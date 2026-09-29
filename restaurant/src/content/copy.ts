@@ -11,11 +11,34 @@ export const LINKS = {
 export const HERO = {
   kicker: "Counter open · 24/7",
   title: "Jiro, your AI staff engineer",
-  lede: "Cloud coding agents from Nori, the infrastructure for your agent army. Bring your own subscription.",
-  primary: "Get started for free",
-  secondary: "Book a demo",
+  lede: "Bring your own subscription.",
+  sub: "Cloud coding agents from Nori, the infrastructure for your agent army.",
+  /** The page has exactly ONE call-to-action button: the header "Reserve a seat". */
+  cta: "Reserve a seat",
 };
 
+/** Sketch section 4: comparison table. y = yes, m = partly, n = no. Competitor cells are draft copy. */
+export const TABLE = {
+  title: "How Jiro compares",
+  cols: ["Jiro", "Devin", "Factory", "Cursor Cloud"],
+  rows: [
+    ["Bring your own Claude / Codex / Gemini plan", "y", "n", "m", "n"],
+    ["Asks clarifying questions before coding", "y", "m", "m", "n"],
+    ["Proof on every PR (tests, screenshots, traces)", "y", "m", "m", "n"],
+    ["Lives in Slack, web and CLI", "y", "y", "y", "m"],
+    ["Waits for approval on anything outward-facing", "y", "m", "m", "m"],
+    ["Opinionated about quality (anti-slop)", "y", "n", "n", "n"],
+  ] as [string, string, string, string, string][],
+  fine: "Competitor cells are draft copy, to be fact-checked before launch.",
+};
+
+/** Sketch section 7: the call to action before the footer. */
+export const CTA = {
+  title: "Pull up a stool.",
+  body: "Tag @jiro in Slack, hand over the ticket, go get tea. Come back to a pull request with receipts.",
+};
+
+/** Sketch section 5: exactly the five standard FAQ questions. */
 export const FAQ: { q: string; a: string; item: string }[] = [
   {
     q: "Which coding agents can I run?",
@@ -28,11 +51,6 @@ export const FAQ: { q: string; a: string; item: string }[] = [
     item: "salmon",
   },
   {
-    q: "What does an agent's environment look like?",
-    a: "Each agent works in an isolated cloud environment with your repository, tools, dependencies, and services ready to use.",
-    item: "tamago",
-  },
-  {
     q: "How does billing work?",
     a: "Plans are sized by runtimes. The free trial runs five for 30 days, Developer gives one user up to three persistent runtimes, and Team gives multiple users five shared ones. Runtimes sleep when idle and wake on demand.",
     item: "ikura",
@@ -43,19 +61,9 @@ export const FAQ: { q: string; a: string; item: string }[] = [
     item: "maki",
   },
   {
-    q: "What repositories can I use?",
-    a: "Any GitHub repository you have access to. Connect your GitHub account and select which repos to enable.",
-    item: "ebi",
-  },
-  {
-    q: "Is Jiro a real sushi chef?",
-    a: "Jiro is a real staff engineer. The sushi is load-bearing metaphor. Please do not eat the rock.",
+    q: "Will Jiro just do whatever I say?",
+    a: "No. He asks before he cuts: he pins down what you actually want before writing a line, and anything outward-facing waits for your go-ahead.",
     item: "onigiri-happy",
-  },
-  {
-    q: "Does Jiro ever sleep?",
-    a: "Runtimes sleep when idle and wake on demand, so you only pay for work. Jiro himself blinks every six seconds and calls it a nap.",
-    item: "onigiri-sleepy",
   },
 ];
 

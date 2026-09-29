@@ -65,3 +65,81 @@ window, mail slot, hedge gap...).
 - Loops: every ambient animation is a function of time with a period that
   divides `LOOP` (24 s) or is aperiodic noise; never a one-shot.
 - Only touch your own files. Shared engine changes go through Jiro (lead).
+
+---
+
+# v2 — Sketch route (Martin, 2026-09-29 21:30 UTC) — THIS SECTION OVERRIDES THE ABOVE
+
+Martin's hand sketch (`art/src/sketch.jpg`) defines the page order and how the ONE belt
+moves in 3D from section to section. It overrides the scene table above.
+
+## Page order (scroll order) and room mapping
+
+| # | scene id | Room | Sketch section | Mood |
+|---|----------|------|----------------|------|
+| 1 | `bar` | Sushi bar | HERO: the approved v6 bar loop (`public/video/hero.mp4`) framed on the RIGHT, big dark space LEFT with "Jiro, your AI staff engineer" / "Bring your own subscription." No menu buttons. The page's ONLY call-to-action button is the header "Reserve a seat". | bustling |
+| 2 | `office` | Back office behind the bar | PRODUCT DEMO: big clickable Nori UI (Playwright capture). Very small Jiro at a computer in the bottom-RIGHT corner. | quiet |
+| 3 | `dining` | Restaurant floor | COMPARISON VIDEOS: two Playwright-recorded windows side by side, same prompt, generic agent vs opinionated Jiro (clearer code, better output). Jiro seen in BIRD'S-EYE view from the top, serving tables. | bustling |
+| 4 | `kitchen` | Kitchen | COMPARISON TABLE: Jiro vs Devin, Factory, Cursor Cloud (`TABLE` in copy.ts). | medium |
+| 5 | `storage` | Storage room | FAQ: the 5 standard questions (`FAQ` in copy.ts) pop up as thought/speech bubbles over sushi items, "as if they are thinking them right now". Click one and Jiro answers in a big bubble over it. Whack-a-Bug mini game lives here too. | quiet |
+| 6 | `yard` | Outdoor back yard, washing plates at night | Quiet interlude. Mini game: Hose Snake. | quiet |
+| 7 | `street` | Night street, Jiro on the delivery bike | PRICING chart. | bustling |
+| 8 | `pond` | Koi pond garden | CALL TO ACTION ("Pull up a stool", `CTA` in copy.ts; its button is a link to the header CTA target, styled as the same single CTA) then an ENTERTAINING FOOTER with an easter egg for people who watch. Ending: a big koi jumps out of the pond and eats the sushi. Mini game: Flappy Koi. | quiet → punchline |
+
+Do NOT use the fish-market / tuna scene as a reference.
+
+## Belt flow
+
+The belt flows OUT of the hero and DOWN the page: plates come out of the dark opening
+under the bottle shelf in the hero video, ride past Jiro, leave the video at its bottom
+edge and continue down through every room to the koi. Scrolling = following the sushi.
+(The hero file is the approved v6 take played forward-in-time the other way so it flows
+outward; same take, same speed, same stillness.) `pts` are listed in FLOW ORDER:
+first point = where plates enter the scene (top), last point = where they leave (bottom).
+
+Speed is identical everywhere (`BELT_SPEED` in engine/types.ts), and it must match the
+apparent speed of the belt in the hero video at the size the video is drawn. Only the
+hero agent may change `BELT_SPEED`.
+
+## The route (from the sketch) — ports are FIXED
+
+Stage is 1920x1080. Two lanes: LEFT lane x = 150, RIGHT lane x = 1770. The bottom run
+of an L/U-shaped scene sits at y ≈ 940. Belt scale 1.0 at every port (width 64).
+A port is where the belt crosses the stage's top or bottom edge.
+
+| scene | IN port (top edge unless noted) | shape inside the room | OUT port (bottom edge) |
+|---|---|---|---|
+| bar | from the hero video's belt (inside the video frame) | straight diagonal down-LEFT, continuing the video's belt line out of the frame over the dark page | x ≈ 700, heading down-left |
+| office | x = 150 | straight down the left lane | x = 150 |
+| dining | x = 150 | down the left lane, round corner, along the bottom (y≈940) to the right, round corner | x = 1770 |
+| kitchen | x = 1770 | straight down the right lane | x = 1770 |
+| storage | x = 1770 | down the right lane, corner, along the bottom to the left, corner | x = 150 |
+| yard | x = 150 | straight down the left lane | x = 150 |
+| street | x = 150 | down the left lane, corner, along the bottom to the right, corner | x = 1770 |
+| pond | x = 1770 | down the right lane, corner, along the bottom to the left, ending at the end of a pier where the koi eats | (end of belt, x ≈ 360) |
+
+Inside a room the belt must look physically installed: a straight "vertical" lane is a
+belt running from the back of the room toward the viewer along a side wall or counter
+(or climbing/descending as a sushi elevator), corners are real curved belt modules, and
+the belt enters and leaves rooms through a believable-but-wild part of a wall, floor or
+ceiling (hatch, vent, mail slot, cat flap, dish window, drain, hedge gap...). The
+transition agents own how the belt gets from one room's OUT port to the next room's IN
+port, with the camera following the belt downward, in 3D (pitch, dolly, bank at the
+corners), never cutting.
+
+Exactly ONE transition (dining → kitchen) is the SUSHI CAM: the camera is bolted to the
+belt and we see the kitchen we are entering from the point of view of a sushi on a
+plate, then we return to the neutral eye-level observer view for the kitchen scene.
+
+## Composition rules (Martin)
+
+- Pixel art is the centre of each scene, but it must NOT fill the whole room. Dark space
+  where text lives is good: shadowed wall, dark garden, low-contrast wall, a monitor side
+  in shadow. Mix bustling scenes and quiet scenes.
+- Animation is minimal, very relaxing and slow, and perfectly looped (no human can see
+  where a loop starts or ends). No big movements like people walking around. Blinks,
+  steam, flicker, a finger twitch, a sway of a curtain.
+- The belt is always moving at the same speed.
+- Silly and entertaining: lots of clickable easter eggs, absurd comic/animal items on the
+  belt, 3 immediately recognisable mini games (Whack-a-mole, Snake, Flappy).
+- Keep noriagentic.com's real content (copy.ts) for context.
