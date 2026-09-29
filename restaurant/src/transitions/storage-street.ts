@@ -166,3 +166,6 @@ export const storageStreet: TransitionDef = {
     g.restore();
   },
 };
+
+/** The pantry shares the storage frame, so the drop to the street starts from it unchanged. */
+export const pantryStreet: TransitionDef = { ...storageStreet, from: "pantry" };
