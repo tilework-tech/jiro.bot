@@ -104,7 +104,7 @@ function renderWall(g: CanvasRenderingContext2D, t: number, now: number, api: Ap
 export const barOffice: TransitionDef = {
   from: "bar",
   to: "office",
-  length: 1.8,
+  length: 0.9,
   route: "Into the dark opening under the bar's bottle shelf, down a diagonal brace inside the wall past a mouse family, out a floor-level hatch in the office's left wall",
   render(g, t, now, api) {
     if (t >= T_END) { api.drawScene("office", g, now); return; }

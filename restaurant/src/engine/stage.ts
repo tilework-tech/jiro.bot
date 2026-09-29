@@ -1,5 +1,6 @@
 import { STAGE_W, STAGE_H, type Api, type Camera, type Plate, type SceneDef, type TransitionDef, type BeltPath } from "./types";
 import { drawBeltFull, hitPlate } from "./belt";
+import { Drag } from "./drag";
 import { ITEMS, preloadItems } from "./items";
 import { eggCount, eggFound, noteEgg, onEggs } from "./eggs";
 import { sfx, setSound, soundOn } from "./sfx";
@@ -130,7 +131,8 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
       return drawBeltFull(gg, path, now, key);
     },
     plateAt(x, y) {
-      return hitPlate(scenePlates, sceneBeltSize, x, y);
+      const sc = active.kind === "scene" ? active.id : "";
+      return (sc && drag.hitRested(sc, sceneBeltSize, x, y)) || hitPlate(scenePlates, sceneBeltSize, x, y);
     },
     goto(id) {
       const s = segs.find((x) => x.id === id);
@@ -156,11 +158,14 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
     if (art.complete && art.naturalWidth) gg.drawImage(art, 0, 0, STAGE_W, STAGE_H);
     else { gg.fillStyle = "#0b0a09"; gg.fillRect(0, 0, STAGE_W, STAGE_H); }
     s.under?.(gg, now, api);
-    const plates = drawBeltFull(gg, s.belt, now, s.id);
+    const plates = drawBeltFull(gg, s.belt, now, s.id, drag.hidden).filter((p) => !drag.hidden.has(p.key));
+    drag.drawScene(gg, s, now);
     if (live) { scenePlates = plates; sceneBeltSize = s.belt.plate ?? 52; }
     s.over?.(gg, now, api);
     gg.restore();
   }
+
+  const drag = new Drag(api);
 
   // Scene DOM layers.
   const layers = new Map<string, HTMLDivElement>();
@@ -206,6 +211,7 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
   let active: Seg = segs[0];
   const said = new Map<string, number>();
   frame.addEventListener("click", (e) => {
+    if (drag.suppressClick()) return;
     if ((e.target as HTMLElement).closest("#ui .hit, #ui button, #ui a, #ui input")) return;
     if (active.kind !== "scene") return;
     const [x, y] = api.toStage(e.clientX, e.clientY);
@@ -229,6 +235,30 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
     const [x, y] = api.toStage(e.clientX, e.clientY);
     frame.classList.toggle("over-plate", !!api.plateAt(x, y));
   });
+  // Drag plates (mouse and pen; touch keeps native scrolling).
+  frame.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0 || e.pointerType === "touch" || active.kind !== "scene") return;
+    if ((e.target as HTMLElement).closest("#ui .hit, #ui button, #ui a, #ui input, #ui video, #ui .arcade, #ui figure")) return;
+    const [x, y] = api.toStage(e.clientX, e.clientY);
+    const beltHit = hitPlate(scenePlates, sceneBeltSize, x, y);
+    if (drag.pointerDown(active.def as SceneDef, x, y, beltHit)) {
+      e.preventDefault();
+      frame.setPointerCapture(e.pointerId);
+    }
+  });
+  frame.addEventListener("pointermove", (e) => {
+    const [x, y] = api.toStage(e.clientX, e.clientY);
+    if (drag.pointerMove(x, y)) frame.classList.add("dragging");
+  });
+  const endDrag = (e: PointerEvent) => {
+    frame.classList.remove("dragging");
+    if (frame.hasPointerCapture(e.pointerId)) frame.releasePointerCapture(e.pointerId);
+    const sc = active.kind === "scene" ? (active.def as SceneDef) : null;
+    if (sc) drag.pointerUp(sc, performance.now() / 1000);
+    else if (drag.held) { drag.held = null; }
+  };
+  frame.addEventListener("pointerup", endDrag);
+  frame.addEventListener("pointercancel", endDrag);
 
   addEventListener("keydown", (e) => {
     const tgt = e.target as HTMLElement;
@@ -279,6 +309,7 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
     g.imageSmoothingEnabled = true;
     if (seg.kind === "scene") {
       renderScene(seg.def, g, now, undefined, true);
+      drag.drawHeld(g, seg.def.belt.plate ?? 52);
     } else {
       const t = Math.max(0, Math.min(1, (p - seg.start) / seg.len));
       g.save();

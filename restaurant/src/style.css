@@ -243,3 +243,5 @@ h2.px { font-size: 56px; line-height: 1.05; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 .office-head h2.px { font-size: 46px; }
+#frame.over-plate { cursor: grab; }
+#frame.dragging, #frame.dragging * { cursor: grabbing !important; }

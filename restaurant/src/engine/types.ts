@@ -66,6 +66,16 @@ export interface Camera {
   alpha?: number;
 }
 
+/** A surface in a room where a dragged plate can rest (counter, table, shelf, pier). */
+export interface Surface {
+  /** Polygon in stage coords; the plate's drop point (its bottom centre) must be inside. */
+  poly: [number, number][];
+  /** Plate scale when resting here (perspective); default: the scale it was picked up at. */
+  scale?: number;
+  /** Toast line when a plate is parked here (first park counts as an egg). */
+  say?: string;
+}
+
 export interface SceneDef {
   id: string;
   /** Short room name shown in the side rail. */
@@ -73,6 +83,8 @@ export interface SceneDef {
   art: string;
   mood: "bustling" | "quiet";
   belt: BeltPath;
+  /** Where dragged plates may rest. Drops elsewhere zoom back to the belt, vanish, or explode. */
+  surfaces?: Surface[];
   /** Scroll length of the hold in viewport heights. */
   hold: number;
   /** Draw ambient animation over the art, under the belt (stage coords). */
