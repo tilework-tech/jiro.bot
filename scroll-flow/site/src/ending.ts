@@ -192,3 +192,36 @@ export class Train {
     }
   }
 }
+
+// ------------------------------------------------------------------ end of the belt: plates tip off the trestle into the pond
+export class PondDrop {
+  items: { sprite: THREE.Sprite; x: number; y: number; vx: number; vy: number; spin: number }[] = [];
+  static END: V2 = [-3.05, -0.02];
+  static WATER = -1.9;
+  constructor(public scene: THREE.Scene, public card: Card, public fx: Particles) {}
+
+  arrive(item: THREE.Texture) {
+    const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: item, alphaTest: 0.35 }));
+    const s = 0.62 * 0.55; sprite.scale.set(s, s, 1);
+    this.scene.add(sprite);
+    this.items.push({ sprite, x: PondDrop.END[0], y: PondDrop.END[1] + 0.17, vx: -0.9 - Math.random() * 0.4, vy: 0.8, spin: 0 });
+  }
+
+  update(dt: number, active: boolean) {
+    for (let i = this.items.length - 1; i >= 0; i--) {
+      const it = this.items[i];
+      it.vy -= 7 * dt; it.x += it.vx * dt; it.y += it.vy * dt; it.spin += dt * 4;
+      place(this.card, it.sprite, [it.x, it.y], 0.3);
+      it.sprite.material.rotation = it.spin;
+      if (it.y < PondDrop.WATER) {
+        if (active) {
+          const at = new THREE.Vector3(it.x, PondDrop.WATER, 0.3).applyMatrix4(this.card.object.matrixWorld);
+          const up = this.card.up, right = new THREE.Vector3(1, 0, 0).applyQuaternion(this.card.quat);
+          for (let k = 0; k < 26; k++) this.fx.emit(at, up.clone().multiplyScalar(1 + Math.random() * 2).addScaledVector(right, (Math.random() - 0.5) * 2),
+            new THREE.Color(k % 3 ? "#9fd6ff" : "#ffffff").convertSRGBToLinear(), 0.6 + Math.random() * 0.4, 0.035, up.clone().multiplyScalar(-7));
+        }
+        this.scene.remove(it.sprite); it.sprite.material.dispose(); this.items.splice(i, 1);
+      }
+    }
+  }
+}

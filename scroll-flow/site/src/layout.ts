@@ -43,7 +43,7 @@ export const CARDS: CardDef[] = [
     beltWidth: [0.5, -0.1], beltScale: 0.5, beltZ: 0.04,
   },
   {
-    id: "s1-code", video: "v/s1-code.mp4",
+    id: "s1-code", video: "v/s1-code-small.mp4",
     pos: [-15, -14, -8], rot: [0, 32, 0],
     belt: [[L, T], [L, B]], entryDir: [0, -1], exitDir: [0, -1],
   },
@@ -53,10 +53,10 @@ export const CARDS: CardDef[] = [
     belt: [[L, T], [L, BOT], [R, BOT], [R, B]], entryDir: [0, -1], exitDir: [0, -1],
   },
   {
-    id: "s3-tuna", video: "v/s3-tuna.mp4",
+    // after-hours bar (was the tuna scene's slot): hosts the comparison table
+    id: "s7-closing", video: "v/s7-closing.mp4",
     pos: [9, -42, -14], rot: [0, -28, 0],
     belt: [[R, T], [R, B]], entryDir: [0, -1], exitDir: [0, -1],
-    close: { video: "v/s3-tuna-close.mp4", focus: [2.9, -1.8], yaw: 16, dist: 3.0 },
   },
   {
     id: "s4-omakase", video: "v/s4-omakase.mp4",
@@ -74,23 +74,11 @@ export const CARDS: CardDef[] = [
     belt: [[R, T], [R, B]], entryDir: [0, -1], exitDir: [0, -1],
   },
   {
-    id: "s7-closing", video: "v/s7-closing.mp4",
-    pos: [-9, -100, 19], rot: [-18, -205, 0],
-    belt: [[R, T], [R, BOT], [L + 0.6, BOT]], entryDir: [0, -1], exitDir: [-1, 0],
-  },
-  {
     // ending 1: a trestle over a koi pond; the koi jumps now and then and eats a stretch of belt
     id: "e1-pond", video: "v/e1-pond.mp4",
     pos: [12.7, -110, 29.2], rot: [-6, 155, 0],
-    belt: [[8.4, -0.02], [-3.05, -0.02]], entryDir: [-1, 0], exitDir: [-1, 0],
+    belt: [[8.4, -0.02], [-3.05, -0.02]], entryDir: [-1, 0],
     beltWidth: [0, 0.4], beltScale: 0.55, beltZ: 0.04,
-  },
-  {
-    // ending 2: the belt ends at a platform; plates queue up, then all board the train together
-    id: "e2-station", video: "v/e2-station.mp4",
-    pos: [33.5, -113, 38.9], rot: [0, 155, 0],
-    belt: [[8.4, 0.68], [0.05, 0.68]], entryDir: [-1, 0],
-    beltWidth: [0, 0.36], beltScale: 0.55, beltZ: 0.04,
   },
 ];
 

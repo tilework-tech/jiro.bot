@@ -126,7 +126,7 @@ export class Plates {
         p.mode = "belt"; p.puff = 0.01; if (SUSHI.includes(p.item)) this.setItem(p, SUSHI[Math.floor(Math.random() * SUSHI.length)]);
       }
       if (raw < 0.2 && p.mode === "belt" && Math.random() < 0.02) this.setItem(p, weightedBag()());
-      const beltPos = f.p.clone().addScaledVector(f.u, 0.03 * f.sc);
+      const beltPos = f.p.clone().addScaledVector(f.u, 0.09 * f.sc);
       if (p.mode === "belt") { p.pos.copy(beltPos); p.sc = f.sc; }
       else if (p.mode === "walk" || p.mode === "fall") { this.stray(p, dt, time); continue; }
       else if (p.mode === "return" || p.mode === "fling") {

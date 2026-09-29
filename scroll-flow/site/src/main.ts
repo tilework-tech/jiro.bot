@@ -1,12 +1,12 @@
 import * as THREE from "three";
 import "./style.css";
 import { CARD_H, CARD_W, Card, makeCards, toWorld } from "./layout";
-import { BeltPath, buildBeltMesh, SLAT } from "./belt";
+import { BeltPath, buildBeltMesh, Slats } from "./belt";
 import { Plates, BASE_SPEED } from "./plates";
 import { Particles, blip } from "./fx";
 import { FAQ, initCompare, initDemo, initFaq, initPricing, initTable } from "./content";
 import { buildDoors, animateDoors } from "./doors";
-import { Koi, Train } from "./ending";
+import { Koi, PondDrop } from "./ending";
 
 // ------------------------------------------------------------------ renderer
 const canvas = document.getElementById("gl") as HTMLCanvasElement;
@@ -79,6 +79,8 @@ function ensureLoaded(v: HTMLVideoElement) {
 const path = new BeltPath(cards);
 const belt = buildBeltMesh(path);
 scene.add(belt.group);
+const slats = new Slats(path);
+scene.add(slats.mesh);
 const fx = new Particles(scene);
 
 // lanterns + drifting embers along the connector runs so transitions have depth
@@ -156,9 +158,9 @@ const hooks = {
 const plates = new Plates(scene, path, camera, fx, hooks);
 
 // endings: the koi pond, then the station where the belt finally stops
-const koi = new Koi(scene, cards[8], plates, fx, hooks);
-const train = new Train(scene, cards[9], plates, fx, hooks);
-plates.onWrap = (item) => train.arrive(item);
+const koi = new Koi(scene, cards[7], plates, fx, hooks);
+const drop = new PondDrop(scene, cards[7], fx);
+plates.onWrap = (item) => drop.arrive(item);
 
 // the belt comes out from behind the right-hand post of the hero's kitchen window:
 // an opaque cut-out of the painted post/wall sits in front of the belt, and the
@@ -199,12 +201,12 @@ let heroOccluder: THREE.Mesh | null = null;
 // ------------------------------------------------------------------ stops + camera rig
 interface Stop { card: number; close?: boolean }
 const STOPS: Stop[] = [
-  { card: 0 }, { card: 1 }, { card: 2 }, { card: 3 }, { card: 3, close: true },
-  { card: 4 }, { card: 5 }, { card: 6 }, { card: 7 }, { card: 8 }, { card: 9 },
+  { card: 0 }, { card: 1 }, { card: 2 }, { card: 3 },
+  { card: 4 }, { card: 5 }, { card: 6 }, { card: 7 },
 ];
 const N = STOPS.length;
 const FAQ_STOP = STOPS.findIndex((x) => x.card === 4);
-const CLOSING_STOP = STOPS.findIndex((x) => x.card === 7);
+const CLOSING_STOP = STOPS.findIndex((x) => x.card === 3);
 
 function coverDist() {
   const a = camera.aspect;
@@ -475,7 +477,7 @@ function updateOverlays(time: number) {
     footerSince ||= time;
     if (!paraded && time - footerSince > 8) {
       paraded = true; plates.paradeOfJiros(); hooks.found("stay", "Stayed after closing time.");
-      hooks.bubble(toWorld(cards[7], [3.2, 2.6], 0), "…five more minutes", 2600);
+      hooks.bubble(toWorld(cards[3], [3.2, 2.6], 0), "…five more minutes", 2600);
     }
   } else footerSince = 0;
 }
@@ -545,12 +547,12 @@ function frame() {
 
   plates.update(dt, time);
   const near = (ci: number) => Math.min(...STOPS.map((st, k) => st.card === ci ? Math.abs(s - k) : 9));
-  koi.update(dt, near(8) < 0.6);
-  train.update(dt, time, near(9) < 0.6);
+  koi.update(dt, near(7) < 0.6);
+  drop.update(dt, near(7) < 1);
   animateDoors(doors, time);
   occasionalFall(dt);
   if (heroOccluder) heroOccluder.visible = near(0) < 1.5;
-  belt.tex.offset.y = -plates.offset / SLAT;
+  slats.update(plates.offset);
   fx.update(dt);
   embers.rotation.y = Math.sin(time * 0.05) * 0.01;
 

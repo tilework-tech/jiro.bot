@@ -62,8 +62,22 @@ export class BeltPath {
       }
     });
 
-    // densify straight runs, then round corners with Chaikin (endpoints pinned)
+    // round the corners on the coarse polygon first (Chaikin, cut capped at ~1.8 units) so every
+    // turn has a radius well above the belt width: the slats need that to fan without gaps
     type S = { p: THREE.Vector3; up: THREE.Vector3; w: THREE.Vector3 | null; sc: number; lift: THREE.Vector3 | null; ci: number };
+    const mixC = (a: THREE.Vector3 | null, b: THREE.Vector3 | null, f: number) => a && b ? a.clone().lerp(b, f) : (f < 0.5 ? a : b);
+    for (let it = 0; it < 4; it++) {
+      const N: Ctl[] = [C[0]];
+      for (let i = 0; i < C.length - 1; i++) {
+        const A = C[i], B = C[i + 1], len = A.p.distanceTo(B.p);
+        const f = Math.min(0.25, 1.8 / Math.max(len, 1e-6) / (it + 1));
+        const at = (g: number): Ctl => ({ p: A.p.clone().lerp(B.p, g), up: A.up.clone().lerp(B.up, g).normalize(), w: mixC(A.w, B.w, g),
+          sc: A.sc + (B.sc - A.sc) * g, lift: mixC(A.lift, B.lift, g), ci: A.ci === B.ci ? A.ci : (g < 0.5 ? A.ci : B.ci) });
+        N.push(at(f), at(1 - f));
+      }
+      N.push(C[C.length - 1]);
+      C.length = 0; C.push(...N);
+    }
     let S: S[] = [];
     const mixV = (a: THREE.Vector3 | null, b: THREE.Vector3 | null, f: number) => a && b ? a.clone().lerp(b, f) : null;
     for (let i = 0; i < C.length - 1; i++) {
@@ -76,16 +90,6 @@ export class BeltPath {
       }
     }
     S.push({ ...C[C.length - 1] });
-    for (let it = 0; it < 3; it++) {
-      const N: S[] = [S[0]];
-      for (let i = 0; i < S.length - 1; i++) {
-        const A = S[i], B = S[i + 1];
-        for (const f of [0.25, 0.75]) N.push({ p: A.p.clone().lerp(B.p, f), up: A.up.clone().lerp(B.up, f).normalize(), w: mixV(A.w, B.w, f), sc: A.sc + (B.sc - A.sc) * f, lift: mixV(A.lift, B.lift, f), ci: A.ci });
-      }
-      N.push(S[S.length - 1]);
-      S = N;
-    }
-
     let acc = 0, accU = 0;
     for (let i = 0; i < S.length; i++) {
       if (i > 0) { const ds = S[i].p.distanceTo(S[i - 1].p); acc += ds; accU += ds / ((S[i].sc + S[i - 1].sc) / 2); }
@@ -180,7 +184,7 @@ export function buildBeltMesh(path: BeltPath) {
   const sp = new Float32Array(n * 2 * 3), suv = new Float32Array(n * 2 * 2);
   const idx: number[] = [];
   for (let i = 0; i < n; i++) {
-    const p = path.pts[i], w = path.wid[i];
+    const p = path.pts[i].clone().addScaledVector(path.ups[i], -0.06 * path.scs[i]), w = path.wid[i];
     const l = p.clone().sub(w), r = p.clone().add(w);
     sp.set([l.x, l.y, l.z, r.x, r.y, r.z], i * 6);
     const v = path.cumU[i] / SLAT;
@@ -192,7 +196,8 @@ export function buildBeltMesh(path: BeltPath) {
   sg.setAttribute("uv", new THREE.BufferAttribute(suv, 2));
   sg.setIndex(idx);
   const tex = slatTexture();
-  const surface = new THREE.Mesh(sg, new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide, fog: true }));
+  // dark bed under the slats (the slats themselves are instanced, see Slats)
+  const surface = new THREE.Mesh(sg, new THREE.MeshBasicMaterial({ color: "#1e1814", side: THREE.DoubleSide, fog: true }));
 
   // --- frame: profile in (width-fraction, up) coordinates, with a flat shade per face
   const prof: [number, number][] = [
@@ -221,4 +226,95 @@ export function buildBeltMesh(path: BeltPath) {
   const group = new THREE.Group();
   group.add(surface, frame);
   return { group, tex };
+}
+
+/**
+ * Airport-carousel style slats (see EP2669218A1 / US3718249A): each slat hangs off a
+ * chain pin on the centreline, points along the chord to the next pin, and is tilted
+ * nose-down so its front tucks under the slat ahead. On a curve the slats pivot about
+ * their pins: they pile up on the inside of the turn and fan open on the outside,
+ * sliding under one another instead of leaving gaps.
+ */
+export const SLAT_PITCH = 0.25;                    // ≈0.22 × belt width (research: 0.2–0.25 W)
+const SLAT_LEN = SLAT_PITCH + 0.15;                // pitch + straight-run overlap
+const SLAT_TILT = Math.atan(0.035 / SLAT_PITCH);   // nose-down shingle angle
+
+function slatGeometry() {
+  const W = BELT_W, L = SLAT_LEN, bow = 0.08 * W, hw = W / 2;
+  const sh = new THREE.Shape();
+  // plan view: x forward (0 = chain pin at the rear, L = nose), y across. Convex nose, concave tail.
+  sh.moveTo(0, -hw);
+  sh.quadraticCurveTo(bow, 0, 0, hw);                 // concave trailing edge
+  sh.lineTo(L - bow, hw);
+  sh.quadraticCurveTo(L + bow, 0, L - bow, -hw);      // convex leading edge
+  sh.lineTo(0, -hw);
+  let g: THREE.BufferGeometry = new THREE.ExtrudeGeometry(sh, { depth: 0.035, bevelEnabled: false, curveSegments: 10 });
+  // subdivide along x so the per-vertex bands have vertices to live on
+  g = g.toNonIndexed();
+  // shingle tilt: the nose sits lower than the tail
+  const pos = g.attributes.position as THREE.BufferAttribute;
+  for (let i = 0; i < pos.count; i++) pos.setZ(i, pos.getZ(i) - pos.getX(i) * Math.tan(SLAT_TILT) + 0.02);
+  pos.needsUpdate = true;
+  // pixel-art shading baked per vertex: a dark lip along the exposed trailing edge (the
+  // classic stepped look of a carousel), a light band just behind it, steel in between
+  const col = new Float32Array(pos.count * 3), c = new THREE.Color();
+  const bowAt = (y: number) => 0.08 * W * (1 - (2 * y / W) ** 2); // x of the concave tail at this y
+  const va = new THREE.Vector3(), vb = new THREE.Vector3(), vc = new THREE.Vector3(), n = new THREE.Vector3();
+  for (let t = 0; t < pos.count; t += 3) {
+    va.fromBufferAttribute(pos, t); vb.fromBufferAttribute(pos, t + 1); vc.fromBufferAttribute(pos, t + 2);
+    n.subVectors(vc, vb).cross(va.clone().sub(vb)).normalize();
+    const top = Math.abs(n.z) > 0.6 && (va.z + vb.z + vc.z) / 3 > -0.03 + 0.02 - ((va.x + vb.x + vc.x) / 3) * Math.tan(SLAT_TILT) + 0.017;
+    for (let k = 0; k < 3; k++) {
+      const i = t + k, x = pos.getX(i), y = pos.getY(i);
+      const fromTail = x - bowAt(y) * 0.5;
+      if (!top) c.set("#3a3632");
+      else if (fromTail < 0.035) c.set("#6b6661");
+      else if (fromTail < 0.075) c.set("#e0dbd3");
+      else c.set("#b3aea6");
+      col.set([c.r, c.g, c.b], i * 3);
+    }
+  }
+  g.setAttribute("color", new THREE.BufferAttribute(col, 3));
+  g.computeBoundingSphere();
+  return g;
+}
+
+export class Slats {
+  mesh: THREE.InstancedMesh;
+  n: number;
+  f1: Frame = { p: new THREE.Vector3(), t: new THREE.Vector3(), b: new THREE.Vector3(), u: new THREE.Vector3(), w: new THREE.Vector3(), sc: 1, lift: new THREE.Vector3() };
+  f2: Frame = { p: new THREE.Vector3(), t: new THREE.Vector3(), b: new THREE.Vector3(), u: new THREE.Vector3(), w: new THREE.Vector3(), sc: 1, lift: new THREE.Vector3() };
+  m = new THREE.Matrix4();
+  fwd = new THREE.Vector3(); side = new THREE.Vector3();
+
+  constructor(public path: BeltPath) {
+    this.n = Math.floor(path.lengthU / SLAT_PITCH);
+    const mat = new THREE.MeshBasicMaterial({ vertexColors: true, fog: true });
+    this.mesh = new THREE.InstancedMesh(slatGeometry(), mat, this.n);
+    this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    this.mesh.frustumCulled = false;
+    // a hint of variation so the shingled rows read (every 4th slat a touch lighter)
+    const c = new THREE.Color();
+    for (let i = 0; i < this.n; i++) this.mesh.setColorAt(i, c.setScalar(i % 2 ? 0.86 : 1));
+  }
+
+  update(offsetU: number) {
+    const L = this.path.lengthU, hw = BELT_W / 2;
+    for (let i = 0; i < this.n; i++) {
+      let u = (i * SLAT_PITCH + offsetU) % L; if (u < 0) u += L;
+      const a = this.path.frameAtU(u, this.f1);
+      const b = this.path.frameAtU(Math.min(L, u + SLAT_PITCH), this.f2);
+      // aim along the chord to the next pin (this is what makes them fan in a turn)
+      this.fwd.copy(b.p).sub(a.p);
+      const len = this.fwd.length();
+      if (len < 1e-5) this.fwd.copy(a.t).multiplyScalar(SLAT_PITCH * a.sc); else this.fwd.multiplyScalar((SLAT_PITCH * a.sc) / len);
+      this.fwd.multiplyScalar(1 / SLAT_PITCH);          // geometry x is in slat units; scale to world
+      this.side.copy(a.w).multiplyScalar(1 / hw);       // skewed + scaled width on painted lanes
+      const up = a.u.clone().multiplyScalar(a.sc);
+      const vis = Math.min(1, u / 0.3);
+      this.m.makeBasis(this.fwd.multiplyScalar(vis), this.side.multiplyScalar(vis), up.multiplyScalar(vis)).setPosition(a.p.x, a.p.y, a.p.z);
+      this.mesh.setMatrixAt(i, this.m);
+    }
+    this.mesh.instanceMatrix.needsUpdate = true;
+  }
 }
