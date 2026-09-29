@@ -8,12 +8,10 @@ import { office } from "./scenes/office";
 import { dining } from "./scenes/dining";
 import { kitchen } from "./scenes/kitchen";
 import { storage } from "./scenes/storage";
-import { aquarium } from "./scenes/aquarium";
 import { street } from "./scenes/street";
 import { pond } from "./scenes/pond";
 import { barOffice } from "./transitions/bar-office";
-import { officeAquarium } from "./transitions/office-aquarium";
-import { aquariumDining } from "./transitions/aquarium-dining";
+import { officeDining } from "./transitions/office-dining";
 import { diningKitchen } from "./transitions/dining-kitchen";
 import { kitchenStorageF as kitchenStorage } from "./transitions/kitchen-storage-f";
 import { storageStreet } from "./transitions/storage-street";
@@ -22,8 +20,8 @@ import { streetPond } from "./transitions/street-pond";
 declareEggs(["konami", "omakase", "logo-5", "sudo", "tab-away", "console", "plate-parked", "plate-exploded", "plate-vanished"]);
 
 const api = start(
-  [bar, office, aquarium, dining, kitchen, storage, street, pond],
-  [barOffice, officeAquarium, aquariumDining, diningKitchen, kitchenStorage, storageStreet, streetPond],
+  [bar, office, dining, kitchen, storage, street, pond],
+  [barOffice, officeDining, diningKitchen, kitchenStorage, storageStreet, streetPond],
 );
 
 setupChrome(api);
