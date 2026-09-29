@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jiro.bot scroll site · 10 directions</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="variants.js"></script>
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#0e0b09; color:#efe6d8; font:14px/1.4 'Instrument Sans', sans-serif; height:100vh; display:flex; flex-direction:column; }
+  header { display:flex; align-items:center; gap:18px; padding:10px 16px; border-bottom:1px solid #2a221c; flex:none; }
+  h1 { font-size:15px; margin:0; white-space:nowrap; } h1 span { color:#f0a04b; }
+  .mode { display:flex; background:#1c1612; border-radius:999px; padding:3px; }
+  .mode button, .tabs button { font:600 13px 'Instrument Sans'; color:#b3a28c; background:none; border:0; padding:6px 12px; border-radius:999px; cursor:pointer; white-space:nowrap; }
+  .mode button.on { background:#f0a04b; color:#120d0a; }
+  .tabs { display:flex; gap:4px; overflow-x:auto; flex:1; }
+  .tabs button { border:1px solid #2a221c; } .tabs button.on { background:#efe6d8; color:#120d0a; border-color:#efe6d8; }
+  .tabs b { font-family:'JetBrains Mono'; margin-right:6px; opacity:.6; }
+  .info { padding:8px 16px; font-size:13px; color:#b3a28c; border-bottom:1px solid #2a221c; display:flex; gap:22px; flex:none; }
+  .info b { color:#efe6d8; font-weight:600; } .info a { margin-left:auto; color:#f0a04b; }
+  #live { flex:1; border:0; width:100%; background:#000; }
+  #grid { flex:1; overflow:auto; display:none; }
+  #grid .cols { display:flex; gap:14px; padding:14px; width:max-content; }
+  .col { width:300px; cursor:pointer; }
+  .col .meta { position:sticky; top:0; background:#0e0b09; padding:4px 0 10px; z-index:1; }
+  .col .meta b { display:block; font-size:15px; } .col .meta span { color:#b3a28c; font-size:12px; display:block; }
+  .col img { width:300px; border-radius:8px; border:1px solid #2a221c; transition:outline-color .15s; outline:2px solid transparent; }
+  .col:hover img { outline-color:#f0a04b; }
+  .keys { color:#6f6255; font-size:12px; white-space:nowrap; }
+  body.grid #live, body.grid .info { display:none; } body.grid #grid { display:block; }
+</style>
+</head>
+<body>
+<header>
+  <h1>jiro<span>.</span>bot · 10 directions</h1>
+  <div class="mode"><button id="m-tabs" class="on">Tabs</button><button id="m-grid">Side by side</button></div>
+  <div class="tabs" id="tabs"></div>
+  <span class="keys">← → to flip</span>
+</header>
+<div class="info" id="info"></div>
+<iframe id="live" title="variant"></iframe>
+<div id="grid"><div class="cols" id="cols"></div></div>
+<script>
+  const VS = window.VARIANTS, tabs = document.getElementById('tabs'), cols = document.getElementById('cols');
+  let cur = Math.max(0, VS.findIndex((v) => v.id === location.hash.slice(1)));
+  VS.forEach((v, i) => {
+    const b = document.createElement('button'); b.innerHTML = `<b>${v.n}</b>${v.name}`; b.onclick = () => open(i); tabs.append(b);
+    const c = document.createElement('div'); c.className = 'col';
+    c.innerHTML = `<div class="meta"><b>${v.n}. ${v.name}</b><span>${v.theme}</span><span>Angle: ${v.angle}</span><span>Job: ${v.job}</span></div><img loading="lazy" src="shots/${v.id}.jpg?v=${Date.now()}" alt="">`;
+    c.onclick = () => open(i); cols.append(c);
+  });
+  function open(i) {
+    cur = (i + VS.length) % VS.length; const v = VS[cur];
+    document.body.classList.remove('grid'); document.getElementById('m-tabs').classList.add('on'); document.getElementById('m-grid').classList.remove('on');
+    [...tabs.children].forEach((b, j) => b.classList.toggle('on', j === cur));
+    tabs.children[cur].scrollIntoView({ inline: 'nearest', block: 'nearest' });
+    document.getElementById('live').src = `v.html?v=${v.id}`;
+    document.getElementById('info').innerHTML = `<span><b>${v.n}. ${v.name}</b></span><span>Theme: <b>${v.theme}</b></span><span>Angle: <b>${v.angle}</b></span><span>Job he is preparing: <b>${v.job}</b></span><a href="v.html?v=${v.id}" target="_blank">Open full page ↗</a>`;
+    history.replaceState(null, '', '#' + v.id);
+  }
+  document.getElementById('m-tabs').onclick = () => open(cur);
+  document.getElementById('m-grid').onclick = () => { document.body.classList.add('grid'); document.getElementById('m-grid').classList.add('on'); document.getElementById('m-tabs').classList.remove('on'); };
+  addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') open(cur + 1); if (e.key === 'ArrowLeft') open(cur - 1); });
+  open(cur);
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+{
+ "screens": [
+  {
+   "id": "chat",
+   "name": "Chat"
+  },
+  {
+   "id": "multi",
+   "name": "Multiplayer"
+  },
+  {
+   "id": "projects",
+   "name": "Projects"
+  },
+  {
+   "id": "automations",
+   "name": "Automations"
+  },
+  {
+   "id": "agents",
+   "name": "New agent"
+  },
+  {
+   "id": "library",
+   "name": "Library"
+  }
+ ],
+ "hot": {
+  "chat": [
+   {
+    "x": 13.59375,
+    "y": 47.5,
+    "w": 200,
+    "h": 33,
+    "to": "chat",
+    "label": "Chat"
+   },
+   {
+    "x": 13.59375,
+    "y": 80.5,
+    "w": 200,
+    "h": 33,
+    "to": "projects",
+    "label": "Projects"
+   },
+   {
+    "x": 13.59375,
+    "y": 113.5,
+    "w": 200,
+    "h": 33,
+    "to": "automations",
+    "label": "Automations"
+   },
+   {
+    "x": 32,
+    "y": 542.0625,
+    "w": 197,
+    "h": 33,
+    "to": "multi",
+    "label": "Open session"
+   },
+   {
+    "x": 32,
+    "y": 436.0625,
+    "w": 197,
+    "h": 33,
+    "to": "automations",
+    "label": "Automation"
+   }
+  ],
+  "multi": [],
+  "projects": [
+   {
+    "x": -10,
+    "y": 84,
+    "w": 200,
+    "h": 36,
+    "to": "chat",
+    "label": "Chat"
+   },
+   {
+    "x": -10,
+    "y": 128,
+    "w": 200,
+    "h": 36,
+    "to": "projects",
+    "label": "Projects"
+   },
+   {
+    "x": -10,
+    "y": 172,
+    "w": 200,
+    "h": 36,
+    "to": "automations",
+    "label": "Automations"
+   }
+  ],
+  "automations": [
+   {
+    "x": 130,
+    "y": -6,
+    "w": 200,
+    "h": 42,
+    "to": "automations",
+    "label": "Automations"
+   },
+   {
+    "x": 1145.359375,
+    "y": 6,
+    "w": 142.640625,
+    "h": 47,
+    "to": "agents",
+    "label": "New agent"
+   }
+  ],
+  "agents": [
+   {
+    "x": 289,
+    "y": 149,
+    "w": 862,
+    "h": 36,
+    "to": "agents",
+    "label": "New agent"
+   }
+  ],
+  "library": [
+   {
+    "x": 103.203125,
+    "y": 135.5,
+    "w": 66.40625,
+    "h": 30,
+    "to": "library",
+    "label": "Library"
+   }
+  ]
+ }
+}

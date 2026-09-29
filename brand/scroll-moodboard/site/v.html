@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jiro.bot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400;600&family=Shippori+Mincho+B1:wght@600;800&family=Zen+Old+Mincho:wght@700&family=Space+Grotesk:wght@400..700&family=Orbitron:wght@600..900&family=VT323&family=Press+Start+2P&family=Silkscreen&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="v.css">
+<script src="variants.js"></script>
+</head>
+<body>
+<header class="nav"><a class="logo" href="#top"><span class="mark"></span>jiro<span class="dot">.</span>bot</a>
+  <nav><a href="#product">Product</a><a href="#antislop">Anti slop</a><a href="#faq">FAQ</a><a href="#pricing">Pricing</a></nav>
+  <a class="btn sm" href="#pricing">Take a seat</a></header>
+
+<div id="belt-layer" aria-hidden="true"><svg id="belt-svg"><path id="belt-path"/><path id="belt-rollers"/></svg><div id="plates"></div></div>
+
+<main id="top">
+  <!-- 1. Hero -->
+  <section class="hero" id="hero">
+    <div class="hero-frame">
+      <img class="hero-img" id="hero-img" alt="">
+      <div class="hero-shade"></div>
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="live"></span><span id="eyebrow"></span></p>
+        <h1>Jiro, your <em>AI Staff Engineer</em></h1>
+        <p class="sub" id="hero-sub"></p>
+        <div class="ctas"><a class="btn" href="#pricing">Take a seat</a><a class="btn ghost" href="#product">See him work ↓</a></div>
+        <ul class="byo"><li><i style="--c:#d97757"></i>Claude</li><li><i style="--c:#e8e3d9"></i>Codex</li><li><i style="--c:#6d8cff"></i>Gemini</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Product -->
+  <section class="product wrap" id="product">
+    <header class="head"><p class="kicker">お品書き · The product</p><h2>Click around his workstation.</h2>
+      <p class="lede">Real Nori UI, captured with Playwright. Click the sidebar, a session, or the tabs.</p></header>
+    <div class="browser" id="browser">
+      <div class="chrome"><span></span><span></span><span></span><div class="url">app.norisessions.com/<b id="url-path">chat</b></div></div>
+      <div class="screen" id="screen"><img id="ui-img" alt="Nori Sessions UI"><div id="hotspots"></div></div>
+      <div class="tabs" id="ui-tabs"></div>
+      <button class="tiny-jiro" id="tiny-jiro" title="Jiro is driving. Click for the next screen."><img src="art/jiro-laptop.png" alt=""><span class="tj-bubble">next →</span></button>
+    </div>
+  </section>
+
+  <!-- 3. Comparison -->
+  <section class="compare" id="antislop">
+    <div class="compare-bg"><img id="dining-img" alt=""></div>
+    <div class="compare-inner wrap">
+      <header class="head center"><p class="kicker">味 · Taste test</p><h2>Optimized for <em>anti slop</em>.</h2>
+        <p class="lede">Same ticket, two kitchens. Recorded side by side.</p></header>
+      <div class="tables2">
+        <figure class="win-card generic"><figcaption><span class="tag bad">General agent</span></figcaption><video id="vid-generic" muted playsinline loop preload="none"></video></figure>
+        <figure class="win-card jiro"><figcaption><span class="tag good">Jiro</span></figcaption><video id="vid-jiro" muted playsinline loop preload="none"></video></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. FAQ -->
+  <section class="faq" id="faq">
+    <div class="faq-bg"><img id="counter-img" alt=""></div>
+    <header class="head center wrap"><p class="kicker">問 · Questions at the counter</p><h2>Ask the sushi.</h2><p class="lede">Every piece has a question. Tap one and Jiro answers.</p></header>
+    <div class="sushi-row" id="sushi-row"></div>
+    <div class="answer" id="answer" hidden>
+      <div class="answer-inner"><img src="art/jiro-talk.png" alt="Jiro"><div class="big-bubble"><p class="bq" id="bq"></p><p class="ba" id="ba"></p><button class="close" id="close">Got it</button></div></div>
+    </div>
+  </section>
+
+  <!-- 5. Pricing -->
+  <section class="pricing" id="pricing">
+    <div class="bike-bg" id="bike-bg"></div>
+    <div class="pricing-inner wrap">
+      <header class="head center"><p class="kicker">出前 · Delivery menu</p><h2>Delivered hot, all night.</h2><p class="lede">Pay for agents. Tokens stay on your own keys, zero markup.</p></header>
+      <div class="tickets">
+        <article class="ticket"><p class="tk-k">Order 001 · Trial</p><h3>Nori Sessions</h3><p class="price">Free<span> for 30 days</span></p>
+          <ul><li>5 agents</li><li>Slack integration</li><li>Org-level control</li><li>Bring your own subscription</li></ul><a class="btn" href="#">Start free trial</a></article>
+        <article class="ticket alt"><p class="tk-k">Order 002 · Catering</p><h3>Enterprise</h3><p class="price">Contact us</p>
+          <ul><li>Custom agent capacity</li><li>Dedicated support</li><li>Hands-on setup</li><li>Run in your own cloud</li></ul><a class="btn ghost" href="#">Talk to us</a></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Ending -->
+  <section class="ending" id="ending">
+    <div class="koi-stage" id="koi-stage"><img id="koi-img" alt=""><div class="splash" id="splash"></div></div>
+    <div class="end-copy"><h2>Feed him your backlog.</h2><a class="btn big" href="#">Reserve a seat</a>
+      <p class="fine">Made by a robot who eats rocks · Nori</p></div>
+  </section>
+</main>
+<script src="v.js"></script>
+</body>
+</html>
