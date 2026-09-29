@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jiro — your AI staff engineer</title>
+<meta name="description" content="Jiro, your AI staff engineer. Bring your own subscription.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div id="spacer"></div>
+
+<div id="ui">
+  <!-- 0 · hero -->
+  <section class="ov" id="ov-hero" data-scene="hero">
+    <div class="shade shade-left"></div>
+    <a class="brand" href="#">JIRO<span>.bot</span></a>
+    <a class="cta" href="https://noriagentic.com" target="_blank" rel="noopener">Hire Jiro</a>
+    <div class="hero-copy">
+      <h1>Jiro, your AI<br>staff engineer</h1>
+      <p>Bring your own subscription.</p>
+    </div>
+    <div class="scroll-hint"><span>follow the belt</span><i></i></div>
+  </section>
+
+  <!-- 1 · product demo, inside the CRT -->
+  <section class="ov" id="ov-demo" data-scene="demo">
+    <div class="crt">
+      <div class="crt-bar"><b>#eng-checkout</b><span>Slack · Jiro demo</span><button class="linkish" id="demo-reset">reset</button></div>
+      <div class="crt-body" id="demo-log">
+        <div class="msg"><em class="av av-m">M</em><div><b>Martin</b> <small>9:41</small><p>@jiro the checkout test is flaky again. Can you take it?</p></div></div>
+        <div class="demo-actions" id="demo-start"><button class="px-btn" id="demo-go">Hand it to Jiro 🍣</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · same prompt, side by side -->
+  <section class="ov" id="ov-duel" data-scene="duel">
+    <div class="duel-head">
+      <h2>Same prompt. Different chef.</h2>
+      <p class="prompt-chip">“Make me an omakase platter.”</p>
+    </div>
+    <div class="duel">
+      <figure><video src="media/sb-clumsy.mp4" poster="media/sb-clumsy.jpg" muted loop playsinline preload="none"></video><figcaption><span class="tag tag-dim">Generic agent</span> rice on the floor, soy on the counter</figcaption></figure>
+      <figure class="win"><video src="media/sb-jiro.mp4" poster="media/sb-jiro.jpg" muted loop playsinline preload="none"></video><figcaption><span class="tag">Jiro</span> opinionated, tested, plated</figcaption></figure>
+    </div>
+    <p class="fine">Stand-in footage. The real same-prompt agent comparison drops in here.</p>
+  </section>
+
+  <!-- 3 · comparison table -->
+  <section class="ov" id="ov-table" data-scene="compare">
+    <div class="shade shade-full"></div>
+    <div class="table-wrap">
+      <h2>Cut cleaner than the rest.</h2>
+      <div class="tscroll"><table class="cmp">
+        <thead><tr><th></th><th class="us">Jiro</th><th>Devin</th><th>Factory<sup>*</sup></th><th>Cursor Cloud</th></tr></thead>
+        <tbody>
+          <tr><th>Agent</th><td class="us">Claude Code, Codex, Cursor, any ACP agent</td><td>Devin only</td><td class="tbd">Droids only</td><td>Cursor only</td></tr>
+          <tr><th>Model</th><td class="us">Any model, your keys</td><td>Routed for you</td><td class="tbd">Multi-model</td><td>Cursor's catalogue</td></tr>
+          <tr><th>Context</th><td class="us">Org-wide, portable</td><td>API export</td><td class="tbd">Proprietary</td><td>Proprietary rules</td></tr>
+          <tr><th>Cloud</th><td class="us">Your VPC: AWS, Azure, GCP</td><td>Hosted (VPC on contract)</td><td class="tbd">Hosted</td><td>Hosted only</td></tr>
+          <tr><th>Pricing</th><td class="us">Flat, zero token markup</td><td>Credits (token markup)</td><td class="tbd">Credits</td><td>Metered, per model</td></tr>
+        </tbody>
+      </table></div>
+      <p class="fine"><sup>*</sup> Factory column pending verification.</p>
+    </div>
+  </section>
+
+  <!-- 4 · FAQ thought bubbles, anchored to things in the scene -->
+  <section class="ov" id="ov-faq" data-scene="faq">
+    <h2 class="faq-title">Questions the apprentices are thinking</h2>
+    <div id="bubbles"></div>
+    <div class="answer" id="faq-answer" hidden><button class="x" aria-label="close">×</button><h3></h3><p></p></div>
+  </section>
+
+  <!-- 5 · pricing, painted onto the hanging board -->
+  <section class="ov" id="ov-pricing" data-scene="pricing">
+    <div id="board">
+      <div class="plan" data-panel="0"><h4>Free trial</h4><div class="price">$0<small>30 days</small></div><p>Five runtimes and the complete team experience.</p><a class="px-btn" href="https://noriagentic.com" target="_blank" rel="noopener">Start free</a></div>
+      <div class="plan" data-panel="1"><h4>Developer</h4><div class="price">$99<small>/month</small></div><p>One user, up to three persistent runtimes, integrations, triggers, BYOK.</p><a class="px-btn" href="https://noriagentic.com" target="_blank" rel="noopener">Get started</a></div>
+      <div class="plan hot" data-panel="2"><h4>Team</h4><div class="price">$250<small>/month</small></div><p>Multiple users, five shared runtimes, org controls, collaboration.</p><a class="px-btn" href="https://noriagentic.com" target="_blank" rel="noopener">Get started</a></div>
+    </div>
+    <p class="enterprise"><span>Enterprise: custom capacity, RBAC, audit trails. <a href="mailto:amol@noriagentic.com?subject=Jiro%20Enterprise">Talk to us</a></span></p>
+  </section>
+
+  <!-- 6 · footer -->
+  <section class="ov" id="ov-footer" data-scene="footer">
+    <div class="shade shade-bottom"></div>
+    <footer>
+      <div class="f-brand">JIRO<span>.bot</span><p>Hand-rolled by <a href="https://noriagentic.com" target="_blank" rel="noopener">Nori</a>. Served fresh daily.</p></div>
+      <nav><a href="https://noriagentic.com" target="_blank" rel="noopener">noriagentic.com</a><a href="https://noriagentic.com/#pricing" target="_blank" rel="noopener">Pricing</a><a href="mailto:amol@noriagentic.com">Contact</a></nav>
+      <p class="wait-hint" id="wait-hint">Sit with Jiro for a moment…</p>
+    </footer>
+  </section>
+</div>
+
+<div id="hud">
+  <div id="eggs" title="Easter eggs found">🥚 <b>0</b>/15</div>
+  <div id="toasts"></div>
+  <div id="flash"></div>
+</div>
+<noscript><p style="color:#fff;padding:2rem">Jiro needs JavaScript and WebGL to run the belt.</p></noscript>
+<script type="module" src="main.js"></script>
+</body>
+</html>
