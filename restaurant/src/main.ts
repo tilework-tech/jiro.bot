@@ -15,7 +15,7 @@ import { barOffice } from "./transitions/bar-office";
 import { officeAquarium } from "./transitions/office-aquarium";
 import { aquariumDining } from "./transitions/aquarium-dining";
 import { diningKitchen } from "./transitions/dining-kitchen";
-import { kitchenStorage } from "./transitions/kitchen-storage";
+import { kitchenStorageF as kitchenStorage } from "./transitions/kitchen-storage-f";
 import { storageStreet } from "./transitions/storage-street";
 import { streetPond } from "./transitions/street-pond";
 
