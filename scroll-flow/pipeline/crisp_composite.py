@@ -27,6 +27,11 @@ frac = mot / max(1, globals().get("n", 1))
 m = Image.fromarray(((frac > 0.12) * 255).astype(np.uint8))
 # drop thin shimmering edges, then grow real motion regions and feather them
 m = m.filter(ImageFilter.MinFilter(5)).filter(ImageFilter.MaxFilter(21)).filter(ImageFilter.GaussianBlur(6))
+# optional regions forced static (use the still there), as fractions "x0,y0,x1,y1;..."
+for box in filter(None, os.environ.get("STATIC", "").split(";")):
+    x0, y0, x1, y1 = [float(v) for v in box.split(",")]
+    z = Image.new("L", m.size, 255); z.paste(0, (int(x0 * m.width), int(y0 * m.height), int(x1 * m.width), int(y1 * m.height)))
+    m = Image.fromarray(np.minimum(np.array(m), np.array(z.filter(ImageFilter.GaussianBlur(3)))))
 m = np.array(m.resize((W, H), Image.BILINEAR)).astype(np.float32)[..., None] / 255
 print("moving area:", round(float((m > 0.5).mean()) * 100, 1), "%")
 

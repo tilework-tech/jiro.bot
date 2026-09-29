@@ -6,7 +6,7 @@ import { Plates, BASE_SPEED } from "./plates";
 import { Particles, blip } from "./fx";
 import { FAQ, initCompare, initDemo, initFaq, initPricing, initTable } from "./content";
 import { buildDoors, animateDoors } from "./doors";
-import { Koi, PondDrop } from "./ending";
+import { Koi } from "./ending";
 
 // ------------------------------------------------------------------ renderer
 const canvas = document.getElementById("gl") as HTMLCanvasElement;
@@ -159,8 +159,7 @@ const plates = new Plates(scene, path, camera, fx, hooks);
 
 // endings: the koi pond, then the station where the belt finally stops
 const koi = new Koi(scene, cards[7], plates, fx, hooks);
-const drop = new PondDrop(scene, cards[7], fx);
-plates.onWrap = (item) => drop.arrive(item);
+
 
 // the belt comes out from behind the right-hand post of the hero's kitchen window:
 // an opaque cut-out of the painted post/wall sits in front of the belt, and the
@@ -170,7 +169,7 @@ plates.onWrap = (item) => drop.arrive(item);
   img.src = "p/s0-hero.jpg";
   img.onload = () => {
     // window geometry measured on the 1600x900 hero grid
-    const x0 = 1405, y0 = 150, x1 = 1600, y1 = 380, post = 1503, dark = [1418, 200, 1503, 318];
+    const x0 = 1440, y0 = 320, x1 = 1600, y1 = 470, post = 1523, dark = [1455, 350, 1523, 428];
     const k = img.width / 1600, W = Math.round((x1 - x0) * k), H = Math.round((y1 - y0) * k);
     const c = document.createElement("canvas"); c.width = W; c.height = H;
     const g = c.getContext("2d")!;
@@ -356,9 +355,9 @@ const setNdc = (e: PointerEvent) => ndc.set((e.clientX / innerWidth) * 2 - 1, -(
 canvas.addEventListener("pointerdown", (e) => {
   setNdc(e);
   if (plates.pointerDown(ndc, e.clientX, e.clientY)) { canvas.setPointerCapture(e.pointerId); canvas.classList.add("grabbing"); return; }
-  const sc = project(toWorld(cards[0], [0.5, 1.9], 0));
+  const sc = project(toWorld(cards[0], [1.75, 1.2], 0));
   if (Math.round(s) === 0 && Math.hypot(sc.x - e.clientX, sc.y - e.clientY) < innerHeight * 0.12) {
-    hooks.bubble(toWorld(cards[0], [0.5, 3.6], 0), "Irasshaimase!", 1600); hooks.found("hero", "Jiro welcomes you in."); blip(620, 0.1); setTimeout(() => blip(830, 0.14), 110);
+    hooks.bubble(toWorld(cards[0], [1.75, 2.8], 0), "Irasshaimase!", 1600); hooks.found("hero", "Jiro welcomes you in."); blip(620, 0.1); setTimeout(() => blip(830, 0.14), 110);
   }
 });
 canvas.addEventListener("pointermove", (e) => {
@@ -399,6 +398,7 @@ document.querySelectorAll(".tag").forEach(() => 0);
 // ------------------------------------------------------------------ overlays
 initDemo(); initCompare(); initTable(); initPricing();
 const faqEls = initFaq();
+const faqAnswer = document.getElementById("faq-answer")!;
 document.getElementById("tags")!.addEventListener("click", () => hooks.found("tag", "Poked a price tag."));
 const ovs = Array.from(document.querySelectorAll<HTMLElement>(".ov"));
 const railFill = document.getElementById("rail-fill")!;
@@ -457,9 +457,14 @@ function updateOverlays(time: number) {
   if (faqOn && !faqShown) { faqEls.forEach((b, i) => setTimeout(() => b.classList.add("in"), 250 + i * 320)); faqShown = true; }
   if (!faqOn && Math.abs(s - FAQ_STOP) > 0.9 && faqShown) { faqEls.forEach((b) => b.classList.remove("in")); faqShown = false; }
   if (Math.abs(s - FAQ_STOP) < 1) faqEls.forEach((b, i) => {
-    const p = project(toWorld(cards[4], [FAQ[i].at[0], FAQ[i].at[1] + 0.35 + (i % 2) * 0.9], 0));
+    const p = project(toWorld(cards[4], [FAQ[i].at[0], FAQ[i].at[1] + 0.55 + (i % 2) * 0.85], 0));
     b.style.left = `${p.x}px`; b.style.top = `${p.y}px`;
   });
+  // Jiro answers in a speech bubble next to his head
+  if (Math.abs(s - FAQ_STOP) < 1) {
+    const a = project(toWorld(cards[4], [-3.3, 2.1], 0));
+    faqAnswer.style.left = `${a.x}px`; faqAnswer.style.top = `${a.y}px`;
+  }
   // the two strays, once each per visit: a dish on the table scene's belt falls off,
   // and one on the FAQ belt grows legs and wanders off into the scene
   strayEvent(TABLE_STOP, 2.2, () => {
@@ -548,7 +553,7 @@ function frame() {
   plates.update(dt, time);
   const near = (ci: number) => Math.min(...STOPS.map((st, k) => st.card === ci ? Math.abs(s - k) : 9));
   koi.update(dt, near(7) < 0.6);
-  drop.update(dt, near(7) < 1);
+
   animateDoors(doors, time);
   occasionalFall(dt);
   if (heroOccluder) heroOccluder.visible = near(0) < 1.5;

@@ -39,8 +39,8 @@ export const CARDS: CardDef[] = [
     id: "s0-hero", video: "v/s0-hero.mp4",
     pos: [0, 0, 0], rot: [0, 0, 0],
     // the belt lies on the painted wooden lane: out of the wall opening, down to the bottom-left edge
-    belt: [[7.8, 2.1], [-2.25, B]], exitDir: [-0.836, -0.549],
-    beltWidth: [0.5, -0.1], beltScale: 0.5, beltZ: 0.04,
+    belt: [[7.6, 0.8], [-0.35, B]], exitDir: [-0.832, -0.555],
+    beltWidth: [0.42, -0.085], beltScale: 0.42, beltZ: 0.04,
   },
   {
     id: "s1-code", video: "v/s1-code-small.mp4",
@@ -61,7 +61,8 @@ export const CARDS: CardDef[] = [
   {
     id: "s4-omakase", video: "v/s4-omakase.mp4",
     pos: [26, -55, -4], rot: [0, -78, 0],
-    belt: [[R, T], [R, BOT], [L, BOT]], entryDir: [0, -1], exitDir: [-1, 0],
+    // belt runs only along the very bottom so all five sushi characters stay visible
+    belt: [[8.7, T + 0.6], [8.7, -4.15], [L, -4.15]], entryDir: [0, -1], exitDir: [-1, 0],
   },
   {
     id: "s5-market", video: "v/s5-market.mp4",
@@ -77,7 +78,7 @@ export const CARDS: CardDef[] = [
     // ending 1: a trestle over a koi pond; the koi jumps now and then and eats a stretch of belt
     id: "e1-pond", video: "v/e1-pond.mp4",
     pos: [12.7, -110, 29.2], rot: [-6, 155, 0],
-    belt: [[8.4, -0.02], [-3.05, -0.02]], entryDir: [-1, 0],
+    belt: [[8.4, 0.08], [-8.8, 0.08]], entryDir: [-1, 0],
     beltWidth: [0, 0.4], beltScale: 0.55, beltZ: 0.04,
   },
 ];

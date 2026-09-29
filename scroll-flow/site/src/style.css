@@ -138,9 +138,12 @@ h1 { font-size: clamp(36px, 4.2vw, 72px); line-height: 1.02; margin: 0; text-sha
 .faq-bubble::after { width: 7px; height: 7px; bottom: -30px; transform: translateX(-20%); }
 @keyframes think { from { opacity: 0; transform: translate(-50%, -60%) scale(.3); } to { opacity: 1; transform: translate(-50%, -100%) scale(1); } }
 @keyframes float { 50% { transform: translate(-50%, calc(-100% - 6px)); } }
-.faq-answer { position: absolute; left: 50%; bottom: 7vh; transform: translateX(-50%); width: min(60vw, 760px); padding: 18px 22px; font-size: 17px; line-height: 1.5; opacity: 0; transition: opacity .25s; }
-.faq-answer.show { opacity: 1; }
-.faq-answer b { font-family: var(--pixel); color: var(--copper); display: block; margin-bottom: 4px; font-size: 18px; }
+.faq-answer { position: absolute; transform: translate(0, -50%) scale(.6); transform-origin: 0 50%; width: min(40vw, 620px); padding: 18px 24px; font-size: 19px; line-height: 1.5; opacity: 0;
+  background: var(--cream); color: var(--ink); border-radius: 26px; box-shadow: 0 0 0 3px var(--ink), 0 8px 0 3px rgba(0,0,0,.35); transition: opacity .25s, transform .3s cubic-bezier(.3,1.6,.5,1); }
+.faq-answer::before { content: ""; position: absolute; left: -22px; top: 50%; width: 0; height: 0; border: 14px solid transparent; border-right: 22px solid var(--ink); transform: translateY(-50%); }
+.faq-answer::after { content: ""; position: absolute; left: -15px; top: 50%; width: 0; height: 0; border: 11px solid transparent; border-right: 18px solid var(--cream); transform: translateY(-50%); }
+.faq-answer.show { opacity: 1; transform: translate(0, -50%) scale(1); }
+.faq-answer b { font-family: var(--pixel); color: var(--copper-2); display: block; margin-bottom: 6px; font-size: 20px; }
 
 /* pricing */
 .pricing { position: absolute; left: 5vw; top: 50%; transform: translateY(-50%); width: min(58vw, 900px); }
@@ -175,3 +178,14 @@ h1 { font-size: clamp(36px, 4.2vw, 72px); line-height: 1.02; margin: 0; text-sha
 
 .rainbow #gl { animation: hue 1.2s linear infinite; }
 @keyframes hue { to { filter: hue-rotate(360deg); } }
+
+/* legibility: every headline sits on a calm, dark scrim */
+#ov-hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(8,5,4,.55) 0%, rgba(8,5,4,.38) 28%, rgba(8,5,4,0) 52%); }
+.hero-copy::before { background: radial-gradient(closest-side, rgba(10,7,5,.6), rgba(10,7,5,0)); }
+.compare-head { background: rgba(12,8,6,.72); border: 1px solid var(--line); padding: 14px 28px; width: fit-content; margin: 0 auto 18px; backdrop-filter: blur(4px); }
+.compare-head .prompt { background: none; border: 0; padding: 0; }
+.faq-title { background: rgba(12,8,6,.7); border: 1px solid var(--line); padding: 12px 26px; backdrop-filter: blur(4px); }
+.faq-title p { color: var(--cream); }
+.pricing::before { content: ""; position: absolute; inset: -10vh -6vw -8vh -8vw; background: radial-gradient(closest-side, rgba(8,10,16,.78), rgba(8,10,16,0)); z-index: -1; }
+.cta-block::before { background: radial-gradient(closest-side, rgba(8,6,12,.85), rgba(8,6,12,0)); }
+.caption { background: rgba(12,8,6,.82); }

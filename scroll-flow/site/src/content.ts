@@ -136,11 +136,11 @@ export function initTable() {
 
 // ---------------------------------------------------------------- FAQ (anchored to sushi in the omakase scene)
 export const FAQ: { q: string; a: string; at: [number, number] }[] = [
-  { q: "Which models does Jiro use?", a: "Yours. Bring your own Claude, Codex, or Gemini subscription. Jiro brings the knife skills.", at: [-0.83, 0.55] },
-  { q: "Where does he work?", a: "In the cloud, in your Slack. Ping him at 2am with a stack trace and he's still slicing.", at: [1.0, 0.55] },
-  { q: "Will he just do whatever I say?", a: "No. He asks before he cuts: he pins down what you actually want before writing a line. Not a yes-man.", at: [2.83, 0.6] },
-  { q: "How do I know the work is right?", a: "Every change ships with tests and proof: screenshots, traces, receipts. If it isn't right, it doesn't leave the kitchen.", at: [4.67, 0.65] },
-  { q: "Can he touch production?", a: "Not without you. Merges, deploys and anything outward-facing wait for your explicit go-ahead.", at: [6.5, 0.6] },
+  { q: "Which models does Jiro use?", a: "Yours. Bring your own Claude, Codex, or Gemini subscription. Jiro brings the knife skills.", at: [-6.08, -1.9] },
+  { q: "Where does he work?", a: "In the cloud, in your Slack. Ping him at 2am with a stack trace and he's still slicing.", at: [-3.08, -1.0] },
+  { q: "Will he just do whatever I say?", a: "No. He asks before he cuts: he pins down what you actually want before writing a line. Not a yes-man.", at: [-0.08, -2.1] },
+  { q: "How do I know the work is right?", a: "Every change ships with tests and proof: screenshots, traces, receipts. If it isn't right, it doesn't leave the kitchen.", at: [3.0, -1.75] },
+  { q: "Can he touch production?", a: "Not without you. Merges, deploys and anything outward-facing wait for your explicit go-ahead.", at: [6.0, -1.0] },
 ];
 export function initFaq(): HTMLElement[] {
   const wrap = $("#faq-bubbles"), ans = $("#faq-answer");
@@ -150,7 +150,8 @@ export function initFaq(): HTMLElement[] {
     b.onclick = () => {
       wrap.querySelectorAll(".faq-bubble").forEach((x) => x.classList.remove("on"));
       b.classList.add("on");
-      ans.innerHTML = `<b>${esc(f.q)}</b>${esc(f.a)}`; ans.classList.add("show");
+      ans.innerHTML = `<b>${esc(f.q)}</b>${esc(f.a)}`;
+      ans.classList.remove("show"); void ans.offsetWidth; ans.classList.add("show");
     };
     b.dataset.i = String(i);
     wrap.appendChild(b);

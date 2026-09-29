@@ -25,7 +25,7 @@ export class Koi {
   xa = 0; xb = 0;
   eaten = 0;
   static DUR = 1.9;
-  static BELT_Y = -0.02;
+  static BELT_Y = 0.08;
 
   constructor(scene: THREE.Scene, public card: Card, public plates: Plates, public fx: Particles, public hooks: Hooks) {
     const m = new THREE.MeshBasicMaterial({ map: tex("end/koi.png"), transparent: true, alphaTest: 0.4, side: THREE.DoubleSide, fog: false });
@@ -63,7 +63,7 @@ export class Koi {
 
   start() {
     const dir = Math.random() < 0.5 ? 1 : -1;
-    const c = -0.5 + Math.random() * 4.5;
+    const c = -4 + Math.random() * 8;
     this.xa = c - dir * 3.2; this.xb = c + dir * 3.2;
     this.t = 0; this.eaten = 0;
     this.mesh.scale.x = dir;          // sprite faces right; mirror when jumping left
@@ -75,7 +75,7 @@ export class Koi {
     for (const p of this.plates.plates) {
       if (p.mode !== "belt" || !p.sprite.visible) continue;
       const q = local(this.card, p.pos);
-      if (Math.abs(q.y - Koi.BELT_Y) > 0.8 || Math.abs(q.x - mx) > r || q.x < -3.1 || q.x > 8) continue;
+      if (Math.abs(q.y - Koi.BELT_Y) > 0.8 || Math.abs(q.x - mx) > r || q.x < -8 || q.x > 8) continue;
       this.plates.eat(p);
       this.eaten++;
       if (this.eaten === 1) { this.hooks.bubble(p.sprite.position.clone(), "GULP", 900, "hot"); boom(); }
