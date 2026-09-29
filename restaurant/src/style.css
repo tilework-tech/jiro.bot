@@ -69,24 +69,28 @@ h2.px { font-size: 56px; line-height: 1.05; }
 
 /* Product window */
 .product-win { position: absolute; background: #0f0d0c; border: 2px solid rgba(243,230,207,.16); box-shadow: 0 30px 80px rgba(0,0,0,.7), 0 0 0 1px #000; }
-.product-win .chrome { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #1a1714; border-bottom: 1px solid rgba(243,230,207,.1); }
+.product-win .chrome { flex-wrap: nowrap; display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: #1a1714; border-bottom: 1px solid rgba(243,230,207,.1); }
 .product-win .chrome i { width: 12px; height: 12px; border-radius: 50%; background: #3a332d; }
 .product-win .url { font: 15px var(--mono); color: var(--muted); margin-left: 12px; background: #0f0d0c; padding: 5px 14px; border-radius: 6px; }
-.product-win .hint { margin-left: auto; font: 13px var(--px); color: var(--green); }
 .product-win .screen { position: relative; width: 100%; aspect-ratio: 16/10; background: #111; }
 .product-win .screen img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .product-win .hots { position: absolute; inset: 0; }
-.product-win .hot { position: absolute; background: rgba(111,220,140,.0); border: 2px solid rgba(111,220,140,.0); cursor: pointer; animation: hotpulse 3s ease-in-out infinite; border-radius: 6px; }
+.product-win .hot { position: absolute; background: transparent; border: 2px solid transparent; cursor: pointer; border-radius: 6px; }
+.product-win .hot.lead { animation: hotpulse 3s ease-in-out infinite; }
 .product-win .hot:hover { background: rgba(111,220,140,.12); border-color: var(--green); }
 @keyframes hotpulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(111,220,140,0); } 50% { box-shadow: 0 0 0 4px rgba(111,220,140,.35); } }
-.product-win .caption { position: absolute; left: 0; top: 100%; margin: 12px 0 0; font: 20px var(--sans); color: var(--muted); }
+.product-cap .hint { font: 16px var(--px); color: var(--green); margin: 0 0 18px; }
+.product-cap .caption { font: 26px/1.45 var(--sans); color: #e7d8bf; margin: 0; min-height: 5.8em; text-shadow: 0 2px 8px #000; }
+.product-cap .steps { font: 15px var(--mono); color: var(--muted); margin-top: 16px; }
 
 /* Comparison */
 .cmp { position: absolute; margin: 0; background: #0e0c0b; border: 2px solid rgba(243,230,207,.16); box-shadow: 0 30px 70px rgba(0,0,0,.7); }
 .cmp.right { border-color: rgba(111,220,140,.6); }
 .cmp figcaption { display: flex; gap: 14px; align-items: baseline; padding: 10px 14px; background: #1a1714; }
-.cmp figcaption b { font: 400 20px var(--px); }
+.cmp figcaption b { font: 400 20px var(--px); white-space: nowrap; }
 .cmp.right figcaption b { color: var(--green); }
+.compare-head h2.px { font-size: 50px; }
+.compare-head .ticket { font: 18px var(--mono); color: var(--muted); margin: 10px 0 0; }
 .cmp .task { font: 14px var(--mono); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cmp video { display: block; width: 100%; aspect-ratio: 16/10; background: #0b0a09; }
 .cmp .stats { list-style: none; margin: 0; padding: 10px 14px 12px; display: flex; flex-wrap: wrap; gap: 8px 18px; font: 15px var(--mono); color: var(--muted); background: #141110; }
@@ -152,3 +156,4 @@ h2.px { font-size: 56px; line-height: 1.05; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+.office-head h2.px { font-size: 46px; }

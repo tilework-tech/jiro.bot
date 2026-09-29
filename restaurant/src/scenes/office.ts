@@ -22,8 +22,8 @@ export const office: SceneDef = {
   },
   mount(el, api) {
     html(el, `
-      <section class="copy" style="left:110px;top:64px;width:1100px">
-        <p class="kicker">Back office · where the work happens</p>
+      <section class="copy office-head" style="left:1370px;top:100px;width:440px">
+        <p class="kicker">Back office</p>
         <h2 class="px">Your agents, on shift.</h2>
       </section>`);
     mountProduct(el, api);

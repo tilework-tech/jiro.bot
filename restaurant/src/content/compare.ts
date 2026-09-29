@@ -9,20 +9,20 @@ import { html, place } from "../engine/dom";
 interface Side { label: string; video: string; poster?: string; stats: string[]; verdict?: string }
 interface Spec { task: string; title?: string; left: Side; right: Side }
 
-export const COMPARE_BOX = { left: [120, 150, 800], right: [1000, 150, 800] } as const;
+export const COMPARE_BOX = { left: [110, 176, 800], right: [1010, 176, 800] } as const;
 
 export function mountCompare(el: HTMLElement, api: Api) {
   const base = import.meta.env.BASE_URL;
   const head = html(el, `
-    <section class="copy compare-head" style="left:120px;top:40px;width:1680px">
-      <p class="kicker">Dining room · same ticket, two kitchens</p>
+    <section class="copy compare-head" style="left:110px;top:74px;width:1700px">
       <h2 class="px">Generic agent vs. Jiro</h2>
+      <p class="ticket"></p>
     </section>`);
   const mk = (k: "left" | "right") => {
     const [x, y, w] = COMPARE_BOX[k];
     const box = html(el, `
       <figure class="cmp ${k}">
-        <figcaption><b></b><span class="task"></span></figcaption>
+        <figcaption><b></b></figcaption>
         <video muted playsinline loop preload="auto"></video>
         <ul class="stats"></ul>
       </figure>`);
@@ -32,9 +32,9 @@ export function mountCompare(el: HTMLElement, api: Api) {
   const L = mk("left"), R = mk("right");
   fetch(`${base}ui/compare/compare.json`).then((r) => r.json()).then((spec: Spec) => {
     if (spec.title) head.querySelector("h2")!.textContent = spec.title;
+    head.querySelector(".ticket")!.textContent = spec.task;
     ([[L, spec.left], [R, spec.right]] as const).forEach(([box, s]) => {
       box.querySelector("b")!.textContent = s.label;
-      box.querySelector(".task")!.textContent = spec.task;
       const v = box.querySelector("video")!;
       if (s.poster) v.poster = base + s.poster;
       v.src = base + s.video;
