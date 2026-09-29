@@ -1,84 +1,95 @@
-import type { SceneDef } from "../engine/types";
+import type { BeltPt, SceneDef } from "../engine/types";
 import { glow, motes, shade, wave } from "../engine/fx";
-import { bubble, html, hotspot, place } from "../engine/dom";
+import { html, hotspot, place } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
-import { mountWhack } from "../games/whack";
+import { FAQ } from "../content/copy";
+import { HOLES, mountWhack } from "../games/whack";
 import "./storage.css";
 
-declareEggs(["whack-played", "whack-20", "storage-bulb", "storage-jars", "storage-mouse", "storage-jiro"]);
+declareEggs(["faq-all", "whack-played", "whack-20", "storage-bulb", "storage-jars", "storage-barrels"]);
 
-// Quiet storage room. Nine open rice sacks form the Whack-a-Bug grid (HOLES in
-// games/whack.ts sit on their mouths); rims.png is the front rim of every sack,
-// drawn above the moles so bugs rise out of the rice. Ambient: bulb breathing,
-// dust in the cone, Jiro blinking, a mouse peeking from a hole in the counter.
+// Storage room = FAQ (sketch section 5). Five sushi sit on the pantry shelves,
+// each "thinking" one of the five standard questions in a bobbing thought
+// bubble. Click a sushi (or its question in the list) and Jiro answers in a big
+// speech bubble over it. The nine rice sacks are the Whack-a-Bug board; the
+// little wooden sign in front of them starts the game.
 
-const BULB: [number, number] = [731, 106];
-const EYES: [number, number, number, number][] = [[966, 417, 13, 18], [997, 421, 15, 19]];
-const FACE = "#c3a990";
-const MOUSE: [number, number] = [1112, 965]; // hole centre on the counter base
-let flicker = 0; // performance.now() of a bulb click
+const BASE = import.meta.env.BASE_URL;
+const BULB: [number, number] = [1117, 128];
+
+// ---- Belt (BIBLE v2): IN top edge x=1770, down the right lane, corner, along
+// the floor (y=965) to the left, corner, OUT bottom edge x=150. Scale 1, width 64.
+const RX = 1770, LX = 150, FY = 965, R1 = 120, R2 = 80;
+function arc(cx: number, cy: number, r: number, a0: number, a1: number, n = 10): BeltPt[] {
+  const out: BeltPt[] = [];
+  for (let i = 1; i < n; i++) {
+    const a = a0 + ((a1 - a0) * i) / n;
+    out.push([Math.round((cx + r * Math.cos(a)) * 10) / 10, Math.round((cy + r * Math.sin(a)) * 10) / 10, 1]);
+  }
+  return out;
+}
+const BELT_PTS: BeltPt[] = [
+  [RX, -30, 1],
+  [RX, FY - R1, 1],
+  ...arc(RX - R1, FY - R1, R1, 0, Math.PI / 2),
+  [RX - R1, FY, 1],
+  [LX + R2, FY, 1],
+  ...arc(LX + R2, FY + R2, R2, -Math.PI / 2, -Math.PI),
+  [LX, FY + R2, 1],
+  [LX, 1110, 1],
+];
+
+// ---- FAQ sushi on the shelves: [x centre, standing y]. Top plank y=314, middle plank y=462.
+// Zig-zag so every thought bubble has its own gap between the sushi on the shelf above.
+const SPOTS: [number, number][] = [[800, 462], [950, 314], [1100, 462], [1250, 314], [1400, 462]];
+const ASPECT: Record<string, number> = { tuna: 128 / 160, salmon: 125 / 160, ikura: 1, maki: 133 / 160, "onigiri-happy": 1 };
+const SW = 84; // sushi width on the shelf
+const BW = 220; // thought bubble width
+const AW = 780; // answer bubble width
+
+let flicker = 0;
+
+function hatch(g: CanvasRenderingContext2D) {
+  // Ceiling chute where the belt comes down from the kitchen, and the floor trapdoor it leaves by.
+  g.save();
+  g.fillStyle = "#070504";
+  g.fillRect(RX - 50, 0, 100, 26);
+  g.fillStyle = "#5a3520";
+  g.fillRect(RX - 58, 0, 8, 34); g.fillRect(RX + 50, 0, 8, 34);
+  g.fillRect(RX - 58, 26, 116, 8);
+  g.fillStyle = "#8a5430";
+  g.fillRect(RX - 58, 26, 116, 3);
+  g.fillStyle = "#070504";
+  g.fillRect(LX - 50, 1052, 100, 28);
+  g.fillStyle = "#5a3520";
+  g.fillRect(LX - 58, 1044, 116, 8); g.fillRect(LX - 58, 1044, 8, 36); g.fillRect(LX + 50, 1044, 8, 36);
+  // Wall brackets holding the sushi elevator on the right lane.
+  for (const y of [190, 430, 670]) {
+    g.fillStyle = "rgba(0,0,0,.45)";
+    g.fillRect(RX - 50, y + 6, 100, 14);
+    g.fillStyle = "#3a2417";
+    g.fillRect(RX - 48, y, 96, 12);
+    g.fillStyle = "#6b4027";
+    g.fillRect(RX - 48, y, 96, 3);
+  }
+  g.restore();
+}
 
 function cone(g: CanvasRenderingContext2D, now: number) {
   const k = 0.5 + 0.5 * wave(now, 8);
-  const grd = g.createLinearGradient(0, BULB[1], 0, 470);
-  grd.addColorStop(0, `rgba(255,205,130,${0.07 + 0.04 * k})`);
+  const grd = g.createLinearGradient(0, BULB[1], 0, 660);
+  grd.addColorStop(0, `rgba(255,205,130,${0.06 + 0.035 * k})`);
   grd.addColorStop(1, "rgba(255,205,130,0)");
   g.save();
   g.globalCompositeOperation = "lighter";
   g.fillStyle = grd;
   g.beginPath();
-  g.moveTo(BULB[0] - 14, BULB[1] + 14);
-  g.lineTo(BULB[0] + 14, BULB[1] + 14);
-  g.lineTo(930, 450);
-  g.lineTo(505, 450);
+  g.moveTo(BULB[0] - 12, BULB[1] + 16);
+  g.lineTo(BULB[0] + 12, BULB[1] + 16);
+  g.lineTo(1480, 660);
+  g.lineTo(760, 660);
   g.closePath();
   g.fill();
-  g.restore();
-}
-
-function blink(g: CanvasRenderingContext2D, now: number) {
-  // Blink at 3.1 s into every 6 s; a double blink once per 24 s loop.
-  const t6 = now % 6, t24 = now % 24;
-  const shut = (t6 > 3.1 && t6 < 3.24) || (t24 > 15.42 && t24 < 15.54);
-  if (!shut) return;
-  g.save();
-  for (const [x, y, w, h] of EYES) {
-    g.fillStyle = FACE;
-    g.fillRect(x - 1, y - 1, w + 2, h + 2);
-    g.fillStyle = "#1b3a44";
-    g.fillRect(x, y + Math.round(h / 2) - 1, w, 3);
-  }
-  g.restore();
-}
-
-function mouse(g: CanvasRenderingContext2D, now: number) {
-  const [x, y] = MOUSE;
-  g.save();
-  // The hole: a dark arch at the foot of the counter.
-  g.fillStyle = "#0c0706";
-  g.beginPath();
-  g.ellipse(x, y, 17, 15, 0, Math.PI, 0);
-  g.lineTo(x + 17, y + 3); g.lineTo(x - 17, y + 3);
-  g.fill();
-  // Peek: out for ~5 s once per 12 s, eased in and out (no visible start/end).
-  const t = now % 12;
-  const out = t < 5 ? Math.sin((t / 5) * Math.PI) : 0;
-  const p = Math.min(1, out * 1.6);
-  if (p > 0.02) {
-    g.beginPath();
-    g.ellipse(x, y, 16, 14, 0, Math.PI, 0);
-    g.lineTo(x + 16, y + 3); g.lineTo(x - 16, y + 3);
-    g.clip();
-    const dy = Math.round((1 - p) * 20);
-    const px = (a: number, b: number, w: number, h: number, c: string) => { g.fillStyle = c; g.fillRect(x + a, y + b + dy, w, h); };
-    px(-9, -6, 18, 12, "#8a7f78"); // head
-    px(-12, -12, 6, 6, "#8a7f78"); px(6, -12, 6, 6, "#8a7f78"); // ears
-    px(-11, -10, 3, 3, "#d9a1a1"); px(8, -10, 3, 3, "#d9a1a1");
-    const winkL = now % 6 > 4.4 && now % 6 < 4.52;
-    px(-5, -3, 3, winkL ? 1 : 3, "#0b0a09"); px(3, -3, 3, 3, "#0b0a09"); // eyes
-    px(-1, 2, 3, 2, "#e79aa0"); // nose
-    px(-8, 2, 5, 1, "#c9c0b8"); px(4, 2, 5, 1, "#c9c0b8"); // whiskers
-  }
   g.restore();
 }
 
@@ -87,59 +98,173 @@ export const storage: SceneDef = {
   room: "Storage",
   art: "art/storage.jpg",
   mood: "quiet",
-  hold: 1.3,
-  // Centre line of the painted belt bed: y = 441 + 0.471 (x - 440). Width covers the painted rails.
-  belt: { pts: [[262, 357, 0.96], [1880, 1119, 1.04]], width: 72, plate: 54, fadeIn: 80, fadeOut: 20 },
+  hold: 1.6,
+  belt: { pts: BELT_PTS, width: 64, plate: 52, fadeIn: 0, fadeOut: 0 },
   under(g, now) {
     const since = (performance.now() - flicker) / 1000;
     const off = flicker && since < 1.2 && Math.floor(since * 10) % 3 === 1;
     if (!off) {
-      glow(g, BULB[0] + wave(now, 12), BULB[1], 110, "rgba(255,210,140,.30)", now, 0.06, 8);
-      glow(g, 720, 360, 330, "rgba(255,190,110,.09)", now, 0.08, 8, 1);
+      glow(g, BULB[0], BULB[1], 110, "rgba(255,210,140,.28)", now, 0.06, 8);
       cone(g, now);
     } else {
-      shade(g, 0, 0, 1300, 1080, 0.35, 10, "left");
+      shade(g, 520, 0, 1250, 1080, 0.4, 10, "left");
     }
-    motes(g, now, 560, 160, 360, 300, 16);
-    blink(g, now);
-    mouse(g, now);
-    shade(g, 1250, 0, 670, 760, 0.35, 260, "right");
+    motes(g, now, 860, 200, 520, 420, 14);
+    // Keep the text column quiet and the right lane in shadow.
+    shade(g, 0, 0, 640, 1080, 0.35, 220, "left");
+    shade(g, 1640, 0, 280, 1080, 0.3, 120, "right");
+    hatch(g);
+  },
+  click() {
+    document.querySelector<HTMLElement>('.scene-ui[data-id="storage"] .st-ask.on .x')?.click();
+    return false;
   },
   mount(el, api) {
     html(el, `
-      <section class="copy" style="left:1300px;top:130px;width:520px">
-        <p class="kicker">Storage room · mini game 1 of 3</p>
-        <h2 class="px">Whack-a-Bug</h2>
-        <p class="lede">Bugs hide in the rice. Jiro finds them before they reach your plate. Your turn.</p>
+      <section class="copy st-head">
+        <p class="kicker">Storage room · FAQ</p>
+        <h2 class="px">The sushi have questions.</h2>
+        <p class="lede">They have been thinking about them all day. Pick one and Jiro answers.</p>
+        <ol class="st-list"></ol>
       </section>`);
-    mountWhack(el, api);
-    // Front rims of the sacks, above the moles (clicks pass through).
-    const rims = html(el, `<img class="st-rims" alt="" src="${import.meta.env.BASE_URL}art/storage/rims.png" />`);
-    place(rims, 218, 654);
+    const list = el.querySelector<HTMLElement>(".st-list")!;
 
-    hotspot(el, 700, 50, 64, 90, "Light bulb", () => {
+    // Jiro's answer: big speech bubble over the sushi, tail pointing at it.
+    const ask = html(el, `
+      <div class="st-ask">
+        <svg class="st-tail" width="1920" height="1080" viewBox="0 0 1920 1080" aria-hidden="true"><path /></svg>
+        <div class="st-answer" role="dialog" aria-modal="false" aria-labelledby="st-answer-q" tabindex="-1">
+          <img class="face" alt="" src="${BASE}items/mini-jiro.png" />
+          <button class="x" aria-label="Close answer">×</button>
+          <p class="who">Jiro says</p>
+          <p class="q" id="st-answer-q"></p>
+          <p class="a" aria-live="polite"></p>
+        </div>
+      </div>`);
+    const card = ask.querySelector<HTMLElement>(".st-answer")!;
+    const path = ask.querySelector<SVGPathElement>(".st-tail path")!;
+
+    const sushi: HTMLButtonElement[] = [];
+    const items: HTMLButtonElement[] = [];
+    const asked = new Set<number>();
+    let current = -1;
+    let returnFocus: HTMLElement | null = null;
+
+    const close = () => {
+      if (current < 0) return;
+      ask.classList.remove("on");
+      el.classList.remove("st-open");
+      sushi[current]?.classList.remove("on");
+      items[current]?.classList.remove("on");
+      items[current]?.setAttribute("aria-expanded", "false");
+      current = -1;
+      returnFocus?.focus({ preventScroll: true });
+      returnFocus = null;
+    };
+
+    const open = (i: number, from: HTMLElement) => {
+      if (current === i) { close(); return; }
+      if (current >= 0) { sushi[current].classList.remove("on"); items[current].classList.remove("on"); items[current].setAttribute("aria-expanded", "false"); }
+      current = i;
+      returnFocus = from;
+      const f = FAQ[i];
+      api.sfx("blip");
+      sushi[i].classList.add("on", "asked");
+      items[i].classList.add("on", "asked");
+      items[i].setAttribute("aria-expanded", "true");
+      card.querySelector(".q")!.textContent = f.q;
+      card.querySelector(".a")!.textContent = f.a;
+      ask.classList.remove("on");
+      // Lay out: centred on the sushi, above it if it fits, otherwise below.
+      const [sx, sy] = SPOTS[i];
+      const sh = Math.round(SW * (ASPECT[f.item] ?? 1));
+      const x = Math.max(600, Math.min(1700 - AW, sx - AW / 2));
+      place(card, x, 0, AW);
+      const h = card.offsetHeight;
+      const above = sy - sh - 40 - h >= 60;
+      const y = above ? sy - sh - 40 - h : sy + 34;
+      place(card, x, y, AW);
+      const tx = Math.max(x + 60, Math.min(x + AW - 60, sx));
+      const w = 26;
+      if (above) {
+        const by = y + h - 4;
+        path.setAttribute("d", `M ${tx - w} ${by} L ${sx + 6} ${sy - sh - 6} L ${tx + w} ${by} Z`);
+      } else {
+        const by = y + 4;
+        path.setAttribute("d", `M ${tx - w} ${by} L ${sx + 4} ${sy + 2} L ${tx + w} ${by} Z`);
+      }
+      card.style.transformOrigin = `${sx - x}px ${above ? "100%" : "0%"}`;
+      void ask.offsetWidth;
+      ask.classList.add("on");
+      el.classList.add("st-open");
+      card.focus({ preventScroll: true });
+      asked.add(i);
+      if (asked.size === FAQ.length) api.egg("faq-all", "You asked every question. Jiro is impressed. And a little tired.");
+    };
+
+    card.querySelector(".x")!.addEventListener("click", (e) => { e.stopPropagation(); close(); });
+    card.addEventListener("click", (e) => e.stopPropagation());
+
+    FAQ.forEach((f, i) => {
+      const [x, y] = SPOTS[i];
+      const w = SW, h = Math.round(SW * (ASPECT[f.item] ?? 1));
+      const b = html(el, `<button class="st-sushi" style="--d:${(-i * 1.9).toFixed(2)}s;--bd:${(-i * 2.3).toFixed(2)}s" aria-label="${f.q}">
+        <span class="shadow"></span>
+        <span class="sprite" style="background-image:url(${BASE}art/storage/faq-${f.item}.png)"></span>
+        <span class="think" aria-hidden="true"><span class="txt">${f.q}</span><i></i><i></i><i></i></span>
+      </button>`) as HTMLButtonElement;
+      place(b, x - w / 2, y - h, w, h);
+      b.querySelector<HTMLElement>(".think")!.style.width = `${BW}px`;
+      b.addEventListener("click", (e) => { e.stopPropagation(); open(i, b); });
+      sushi.push(b);
+
+      const li = html(list, `<li><button class="st-q" aria-expanded="false"><b>${i + 1}</b><span>${f.q}</span></button></li>`);
+      const q = li.querySelector("button")!;
+      q.addEventListener("click", (e) => { e.stopPropagation(); open(i, q); });
+      // Hovering a question lights up the sushi that is thinking it.
+      q.addEventListener("pointerenter", () => b.classList.add("hl"));
+      q.addEventListener("pointerleave", () => b.classList.remove("hl"));
+      q.addEventListener("focus", () => b.classList.add("hl"));
+      q.addEventListener("blur", () => b.classList.remove("hl"));
+      items.push(q);
+    });
+
+    // Rice sack rims (front half of each mouth), one strip per row, above that row's bugs.
+    [0, 1, 2].forEach((r) => {
+      const rim = html(el, `<img class="st-rims" alt="" src="${BASE}art/storage/rims-${r}.png" />`);
+      place(rim, 890, HOLES[r * 3][1] - 8);
+      rim.style.zIndex = String(3 + 2 * r);
+    });
+    const game = mountWhack(el, api, {
+      sign: [796, 832, 110, 74],
+      hud: [96, 110],
+      onStart: () => { close(); el.classList.add("st-whack"); },
+      onClose: () => el.classList.remove("st-whack"),
+    });
+
+    addEventListener("keydown", (e) => {
+      if (e.key !== "Escape" || !el.closest(".layer")?.classList.contains("live")) return;
+      if (current >= 0) { close(); return; }
+      if (game.open() && !game.running()) game.close();
+    });
+
+    // Easter eggs.
+    hotspot(el, BULB[0] - 30, 60, 60, 100, "Light bulb", () => {
       flicker = performance.now();
       api.sfx("blip");
       api.egg("storage-bulb", "Bugs love the dark. That's why this bulb has never been turned off.");
     });
-    hotspot(el, 1340, 570, 140, 150, "Jars", () => {
+    hotspot(el, 1450, 215, 230, 110, "Jars", () => {
       api.sfx("pop");
       api.egg("storage-jars", "Pickled legacy code. Do not open before 2031.");
     });
-    hotspot(el, MOUSE[0] - 22, MOUSE[1] - 26, 44, 32, "Mouse hole", () => {
-      api.sfx("blip");
-      api.egg("storage-mouse", "Not a bug. The mouse is a feature. It pays rent in crumbs.");
+    hotspot(el, 578, 350, 150, 115, "Sake barrels", () => {
+      api.sfx("splash");
+      api.egg("storage-barrels", "Two barrels of sake, labelled 'post-mortem' and 'post-launch'. Same sake.");
     });
-    const lines = [
-      "I don't write bugs. I store them for game night.",
-      "Rice first. Then the bugs. Then the rice again.",
-      "Every sack is load-tested. By sitting on it.",
-    ];
-    let n = 0;
-    hotspot(el, 915, 345, 200, 180, "Jiro", () => {
-      api.sfx("chime");
-      bubble(el, 1060, 300, lines[n++ % lines.length], 2600, "st-say");
-      if (n === 3) api.egg("storage-jiro", "Jiro, arms crossed, guarding nine sacks of rice like production data.");
-    });
+  },
+  leave() {
+    const el = document.querySelector<HTMLElement>('.scene-ui[data-id="storage"]');
+    el?.querySelector<HTMLElement>(".st-ask.on .x")?.click();
   },
 };

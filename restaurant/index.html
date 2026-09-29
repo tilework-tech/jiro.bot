@@ -22,7 +22,7 @@
     <link rel="icon" href="./favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="icon" href="./favicon.png" sizes="64x64" type="image/png" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-    <link rel="preload" as="image" href="./art/bar.jpg" />
+    <link rel="preload" as="image" href="./art/bar/still.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400;600&family=Silkscreen&display=swap" rel="stylesheet" />
@@ -58,7 +58,7 @@
         var bar = el.querySelector(".bar i"), note = el.querySelector("small");
         var lines = ["seasoning with vinegar", "fanning the rice", "sharpening the yanagiba", "warming the copper hands"], li = 0;
         var lt = setInterval(function () { note.textContent = lines[++li % lines.length]; }, 900);
-        var urls = ["art/bar.jpg", "items/tuna.png", "items/salmon.png", "items/tamago.png", "items/maki.png", "items/ikura.png", "items/ebi.png", "items/duck.png"];
+        var urls = ["art/bar/still.jpg", "items/tuna.png", "items/salmon.png", "items/tamago.png", "items/maki.png", "items/ikura.png", "items/ebi.png", "items/duck.png"];
         var n = 0, finished = false;
         function done() {
           if (finished) return; finished = true;

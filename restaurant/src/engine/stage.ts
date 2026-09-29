@@ -53,16 +53,14 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
     <header class="top">
       <a class="logo" href="#bar" data-goto="bar" aria-label="jiro.bot, back to the bar"><img src="${BASE}items/mini-jiro.png" alt="" width="34" height="32" /><b>jiro<span>.</span>bot</b></a>
       <a class="by" href="https://noriagentic.com" target="_blank" rel="noopener">by <em>Nori</em></a>
-      <div class="top-right">
-        <button class="snd${soundOn ? "" : " off"}" id="sound" aria-pressed="${soundOn}" aria-label="Sound" title="Sound on/off">
-          <svg viewBox="0 0 16 16" width="20" height="20" shape-rendering="crispEdges" aria-hidden="true">
-            <path fill="currentColor" d="M1 6h3v4H1zM4 5h2v6H4zM6 3h2v10H6z"/>
-            <path class="w" fill="currentColor" d="M10 6h1v4h-1zM12 4h1v8h-1zM11 5h1v1h-1zM11 10h1v1h-1zM14 3h1v10h-1zM13 2h1v1h-1zM13 13h1v1h-1z"/>
-            <path class="x" fill="currentColor" d="M10 5h2v2h-2zM12 7h2v2h-2zM14 5h1v2h-1zM10 9h2v2h-2zM14 9h1v2h-1z"/>
-          </svg>
-        </button>
-        <a class="cta" href="https://noriagentic.com/" target="_blank" rel="noopener">Reserve a seat</a>
-      </div>
+      <a class="cta" href="https://noriagentic.com/" target="_blank" rel="noopener">Reserve a seat</a>
+      <button class="snd${soundOn ? "" : " off"}" id="sound" aria-pressed="${soundOn}" aria-label="Sound" title="Sound on/off">
+        <svg viewBox="0 0 16 16" width="16" height="16" shape-rendering="crispEdges" aria-hidden="true">
+          <path fill="currentColor" d="M1 6h3v4H1zM4 5h2v6H4zM6 3h2v10H6z"/>
+          <path class="w" fill="currentColor" d="M10 6h1v4h-1zM12 4h1v8h-1zM11 5h1v1h-1zM11 10h1v1h-1zM14 3h1v10h-1zM13 2h1v1h-1zM13 13h1v1h-1z"/>
+          <path class="x" fill="currentColor" d="M10 5h2v2h-2zM12 7h2v2h-2zM14 5h1v2h-1zM10 9h2v2h-2zM14 9h1v2h-1z"/>
+        </svg>
+      </button>
     </header>
     <nav class="rail" aria-label="Rooms"><div class="track" aria-hidden="true"><b></b></div></nav>
     <div class="eggbox">

@@ -37,13 +37,14 @@ a { color: inherit; }
 .by { font: 12px/1 var(--mono); color: var(--muted); text-decoration: none; padding: 5px 7px; margin-left: -4px; text-shadow: 0 1px 0 #000; }
 .by em { font-style: normal; color: var(--green); }
 .by:hover em { text-decoration: underline; text-underline-offset: 3px; }
-.top-right { margin-left: auto; display: flex; gap: 16px; align-items: center; }
-.snd { --edge: rgba(243,230,207,.3); width: 36px; height: 36px; display: grid; place-items: center; padding: 0; border: 0; cursor: pointer; background: rgba(20,16,13,.82); color: var(--cream); box-shadow: var(--pxframe), 0 5px 0 0 rgba(0,0,0,.55); }
+/* Sound toggle lives in the header markup but sits small above the egg counter, bottom-left. */
+.snd { position: fixed; left: 16px; bottom: 64px; z-index: 7; --edge: rgba(243,230,207,.24); width: 28px; height: 28px; display: grid; place-items: center; padding: 0; border: 0; cursor: pointer; background: rgba(20,16,13,.82); color: var(--cream); box-shadow: var(--pxframe), 0 5px 0 0 rgba(0,0,0,.55); }
 .snd:hover { color: var(--green); --edge: var(--green); }
 .snd .x { display: none; }
 .snd.off { color: var(--muted); }
 .snd.off .w { display: none; }
 .snd.off .x { display: inline; }
+.top .cta { margin-left: auto; }
 .cta { font: 400 14px/1 var(--px); background: var(--copper); color: #1a0f07; padding: 11px 16px; text-decoration: none; box-shadow: 0 -3px 0 0 var(--copper), 0 3px 0 0 var(--copper), -3px 0 0 0 var(--copper), 3px 0 0 0 var(--copper), 0 6px 0 0 #7a4220; letter-spacing: .02em; }
 .cta:hover { filter: brightness(1.1); }
 .cta:active { transform: translateY(3px); box-shadow: 0 -3px 0 0 var(--copper), 0 3px 0 0 var(--copper), -3px 0 0 0 var(--copper), 3px 0 0 0 var(--copper); }
@@ -118,8 +119,7 @@ a { color: inherit; }
   .logo img { width: 24px; height: 23px; }
   .logo b { font-size: 15px; }
   .by { font-size: 10px; }
-  .top-right { gap: 10px; }
-  .snd { width: 28px; height: 28px; }
+  .snd { width: 24px; height: 24px; left: 8px; bottom: 48px; }
   .cta { font-size: 10px; padding: 7px 9px; }
   .rail { right: 6px; gap: 2px; }
   .rail button span { display: none; }

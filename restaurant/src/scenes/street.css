@@ -1,10 +1,10 @@
-/* street: night delivery / pricing. A lit menu board bolted to the dark left wall. */
+/* street: night delivery / pricing. A lit menu board bolted to the dark left wall, right of the belt's drainpipe lane (x 118-182). */
 
 .scene-ui[data-id="street"] .st-board {
   position: absolute;
-  left: 140px;
-  top: 88px;
-  width: 640px;
+  left: 250px;
+  top: 84px;
+  width: 610px;
 }
 
 .scene-ui[data-id="street"] .st-open {

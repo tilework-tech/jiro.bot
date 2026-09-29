@@ -93,8 +93,7 @@ Do NOT use the fish-market / tuna scene as a reference.
 The belt flows OUT of the hero and DOWN the page: plates come out of the dark opening
 under the bottle shelf in the hero video, ride past Jiro, leave the video at its bottom
 edge and continue down through every room to the koi. Scrolling = following the sushi.
-(The hero file is the approved v6 take played forward-in-time the other way so it flows
-outward; same take, same speed, same stillness.) `pts` are listed in FLOW ORDER:
+(The hero file is the approved v6 take, unchanged; measured, its plates flow outward.) `pts` are listed in FLOW ORDER:
 first point = where plates enter the scene (top), last point = where they leave (bottom).
 
 Speed is identical everywhere (`BELT_SPEED` in engine/types.ts), and it must match the
@@ -104,7 +103,7 @@ hero agent may change `BELT_SPEED`.
 ## The route (from the sketch) — ports are FIXED
 
 Stage is 1920x1080. Two lanes: LEFT lane x = 150, RIGHT lane x = 1770. The bottom run
-of an L/U-shaped scene sits at y ≈ 940. Belt scale 1.0 at every port (width 64).
+of an L/U-shaped scene sits at y ≈ 940. Belt scale 1.0 at every port (width 64). PLATE_GAP = 72 (matches the hero video's plate density).
 A port is where the belt crosses the stage's top or bottom edge.
 
 | scene | IN port (top edge unless noted) | shape inside the room | OUT port (bottom edge) |

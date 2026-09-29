@@ -1,6 +1,6 @@
 import type { SceneDef } from "../engine/types";
 import { LOOP } from "../engine/types";
-import { glow, stars, steam, wave } from "../engine/fx";
+import { glow, steam, wave } from "../engine/fx";
 import { bubble, hotspot, html } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
 import { itemImg } from "../engine/items";
@@ -8,21 +8,16 @@ import { INTEGRATIONS } from "../content/copy";
 import { mountSnake } from "../games/snake";
 import "./yard.css";
 
-// Back yard: a quiet night scene. Jiro dries a plate, the cat sleeps, the towels
-// (one per integration) sway on the line, and the belt climbs the fence.
+// Back yard: a quiet night scene seen from above. The belt comes out of the
+// dish-return hatch in the restaurant's back wall, runs straight down the left
+// lane on wooden trestles past the wash basin, and slips out through a gap in
+// the hedge. Jiro washes plates under the one lantern, the cat sleeps, and the
+// towels (one per integration) hang on the line along the back wall.
 
 declareEggs(["snake-played", "snake-10", "yard-cat", "yard-plates", "yard-duck", "yard-laundry"]);
 
-const STARS: [number, number][] = [
-  [1030, 30], [1100, 58], [1370, 64], [1515, 50], [1720, 24], [890, 40], [1250, 20], [1600, 110],
-  [1180, 130], [1440, 150], [960, 150], [1300, 95], [1660, 70], [1810, 132],
-];
-
 // ---- Laundry line: rope measured from the art (stage px). ----
-const ROPE: [number, number][] = [
-  [1035, 262], [1100, 288], [1150, 302], [1200, 313], [1250, 318], [1300, 322], [1350, 329], [1400, 331],
-  [1450, 331], [1500, 329], [1550, 328], [1600, 323], [1650, 316], [1700, 309], [1750, 298], [1800, 284], [1825, 277],
-];
+const ROPE: [number, number][] = [[1030, 62], [1300, 73], [1645, 66]];
 const ropeY = (x: number) => {
   for (let i = 0; i < ROPE.length - 1; i++) {
     const [x0, y0] = ROPE[i], [x1, y1] = ROPE[i + 1];
@@ -31,7 +26,7 @@ const ropeY = (x: number) => {
   return ROPE[ROPE.length - 1][1];
 };
 
-const TW = 70, TH = 92, PITCH = 76, X0 = 1050;
+const TW = 54, TH = 72, PITCH = 60, X0 = 1042;
 const STRIPE: Record<string, string> = {
   Slack: "#6b2f6e", GitHub: "#2b2d33", Linear: "#5e5bd1", Notion: "#1d1b19", "Google Drive": "#2f8f4e",
   Sentry: "#5a3f8a", Jira: "#2c62c9", HubSpot: "#e2683a", Stripe: "#5b5fd6", Gmail: "#c8433a",
@@ -69,7 +64,7 @@ function paintTowel(name: string, i: number): HTMLCanvasElement {
   g.fillRect(2, 10, TW - 4, 2);
   // Brand-colour stripes near the hem.
   const st = STRIPE[name] ?? "#3a3f7a";
-  g.fillStyle = st; g.fillRect(2, TH - 22, TW - 4, 4); g.fillRect(2, TH - 14, TW - 4, 2);
+  g.fillStyle = st; g.fillRect(2, TH - 18, TW - 4, 4); g.fillRect(2, TH - 11, TW - 4, 2);
   // Fringe.
   g.fillStyle = ink;
   for (let x = 0; x < TW; x += 6) g.fillRect(x, TH, 2, 2 + ((x / 6 + i) % 2) * 2);
@@ -79,10 +74,10 @@ function paintTowel(name: string, i: number): HTMLCanvasElement {
   const words = name.split(" ");
   g.fillStyle = ink;
   g.textAlign = "center"; g.textBaseline = "middle";
-  let size = 14;
+  let size = 12;
   const longest = words.reduce((a, b) => (a.length > b.length ? a : b));
   for (; size > 7; size--) { g.font = `400 ${size}px Silkscreen, monospace`; if (g.measureText(longest.toUpperCase()).width <= TW - 10) break; }
-  const lh = size + 3, top = 40 - ((words.length - 1) * lh) / 2;
+  const lh = size + 3, top = 31 - ((words.length - 1) * lh) / 2;
   words.forEach((w, k) => g.fillText(w.toUpperCase(), TW / 2, top + k * lh));
   return c;
 }
@@ -134,8 +129,16 @@ const pulse = (now: number, period: number, at: number, w: number) => {
   return d < w ? 0.5 + 0.5 * Math.cos((d / w) * Math.PI) : 0;
 };
 
+// Art anchors (stage px, measured from art/yard.jpg).
+const LANTERN: [number, number] = [345, 545];
+const SPOUT: [number, number] = [372, 752];
+const TUB: [number, number] = [402, 800];
+const EYES: [number, number][] = [[505, 648], [555, 652]];
+const HATCH = { x: 84, y: 0, w: 134, h: 88 };
+
 function fireflies(g: CanvasRenderingContext2D, now: number) {
-  const F: [number, number, number][] = [[880, 180, 0], [1210, 200, 2.1], [1660, 190, 4.2], [1010, 620, 1.3], [1280, 600, 3.3], [760, 170, 5.1]];
+  // Out in the dark lawn and along the shrubs, well clear of the copy.
+  const F: [number, number, number][] = [[1720, 330, 0], [1810, 560, 2.1], [1640, 820, 4.2], [980, 930, 1.3], [1480, 980, 3.3], [700, 330, 5.1]];
   g.save();
   F.forEach(([x0, y0, s], i) => {
     const x = x0 + 22 * wave(now, 24, s) + 8 * wave(now, 8, s * 2);
@@ -149,8 +152,8 @@ function fireflies(g: CanvasRenderingContext2D, now: number) {
 
 function moth(g: CanvasRenderingContext2D, now: number) {
   const f = ((now % LOOP) / 8) * Math.PI * 2;
-  const x = 622 + Math.cos(f) * 58 + Math.sin(f * 3) * 6;
-  const y = 214 + Math.sin(f) * 22;
+  const x = LANTERN[0] + Math.cos(f) * 52 + Math.sin(f * 3) * 6;
+  const y = LANTERN[1] - 10 + Math.sin(f) * 30;
   const flap = Math.floor(now * 8) % 2;
   g.fillStyle = "#e9dcc0";
   g.fillRect(Math.round(x) - 3, Math.round(y) - (flap ? 2 : 0), 3, 2);
@@ -163,7 +166,7 @@ function zzz(g: CanvasRenderingContext2D, now: number) {
   g.fillStyle = "#cfe0ff";
   for (let k = 0; k < 3; k++) {
     const f = (((now % LOOP) / 6 + k / 3) % 1);
-    const x = Math.round(842 - f * 14 + Math.sin(f * 6) * 3), y = Math.round(760 - f * 70);
+    const x = Math.round(612 + f * 16 + Math.sin(f * 6) * 3), y = Math.round(958 - f * 64);
     const s = 3 + (k % 2);
     g.globalAlpha = 0.85 * Math.sin(f * Math.PI);
     // pixel "z"
@@ -172,36 +175,21 @@ function zzz(g: CanvasRenderingContext2D, now: number) {
   g.restore();
 }
 
-function wipe(g: CanvasRenderingContext2D, now: number) {
-  // Two-frame wipe: a dish cloth draped from Jiro's right hand rubs the plate rim (0.75 s per frame).
-  const fr = Math.floor((now % LOOP) / 0.75) % 2;
-  const x = 1566 - fr * 6, y = 724 - fr * 4;
-  const ink = "#1d1a24", cl = "#e9e2d3", sh = "#b9b3c4", hi = "#fbf7ee";
-  g.fillStyle = ink;
-  g.fillRect(x, y, 26, 2); g.fillRect(x - 2, y + 2, 30, 26); g.fillRect(x + 2, y + 28, 10, 8); g.fillRect(x + 16, y + 28, 10, 5);
-  g.fillStyle = cl;
-  g.fillRect(x, y + 2, 26, 26); g.fillRect(x + 4, y + 28, 6, 6); g.fillRect(x + 18, y + 28, 6, 3);
-  g.fillStyle = sh;
-  g.fillRect(x + 12, y + 6, 2, 22); g.fillRect(x + 20, y + 10, 2, 16); g.fillRect(x, y + 20, 26, 2);
-  g.fillStyle = hi; g.fillRect(x + 2, y + 4, 8, 2); g.fillRect(x + 2, y + 6, 2, 6);
-  g.fillStyle = "#6b7bd1"; g.fillRect(x, y + 24, 26, 2);
-  // The rim shine hops between two spots as the cloth moves.
-  g.fillStyle = "#ffffff";
-  if (fr) { g.fillRect(1506, 716, 8, 2); g.fillRect(1502, 718, 4, 4); }
-  else { g.fillRect(1498, 740, 2, 10); g.fillRect(1500, 736, 2, 4); }
-  sparkle(g, 1540, 712, pulse(now, 6, 0.35, 0.06), "#ffffff");
-}
-
 function blink(g: CanvasRenderingContext2D, now: number) {
   // Jiro's eyes glow softly and blink once per 12 s.
-  glow(g, 1519, 541, 44, "rgba(90,200,255,.22)", now, 0.1, 4);
+  glow(g, 540, 660, 40, "rgba(90,220,255,.16)", now, 0.1, 4);
   if (pulse(now, 12, 0.6, 0.012) > 0.1) {
-    g.fillStyle = "#e7d7b8";
-    g.fillRect(1486, 530, 22, 22);
-    g.fillRect(1530, 530, 22, 22);
-    g.fillStyle = "#3d7bb0";
-    g.fillRect(1488, 541, 18, 3); g.fillRect(1532, 541, 18, 3);
+    for (const [x, y] of EYES) {
+      g.fillStyle = "#e9bb8c"; g.fillRect(x - 1, y - 1, 21, 23);
+      g.fillStyle = "#3d7bb0"; g.fillRect(x, y + 9, 19, 3);
+    }
   }
+}
+
+function plateShine(g: CanvasRenderingContext2D, now: number) {
+  // The plate in Jiro's hands catches the lantern light every 6 s.
+  sparkle(g, 492, 786, pulse(now, 6, 0.35, 0.06), "#ffffff");
+  sparkle(g, 772, 690, 0.8 * pulse(now, 8, 0.8, 0.05), "#ffffff");
 }
 
 let duckUntil = 0;
@@ -212,22 +200,20 @@ function duck(g: CanvasRenderingContext2D, now: number) {
   const bob = Math.round(2 * wave(now, 3));
   g.save();
   g.imageSmoothingEnabled = false;
-  g.drawImage(im, 708, 488 + bob, 40, 40);
+  g.drawImage(im, TUB[0] - 6, TUB[1] - 30 + bob, 36, 36);
   g.restore();
 }
 
 function ripple(g: CanvasRenderingContext2D, now: number) {
-  // A drip from the tap, then a slow ring in the tub (4 s cycle).
+  // The tap trickles; a slow ring spreads in the tub (4 s cycle).
   const f = ((now % LOOP) / 4) % 1;
   g.save();
-  if (f < 0.25) {
-    g.globalAlpha = 0.8; g.fillStyle = "#bfe6ff";
-    g.fillRect(668, Math.round(478 + f * 4 * 36), 2, 4);
-  } else {
-    const r = (f - 0.25) / 0.75;
-    g.globalAlpha = 0.45 * (1 - r); g.strokeStyle = "#dff3ff"; g.lineWidth = 2;
-    g.beginPath(); g.ellipse(669, 522, 6 + r * 34, 2 + r * 8, 0, 0, Math.PI * 2); g.stroke();
-  }
+  g.globalAlpha = 0.5; g.fillStyle = "#dff3ff";
+  const d = Math.floor(((now % LOOP) * 30) % 36);
+  g.fillRect(SPOUT[0] - 1, SPOUT[1] + d, 2, 4);
+  const r = f;
+  g.globalAlpha = 0.4 * (1 - r); g.strokeStyle = "#dff3ff"; g.lineWidth = 2;
+  g.beginPath(); g.ellipse(SPOUT[0] + 4, TUB[1] - 4, 5 + r * 28, 2 + r * 7, 0, 0, Math.PI * 2); g.stroke();
   g.restore();
 }
 
@@ -238,30 +224,36 @@ export const yard: SceneDef = {
   mood: "quiet",
   hold: 1.3,
   belt: {
-    // Traced from the painted belt: out of the hatch, along the ledge, curving up the fence.
-    pts: [
-      [122, 796], [152, 845], [196, 881], [250, 900], [310, 905], [1440, 905], [1510, 896], [1560, 862],
-      [1630, 800], [1700, 742], [1770, 692], [1850, 640], [1945, 583],
-    ],
-    width: 66, plate: 50, fadeIn: 60, fadeOut: 20,
+    // Left lane: out of the dish hatch at the top edge, straight down on trestles,
+    // through the hedge gap at the bottom edge.
+    pts: [[150, -10, 1], [150, 1090, 1]],
+    width: 64, plate: 52, fadeIn: 0, fadeOut: 0,
   },
   under(g, now) {
-    stars(g, now, STARS);
-    glow(g, 620, 225, 250, "rgba(255,190,110,.2)", now, 0.08, 6);
-    glow(g, 620, 225, 70, "rgba(255,210,140,.18)", now, 0.12, 6, 1);
+    glow(g, LANTERN[0], LANTERN[1], 260, "rgba(255,190,110,.12)", now, 0.08, 6);
+    glow(g, LANTERN[0], LANTERN[1], 60, "rgba(255,210,140,.2)", now, 0.12, 6, 1);
     moth(g, now);
     fireflies(g, now);
-    steam(g, 690, 500, now, 0.4, 130, 6, 0.2);
-    steam(g, 720, 505, now, 3.1, 100, 4, 0.14);
+    steam(g, TUB[0] + 16, TUB[1] - 30, now, 0.4, 130, 6, 0.2);
+    steam(g, TUB[0] + 40, TUB[1] - 24, now, 3.1, 100, 4, 0.14);
     ripple(g, now);
     duck(g, now);
     drawTowels(g, now);
     // Hose glint: two slow sparkles that take turns on the coil.
-    sparkle(g, 1102, 694, 0.9 * pulse(now, 4, 0.2, 0.08));
-    sparkle(g, 1210, 742, 0.75 * pulse(now, 4, 0.7, 0.08));
+    sparkle(g, 860, 975, 0.9 * pulse(now, 4, 0.2, 0.08));
+    sparkle(g, 930, 1030, 0.75 * pulse(now, 4, 0.7, 0.08));
     zzz(g, now);
     blink(g, now);
-    wipe(g, now);
+    plateShine(g, now);
+  },
+  over(g, now, api) {
+    // The hatch lintel sits in front of the belt so plates slide out from under it.
+    const art = api.img("art/yard.jpg");
+    if (art.complete && art.naturalWidth) {
+      const k = art.naturalWidth / 1920;
+      g.drawImage(art, HATCH.x * k, HATCH.y * k, HATCH.w * k, HATCH.h * k, HATCH.x, HATCH.y, HATCH.w, HATCH.h);
+    }
+    glow(g, 150, 70, 70, "rgba(255,200,130,.12)", now, 0.1, 8, 2);
   },
   mount(el, api) {
     mountSnake(el, api);
@@ -277,18 +269,18 @@ export const yard: SceneDef = {
       });
     });
     const tag = html(el, `<p class="kicker yard-line">Out back · everything plugs in</p>`);
-    tag.style.left = "1052px"; tag.style.top = "214px";
+    tag.style.left = "1042px"; tag.style.top = "166px";
 
     // The sleeping cat.
-    hotspot(el, 810, 720, 150, 100, "Sleeping cat", () => {
+    hotspot(el, 500, 940, 150, 80, "Sleeping cat", () => {
       api.sfx("meow");
-      bubble(el, 780, 650, "…mrrp. LGTM. (did not read)", 2400, "small");
+      bubble(el, 520, 880, "…mrrp. LGTM. (did not read)", 2400, "small");
       api.egg("yard-cat", "The cat reviewed your PR without waking up. Approved.");
     });
 
     // The plate towers.
     let washed = 1023;
-    hotspot(el, 740, 330, 210, 380, "Stacks of clean plates", () => {
+    hotspot(el, 670, 660, 200, 250, "Stacks of clean plates", () => {
       washed++;
       api.sfx("chime");
       api.toast(`Plates washed tonight: ${washed.toLocaleString()}. Broken: 0. Judged: all of them.`, 2800);
@@ -296,7 +288,7 @@ export const yard: SceneDef = {
     });
 
     // The wash tub hides a duck.
-    hotspot(el, 620, 480, 150, 90, "Wash tub", () => {
+    hotspot(el, 330, 760, 140, 110, "Wash tub", () => {
       duckUntil = performance.now() + 20000;
       api.sfx("quack");
       api.egg("yard-duck", "Rubber duck debugging, bath edition. The duck found the bug in 4 seconds.");

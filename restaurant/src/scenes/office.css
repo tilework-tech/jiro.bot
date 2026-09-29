@@ -1,3 +1,53 @@
-/* Back office: small speech bubbles for tiny Jiro and the hatch. */
+/* Back office: the product window is the hero; tiny Jiro and the sushi lift frame it. */
 .scene-ui[data-id="office"] .bubble.office-bubble { font-size: 18px; max-width: 300px; padding: 10px 14px; }
 .scene-ui[data-id="office"] .hit:hover { background: radial-gradient(closest-side, rgba(243, 230, 207, .08), transparent); }
+
+.scene-ui[data-id="office"] .office-head .kicker { margin: 0 0 12px; font-size: 16px; }
+.scene-ui[data-id="office"] .office-head h2.px { font-size: 44px; white-space: nowrap; }
+
+/* Window: a monitor glowing in a dark room. */
+.scene-ui[data-id="office"] .product-win {
+  border: 2px solid rgba(243, 230, 207, .2);
+  box-shadow: 0 0 0 1px #000, 0 0 0 8px rgba(8, 6, 5, .75), 0 40px 90px rgba(0, 0, 0, .8), 0 0 140px rgba(111, 220, 140, .07);
+}
+.scene-ui[data-id="office"] .product-win .chrome { padding: 8px 12px; gap: 7px; }
+.scene-ui[data-id="office"] .product-win .url { font-size: 14px; padding: 4px 12px; margin-left: 4px; }
+.scene-ui[data-id="office"] .product-win .back {
+  margin-left: 10px; width: 28px; height: 26px; border: 0; border-radius: 5px; background: #0f0d0c;
+  color: var(--cream); font: 11px/1 var(--mono); cursor: pointer; padding: 0;
+}
+.scene-ui[data-id="office"] .product-win .back:disabled { color: #4a423b; cursor: default; }
+.scene-ui[data-id="office"] .product-win .back:not(:disabled):hover { color: var(--green); }
+.scene-ui[data-id="office"] .product-win .dots { display: flex; gap: 6px; margin-left: auto; }
+.scene-ui[data-id="office"] .product-win .dots i { width: 8px; height: 8px; border-radius: 0; background: #3a332d; }
+.scene-ui[data-id="office"] .product-win .dots i.seen { background: #2d7a45; }
+.scene-ui[data-id="office"] .product-win .dots i.cur { background: var(--green); box-shadow: 0 0 6px rgba(111, 220, 140, .8); }
+.scene-ui[data-id="office"] .product-win .live { display: flex; align-items: center; gap: 7px; margin-left: 14px; font: 400 12px/1 var(--px); color: var(--green); letter-spacing: .05em; }
+.scene-ui[data-id="office"] .product-win .live b { width: 8px; height: 8px; background: var(--green); animation: officeLive 2s steps(2) infinite; }
+@keyframes officeLive { 50% { opacity: .25; } }
+
+.scene-ui[data-id="office"] .product-win .screen img { image-rendering: auto; }
+.scene-ui[data-id="office"] .product-win .hot { border-radius: 5px; animation: officeHint 8s ease-in-out infinite; }
+.scene-ui[data-id="office"] .product-win .hot.lead { border-color: rgba(111, 220, 140, .85); animation: officeLead 2s ease-in-out infinite; }
+.scene-ui[data-id="office"] .product-win .hot:hover { background: rgba(111, 220, 140, .14); border-color: var(--green); }
+.scene-ui[data-id="office"] .product-win.flash .hot { animation: officeFlash .9s ease-out 1; }
+@keyframes officeHint { 0%, 88%, 100% { border-color: transparent; } 93% { border-color: rgba(111, 220, 140, .45); } }
+@keyframes officeLead { 0%, 100% { box-shadow: 0 0 0 0 rgba(111, 220, 140, .0); } 50% { box-shadow: 0 0 0 5px rgba(111, 220, 140, .3); } }
+@keyframes officeFlash { 0% { border-color: var(--green); background: rgba(111, 220, 140, .2); } 100% { border-color: transparent; background: transparent; } }
+
+/* "Click here" tag under the lead hotspot. */
+.scene-ui[data-id="office"] .product-win .tag {
+  position: absolute; display: none; pointer-events: none; white-space: nowrap; z-index: 2;
+  font: 400 12px/1 var(--px); letter-spacing: .04em; color: #07130b; background: var(--green);
+  padding: 7px 9px 6px; box-shadow: 0 3px 0 #2d7a45; animation: officeTag 2s ease-in-out infinite;
+}
+.scene-ui[data-id="office"] .product-win .tag.on { display: block; }
+.scene-ui[data-id="office"] .product-win .tag::before { content: "▲ click: "; }
+.scene-ui[data-id="office"] .product-win .tag.up::before { content: "▼ click: "; }
+@keyframes officeTag { 50% { transform: translateY(3px); } }
+
+.scene-ui[data-id="office"] .product-cap .hint { font-size: 18px; line-height: 1.4; margin: 6px 0 20px; }
+.scene-ui[data-id="office"] .product-cap .caption { font-size: 21px; min-height: 6.6em; }
+.scene-ui[data-id="office"] .product-cap .caption.in { animation: officeCap .35s ease-out; }
+@keyframes officeCap { from { opacity: 0; transform: translateY(6px); } }
+.scene-ui[data-id="office"] .product-cap .steps { font-size: 14px; margin-top: 10px; }

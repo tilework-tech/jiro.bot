@@ -6,23 +6,23 @@ import { html, place } from "../engine/dom";
 // { "task": "…", "left": { "label": "Generic agent", "video": "ui/compare/generic.mp4", "poster": "…", "stats": ["…"] },
 //   "right": { "label": "Jiro", … } }
 //
-// In the dining room the two windows hang like menu boards on the calm upper
-// wall (small, so the diners and the belt stay visible). Click one to enlarge
-// it to a readable size (with its stats); click again, the backdrop, or Esc to
-// hang it back.
+// In the (bird's-eye) dining room the two windows float over the dark, calm
+// tatami area, above the counter row where Jiro serves. They are sized so the
+// terminal text reads at 1440x900 (~12px). Click one to enlarge it (with its
+// stats); click again, the backdrop, or Esc to put it back.
 
 interface Side { label: string; video: string; poster?: string; stats: string[]; verdict?: string }
 interface Spec { task: string; title?: string; left: Side; right: Side }
 
 /** [x, y, width] of each hung window in stage px. */
-export const COMPARE_BOX = { left: [80, 186, 500], right: [660, 186, 500] } as const;
+export const COMPARE_BOX = { left: [440, 150, 640], right: [1120, 150, 640] } as const;
 /** [x, y, width] of the enlarged window. */
-export const COMPARE_BIG = [360, 96, 1200] as const;
+export const COMPARE_BIG = [400, 80, 1120] as const;
 
 export function mountCompare(el: HTMLElement, api: Api) {
   const base = import.meta.env.BASE_URL;
   const head = html(el, `
-    <section class="copy compare-head" style="left:${COMPARE_BOX.left[0]}px;top:92px;width:1100px">
+    <section class="copy compare-head" style="left:${COMPARE_BOX.left[0]}px;top:72px;width:1320px">
       <h2 class="px">Generic agent vs. Jiro</h2>
       <p class="ticket"></p>
     </section>`);
@@ -41,9 +41,8 @@ export function mountCompare(el: HTMLElement, api: Api) {
     const [x, y, w] = COMPARE_BOX[k];
     const box = html(el, `
       <figure class="cmp ${k}" data-side="${k}" tabindex="0" role="button" aria-label="Enlarge window">
-        <figcaption><b></b><span class="zoom">click to enlarge</span></figcaption>
-        <video muted playsinline loop preload="auto"></video>
-        <p class="verdict"></p>
+        <figcaption><b></b><p class="verdict"></p></figcaption>
+        <div class="screen"><video muted playsinline loop preload="auto"></video><span class="zoom">click to enlarge</span></div>
         <ul class="stats"></ul>
       </figure>`);
     place(box, x, y, w);

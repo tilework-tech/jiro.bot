@@ -20,23 +20,23 @@ const DIRS: Record<string, P> = {
 
 export function mountSnake(el: HTMLElement, api: Api) {
   html(el, `
-    <section class="copy" style="left:110px;top:120px;width:560px">
+    <section class="copy" style="left:1010px;top:330px;width:600px">
       <p class="kicker">Back yard · mini game 2 of 3</p>
       <h2 class="px">That hose is a snake.</h2>
       <p class="lede">Classic Snake, garden edition. Steer the hose, eat the sushi, don't tie yourself in a knot.</p>
     </section>`);
   const btn = html(el, `<button class="btn primary game-start">▶ Play Hose Snake</button>`);
-  place(btn, 110, 400);
+  place(btn, 1010, 610);
   let game: Arcade | null = null;
   const start = () => {
     if (game && !game.closed) return;
     api.sfx("chime");
     api.egg("snake-played", "The hose was a snake all along.");
-    game = openArcade(el, api, { title: "HOSE SNAKE", w: 720, h: 450, px: 2.5, x: 690, y: 250, bestKey: "jiro-best-snake", keys: Object.keys(DIRS).concat("Enter") });
+    game = openArcade(el, api, { title: "HOSE SNAKE", w: 720, h: 450, px: 2.5, x: 980, y: 300, bestKey: "jiro-best-snake", keys: Object.keys(DIRS).concat("Enter") });
     run(game, api);
   };
   btn.addEventListener("click", (e) => { e.stopPropagation(); start(); });
-  hotspot(el, 1010, 660, 250, 120, "Garden hose", start);
+  hotspot(el, 790, 950, 230, 120, "Garden hose", start);
 }
 
 function run(a: Arcade, api: Api) {

@@ -1,6 +1,6 @@
 {
   "title": "Same ticket. Two kitchens.",
-  "task": "Ticket #482 · Checkout total is wrong when a coupon and a gift card are combined",
+  "task": "Ticket #482 · coupon + gift card = wrong total",
   "left": {
     "label": "Generic agent",
     "video": "ui/compare/generic.mp4",

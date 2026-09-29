@@ -1,40 +1,63 @@
-import type { SceneDef } from "../engine/types";
+import type { SceneDef, BeltPt } from "../engine/types";
 import { glow, shade, steam, wave } from "../engine/fx";
 import { hotspot, bubble } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
 import { mountCompare } from "../content/compare";
 import "./dining.css";
 
-// Dining room (bustling, no Jiro). The two comparison windows hang on the calm
-// upper wall; the diners, the kitchen doors and the single belt stay visible.
-// Ambient: lantern breathing, string-light twinkle, porthole glow, tea steam,
-// and a few diners doing slow 2-frame "sprite swaps" cut from the art itself.
+// Dining room, BIRD'S-EYE (straight top-down). Dark calm tatami up top carries the
+// two comparison windows; below them a row of diners at the long counter, and
+// Jiro (seen from above: copper dome + hachimaki knot) serving a tray.
+// The belt drops down the dark service corridor on the LEFT lane, turns through a
+// hatch in the pillar, runs along the counter (y 940) and turns down to the OUT port.
+// Ambient (all periods divide LOOP=24): lantern breathing, tea steam, diners bowing
+// to eat, one diner's chopsticks, Jiro's eyes and a one-pixel tray bob.
 
-declareEggs(["dining-doors", "dining-plant", "slop", "dining-porthole", "dining-lantern", "dining-chopsticks", "dining-tea"]);
+declareEggs(["slop", "dining-lantern", "dining-chopsticks", "dining-tea", "dining-jiro", "dining-hatch"]);
 let cmp: { enter(): void; leave(): void } | null = null;
 
 const ART = "art/dining.jpg";
-const LANTERNS: [number, number, number][] = [[58, 68, 170], [270, 92, 190], [630, 160, 150], [1302, 160, 150], [1660, 92, 190], [1873, 68, 170]];
-const BULBS: [number, number][] = [
-  [342, 86], [382, 98], [425, 106], [476, 106], [515, 100], [552, 86], [583, 72], [660, 72], [689, 86], [728, 98],
-  [767, 106], [818, 106], [861, 98], [901, 87], [936, 72], [985, 71], [1020, 86], [1062, 99], [1104, 106], [1155, 106],
-  [1194, 99], [1231, 86], [1261, 72], [1342, 72], [1373, 87], [1408, 96], [1448, 106], [1499, 106], [1543, 100], [1583, 87],
-];
-const PORTHOLES: [number, number][] = [[1402, 318], [1546, 318]];
-/** Sprite swaps: [sx, sy, w, h, dx, dy, period s, on-from, on-to (fraction of period)]. Periods divide LOOP. */
-const SWAPS: [number, number, number, number, number, number, number, number, number][] = [
-  [788, 560, 56, 48, 0, -3, 8, 0.1, 0.32], // light-blue diner lifts his chopsticks
-  [1394, 560, 80, 48, 0, -3, 12, 0.55, 0.72], // pink sweater, chopsticks up
-  [1412, 498, 64, 60, 2, 0, 24, 0.05, 0.3], // pink sweater tilts her head
-  [312, 562, 50, 44, 0, -2, 6, 0.6, 0.8], // left diner, chopsticks
-  [1566, 478, 70, 100, 0, -2, 24, 0.3, 0.42], // man by the doors takes a bite
-  [1198, 502, 52, 60, 2, 0, 12, 0.7, 0.9], // scarf woman glances over
-  [1658, 552, 66, 60, -2, 0, 24, 0.55, 0.8], // blue shirt turns to his friend
-];
-const TEA: [number, number, number][] = [[890, 604, 0], [1266, 608, 2.2], [617, 632, 4.1]];
+const PX = 3; // art pixel grid
 
-let peekT = -99, flickT = -99;
+// ---- Belt: IN top x=150 → left lane → round corner → counter y=940 → round corner → OUT bottom x=1770.
+const R = 100;
+function arc(cx: number, cy: number, a0: number, a1: number, n = 12): BeltPt[] {
+  const out: BeltPt[] = [];
+  for (let i = 1; i < n; i++) {
+    const a = a0 + ((a1 - a0) * i) / n;
+    out.push([Math.round((cx + R * Math.cos(a)) * 10) / 10, Math.round((cy + R * Math.sin(a)) * 10) / 10, 1]);
+  }
+  return out;
+}
+const BELT: BeltPt[] = [
+  [150, -40, 1],
+  [150, 940 - R, 1],
+  ...arc(150 + R, 940 - R, Math.PI, Math.PI / 2), // left corner (down → right)
+  [150 + R, 940, 1],
+  [1770 - R, 940, 1],
+  ...arc(1770 - R, 940 + R, -Math.PI / 2, 0), // right corner (right → down)
+  [1770, 940 + R, 1],
+  [1770, 1120, 1],
+];
+
+const LANTERNS: [number, number][] = [[445, 108], [797, 108], [1155, 108], [1508, 108], [1865, 108]];
+/** Tea cups on the counter + the one on Jiro's tray: [x, y, seed]. */
+const TEA: [number, number, number][] = [[370, 836, 0], [583, 842, 1.7], [800, 836, 3.1], [1508, 836, 4.4], [1725, 836, 2.3], [1273, 776, 0.9]];
+/** Diners bowing to eat (sprite swap, shifted down one art pixel): [x, y, w, h, period, on-from, on-to]. */
+const BOWS: [number, number, number, number, number, number, number][] = [
+  [352, 684, 130, 110, 8, 0.1, 0.35],
+  [800, 684, 110, 110, 12, 0.5, 0.7],
+  [990, 684, 130, 110, 6, 0.6, 0.85],
+  [1490, 684, 130, 110, 24, 0.2, 0.32],
+  [1700, 684, 130, 110, 12, 0.05, 0.22],
+];
+const EYES: [number, number][] = [[1220, 679], [1261, 679]];
+const TRAY = { x: 1245, y: 823, r: 66 };
+const JIRO = { x: 1150, y: 590, w: 200, h: 300 };
+
+let blinkT = -99, flickT = -99;
 const tnow = () => performance.now() / 1000;
+const phase = (now: number, per: number) => (((now % per) + per) % per) / per;
 
 export const dining: SceneDef = {
   id: "dining",
@@ -42,84 +65,90 @@ export const dining: SceneDef = {
   art: ART,
   mood: "bustling",
   hold: 1.6,
-  belt: { pts: [[-30, 824, 1.55], [1950, 824, 1.55]], width: 72, plate: 50, fadeIn: 30, fadeOut: 30 },
+  belt: { pts: BELT, width: 64, plate: 52 },
   under(g, now, api) {
     const art = api.img(ART);
-    if (art.complete && art.naturalWidth) {
-      const prev = g.imageSmoothingEnabled;
-      g.imageSmoothingEnabled = false;
-      const k = art.naturalWidth / 1920;
-      for (const [sx, sy, w, h, dx, dy, per, a, b] of SWAPS) {
-        const f = ((now % per) + per) % per / per;
-        if (f >= a && f < b) g.drawImage(art, sx * k, sy * k, w * k, h * k, sx + dx, sy + dy, w, h);
+    const ok = art.complete && art.naturalWidth > 0;
+    const k = ok ? art.naturalWidth / 1920 : 1;
+    const prev = g.imageSmoothingEnabled;
+    g.imageSmoothingEnabled = false;
+    if (ok) {
+      for (const [x, y, w, h, per, a, b] of BOWS) {
+        const f = phase(now, per);
+        if (f >= a && f < b) g.drawImage(art, x * k, y * k, w * k, (h - PX) * k, x, y + PX, w, h - PX);
       }
-      g.imageSmoothingEnabled = prev;
+      // Jiro's tray bobs one art pixel (period 4 s).
+      if (phase(now, 4) < 0.5) {
+        g.save();
+        g.beginPath(); g.arc(TRAY.x, TRAY.y, TRAY.r, 0, Math.PI * 2); g.clip();
+        g.drawImage(art, (TRAY.x - TRAY.r) * k, (TRAY.y - TRAY.r) * k, TRAY.r * 2 * k, TRAY.r * 2 * k, TRAY.x - TRAY.r, TRAY.y - TRAY.r - PX, TRAY.r * 2, TRAY.r * 2);
+        g.restore();
+      }
     }
-    // Calm the upper wall a touch more so the hung windows read.
-    shade(g, 0, 0, 1920, 1080, 0.3, 700, "top");
+    // Chopsticks: the second diner lifts hers (with a piece of tamago) and puts them back (period 6 s).
+    {
+      const f = phase(now, 6);
+      if (f > 0.35 && f < 0.75 && ok) {
+        // hide the resting pair under a strip of clean counter, then draw the pair raised toward her
+        g.drawImage(art, 678 * k, 800 * k, 6 * k, 32 * k, 588, 800, 84, 32);
+        const lift = f < 0.42 ? (f - 0.35) / 0.07 : f > 0.68 ? (0.75 - f) / 0.07 : 1;
+        const dy = Math.round((lift * 21) / PX) * PX;
+        const y0 = 810 - dy, x0 = 606, n = 16;
+        g.fillStyle = "#3b1d0f"; g.fillRect(x0 - PX, y0 - PX, n * PX + 2 * PX, 4 * PX); // outline
+        g.fillStyle = "#e2a867"; g.fillRect(x0, y0, n * PX, PX); g.fillRect(x0, y0 + 2 * PX, n * PX, PX);
+        g.fillStyle = "#f4d35e"; g.fillRect(x0 - 4 * PX, y0 - PX, 4 * PX, 4 * PX); // tamago
+        g.fillStyle = "#2d4a2a"; g.fillRect(x0 - 3 * PX, y0 + PX, 2 * PX, PX); // nori band
+      }
+    }
+    g.imageSmoothingEnabled = prev;
+    // Keep the top (lanterns) and the tatami a notch calmer so the windows and headline read.
+    shade(g, 300, 0, 1620, 600, 0.42, 520, "top");
     const flick = tnow() - flickT;
-    LANTERNS.forEach(([x, y, r], i) => {
-      if (i === 2 && flick < 1.6 && Math.floor(flick * 7) % 2 === 0) { g.fillStyle = "rgba(10,6,4,.55)"; g.fillRect(x - 34, y - 55, 68, 110); return; }
-      glow(g, x, y, r, "rgba(255,190,110,.15)", now, 0.08, 6, i);
+    LANTERNS.forEach(([x, y], i) => {
+      if (i === 1 && flick < 1.6 && Math.floor(flick * 7) % 2 === 0) { g.fillStyle = "rgba(8,6,4,.6)"; g.fillRect(x - 56, y - 50, 112, 100); return; }
+      glow(g, x, y, 150, "rgba(255,190,110,.13)", now, 0.1, 6, i * 1.3);
     });
-    PORTHOLES.forEach(([x, y], i) => glow(g, x, y, 70, "rgba(255,210,130,.14)", now, 0.12, 8, i * 2));
-    TEA.forEach(([x, y, s]) => steam(g, x, y, now, s, 56, 3, 0.16));
+    // Warm pools on the counter breathe gently.
+    [420, 840, 1245, 1640].forEach((x, i) => glow(g, x, 870, 190, "rgba(255,170,80,.07)", now, 0.12, 8, i));
   },
   over(g, now) {
-    // String lights twinkle (slow, each bulb its own period).
+    TEA.forEach(([x, y, s]) => steam(g, x, y, now, s, 34, PX, 0.2));
+    // Jiro's eyes: canon blue glow, slow breathing, blink on click.
+    const bl = tnow() - blinkT < 0.18 || phase(now, 8) > 0.97;
+    const a = 0.75 + 0.2 * wave(now, 4);
     g.save();
-    g.globalCompositeOperation = "lighter";
-    BULBS.forEach(([x, y], i) => {
-      const a = 0.12 + 0.12 * (0.5 + 0.5 * wave(now, [6, 8, 12, 24][i % 4], i * 1.9));
-      g.fillStyle = `rgba(255,205,120,${a.toFixed(3)})`;
-      g.fillRect(x - 5, y - 5, 10, 10);
-      g.fillStyle = `rgba(255,190,100,${(a * 0.35).toFixed(3)})`;
-      g.fillRect(x - 10, y - 10, 20, 20);
-    });
-    g.restore();
-    // Porthole peek egg: the kitchen cat peers through the right porthole (no Jiro in this room).
-    const pk = tnow() - peekT;
-    if (pk < 2.8) {
-      const [x, y] = PORTHOLES[1];
-      const rise = Math.min(1, pk / 0.3, (2.8 - pk) / 0.3);
-      const yy = Math.round(y + 14 - rise * 12);
-      g.save();
-      g.beginPath(); g.arc(x, y, 24, 0, Math.PI * 2); g.clip();
-      g.fillStyle = "#c8742f"; g.fillRect(x - 18, yy - 12, 8, 8); g.fillRect(x + 10, yy - 12, 8, 8);
-      g.fillStyle = "#e0924a"; g.fillRect(x - 20, yy - 4, 40, 36);
-      g.fillStyle = "#b8612a"; g.fillRect(x - 4, yy - 4, 8, 6);
-      const blink = pk > 1.5 && pk < 1.62;
-      g.fillStyle = "#9be36b";
-      if (!blink) { g.fillRect(x - 12, yy + 4, 7, 7); g.fillRect(x + 5, yy + 4, 7, 7); }
-      g.fillStyle = "#101010";
-      if (!blink) { g.fillRect(x - 9, yy + 5, 2, 5); g.fillRect(x + 8, yy + 5, 2, 5); }
-      g.restore();
+    for (const [x, y] of EYES) {
+      if (bl) { g.fillStyle = "#6b3a1f"; g.fillRect(x - 6, y - 1, 12, 3); continue; }
+      g.fillStyle = `rgba(90,200,255,${(a * 0.35).toFixed(3)})`; g.fillRect(x - 9, y - 6, 18, 12);
+      g.fillStyle = `rgba(150,230,255,${a.toFixed(3)})`; g.fillRect(x - 6, y - 3, 12, 6);
+      g.fillStyle = "rgba(235,250,255,.9)"; g.fillRect(x - 3, y - 3, 3, 3);
     }
+    g.restore();
   },
   mount(el, api) {
     cmp = mountCompare(el, api);
-    hotspot(el, 1335, 205, 285, 345, "Kitchen doors", () => {
-      api.sfx("bonk");
-      bubble(el, 1330, 150, "Staff only. The belt has a staff pass.");
-      api.egg("dining-doors", "The belt is the only one allowed through the kitchen doors.");
-    });
-    PORTHOLES.forEach(([x, y]) => hotspot(el, x - 30, y - 30, 60, 60, "Porthole", () => {
-      peekT = tnow();
+    hotspot(el, JIRO.x + 20, JIRO.y, JIRO.w - 40, 150, "Jiro", () => {
+      blinkT = tnow();
       api.sfx("blip");
-      api.egg("dining-porthole", "The kitchen cat is checking whether you finished your nigiri.");
-    }));
-    hotspot(el, 1660, 360, 150, 210, "Plant", () => { api.sfx("pop"); api.egg("dining-plant", "The plant is a Monstera. It has been there since v0.1."); });
-    hotspot(el, 598, 110, 58, 105, "Lantern", () => {
+      bubble(el, JIRO.x - 140, JIRO.y - 60, "Table 4, your nigiri. Tests are on the side.");
+      api.egg("dining-jiro", "Jiro also waits tables. He asked which table before walking over.");
+    });
+    hotspot(el, 236, 880, 84, 110, "Hatch", () => {
+      api.sfx("bonk");
+      bubble(el, 170, 800, "Belt only. Mind your fingers.");
+      api.egg("dining-hatch", "The belt cuts through the pillar. The generic agent would have removed the pillar.");
+    });
+    hotspot(el, LANTERNS[1][0] - 50, LANTERNS[1][1] - 50, 100, 100, "Lantern", () => {
       flickT = tnow();
       api.sfx("bonk");
-      api.egg("dining-lantern", "Flaky lantern. The generic agent marked it @skip. Jiro filed a bug.");
+      api.egg("dining-lantern", "Flaky lantern. The generic agent marked it it.skip. Jiro filed a bug.");
     });
-    hotspot(el, 780, 576, 110, 50, "Diner with chopsticks", () => {
+    hotspot(el, 570, 690, 120, 140, "Diner with chopsticks", () => {
       api.sfx("pop");
-      bubble(el, 700, 640, "Almost… almost…");
-      api.egg("dining-chopsticks", "He has been about to eat that nigiri since sprint planning.");
+      bubble(el, 500, 610, "Almost… almost…");
+      api.egg("dining-chopsticks", "She has been about to eat that tamago since sprint planning.");
     });
-    hotspot(el, 1245, 598, 42, 52, "Tea cup", () => {
+    hotspot(el, 1255, 760, 36, 36, "Tea cup", () => {
       api.sfx("chime");
       api.egg("dining-tea", "Refill ticket #484 opened. Jiro added a regression test for lukewarm tea.");
     });

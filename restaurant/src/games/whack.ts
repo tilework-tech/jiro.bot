@@ -8,39 +8,51 @@ import "./games.css";
 
 declareEggs(["whack-gold", "whack-duck"]);
 
+// Mouth centres of the nine rice sacks in public/art/storage.jpg (3 rows x 3, back to front).
 export const HOLES: [number, number][] = [
-  [620, 698], [780, 774], [940, 850], [448, 779], [608, 855], [768, 931], [276, 861], [436, 937], [596, 1013],
+  [979, 622], [1153, 622], [1327, 622], [979, 741], [1153, 741], [1327, 741], [979, 859], [1153, 859], [1327, 859],
 ];
+/** Where the game UI goes: the sign that starts it, and the HUD/help column. */
+export interface WhackLayout { sign: [number, number, number, number]; hud: [number, number]; onStart?(): void; onClose?(): void }
 
 const GAME_S = 30;
 type Kind = "bug" | "duck" | "gold";
 interface Hole { el: HTMLButtonElement; im: HTMLImageElement; x: number; y: number; kind: Kind; up: boolean; hit: boolean; until: number }
 
-export function mountWhack(el: HTMLElement, api: Api) {
+export function mountWhack(el: HTMLElement, api: Api, lay: WhackLayout) {
   const base = import.meta.env.BASE_URL;
   const src = (n: string) => `${base}${n}`;
   // Preload.
   ["games/bug-a.png", "games/bug-b.png", "games/bug-gold.png", "games/bug-dizzy.png", "games/bonk-star.png", "games/dizzy.png", "games/mallet.png", "items/duck.png"].forEach((n) => { new Image().src = src(n); });
 
-  const startBtn = html(el, `<button class="btn primary game-start">▶ Play Whack-a-Bug</button>`) as HTMLButtonElement;
-  place(startBtn, 1300, 470);
-  const help = html(el, `<p class="whack-help">Whack the bugs, spare the duck. Click, tap or <kbd>1</kbd>–<kbd>${HOLES.length}</kbd>.</p>`);
-  place(help, 1300, 556);
-  const hud = html(el, `
+  // The start "button" is the little wooden sign planted by the sacks.
+  const sign = html(el, `<button class="whack-sign" aria-label="Play Whack-a-Bug, the storage room mini game"><span>PLAY</span><span>WHACK-</span><span>A-BUG</span></button>`) as HTMLButtonElement;
+  place(sign, ...lay.sign);
+  const [hx, hy] = lay.hud;
+  const panel = html(el, `<section class="whack-panel" hidden aria-label="Whack-a-Bug">
+      <p class="kicker">Storage room · mini game</p>
+      <h2 class="px">Whack-a-Bug</h2>
+    </section>`);
+  place(panel, hx, hy);
+  const help = html(panel, `<p class="whack-help">Whack the bugs, spare the duck. Click, tap or <kbd>1</kbd>–<kbd>${HOLES.length}</kbd>. <kbd>Esc</kbd> stops.</p>`);
+  const hud = html(panel, `
     <div class="whack-hud" hidden aria-live="polite">
       <div class="row"><span><span class="lbl">BUGS SQUASHED</span><span class="pts">0</span></span><span class="cmb"></span></div>
       <div class="row"><span class="tm">30s</span><span class="best"></span></div>
       <div class="bar"><i></i></div>
       <p class="say"></p>
     </div>`);
-  place(hud, 1300, 556);
+  const startBtn = html(panel, `<button class="btn primary game-start">▶ Play again</button>`) as HTMLButtonElement;
+  const closeBtn = html(panel, `<button class="btn whack-close">← Back to the questions</button>`) as HTMLButtonElement;
   const $ = (s: string) => hud.querySelector<HTMLElement>(s)!;
   const mallet = html(el, `<div class="whack-mallet" hidden></div>`);
   mallet.style.backgroundImage = `url(${src("games/mallet.png")})`;
+  mallet.style.zIndex = "20";
 
   const holes: Hole[] = HOLES.map(([x, y], i) => {
     const b = html(el, `<button class="mole m16" aria-label="Rice sack ${i + 1}"><img alt="" draggable="false" /><span class="k">${i + 1}</span></button>`) as HTMLButtonElement;
     place(b, x - 55, y - 125, 110, 115);
+    b.style.zIndex = String(2 + 2 * Math.floor(i / 3)); // rims of row r sit at 3 + 2r
     return { el: b, im: b.querySelector("img")!, x, y, kind: "bug", up: false, hit: false, until: 0 };
   });
 
@@ -129,7 +141,7 @@ export function mountWhack(el: HTMLElement, api: Api) {
   const onMove = (e: PointerEvent) => {
     if (!running) return;
     const [x, y] = api.toStage(e.clientX, e.clientY);
-    mallet.hidden = e.pointerType === "touch" || x > 1240;
+    mallet.hidden = e.pointerType === "touch" || x < 620;
     moveMallet(x, y);
   };
 
@@ -176,7 +188,7 @@ export function mountWhack(el: HTMLElement, api: Api) {
   const pauseGame = () => { if (!running) return; paused = true; cancelAnimationFrame(raf); raf = 0; say("Paused. Scroll back to keep whacking."); };
   const mo = layer ? new MutationObserver(() => { if (!running) return; if (live()) { if (paused) { kick(); goFlash("GO!"); } } else pauseGame(); }) : null;
 
-  const goFlash = (t: string) => fx("whack-go", 700, 520, t, 600);
+  const goFlash = (t: string) => fx("whack-go", 1153, 470, t, 600);
 
   const finish = (early = false) => {
     running = false; paused = false;
@@ -194,10 +206,9 @@ export function mountWhack(el: HTMLElement, api: Api) {
     $(".cmb").textContent = maxCombo >= 3 ? `BEST COMBO x${maxCombo}` : "";
     say(`${rec && score ? "New high score! " : ""}${score >= 20 ? "Staff engineer material." : score >= 10 ? "Solid senior." : "Jiro will pair with you."}`);
     api.sfx(early ? "pop" : "chime");
-    startBtn.textContent = "▶ Play again";
     startBtn.hidden = false;
+    closeBtn.hidden = false;
     help.hidden = true;
-    place(hud, 1300, 556);
     startBtn.focus({ preventScroll: true });
     setPeek(true);
     if (score >= 20) api.egg("whack-20", "20+ bugs squashed. Jiro offers you a headband.");
@@ -208,14 +219,16 @@ export function mountWhack(el: HTMLElement, api: Api) {
     const k = e.key;
     const n = parseInt(k, 10);
     if (n >= 1 && n <= holes.length) { e.preventDefault(); e.stopImmediatePropagation(); if (!e.repeat) whack(holes[n - 1]); return; }
-    if (k === "Escape") { e.preventDefault(); e.stopImmediatePropagation(); finish(true); return; }
+    if (k === "Escape") { e.preventDefault(); e.stopImmediatePropagation(); finish(true); close(); return; }
     if ([" ", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "PageUp", "PageDown", "Home", "End"].includes(k)) { e.preventDefault(); e.stopImmediatePropagation(); }
   }
 
   const begin = () => {
     setPeek(false);
     running = true; paused = false; score = 0; combo = 0; maxCombo = 0; left = GAME_S; clock = 0; nextSpawn = 0.5; duckToast = false;
-    startBtn.hidden = true; help.hidden = true; hud.hidden = false;
+    startBtn.hidden = true; closeBtn.hidden = true; help.hidden = false; hud.hidden = false;
+    panel.hidden = false; sign.classList.add("on");
+    lay.onStart?.();
     $(".pts").textContent = "0"; setCombo(); showBest(); say("");
     el.classList.add("whacking");
     api.sfx("chime");
@@ -226,7 +239,15 @@ export function mountWhack(el: HTMLElement, api: Api) {
     goFlash("GO!");
     kick();
   };
+  const close = () => {
+    if (running) finish(true);
+    panel.hidden = true; sign.classList.remove("on");
+    lay.onClose?.();
+  };
   startBtn.addEventListener("click", (e) => { e.stopPropagation(); begin(); });
+  sign.addEventListener("click", (e) => { e.stopPropagation(); api.sfx("bonk"); if (!running) begin(); });
+  closeBtn.addEventListener("click", (e) => { e.stopPropagation(); close(); sign.focus({ preventScroll: true }); });
+  panel.addEventListener("keydown", (e) => { if (e.key === "Escape" && !running) { e.stopPropagation(); close(); sign.focus({ preventScroll: true }); } });
   holes.forEach((h) => {
     h.el.addEventListener("pointerdown", (e) => {
       e.stopPropagation(); e.preventDefault();
@@ -246,4 +267,5 @@ export function mountWhack(el: HTMLElement, api: Api) {
     swingAt(x, y);
   });
   showBest();
+  return { close, running: () => running, open: () => !panel.hidden };
 }

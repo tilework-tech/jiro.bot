@@ -1,21 +1,48 @@
-import type { SceneDef, BeltPt } from "../engine/types";
+import type { SceneDef, BeltPt, Plate } from "../engine/types";
 import { LOOP } from "../engine/types";
 import { glow, wave } from "../engine/fx";
 import { html, hotspot, bubble } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
+import { drawPlates } from "../engine/belt";
 import { PRICING } from "../content/copy";
 import "./street.css";
 
-declareEggs(["street-bell", "street-neon", "street-jiro", "street-pm", "street-drain", "street-special"]);
-
-// Tiny closed belt loop riding on the delivery trike's cargo tray.
-// Transitions read these points (yard>street lands on sample 24, street>pond leaves from the rear point): keep them.
-const LOOP_PTS: BeltPt[] = Array.from({ length: 28 }, (_, i) => {
-  const a = (i / 28) * Math.PI * 2;
-  return [1493 + Math.cos(a) * 118, 607 + Math.sin(a) * 44, 0.72 + 0.1 * Math.sin(a)];
-});
+declareEggs(["street-bell", "street-neon", "street-jiro", "street-pm", "street-drain", "street-special", "street-chute", "street-cargo"]);
 
 const TAU = Math.PI * 2;
+
+/** Quarter arc from angle a0 to a1 (radians) around (cx, cy), scale 1. */
+function arc(cx: number, cy: number, r: number, a0: number, a1: number, n = 10): BeltPt[] {
+  return Array.from({ length: n - 1 }, (_, i) => {
+    const a = a0 + ((a1 - a0) * (i + 1)) / n;
+    return [Math.round((cx + Math.cos(a) * r) * 10) / 10, Math.round((cy + Math.sin(a) * r) * 10) / 10, 1] as BeltPt;
+  });
+}
+
+// The ONE belt (BIBLE v2 route). IN at the top edge x=150: lowered from an upstairs window, it runs down
+// the dark left wall like a drainpipe, rounds a real corner onto a raised gutter belt on posts along the
+// near kerb (y=990, passing in front of the trike's tyres), then curves down into the kerb at x=1770 (OUT).
+const LANE_X = 150, RUN_Y = 990, R_L = 120, R_R = 90, OUT_X = 1770;
+const BELT_PTS: BeltPt[] = [
+  [LANE_X, -60, 1],
+  [LANE_X, RUN_Y - R_L, 1],
+  ...arc(LANE_X + R_L, RUN_Y - R_L, R_L, Math.PI, Math.PI / 2, 12),
+  [LANE_X + R_L, RUN_Y, 1],
+  [OUT_X - R_R, RUN_Y, 1],
+  ...arc(OUT_X - R_R, RUN_Y + R_R, R_R, -Math.PI / 2, 0, 10),
+  [OUT_X, RUN_Y + R_R, 1],
+  [OUT_X, 1140, 1],
+];
+
+// Plates already loaded from the belt into the trike's delivery tray (static; they ride with Jiro, not the belt).
+const CARGO: Plate[] = ([
+  [1446, 596, "salmon", "#c9814a"], [1522, 590, "maki", "#1c1a18"], [1578, 608, "duck", "#b8433a"],
+  [1470, 624, "tuna", "#e6c46a"], [1548, 630, "tamago", "#c9814a"],
+] as const).map(([x, y, item, rim], i) => ({ x, y, s: 0.72, angle: 0, item, rim, key: `street-cargo:${i}`, alpha: 1 }));
+
+// Trike wheels (inner rim ellipses, stage px). Spoke glints + a reflector turn slowly: period 12 s.
+const WHEELS: [number, number, number, number][] = [[1125, 938, 58, 90], [1567, 855, 46, 80]];
+
 /** Loop-local time in [0, LOOP). */
 const lt = (now: number) => ((now % LOOP) + LOOP) % LOOP;
 /** Deterministic 0..1 hash. */
@@ -65,15 +92,71 @@ const SHIMMER: [number, number, number, string][] = [
   [830, 1055, 70, "255,95,200"], [1560, 960, 50, "255,190,120"], [1880, 990, 40, "255,160,90"],
 ];
 
+/** Belt hardware: wall clamps on the drainpipe lane, stubby kerb posts under the near run, a kerb slot at OUT. */
+function fixtures(g: CanvasRenderingContext2D) {
+  g.save();
+  // Lane shadow on the wall (the belt stands off the wall by a bracket's depth).
+  g.fillStyle = "rgba(0,0,0,.32)";
+  g.fillRect(LANE_X - 24, 0, 64, RUN_Y - R_L - 10);
+  // Wall clamps every 170 px: dark iron arms both sides of the tread, with a rivet.
+  for (let y = 90; y < RUN_Y - R_L - 20; y += 170) {
+    for (const side of [-1, 1]) {
+      const x0 = side < 0 ? LANE_X - 50 : LANE_X + 32;
+      g.fillStyle = "#15121a"; g.fillRect(x0, y - 7, 18, 16);
+      g.fillStyle = "#3a3340"; g.fillRect(x0 + 1, y - 6, 16, 5);
+      g.fillStyle = "#8a5a3a"; g.fillRect(x0 + (side < 0 ? 4 : 10), y - 1, 4, 4);
+    }
+  }
+  // Kerb posts under the near run: iron legs down out of frame, wet highlight on the left edge.
+  for (let x = 330; x < OUT_X - R_R - 30; x += 190) {
+    g.fillStyle = "#0e0c12"; g.fillRect(x - 9, RUN_Y + 30, 18, 1080 - RUN_Y - 30);
+    g.fillStyle = "#2c2733"; g.fillRect(x - 7, RUN_Y + 30, 5, 1080 - RUN_Y - 30);
+    g.fillStyle = "rgba(150,190,255,.25)"; g.fillRect(x - 7, RUN_Y + 42, 1, 1080 - RUN_Y - 42);
+    g.fillStyle = "#15121a"; g.fillRect(x - 14, RUN_Y + 30, 28, 6);
+  }
+  g.restore();
+}
+
+/** Spoke glints and a reflector that go round with the wheel (direction: riding left). */
+function wheels(g: CanvasRenderingContext2D, now: number) {
+  const th = -TAU * (lt(now) / 12);
+  g.save();
+  WHEELS.forEach(([cx, cy, rx, ry], wi) => {
+    for (let k = 0; k < 3; k++) {
+      const a = th + wi * 0.9 + (k * TAU) / 3;
+      const c = Math.cos(a), sn = Math.sin(a);
+      g.strokeStyle = "rgba(235,240,255,.6)";
+      g.lineWidth = 2;
+      g.beginPath();
+      g.moveTo(cx + c * rx * 0.2, cy + sn * ry * 0.2);
+      g.lineTo(cx + c * rx * 0.95, cy + sn * ry * 0.95);
+      g.stroke();
+    }
+    // Amber spoke reflector.
+    const a = th + wi * 0.9 + TAU / 6;
+    const x = Math.round(cx + Math.cos(a) * rx * 0.62), y = Math.round(cy + Math.sin(a) * ry * 0.62);
+    g.fillStyle = "rgba(255,170,60,.9)"; g.fillRect(x - 3, y - 2, 6, 4);
+    g.fillStyle = "rgba(255,230,170,.9)"; g.fillRect(x - 2, y - 2, 2, 1);
+    // Tyre valve: a dark nub on the rim, also turning.
+    const b = th + wi * 0.9 + TAU / 2.4;
+    g.fillStyle = "#c9c2b0";
+    g.fillRect(Math.round(cx + Math.cos(b) * rx * 1.02) - 1, Math.round(cy + Math.sin(b) * ry * 1.02) - 1, 3, 3);
+  });
+  g.restore();
+}
+
 export const street: SceneDef = {
   id: "street",
   room: "Delivery",
   art: "art/street.jpg",
   mood: "bustling",
   hold: 1.6,
-  belt: { pts: LOOP_PTS, closed: true, width: 44, plate: 44 },
+  belt: { pts: BELT_PTS, width: 64, plate: 52, fadeIn: 0, fadeOut: 0 },
   under(g, now, api) {
     const t = lt(now);
+    fixtures(g);
+    wheels(g, now);
+    drawPlates(g, CARGO, 52);
     // Neon halos breathe slowly.
     glow(g, 1005, 150, 190, "rgba(255,80,190,.13)", now, 0.12, 6);
     glow(g, 820, 70, 110, "rgba(255,80,190,.10)", now, 0.12, 8, 2);
@@ -163,6 +246,15 @@ export const street: SceneDef = {
     drizzle(g, now, 120, 0.2, 16, [2, 2.4, 3]);   // far, slow, faint
     drizzle(g, now, 60, 0.3, 24, [1.5, 1.6, 2]);  // near, a touch brighter
   },
+  click(x, y, api) {
+    // The drainpipe lane (plates on it are handled by the engine first).
+    if (Math.abs(x - LANE_X) < 44 && y < RUN_Y - R_L) {
+      api.sfx("bonk");
+      api.egg("street-chute", "The upstairs neighbour filed a complaint: sushi keeps passing his window. Status: working as intended.");
+      return true;
+    }
+    return false;
+  },
   mount(el, api) {
     const [lead, tail] = PRICING.title.split(/,\s*/);
     const rows = PRICING.plans.map((p) => `
@@ -211,6 +303,11 @@ export const street: SceneDef = {
       api.sfx("splash");
       bubble(el, 470, 700, "(from the drain) …works on my machine…");
       api.egg("street-drain", "Something down there is still running the legacy cron job.");
+    });
+    hotspot(el, 1385, 565, 235, 85, "Delivery tray", () => {
+      api.sfx("pop");
+      bubble(el, 1330, 490, "Five plates, one address. The duck is a plus-one.");
+      api.egg("street-cargo", "Jiro loads the trike straight off the belt. Zero handoffs, zero cold sushi.");
     });
     hotspot(el, 905, 495, 95, 150, "Sidewalk menu sign", () => {
       api.sfx("coin");
