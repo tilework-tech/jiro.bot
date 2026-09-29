@@ -172,7 +172,7 @@ const plates = new Plates(scene, path, camera, fx, hooks);
 plates.shade = heroShade;
 
 // endings: the koi pond, then the station where the belt finally stops
-const koi = new Koi(scene, cards[7], plates, fx, hooks);
+const koi = new Koi(scene, cards[6], plates, fx, hooks);
 
 
 // the belt comes out from behind the right-hand post of the hero's kitchen window:
@@ -210,7 +210,7 @@ let heroOccluder: THREE.Mesh | null = null;
 interface Stop { card: number; close?: boolean }
 const STOPS: Stop[] = [
   { card: 0 }, { card: 1 }, { card: 2 }, { card: 3 },
-  { card: 4 }, { card: 5 }, { card: 6 }, { card: 7 },
+  { card: 4 }, { card: 5 }, { card: 6 },
 ];
 const N = STOPS.length;
 const FAQ_STOP = STOPS.findIndex((x) => x.card === 4);
@@ -399,7 +399,7 @@ let heroClicks = 0;
 document.querySelector(".mark")!.addEventListener("click", () => {
   if (++heroClicks === 5) { hooks.found("logo", "Five taps on the logo."); plates.paradeOfJiros(); toast("Mini Jiro parade!"); }
 });
-document.getElementById("ov-cta")!.addEventListener("click", (e) => {
+document.getElementById("ov-pricing")!.addEventListener("click", (e) => {
   if ((e.target as HTMLElement).id === "reserve") { e.preventDefault(); hooks.found("cta", "You reserved a seat."); toast("Seat reserved. (Demo: no form yet.)"); }
 });
 document.querySelectorAll(".tag").forEach(() => 0);
@@ -562,7 +562,7 @@ function frame() {
 
   plates.update(dt, time);
   const near = (ci: number) => Math.min(...STOPS.map((st, k) => st.card === ci ? Math.abs(s - k) : 9));
-  koi.update(dt, near(7) < 0.6);
+  koi.update(dt, near(6) < 0.6);
 
   animateDoors(doors, time);
   occasionalFall(dt);

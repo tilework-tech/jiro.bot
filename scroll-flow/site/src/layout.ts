@@ -66,11 +66,6 @@ export const CARDS: CardDef[] = [
     belt: [[8.7, T + 0.6], [8.7, -4.15], [L, -4.15]], entryDir: [0, -1], exitDir: [-1, 0],
   },
   {
-    id: "s5-market", video: "v/s5-market.mp4",
-    pos: [25, -70, 14], rot: [0, -122, 12],
-    belt: [[L, T], [R, 2.4], [R, B]], entryDir: [0.99, -0.14], exitDir: [0, -1],
-  },
-  {
     id: "s6-delivery", video: "v/s6-delivery.mp4",
     pos: [9, -86, 25], rot: [6, -168, 0],
     belt: [[R, T], [R, B]], entryDir: [0, -1], exitDir: [0, -1],

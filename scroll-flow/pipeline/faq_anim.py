@@ -30,11 +30,11 @@ W8 = [weights(i) for i in range(5)]
 tau = 2 * math.pi
 def motion(i, f):
     ph = f / N
-    if i == 0:  return 2.2 * math.sin(tau * ph * 2), 0.0                                     # tuna: slow sway
-    if i == 1:  s = max(0, math.sin(tau * ph)) ** 3; return 0.0, -9.0 * s                    # salmon: big stretch up once
-    if i == 2:  return 1.6 * math.sin(tau * ph * 6) * (0.5 + 0.5 * math.sin(tau * ph)), 0.0  # tamago: little wiggle bursts
-    if i == 3:  return 3.0 * math.sin(tau * ph + 1.3), -1.2 * (1 - math.cos(tau * ph * 2)) / 2   # ikura: lean and settle
-    return 0.0, -2.5 * (1 - math.cos(tau * ph * 3)) / 2                                       # ebi: breathing bob
+    if i == 0:  return 4.0 * math.sin(tau * ph * 2), -1.5 * (1 - math.cos(tau * ph * 4)) / 2                                     # tuna: slow sway
+    if i == 1:  s = max(0, math.sin(tau * ph)) ** 2 + 0.6 * max(0, math.sin(tau * ph * 2 + 3.5)) ** 4; return 1.2 * math.sin(tau * ph * 3), -13.0 * min(1, s)                    # salmon: big stretch up once
+    if i == 2:  return 3.2 * math.sin(tau * ph * 8) * max(0, math.sin(tau * ph * 2)), -2.0 * max(0, math.sin(tau * ph * 2)) ** 2  # tamago: little wiggle bursts
+    if i == 3:  return 5.0 * math.sin(tau * ph + 1.3), -2.5 * (1 - math.cos(tau * ph * 2)) / 2   # ikura: lean and settle
+    return 1.5 * math.sin(tau * ph * 5), -4.5 * (1 - math.cos(tau * ph * 3)) / 2                                       # ebi: breathing bob
 # Jiro's eyes: find the glowing cyan blobs in his head
 hx0, hx1, hy0, hy1 = int(200 * 1.72 * S), int(700 * 1.72 * S), int(120 * 1.72 * S), int(420 * 1.72 * S)
 Rh = src[hy0:hy1, hx0:hx1].astype(int)

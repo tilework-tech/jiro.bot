@@ -105,7 +105,7 @@ export function buildDoors(scene: THREE.Scene, path: BeltPath, spans: [number, n
       let ok = views.every((v) => v.to.every((t) => !blocked(v.from, t)));
       if (ok && cross) {
         const c = cross.clone().applyMatrix4(inv);
-        if (Math.abs(c.x) < r.w / 2 + 1 && c.y < r.top + 1 && c.y > r.bottom - 1) ok = false;
+        if (Math.abs(c.x) < r.w / 2 + 3.5 && c.y < r.top + 3 && c.y > r.bottom - 3) ok = false;
       }
       for (let s = 0; ok && s < path.length - 0.5; s += 0.5) {
         if (Math.abs(s - sm) < 1) continue;
