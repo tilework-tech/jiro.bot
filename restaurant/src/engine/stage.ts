@@ -232,7 +232,10 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
   let lastScene = "";
   const q = new URLSearchParams(location.search);
   const fixedT = q.get("t"); // ?t=seconds freezes time (for screenshots)
-  const fixedP = q.get("p"); // ?p=scroll position in viewport heights (for screenshots)
+  const segQ = q.get("seg"); // ?seg=bar>office&tt=0.5 renders a segment at local progress tt (for screenshots)
+  const segHit = segQ ? segs.find((s) => s.id === segQ) : undefined;
+  const fixedP = segHit ? String(segHit.start + Math.min(0.9999, parseFloat(q.get("tt") ?? "0.5")) * segHit.len) : q.get("p"); // ?p=scroll position in viewport heights
+  (window as any).__segs = segs.map((s) => ({ id: s.id, start: s.start, len: s.len }));
 
   function tick() {
     const now = fixedT ? parseFloat(fixedT) : performance.now() / 1000;
