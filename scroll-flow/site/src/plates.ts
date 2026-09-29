@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { BeltPath, Frame, BELT_W } from "./belt";
+import { BeltPath, Frame, BELT_W, SHADE_U } from "./belt";
 import { Particles, pixelGrid, blip, boom } from "./fx";
 
 export const ITEMS = [
@@ -63,6 +63,8 @@ export class Plates {
   walker: Plate | null = null;
   /** called when a plate reaches the end of the belt (before it recycles to the hero) */
   onWrap: ((item: THREE.Texture) => void) | null = null;
+  /** light level (0..1) at a world point near the belt start (kitchen-window shading) */
+  shade?: (p: THREE.Vector3) => number;
 
   constructor(public scene: THREE.Scene, public path: BeltPath, public camera: THREE.PerspectiveCamera,
     public fx: Particles, public hooks: Hooks) {
@@ -150,6 +152,10 @@ export class Plates {
       const sc = 0.62 * f.sc * vis * p.puff * (1 + (p.mode === "drag" ? 0.15 : 0));
       p.sprite.scale.set(sc, sc, 1);
       (p.sprite.material as THREE.SpriteMaterial).rotation = p.spin + (p.item === "onigiri-angry" && p.mode === "belt" ? Math.sin(time * 30) * 0.04 : 0);
+      // dim plates still inside the hero's kitchen window (lit by the belt surface under them)
+      const l = this.shade && raw < SHADE_U && p.mode === "belt" ? this.shade(p.pos) : 1;
+      (p.sprite.material as THREE.SpriteMaterial).color.setScalar(l);
+      (p.disc.material as THREE.MeshBasicMaterial).color.setScalar(l);
     }
   }
 

@@ -77,9 +77,22 @@ function ensureLoaded(v: HTMLVideoElement) {
 
 // ------------------------------------------------------------------ belt + plates + fx
 const path = new BeltPath(cards);
-const belt = buildBeltMesh(path);
+// light on the belt where it comes out of the hero's kitchen window (1600x900 hero grid):
+// dim (~0.25) behind the right-hand post, brightening across the opening until it clears
+// the left jamb into the lit bar. Only the belt, slats and plates are shaded, never the wall.
+const heroInv = cards[0].object.matrixWorld.clone().invert(), heroV = new THREE.Vector3();
+function heroShade(p: THREE.Vector3) {
+  heroV.copy(p).applyMatrix4(heroInv);
+  if (Math.abs(heroV.z) > 1.5) return 1;
+  const gx = 800 + heroV.x * 100, gy = 450 - heroV.y * 100;
+  if (gy < 320 || gy > 480 || gx < 1440) return 1;
+  const t = THREE.MathUtils.smoothstep(gx, 1450, 1508);  // 0 at the left jamb, 1 near/behind the right post
+  return (1 - 0.8 * t) ** 2.2;                             // perceived brightness -> linear colour factor
+}
+const belt = buildBeltMesh(path, heroShade);
 scene.add(belt.group);
 const slats = new Slats(path);
+slats.shade = heroShade;
 scene.add(slats.mesh);
 const fx = new Particles(scene);
 
@@ -156,39 +169,35 @@ const hooks = {
   rainbow(on: boolean) { document.body.classList.toggle("rainbow", on); },
 };
 const plates = new Plates(scene, path, camera, fx, hooks);
+plates.shade = heroShade;
 
 // endings: the koi pond, then the station where the belt finally stops
 const koi = new Koi(scene, cards[7], plates, fx, hooks);
 
 
 // the belt comes out from behind the right-hand post of the hero's kitchen window:
-// an opaque cut-out of the painted post/wall sits in front of the belt, and the
-// window's dark inside dims whatever is on the belt back there
+// an opaque cut-out of the painted post/wall is drawn over the belt (see heroShade for
+// how the belt itself dims inside the window)
 {
   const img = new Image();
   img.src = "p/s0-hero.jpg";
   img.onload = () => {
-    // window geometry measured on the 1600x900 hero grid
-    const x0 = 1440, y0 = 320, x1 = 1600, y1 = 470, post = 1523, dark = [1455, 350, 1523, 428];
+    // window geometry measured on the 1600x900 hero grid; `post` = inner (left) edge of the right post
+    const x0 = 1440, y0 = 320, x1 = 1600, y1 = 470, post = 1524;
     const k = img.width / 1600, W = Math.round((x1 - x0) * k), H = Math.round((y1 - y0) * k);
     const c = document.createElement("canvas"); c.width = W; c.height = H;
     const g = c.getContext("2d")!;
     g.drawImage(img, x0 * k, y0 * k, W, H, 0, 0, W, H);
     const id = g.getImageData(0, 0, W, H), d = id.data;
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
-      const px = x0 + x / k, py = y0 + y / k, i = (y * W + x) * 4;
-      if (px >= post) { d[i + 3] = 255; continue; }                         // post + wall: fully in front
-      const inDark = px > dark[0] && py > dark[1] && px < dark[2] && py < dark[3];
-      if (inDark) { const depth = Math.min(1, (px - dark[0]) / (dark[2] - dark[0])); d[i] = d[i + 1] = d[i + 2] = 8; d[i + 3] = Math.round(90 + 130 * depth); continue; }
-      d[i + 3] = 0;
-    }
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) d[(y * W + x) * 4 + 3] = x0 + x / k >= post ? 255 : 0;
     g.putImageData(id, 0, 0);
     const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
     const w = (x1 - x0) / 100, h = (y1 - y0) / 100;
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, fog: false, toneMapped: false }));
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: t, transparent: true, depthTest: false, depthWrite: false, fog: false, toneMapped: false }));
+    // lies on the card itself (so it lines up with the painting from any camera) and is drawn last, over the belt
     m.renderOrder = 8;
     const cx = ((x0 + x1) / 2 / 1600 - 0.5) * 16, cy = (0.5 - (y0 + y1) / 2 / 900) * 9;
-    m.position.copy(new THREE.Vector3(cx, cy, 0.3).applyMatrix4(cards[0].object.matrixWorld));
+    m.position.copy(new THREE.Vector3(cx, cy, 0.001).applyMatrix4(cards[0].object.matrixWorld));
     m.quaternion.copy(cards[0].quat);
     scene.add(m);
     heroOccluder = m;
@@ -457,12 +466,13 @@ function updateOverlays(time: number) {
   if (faqOn && !faqShown) { faqEls.forEach((b, i) => setTimeout(() => b.classList.add("in"), 250 + i * 320)); faqShown = true; }
   if (!faqOn && Math.abs(s - FAQ_STOP) > 0.9 && faqShown) { faqEls.forEach((b) => b.classList.remove("in")); faqShown = false; }
   if (Math.abs(s - FAQ_STOP) < 1) faqEls.forEach((b, i) => {
-    const p = project(toWorld(cards[4], [FAQ[i].at[0], FAQ[i].at[1] + 0.55 + (i % 2) * 0.85], 0));
+    // the five sit close together on one board: fan the bubbles out above them
+    const p = project(toWorld(cards[4], [FAQ[i].at[0] + (i - 2) * 1.25 + 0.6, FAQ[i].at[1] + 1.2 + (i % 2) * 1.05], 0));
     b.style.left = `${p.x}px`; b.style.top = `${p.y}px`;
   });
   // Jiro answers in a speech bubble next to his head
   if (Math.abs(s - FAQ_STOP) < 1) {
-    const a = project(toWorld(cards[4], [-3.3, 2.1], 0));
+    const a = project(toWorld(cards[4], [-3.6, 3.0], 0));
     faqAnswer.style.left = `${a.x}px`; faqAnswer.style.top = `${a.y}px`;
   }
   // the two strays, once each per visit: a dish on the table scene's belt falls off,

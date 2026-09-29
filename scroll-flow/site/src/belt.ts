@@ -177,7 +177,7 @@ function slatTexture(): THREE.CanvasTexture {
 }
 
 /** Belt surface (scrolling slats) plus a copper-railed wooden frame, shaded without lights. */
-export function buildBeltMesh(path: BeltPath) {
+export function buildBeltMesh(path: BeltPath, shade?: (p: THREE.Vector3) => number) {
   const n = path.pts.length;
   const hw = BELT_W / 2;
   // --- surface
@@ -215,7 +215,7 @@ export function buildBeltMesh(path: BeltPath) {
     for (let k = 0; k < prof.length - 1; k++) {
       const a = q(i, k), b = q(i, k + 1), c = q(i + 1, k), d = q(i + 1, k + 1);
       const col = faceCol[k];
-      for (const v of [a, b, c, b, d, c]) { fp.push(v.x, v.y, v.z); fc.push(col.r, col.g, col.b); }
+      for (const v of [a, b, c, b, d, c]) { const l = shade ? shade(v) : 1; fp.push(v.x, v.y, v.z); fc.push(col.r * l, col.g * l, col.b * l); }
     }
   }
   const fg = new THREE.BufferGeometry();
@@ -235,6 +235,8 @@ export function buildBeltMesh(path: BeltPath) {
  * their pins: they pile up on the inside of the turn and fan open on the outside,
  * sliding under one another instead of leaving gaps.
  */
+/** belt-space length from the start over which the kitchen-window shading is evaluated */
+export const SHADE_U = 5;
 export const SLAT_PITCH = 0.25;                    // ≈0.22 × belt width (research: 0.2–0.25 W)
 const SLAT_LEN = SLAT_PITCH + 0.15;                // pitch + straight-run overlap
 const SLAT_TILT = Math.atan(0.035 / SLAT_PITCH);   // nose-down shingle angle
@@ -286,6 +288,9 @@ export class Slats {
   f2: Frame = { p: new THREE.Vector3(), t: new THREE.Vector3(), b: new THREE.Vector3(), u: new THREE.Vector3(), w: new THREE.Vector3(), sc: 1, lift: new THREE.Vector3() };
   m = new THREE.Matrix4();
   fwd = new THREE.Vector3(); side = new THREE.Vector3();
+  /** light level (0..1) at a world point near the belt start; dims slats inside the hero's kitchen window */
+  shade?: (p: THREE.Vector3) => number;
+  lit: Float32Array; col = new THREE.Color();
 
   constructor(public path: BeltPath) {
     this.n = Math.floor(path.lengthU / SLAT_PITCH);
@@ -296,6 +301,7 @@ export class Slats {
     // a hint of variation so the shingled rows read (every 4th slat a touch lighter)
     const c = new THREE.Color();
     for (let i = 0; i < this.n; i++) this.mesh.setColorAt(i, c.setScalar(i % 2 ? 0.86 : 1));
+    this.lit = new Float32Array(this.n).fill(1);
   }
 
   update(offsetU: number) {
@@ -314,6 +320,13 @@ export class Slats {
       const vis = Math.min(1, u / 0.3);
       this.m.makeBasis(this.fwd.multiplyScalar(vis), this.side.multiplyScalar(vis), up.multiplyScalar(vis)).setPosition(a.p.x, a.p.y, a.p.z);
       this.mesh.setMatrixAt(i, this.m);
+      // sample the light at the middle of the slat, only near the start of the belt
+      const l = this.shade && u < SHADE_U ? this.shade(this.f2.p.lerp(a.p, 0.5)) : 1;
+      if (Math.abs(l - this.lit[i]) > 0.004) {
+        this.lit[i] = l;
+        this.mesh.setColorAt(i, this.col.setScalar((i % 2 ? 0.86 : 1) * l));
+        if (this.mesh.instanceColor) this.mesh.instanceColor.needsUpdate = true;
+      }
     }
     this.mesh.instanceMatrix.needsUpdate = true;
   }

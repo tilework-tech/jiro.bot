@@ -49,12 +49,12 @@ export const CARDS: CardDef[] = [
   },
   {
     id: "s2-serve", video: "v/s2-serve.mp4",
-    pos: [-11, -32, -18], rot: [-90, 0, 0],
+    pos: [-14, -32, -1.5], rot: [-90, 0, 0],
     belt: [[L, T], [L, BOT], [R, BOT], [R, B]], entryDir: [0, -1], exitDir: [0, -1],
   },
   {
     // after-hours bar (was the tuna scene's slot): hosts the comparison table
-    id: "s7-closing", video: "v/s7-closing.mp4",
+    id: "s7-closing", video: "v/s7-closing-small.mp4",
     pos: [9, -42, -14], rot: [0, -28, 0],
     belt: [[R, T], [R, B]], entryDir: [0, -1], exitDir: [0, -1],
   },
