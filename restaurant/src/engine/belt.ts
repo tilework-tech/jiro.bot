@@ -36,8 +36,11 @@ function bake(path: BeltPath): Baked {
   const p = out[out.length - 1];
   u += Math.hypot(xl - p.x, yl - p.y) / ((sl + p.s) / 2);
   out.push({ x: xl, y: yl, s: sl, u, nx: 0, ny: 0, a: 0 });
+  const last = out.length - 1;
   for (let i = 0; i < out.length; i++) {
-    const a = out[Math.max(0, i - 1)], b = out[Math.min(out.length - 1, i + 1)];
+    // Closed loops wrap neighbours across the join so the tread has no notch there.
+    const a = path.closed && i === 0 ? out[last - 1] : out[Math.max(0, i - 1)];
+    const b = path.closed && i === last ? out[1] : out[Math.min(last, i + 1)];
     const dx = b.x - a.x, dy = b.y - a.y, l = Math.hypot(dx, dy) || 1;
     out[i].nx = -dy / l; out[i].ny = dx / l; out[i].a = Math.atan2(dy, dx);
   }

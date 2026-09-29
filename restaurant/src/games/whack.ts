@@ -24,7 +24,7 @@ export function mountWhack(el: HTMLElement, api: Api) {
 
   const startBtn = html(el, `<button class="btn primary game-start">▶ Play Whack-a-Bug</button>`) as HTMLButtonElement;
   place(startBtn, 1300, 470);
-  const help = html(el, `<p class="whack-help">Whack the bugs, spare the duck. Click, tap or <kbd>1</kbd>–<kbd>8</kbd>.</p>`);
+  const help = html(el, `<p class="whack-help">Whack the bugs, spare the duck. Click, tap or <kbd>1</kbd>–<kbd>${HOLES.length}</kbd>.</p>`);
   place(help, 1300, 556);
   const hud = html(el, `
     <div class="whack-hud" hidden aria-live="polite">

@@ -1,13 +1,16 @@
-import type { Api, TransitionDef } from "../engine/types";
-import { STAGE_W, STAGE_H } from "../engine/types";
-import { drawPov, ZW0, type Pov } from "./dining-kitchen/pov";
+import type { Api, Camera, TransitionDef } from "../engine/types";
+import { F, WPX, DOOR, drawPov, type Pov } from "./dining-kitchen/pov";
+import { layerCtx, dissolve } from "./dining-kitchen/dissolve";
 
 // dining -> kitchen: the "sushi cam". See dining-kitchen.md.
-//   0.00-0.16  dining camera dips to the belt (zoom toward the doors); POV slides up from below
-//              (camera bolted to a plate, doors ahead)
-//   0.08-0.80  ride at constant speed: plate ahead noses the doors open, they flap
+//   0.00-0.21  one camera: dining zooms onto the kitchen doors while the sushi cam,
+//              locked to the same door rect, cranes down to belt height; a
+//              bottom-first dithered pixel dissolve swaps dining -> POV (0.10-0.21)
+//   0.00-0.80  ride at constant speed: plate ahead noses the doors open, they flap
 //              back, our plate pushes through, kitchen towers over us
-//   0.80-1.00  un-bolt: camera rises, POV slides down out of frame, kitchen zooms out to 1
+//   0.78-1.00  un-bolt: camera rises (belt drops out of frame), a top-first
+//              dithered dissolve reveals the kitchen at the matching zoom (0.83-0.95),
+//              which then pulls back to the observer frame
 
 const smooth = (a: number, b: number, t: number) => {
   const x = Math.max(0, Math.min(1, (t - a) / (b - a)));
@@ -15,21 +18,55 @@ const smooth = (a: number, b: number, t: number) => {
 };
 const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 
-const T_POV0 = 0.08, T_POV1 = 0.8;
-const ZW_END = -80;
+/** Ride: zw is linear in t (constant speed): ZW_A at t=0 -> ZW_END at T_END. */
+const ZW_A = 283, ZW_END = -80, T_END = 0.8;
+const zwAt = (t: number) => ZW_A + (ZW_END - ZW_A) * (t / T_END);
+
+/** Entry dissolve window and crane height. */
+const IN0 = 0.1, IN1 = 0.21;
+const CRANE = 130;
+/** Exit dissolve window. */
+const OUT0 = 0.83, OUT1 = 0.95;
+
+/** Dining door (stage px in dining.jpg) and its size ratio to the POV door art. */
+const DD = { cx: 1475, top: 205, w: 280 };
+const DOOR_RATIO = (DOOR.x1 - DOOR.x0) / DD.w;
+
+/** Kitchen camera that lines kitchen.jpg up with kitchen-pov.jpg (tub centre-left, Jiro right). */
+const K_MATCH = { zoom: 2.0, cx: 1397, cy: 536 };
 
 export function povAt(t: number): Pov {
-  const k = Math.max(0, Math.min(1, (t - T_POV0) / (T_POV1 - T_POV0)));
-  const zw = ZW0 + (ZW_END - ZW0) * k; // linear: constant riding speed
+  const zw = zwAt(Math.min(t, 0.9));
   // Camera tilt (horizon) is eased; travel is not.
-  const tiltUp = smooth(0, 1, (ZW0 - zw) / (ZW0 - 150));
+  const tiltUp = smooth(0, 1, (300 - zw) / 150);
   const tiltDown = smooth(0, 1, (40 - zw) / 100);
-  const yh = lerp(lerp(707, 880, tiltUp), 566, tiltDown);
+  let yh = lerp(lerp(707, 880, tiltUp), 566, tiltDown);
   const rise = smooth(0, 1, (0 - zw) / 60);
-  const unbolt = smooth(0.76, 0.9, t);
-  const hc = 20 + 9 * rise + 90 * unbolt;
+  const unbolt = smooth(0.76, 0.93, t);
+  let hc = 20 + 9 * rise + 240 * unbolt;
+  // Crane down: extra height, horizon compensated so the door plane holds still
+  // on screen while the near counter and belt swing up from below.
+  const up = CRANE * (1 - smooth(0.02, IN1 + 0.02, t));
+  hc += up;
+  yh -= (up * F) / Math.max(zw, 40);
   return { zw, yh, hc };
 }
+
+/** Dining camera whose kitchen doors sit exactly on the POV's door rect. */
+function diningMatch(p: Pov): Camera {
+  const sc = (WPX * F) / p.zw;
+  const zoom = DOOR_RATIO * sc;
+  const topY = p.yh + ((p.hc - (DOOR.base - DOOR.y0) * WPX) * F) / p.zw;
+  // Door centred (as in the POV) unless that would show past the art's right edge.
+  const cx = Math.min(DD.cx, 1920 - 960 / zoom);
+  const cy = DD.top - (topY - 540) / zoom;
+  return { zoom, cx, cy };
+}
+
+function mixCam(a: Camera, b: Camera, k: number): Camera {
+  return { zoom: lerp(a.zoom ?? 1, b.zoom ?? 1, k), cx: lerp(a.cx ?? 960, b.cx ?? 960, k), cy: lerp(a.cy ?? 540, b.cy ?? 540, k) };
+}
+const ID: Camera = { zoom: 1, cx: 960, cy: 540 };
 
 export const diningKitchen: TransitionDef = {
   from: "dining",
@@ -37,38 +74,29 @@ export const diningKitchen: TransitionDef = {
   length: 2.0,
   route: "Sushi cam: we ride a plate through the swinging kitchen doors and look up at the kitchen from belt height",
   render(g: CanvasRenderingContext2D, t: number, now: number, api: Api) {
-    // The sushi cam slides up from below as we dip onto the belt, and slides
-    // down out of frame as the camera rises back to eye level (no ghosting).
-    const inK = smooth(0.03, 0.16, t), outK = smooth(0.8, 0.95, t);
-    const povY = (1 - inK) * STAGE_H + outK * STAGE_H * 1.12;
-    // 1. Dining: dip toward the belt near the doors.
-    if (t < 0.17) {
-      const k = smooth(0, 0.15, t);
-      if (k <= 0) api.drawScene("dining", g, now);
-      else api.drawScene("dining", g, now, { zoom: 1 + 2.4 * k, cx: lerp(960, 1480, k), cy: lerp(540, 800, k) });
-    }
-    // 2. Kitchen: pull back from belt height to the observer frame.
-    if (t > T_POV1 - 0.02) {
-      const k = smooth(T_POV1 - 0.02, 1, t);
-      if (k >= 1) api.drawScene("kitchen", g, now);
-      else api.drawScene("kitchen", g, now, { zoom: 2.6 - 1.6 * k, cx: lerp(1060, 960, k), cy: lerp(560, 540, k) });
-    }
-    // 3. Sushi cam on top.
-    if (povY < STAGE_H - 0.5) {
-      const p = povAt(t);
-      g.save();
-      if (povY > 0.5) {
-        // Soft shadow along the top edge sells the "camera moving" wipe.
-        const sh = g.createLinearGradient(0, povY - 140, 0, povY);
-        sh.addColorStop(0, "rgba(8,6,5,0)");
-        sh.addColorStop(1, "rgba(8,6,5,.75)");
-        g.fillStyle = sh;
-        g.fillRect(0, povY - 140, STAGE_W, 140);
-        g.beginPath(); g.rect(0, povY, STAGE_W, STAGE_H); g.clip();
-        g.translate(0, Math.round(povY));
+    const p = povAt(t);
+    const kIn = smooth(IN0, IN1, t), kOut = smooth(OUT0, OUT1, t);
+    if (t <= 0) { api.drawScene("dining", g, now); return; }
+    if (t >= 1) { api.drawScene("kitchen", g, now); return; }
+
+    if (kIn < 1) {
+      // Entry: dining camera eases from identity onto the door-matched camera.
+      const cam = mixCam(ID, diningMatch(p), smooth(0, IN0 + 0.02, t));
+      api.drawScene("dining", g, now, cam);
+      if (kIn > 0) {
+        drawPov(layerCtx(), p, now, api);
+        // Bottom first: the belt arrives before the doors change.
+        dissolve(g, kIn, (u, v) => 1 - v * 0.85 - 0.15 * Math.abs(u - 0.5));
       }
-      drawPov(g, p, now, api);
-      g.restore();
+      return;
     }
+    if (kOut <= 0) { drawPov(g, p, now, api); return; }
+    // Exit: POV rising; kitchen revealed top-first at the matching zoom, then pulled back.
+    drawPov(g, p, now, api);
+    const cam = mixCam(K_MATCH, ID, smooth(OUT0 + 0.05, 1, t));
+    const lg = layerCtx();
+    if (kOut >= 1) { api.drawScene("kitchen", g, now, cam); return; }
+    api.drawScene("kitchen", lg, now, cam);
+    dissolve(g, kOut, (u, v) => v * 0.85 + 0.15 * Math.abs(u - 0.5));
   },
 };

@@ -6,18 +6,21 @@
 
 | t | beat |
 |---|------|
-| 0 – 0.16 | dining zooms toward the belt near the doors (×3.4 around 1480,800); POV slides up from below (camera tilting down) |
-| 0.08 – 0.80 | POV ride. Door-plane distance falls linearly 300 → −80 world units (constant speed; the camera tilt is eased, the travel is not) |
-| ≈0.31 / 0.60 | duck plate pushes the doors open / our plate pushes them open again |
-| 0.80 – 1.0 | camera rises (eye height 29 → 119) and the POV slides down out of frame while the kitchen zooms out 2.6 → 1 |
+| 0 – 0.12 | dining camera eases from identity onto a camera locked to the POV door rect (zoom ≈ 1.6 × POV door scale, doors centred unless that would show past the art's right edge) |
+| 0.02 – 0.23 | sushi cam cranes down: eye height starts 130 higher, horizon compensated so the door plane holds still while the counter and belt swing up from below |
+| 0.10 – 0.21 | bottom-first ordered-dither pixel dissolve dining → POV (6 px cells, Bayer 8×8 + position bias; no seam) |
+| 0 – 0.80 | POV ride. Door-plane distance falls linearly 283 → −80 world units (constant speed; the camera tilt is eased, the travel is not) |
+| ≈0.24 / 0.57 | duck plate pushes the doors open / our plate pushes them open again |
+| 0.76 – 0.93 | un-bolt: eye height rises +240, so the near belt and plates drop out of frame and the belt narrows toward the vanishing point |
+| 0.83 – 0.95 | top-first pixel dissolve POV → kitchen at the matching camera `K_MATCH` (zoom 2.0 around 1397, 536: tub centre-left, Jiro right); kitchen pulls back to identity over 0.88 – 1.0 |
 
-**How it works:** `dining-kitchen/pov.ts` is a pinhole camera (F=500) on a plate. The belt tread, copper rails and wooden counter are mode-7 scanlines rendered at 1/4 resolution. The tread and the plates ahead ride with us, so they hold still. The rails' rivets and the counter joints stream past at `BELT_SPEED` plus the scroll travel. The door leaves are projected vertical strips of `doors.jpg`, hinged on the frame.
+**How it works:** `dining-kitchen/dissolve.ts` renders the incoming layer offscreen and masks it with chunky Bayer-dither cells (the same pixel look as the art) so the hand-offs read as one camera, not a split screen. `dining-kitchen/pov.ts` is a pinhole camera (F=500) on a plate. The belt tread, copper rails and wooden counter are mode-7 scanlines rendered at 1/4 resolution. The tread and the plates ahead ride with us, so they hold still. The rails' rivets and the counter joints stream past at `BELT_SPEED` plus the scroll travel. The door leaves are projected vertical strips of `doors.jpg`, hinged on the frame.
 
 **Art** (`public/art/tr/dining-kitchen/`, sources in `/tmp/dining-kitchen/src/`):
 - `doors.jpg`: the dining wall from belt height. The door opening is hard-coded as `DOOR` in `pov.ts`: x 738–1182, y 205–728, the leaf split at x 960, and the counter line at y 740. If you regenerate this image, update those numbers.
 - `kitchen-pov.jpg`: a worm's-eye view of the kitchen. Its vanishing point is hard-coded as `KVP` = (960, 566).
 
 **Scene dependencies (kept small):**
-- Dining: the zoom target is (1480, 800), the belt near the right-hand doors. The dining art should keep a double swinging door with round portholes on the right wall (currently about 1330–1650 × 200–520) and a belt running toward it along the bottom (y ≈ 824), so the POV doors read as the same doors. The dining art must not change the zoom math.
-- Kitchen: the pull-back starts at zoom 2.6 around (1060, 560) (the rice tub, pass shelf and Jiro). Keep Jiro on the right, the hangiri tub centre-left, and the belt entering from the left (about 700, 650). If Jiro or the tub move a lot, update `kitchen-pov.jpg` so they stay on the same sides.
+- Dining: `DD` in `dining-kitchen.ts` is the dining door (centre x 1475, top y 205, width 280; doors ≈ 1335–1620 × 205–550). The entry camera is solved each frame so these doors land on the POV door rect. If the dining doors move, update `DD`.
+- Kitchen: the dissolve lands on `K_MATCH` (zoom 2.0 around 1397, 536), which lines kitchen.jpg's tub (≈1154, 580) and Jiro's eyes (≈1567, 358) up with the same props in `kitchen-pov.jpg`. Keep Jiro on the right, the hangiri tub centre-left, and the belt entering from the left (about 700, 650). If Jiro or the tub move a lot, update `kitchen-pov.jpg` so they stay on the same sides.
 - Neither scene's `belt` data is read. The POV belt is its own world (belt 64 wide, plates 52, PLATE_GAP 150).

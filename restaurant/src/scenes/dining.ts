@@ -77,7 +77,7 @@ export const dining: SceneDef = {
       g.fillRect(x - 10, y - 10, 20, 20);
     });
     g.restore();
-    // Porthole peek egg: two blue robot eyes in the right porthole.
+    // Porthole peek egg: the kitchen cat peers through the right porthole (no Jiro in this room).
     const pk = tnow() - peekT;
     if (pk < 2.8) {
       const [x, y] = PORTHOLES[1];
@@ -85,11 +85,14 @@ export const dining: SceneDef = {
       const yy = Math.round(y + 14 - rise * 12);
       g.save();
       g.beginPath(); g.arc(x, y, 24, 0, Math.PI * 2); g.clip();
-      g.fillStyle = "#b8703c"; g.fillRect(x - 24, yy - 12, 48, 40);
-      g.fillStyle = "#f3e6cf"; g.fillRect(x - 16, yy - 4, 32, 30);
+      g.fillStyle = "#c8742f"; g.fillRect(x - 18, yy - 12, 8, 8); g.fillRect(x + 10, yy - 12, 8, 8);
+      g.fillStyle = "#e0924a"; g.fillRect(x - 20, yy - 4, 40, 36);
+      g.fillStyle = "#b8612a"; g.fillRect(x - 4, yy - 4, 8, 6);
       const blink = pk > 1.5 && pk < 1.62;
-      g.fillStyle = "#5ff0ff";
-      if (!blink) { g.fillRect(x - 11, yy + 2, 7, 7); g.fillRect(x + 4, yy + 2, 7, 7); }
+      g.fillStyle = "#9be36b";
+      if (!blink) { g.fillRect(x - 12, yy + 4, 7, 7); g.fillRect(x + 5, yy + 4, 7, 7); }
+      g.fillStyle = "#101010";
+      if (!blink) { g.fillRect(x - 9, yy + 5, 2, 5); g.fillRect(x + 8, yy + 5, 2, 5); }
       g.restore();
     }
   },
@@ -103,7 +106,7 @@ export const dining: SceneDef = {
     PORTHOLES.forEach(([x, y]) => hotspot(el, x - 30, y - 30, 60, 60, "Porthole", () => {
       peekT = tnow();
       api.sfx("blip");
-      api.egg("dining-porthole", "Someone in the kitchen is checking whether you finished your nigiri.");
+      api.egg("dining-porthole", "The kitchen cat is checking whether you finished your nigiri.");
     }));
     hotspot(el, 1660, 360, 150, 210, "Plant", () => { api.sfx("pop"); api.egg("dining-plant", "The plant is a Monstera. It has been there since v0.1."); });
     hotspot(el, 598, 110, 58, 105, "Lantern", () => {

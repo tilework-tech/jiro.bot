@@ -21,6 +21,8 @@ const ART = { url: "art/tr/street-pond/garden.jpg", x: -360, y: 1052, w: 2395, h
 const WALL_TOP = 1073, WALL_BOT = 1530;
 const GATE = { x: 1644, y: 1357, rx: 180, ry: 172 };
 const LANE_X = 1652;
+/** Wall shadow band on the pavement, from the street's puddles down to the roof cap. */
+const SHADE_Y0 = 975, SHADE_Y1 = 1142;
 
 // Street loop geometry, read from the scene: dock at the loop's rear (rightmost) point.
 const loopPts = street.belt.pts;
@@ -172,6 +174,21 @@ export const streetPond: TransitionDef = {
     if (vy1 > ART.y && art.complete && art.naturalWidth) g.drawImage(art, ART.x, ART.y, ART.w, ART.h);
     if (vy1 > PY) g.drawImage(sceneBuf("b", "pond", now, api, 0, 90 * outP, 40 * outP), PX, PY);
     if (vy0 < STAGE_H) g.drawImage(sceneBuf("a", "street", now, api, 28 * inS, 0, 0), 0, 0);
+
+    // The wall's shadow on the wet pavement: fades in as the camera leaves the
+    // street frame and swallows the street art's puddle reflections at its bottom
+    // edge, so nothing upside-down meets the wall. Zero at t=0.
+    const shade = smooth(0.08, 0.3, t);
+    if (shade > 0 && vy0 < WALL_TOP + 80) {
+      const gr = g.createLinearGradient(0, SHADE_Y0, 0, SHADE_Y1);
+      gr.addColorStop(0, "rgba(8,10,22,0)");
+      gr.addColorStop(0.5, `rgba(8,10,22,${0.8 * shade})`);
+      gr.addColorStop(0.62, `rgba(8,10,22,${0.8 * shade})`);
+      // Lighter at the roof cap so the cat sitting on it stays readable.
+      gr.addColorStop(1, `rgba(8,10,22,${0.3 * shade})`);
+      g.fillStyle = gr;
+      g.fillRect(ART.x, SHADE_Y0, ART.w, SHADE_Y1 - SHADE_Y0);
+    }
 
     // The chute: unfolds from the cargo box, hidden behind the wall except through the gate.
     const unfold = smooth(0.02, 0.2, t);
