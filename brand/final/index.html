@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Jiro — final moodboard</title>
+<style>
+  :root{--bg:#141110;--panel:#1d1815;--line:#33291f;--ink:#f1e8da;--mute:#a4937f;--copper:#d38a4a;--blue:#5ac8ff;--red:#c8433a;--green:#7fb36a}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 "Liberation Sans",Arial,sans-serif;width:2400px}
+  .wrap{padding:56px 64px 48px}
+  header{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2px solid var(--copper);padding-bottom:22px;margin-bottom:36px}
+  h1{margin:0;font-size:64px;letter-spacing:-1px;line-height:1}
+  h1 small{display:block;font-size:22px;color:var(--mute);font-weight:400;letter-spacing:0;margin-top:10px}
+  .meta{text-align:right;color:var(--mute);font-size:18px;line-height:1.6}
+  .meta b{color:var(--ink)}
+  section{margin-bottom:40px}
+  h2{font-size:26px;margin:0 0 14px;color:var(--copper);text-transform:uppercase;letter-spacing:2px}
+  h2 span{color:var(--mute);text-transform:none;letter-spacing:0;font-weight:400;font-size:20px;margin-left:14px}
+  .row{display:grid;gap:18px}
+  figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden;position:relative}
+  figure img,figure video{display:block;width:100%;height:auto}
+  figure.pix img{image-rendering:pixelated}
+  figcaption{padding:10px 12px;font-size:16px;color:var(--mute)}
+  figcaption b{color:var(--ink)}
+  .tag{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.72);color:#fff;font-weight:700;font-size:15px;padding:4px 9px;border-radius:4px;letter-spacing:1px}
+  .tag.ok{background:var(--green);color:#0d1a08}
+  .tag.no{background:var(--red)}
+  .hero{grid-template-columns:1fr 60px 1.25fr 60px 2.2fr;align-items:center}
+  .arrow{font-size:54px;color:var(--copper);text-align:center}
+  .fixed{aspect-ratio:1/1;object-fit:cover}
+  .box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:18px 22px}
+  .box h3{margin:0 0 10px;font-size:19px;color:var(--copper);text-transform:uppercase;letter-spacing:1.5px}
+  .box ul{margin:0;padding-left:18px;color:var(--ink);font-size:17px;line-height:1.55}
+  .box li+li{margin-top:3px}
+  .box .no{color:var(--mute)}
+  footer{border-top:1px solid var(--line);margin-top:8px;padding-top:16px;color:var(--mute);font-size:15px;display:flex;justify-content:space-between}
+</style></head><body><div class="wrap">
+
+<header>
+  <h1>JIRO <small>Sushi-master robot. Everything from the design thread, 28–29 September 2026.</small></h1>
+  <div class="meta"><b>13 rounds</b> · <b>45 files</b> · character → pixel art → moodboards → redesign → bar → banners → belt → loop<br>
+  Canon is <b>#19</b>. One belt, from the wall, out bottom-left. Slow, still, seamless.</div>
+</header>
+
+<section>
+  <h2>The arc <span>from Martin's original to the approved scene</span></h2>
+  <div class="row hero">
+    <figure><span class="tag">ORIGINAL</span><img src="../reference/jiro-original.png"><figcaption><b>Reference.</b> Martin's artwork. Copper dome, cream faceplate, blue eyes, hachimaki, striped happi, big shoulder pads.</figcaption></figure>
+    <div class="arrow">→</div>
+    <figure><span class="tag ok">#19 CANON</span><img src="../character/05-design-iterations/19-CANON-rolled-sleeves-grille-mouth-facing-left.png"><figcaption><b>Canon.</b> #3 rolled sleeves + #10 grille mouth, mirrored to face left. Shoulder pads gone.</figcaption></figure>
+    <div class="arrow">→</div>
+    <figure><span class="tag ok">FINAL STILL</span><img src="../scenes/04-belt-edits/v5-FINAL-belt-into-wall-opening/01.jpg"><figcaption><b>The bar.</b> Bar scene 1, belt v5: one straight belt out of a wall opening under the bottles, past Jiro, off the bottom-left. Source frame of the loop.</figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <h2>Rounds 1–4 <span>pixel explorations: 16-bit, Caves of Qud, icons, Aseprite</span></h2>
+  <div class="row" style="grid-template-columns:1fr 1fr 0.5fr 1.4fr 1fr 1fr 1fr">
+    <figure class="pix"><span class="tag">R1</span><img src="../character/01-16bit/jiro-16bit-scene-768.png"><figcaption><b>16-bit.</b> 64×64, 26 colours, hand-placed.</figcaption></figure>
+    <figure class="pix"><span class="tag">R2</span><img src="../character/02-caves-of-qud/jiro-qud-scene-768.png"><figcaption><b>Caves of Qud.</b> 16-colour palette, checkerboard dither.</figcaption></figure>
+    <figure class="pix"><span class="tag">R2</span><img src="../character/02-caves-of-qud/jiro-qud-tile-192x288.png"><figcaption><b>16×24 tile.</b></figcaption></figure>
+    <figure class="pix"><span class="tag">R2</span><img src="../character/02-caves-of-qud/jiro-qud-sushi-bestiary.png"><figcaption><b>Sushi bestiary.</b> 24 tiles, onigiri moods, nigiri, gunkan, mutants.</figcaption></figure>
+    <figure class="pix"><span class="tag">R3</span><img src="../character/03-icons-handdrawn/icon-front-focused-768.png"><figcaption><b>Icon, hand-drawn.</b> Front focused, Jiro's pick of four.</figcaption></figure>
+    <figure class="pix"><span class="tag">R4</span><img src="../character/04-icons-aseprite/icon-128-flat-backdrop-6x.png"><figcaption><b>Icon, Aseprite.</b> Original quantised to 128 px, LibreSprite.</figcaption></figure>
+    <figure class="pix"><span class="tag">R4</span><img src="../character/04-icons-aseprite/scene-128-6x.png"><figcaption><b>Scene 128.</b> The original as 32-colour pixel art.</figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <h2>Round 5 <span>character moodboard, 10 jobs and angles</span> &nbsp;&nbsp;&nbsp;&nbsp; Round 6 <span>design iterations, one feature per card</span></h2>
+  <div class="row" style="grid-template-columns:1.1fr 1fr">
+    <figure><span class="tag">R5</span><img src="../scenes/01-moodboard/contact-sheet.jpg"><figcaption><b>"i like them."</b> Tuna, fish market, rice, omakase, knife, bento run, code review, apprentices, the catch, tea garden. Strongest: 01, 04, 07, 09.</figcaption></figure>
+    <figure><span class="tag">R6</span><img src="../character/05-design-iterations/contact-sheet-numbered.jpg"><figcaption><b>Shoulders, head, eyes, mouth, hands, personas.</b> Martin: "3 with the mouth of 10, flip it so he looks left" → #18, #19.</figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <h2>Round 7 <span>bar scene moodboard</span> &nbsp;&nbsp;&nbsp;&nbsp; Round 8 <span>hero banners, left side quiet for type</span></h2>
+  <div class="row" style="grid-template-columns:0.78fr 1fr">
+    <figure><span class="tag">R7</span><img src="../scenes/02-bar-moodboard/contact-sheet.jpg"><figcaption><b>Ten bars.</b> Conveyor, customers seen from behind, ingredients in the back. Martin liked 1, 5, 6, 10.</figcaption></figure>
+    <div class="row" style="grid-template-columns:1fr;gap:18px">
+      <figure><span class="tag">1A</span><img src="../scenes/03-hero-banners/01A-interior-mock.png"></figure>
+      <figure><span class="tag">5A</span><img src="../scenes/03-hero-banners/05A-interior-mock.png"></figure>
+      <figure><span class="tag">6A</span><img src="../scenes/03-hero-banners/06A-interior-mock.png"></figure>
+      <figure><span class="tag">10A</span><img src="../scenes/03-hero-banners/10A-interior-mock.png"><figcaption><b>2560×768.</b> Scene outpainted leftward with a matching interior element, dimmed. Placeholder header copy.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Rounds 9–13 <span>the conveyor belt, five rounds of rules</span></h2>
+  <div class="row" style="grid-template-columns:repeat(5,1fr)">
+    <figure><span class="tag no">v1</span><img src="../scenes/04-belt-edits/v1-multi-belt/01.jpg"><figcaption><b>Belt turns and exits bottom.</b> Rejected: "it can always only be one single belt".</figcaption></figure>
+    <figure><span class="tag no">v2</span><img src="../scenes/04-belt-edits/v2-single-belt/01.jpg"><figcaption><b>One belt, corner turn.</b> Rejected: no turning, plain wood in front of the customers.</figcaption></figure>
+    <figure><span class="tag no">v3</span><img src="../scenes/04-belt-edits/v3-straight-belt-bottom-left/01.jpg"><figcaption><b>Straight, bottom-left.</b> Rejected: ghost belt on the right, must start in the wall.</figcaption></figure>
+    <figure><span class="tag no">v4</span><img src="../scenes/04-belt-edits/v4-belt-from-wall/01.jpg"><figcaption><b>From the wall.</b> Rejected: starts mid-counter, and the loop was too fast and busy.</figcaption></figure>
+    <figure><span class="tag ok">v5</span><img src="../scenes/04-belt-edits/v5-FINAL-belt-into-wall-opening/01.jpg"><figcaption><b>Into the wall opening.</b> Approved. Loop v6 rendered from this, belt flowing toward the wall.</figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <h2>The loop <span>v6, approved: "great"</span> &nbsp;&nbsp;&nbsp;&nbsp; and the rules that came out of it</h2>
+  <div class="row" style="grid-template-columns:1.6fr 1fr 1fr 1fr">
+    <figure><span class="tag ok">v6 LOOP</span><video src="../animation/v6-FINAL-reversed-flow.mp4" poster="../scenes/04-belt-edits/v5-FINAL-belt-into-wall-opening/01.jpg" autoplay muted loop playsinline></video><figcaption><b>~8 s, 1080p, seamless.</b> Veo 3.1 from the still, first and last frame pinned, playback reversed so plates flow into the wall. Six versions to get here.</figcaption></figure>
+    <div class="box"><h3>Jiro canon</h3><ul>
+      <li>Copper dome with rivet seam, cream faceplate, copper cheek guards</li>
+      <li>Two glowing blue eyes, speaker-grille mouth</li>
+      <li>White hachimaki, knot and tails to one side</li>
+      <li>Indigo striped happi, dark V collar, sleeves rolled, slim copper arms</li>
+      <li><b>No</b> shoulder armor, faces left</li>
+      <li class="no">Rejected: tin or visor heads, drawn mouth line, mittens, aprons, hinomaru disc</li>
+    </ul></div>
+    <div class="box"><h3>Scene rules</h3><ul>
+      <li>Exactly one belt. Never two, never branching, never a corner</li>
+      <li>Starts in a visible opening in the back wall under the bottles</li>
+      <li>One straight line past Jiro, exits bottom-left</li>
+      <li>Every other counter section is plain wood</li>
+      <li>Customers with their backs to us</li>
+      <li>Warm lantern light, dark wood, sake and ingredients on the shelves</li>
+    </ul></div>
+    <div class="box"><h3>Animation rules</h3><ul>
+      <li>Belt slow: about one plate-width per clip</li>
+      <li>Plates only enter through the wall or the frame edge, nothing drops in</li>
+      <li>Jiro nearly still: a finger, one blink</li>
+      <li>Curtains barely move</li>
+      <li>Customers: small idle motion</li>
+      <li>First and last frame identical, no visible seam</li>
+      <li>Flow direction: toward the wall</li>
+    </ul></div>
+  </div>
+</section>
+
+<footer>
+  <div>Repo: github.com/tilework-tech/jiro.bot → brand/ &nbsp;·&nbsp; Drive: Jiro brand &nbsp;·&nbsp; Linear: GTM / Jiro brand (GTM-55 … GTM-63)</div>
+  <div>Made by Jiro for Martin Stübler · Nori</div>
+</footer>
+</div></body></html>
