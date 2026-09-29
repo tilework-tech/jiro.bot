@@ -5,6 +5,8 @@ import { BeltPath, buildBeltMesh, SLAT } from "./belt";
 import { Plates, BASE_SPEED } from "./plates";
 import { Particles, blip } from "./fx";
 import { FAQ, initCompare, initDemo, initFaq, initPricing, initTable } from "./content";
+import { buildDoors, animateDoors } from "./doors";
+import { Koi, Train } from "./ending";
 
 // ------------------------------------------------------------------ renderer
 const canvas = document.getElementById("gl") as HTMLCanvasElement;
@@ -153,14 +155,56 @@ const hooks = {
 };
 const plates = new Plates(scene, path, camera, fx, hooks);
 
+// endings: the koi pond, then the station where the belt finally stops
+const koi = new Koi(scene, cards[8], plates, fx, hooks);
+const train = new Train(scene, cards[9], plates, fx, hooks);
+plates.onWrap = (item) => train.arrive(item);
+
+// the belt comes out from behind the right-hand post of the hero's kitchen window:
+// an opaque cut-out of the painted post/wall sits in front of the belt, and the
+// window's dark inside dims whatever is on the belt back there
+{
+  const img = new Image();
+  img.src = "p/s0-hero.jpg";
+  img.onload = () => {
+    // window geometry measured on the 1600x900 hero grid
+    const x0 = 1405, y0 = 150, x1 = 1600, y1 = 380, post = 1503, dark = [1418, 200, 1503, 318];
+    const k = img.width / 1600, W = Math.round((x1 - x0) * k), H = Math.round((y1 - y0) * k);
+    const c = document.createElement("canvas"); c.width = W; c.height = H;
+    const g = c.getContext("2d")!;
+    g.drawImage(img, x0 * k, y0 * k, W, H, 0, 0, W, H);
+    const id = g.getImageData(0, 0, W, H), d = id.data;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const px = x0 + x / k, py = y0 + y / k, i = (y * W + x) * 4;
+      if (px >= post) { d[i + 3] = 255; continue; }                         // post + wall: fully in front
+      const inDark = px > dark[0] && py > dark[1] && px < dark[2] && py < dark[3];
+      if (inDark) { const depth = Math.min(1, (px - dark[0]) / (dark[2] - dark[0])); d[i] = d[i + 1] = d[i + 2] = 8; d[i + 3] = Math.round(90 + 130 * depth); continue; }
+      d[i + 3] = 0;
+    }
+    g.putImageData(id, 0, 0);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+    const w = (x1 - x0) / 100, h = (y1 - y0) / 100;
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, fog: false, toneMapped: false }));
+    m.renderOrder = 8;
+    const cx = ((x0 + x1) / 2 / 1600 - 0.5) * 16, cy = (0.5 - (y0 + y1) / 2 / 900) * 9;
+    m.position.copy(new THREE.Vector3(cx, cy, 0.3).applyMatrix4(cards[0].object.matrixWorld));
+    m.quaternion.copy(cards[0].quat);
+    scene.add(m);
+    heroOccluder = m;
+  };
+}
+let heroOccluder: THREE.Mesh | null = null;
+
+
 // ------------------------------------------------------------------ stops + camera rig
 interface Stop { card: number; close?: boolean }
 const STOPS: Stop[] = [
   { card: 0 }, { card: 1 }, { card: 2 }, { card: 3 }, { card: 3, close: true },
-  { card: 4 }, { card: 5 }, { card: 6 }, { card: 7 },
+  { card: 4 }, { card: 5 }, { card: 6 }, { card: 7 }, { card: 8 }, { card: 9 },
 ];
 const N = STOPS.length;
 const FAQ_STOP = STOPS.findIndex((x) => x.card === 4);
+const CLOSING_STOP = STOPS.findIndex((x) => x.card === 7);
 
 function coverDist() {
   const a = camera.aspect;
@@ -191,7 +235,16 @@ const slerpV = (a: THREE.Vector3, b: THREE.Vector3, t: number) => {
   return a.clone().applyQuaternion(new THREE.Quaternion().slerp(q, t)).normalize();
 };
 
-// per-transition curves, cached (depend on aspect via coverDist)
+const doorViews = STOPS.map((st) => {
+  const p = stopPose(st), c = views[st.card].card;
+  const to = st.close ? [p.target] : [[-8, -4.5], [8, -4.5], [-8, 4.5], [8, 4.5], [0, 0]].map((q) => new THREE.Vector3(q[0], q[1], 0).applyMatrix4(c.object.matrixWorld));
+  return { from: p.pos, to };
+});
+// transitions: an upright camera glides from scene A to scene B a few units off the
+// belt, always looking at the stretch of belt between them, and passes through the
+// doorway in the wall that separates the two rooms. Its up vector just blends from
+// A's up to B's up, so a change of orientation is a gentle flop, never a roll.
+const TRANSIT_D = 8;
 let curveCache: Map<number, { pos: THREE.CatmullRomCurve3; tgt: THREE.CatmullRomCurve3 }> = new Map();
 function transitionCurves(k: number) {
   let c = curveCache.get(k);
@@ -199,14 +252,13 @@ function transitionCurves(k: number) {
   const A = STOPS[k], B = STOPS[k + 1];
   const pa = stopPose(A), pb = stopPose(B);
   const ca = views[A.card].card, cb = views[B.card].card;
-  const s0 = path.cardSpan[A.card][1], s1 = path.cardSpan[B.card][0];
+  const sa = path.cardSpan[A.card][1], sb = path.cardSpan[B.card][0];
   const pts: THREE.Vector3[] = [pa.pos], tg: THREE.Vector3[] = [pa.target];
-  const D = 10;
-  for (const f of [0.3, 0.7]) {
-    const fr = path.frameAt(THREE.MathUtils.lerp(s0, s1, f));
+  for (const f of [0.33, 0.67]) {
+    const fr = path.frameAt(THREE.MathUtils.lerp(sa, sb, f));
     const n = slerpV(ca.normal, cb.normal, f);
-    const dir = n.clone().multiplyScalar(0.75).addScaledVector(fr.u, 0.25).normalize();
-    pts.push(fr.p.clone().addScaledVector(dir, D));
+    const dir = n.clone().multiplyScalar(0.55).addScaledVector(fr.u, 0.45).normalize();
+    pts.push(fr.p.clone().addScaledVector(dir, TRANSIT_D));
     tg.push(fr.p.clone());
   }
   pts.push(pb.pos); tg.push(pb.target);
@@ -220,7 +272,6 @@ function poseAt(s: number) {
   s = THREE.MathUtils.clamp(s, 0, N - 1);
   const k = Math.min(Math.floor(s), N - 2), t = s - k;
   const A = STOPS[k], B = STOPS[k + 1];
-  let roll = 0;
   if (t < 1e-4 || t > 1 - 1e-4) {
     const p = stopPose(t < 0.5 ? A : B); camPos.copy(p.pos); camTgt.copy(p.target); camUp.copy(p.up);
   } else if (A.card === B.card) {
@@ -230,11 +281,25 @@ function poseAt(s: number) {
     const c = transitionCurves(k), e = easeS(t);
     camPos.copy(c.pos.getPoint(e)); camTgt.copy(c.tgt.getPoint(e));
     camUp.copy(slerpV(views[A.card].card.up, views[B.card].card.up, e));
-    const spin = views[B.card].card.spin ?? 0;
-    roll = spin * Math.PI * 2 * ease(t);
   }
-  return roll;
+  return 0;
 }
+void ease;
+
+// where each transition's camera crosses the plane half-way along its connector (for the doorways)
+function cameraCrossing(ci: number, planePoint: THREE.Vector3, normal: THREE.Vector3) {
+  const k = STOPS.findIndex((st, i) => st.card === ci && STOPS[i + 1] && STOPS[i + 1].card === ci + 1);
+  if (k < 0) return null;
+  const c = transitionCurves(k);
+  let prev = c.pos.getPoint(0), pd = prev.clone().sub(planePoint).dot(normal);
+  for (let i = 1; i <= 200; i++) {
+    const p = c.pos.getPoint(i / 200), d = p.clone().sub(planePoint).dot(normal);
+    if (pd * d <= 0) return prev.clone().lerp(p, pd / (pd - d));
+    prev = p; pd = d;
+  }
+  return null;
+}
+const doors = buildDoors(scene, path, path.cardSpan, lanternTex, doorViews, cameraCrossing);
 
 // ------------------------------------------------------------------ scroll: scrub between stops, snap to scenes
 let s = 0, target = 0, landed = 0, lastInput = 0;
@@ -348,6 +413,22 @@ function strayEvent(stop: number, delay: number, fire: () => boolean) {
   if (st === undefined) { strayState.set(stop, now); return; }
   if (now - st > delay && fire()) strayState.set(stop, -1);
 }
+// every so often a dish slides off the edge of whatever stretch of belt is on screen
+let fallIn = 14 + Math.random() * 10;
+function occasionalFall(dt: number) {
+  if (Math.abs(s - Math.round(s)) > 0.02) return;
+  fallIn -= dt;
+  if (fallIn > 0) return;
+  fallIn = 18 + Math.random() * 22;
+  const ci = STOPS[Math.round(s)].card;
+  const list = platesOnCard(ci);
+  if (!list.length) return;
+  const p = list[Math.floor(Math.random() * list.length)];
+  const f = path.frameAt(0); void f;
+  const side = new THREE.Vector3(Math.random() < 0.5 ? -1 : 1, 0.4, 0).applyQuaternion(camera.quaternion);
+  plates.fallOff(p, side);
+}
+
 function platesOnCard(ci: number) {
   const [s0, s1] = path.cardSpan[ci];
   return plates.plates.filter((p) => {
@@ -390,7 +471,7 @@ function updateOverlays(time: number) {
     return true;
   });
   // footer: stay 8s → a mini-Jiro parade
-  if (Math.abs(s - (N - 1)) < 0.05) {
+  if (Math.abs(s - CLOSING_STOP) < 0.05) {
     footerSince ||= time;
     if (!paraded && time - footerSince > 8) {
       paraded = true; plates.paradeOfJiros(); hooks.found("stay", "Stayed after closing time.");
@@ -419,7 +500,7 @@ const tmpQ = new THREE.Quaternion();
 function frame() {
   const dt = Math.min(clock.getDelta(), 0.05), time = clock.elapsedTime;
   snap();
-  s += (target - s) * (1 - Math.exp(-dt * (lastInput ? 7 : 3.6)));
+  s += (target - s) * (1 - Math.exp(-dt * (lastInput ? 6 : 2.6)));
   if (Math.abs(target - s) < 1e-4) s = target;
 
   const roll = poseAt(s);
@@ -463,6 +544,12 @@ function frame() {
   });
 
   plates.update(dt, time);
+  const near = (ci: number) => Math.min(...STOPS.map((st, k) => st.card === ci ? Math.abs(s - k) : 9));
+  koi.update(dt, near(8) < 0.6);
+  train.update(dt, time, near(9) < 0.6);
+  animateDoors(doors, time);
+  occasionalFall(dt);
+  if (heroOccluder) heroOccluder.visible = near(0) < 1.5;
   belt.tex.offset.y = -plates.offset / SLAT;
   fx.update(dt);
   embers.rotation.y = Math.sin(time * 0.05) * 0.01;
@@ -496,5 +583,7 @@ if (qs.has("s")) { const v = +qs.get("s")!; s = target = v; landed = Math.round(
     return null;
   },
   eggs: () => [...foundSet],
+  koi: () => ({ t: koi.t, next: koi.next, vis: koi.mesh.visible, eaten: koi.eaten }),
+  jump: () => koi.start(),
 };
 (window as any).__dbg = () => plates.plates.filter((p) => p.sprite.visible).slice(0, 400).map((p) => { const q = project(p.sprite.position); return [Math.round(q.x), Math.round(q.y), +q.z.toFixed(3), p.mode]; }).filter((a) => (a[0] as number) > 0 && (a[0] as number) < 1600 && (a[1] as number) > 0 && (a[1] as number) < 900);

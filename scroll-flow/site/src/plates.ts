@@ -25,7 +25,7 @@ export const BASE_SPEED = 0.38; // belt-space units / s, calm
 interface Plate {
   s: number; item: Item; group: THREE.Group; sprite: THREE.Sprite; disc: THREE.Mesh;
   mode: "belt" | "drag" | "return" | "gone" | "fling" | "walk" | "fall";
-  pos: THREE.Vector3; vel: THREE.Vector3; t: number; scale: number; spin: number; puff: number; sc: number;
+  pos: THREE.Vector3; vel: THREE.Vector3; t: number; scale: number; spin: number; puff: number; sc: number; lastRaw: number;
 }
 
 export interface Hooks {
@@ -61,6 +61,8 @@ export class Plates {
   legs: THREE.Sprite;
   legTex: THREE.Texture[];
   walker: Plate | null = null;
+  /** called when a plate reaches the end of the belt (before it recycles to the hero) */
+  onWrap: ((item: THREE.Texture) => void) | null = null;
 
   constructor(public scene: THREE.Scene, public path: BeltPath, public camera: THREE.PerspectiveCamera,
     public fx: Particles, public hooks: Hooks) {
@@ -89,7 +91,7 @@ export class Plates {
     group.add(disc);
     this.scene.add(group, sprite);
     group.matrixAutoUpdate = false;
-    const p: Plate = { s, item, group, sprite, disc, mode: "belt", pos: new THREE.Vector3(), vel: new THREE.Vector3(), t: 0, scale: 1, spin: 0, puff: 1, sc: 1 };
+    const p: Plate = { s, item, group, sprite, disc, mode: "belt", pos: new THREE.Vector3(), vel: new THREE.Vector3(), t: 0, scale: 1, spin: 0, puff: 1, sc: 1, lastRaw: s };
     sprite.userData.ref = p;
     return p;
   }
@@ -114,8 +116,10 @@ export class Plates {
       const raw = (p.s + this.offset) % this.path.lengthU;
       this.slot(p, f);
       // pop in at the hero exit, sink out at the footer end
-      const edge = Math.min(raw, this.path.lengthU - raw);
-      const vis = THREE.MathUtils.clamp(edge / 0.8, 0, 1);
+      // plates only ease in at the start (hidden behind the kitchen window); the end hands them to the ending
+      const vis = THREE.MathUtils.clamp(raw / 0.8, 0, 1);
+      if (raw < p.lastRaw - this.path.lengthU / 2 && p.mode === "belt") this.onWrap?.(this.tex.get(p.item)!);
+      p.lastRaw = raw;
       if (p.mode === "gone") {
         p.t -= dt;
         if (p.t > 0) { p.group.visible = p.sprite.visible = false; continue; }
@@ -147,6 +151,13 @@ export class Plates {
       p.sprite.scale.set(sc, sc, 1);
       (p.sprite.material as THREE.SpriteMaterial).rotation = p.spin + (p.item === "onigiri-angry" && p.mode === "belt" ? Math.sin(time * 30) * 0.04 : 0);
     }
+  }
+
+  /** swallowed (koi): gone until it would have reached the end, then it recycles as usual */
+  eat(p: Plate) {
+    const raw = (p.s + this.offset) % this.path.lengthU;
+    p.mode = "gone"; p.t = (this.path.lengthU - raw) / (BASE_SPEED * Math.max(0.2, this.speedMul)) + 0.2;
+    p.group.visible = p.sprite.visible = false;
   }
 
   // ---------- the two strays: one dish grows legs and wanders off, one falls off ----------

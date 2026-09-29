@@ -39,7 +39,7 @@ export const CARDS: CardDef[] = [
     id: "s0-hero", video: "v/s0-hero.mp4",
     pos: [0, 0, 0], rot: [0, 0, 0],
     // the belt lies on the painted wooden lane: out of the wall opening, down to the bottom-left edge
-    belt: [[6.72, 1.38], [-2.25, B]], exitDir: [-0.836, -0.549],
+    belt: [[7.8, 2.1], [-2.25, B]], exitDir: [-0.836, -0.549],
     beltWidth: [0.5, -0.1], beltScale: 0.5, beltZ: 0.04,
   },
   {
@@ -70,13 +70,27 @@ export const CARDS: CardDef[] = [
   },
   {
     id: "s6-delivery", video: "v/s6-delivery.mp4",
-    pos: [9, -86, 25], rot: [6, -168, 0], spin: 1,
+    pos: [9, -86, 25], rot: [6, -168, 0],
     belt: [[R, T], [R, B]], entryDir: [0, -1], exitDir: [0, -1],
   },
   {
     id: "s7-closing", video: "v/s7-closing.mp4",
     pos: [-9, -100, 19], rot: [-18, -205, 0],
-    belt: [[R, T], [R, BOT], [L + 0.6, BOT]], entryDir: [0, -1],
+    belt: [[R, T], [R, BOT], [L + 0.6, BOT]], entryDir: [0, -1], exitDir: [-1, 0],
+  },
+  {
+    // ending 1: a trestle over a koi pond; the koi jumps now and then and eats a stretch of belt
+    id: "e1-pond", video: "v/e1-pond.mp4",
+    pos: [12.7, -110, 29.2], rot: [-6, 155, 0],
+    belt: [[8.4, -0.02], [-3.05, -0.02]], entryDir: [-1, 0], exitDir: [-1, 0],
+    beltWidth: [0, 0.4], beltScale: 0.55, beltZ: 0.04,
+  },
+  {
+    // ending 2: the belt ends at a platform; plates queue up, then all board the train together
+    id: "e2-station", video: "v/e2-station.mp4",
+    pos: [33.5, -113, 38.9], rot: [0, 155, 0],
+    belt: [[8.4, 0.68], [0.05, 0.68]], entryDir: [-1, 0],
+    beltWidth: [0, 0.36], beltScale: 0.55, beltZ: 0.04,
   },
 ];
 
