@@ -1,26 +1,30 @@
 # dining → kitchen: the sushi cam
 
-**Route:** the camera dips onto a plate on the dining belt and, bolted to it, rides at sushi eye height behind a rubber-duck plate that noses the swinging kitchen doors open. The doors flap shut, our plate pushes through, and a towering Jiro, a giant knife, the rice "hot tub" and a peeking cat look down at us. Then the camera rises back to the eye-level kitchen view.
+**Route:** the belt leaves the dining room at the bottom-right corner, runs on across the lower counter, and goes into the dining's south wall through a small serving hatch at counter height. The hatch has saloon doors and a noren above it. The plates ahead push the doors open, then they flap shut between plates. Our plate goes through too, and on the other side Jiro looms over his kitchen counter like a friendly kaiju: giant knives, a steaming pot, and a cat's eye watching from behind the plate stack. Then the camera lifts off the plate into the normal kitchen view.
 
-**Length:** 2.0 viewport heights.
+**Length:** 1.6 viewport heights.
 
 | t | beat |
 |---|------|
-| 0 – 0.12 | dining camera eases from identity onto a camera locked to the POV door rect (zoom ≈ 1.6 × POV door scale, doors centred unless that would show past the art's right edge) |
-| 0.02 – 0.23 | sushi cam cranes down: eye height starts 130 higher, horizon compensated so the door plane holds still while the counter and belt swing up from below |
-| 0.10 – 0.21 | bottom-first ordered-dither pixel dissolve dining → POV (6 px cells, Bayer 8×8 + position bias; no seam) |
-| 0 – 0.80 | POV ride. Door-plane distance falls linearly 283 → −80 world units (constant speed; the camera tilt is eased, the travel is not) |
-| ≈0.24 / 0.57 | duck plate pushes the doors open / our plate pushes them open again |
-| 0.76 – 0.93 | un-bolt: eye height rises +240, so the near belt and plates drop out of frame and the belt narrows toward the vanishing point |
-| 0.83 – 0.95 | top-first pixel dissolve POV → kitchen at the matching camera `K_MATCH` (zoom 2.0 around 1397, 536: tub centre-left, Jiro right); kitchen pulls back to identity over 0.88 – 1.0 |
+| 0 – 0.22 | Bird's-eye swoop. Zoom 1 → 2.4 onto the corner at (1770, 965), and the view turns 180° (0.06 – 0.22) so south, toward the kitchen, points up the screen |
+| 0.22 – 0.39 | True 3D crane: the camera pitches from straight down to level and drops from h 208 to sushi eye height 22. The hatch wall rises from the top edge |
+| 0.31 – 0.38 | Lock-on, as a near-first dither. The belt under us stops streaming, and our plate's rim and our salmon's nose appear in the foreground. The plates ahead now ride with us. A clickable "REC · SUSHI CAM" HUD fades in (easter egg `tr-sushi-cam`) |
+| 0.38 – 0.80 | The ride. We approach the doors, which are pushed open by every plate ahead. We pass under the noren, and the camera tilts up 0.1 rad toward Jiro |
+| 0.78 – 1.00 | The camera un-bolts: it rises 190 and levels. A top-first dither (0.84 – 0.95) brings in kitchen.jpg at a zoom that lines up Jiro's eyes, then pulls back to identity (0.88 – 1) |
 
-**How it works:** `dining-kitchen/dissolve.ts` renders the incoming layer offscreen and masks it with chunky Bayer-dither cells (the same pixel look as the art) so the hand-offs read as one camera, not a split screen. `dining-kitchen/pov.ts` is a pinhole camera (F=500) on a plate. The belt tread, copper rails and wooden counter are mode-7 scanlines rendered at 1/4 resolution. The tread and the plates ahead ride with us, so they hold still. The rails' rivets and the counter joints stream past at `BELT_SPEED` plus the scroll travel. The door leaves are projected vertical strips of `doors.jpg`, hinged on the frame.
+**How it works** (`dining-kitchen/world.ts`):
+- The world uses dining stage units: X is east, Y is south, Z is up. The belt is 64 wide.
+- The camera looks south. It pitches about the x axis and has a vertical lens shift.
+- The floor is a texture made from the live dining frame, drawn each frame as horizontal strips, mirrored. Its east edge is extended by stretching the edge, and the lower counter continues procedurally up to the wall at Y = 1200. The dining belt continues into the hatch with the same ids and phase.
+- The wall is drawn as strips by height, with the hatch cut out using an evenodd clip.
+- Through the hatch: the painted kitchen backdrop, anchored on the horizon; a procedural steel-rail belt; plates drawn as billboards (POV spacing 150, so the duck doesn't block the view); and the door leaves drawn as projected strips of `leaves.png`.
+- On the near side, the procedural tread moves with us and the rails' rivets stream past at BELT_SPEED.
 
-**Art** (`public/art/tr/dining-kitchen/`, sources in `/tmp/dining-kitchen/src/`):
-- `doors.jpg`: the dining wall from belt height. The door opening is hard-coded as `DOOR` in `pov.ts`: x 738–1182, y 205–728, the leaf split at x 960, and the counter line at y 740. If you regenerate this image, update those numbers.
-- `kitchen-pov.jpg`: a worm's-eye view of the kitchen. Its vanishing point is hard-coded as `KVP` = (960, 566).
+**Art** (`public/art/tr/dining-kitchen/`, all generated with gen_still.py and snapped to a 3 px grid):
+- `wall.jpg`: the dining south wall. Counter line y 865, hatch x 740–1180 × y 350–865, leaf split x 960.
+- `leaves.png`: the door leaves cut from `wall.jpg`, origin (738, 395).
+- `kitchen-pov.jpg`: the sushi-eye view of the new `kitchen.jpg`, with the empty plate painted out. Its vanishing point is (960, 745) and Jiro's eyes are at (891, 282) and (990, 275).
 
-**Scene dependencies (kept small):**
-- Dining: `DD` in `dining-kitchen.ts` is the dining door (centre x 1475, top y 205, width 280; doors ≈ 1335–1620 × 205–550). The entry camera is solved each frame so these doors land on the POV door rect. If the dining doors move, update `DD`.
-- Kitchen: the dissolve lands on `K_MATCH` (zoom 2.0 around 1397, 536), which lines kitchen.jpg's tub (≈1154, 580) and Jiro's eyes (≈1567, 358) up with the same props in `kitchen-pov.jpg`. Keep Jiro on the right, the hangiri tub centre-left, and the belt entering from the left (about 700, 650). If Jiro or the tub move a lot, update `kitchen-pov.jpg` so they stay on the same sides.
-- Neither scene's `belt` data is read. The POV belt is its own world (belt 64 wide, plates 52, PLATE_GAP 150).
+**Scene dependencies:**
+- Dining: the belt path and phase are read from `dining.belt`.
+- Kitchen: the final match uses kitchen.jpg's eye centre (1229, 444.5) and eye gap 34.5, hard-coded in `kitchenMatch`. If Jiro moves in kitchen.jpg, update those numbers.

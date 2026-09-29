@@ -1,17 +1,16 @@
-# street → pond
+# street → pond: "Drains to pond"
 
-**Route:** A delivery chute folds out of the rear of the trike's cargo loop and runs down the wet street, through the round moon gate in a garden wall and down a gravel lane, then turns left onto the pond pier. The camera cranes down along it, and the rain gives way to fireflies.
+**Route:** the street belt curves down into the kerb at x 1770 and drops through a storm drain inlet (a blue fish drain marker sits on the kerb next to it). The ground opens into a cutaway: the belt rides down a lamp-lit brick shaft, bolted to its wall, past a kappa on a ledge typing on a laptop (easter egg `tr-drain-kappa`). At the shaft floor the belt drops through a stone-lipped slot into the dark. It comes back out of a round stone culvert in a mossy garden wall, beside the little spout that feeds the creek, and runs down the wooden walkway into the pond scene's own walkway.
 
-**Length:** 2.0 viewport heights.
+**Camera:** Hermite keyframes (t, cx, cy, zoom, bank) with zero velocity at both ends. It dollies in (×1.32) toward the kerb as the belt dives, cranes down into the shaft (×1.5, with a slight bank each way), pulls out past the culvert (×1.34) and settles on the pond frame. The neon dims as we go underground. Rain gives way to drips in the shaft, then to moonlight and fireflies. A screen-space near layer (big soft drops, then out-of-focus fireflies) moves at 1.6× for parallax.
+
+**Length:** 1.4 viewport heights.
 
 ## How it works
-- World space: street frame at (0,0), pond frame at (PX,PY) = (-351, 1665). The backdrop `public/art/tr/street-pond/garden.jpg` sits at (-360, 1052), 2395×1673. It holds the wall, the moon gate, the lane and the garden bank, and was outpainted from both scene frames. The top strip (world y 1052–1140) is plain dark wet pavement with a black cat on the roof cap; the wall face is weathered plaster in blue moonlight shadow with ivy and a lit wall lantern (Gemini edit of rows 0–400, plaster darkened in post, gate interior kept from the original outpaint so GATE still lines up).
-- Scenes are rendered through `api.drawScene` into offscreen buffers. Their edges feather into the backdrop only while 0 < t < 1, so t=0 and t=1 are pixel-identical to the scenes (checked: mean diff < 0.2/255).
-- The chute is one open `BeltPath`. It starts at the loop's rightmost point (read from `street.belt.pts`) and ends at `pond.belt.pts[0]`, and it uses the pond width, plate size and scale 1 at the join. Its phase is `pathLength(CHUTE) + pond.phase` and its item key is `"pond"`, so every plate becomes the same pond plate at the same speed. Plates hop over the first 70 px after they leave the loop. The wall hides the chute except where it shows through the gate hole.
-- A wall-shadow gradient (SHADE_Y0–SHADE_Y1, world y 975–1142) fades in over t 0.08–0.3 on top of the street's bottom edge, so the street art's puddle reflections of the wheels don't read as an upside-down strip next to the wall. It is zero at t=0.
-- Camera: Hermite keyframes (t, cx, cy, zoom) with zero velocity at both ends. It zooms to 1.2 on the trike, cranes down over the wall and eases out to the pond frame.
+- World space: street frame at (0,0), `public/art/tr/street-pond/drain.jpg` (1920×1000) at (0,960), pond frame at (0, PY=1812). The band is a Gemini outpaint between the two frames: registered at scale 1.144 and x −12, crisped to a 3 px grid, with the shaft interior mirrored so the lamp hangs left of the belt.
+- The belt on the street side is `street.belt.pts` plus a straight run to the shaft floor. It uses the same phase and the key `street`, so it overlays the street's belt exactly. On the pond side it runs from the culvert mouth plus `pond.belt.pts` shifted by PY, keyed `pond`, and its phase continues the pond's. The item swap is hidden between the shaft floor and the culvert (world y 1478–1688).
+- The scenes are drawn through `api.drawScene` into buffers, with their edges feathered only while 0 < t < 1. The t=0 and t=1 frames match the scenes (mean diff < 0.03/255).
 
 ## What the scene art must keep
-- **street:** the loop's rear (right) point at about (1611, 607). The column x ≈ 1640–1720, y 650–1080, right of the rear wheel, must stay clear for the chute. The bottom rows (y 990–1080) must stay wet pavement; they meet the backdrop's plain pavement strip under the wall shadow.
-- **pond:** the pier belt enters from the right at y ≈ 530 (pond.belt.pts[0] = (1950, 530)). The pier deck must reach the right edge at y ≈ 495–600. The top edge must keep water on the left, garden in the middle and the bridge on the right, because that is what the backdrop was painted to meet. Jiro on the bridge at about (1650, 120) matches the backdrop.
-- If either scene is repainted with a different layout, regenerate `garden.jpg` with the same outpaint (street at the top, pond at (-351, 1665)), then re-measure GATE and LANE_X.
+- **street:** the belt leaves the bottom edge at x 1770, heading straight down. The bottom rows should stay wet pavement, because they meet the band's kerb at world y ≈ 1090.
+- **pond:** the belt enters the top edge at x 1770 on a walkway about x 1705–1835 wide. The top edge has dark foliage on the left, the creek at x ≈ 1200–1530 and the bridge with Jiro. If the pond is repainted, regenerate drain.jpg the same way (composite 1920×2880, street at 0, pond at 1812, AR 2:3), then re-measure SHAFT, MOUTH_Y and the lamp.

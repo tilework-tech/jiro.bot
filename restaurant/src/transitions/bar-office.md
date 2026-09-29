@@ -1,26 +1,9 @@
 # bar → office
 
-**Route:** the plates slide into the dark opening under the bar's bottle shelf, come out of a slot inside the wall (seen as a side-view cutaway), ride down a diagonal brace past a mouse family at a thimble table, a dripping copper valve and a cat's eye in a knothole, then pass through a floor-level hatch in the office's left wall.
+**Route:** the hero trough leaves the picture's bottom edge and keeps running diagonally down-left across the dark page. It banks round a 110 px fillet into the left lane (x = 150), then drops through a copper hatch in the bar floor. Below the floor it rides a glass-and-copper lift shaft through the crawlspace, where the floor mice hold standup round a thimble by candlelight (clickable egg `tr-floor-mice`). It enters the office ceiling as the office's sushi lift.
 
-**Length:** 1.8 viewport heights.
+**Camera:** it glides straight down one tall world column: bar frame at y 0, dark page, crawlspace at `Y_B`, office frame at `Y_OFF = Y_B + 816`. The move is cosine-eased with zero speed at both ends and sits on the exact office frame from t = 0.9, while the office DOM fades in. On the way it zooms in by up to 12 % and drifts toward the left lane. It banks about 1.7° into the diagonal-to-vertical bend, and pitches slightly (vertical squash) while dropping through the floor. The parallax layers are faint far specks over the dark page (depth 0.6) and a near cross beam plus sifting sawdust in the crawlspace (depths 1.4 and 1.2). The hero video keeps playing because the bar scene is drawn live under the camera.
 
-## Timeline (t)
-- 0 → 0.31: camera pushes into the bar opening (zoom 1 → 3.2, clamped so the view never leaves the art).
-- 0.15 → 0.31: chunky Bayer-dither dissolve into the wall cutaway, spreading out from the opening's screen position. The slot in the wall sits on the same screen spot, so plates vanish into the bar opening and come out of the slot there.
-- 0.31 → 0.88: camera follows the belt through the wall (Catmull-Rom keyframes). The office is the world to the right of the wall (x ≥ 0), so the pan ends on the exact office frame.
-- 0.88 → 1: exact office frame (the office DOM fades in over this window).
+**Belt:** one path W runs from `bar.belt.pts[0]` to `office.belt.pts[0]`. `Y_B` is nudged so W is a whole number of `PLATE_GAP`s, which puts the plates exactly on the bar's plates and on the office's. Section A (hero trough, `bar` item identity) runs from y = 1000 to the middle of the floor. Section B (office lift, `office` identity, phase = distance to the office top) runs from there down. The item swap and the trough-to-lift style swap both happen hidden inside the floorboards. The trough keeps the bar's cross-section, and its perpendicular scale blends from the hero width (about 0.31 px per video px) to 0.42 in the lane; the front face shrinks as the belt turns.
 
-## Belt continuity
-- The cutaway belt ends at `office.belt.pts[0]`. Its `phase = office.phase + length`, so plate ids and seams carry straight into the office belt.
-- Plates keep their **bar** identity (`itemFor(n, "bar")`) until they pass behind a foreground stud at x = −1180, then switch to their **office** identity. The floppy that goes into the bar opening is the floppy that comes out of the slot.
-- The only scale-1 speed is `BELT_SPEED`: nothing is hardcoded.
-
-## What the scene art must keep or add
-- **bar:** keep a dark opening at the belt's last point (currently `bar.belt.pts[1]` = 1745,335; the camera aims at last point + (15, −25)). The belt must keep running up and to the right into it, and `fadeOut` should stay around 70. If the opening moves, move the belt end with it and the transition follows.
-- **office:** the left wall needs a **dark square hatch at x ≈ 0..60, y ≈ 905..1000**, framed in wood or copper, with the belt coming out of it. The transition's hatch frame (y ≈ 897..1007) sits just left of x = 0. Keep the belt horizontal at y ≈ 955, starting at x ≈ −20 with `fadeIn` ≈ 60. Some dark wood at the far-left edge (x 0..20) helps the seam.
-
-## Files
-- `src/transitions/bar-office.ts`: cameras, dissolve, timeline.
-- `src/transitions/bar-office/wall.ts`: cutaway world (belt path, plate identity, mice, cat eye, drip, stud, hatch).
-- `public/art/tr/bar-office/wall.jpg`: 2560×1080 inside-the-wall art (world x −2560..0). The leftmost 440 px are mirrored and shaded as padding.
-- `public/art/tr/bar-office/mice.png`: mouse family sprite.
+**Files:** `src/transitions/bar-office.ts` (camera, render, egg), `src/transitions/bar-office/world.ts` (paths, trough, crawlspace, near layer), `public/art/tr/bar-office/crawl.png` (Gemini, 3× pixel-snapped, 56 colours, darkened) and `mice.png`.

@@ -3,132 +3,191 @@ import { STAGE_W, STAGE_H } from "../engine/types";
 import { drawPlates, drawTread, platesOn } from "../engine/belt";
 import { smooth } from "../engine/stage";
 import { glow } from "../engine/fx";
-import { ART, BOUNDS, CHUTE, OX, OY } from "./kitchen-storage/world";
+import { hotspot } from "../engine/dom";
+import { declareEggs } from "../engine/eggs";
+import { kitchen } from "../scenes/kitchen";
+import { storage } from "../scenes/storage";
+import { drawBracket, drawCollar, drawNear, drawSleeve, NEAR } from "./kitchen-storage/props";
 
-// Kitchen -> storage: the camera pulls back into a dollhouse cutaway of the
-// building. The belt leaves the kitchen counter, dives through a hatch in the
-// floor, rattles through the joists (chopstick, fortune cookie, mouse), runs
-// down the cellar stairwell behind the storage wall and comes out of the
-// storage doorway. See kitchen-storage.md.
+declareEggs(["ks-mice", "ks-bunnies"]);
 
-const KC = [STAGE_W / 2, STAGE_H / 2];
-const SC = [OX + STAGE_W / 2, OY + STAGE_H / 2];
-const ZMIN = 0.6;
-const FEATHER = 150;
+// Kitchen -> storage: a straight vertical descent down the right lane. World
+// space = kitchen stage space extended downward: kitchen frame at y 0, the
+// between-floors cutaway band (between.png) at y 1080, the storage frame at y
+// OY. The belt is one straight line x = LANE from the kitchen ceiling to the
+// storage floor. See kitchen-storage.md.
 
-let offK: HTMLCanvasElement | null = null;
-let offS: HTMLCanvasElement | null = null;
-function off(c: HTMLCanvasElement | null): HTMLCanvasElement {
-  if (c) return c;
-  const n = document.createElement("canvas");
-  n.width = STAGE_W; n.height = STAGE_H;
-  return n;
-}
+const LANE = kitchen.belt.pts[kitchen.belt.pts.length - 1][0];
+const BAND_Y = STAGE_H;
+/** Storage frame offset. OY - 30 ≡ 1080 (mod PLATE_GAP) so plate spacing runs straight through. */
+const OY = 1686;
+const ART = { url: "art/tr/kitchen-storage/between.png", w: 1920, h: 632 };
+/** Where the storage belt starts in its own frame (y of its first point, usually -30). */
+const S0 = storage.belt.pts[0][1];
+/** Belt through the band: starts hidden inside the floor sleeve, ends overlapping the storage belt. */
+const Y0 = 1100;
+const BAND_BELT = {
+  pts: [[LANE, Y0, 1], [LANE, OY + 40, 1]] as [number, number, number][],
+  width: 64, plate: 52, fadeIn: 0, fadeOut: 0,
+  // Same world phase as the storage belt, so plates and seams continue into it exactly.
+  phase: OY + S0 - Y0,
+};
+const BRACKETS = [1262, 1446, 1606];
 
-/** Scene frame with its inner edges faded out by `f` px (only the edges that face the cutaway). */
-function frame(api: Api, id: string, cv: HTMLCanvasElement, now: number, f: number, edges: ("l" | "r" | "t" | "b")[]) {
-  const o = cv.getContext("2d")!;
-  o.setTransform(1, 0, 0, 1, 0, 0);
-  o.globalAlpha = 1;
-  o.globalCompositeOperation = "source-over";
-  o.clearRect(0, 0, STAGE_W, STAGE_H);
-  api.drawScene(id, o, now);
-  if (f > 0.5) {
-    o.save();
-    o.globalCompositeOperation = "destination-out";
-    for (const e of edges) {
-      const [x0, y0, x1, y1] = e === "r" ? [STAGE_W - f, 0, STAGE_W, 0] : e === "l" ? [f, 0, 0, 0] : e === "b" ? [0, STAGE_H - f, 0, STAGE_H] : [0, f, 0, 0];
-      const gr = o.createLinearGradient(x0, y0, x1, y1);
-      gr.addColorStop(0, "rgba(0,0,0,0)");
-      gr.addColorStop(1, "rgba(0,0,0,1)");
-      o.fillStyle = gr;
-      if (e === "r") o.fillRect(STAGE_W - f, 0, f, STAGE_H);
-      else if (e === "l") o.fillRect(0, 0, f, STAGE_H);
-      else if (e === "b") o.fillRect(0, STAGE_H - f, STAGE_W, f);
-      else o.fillRect(0, 0, STAGE_W, f);
-    }
-    o.restore();
-  }
-  return cv;
-}
-
-/** Camera centre + zoom for progress t. */
+/** Camera for progress t: centre (cx, cy), zoom z, roll, keystone pitch p. */
 function camera(t: number) {
-  const s = smooth(0, 1, t);
-  const e = 0.5 * s + 0.5 * (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-  const bump = Math.pow(Math.sin(Math.PI * smooth(0, 1, t)), 2);
-  const z = 1 / (1 + (1 / ZMIN - 1) * bump);
-  let cx = KC[0] + (SC[0] - KC[0]) * e;
-  let cy = KC[1] + (SC[1] - KC[1]) * e;
-  const hw = STAGE_W / 2 / z, hh = STAGE_H / 2 / z;
-  cx = Math.max(BOUNDS.x0 + hw, Math.min(BOUNDS.x1 - hw, cx));
-  cy = Math.max(BOUNDS.y0 + hh, Math.min(BOUNDS.y1 - hh, cy));
-  return { cx, cy, z };
+  // Down the lane, a short pause on the cross-section in the middle, on down into the storage.
+  const f = 0.47 * smooth(0, 0.46, t) + 0.47 * smooth(0.54, 1, t) + 0.06 * smooth(0, 1, t);
+  const cy = STAGE_H / 2 + (OY) * f;
+  // Dolly into the floor hatch, pull back for the reveal, lean in again as we arrive.
+  const bump = (a: number, b: number) => Math.pow(Math.sin(Math.PI * smooth(a, b, t)), 2);
+  const z = 1 + 0.24 * bump(0, 0.46) + 0.1 * bump(0.56, 1);
+  // Keep the lane in view: hug the right edge of the world (with a little margin for the roll).
+  const cx = STAGE_W - STAGE_W / 2 / z - 100 * (z - 1);
+  const rot = 0.01 * bump(0.08, 0.4) - 0.006 * bump(0.62, 0.92);
+  // Pitch: look down into the hatch (near top rows wider), then level out on arrival.
+  const p = 0.09 * bump(0.02, 0.5) - 0.06 * bump(0.5, 0.98);
+  return { cx, cy, z, rot, p };
 }
 
-/** "Employee of the month" plaque painted blank in the cutaway (world ~(2188,1682), tilted). */
-function plaque(g: CanvasRenderingContext2D) {
+let buf: HTMLCanvasElement | null = null;
+
+function world(g: CanvasRenderingContext2D, t: number, now: number, api: Api) {
+  g.fillStyle = "#0b0908";
+  g.fillRect(-200, -200, STAGE_W + 400, OY + STAGE_H + 400);
+
+  // 1. The cutaway band and its little life.
+  const art = api.img(ART.url);
+  if (art.complete && art.naturalWidth) {
+    const prev = g.imageSmoothingEnabled;
+    g.imageSmoothingEnabled = false;
+    g.drawImage(art, 0, BAND_Y, ART.w, ART.h);
+    g.imageSmoothingEnabled = prev;
+  }
+  glow(g, 425, BAND_Y + 280, 150, "rgba(255,190,110,.22)", now, 0.12, 3, 1); // candle
+  glow(g, 683, BAND_Y + 512, 70, "rgba(255,210,140,.22)", now, 0.1, 4, 2); // mushroom
+  glow(g, LANE, BAND_Y + 330, 260, "rgba(255,170,90,.05)", now, 0.06, 8, 3);
+  drip(g, now);
+
+  // 2. Rooms. Storage first; the kitchen bottom meets the floor sleeve.
   g.save();
-  g.translate(2192, 1700);
-  g.rotate(-0.245);
-  g.textAlign = "center";
-  g.textBaseline = "middle";
-  const line = (txt: string, y: number, px: number) => {
-    g.font = `${px}px Silkscreen, monospace`;
-    g.fillStyle = "rgba(20,10,4,.9)";
-    g.fillText(txt, 2, y + 2);
-    g.fillStyle = "#e9c27a";
-    g.fillText(txt, 0, y);
-  };
-  line("EMPLOYEE OF", -28, 18);
-  line("THE MONTH", -8, 18);
-  line("JIRO", 18, 26);
+  g.translate(0, OY);
+  api.drawScene("storage", g, now);
+  g.restore();
+  api.drawScene("kitchen", g, now);
+
+  // 3. Seam shading where each room meets the cutaway (0 at the ends, so frames stay exact).
+  const k = smooth(0, 0.12, t) * smooth(0, 0.12, 1 - t);
+  if (k > 0) {
+    seam(g, BAND_Y, 40, k * 0.6, 1);
+    seam(g, OY, 40, k * 0.5, -1);
+  }
+
+  // 4. Belt through the band: brackets and ceiling collar under it, sleeve over it.
+  for (const y of BRACKETS) drawBracket(g, LANE, y);
+  drawCollar(g, LANE, OY);
+  g.save();
+  g.beginPath();
+  g.rect(0, Y0, STAGE_W, OY + 40 - Y0);
+  g.clip();
+  drawTread(g, BAND_BELT, now);
+  drawPlates(g, platesOn(BAND_BELT, now, "storage"), BAND_BELT.plate);
+  g.restore();
+  drawSleeve(g, LANE, BAND_Y, smooth(0, 0.08, t), now);
+}
+
+/** One drop from the leaky faucet every 3 s (8 per LOOP). */
+function drip(g: CanvasRenderingContext2D, now: number) {
+  const f = (now % 3) / 3;
+  const x = 1240, y0 = BAND_Y + 276;
+  g.save();
+  g.fillStyle = "#8fd0ff";
+  if (f < 0.55) {
+    const s = Math.round(2 + 4 * (f / 0.55));
+    g.fillRect(x - 2, y0, 4, s); // swelling drop
+  } else {
+    const k = (f - 0.55) / 0.45;
+    const y = y0 + 8 + 190 * k * k;
+    g.globalAlpha = 1 - smooth(0.8, 1, k);
+    g.fillRect(x - 2, Math.round(y / 4) * 4, 4, 8);
+  }
   g.restore();
 }
+
+function seam(g: CanvasRenderingContext2D, y: number, h: number, a: number, dir: 1 | -1) {
+  const gr = g.createLinearGradient(0, y, 0, y + dir * h);
+  gr.addColorStop(0, `rgba(6,4,3,${a})`);
+  gr.addColorStop(1, "rgba(6,4,3,0)");
+  g.fillStyle = gr;
+  g.fillRect(0, dir > 0 ? y : y - h, STAGE_W, h);
+}
+
+/** Screen position of a world point (ignores the small roll and keystone; for DOM hotspots). */
+function toScreen(t: number, x: number, y: number): [number, number, number] {
+  const { cx, cy, z } = camera(t);
+  return [STAGE_W / 2 + (x - cx) * z, STAGE_H / 2 + (y - cy) * z, z];
+}
+
+let hotMice: HTMLElement | null = null;
+let hotBunnies: HTMLElement | null = null;
 
 export const kitchenStorage: TransitionDef = {
   from: "kitchen",
   to: "storage",
-  length: 1.8,
-  route: "Off the end of the kitchen counter, down a hatch in the floor, through the joists and down the cellar stairwell, out of the storage doorway.",
+  length: 1.4,
+  route: "Down the steel sushi lift, through a riveted sleeve in the kitchen floor, past the mouse family's flat and a pile of dust bunnies, out of the storage ceiling hatch.",
   render(g, t, now, api) {
     if (t <= 0) { api.drawScene("kitchen", g, now); return; }
     if (t >= 1) { api.drawScene("storage", g, now); return; }
-    const { cx, cy, z } = camera(t);
-    offK = off(offK); offS = off(offS);
-    const fk = FEATHER * smooth(0, 0.25, t);
-    const fs = 0.7 * FEATHER * smooth(0, 0.25, 1 - t);
+    const { cx, cy, z, rot, p } = camera(t);
+    buf ??= Object.assign(document.createElement("canvas"), { width: STAGE_W, height: STAGE_H });
+    const o = buf.getContext("2d")!;
+    o.setTransform(1, 0, 0, 1, 0, 0);
+    o.globalAlpha = 1;
+    o.save();
+    o.translate(STAGE_W / 2, STAGE_H / 2);
+    o.rotate(rot);
+    o.scale(z, z);
+    o.translate(-cx, -cy);
+    world(o, t, now, api);
+    o.restore();
+    // Near layer: parallax 1.8x, passes the lens faster than the band.
+    drawNear(o, now, (y) => STAGE_H / 2 + (y - cy) * z * NEAR.parallax, cx, z);
 
-    g.save();
-    g.fillStyle = "#0b0a09";
-    g.fillRect(0, 0, STAGE_W, STAGE_H);
-    g.translate(STAGE_W / 2, STAGE_H / 2);
-    g.scale(z, z);
-    g.translate(-cx, -cy);
-
-    // 1. Painted cutaway + a little life in it.
-    const art = api.img(ART.url);
-    if (art.complete && art.naturalWidth) g.drawImage(art, ART.x, ART.y, ART.w * ART.s, ART.h * ART.s);
-    glow(g, 2380, 1330, 260, "rgba(255,180,100,.10)", now, 0.08, 8, 1);
-    glow(g, 1175, 1390, 200, "rgba(255,170,90,.08)", now, 0.06, 6, 2);
-
-    // 2. Chute tread (under the room frames so each room occludes its own part).
-    drawTread(g, CHUTE, now);
-
-    // 3. Room frames, inner edges feathered into the cutaway.
-    g.drawImage(frame(api, "kitchen", offK, now, fk, ["r", "b"]), 0, 0);
-    g.drawImage(frame(api, "storage", offS, now, fs, ["l", "t"]), OX, OY);
-
-    // 4. Chute plates on top; they vanish behind the storage wall.
-    // Fade them out as they pass behind the storage wall's feathered edge.
-    const k = smooth(0, 0.06, t) * smooth(0, 0.06, 1 - t);
-    const plates = platesOn(CHUTE, now, "kitchen")
-      .map((p) => ({ ...p, alpha: p.alpha * k * (p.y > OY ? 1 - smooth(OX - 30, OX + 50, p.x) : 1) }));
-    drawPlates(g, plates, CHUTE.plate ?? 52);
-
-    // 5. The plaque on the stairwell wall.
-    plaque(g);
-
-    g.restore();
+    // Keystone pitch, pivoting on the lane so the belt stays a straight vertical line.
+    const prev = g.imageSmoothingEnabled;
+    g.imageSmoothingEnabled = false;
+    if (Math.abs(p) < 0.002) g.drawImage(buf, 0, 0);
+    else {
+      const px = STAGE_W / 2 + (LANE - cx) * z;
+      const S = 4;
+      for (let y = 0; y < STAGE_H; y += S) {
+        const v = y / STAGE_H;
+        const sx = 1 + (p > 0 ? p * (1 - v) : -p * v);
+        g.drawImage(buf, 0, y, STAGE_W, S, px - px * sx, y, STAGE_W * sx, S);
+      }
+    }
+    g.imageSmoothingEnabled = prev;
+  },
+  mount(el, api) {
+    hotMice = hotspot(el, 0, 0, 10, 10, "The mouse family", () => {
+      api.sfx("blip");
+      api.egg("ks-mice", "The Nezumi family. Rent: one grain of rice a month. Jiro has never raised it.");
+    });
+    hotBunnies = hotspot(el, 0, 0, 10, 10, "Dust bunnies", () => {
+      api.sfx("pop");
+      api.egg("ks-bunnies", "Dust bunnies. Structurally load-bearing. Do not refactor.");
+    });
+  },
+  update(_el, t) {
+    const place = (b: HTMLElement | null, x: number, y: number, w: number, h: number) => {
+      if (!b) return;
+      const [sx, sy, z] = toScreen(t, x, y);
+      const on = t > 0.2 && t < 0.8;
+      b.style.display = on ? "" : "none";
+      Object.assign(b.style, { left: `${sx}px`, top: `${sy}px`, width: `${w * z}px`, height: `${h * z}px` });
+    };
+    place(hotMice, 20, BAND_Y + 190, 550, 380);
+    place(hotBunnies, 720, BAND_Y + 330, 280, 180);
   },
 };

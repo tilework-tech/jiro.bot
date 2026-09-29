@@ -1,245 +1,295 @@
-import type { Api, BeltPath, BeltPt, Camera, TransitionDef } from "../engine/types";
-import { STAGE_W, STAGE_H, PLATE_GAP, LOOP } from "../engine/types";
+import type { Api, BeltPath, BeltPt, TransitionDef } from "../engine/types";
+import { STAGE_W, STAGE_H, PLATE_GAP } from "../engine/types";
 import { smooth } from "../engine/stage";
 import { pathLength } from "../engine/belt";
-import { glow } from "../engine/fx";
+import { glow, wave } from "../engine/fx";
+import { hotspot, bubble } from "../engine/dom";
+import { declareEggs } from "../engine/eggs";
 import { office } from "../scenes/office";
 import { dining } from "../scenes/dining";
+import { paintWall, lantern, cat, BEAM_T, BEAM_B, LANTERN, CAT } from "./office-dining/wall";
 
-// office → dining: a side-scrolling "dollhouse cutaway" pan. The office, the
-// wall between the rooms, and the dining room sit side by side in one world
-// (office stage units). The wall is a built-in aquarium: the belt tunnels
-// through the office-side post, crosses the tank in a glass tube (the resident
-// pufferfish watches its relatives go by), and disappears into the dining-side
-// post, coming out on the dining room's ledge. The dining room is placed at
-// 1/Zd scale so its (bigger, closer) belt lines up with the office belt; the
-// camera zooms from 1 to Zd while panning, so plate size and speed on screen
-// stay continuous.
-//
-// Belt continuity: path A = office belt extended to Xs (key "office"), path B =
-// dining belt extended backwards to Xs (key "dining"). Each reproduces its
-// scene's plates exactly. The wall width is nudged so both paths put plates at
-// Xs at the same moment; the item swap happens behind the dining-side post.
+// office → dining: the big 3D camera move. One real (tiny) 3D world, rendered with a
+// pinhole camera that only pitches about the x axis, so every texture row maps to one
+// screen row and a plane can be drawn as horizontal strips:
+//   WALL  (plane Z = 0, y down): the office frame, the office floor cut open (crawl space,
+//         ceiling cat), the dining ceiling beam, and the dining back wall with the giant
+//         paper lantern the lift drops through.
+//   FLOOR (plane Y = YF): the dining frame, top-down; image y runs toward the viewer (Z = -y).
+// The lift runs down the wall at x = 150, bends at the wall/floor corner and continues as
+// the dining belt. The camera slides down the lift, dollies toward it and pitches from eye
+// level (t = 0, exactly the office frame) to straight down (t = 1, exactly the dining frame).
 
-const WALL = "art/tr/office-dining/wall.jpg";
-// Landmarks in the wall art, as fractions of its width / height.
-const F_TANK_L = 0.169; // inner glass, left
-const F_TANK_R = 0.876; // inner glass, right
-const F_WATER = 0.405; // water line
-const F_GRAVEL = 0.725; // gravel top
-const F_BELT = 0.708; // belt centre line
-const WALL_W0 = 926; // nominal world width
-const WALL_H = 805; // world height
+declareEggs(["tr-ceiling-cat"]);
 
+const F = 1300; // focal length (stage px); also the camera's distance to its target
+const M = 480; // side margins of both textures (edge-stretched, darkened)
+const NEAR = 60;
+const G = PLATE_GAP;
+
+// ---- Belt continuity. Office path A (ids keyed "office"), dining path B (keyed "dining").
 const oPts = office.belt.pts;
 const oEnd = oPts[oPts.length - 1];
-const OY = oEnd[1];
-const SA = oEnd[2] ?? 1;
+const OX = oEnd[0], OEY = oEnd[1];
+const LO = pathLength(office.belt);
+const PHI_O = office.belt.phase ?? 0;
+const PHI_D = dining.belt.phase ?? 0;
 const d0 = dining.belt.pts[0];
-const S0 = d0[2] ?? 1;
-const ZD = S0 / SA; // dining is drawn at 1/ZD in the world
-const WX = STAGE_W; // wall starts at the office's right edge
-const WT = OY - F_BELT * WALL_H; // wall top
-const DT = OY - d0[1] / ZD; // dining top in world
+const E = Math.max(0, -d0[1] / (d0[2] ?? 1)); // dining path length above the floor's top edge
+/** Item swap point: behind the ceiling beam. */
+const YMID = BEAM_T + 52; // plate sprites span ~[-50, +20] around the centre: hidden by the beam
+/** Dining floor Y, snapped so a plate leaving A at YMID is a plate entering B there. */
+const YF = (() => {
+  const want = 1768;
+  const r = ((PHI_O - PHI_D - LO + OEY + E - want) % G + G) % G;
+  return want + r;
+})();
+const A_EXT: BeltPath = { ...office.belt, pts: [[OX, OEY, 1], [OX, YMID, 1]] as BeltPt[], phase: PHI_O - LO, fadeIn: 0, fadeOut: 0 };
+const B_WALL: BeltPath = { ...dining.belt, pts: [[OX, YMID, 1], [OX, YF, 1]] as BeltPt[], phase: PHI_D + (YF - YMID) - E, fadeIn: 0, fadeOut: 0 };
 
-interface Layout { W: number; XD: number; XS: number; A: BeltPath; B: BeltPath }
-
-function layout(W: number): Layout {
-  const XD = WX + W;
-  const XS = WX + W * (F_TANK_R + 1) / 2; // centre of the dining-side post
-  const A: BeltPath = {
-    ...office.belt, pts: [...oPts, [XS, OY, SA] as BeltPt], fadeOut: 0,
-  };
-  const xsD = (XS - XD) * ZD;
-  const ext: BeltPath = { pts: [[xsD, d0[1], S0], [d0[0], d0[1], S0]] };
-  const E = pathLength(ext);
-  const B: BeltPath = {
-    ...dining.belt, pts: [[xsD, d0[1], S0], ...dining.belt.pts], fadeIn: 0, phase: (dining.belt.phase ?? 0) + E,
-  };
-  return { W, XD, XS, A, B };
+// ---- Textures.
+const TW = STAGE_W + 2 * M;
+const WALL_H = YF + 6;
+const FLOOR_H = STAGE_H + M;
+let wallBase: HTMLCanvasElement | null = null;
+let wallTex: HTMLCanvasElement | null = null;
+let floorTex: HTMLCanvasElement | null = null;
+let frameTex: HTMLCanvasElement | null = null;
+function canvas(w: number, h: number) {
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  // CPU-backed on purpose: ~1000 strip blits per frame between these canvases are far
+  // cheaper in raster memory than bouncing freshly painted textures to the GPU.
+  c.getContext("2d", { willReadFrequently: true });
+  return c;
+}
+function ensure() {
+  if (wallBase) return;
+  wallBase = canvas(TW, WALL_H);
+  paintWall(wallBase.getContext("2d")!, M, YF, TW);
+  wallTex = canvas(TW, WALL_H);
+  floorTex = canvas(TW, FLOOR_H);
 }
 
-function solve(): Layout {
-  let L = layout(WALL_W0);
-  for (let i = 0; i < 3; i++) {
-    const r = (((pathLength(L.A) - (office.belt.phase ?? 0) + (L.B.phase ?? 0)) % PLATE_GAP) + PLATE_GAP) % PLATE_GAP;
-    if (r < 0.01 || PLATE_GAP - r < 0.01) break;
-    const d = (r < PLATE_GAP / 2 ? -r : PLATE_GAP - r) * SA;
-    L = layout(L.W + d);
+/** Stretch the art's edge columns into the side margins, darkened toward the outside. */
+function margins(g: CanvasRenderingContext2D, art: HTMLImageElement) {
+  const h = STAGE_H;
+  if (art.complete && art.naturalWidth) {
+    const k = art.naturalWidth / STAGE_W;
+    g.drawImage(art, 0, 0, 2 * k, art.naturalHeight, 0, 0, M, h);
+    g.drawImage(art, art.naturalWidth - 2 * k, 0, 2 * k, art.naturalHeight, M + STAGE_W, 0, M, h);
   }
-  return L;
-}
-
-const { W, XD, XS, A, B } = solve();
-const TL = WX + W * F_TANK_L, TR = WX + W * F_TANK_R;
-
-/** Camera in world (office) units. */
-function camAt(t: number) {
-  const kz = smooth(0, 0.6, t);
-  const kx = smooth(0, 1, t);
-  const z = 1 + (ZD - 1) * kz;
-  const cxEnd = XD + STAGE_W / 2 / ZD, cyEnd = DT + STAGE_H / 2 / ZD;
-  return { z, cx: 960 + (cxEnd - 960) * kx, cy: 540 + (cyEnd - 540) * kz };
-}
-
-function drawWallArt(g: CanvasRenderingContext2D, api: Api, f0: number, f1: number) {
-  const im = api.img(WALL);
-  const x = WX + W * f0, w = W * (f1 - f0);
-  if (im.complete && im.naturalWidth) {
-    const sx = im.naturalWidth * f0, sw = im.naturalWidth * (f1 - f0);
-    g.drawImage(im, sx, 0, sw, im.naturalHeight, x, WT, w, WALL_H);
-    // Posts and beams continue above the art (seen while the camera is still zoomed out).
-    g.drawImage(im, sx, 0, sw, 6, x, WT - 700, w, 700);
-  } else {
-    g.fillStyle = "#1a120e";
-    g.fillRect(x, WT, w, WALL_H);
-  }
-}
-
-function bubbles(g: CanvasRenderingContext2D, now: number) {
-  const top = WT + WALL_H * F_WATER + 8, bot = WT + WALL_H * F_GRAVEL;
-  g.save();
-  g.fillStyle = "#bfefff";
-  for (let i = 0; i < 9; i++) {
-    const period = [6, 8, 12][i % 3];
-    const f = (((now % LOOP) / period + i * 0.37) % 1 + 1) % 1;
-    const x = TL + (TR - TL) * ((i * 0.618 + 0.08) % 1) + Math.sin(f * Math.PI * 4 + i) * 4;
-    const y = bot - f * (bot - top);
-    g.globalAlpha = 0.55 * Math.sin(f * Math.PI);
-    const r = 2 + (i % 3);
-    g.fillRect(Math.round(x - r), Math.round(y - r), r * 2, r * 2);
-  }
-  g.restore();
-}
-
-function tube(g: CanvasRenderingContext2D) {
-  const y0 = OY - 74, y1 = OY + 40;
-  g.save();
-  // Glass body and edges.
-  g.fillStyle = "rgba(190,235,255,.07)";
-  g.fillRect(TL, y0, TR - TL, y1 - y0);
-  g.fillStyle = "rgba(220,248,255,.45)";
-  g.fillRect(TL, y0, TR - TL, 3);
-  g.fillStyle = "rgba(220,248,255,.22)";
-  g.fillRect(TL, y0 + 9, TR - TL, 2);
-  g.fillRect(TL, y1 - 3, TR - TL, 3);
-  // Diagonal glints.
-  g.fillStyle = "rgba(255,255,255,.10)";
-  for (const gx of [0.18, 0.52, 0.8]) {
-    const x = TL + (TR - TL) * gx;
-    g.beginPath();
-    g.moveTo(x, y0 + 4); g.lineTo(x + 26, y0 + 4); g.lineTo(x - 14, y1 - 4); g.lineTo(x - 40, y1 - 4);
-    g.closePath(); g.fill();
-  }
-  // Copper gaskets where the tube meets the tank walls.
-  for (const x of [TL, TR - 12]) {
-    g.fillStyle = "#4a2616"; g.fillRect(x - 2, y0 - 8, 16, y1 - y0 + 16);
-    g.fillStyle = "#c9814a"; g.fillRect(x, y0 - 6, 12, y1 - y0 + 12);
-    g.fillStyle = "#f0b27a"; g.fillRect(x + 2, y0 - 6, 3, y1 - y0 + 12);
-  }
-  g.restore();
-}
-
-function sign(g: CanvasRenderingContext2D) {
-  // Small wooden plaque on the cabinet under the tank.
-  const w = 250, h = 34, x = WX + W * 0.52 - w / 2, y = WT + WALL_H * 0.855;
-  g.save();
-  g.fillStyle = "#2a1810"; g.fillRect(x - 3, y - 3, w + 6, h + 6);
-  g.fillStyle = "#6d4127"; g.fillRect(x, y, w, h);
-  g.fillStyle = "#f3e6cf";
-  g.font = "13px Silkscreen, monospace";
-  g.textAlign = "center"; g.textBaseline = "middle";
-  g.fillText("STAFF AQUARIUM", x + w / 2, y + 11);
-  g.fillStyle = "#e8b27c";
-  g.fillText("not on the menu", x + w / 2, y + 24);
-  g.restore();
-}
-
-function world(g: CanvasRenderingContext2D, now: number, api: Api) {
-  g.fillStyle = "#0d0908";
-  g.fillRect(-4000, -4000, 12000, 9000);
-  // Office.
-  g.save();
-  g.beginPath(); g.rect(0, 0, STAGE_W, STAGE_H); g.clip();
-  const oa = api.img(office.art);
-  if (oa.complete && oa.naturalWidth) g.drawImage(oa, 0, 0, STAGE_W, STAGE_H);
-  office.under?.(g, now, api);
-  g.restore();
-  // The zoomed camera peeks ~40px below the office frame: extend its floor.
-  if (oa.complete && oa.naturalWidth) g.drawImage(oa, 0, oa.naturalHeight - 4, oa.naturalWidth, 4, 0, STAGE_H, STAGE_W, 160);
-  // Dining (scaled into the world).
-  g.save();
-  g.translate(XD, DT); g.scale(1 / ZD, 1 / ZD);
-  g.beginPath(); g.rect(0, 0, STAGE_W, STAGE_H); g.clip();
-  const da = api.img(dining.art);
-  if (da.complete && da.naturalWidth) g.drawImage(da, 0, 0, STAGE_W, STAGE_H);
-  dining.under?.(g, now, api);
-  g.restore();
-  // Wall + aquarium.
-  drawWallArt(g, api, 0, 1);
-  g.save();
-  g.beginPath(); g.rect(TL, WT + WALL_H * F_WATER, TR - TL, WALL_H * (F_GRAVEL - F_WATER) + 30); g.clip();
-  glow(g, (TL + TR) / 2, WT + WALL_H * F_WATER, 360, "rgba(120,220,255,.10)", now, 0.12, 8);
-  bubbles(g, now);
-  g.fillStyle = "rgba(0,18,28,.28)";
-  g.fillRect(TL, OY - 74, TR - TL, 114);
-  g.restore();
-  // One belt: office part, then dining part.
-  api.drawBelt(g, A, now, office.id);
-  g.save();
-  g.translate(XD, DT); g.scale(1 / ZD, 1 / ZD);
-  api.drawBelt(g, B, now, dining.id);
-  g.restore();
-  tube(g);
-  // Posts in front of the belt (it tunnels through them).
-  drawWallArt(g, api, 0, F_TANK_L);
-  drawWallArt(g, api, F_TANK_R, 1);
-  // Soft contact shadow where the belt dives into each post.
-  for (const [x, dir] of [[TL, -1], [TR, 1]] as const) {
-    const grd = g.createLinearGradient(x, 0, x - dir * 18, 0);
-    grd.addColorStop(0, "rgba(0,0,0,.45)"); grd.addColorStop(1, "rgba(0,0,0,0)");
+  for (const [x, dir] of [[0, 1], [M + STAGE_W, -1]] as const) {
+    const grd = g.createLinearGradient(x, 0, x + M, 0);
+    grd.addColorStop(dir > 0 ? 0 : 1, "rgba(8,6,5,.9)");
+    grd.addColorStop(dir > 0 ? 1 : 0, "rgba(8,6,5,.35)");
     g.fillStyle = grd;
-    g.fillRect(Math.min(x, x - dir * 18), OY - 70, 18, 110);
-  }
-  sign(g);
-  // Overlays.
-  g.save();
-  g.beginPath(); g.rect(0, 0, STAGE_W, STAGE_H); g.clip();
-  office.over?.(g, now, api);
-  g.restore();
-  if (dining.over) {
-    g.save();
-    g.translate(XD, DT); g.scale(1 / ZD, 1 / ZD);
-    g.beginPath(); g.rect(0, 0, STAGE_W, STAGE_H); g.clip();
-    dining.over(g, now, api);
-    g.restore();
+    g.fillRect(x, 0, M, h);
   }
 }
+
+let catAwakeUntil = 0;
+
+function paintWallTex(now: number, api: Api) {
+  const g = wallTex!.getContext("2d")!;
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  g.globalAlpha = 1;
+  g.drawImage(wallBase!, 0, 0);
+  g.save();
+  g.translate(M, 0);
+  g.beginPath(); g.rect(0, 0, STAGE_W, STAGE_H); g.clip();
+  api.drawScene(office.id, g, now);
+  g.restore();
+  margins(g, api.img(office.art));
+  // The lift continues: office plates down to the beam, dining plates from the beam to the floor.
+  g.save();
+  g.translate(M, 0);
+  g.beginPath(); g.rect(-M, STAGE_H, TW, YF - STAGE_H); g.clip();
+  // Warm light spilling out of the lantern onto the wall.
+  const lk = 0.9 + 0.1 * wave(now, 6);
+  glow(g, LANTERN.x, (LANTERN.top + LANTERN.bot) / 2, 330, "rgba(255,120,60,.16)", now, 0.06, 6);
+  api.drawBelt(g, A_EXT, now, office.id);
+  api.drawBelt(g, B_WALL, now, dining.id);
+  g.restore();
+  // Occluders in front of the lift.
+  const beam = (y0: number, y1: number) => {
+    g.fillStyle = "#140c08"; g.fillRect(0, y0, TW, y1 - y0);
+    g.fillStyle = "#3d2517"; g.fillRect(0, y0 + 3, TW, y1 - y0 - 9);
+    g.fillStyle = "#56341f"; g.fillRect(0, y0 + 3, TW, 6);
+    g.fillStyle = "#2a1810"; g.fillRect(0, y1 - 18, TW, 12);
+    // Wood grain.
+    g.fillStyle = "rgba(20,10,6,.35)";
+    for (let k = 0; k < 40; k++) g.fillRect(((k * 331) % TW), y0 + 15 + ((k * 7) % 4) * 12, 60 + (k % 5) * 30, 3);
+  };
+  beam(BEAM_T, BEAM_B);
+  // Copper collar where the lift pierces the beam.
+  g.fillStyle = "#3a2014"; g.fillRect(M + OX - 54, BEAM_T - 6, 108, BEAM_B - BEAM_T + 12);
+  g.fillStyle = "#b8703f"; g.fillRect(M + OX - 51, BEAM_T - 3, 102, BEAM_B - BEAM_T + 6);
+  g.fillStyle = "#e3a26a"; g.fillRect(M + OX - 51, BEAM_T - 3, 102, 3);
+  g.fillStyle = "#6d3f22";
+  for (const rx of [-42, 36]) for (const ry of [12, 60]) g.fillRect(M + OX + rx, BEAM_T + ry, 6, 6);
+  lantern(g, M, lk);
+  glow(g, M + LANTERN.x, (LANTERN.top + LANTERN.bot) / 2, 170, "rgba(255,170,90,.10)", now, 0.08, 6);
+  cat(g, M, now, performance.now() / 1000 < catAwakeUntil);
+  // Contact shadow where the lift bends onto the floor.
+  const grd = g.createLinearGradient(0, YF - 60, 0, YF);
+  grd.addColorStop(0, "rgba(0,0,0,0)"); grd.addColorStop(1, "rgba(0,0,0,.55)");
+  g.fillStyle = grd; g.fillRect(0, YF - 60, TW, 60);
+}
+
+function paintFloorTex(now: number, api: Api) {
+  const g = floorTex!.getContext("2d")!;
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  g.globalAlpha = 1;
+  g.fillStyle = "#0b0908";
+  g.fillRect(0, 0, TW, FLOOR_H);
+  g.save();
+  g.translate(M, 0);
+  g.beginPath(); g.rect(0, 0, STAGE_W, STAGE_H); g.clip();
+  api.drawScene(dining.id, g, now);
+  g.restore();
+  const da = api.img(dining.art);
+  margins(g, da);
+  // Toward the viewer: stretch the art's last rows.
+  if (da.complete && da.naturalWidth) {
+    const k = da.naturalWidth / STAGE_W;
+    g.drawImage(da, 0, da.naturalHeight - 2 * k, da.naturalWidth, 2 * k, M, STAGE_H, STAGE_W, M);
+  }
+  const grd = g.createLinearGradient(0, STAGE_H, 0, FLOOR_H);
+  grd.addColorStop(0, "rgba(8,6,5,.2)"); grd.addColorStop(1, "rgba(8,6,5,.9)");
+  g.fillStyle = grd; g.fillRect(0, STAGE_H, TW, M);
+}
+
+// ---- Camera. Target C (at screen centre, distance F along the view axis), pitch th.
+interface Cam { px: number; py: number; pz: number; s: number; c: number; roll: number }
+const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
+
+function camAt(t: number): Cam {
+  const kd = smooth(0.06, 0.78, t); // slide down the lift
+  const kp = smooth(0.22, 0.9, t); // pitch
+  const kz = smooth(0.4, 0.9, t); // travel out over the floor
+  const kx = Math.sin(Math.PI * smooth(0.04, 0.9, t)); // dolly toward the lane
+  const th = (Math.PI / 2) * kp;
+  const s = Math.sin(th), c = Math.cos(th);
+  const cx = 960 - 330 * kx;
+  const cy = lerp(540, YF, kd);
+  const cz = lerp(0, -540, kz);
+  // Slight bank while turning over the corner.
+  const roll = -0.035 * Math.sin(Math.PI * smooth(0.28, 0.9, t));
+  return { px: cx, py: cy - F * s, pz: cz - F * c, s, c, roll };
+}
+
+/** Project a world point; returns [sx, sy] (before roll) or null behind the camera. */
+function project(cam: Cam, X: number, Y: number, Z: number): [number, number] | null {
+  const dy = Y - cam.py, dz = Z - cam.pz;
+  const depth = dy * cam.s + dz * cam.c;
+  if (depth < NEAR) return null;
+  const v = dy * cam.c - dz * cam.s;
+  return [STAGE_W / 2 + (F * (X - cam.px)) / depth, STAGE_H / 2 + (F * v) / depth];
+}
+
+/**
+ * Draw a plane as horizontal strips. rowWorld(r) gives [Y, Z] of texture row r.
+ * Texture x → world X = x - M.
+ */
+function drawPlane(g: CanvasRenderingContext2D, tex: HTMLCanvasElement, rows: number, cam: Cam, rowWorld: (r: number) => [number, number]) {
+  const at = (r: number) => {
+    const [Y, Z] = rowWorld(r);
+    const dy = Y - cam.py, dz = Z - cam.pz;
+    const depth = dy * cam.s + dz * cam.c;
+    const v = dy * cam.c - dz * cam.s;
+    return { depth, sy: STAGE_H / 2 + (F * v) / depth };
+  };
+  const pad = 2;
+  let r = 0;
+  while (r < rows) {
+    const a = at(r);
+    if (a.depth < NEAR) { r += 4; continue; }
+    const b1 = at(Math.min(rows, r + 1));
+    const per = Math.abs(b1.sy - a.sy) || 0.001; // screen px per texture row
+    const h = Math.max(1, Math.min(48, Math.floor(3 / per)));
+    const r1 = Math.min(rows, r + h);
+    const b = at(r1);
+    if (b.depth < NEAR) { r = r1; continue; }
+    const y0 = Math.min(a.sy, b.sy), y1 = Math.max(a.sy, b.sy);
+    if (y1 >= -pad && y0 <= STAGE_H + pad) {
+      const dm = (a.depth + b.depth) / 2;
+      const k = F / dm;
+      const x0 = STAGE_W / 2 + k * (-M - cam.px);
+      // Only the texture columns that land on screen.
+      const c0 = Math.max(0, Math.floor((-pad - x0) / k)), c1 = Math.min(TW, Math.ceil((STAGE_W + pad - x0) / k));
+      // Snap to whole pixels; overlap by a fraction to hide seams (none when the mapping is 1:1).
+      const top = Math.floor(y0 + 1e-3), bot = Math.ceil(y1 - 1e-3);
+      const ext = Math.abs(bot - top - (r1 - r)) < 1e-3 && Math.abs(k - 1) < 1e-6 ? 0 : 0.6;
+      if (c1 > c0) g.drawImage(tex, c0, r, c1 - c0, r1 - r, x0 + c0 * k, top, (c1 - c0) * k, Math.max(1, bot - top) + ext);
+    }
+    r = r1;
+  }
+}
+
+function render3d(g: CanvasRenderingContext2D, t: number, now: number, api: Api) {
+  ensure();
+  paintWallTex(now, api);
+  paintFloorTex(now, api);
+  const cam = camAt(t);
+  // Project both planes into an axis-aligned frame (fast strips), then bank it in one blit.
+  if (!frameTex) frameTex = canvas(STAGE_W, STAGE_H);
+  const f = frameTex.getContext("2d")!;
+  f.setTransform(1, 0, 0, 1, 0, 0);
+  f.fillStyle = "#0b0908";
+  f.fillRect(0, 0, STAGE_W, STAGE_H);
+  f.imageSmoothingEnabled = false;
+  drawPlane(f, wallTex!, YF, cam, (r) => [r, 0]);
+  drawPlane(f, floorTex!, FLOOR_H, cam, (r) => [YF, -r]);
+  g.fillStyle = "#0b0908";
+  g.fillRect(0, 0, STAGE_W, STAGE_H);
+  g.save();
+  g.translate(STAGE_W / 2, STAGE_H / 2);
+  g.rotate(cam.roll);
+  const sc = 1 + Math.abs(cam.roll) * 1.2;
+  g.scale(sc, sc);
+  g.imageSmoothingEnabled = true;
+  g.drawImage(frameTex, -STAGE_W / 2, -STAGE_H / 2);
+  g.restore();
+}
+
+let catBtn: HTMLButtonElement | null = null;
 
 export const officeDining: TransitionDef = {
   from: "office",
   to: "dining",
-  length: 2,
-  route: "Through the wall's built-in aquarium: in a hole in the office post, across the fish tank in a glass tube, out through the dining-side post onto the ledge.",
-  mount(_el, api) {
-    api.img(WALL);
+  length: 1.6,
+  route: "Down the sushi lift: through the office floor (past the sleeping ceiling cat), behind the dining ceiling beam, straight through a giant paper lantern, and onto the dining floor while the camera pitches to a bird's-eye view.",
+  mount(el, api) {
+    catBtn = hotspot(el, -200, -200, 10, 10, "Ceiling cat", () => {
+      catAwakeUntil = performance.now() / 1000 + 2.5;
+      api.sfx("meow");
+      const r = catBtn!.getBoundingClientRect();
+      const [x, y] = api.toStage(r.left, r.top);
+      bubble(el, x - 60, y - 70, "I was never here.", 2200);
+      api.egg("tr-ceiling-cat", "Every restaurant has a ceiling cat. This one reviews every plate that goes past. Nothing gets merged without a sniff.");
+    });
+  },
+  update(_el, t) {
+    if (!catBtn) return;
+    const cam = camAt(t);
+    const p0 = project(cam, CAT.x - 6, CAT.y - 12, 0), p1 = project(cam, CAT.x + CAT.w + 12, CAT.y + CAT.h + 6, 0);
+    if (!p0 || !p1 || t < 0.03 || t > 0.97) { catBtn.style.left = "-200px"; return; }
+    // Apply the roll + overscan the renderer uses.
+    const sc = 1 + Math.abs(cam.roll) * 1.2, cs = Math.cos(cam.roll), sn = Math.sin(cam.roll);
+    const tr = ([x, y]: [number, number]) => {
+      const dx = (x - STAGE_W / 2) * sc, dy = (y - STAGE_H / 2) * sc;
+      return [STAGE_W / 2 + dx * cs - dy * sn, STAGE_H / 2 + dx * sn + dy * cs];
+    };
+    const [ax, ay] = tr(p0), [bx, by] = tr(p1);
+    const w = Math.max(24, Math.abs(bx - ax)), h = Math.max(24, Math.abs(by - ay));
+    catBtn.style.left = `${Math.min(ax, bx)}px`; catBtn.style.top = `${Math.min(ay, by)}px`;
+    catBtn.style.width = `${w}px`; catBtn.style.height = `${h}px`;
   },
   render(g, t, now, api) {
-    const { z, cx, cy } = camAt(t);
-    g.save();
-    g.translate(STAGE_W / 2, STAGE_H / 2);
-    g.scale(z, z);
-    g.translate(-cx, -cy);
-    world(g, now, api);
-    g.restore();
-    // Exact endpoints: cross-blend into the real scene frames (only the edge
-    // fades of the scene belts differ, so this is invisible).
-    if (t < 0.06) {
-      const cam: Camera = { zoom: z, cx, cy, alpha: 1 - smooth(0, 0.06, t) };
-      api.drawScene("office", g, now, cam);
-    } else if (t > 0.94) {
-      const cam: Camera = { zoom: z / ZD, cx: (cx - XD) * ZD, cy: (cy - DT) * ZD, alpha: smooth(0.94, 1, t) };
-      api.drawScene("dining", g, now, cam);
-    }
+    // Exact end frames (the camera is at rest there).
+    if (t <= 0.03) { api.drawScene(office.id, g, now); return; }
+    if (t >= 0.97) { api.drawScene(dining.id, g, now); return; }
+    render3d(g, t, now, api);
   },
 };
