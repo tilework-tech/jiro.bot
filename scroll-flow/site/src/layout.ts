@@ -45,7 +45,8 @@ export const CARDS: CardDef[] = [
   {
     id: "s1-code", video: "v/s1-code-small.mp4",
     pos: [-15, -14, -8], rot: [0, 32, 0],
-    belt: [[L, T], [L, B]], entryDir: [0, -1], exitDir: [0, -1],
+    // belt runs down the right-hand side of the screen
+    belt: [[R + 0.2, T], [R + 0.2, B]], entryDir: [0, -1], exitDir: [0, -1],
   },
   {
     id: "s2-serve", video: "v/s2-serve.mp4",

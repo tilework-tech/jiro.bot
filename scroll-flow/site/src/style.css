@@ -202,3 +202,5 @@ h1 { font-size: clamp(36px, 4.2vw, 72px); line-height: 1.02; margin: 0; text-sha
 .table-wrap .y { color: #2f8a3a; } .table-wrap .n { color: #b8402e; } .table-wrap .m { color: #b07a18; }
 .table-wrap .fine { color: #5a4a3c; opacity: 1; }
 .faq-title { left: auto; right: 4vw; top: 8vh; transform: none; text-align: right; }
+
+#ov-demo .demo { right: 9vw; width: min(58vw, 1120px); }
