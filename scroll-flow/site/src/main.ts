@@ -1,0 +1,468 @@
+import * as THREE from "three";
+import "./style.css";
+import { CARD_H, CARD_W, Card, makeCards, toWorld } from "./layout";
+import { BeltPath, buildBeltMesh, SLAT } from "./belt";
+import { Plates, BASE_SPEED } from "./plates";
+import { Particles, blip } from "./fx";
+import { FAQ, initCompare, initDemo, initFaq, initPricing, initTable } from "./content";
+
+// ------------------------------------------------------------------ renderer
+const canvas = document.getElementById("gl") as HTMLCanvasElement;
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+const scene = new THREE.Scene();
+const BG = new THREE.Color("#0c0806");
+scene.background = BG;
+scene.fog = new THREE.FogExp2(BG, 0.022);
+const FOV = 38;
+const camera = new THREE.PerspectiveCamera(FOV, innerWidth / innerHeight, 0.05, 400);
+const tanH = Math.tan(THREE.MathUtils.degToRad(FOV / 2));
+
+// ------------------------------------------------------------------ cards (looping video planes)
+const cards = makeCards();
+interface CardView { card: Card; video: HTMLVideoElement; mat: THREE.MeshBasicMaterial; mesh: THREE.Mesh;
+  close?: { video: HTMLVideoElement; mat: THREE.MeshBasicMaterial; mesh: THREE.Mesh; focus: THREE.Vector3; dir: THREE.Vector3; quat: THREE.Quaternion } }
+
+function makeVideo(src: string, eager = false) {
+  const v = document.createElement("video");
+  // only the hero loads up front; the rest load as the camera approaches (see ensureLoaded)
+  v.muted = true; v.loop = true; v.playsInline = true; v.crossOrigin = "anonymous";
+  v.preload = eager ? "auto" : "none"; v.dataset.src = src; if (eager) v.src = src;
+  v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
+  const tex = new THREE.VideoTexture(v);
+  tex.colorSpace = THREE.SRGBColorSpace; tex.minFilter = THREE.LinearFilter; tex.magFilter = THREE.LinearFilter; tex.generateMipmaps = false;
+  // poster (first frame of the loop) until the video has data, so a card is never black
+  const poster = new THREE.TextureLoader().load(src.replace(/^v\//, "p/").replace(/\.mp4$/, ".jpg"));
+  poster.colorSpace = THREE.SRGBColorSpace;
+  return { v, tex, poster };
+}
+
+const views: CardView[] = cards.map((card) => {
+  const { v, tex, poster } = makeVideo(card.video, card.id === "s0-hero");
+  const mat = new THREE.MeshBasicMaterial({ map: poster, fog: false, toneMapped: false });
+  v.addEventListener("loadeddata", () => { mat.map = tex; mat.needsUpdate = true; }, { once: true });
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(CARD_W, CARD_H), mat);
+  mesh.quaternion.copy(card.quat); mesh.position.copy(card.center);
+  scene.add(mesh);
+  // dark back + pixel frame so cards read as physical panels from behind/side
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(CARD_W + 0.5, CARD_H + 0.5), new THREE.MeshBasicMaterial({ color: "#1d130d", side: THREE.BackSide, fog: true }));
+  back.quaternion.copy(card.quat); back.position.copy(card.center).addScaledVector(card.normal, -0.02);
+  scene.add(back);
+  const view: CardView = { card, video: v, mat, mesh };
+  if (card.close) {
+    const c = makeVideo(card.close.video);
+    const cm = new THREE.MeshBasicMaterial({ map: c.poster, fog: false, toneMapped: false, transparent: true, opacity: 0, depthWrite: false });
+    c.v.addEventListener("loadeddata", () => { cm.map = c.tex; cm.needsUpdate = true; }, { once: true });
+    const cmesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), cm);
+    const yawQ = new THREE.Quaternion().setFromAxisAngle(card.up, THREE.MathUtils.degToRad(card.close.yaw));
+    const quat = yawQ.clone().multiply(card.quat);
+    const dir = card.normal.clone().applyQuaternion(yawQ);
+    const focus = toWorld(card, card.close.focus, 0);
+    cmesh.quaternion.copy(quat);
+    cmesh.position.copy(focus).addScaledVector(dir, 0.9);
+    cmesh.renderOrder = 5;
+    scene.add(cmesh);
+    view.close = { video: c.v, mat: cm, mesh: cmesh, focus, dir, quat };
+  }
+  return view;
+});
+
+function ensureLoaded(v: HTMLVideoElement) {
+  if (v.src) return;
+  v.src = v.dataset.src!; v.preload = "auto"; v.load();
+}
+
+// ------------------------------------------------------------------ belt + plates + fx
+const path = new BeltPath(cards);
+const belt = buildBeltMesh(path);
+scene.add(belt.group);
+const fx = new Particles(scene);
+
+// lanterns + drifting embers along the connector runs so transitions have depth
+const lanternTex = (() => {
+  const c = document.createElement("canvas"); c.width = 16; c.height = 24; const g = c.getContext("2d")!;
+  g.fillStyle = "#2a1a0e"; g.fillRect(7, 0, 2, 3); g.fillRect(4, 3, 8, 2); g.fillRect(4, 19, 8, 2);
+  g.fillStyle = "#ffcf7a"; g.fillRect(3, 5, 10, 14); g.fillStyle = "#fff0c2"; g.fillRect(5, 7, 5, 9);
+  g.fillStyle = "#d9893f"; for (let y = 7; y < 19; y += 4) g.fillRect(3, y, 10, 1);
+  const t = new THREE.CanvasTexture(c); t.magFilter = THREE.NearestFilter; t.colorSpace = THREE.SRGBColorSpace; return t;
+})();
+const glowTex = (() => {
+  const c = document.createElement("canvas"); c.width = c.height = 64; const g = c.getContext("2d")!;
+  const r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, "rgba(255,190,110,.55)"); r.addColorStop(1, "rgba(255,190,110,0)");
+  g.fillStyle = r; g.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c);
+})();
+for (let i = 0; i < cards.length - 1; i++) {
+  const s0 = path.cardSpan[i][1], s1 = path.cardSpan[i + 1][0];
+  for (let s = s0 + 3; s < s1 - 2; s += 5.5) {
+    const f = path.frameAt(s);
+    if (cards.some((c) => c.center.distanceTo(f.p) < 12)) continue;
+    const side = (Math.floor(s) % 2 ? 1 : -1) * 2.2;
+    const p = f.p.clone().addScaledVector(f.b, side).addScaledVector(f.u, 1.6);
+    const l = new THREE.Sprite(new THREE.SpriteMaterial({ map: lanternTex, fog: true })); l.scale.set(0.55, 0.82, 1); l.position.copy(p);
+    const gl = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, fog: true })); gl.scale.setScalar(3.2); gl.position.copy(p);
+    scene.add(l, gl);
+  }
+}
+const emberGeo = new THREE.BufferGeometry();
+{
+  const n = 900, pos = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) {
+    const f = path.frameAt(Math.random() * path.length);
+    const p = f.p.clone().add(new THREE.Vector3().randomDirection().multiplyScalar(1.5 + Math.random() * 6));
+    pos.set([p.x, p.y, p.z], i * 3);
+  }
+  emberGeo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+}
+const embers = new THREE.Points(emberGeo, new THREE.PointsMaterial({ color: "#ffb56b", size: 0.05, transparent: true, opacity: 0.7, fog: true }));
+scene.add(embers);
+
+// ------------------------------------------------------------------ DOM hooks for easter eggs
+const bubbleLayer = document.getElementById("bubbles")!;
+const bubbles: { el: HTMLElement; p: THREE.Vector3; until: number }[] = [];
+const counts = new Map<string, number>();
+const foundSet = new Set<string>();
+const TOTAL_EGGS = 24;
+document.getElementById("egg-t")!.textContent = String(TOTAL_EGGS);
+let toastTimer = 0;
+function toast(t: string) {
+  const el = document.getElementById("toast")!; el.textContent = t; el.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = window.setTimeout(() => el.classList.remove("show"), 2600);
+}
+let shakeAmt = 0;
+const hooks = {
+  bubble(p: THREE.Vector3, text: string, ms = 2000, cls = "") {
+    const el = document.createElement("div"); el.className = "bubble " + cls; el.textContent = text; bubbleLayer.appendChild(el);
+    bubbles.push({ el, p: p.clone(), until: performance.now() + ms });
+  },
+  found(key: string, label: string) {
+    if (foundSet.has(key)) return;
+    foundSet.add(key);
+    document.getElementById("eggs")!.classList.remove("hidden");
+    document.getElementById("egg-n")!.textContent = String(foundSet.size);
+    toast(`🥚 ${label}`);
+    if (foundSet.size === TOTAL_EGGS) setTimeout(() => toast("Every egg found. Jiro bows deeply."), 2800);
+  },
+  shake(a: number) { shakeAmt = Math.max(shakeAmt, a); },
+  flash(color: string) {
+    const f = document.getElementById("flash")!; f.style.background = color; f.style.transition = "none"; f.style.opacity = "0.7";
+    requestAnimationFrame(() => { f.style.transition = "opacity .6s"; f.style.opacity = "0"; });
+  },
+  count(key: string) { const n = counts.get(key) ?? 0; counts.set(key, n + 1); return n; },
+  rainbow(on: boolean) { document.body.classList.toggle("rainbow", on); },
+};
+const plates = new Plates(scene, path, camera, fx, hooks);
+
+// ------------------------------------------------------------------ stops + camera rig
+interface Stop { card: number; close?: boolean }
+const STOPS: Stop[] = [
+  { card: 0 }, { card: 1 }, { card: 1, close: true }, { card: 2 }, { card: 3 }, { card: 3, close: true },
+  { card: 4 }, { card: 5 }, { card: 6 }, { card: 7 },
+];
+const N = STOPS.length;
+
+function coverDist() {
+  const a = camera.aspect;
+  return Math.min(CARD_H / 2 / tanH, CARD_W / 2 / (tanH * a)) * 0.985;
+}
+interface Pose { pos: THREE.Vector3; target: THREE.Vector3; up: THREE.Vector3 }
+function stopPose(st: Stop): Pose {
+  const v = views[st.card], c = v.card;
+  if (st.close && v.close) {
+    const d = c.close!.dist;
+    return { pos: v.close.focus.clone().addScaledVector(v.close.dir, d), target: v.close.focus.clone(), up: c.up.clone() };
+  }
+  return { pos: c.center.clone().addScaledVector(c.normal, coverDist()), target: c.center.clone(), up: c.up.clone() };
+}
+function sizeClosePlanes() {
+  for (const v of views) if (v.close) {
+    const d = v.card.close!.dist - 0.9;
+    const h = 2 * d * tanH, w = h * camera.aspect;
+    const H = Math.max(h, w * 9 / 16) * 1.01;
+    v.close.mesh.scale.set(H * 16 / 9, H, 1);
+  }
+}
+
+const ease = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const easeS = (t: number) => 0.5 - 0.5 * Math.cos(Math.PI * t);
+const slerpV = (a: THREE.Vector3, b: THREE.Vector3, t: number) => {
+  const q = new THREE.Quaternion().setFromUnitVectors(a.clone().normalize(), b.clone().normalize());
+  return a.clone().applyQuaternion(new THREE.Quaternion().slerp(q, t)).normalize();
+};
+
+// per-transition curves, cached (depend on aspect via coverDist)
+let curveCache: Map<number, { pos: THREE.CatmullRomCurve3; tgt: THREE.CatmullRomCurve3 }> = new Map();
+function transitionCurves(k: number) {
+  let c = curveCache.get(k);
+  if (c) return c;
+  const A = STOPS[k], B = STOPS[k + 1];
+  const pa = stopPose(A), pb = stopPose(B);
+  const ca = views[A.card].card, cb = views[B.card].card;
+  const s0 = path.cardSpan[A.card][1], s1 = path.cardSpan[B.card][0];
+  const pts: THREE.Vector3[] = [pa.pos], tg: THREE.Vector3[] = [pa.target];
+  const D = 10;
+  for (const f of [0.3, 0.7]) {
+    const fr = path.frameAt(THREE.MathUtils.lerp(s0, s1, f));
+    const n = slerpV(ca.normal, cb.normal, f);
+    const dir = n.clone().multiplyScalar(0.75).addScaledVector(fr.u, 0.25).normalize();
+    pts.push(fr.p.clone().addScaledVector(dir, D));
+    tg.push(fr.p.clone());
+  }
+  pts.push(pb.pos); tg.push(pb.target);
+  c = { pos: new THREE.CatmullRomCurve3(pts, false, "centripetal"), tgt: new THREE.CatmullRomCurve3(tg, false, "centripetal") };
+  curveCache.set(k, c);
+  return c;
+}
+
+const camPos = new THREE.Vector3(), camTgt = new THREE.Vector3(), camUp = new THREE.Vector3();
+function poseAt(s: number) {
+  s = THREE.MathUtils.clamp(s, 0, N - 1);
+  const k = Math.min(Math.floor(s), N - 2), t = s - k;
+  const A = STOPS[k], B = STOPS[k + 1];
+  let roll = 0;
+  if (t < 1e-4 || t > 1 - 1e-4) {
+    const p = stopPose(t < 0.5 ? A : B); camPos.copy(p.pos); camTgt.copy(p.target); camUp.copy(p.up);
+  } else if (A.card === B.card) {
+    const pa = stopPose(A), pb = stopPose(B), e = easeS(t);
+    camPos.lerpVectors(pa.pos, pb.pos, e); camTgt.lerpVectors(pa.target, pb.target, e); camUp.copy(pa.up);
+  } else {
+    const c = transitionCurves(k), e = easeS(t);
+    camPos.copy(c.pos.getPoint(e)); camTgt.copy(c.tgt.getPoint(e));
+    camUp.copy(slerpV(views[A.card].card.up, views[B.card].card.up, e));
+    const spin = views[B.card].card.spin ?? 0;
+    roll = spin * Math.PI * 2 * ease(t);
+  }
+  return roll;
+}
+
+// ------------------------------------------------------------------ scroll: scrub between stops, snap to scenes
+let s = 0, target = 0, landed = 0, lastInput = 0;
+// after a snap, trackpad inertia keeps firing wheel events; swallow them until they stop
+let lockUntil = 0, lockMax = 0;
+const clampT = (v: number) => THREE.MathUtils.clamp(v, Math.max(0, landed - 1), Math.min(N - 1, landed + 1));
+function nudge(delta: number) {
+  const now = performance.now();
+  if (now < lockUntil) { lockUntil = Math.min(lockMax, now + 140); return; }
+  // resistance: sticky right at a scene, freer in the belt run between scenes
+  const frac = Math.abs(target - Math.round(target));
+  const res = 0.55 + 1.0 * frac;
+  target = clampT(target + delta * res);
+  lastInput = now;
+}
+function go(i: number) { landed = THREE.MathUtils.clamp(i, 0, N - 1); target = landed; lastInput = 0; }
+window.addEventListener("wheel", (e) => {
+  e.preventDefault();
+  const dy = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
+  nudge(dy / 650);
+}, { passive: false });
+window.addEventListener("keydown", (e) => {
+  if (["ArrowDown", "PageDown", " "].includes(e.key)) { e.preventDefault(); go(Math.round(target) + 1); }
+  if (["ArrowUp", "PageUp"].includes(e.key)) { e.preventDefault(); go(Math.round(target) - 1); }
+  if (e.key === "Home") go(0);
+  if (e.key === "End") go(N - 1);
+  konami(e.key);
+});
+let touchY: number | null = null;
+window.addEventListener("touchstart", (e) => { touchY = e.touches[0].clientY; }, { passive: true });
+window.addEventListener("touchmove", (e) => {
+  if (touchY === null || plates.drag) return;
+  const y = e.touches[0].clientY; nudge((touchY - y) / 420); touchY = y;
+}, { passive: true });
+window.addEventListener("touchend", () => { touchY = null; });
+document.querySelectorAll<HTMLElement>("[data-go]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); go(+a.dataset.go!); }));
+
+function snap() {
+  const now = performance.now();
+  if (!lastInput || now - lastInput < 160) return;
+  const d = target - landed;
+  // a small push is enough to pull you to the next scene; a tiny one springs back
+  const next = Math.abs(d) > 0.07 ? landed + Math.sign(d) : landed;
+  if (next !== landed) { lockUntil = now + 450; lockMax = now + 1400; }
+  landed = THREE.MathUtils.clamp(next, 0, N - 1);
+  target = landed; lastInput = 0;
+}
+
+// ------------------------------------------------------------------ pointer: drag / poke plates, click hero Jiro
+const ndc = new THREE.Vector2();
+const setNdc = (e: PointerEvent) => ndc.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+canvas.addEventListener("pointerdown", (e) => {
+  setNdc(e);
+  if (plates.pointerDown(ndc, e.clientX, e.clientY)) { canvas.setPointerCapture(e.pointerId); canvas.classList.add("grabbing"); return; }
+  const sc = project(toWorld(cards[0], [0.2, 1.6], 0));
+  if (Math.round(s) === 0 && Math.hypot(sc.x - e.clientX, sc.y - e.clientY) < innerHeight * 0.12) {
+    hooks.bubble(toWorld(cards[0], [0.2, 3.3], 0), "Irasshaimase!", 1600); hooks.found("hero", "Jiro welcomes you in."); blip(620, 0.1); setTimeout(() => blip(830, 0.14), 110);
+  }
+});
+canvas.addEventListener("pointermove", (e) => {
+  setNdc(e);
+  if (plates.drag) { plates.pointerMove(ndc); return; }
+  canvas.classList.toggle("grab", !!plates.pick(ndc));
+});
+canvas.addEventListener("pointerup", (e) => { plates.pointerUp(e.clientX, e.clientY); canvas.classList.remove("grabbing"); });
+
+function project(p: THREE.Vector3) {
+  const v = p.clone().project(camera);
+  return { x: (v.x + 1) / 2 * innerWidth, y: (1 - v.y) / 2 * innerHeight, z: v.z };
+}
+
+// ------------------------------------------------------------------ secrets
+const KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+let kIdx = 0;
+function konami(key: string) {
+  kIdx = key === KONAMI[kIdx] ? kIdx + 1 : key === KONAMI[0] ? 1 : 0;
+  if (kIdx === KONAMI.length) { kIdx = 0; plates.party(); hooks.found("konami", "Konami code: rainbow belt."); }
+}
+let typed = "";
+window.addEventListener("keypress", (e) => {
+  typed = (typed + e.key.toLowerCase()).slice(-8);
+  if (typed.endsWith("omakase")) { plates.turbo = 6; hooks.found("typed", "Typed the magic word."); toast("おまかせ — the chef decides."); }
+  if (typed.endsWith("slop")) { hooks.found("slop", "Said the forbidden word."); hooks.flash("#ff6a4a"); toast("Jiro does not serve slop."); }
+});
+let footerSince = 0, paraded = false;
+let heroClicks = 0;
+document.querySelector(".mark")!.addEventListener("click", () => {
+  if (++heroClicks === 5) { hooks.found("logo", "Five taps on the logo."); plates.paradeOfJiros(); toast("Mini Jiro parade!"); }
+});
+document.getElementById("ov-cta")!.addEventListener("click", (e) => {
+  if ((e.target as HTMLElement).id === "reserve") { e.preventDefault(); hooks.found("cta", "You reserved a seat."); toast("Seat reserved. (Demo: no form yet.)"); }
+});
+document.querySelectorAll(".tag").forEach(() => 0);
+
+// ------------------------------------------------------------------ overlays
+initDemo(); initCompare(); initTable(); initPricing();
+const faqEls = initFaq();
+document.getElementById("tags")!.addEventListener("click", () => hooks.found("tag", "Poked a price tag."));
+const ovs = Array.from(document.querySelectorAll<HTMLElement>(".ov"));
+const railFill = document.getElementById("rail-fill")!;
+const hint = document.getElementById("hint")!;
+let faqShown = false;
+
+function updateOverlays(time: number) {
+  for (const el of ovs) {
+    const k = +el.dataset.stop!;
+    const d = s - k;
+    const o = THREE.MathUtils.clamp(1 - Math.abs(d) * 3.2, 0, 1);
+    el.style.opacity = String(o);
+    el.style.visibility = o > 0.01 ? "visible" : "hidden";
+    el.style.transform = `translateY(${-d * 70}px)`;
+    el.classList.toggle("live", o > 0.6);
+  }
+  railFill.style.height = `${(s / (N - 1)) * 100}%`;
+  hint.style.opacity = s < 0.15 ? "0.85" : "0";
+  // FAQ bubbles ride on the sushi
+  const faqOn = Math.abs(s - 6) < 0.3;
+  if (faqOn && !faqShown) { faqEls.forEach((b, i) => setTimeout(() => b.classList.add("in"), 250 + i * 320)); faqShown = true; }
+  if (!faqOn && Math.abs(s - 6) > 0.9 && faqShown) { faqEls.forEach((b) => b.classList.remove("in")); faqShown = false; }
+  if (Math.abs(s - 6) < 1) faqEls.forEach((b, i) => {
+    const p = project(toWorld(cards[4], [FAQ[i].at[0], FAQ[i].at[1] + 0.35 + (i % 2) * 0.9], 0));
+    b.style.left = `${p.x}px`; b.style.top = `${p.y}px`;
+  });
+  // footer: stay 8s → a mini-Jiro parade
+  if (Math.abs(s - 9) < 0.05) {
+    footerSince ||= time;
+    if (!paraded && time - footerSince > 8) {
+      paraded = true; plates.paradeOfJiros(); hooks.found("stay", "Stayed after closing time.");
+      hooks.bubble(toWorld(cards[7], [3.2, 2.6], 0), "…five more minutes", 2600);
+    }
+  } else footerSince = 0;
+}
+
+// ------------------------------------------------------------------ resize
+function resize() {
+  renderer.setSize(innerWidth, innerHeight, false);
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+  (fx.points.material as THREE.ShaderMaterial).uniforms.scale.value = innerHeight * renderer.getPixelRatio() / (2 * tanH);
+  curveCache = new Map(); sizeClosePlanes();
+}
+window.addEventListener("resize", resize);
+resize();
+
+// ------------------------------------------------------------------ loop
+const clock = new THREE.Clock();
+const mouse = new THREE.Vector2();
+window.addEventListener("mousemove", (e) => mouse.set(e.clientX / innerWidth - 0.5, e.clientY / innerHeight - 0.5));
+const smoothMouse = new THREE.Vector2();
+const tmpQ = new THREE.Quaternion();
+
+function frame() {
+  const dt = Math.min(clock.getDelta(), 0.05), time = clock.elapsedTime;
+  snap();
+  s += (target - s) * (1 - Math.exp(-dt * (lastInput ? 7 : 3.6)));
+  if (Math.abs(target - s) < 1e-4) s = target;
+
+  const roll = poseAt(s);
+  // tiny breathing + mouse parallax, fades out during transitions
+  const settle = 1 - Math.min(1, Math.abs(s - Math.round(s)) * 4);
+  smoothMouse.lerp(mouse, 1 - Math.exp(-dt * 3));
+  camera.position.copy(camPos);
+  camera.up.copy(camUp);
+  camera.lookAt(camTgt);
+  const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
+  const up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
+  const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+  const breathe = Math.sin(time * 0.5) * 0.06 * settle;
+  camera.position.addScaledVector(right, -smoothMouse.x * 0.18 * settle).addScaledVector(up, smoothMouse.y * 0.12 * settle).addScaledVector(fwd, 0.05 * settle + breathe);
+  if (roll) camera.quaternion.multiply(tmpQ.setFromAxisAngle(new THREE.Vector3(0, 0, 1), roll));
+  if (shakeAmt > 0.001) {
+    camera.position.addScaledVector(right, (Math.random() - 0.5) * shakeAmt * 0.3).addScaledVector(up, (Math.random() - 0.5) * shakeAmt * 0.3);
+    shakeAmt *= Math.pow(0.02, dt);
+  }
+
+  // one scene at a time: the active card is lit, the others sink into the dark
+  views.forEach((v, i) => {
+    let dmin = Infinity;
+    STOPS.forEach((st, k) => { if (st.card === i) dmin = Math.min(dmin, Math.abs(s - k)); });
+    const w = THREE.MathUtils.smoothstep(1 - dmin * 1.7, 0, 1);
+    const b = 0.1 + 0.9 * w;
+    v.mat.color.setScalar(b);
+    if (dmin < 2.2) ensureLoaded(v.video);
+    if (v.close && dmin < 1.6) ensureLoaded(v.close.video);
+    const want = dmin < 1.05;
+    if (want && v.video.paused) v.video.play().catch(() => {});
+    if (!want && !v.video.paused) v.video.pause();
+    if (v.close) {
+      const kc = STOPS.findIndex((st) => st.card === i && st.close);
+      const dc = Math.abs(s - kc);
+      v.close.mat.opacity = THREE.MathUtils.smoothstep(1 - dc, 0.35, 0.9);
+      v.close.mesh.visible = v.close.mat.opacity > 0.001;
+      if (dc < 1 && v.close.video.paused) v.close.video.play().catch(() => {});
+      if (dc >= 1 && !v.close.video.paused) v.close.video.pause();
+    }
+  });
+
+  plates.update(dt, time);
+  belt.tex.offset.y = -plates.offset / SLAT;
+  fx.update(dt);
+  embers.rotation.y = Math.sin(time * 0.05) * 0.01;
+
+  // speech bubbles follow their anchor
+  const now = performance.now();
+  for (let i = bubbles.length - 1; i >= 0; i--) {
+    const b = bubbles[i]; const p = project(b.p);
+    b.el.style.left = `${p.x}px`; b.el.style.top = `${p.y - 10}px`;
+    if (now > b.until) { b.el.classList.add("out"); if (now > b.until + 350) { b.el.remove(); bubbles.splice(i, 1); } }
+  }
+  updateOverlays(time);
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+void BASE_SPEED;
+requestAnimationFrame(frame);
+
+// debug handle for screenshots: ?s=3.5 freezes the camera at a scroll position
+const qs = new URLSearchParams(location.search);
+if (qs.has("s")) { const v = +qs.get("s")!; s = target = v; landed = Math.round(v); lastInput = 0; }
+(window as any).__jiro = {
+  go, set: (v: number) => { s = target = v; landed = Math.round(v); lastInput = 0; },
+  state: () => ({ s, target, landed }),
+  plateOnScreen: (item?: string) => {
+    for (const p of plates.plates) {
+      if (!p.sprite.visible || p.mode !== "belt" || (item && p.item !== item)) continue;
+      const q = project(p.sprite.position);
+      if (q.x > 20 && q.x < innerWidth - 20 && q.y > 70 && q.y < innerHeight - 20 && q.z < 1) return { x: q.x, y: q.y, item: p.item };
+    }
+    return null;
+  },
+  eggs: () => [...foundSet],
+};
+(window as any).__dbg = () => plates.plates.filter((p) => p.sprite.visible).slice(0, 400).map((p) => { const q = project(p.sprite.position); return [Math.round(q.x), Math.round(q.y), +q.z.toFixed(3), p.mode]; }).filter((a) => (a[0] as number) > 0 && (a[0] as number) < 1600 && (a[1] as number) > 0 && (a[1] as number) < 900);
