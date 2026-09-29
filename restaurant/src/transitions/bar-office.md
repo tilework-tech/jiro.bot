@@ -1,6 +1,6 @@
 # bar → office
 
-**Route:** the plates slide into the dark opening under the bar's bottle shelf, come out of a slot inside the wall (seen as a side-view cutaway), ride down a diagonal brace past a mouse family at a thimble table, a dripping copper valve and a cat's eye in a knothole, then pass through a floor-level hatch in the office's left wall.
+**Route:** the plates slide into the dark opening under the bar's bottle shelf, come out of a slot inside the wall (seen as a side-view cutaway), ride down a diagonal brace past a fat, bored ginger tabby loafing on a beam under the belt (chin on paws, watching the plates go by) and a dripping copper valve, then pass through a floor-level hatch in the office's left wall.
 
 **Length:** 1.8 viewport heights.
 
@@ -21,6 +21,6 @@
 
 ## Files
 - `src/transitions/bar-office.ts`: cameras, dissolve, timeline.
-- `src/transitions/bar-office/wall.ts`: cutaway world (belt path, plate identity, mice, cat eye, drip, stud, hatch).
+- `src/transitions/bar-office/wall.ts`: cutaway world (belt path, plate identity, cat, drip, stud, hatch).
 - `public/art/tr/bar-office/wall.jpg`: 2560×1080 inside-the-wall art (world x −2560..0). The leftmost 440 px are mirrored and shaded as padding.
-- `public/art/tr/bar-office/mice.png`: mouse family sprite.
+- `public/art/tr/bar-office/cat.png`: fat bored cat, 4 frames of 120×118 side by side (open, blink, tail flick, ear twitch), drawn at 1.6× on the beam at x ≈ −1752, y = 524. Frame timing on the 24 s loop: blink every 8 s, tail flicks at 4 s (twice) and 13 s, ear twitch at 19.5 s.

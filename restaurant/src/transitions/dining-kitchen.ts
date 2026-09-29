@@ -93,7 +93,7 @@ export const diningKitchen: TransitionDef = {
   from: "dining",
   to: "kitchen",
   length: 0.7,
-  route: "Through the swinging kitchen doors: the camera pushes into the dining doors, they swing open, and we pull back over the pass where the belt comes in under the half-doors",
+  route: "Through the swinging kitchen doors: the camera pushes into the dining doors, they swing open, and we pull back over the pass where the belt comes in through the open half-doors",
   render(g: CanvasRenderingContext2D, t: number, now: number, api: Api) {
     if (t <= 0) { api.drawScene("dining", g, now); return; }
     if (t >= 1) { api.drawScene("kitchen", g, now); return; }

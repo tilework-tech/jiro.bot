@@ -1,6 +1,6 @@
 # dining → kitchen: through the swinging doors
 
-**Route:** an eye-level observer camera pushes from the dining room into the swinging kitchen doors on the right wall. The two leaves swing away from us and the kitchen shows through the doorway. A centre-first pixel dissolve removes the door frame. The kitchen camera then pulls back from the pass to the normal kitchen frame, where the belt comes in under the little half-doors at the counter's left end. (Round 2: the POV sushi cam was removed per Martin.)
+**Route:** an eye-level observer camera pushes from the dining room into the swinging kitchen doors on the right wall. The two leaves swing away from us and the kitchen shows through the doorway. A centre-first pixel dissolve removes the door frame. The kitchen camera then pulls back from the pass to the normal kitchen frame, where the belt comes in through the open half-doors at the counter's left end. (Round 2: the POV sushi cam was removed per Martin.)
 
 **Length:** 0.7 viewport heights.
 

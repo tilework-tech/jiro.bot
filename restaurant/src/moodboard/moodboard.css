@@ -14,3 +14,4 @@
 .mood-arrow.prev { left: -2px; }
 .mood-arrow.next { right: -2px; }
 .mood-arrow:hover { border-color: var(--copper); color: var(--copper); }
+#ui .layer.live .mood, #ui .layer.live .mood * { pointer-events: auto; }

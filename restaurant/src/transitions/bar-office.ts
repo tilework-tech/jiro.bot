@@ -6,7 +6,7 @@ import { drawWall, SLOT_C, WALL_LEFT } from "./bar-office/wall";
 
 // bar -> office: push into the dark opening under the bottle shelf, dither-dissolve
 // into a side-view cutaway of the wall (the same belt rides a diagonal brace down past
-// a mouse family and a cat eye in a knothole), then pan right through the floor-level
+// a fat, bored ginger cat loafing on a beam), then pan right through the floor-level
 // hatch into the office, which is simply the world to the right of the wall (x >= 0).
 
 const bEnd = bar.belt.pts[bar.belt.pts.length - 1];
@@ -105,7 +105,7 @@ export const barOffice: TransitionDef = {
   from: "bar",
   to: "office",
   length: 0.9,
-  route: "Into the dark opening under the bar's bottle shelf, down a diagonal brace inside the wall past a mouse family, out a floor-level hatch in the office's left wall",
+  route: "Into the dark opening under the bar's bottle shelf, down a diagonal brace inside the wall past a fat, bored cat, out a floor-level hatch in the office's left wall",
   render(g, t, now, api) {
     if (t >= T_END) { api.drawScene("office", g, now); return; }
     const k = smooth(D0, D1, t);

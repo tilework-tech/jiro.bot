@@ -33,11 +33,13 @@ function spot(i: number): [number, number, number] {
 // Jiro overlays (pixel-exact patches cut from the art at this offset).
 const FACE_X = 1536, FACE_Y = 330;
 const MOUTH: [number, number] = [1560, 414];
-// Door leaves: redrawn over the belt so plates emerge from behind them.
-const DOORS = { x: 490, y: 230, w: 310, h: 336 };
-
-// Leaves (left hinge x, top, right x, bottom) for the swing easter egg.
-const LEAVES: [number, number, number, number, number][] = [[500, 248, 624, 566, 1], [766, 238, 642, 570, -1]];
+// Open swinging doors: the two leaves stand swung out toward us. Each leaf is
+// redrawn over the belt (clipped to its outline) so plates come out of the dim
+// doorway from behind the left leaf. [hinge x, outline polygon].
+const LEAVES: [number, [number, number][]][] = [
+  [499, [[499, 304], [512, 280], [530, 246], [553, 241], [554, 543], [505, 599], [499, 599]]],
+  [782, [[696, 221], [720, 221], [752, 256], [782, 275], [782, 557], [696, 520]]],
+];
 let talkUntil = 0;
 let kickAt = -9;
 const clock = () => performance.now() / 1000;
@@ -53,9 +55,9 @@ export const kitchen: SceneDef = {
   art: ART,
   mood: "bustling",
   hold: 1.6,
-  // Starts under the swinging half-doors at the left end of the counter and
-  // follows the painted trough to the right edge (kitchen>storage continues it).
-  belt: { pts: [[578, 582, 0.8], [1945, 993, 1.12]], width: 54, plate: 50, fadeIn: 70, fadeOut: 20 },
+  // Comes out of the dim doorway behind the open left door leaf at the left end
+  // of the counter (same line as before, extended back into the doorway) and follows the painted trough to the right edge (kitchen>storage continues it).
+  belt: { pts: [[505, 560, 0.784], [1945, 993, 1.12]], width: 54, plate: 50, fadeIn: 70, fadeOut: 20 },
   // Where dragged plates may rest. The rice tub is deliberately not one.
   surfaces: [
     { poly: [[466, 800], [545, 766], [600, 757], [1585, 1080], [1161, 1080], [470, 812]], scale: 0.95, say: "On the pass. Order up!" },
@@ -104,30 +106,37 @@ export const kitchen: SceneDef = {
     });
   },
   over(g, now, api) {
-    // Swinging doors in front of the belt start, with the same shadow as under().
+    // Open door leaves in front of the belt start, with the same shadow as under().
     const art = api.img(ART);
-    if (art.complete && art.naturalWidth) {
-      const k = art.naturalWidth / 1920;
+    if (!art.complete || !art.naturalWidth) return;
+    const k = art.naturalWidth / 1920;
+    const base = g.getTransform();
+    const age = clock() - kickAt;
+    // Clicked: the leaves flap back toward closed on their hinges and settle open again.
+    const kick = age < 2 ? Math.abs(Math.sin(age * 6)) * Math.exp(-2.2 * age) : 0;
+    LEAVES.forEach(([hx, poly], i) => {
+      const xs = poly.map((p) => p[0]), ys = poly.map((p) => p[1]);
+      const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+      const w = x1 - x0;
+      // Draught sway: at most 1.5 px at the free edge, 12 s period (divides the 24 s loop).
+      const sway = (1.5 * (1 - Math.cos(((now + i * 4) / 12) * Math.PI * 2))) / 2;
+      const sx = 1 + sway / w + kick * 1.1;
       g.save();
-      g.beginPath(); g.rect(DOORS.x, DOORS.y, DOORS.w, DOORS.h); g.clip();
-      const age = clock() - kickAt;
-      if (age < 1.6) {
-        // Clicked: the half-doors swing on their hinges and settle.
-        g.drawImage(art, DOORS.x * k, DOORS.y * k, DOORS.w * k, DOORS.h * k, DOORS.x, DOORS.y, DOORS.w, DOORS.h);
-        const a = Math.abs(Math.sin(age * 9)) * Math.exp(-2.6 * age) * 0.75;
-        for (const [hx, y0, ex, y1] of LEAVES) {
-          const x0 = Math.min(hx, ex), w = Math.abs(ex - hx);
-          g.fillStyle = "#07080c";
-          g.fillRect(x0, y0, w, y1 - y0);
-          g.save();
-          g.translate(hx, 0); g.scale(1 - a, 1); g.translate(-hx, 0);
-          g.drawImage(art, x0 * k, y0 * k, w * k, (y1 - y0) * k, x0, y0, w, y1 - y0);
-          g.restore();
-        }
-      } else g.drawImage(art, DOORS.x * k, DOORS.y * k, DOORS.w * k, DOORS.h * k, DOORS.x, DOORS.y, DOORS.w, DOORS.h);
+      g.translate(hx, 0); g.scale(sx, 1); g.translate(-hx, 0);
+      g.beginPath();
+      poly.forEach(([x, y], j) => (j ? g.lineTo(x, y) : g.moveTo(x, y)));
+      g.closePath();
+      g.clip();
+      g.drawImage(art, x0 * k, y0 * k, w * k, (y1 - y0) * k, x0, y0, w, y1 - y0);
+      if (kick > 0.02) {
+        // A leaf turning back toward the doorway catches less lantern light.
+        g.fillStyle = `rgba(8,5,3,${(0.25 * Math.min(1, kick)).toFixed(3)})`;
+        g.fillRect(x0, y0, w, y1 - y0);
+      }
+      g.setTransform(base);
       shade(g, 0, 0, 900, 1080, 0.5, 500, "left");
       g.restore();
-    }
+    });
   },
   click(_x, _y) {
     document.querySelector<HTMLElement>('.scene-ui[data-id="kitchen"] .k-ask.on .x')?.click();

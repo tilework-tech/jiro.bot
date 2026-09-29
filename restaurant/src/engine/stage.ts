@@ -212,7 +212,7 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
   const said = new Map<string, number>();
   frame.addEventListener("click", (e) => {
     if (drag.suppressClick()) return;
-    if ((e.target as HTMLElement).closest("#ui .hit, #ui button, #ui a, #ui input")) return;
+    if ((e.target as HTMLElement).closest("#ui .hit, #ui button, #ui a, #ui input, #ui .mood")) return;
     if (active.kind !== "scene") return;
     const [x, y] = api.toStage(e.clientX, e.clientY);
     const s = active.def;
@@ -238,7 +238,7 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
   // Drag plates (mouse and pen; touch keeps native scrolling).
   frame.addEventListener("pointerdown", (e) => {
     if (e.button !== 0 || e.pointerType === "touch" || active.kind !== "scene") return;
-    if ((e.target as HTMLElement).closest("#ui .hit, #ui button, #ui a, #ui input, #ui video, #ui .arcade, #ui figure")) return;
+    if ((e.target as HTMLElement).closest("#ui .hit, #ui button, #ui a, #ui input, #ui video, #ui .arcade, #ui figure, #ui .mood")) return;
     const [x, y] = api.toStage(e.clientX, e.clientY);
     const beltHit = hitPlate(scenePlates, sceneBeltSize, x, y);
     if (drag.pointerDown(active.def as SceneDef, x, y, beltHit)) {

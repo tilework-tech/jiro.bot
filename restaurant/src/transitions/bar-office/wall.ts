@@ -7,7 +7,7 @@
 import { BELT_SPEED, PLATE_GAP, type Api, type BeltPath, type BeltPt, type Plate } from "../../engine/types";
 import { drawTread, platesOn, drawPlates, pathLength, pointAt } from "../../engine/belt";
 import { itemFor, rimFor } from "../../engine/items";
-import { wave, glow, motes } from "../../engine/fx";
+import { motes } from "../../engine/fx";
 import { bar } from "../../scenes/bar";
 import { office } from "../../scenes/office";
 
@@ -16,7 +16,8 @@ export const WALL_X0 = -2560;
 export const WALL_PAD = 440;
 export const WALL_LEFT = WALL_X0 - WALL_PAD;
 export const WALL_ART = "art/tr/bar-office/wall.jpg";
-export const MICE_ART = "art/tr/bar-office/mice.png";
+/** Fat bored cat: 4 frames side by side (open, blink, tail flick, ear twitch). */
+export const CAT_ART = "art/tr/bar-office/cat.png";
 
 /** Dark slot the belt comes out of (the other side of the bar's shelf opening). */
 export const SLOT = { x: -2093, y: 274, w: 192, h: 150 };
@@ -108,37 +109,6 @@ function platesInWall(now: number): Plate[] {
   return plates;
 }
 
-function knothole(g: CanvasRenderingContext2D, x: number, y: number, now: number) {
-  g.save();
-  g.fillStyle = "#3a2416";
-  g.beginPath(); g.ellipse(x, y, 30, 22, 0, 0, Math.PI * 2); g.fill();
-  g.fillStyle = "#1a0f09";
-  g.beginPath(); g.ellipse(x, y, 22, 16, 0, 0, Math.PI * 2); g.fill();
-  g.fillStyle = "#050303";
-  g.beginPath(); g.ellipse(x, y, 17, 12, 0, 0, Math.PI * 2); g.fill();
-  // Sleepy cat eye: half lidded, slow blink every 8 s, pupil drifts with the belt.
-  const ph = ((now % 8) + 8) % 8;
-  const blink = ph < 0.35 ? Math.sin((ph / 0.35) * Math.PI) : 0;
-  const open = 0.55 * (1 - blink) + 0.12 * (0.5 + 0.5 * wave(now, 12));
-  const eh = 9 * open;
-  if (eh > 0.8) {
-    g.save();
-    g.beginPath(); g.ellipse(x, y + 1, 12, eh, 0, 0, Math.PI * 2); g.clip();
-    g.fillStyle = "#c9e04a";
-    g.fillRect(x - 12, y - 10, 24, 22);
-    g.fillStyle = "#e9f79a";
-    g.fillRect(x - 10, y + 1, 20, 3);
-    const px = x + 3 * wave(now, 24, 1);
-    g.fillStyle = "#0b0a09";
-    g.fillRect(Math.round(px - 2), y - 10, 4, 22);
-    g.restore();
-    g.fillStyle = "#3b2a1a"; // lid line
-    g.fillRect(x - 13, Math.round(y + 1 - eh) - 2, 26, 3);
-  }
-  glow(g, x, y, 40, "rgba(200,230,90,.10)", now, 0.1, 8);
-  g.restore();
-}
-
 function drip(g: CanvasRenderingContext2D, now: number) {
   // Valve drip: falls every 3 s from the brass valve, splashes on the brace.
   const x = -1286, y0 = 212, y1 = rideY(x) - 30;
@@ -157,18 +127,27 @@ function drip(g: CanvasRenderingContext2D, now: number) {
   g.restore();
 }
 
-function mice(g: CanvasRenderingContext2D, now: number, api: Api) {
-  const im = api.img(MICE_ART);
+/** Frame index for the cat on a 24 s loop: blinks every 8 s, tail flicks twice, one ear twitch. */
+function catFrame(now: number): number {
+  const t = ((now % 24) + 24) % 24;
+  if (t % 8 < 0.3) return 1;                                           // slow blink at 0, 8, 16 s
+  if ((t > 4 && t < 4.35) || (t > 4.7 && t < 5.05) || (t > 13 && t < 13.35)) return 2; // tail tip flick
+  if ((t > 19.5 && t < 19.62) || (t > 19.8 && t < 19.92)) return 3;     // ear twitch
+  return 0;
+}
+
+function cat(g: CanvasRenderingContext2D, now: number, api: Api) {
+  const im = api.img(CAT_ART);
   const base = 524, cx = -1752;
   if (im.complete && im.naturalWidth) {
-    const w = 170, h = (w * im.naturalHeight) / im.naturalWidth;
-    const bob = Math.round(1.5 * wave(now, 2));
+    const fw = im.naturalWidth / 4, fh = im.naturalHeight;
+    const s = 1.6, w = fw * s, h = fh * s;
+    const BELLY = 72; // sprite row where the loaf rests on the beam
     const prev = g.imageSmoothingEnabled;
     g.imageSmoothingEnabled = false;
-    g.drawImage(im, Math.round(cx - w / 2), Math.round(base - h + (bob > 0 ? -2 : 0)), Math.round(w), Math.round(h));
+    g.drawImage(im, catFrame(now) * fw, 0, fw, fh, Math.round(cx - w / 2), Math.round(base - BELLY * s), Math.round(w), Math.round(h));
     g.imageSmoothingEnabled = prev;
   }
-  glow(g, cx + 10, base - 50, 90, "rgba(255,190,110,.18)", now, 0.25, 2, 1.3);
 }
 
 /** Little copper brackets bolting the belt onto the brace, and posts where the brace ends. */
@@ -261,8 +240,7 @@ export function drawWall(g: CanvasRenderingContext2D, now: number, api: Api) {
     g.fillRect(WALL_LEFT, 0, WALL_PAD + 60, 1080);
   } else { g.fillStyle = "#120c09"; g.fillRect(WALL_LEFT, 0, -WALL_LEFT, 1080); }
   motes(g, now, -2440, 250, 420, 560, 14);
-  knothole(g, -935, 470, now);
-  mice(g, now, api);
+  cat(g, now, api);
   // Slot darkness behind the belt start.
   g.fillStyle = "#060404";
   g.fillRect(SLOT.x + 22, SLOT.y + 22, SLOT.w - 44, SLOT.h - 36);
