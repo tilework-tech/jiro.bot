@@ -84,6 +84,12 @@ export const office: SceneDef = {
   mood: "quiet",
   hold: 1.6,
   belt: { pts: [[-20, 955], [1940, 955]], width: 56, plate: 46, fadeIn: 60, fadeOut: 60 },
+  // Where dragged plates may rest (tiny desk corner, so tiny plates).
+  surfaces: [
+    { poly: [[1515, 818], [1550, 805], [1600, 815], [1602, 828], [1660, 845], [1700, 858], [1692, 876], [1600, 852], [1518, 829]], scale: 0.5, say: "Desk lunch. Crumbs in the keyboard are a feature." },
+    { poly: [[1538, 725], [1566, 703], [1622, 698], [1644, 707], [1641, 717], [1580, 728]], scale: 0.46, say: "Warm. Keeps the tamago toasty." },
+    { poly: [[1690, 718], [1704, 703], [1742, 703], [1757, 716], [1741, 724], [1700, 724]], scale: 0.46, say: "Balanced on Jiro's head. He keeps typing." },
+  ],
   under(g, now, api) {
     const t = performance.now() / 1000;
     const lampOn = t >= lampOffUntil;

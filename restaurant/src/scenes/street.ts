@@ -8,12 +8,11 @@ import "./street.css";
 
 declareEggs(["street-bell", "street-neon", "street-jiro", "street-pm", "street-drain", "street-special"]);
 
-// Tiny closed belt loop riding on the delivery trike's cargo tray.
-// Transitions read these points (yard>street lands on sample 24, street>pond leaves from the rear point): keep them.
-const LOOP_PTS: BeltPt[] = Array.from({ length: 28 }, (_, i) => {
-  const a = (i / 28) * Math.PI * 2;
-  return [1493 + Math.cos(a) * 118, 607 + Math.sin(a) * 44, 0.72 + 0.1 * Math.sin(a)];
-});
+// One straight vertical delivery conveyor clamped to the utility pole on the right,
+// from above the top edge straight down and out the bottom edge. It never touches the trike.
+// The transitions read BELT_X and the path ends: storage>street arrives at the top, street>pond leaves at the bottom.
+export const BELT_X = 1740;
+const BELT_PTS: BeltPt[] = [[BELT_X, -70, 1], [BELT_X, 1150, 1]];
 
 const TAU = Math.PI * 2;
 /** Loop-local time in [0, LOOP). */
@@ -71,7 +70,16 @@ export const street: SceneDef = {
   art: "art/street.jpg",
   mood: "bustling",
   hold: 1.6,
-  belt: { pts: LOOP_PTS, closed: true, width: 44, plate: 44 },
+  belt: { pts: BELT_PTS, width: 58, plate: 52, fadeIn: 0, fadeOut: 0 },
+  surfaces: [
+    { poly: [[1385, 628], [1480, 596], [1650, 598], [1712, 640], [1690, 692], [1400, 692]], say: "Plate stowed on the cargo box. Delivery ETA: whenever the tests pass." },
+    { poly: [[898, 490], [1002, 490], [1002, 528], [898, 528]], say: "Balanced on the sidewalk sign. Today's special just got more special." },
+    { poly: [[1004, 478], [1100, 478], [1100, 512], [1004, 512]], say: "Slid across the ramen counter. The ramen chef is filing a merge conflict." },
+    { poly: [[790, 190], [1140, 250], [1150, 300], [790, 290]], say: "Plate on the awning. The rain is now pre-washing it." },
+    { poly: [[780, 640], [1080, 610], [1080, 700], [780, 740]], say: "Left on the doorstep. Jiro rang twice." },
+    { poly: [[160, 250], [760, 250], [760, 284], [160, 284]], say: "Plate on top of the menu board. Now it costs $0 and a ladder." },
+    { poly: [[150, 772], [772, 772], [772, 806], [150, 806]], say: "Parked on the menu board's ledge. Pricing now includes one free nigiri." },
+  ],
   under(g, now, api) {
     const t = lt(now);
     // Neon halos breathe slowly.

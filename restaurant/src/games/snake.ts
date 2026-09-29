@@ -1,14 +1,14 @@
 import type { Api } from "../engine/types";
 import { hotspot, html, place } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
-import { img } from "../engine/stage";
 import { itemImg } from "../engine/items";
 import { openArcade, shrink, type Arcade } from "./arcade";
 
-// Hose Snake: classic Snake played with the garden hose. Brass nozzle head,
-// segmented green hose body, eat sushi, grow, don't hit the fence or yourself.
+// Hose Snake: classic Snake played with the garden hose from the storage room
+// floor. Brass nozzle head, segmented green hose body, eat sushi, grow, don't
+// hit the walls or yourself.
 
-declareEggs(["snake-gold"]);
+declareEggs(["snake-played", "snake-10", "snake-gold"]);
 
 const COLS = 24, ROWS = 15, CELL = 12;
 const FOOD = ["tuna", "salmon", "tamago", "ikura", "maki", "ebi", "onigiri-happy"];
@@ -18,25 +18,36 @@ const DIRS: Record<string, P> = {
   w: [0, -1], s: [0, 1], a: [-1, 0], d: [1, 0], W: [0, -1], S: [0, 1], A: [-1, 0], D: [1, 0],
 };
 
-export function mountSnake(el: HTMLElement, api: Api) {
+export interface SnakeLayout {
+  /** Copy block [left, top, width]. */
+  copy: [number, number, number];
+  /** Play button [left, top]. */
+  btn: [number, number];
+  /** Clickable hose in the art [x, y, w, h]. */
+  hose: [number, number, number, number];
+  /** Arcade window [left, top]. */
+  arcade: [number, number];
+}
+
+export function mountSnake(el: HTMLElement, api: Api, at: SnakeLayout) {
   html(el, `
-    <section class="copy" style="left:110px;top:120px;width:560px">
-      <p class="kicker">Back yard · mini game 2 of 3</p>
+    <section class="copy" style="left:${at.copy[0]}px;top:${at.copy[1]}px;width:${at.copy[2]}px">
+      <p class="kicker">Storage room · mini game 2 of 3</p>
       <h2 class="px">That hose is a snake.</h2>
-      <p class="lede">Classic Snake, garden edition. Steer the hose, eat the sushi, don't tie yourself in a knot.</p>
+      <p class="lede">Nobody remembers why a sushi bar owns a garden hose. Steer it, eat the sushi, don't tie yourself in a knot.</p>
     </section>`);
   const btn = html(el, `<button class="btn primary game-start">▶ Play Hose Snake</button>`);
-  place(btn, 110, 400);
+  place(btn, at.btn[0], at.btn[1]);
   let game: Arcade | null = null;
   const start = () => {
     if (game && !game.closed) return;
     api.sfx("chime");
     api.egg("snake-played", "The hose was a snake all along.");
-    game = openArcade(el, api, { title: "HOSE SNAKE", w: 720, h: 450, px: 2.5, x: 690, y: 250, bestKey: "jiro-best-snake", keys: Object.keys(DIRS).concat("Enter") });
+    game = openArcade(el, api, { title: "HOSE SNAKE", w: 720, h: 450, px: 2.5, x: at.arcade[0], y: at.arcade[1], bestKey: "jiro-best-snake", keys: Object.keys(DIRS).concat("Enter") });
     run(game, api);
   };
   btn.addEventListener("click", (e) => { e.stopPropagation(); start(); });
-  hotspot(el, 1010, 660, 250, 120, "Garden hose", start);
+  hotspot(el, ...at.hose, "Garden hose", start);
 }
 
 function run(a: Arcade, api: Api) {
@@ -114,13 +125,13 @@ function run(a: Arcade, api: Api) {
       api.sfx("pop"); splash(cx, cy, 8, "#9fd8ff");
       food = free(); foodItem = FOOD[Math.floor(Math.random() * FOOD.length)];
       if (!gold && eaten % 5 === 0) gold = { p: free(), ttl: 6 };
-      if (score >= 10) api.egg("snake-10", "10 sushi eaten by a garden hose. Nature is healing.");
+      if (score >= 10) api.egg("snake-10", "10 sushi eaten by a garden hose. Storage inventory: down 10.");
       a.score(score);
     } else if (gold && h[0] === gold.p[0] && h[1] === gold.p[1]) {
       score += 3; grow += 2; gold = null; sprayT = t;
       api.sfx("coin"); splash(cx, cy, 14, "#ffd84a");
       api.egg("snake-gold", "Golden tamago, swallowed by a hose. Worth 3. Tastes like brass.");
-      if (score >= 10) api.egg("snake-10", "10 sushi eaten by a garden hose. Nature is healing.");
+      if (score >= 10) api.egg("snake-10", "10 sushi eaten by a garden hose. Storage inventory: down 10.");
       a.score(score);
     }
   };
@@ -142,14 +153,21 @@ function run(a: Arcade, api: Api) {
   };
 
   const draw = () => {
-    // Night lawn.
-    const lawn = img("games/lawn.png");
-    if (lawn.complete && lawn.naturalWidth) g.drawImage(lawn, 0, 0, a.W, a.H);
-    else { g.fillStyle = "#1d2b1c"; g.fillRect(0, 0, a.W, a.H); }
-    g.fillStyle = "rgba(0,0,0,.08)";
-    for (let x = 0; x < COLS; x++) for (let y = 0; y < ROWS; y++) if ((x + y) % 2) g.fillRect(x * CELL, y * CELL, CELL, CELL);
-    // Moonlit vignette + fence edge.
-    g.fillStyle = "rgba(10,14,30,.35)";
+    // Storage-room floorboards (rows of planks with staggered butt joints).
+    for (let r = 0; r < ROWS; r++) {
+      g.fillStyle = r % 2 ? "#4a2e1c" : "#52331f";
+      g.fillRect(0, r * CELL, a.W, CELL);
+      g.fillStyle = "#3a2315"; g.fillRect(0, r * CELL + CELL - 1, a.W, 1);
+      g.fillStyle = "rgba(255,210,150,.06)"; g.fillRect(0, r * CELL, a.W, 1);
+      for (let x = ((r * 7) % 5) * CELL + 2 * CELL; x < a.W; x += 7 * CELL) { g.fillStyle = "#34200f"; g.fillRect(x, r * CELL, 1, CELL - 1); }
+      g.fillStyle = "rgba(0,0,0,.12)"; g.fillRect(((r * 37) % COLS) * CELL + 3, r * CELL + 5, 5, 1);
+    }
+    // Warm bulb pool in the middle, darker corners.
+    const vg = g.createRadialGradient(a.W / 2, a.H / 2, 20, a.W / 2, a.H / 2, a.W * 0.62);
+    vg.addColorStop(0, "rgba(255,190,110,.10)");
+    vg.addColorStop(1, "rgba(8,5,3,.45)");
+    g.fillStyle = vg; g.fillRect(0, 0, a.W, a.H);
+    g.fillStyle = "#1a0f08";
     g.fillRect(0, 0, a.W, 2); g.fillRect(0, a.H - 2, a.W, 2); g.fillRect(0, 0, 2, a.H); g.fillRect(a.W - 2, 0, 2, a.H);
 
     // Food (bobbing sushi) and golden tamago.

@@ -1,42 +1,28 @@
-/* Dining room: the comparison windows hang like two framed menu boards on the calm upper wall. */
-.scene-ui[data-id="dining"] .compare-head h2.px { font-size: 44px; }
-.scene-ui[data-id="dining"] .compare-head .ticket { font: 17px var(--mono); color: var(--muted); margin: 8px 0 0; text-shadow: 0 2px 0 rgba(0,0,0,.7); }
+/* Dining room: two big comparison windows fill the screen; the dimmed room frames them. */
+.scene-ui[data-id="dining"] .compare-head { display: flex; align-items: baseline; gap: 26px; white-space: nowrap; }
+.scene-ui[data-id="dining"] .compare-head h2.px { font-size: 32px; line-height: 1; }
+.scene-ui[data-id="dining"] .compare-head .ticket { font: 18px var(--mono); color: var(--muted); margin: 0; text-shadow: 0 2px 0 rgba(0,0,0,.8); overflow: hidden; text-overflow: ellipsis; }
 
 .scene-ui[data-id="dining"] .cmp {
-  cursor: zoom-in; z-index: 1;
+  margin: 0; cursor: pointer; z-index: 1;
   background: #0e0c0b;
   border: 6px solid #3b2517;
   outline: 2px solid #1a0f08;
-  box-shadow: inset 0 0 0 2px rgba(217,138,74,.45), 0 18px 40px rgba(0,0,0,.65), 0 0 0 1px rgba(0,0,0,.4);
-  transition: left .35s ease, top .35s ease, width .35s ease, box-shadow .2s;
+  box-shadow: inset 0 0 0 2px rgba(217,138,74,.45), 0 18px 40px rgba(0,0,0,.7);
+  transition: box-shadow .2s, opacity .25s;
 }
-.scene-ui[data-id="dining"] .cmp.right { border-color: #3b2517; box-shadow: inset 0 0 0 2px rgba(111,220,140,.55), 0 18px 40px rgba(0,0,0,.65), 0 0 26px rgba(111,220,140,.12); }
-.scene-ui[data-id="dining"] .cmp:hover { box-shadow: inset 0 0 0 2px var(--copper), 0 22px 46px rgba(0,0,0,.7); }
-.scene-ui[data-id="dining"] .cmp.right:hover { box-shadow: inset 0 0 0 2px var(--green), 0 22px 46px rgba(0,0,0,.7), 0 0 30px rgba(111,220,140,.2); }
-.scene-ui[data-id="dining"] .cmp figcaption { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 10px; background: #1a1714; }
-.scene-ui[data-id="dining"] .cmp figcaption b { font: 400 17px var(--px); }
-.scene-ui[data-id="dining"] .cmp .zoom { font: 11px var(--mono); color: var(--muted); opacity: .75; }
-.scene-ui[data-id="dining"] .cmp .zoom::before { content: "+ "; }
-.scene-ui[data-id="dining"] .cmp video { display: block; width: 100%; aspect-ratio: 16/10; background: #0b0a09; }
-.scene-ui[data-id="dining"] .cmp .verdict { margin: 0; padding: 8px 10px 9px; font: 400 12px/1.35 var(--px); color: var(--cream); background: #141110; }
+.scene-ui[data-id="dining"] .cmp.right { box-shadow: inset 0 0 0 2px rgba(111,220,140,.55), 0 18px 40px rgba(0,0,0,.7), 0 0 30px rgba(111,220,140,.14); }
+.scene-ui[data-id="dining"] .cmp:hover, .scene-ui[data-id="dining"] .cmp:focus-visible { box-shadow: inset 0 0 0 2px var(--copper), 0 22px 46px rgba(0,0,0,.75); outline-color: var(--copper); }
+.scene-ui[data-id="dining"] .cmp.right:hover, .scene-ui[data-id="dining"] .cmp.right:focus-visible { box-shadow: inset 0 0 0 2px var(--green), 0 22px 46px rgba(0,0,0,.75), 0 0 34px rgba(111,220,140,.22); outline-color: var(--green); }
+.scene-ui[data-id="dining"] .cmp figcaption { display: flex; align-items: baseline; gap: 18px; padding: 8px 12px 7px; background: #1a1714; white-space: nowrap; overflow: hidden; }
+.scene-ui[data-id="dining"] .cmp figcaption b { font: 400 19px var(--px); flex: none; }
+.scene-ui[data-id="dining"] .cmp.right figcaption b { color: var(--green); }
+.scene-ui[data-id="dining"] .cmp .verdict { margin-left: auto; font: 15px var(--mono); color: var(--cream); overflow: hidden; text-overflow: ellipsis; }
 .scene-ui[data-id="dining"] .cmp.right .verdict { color: #cfe9d5; }
-.scene-ui[data-id="dining"] .cmp .stats { display: none; }
+.scene-ui[data-id="dining"] .cmp video { display: block; width: 100%; aspect-ratio: 16/10; background: #0b0a09; }
 
-/* Enlarged */
-.scene-ui[data-id="dining"] .cmp.big { cursor: zoom-out; z-index: 5; }
-.scene-ui[data-id="dining"] .cmp.big figcaption { padding: 10px 14px; }
-.scene-ui[data-id="dining"] .cmp.big figcaption b { font-size: 22px; }
-.scene-ui[data-id="dining"] .cmp.big .zoom { font-size: 0; opacity: 1; }
-.scene-ui[data-id="dining"] .cmp.big .zoom::before { content: "× close"; font-size: 14px; }
-.scene-ui[data-id="dining"] .cmp.big .verdict { font-size: 17px; padding: 10px 14px 4px; }
-.scene-ui[data-id="dining"] .cmp.big .stats { display: flex; list-style: none; margin: 0; padding: 6px 14px 12px; flex-wrap: wrap; gap: 6px 22px; font: 16px var(--mono); color: var(--muted); background: #141110; }
-.scene-ui[data-id="dining"] .cmp.big.right .stats li { color: #cfe9d5; }
+/* Carrying a plate: the windows step aside so you can see the tables behind them. */
+#frame.dragging .scene-ui[data-id="dining"] .cmp,
+#frame.dragging .scene-ui[data-id="dining"] .compare-head { opacity: .06; }
 
-.scene-ui[data-id="dining"] .cmp-back { position: absolute; z-index: 4; border: 0; padding: 0; background: rgba(6,5,4,.78); opacity: 0; transition: opacity .3s; pointer-events: none !important; cursor: zoom-out; }
-.scene-ui[data-id="dining"].live .cmp-back.on { opacity: 1; pointer-events: auto !important; }
-
-/* Easter-egg overlays */
 .scene-ui[data-id="dining"] .bubble { font-size: 20px; max-width: 360px; }
-
-/* Soft dark pool behind the headline so it reads over the lanterns. */
-.scene-ui[data-id="dining"] .compare-head::before { content: ""; position: absolute; inset: -26px -60px -18px -60px; z-index: -1; background: radial-gradient(ellipse at 40% 50%, rgba(8,6,5,.62), rgba(8,6,5,.35) 55%, rgba(8,6,5,0) 75%); pointer-events: none; }

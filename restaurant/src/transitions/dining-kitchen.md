@@ -1,26 +1,19 @@
-# dining → kitchen: the sushi cam
+# dining → kitchen: through the swinging doors
 
-**Route:** the camera dips onto a plate on the dining belt and, bolted to it, rides at sushi eye height behind a rubber-duck plate that noses the swinging kitchen doors open. The doors flap shut, our plate pushes through, and a towering Jiro, a giant knife, the rice "hot tub" and a peeking cat look down at us. Then the camera rises back to the eye-level kitchen view.
+**Route:** an eye-level observer camera pushes from the dining room into the swinging kitchen doors on the right wall. The two leaves swing away from us and the kitchen shows through the doorway. A centre-first pixel dissolve removes the door frame. The kitchen camera then pulls back from the pass to the normal kitchen frame, where the belt comes in under the little half-doors at the counter's left end. (Round 2: the POV sushi cam was removed per Martin.)
 
-**Length:** 2.0 viewport heights.
+**Length:** 0.7 viewport heights.
 
-| t | beat |
+| t / dining zoom z | beat |
 |---|------|
-| 0 – 0.12 | dining camera eases from identity onto a camera locked to the POV door rect (zoom ≈ 1.6 × POV door scale, doors centred unless that would show past the art's right edge) |
-| 0.02 – 0.23 | sushi cam cranes down: eye height starts 130 higher, horizon compensated so the door plane holds still while the counter and belt swing up from below |
-| 0.10 – 0.21 | bottom-first ordered-dither pixel dissolve dining → POV (6 px cells, Bayer 8×8 + position bias; no seam) |
-| 0 – 0.80 | POV ride. Door-plane distance falls linearly 283 → −80 world units (constant speed; the camera tilt is eased, the travel is not) |
-| ≈0.24 / 0.57 | duck plate pushes the doors open / our plate pushes them open again |
-| 0.76 – 0.93 | un-bolt: eye height rises +240, so the near belt and plates drop out of frame and the belt narrows toward the vanishing point |
-| 0.83 – 0.95 | top-first pixel dissolve POV → kitchen at the matching camera `K_MATCH` (zoom 2.0 around 1397, 536: tub centre-left, Jiro right); kitchen pulls back to identity over 0.88 – 1.0 |
+| t 0 – 0.56 | push: log-zoom 1 → `ZMAX` 7.5. The focus point `P` (1476, 300, the upper door) slides from its own screen position to screen centre, so the view never leaves the art and needs no clamping |
+| z 3.6 – 5.2 (t ≈ 0.31 – 0.40) | both leaves swing 0 → 80° away from us. Each leaf is drawn as 36 perspective strips cut from the live dining frame, hinged on its jamb, and darkens as it turns. The kitchen layer is clipped to the door opening behind the leaves |
+| z 4.6 – 7.2 (t ≈ 0.36 – 0.50) | centre-first ordered-dither pixel dissolve (`dining-kitchen/dissolve.ts`) from the door frame to the full kitchen layer |
+| t 0.40 – 1.0 | kitchen camera eases from `K0` (zoom 2.1 around 880, 470: the pass, the tub, and the belt start) back to identity |
 
-**How it works:** `dining-kitchen/dissolve.ts` renders the incoming layer offscreen and masks it with chunky Bayer-dither cells (the same pixel look as the art) so the hand-offs read as one camera, not a split screen. `dining-kitchen/pov.ts` is a pinhole camera (F=500) on a plate. The belt tread, copper rails and wooden counter are mode-7 scanlines rendered at 1/4 resolution. The tread and the plates ahead ride with us, so they hold still. The rails' rivets and the counter joints stream past at `BELT_SPEED` plus the scroll travel. The door leaves are projected vertical strips of `doors.jpg`, hinged on the frame.
-
-**Art** (`public/art/tr/dining-kitchen/`, sources in `/tmp/dining-kitchen/src/`):
-- `doors.jpg`: the dining wall from belt height. The door opening is hard-coded as `DOOR` in `pov.ts`: x 738–1182, y 205–728, the leaf split at x 960, and the counter line at y 740. If you regenerate this image, update those numbers.
-- `kitchen-pov.jpg`: a worm's-eye view of the kitchen. Its vanishing point is hard-coded as `KVP` = (960, 566).
+**How it works:** the dining scene is rendered once per frame at identity into an offscreen canvas, then scaled by the push camera with nearest-neighbour sampling (crisp pixels). The leaves are cut from that same canvas, so they match whatever grade the dining art gets. There is no transition art (`public/art/tr/dining-kitchen/` was deleted).
 
 **Scene dependencies (kept small):**
-- Dining: `DD` in `dining-kitchen.ts` is the dining door (centre x 1475, top y 205, width 280; doors ≈ 1335–1620 × 205–550). The entry camera is solved each frame so these doors land on the POV door rect. If the dining doors move, update `DD`.
-- Kitchen: the dissolve lands on `K_MATCH` (zoom 2.0 around 1397, 536), which lines kitchen.jpg's tub (≈1154, 580) and Jiro's eyes (≈1567, 358) up with the same props in `kitchen-pov.jpg`. Keep Jiro on the right, the hangiri tub centre-left, and the belt entering from the left (about 700, 650). If Jiro or the tub move a lot, update `kitchen-pov.jpg` so they stay on the same sides.
-- Neither scene's `belt` data is read. The POV belt is its own world (belt 64 wide, plates 52, PLATE_GAP 150).
+- Dining: `DOOR` = opening x 1335–1617, y 207–551, leaf split x 1474 (same as the scene's "Kitchen doors" hotspot). The swing is keyed to zoom so it starts only when the screen bottom is above y ≈ 487. Diners sit in front of the lower door (heads from y ≈ 480) and must be out of frame before the leaves move. If the doors or the diners move, update `DOOR` / `SWING`.
+- Kitchen: only `K0`. Any framing works, as long as zoom 2.1 around (880, 470) stays inside the art.
+- Neither scene's `belt` data is read.

@@ -1,16 +1,13 @@
-import type { Api, Camera, TransitionDef } from "../engine/types";
-import { F, WPX, DOOR, drawPov, type Pov } from "./dining-kitchen/pov";
+import { STAGE_W, STAGE_H, type Api, type Camera, type TransitionDef } from "../engine/types";
 import { layerCtx, dissolve } from "./dining-kitchen/dissolve";
 
-// dining -> kitchen: the "sushi cam". See dining-kitchen.md.
-//   0.00-0.21  one camera: dining zooms onto the kitchen doors while the sushi cam,
-//              locked to the same door rect, cranes down to belt height; a
-//              bottom-first dithered pixel dissolve swaps dining -> POV (0.10-0.21)
-//   0.00-0.80  ride at constant speed: plate ahead noses the doors open, they flap
-//              back, our plate pushes through, kitchen towers over us
-//   0.78-1.00  un-bolt: camera rises (belt drops out of frame), a top-first
-//              dithered dissolve reveals the kitchen at the matching zoom (0.83-0.95),
-//              which then pulls back to the observer frame
+// dining -> kitchen: through the swinging doors. See dining-kitchen.md.
+//   0.00-0.56  push: the dining camera glides right and up into the kitchen doors
+//              (log-zoom 1 -> ZMAX, the door focus point slides to screen centre)
+//   z 3.4-5.0  the two leaves swing away from us (drawn in code from the dining frame),
+//              the kitchen shows through the doorway
+//   z 4.6-7.2  centre-first pixel dissolve takes the door frame away
+//   0.40-1.00  the kitchen camera pulls back from the pass to the observer frame
 
 const smooth = (a: number, b: number, t: number) => {
   const x = Math.max(0, Math.min(1, (t - a) / (b - a)));
@@ -18,85 +15,136 @@ const smooth = (a: number, b: number, t: number) => {
 };
 const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 
-/** Ride: zw is linear in t (constant speed): ZW_A at t=0 -> ZW_END at T_END. */
-const ZW_A = 283, ZW_END = -80, T_END = 0.8;
-const zwAt = (t: number) => ZW_A + (ZW_END - ZW_A) * (t / T_END);
+/** Dining kitchen-door opening (stage px, measured on dining.jpg; matches the scene's door hotspot). */
+const DOOR = { x0: 1335, x1: 1617, mid: 1474, y0: 207, y1: 551 };
+/** Stage point the push aims at (upper door, portholes), and the push's end zoom. */
+const P = { x: 1476, y: 300 };
+const ZMAX = 7.5;
+const PUSH_END = 0.56;
+/** Swing and dissolve are keyed to the dining zoom so the leaves only move once the
+ *  diners seated in front of the doors (heads from y ~ 480) are below the frame. */
+const SWING: [number, number] = [3.6, 5.2];
+const DISS: [number, number] = [4.6, 7.2];
+/** Max leaf swing (radians, away from us) and the perspective viewing distance (stage px). */
+const THETA = (80 * Math.PI) / 180;
+const DEPTH = 520;
+/** Kitchen camera seen through the doorway: the pass, with the belt start at lower left. */
+const K0: Camera = { zoom: 2.1, cx: 880, cy: 470 };
+const K_PULL: [number, number] = [0.4, 1];
 
-/** Entry dissolve window and crane height. */
-const IN0 = 0.1, IN1 = 0.21;
-const CRANE = 130;
-/** Exit dissolve window. */
-const OUT0 = 0.83, OUT1 = 0.95;
+function pushU(t: number) { return smooth(0, PUSH_END, t); }
 
-/** Dining door (stage px in dining.jpg) and its size ratio to the POV door art. */
-const DD = { cx: 1475, top: 205, w: 280 };
-const DOOR_RATIO = (DOOR.x1 - DOOR.x0) / DD.w;
-
-/** Kitchen camera that lines kitchen.jpg up with kitchen-pov.jpg (tub centre-left, Jiro right). */
-const K_MATCH = { zoom: 2.0, cx: 1397, cy: 536 };
-
-export function povAt(t: number): Pov {
-  const zw = zwAt(Math.min(t, 0.9));
-  // Camera tilt (horizon) is eased; travel is not.
-  const tiltUp = smooth(0, 1, (300 - zw) / 150);
-  const tiltDown = smooth(0, 1, (40 - zw) / 100);
-  let yh = lerp(lerp(707, 880, tiltUp), 566, tiltDown);
-  const rise = smooth(0, 1, (0 - zw) / 60);
-  const unbolt = smooth(0.76, 0.93, t);
-  let hc = 20 + 9 * rise + 240 * unbolt;
-  // Crane down: extra height, horizon compensated so the door plane holds still
-  // on screen while the near counter and belt swing up from below.
-  const up = CRANE * (1 - smooth(0.02, IN1 + 0.02, t));
-  hc += up;
-  yh -= (up * F) / Math.max(zw, 40);
-  return { zw, yh, hc };
+/** Dining camera at push progress u: zoom ZMAX^u, focus point P slides from its own spot to screen centre. */
+function diningCam(u: number) {
+  const z = Math.pow(ZMAX, u);
+  const sx = lerp(P.x, STAGE_W / 2, u), sy = lerp(P.y, STAGE_H / 2, u);
+  return { z, cx: P.x - (sx - STAGE_W / 2) / z, cy: P.y - (sy - STAGE_H / 2) / z };
 }
 
-/** Dining camera whose kitchen doors sit exactly on the POV's door rect. */
-function diningMatch(p: Pov): Camera {
-  const sc = (WPX * F) / p.zw;
-  const zoom = DOOR_RATIO * sc;
-  const topY = p.yh + ((p.hc - (DOOR.base - DOOR.y0) * WPX) * F) / p.zw;
-  // Door centred (as in the POV) unless that would show past the art's right edge.
-  const cx = Math.min(DD.cx, 1920 - 960 / zoom);
-  const cy = DD.top - (topY - 540) / zoom;
-  return { zoom, cx, cy };
+function kitchenCam(t: number): Camera {
+  const k = smooth(K_PULL[0], K_PULL[1], t);
+  return { zoom: lerp(K0.zoom!, 1, k), cx: lerp(K0.cx!, STAGE_W / 2, k), cy: lerp(K0.cy!, STAGE_H / 2, k) };
 }
 
-function mixCam(a: Camera, b: Camera, k: number): Camera {
-  return { zoom: lerp(a.zoom ?? 1, b.zoom ?? 1, k), cx: lerp(a.cx ?? 960, b.cx ?? 960, k), cy: lerp(a.cy ?? 540, b.cy ?? 540, k) };
+let base: HTMLCanvasElement | null = null;
+function baseCtx(): CanvasRenderingContext2D {
+  if (!base) { base = document.createElement("canvas"); base.width = STAGE_W; base.height = STAGE_H; }
+  const g = base.getContext("2d")!;
+  g.setTransform(1, 0, 0, 1, 0, 0);
+  g.globalAlpha = 1;
+  g.imageSmoothingEnabled = true;
+  return g;
 }
-const ID: Camera = { zoom: 1, cx: 960, cy: 540 };
+
+/**
+ * One door leaf swinging away from us, hinged on its jamb. Drawn in stage space
+ * (under the dining camera) as vertical strips cut from the dining frame itself,
+ * so it matches the art whatever grade the room gets.
+ */
+function drawLeaf(g: CanvasRenderingContext2D, src: HTMLCanvasElement, hinge: number, inner: number, theta: number) {
+  const W = Math.abs(inner - hinge), dir = Math.sign(inner - hinge);
+  const vx = DOOR.mid, vy = (DOOR.y0 + DOOR.y1) / 2;
+  const N = 36;
+  const pt = (s: number) => {
+    const d = s * W * Math.sin(theta);
+    const f = DEPTH / (DEPTH + d);
+    return { x: vx + (hinge + dir * s * W * Math.cos(theta) - vx) * f, top: vy + (DOOR.y0 - vy) * f, bot: vy + (DOOR.y1 - vy) * f };
+  };
+  for (let i = 0; i < N; i++) {
+    const a = pt(i / N), b = pt((i + 1) / N);
+    const sx = hinge + dir * (i / N) * W;
+    const sw = W / N;
+    const x0 = Math.min(a.x, b.x), x1 = Math.max(a.x, b.x);
+    if (x1 - x0 < 0.05) continue;
+    const top = (a.top + b.top) / 2, bot = (a.bot + b.bot) / 2;
+    const srcX = dir > 0 ? sx : sx - sw;
+    g.drawImage(src, srcX, DOOR.y0, sw, DOOR.y1 - DOOR.y0, x0, top, x1 - x0 + 0.6, bot - top);
+  }
+  // The turning leaf loses the lantern light.
+  const far = pt(1);
+  g.fillStyle = `rgba(8,5,3,${(0.55 * Math.sin(theta)).toFixed(3)})`;
+  g.beginPath();
+  g.moveTo(hinge, DOOR.y0); g.lineTo(far.x, far.top); g.lineTo(far.x, far.bot); g.lineTo(hinge, DOOR.y1);
+  g.closePath();
+  g.fill();
+}
 
 export const diningKitchen: TransitionDef = {
   from: "dining",
   to: "kitchen",
-  length: 2.0,
-  route: "Sushi cam: we ride a plate through the swinging kitchen doors and look up at the kitchen from belt height",
+  length: 0.7,
+  route: "Through the swinging kitchen doors: the camera pushes into the dining doors, they swing open, and we pull back over the pass where the belt comes in under the half-doors",
   render(g: CanvasRenderingContext2D, t: number, now: number, api: Api) {
-    const p = povAt(t);
-    const kIn = smooth(IN0, IN1, t), kOut = smooth(OUT0, OUT1, t);
     if (t <= 0) { api.drawScene("dining", g, now); return; }
     if (t >= 1) { api.drawScene("kitchen", g, now); return; }
 
-    if (kIn < 1) {
-      // Entry: dining camera eases from identity onto the door-matched camera.
-      const cam = mixCam(ID, diningMatch(p), smooth(0, IN0 + 0.02, t));
-      api.drawScene("dining", g, now, cam);
-      if (kIn > 0) {
-        drawPov(layerCtx(), p, now, api);
-        // Bottom first: the belt arrives before the doors change.
-        dissolve(g, kIn, (u, v) => 1 - v * 0.85 - 0.15 * Math.abs(u - 0.5));
-      }
+    const { z, cx, cy } = diningCam(pushU(t));
+    const dk = smooth(DISS[0], DISS[1], z);
+    const kcam = kitchenCam(t);
+
+    if (dk >= 1) {
+      g.imageSmoothingEnabled = false;
+      api.drawScene("kitchen", g, now, kcam);
       return;
     }
-    if (kOut <= 0) { drawPov(g, p, now, api); return; }
-    // Exit: POV rising; kitchen revealed top-first at the matching zoom, then pulled back.
-    drawPov(g, p, now, api);
-    const cam = mixCam(K_MATCH, ID, smooth(OUT0 + 0.05, 1, t));
-    const lg = layerCtx();
-    if (kOut >= 1) { api.drawScene("kitchen", g, now, cam); return; }
-    api.drawScene("kitchen", lg, now, cam);
-    dissolve(g, kOut, (u, v) => v * 0.85 + 0.15 * Math.abs(u - 0.5));
+
+    // Dining frame rendered once at identity, then pushed with crisp pixels.
+    const bg = baseCtx();
+    api.drawScene("dining", bg, now);
+    g.save();
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    g.imageSmoothingEnabled = z < 1.02;
+    g.translate(STAGE_W / 2, STAGE_H / 2);
+    g.scale(z, z);
+    g.translate(-cx, -cy);
+    g.drawImage(base!, 0, 0);
+
+    const sw = smooth(SWING[0], SWING[1], z);
+    const lg = sw > 0 || dk > 0 ? layerCtx() : null;
+    if (lg) {
+      lg.imageSmoothingEnabled = false;
+      api.drawScene("kitchen", lg, now, kcam);
+    }
+    if (sw > 0 && lg) {
+      // Doorway: the kitchen through the opening, a little darker at the jambs.
+      g.save();
+      g.beginPath();
+      g.rect(DOOR.x0, DOOR.y0, DOOR.x1 - DOOR.x0, DOOR.y1 - DOOR.y0);
+      g.clip();
+      g.save();
+      g.setTransform(1, 0, 0, 1, 0, 0);
+      g.drawImage(lg.canvas, 0, 0);
+      g.restore();
+      g.fillStyle = `rgba(6,4,3,${(0.35 * (1 - sw)).toFixed(3)})`;
+      g.fillRect(DOOR.x0, DOOR.y0, DOOR.x1 - DOOR.x0, DOOR.y1 - DOOR.y0);
+      const theta = THETA * sw;
+      drawLeaf(g, base!, DOOR.x0, DOOR.mid, theta);
+      drawLeaf(g, base!, DOOR.x1, DOOR.mid, theta);
+      g.restore();
+    }
+    g.restore();
+
+    // Centre-first pixel dissolve takes away the door frame.
+    if (dk > 0) dissolve(g, dk, (u, v) => Math.min(1, Math.hypot((u - 0.5) * 1.2, v - 0.5) * 1.4));
   },
 };

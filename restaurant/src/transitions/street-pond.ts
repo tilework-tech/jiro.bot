@@ -3,36 +3,36 @@ import { STAGE_W, STAGE_H } from "../engine/types";
 import { drawTread, platesOn, drawPlates, pathLength } from "../engine/belt";
 import { smooth } from "../engine/stage";
 import { wave } from "../engine/fx";
-import { street } from "../scenes/street";
+import { street, BELT_X } from "../scenes/street";
 import { pond } from "../scenes/pond";
 
-// street -> pond: a delivery chute folds out of the trike's cargo box, runs
-// down the wet street, through the round moon gate in the garden wall and
-// down a gravel lane, then turns left onto the pond pier. The camera cranes
-// down along it and settles on the pond frame.
+// street -> pond: straight down. The street's vertical wall conveyor keeps
+// going past the bottom edge, disappears behind the garden wall's tiled cap,
+// shows through the round moon gate, runs down the gravel lane and turns left
+// onto the pond pier. The camera tilts down along it (drifting a little left)
+// and settles on the pond frame. The rain stays on the street side of the wall;
+// the garden below it has fireflies.
 //
-// World space: street frame at (0,0), pond frame at (PX,PY), and a painted
+// World space: street frame at (0,0), pond frame at (PX,PY), and the painted
 // garden backdrop (wall + moon gate + lane) filling everything in between.
 
-const PX = -351, PY = 1665;
-/** Backdrop art placement in world space. */
-const ART = { url: "art/tr/street-pond/garden.jpg", x: -360, y: 1052, w: 2395, h: 1673 };
+/** Corner radius where the lane turns onto the pier. */
+const R = 46;
+const pierStart = pond.belt.pts[0];
+/** Pond frame placed so the pier corner sits straight under the street belt. */
+const PX = Math.round(BELT_X - R - pierStart[0]), PY = 1665;
+/** Backdrop art placement (painted for the pond at x=-351; it moves with the pond). */
+const ART = { url: "art/tr/street-pond/garden.jpg", x: -360 + (PX + 351), y: 1052, w: 2395, h: 1673 };
 /** Garden wall face (occludes the belt) and the moon gate hole in it. */
 const WALL_TOP = 1073, WALL_BOT = 1530;
-const GATE = { x: 1644, y: 1357, rx: 180, ry: 172 };
-const LANE_X = 1652;
+const GATE = { x: 1644 + (PX + 351), y: 1357, rx: 180, ry: 172 };
 /** Wall shadow band on the pavement, from the street's puddles down to the roof cap. */
 const SHADE_Y0 = 975, SHADE_Y1 = 1142;
+/** Where the plate items switch from the street pool to the pond pool (hidden by the wall). */
+const SWAP_Y = 1130;
 
-// Street loop geometry, read from the scene: dock at the loop's rear (rightmost) point.
-const loopPts = street.belt.pts;
-const dockPt = loopPts.reduce((a, b) => (b[0] > a[0] ? b : a));
-const [DX, DY] = dockPt;
-const DS = (dockPt[2] ?? 1) * ((street.belt.width ?? 64) / (pond.belt.width ?? 64));
-
-// Pond pier start, read from the scene and moved into world space.
-const pierStart = pond.belt.pts[0];
 const PIER_X = PX + pierStart[0], PIER_Y = PY + pierStart[1];
+const LANE_X = BELT_X;
 
 function corner(x0: number, y0: number, x1: number, y1: number, n = 6): BeltPt[] {
   // Quarter turn from heading down (at x0) to heading left (ending at y1).
@@ -44,52 +44,39 @@ function corner(x0: number, y0: number, x1: number, y1: number, n = 6): BeltPt[]
   return out;
 }
 
-const R = 46;
-const CHUTE: BeltPath = {
+/** Upper run: the street belt continued straight down behind the wall cap (street items). */
+const U0 = 880;
+const UPPER: BeltPath = {
+  pts: [[LANE_X, U0, 1], [LANE_X, SWAP_Y, 1]],
+  width: street.belt.width, plate: street.belt.plate, pool: street.belt.pool, fadeIn: 0, fadeOut: 0,
+};
+/** Lower run: through the gate, down the lane, onto the pier and a little way into the pond frame (pond items). */
+const LOWER: BeltPath = {
   pts: [
-    [DX, DY + 4, DS],
-    [DX + 34, DY + 30, DS + 0.03],
-    [DX + 54, DY + 100, DS + 0.08],
-    [DX + 56, 900, 0.8],
-    [LANE_X + 4, 1080, 0.88],
-    [LANE_X, 1300, 0.95],
-    [LANE_X, 1560, 1],
+    [LANE_X, SWAP_Y, 1],
     [LANE_X, PIER_Y - R, 1],
     ...corner(LANE_X, PIER_Y - R, LANE_X - R, PIER_Y),
     [PIER_X, PIER_Y, 1],
+    [PX + 1780, PIER_Y, 1],
   ],
-  width: pond.belt.width,
-  plate: pond.belt.plate,
-  fadeIn: 34,
-  fadeOut: 0,
+  width: pond.belt.width, plate: pond.belt.plate, pool: pond.belt.pool, fadeIn: 0, fadeOut: 0,
 };
-// Phase so plates leave the chute exactly where pond plates start, with the same items.
-CHUTE.phase = pathLength(CHUTE) + (pond.belt.phase ?? 0);
+/** Lower-run distance at the pond belt's first point. */
+const toPier = (() => {
+  const probe: BeltPath = { pts: LOWER.pts.slice(0, LOWER.pts.length - 1) };
+  return pathLength(probe);
+})();
+function phases() {
+  // Same plate identity (and so the same item and spacing) as the scene belts they join.
+  UPPER.phase = (street.belt.phase ?? 0) - (U0 - street.belt.pts[0][1]);
+  LOWER.phase = (pond.belt.phase ?? 0) + toPier;
+}
 
-// Camera keyframes: [t, cx, cy, zoom] in world space.
-const KEYS: [number, number, number, number][] = [
-  [0, 960, 540, 1],
-  [0.22, 1110, 650, 1.2],
-  [0.48, 1110, 1290, 1.2],
-  [0.76, 960, 1950, 1.08],
-  [1, PX + 960, PY + 540, 1],
-];
-
+/** Camera centre in world space: an eased straight tilt down; the small leftward drift
+ * only starts once the view is below the street frame, so its left edge never shows void. */
 function cam(t: number): [number, number, number] {
-  let i = 0;
-  while (i < KEYS.length - 2 && t > KEYS[i + 1][0]) i++;
-  const a = KEYS[i], b = KEYS[i + 1];
-  const u = Math.max(0, Math.min(1, (t - a[0]) / (b[0] - a[0])));
-  const h = b[0] - a[0];
-  const tan = (k: number, c: number) => {
-    if (k === 0 || k === KEYS.length - 1) return 0;
-    const p = KEYS[k - 1], n = KEYS[k + 1];
-    return ((n[c] - p[c]) / (n[0] - p[0])) * h * 0.8;
-  };
-  const u2 = u * u, u3 = u2 * u;
-  const h00 = 2 * u3 - 3 * u2 + 1, h10 = u3 - 2 * u2 + u, h01 = -2 * u3 + 3 * u2, h11 = u3 - u2;
-  const v = (c: number) => h00 * a[c] + h10 * tan(i, c) + h01 * b[c] + h11 * tan(i + 1, c);
-  return [v(1), v(2), v(3)];
+  const k = smooth(0, 1, t);
+  return [960 + PX * smooth(0.62, 1, t), 540 + PY * k, 1];
 }
 
 let bufA: HTMLCanvasElement | null = null, bufB: HTMLCanvasElement | null = null;
@@ -131,11 +118,12 @@ function sceneBuf(which: "a" | "b", id: string, now: number, api: Api, bottom: n
 }
 
 function fireflies(g: CanvasRenderingContext2D, now: number, k: number) {
+  // Only in the garden below the wall and outside the pond frame, so nothing pops at t=1.
   if (k <= 0) return;
   g.save();
   for (let i = 0; i < 16; i++) {
-    const bx = 60 + ((i * 0.618) % 1) * 1900;
-    const by = 1560 + ((i * 0.377) % 1) * 150 + (bx > 1560 ? ((i * 0.29) % 1) * 700 : 0);
+    const bx = PX + 40 + ((i * 0.618) % 1) * 2100;
+    const by = WALL_BOT + 20 + ((i * 0.377) % 1) * (PY - WALL_BOT - 40) + (bx > PX + 1940 ? ((i * 0.29) % 1) * 700 : 0);
     const x = bx + 14 * wave(now, 12, i * 1.3);
     const y = by + 10 * wave(now, 8, i * 2.1);
     const a = Math.max(0, wave(now, [4, 6, 8][i % 3], i * 0.9));
@@ -151,8 +139,8 @@ function fireflies(g: CanvasRenderingContext2D, now: number, k: number) {
 export const streetPond: TransitionDef = {
   from: "street",
   to: "pond",
-  length: 2,
-  route: "A chute folds out of the trike's cargo loop, runs down the street, through the garden wall's moon gate and down a gravel lane onto the pond pier.",
+  length: 0.8,
+  route: "The street's wall conveyor runs straight down past the bottom edge, behind the garden wall, through the moon gate and down the gravel lane, then turns left onto the pond pier.",
   render(g, t, now, api) {
     if (t <= 0) { api.drawScene("street", g, now); return; }
     if (t >= 1) { api.drawScene("pond", g, now); return; }
@@ -184,40 +172,31 @@ export const streetPond: TransitionDef = {
       gr.addColorStop(0, "rgba(8,10,22,0)");
       gr.addColorStop(0.5, `rgba(8,10,22,${0.8 * shade})`);
       gr.addColorStop(0.62, `rgba(8,10,22,${0.8 * shade})`);
-      // Lighter at the roof cap so the cat sitting on it stays readable.
+      // Lighter at the roof cap so the tiles stay readable.
       gr.addColorStop(1, `rgba(8,10,22,${0.3 * shade})`);
       g.fillStyle = gr;
       g.fillRect(ART.x, SHADE_Y0, ART.w, SHADE_Y1 - SHADE_Y0);
     }
 
-    // The chute: unfolds from the cargo box, hidden behind the wall except through the gate.
-    const unfold = smooth(0.02, 0.2, t);
+    // The belt: street run above the wall cap, pond run through the gate and below the wall.
+    phases();
     g.save();
     g.beginPath();
-    const reach = unfold < 1 ? DY + unfold * (1100 - DY) : 1e5;
-    g.rect(-1000, -1000, 4000, Math.min(reach, WALL_TOP) + 1000);
+    g.rect(LANE_X - 80, 1080 - 40, 160, WALL_TOP - 1040);
+    g.clip();
+    drawTread(g, UPPER, now);
+    drawPlates(g, platesOn(UPPER, now, "street"), UPPER.plate ?? 52);
+    g.restore();
+    g.save();
+    g.beginPath();
     g.ellipse(GATE.x, GATE.y, GATE.rx, GATE.ry, 0, 0, Math.PI * 2);
     g.rect(GATE.x - 104, GATE.y, 208, WALL_BOT - GATE.y + 2);
-    if (reach > WALL_BOT) g.rect(-1000, WALL_BOT, 4000, Math.min(reach, 1e4) - WALL_BOT);
+    // Below the wall, except inside the pond frame (which draws its own belt), bar a thin overlap at its feathered right edge.
+    g.rect(ART.x, WALL_BOT, ART.w, PY - WALL_BOT);
+    g.rect(PX + 1860, PY, 1000, STAGE_H);
     g.clip();
-    if (unfold > 0) {
-      g.globalAlpha = Math.min(1, unfold * 4);
-      drawTread(g, CHUTE, now);
-      g.globalAlpha = 1;
-      const plates = platesOn(CHUTE, now, "pond");
-      // First stretch: plates hop off the trike's loop onto the chute.
-      const pts = CHUTE.pts;
-      for (const p of plates) {
-        const d = Math.hypot(p.x - pts[0][0], p.y - pts[0][1]);
-        if (d < 70) p.y -= Math.sin((d / 70) * Math.PI) * 16;
-      }
-      drawPlates(g, plates, CHUTE.plate ?? 52);
-      // Copper dock clamp on the cargo box.
-      g.fillStyle = "#6d3f22";
-      g.fillRect(DX - 10, DY - 6, 26, 18);
-      g.fillStyle = "#d98a4a";
-      g.fillRect(DX - 8, DY - 4, 22, 6);
-    }
+    drawTread(g, LOWER, now);
+    drawPlates(g, platesOn(LOWER, now, "pond"), LOWER.plate ?? 52);
     g.restore();
 
     fireflies(g, now, smooth(0.35, 0.6, t));

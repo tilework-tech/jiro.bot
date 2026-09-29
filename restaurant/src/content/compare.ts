@@ -6,81 +6,66 @@ import { html, place } from "../engine/dom";
 // { "task": "…", "left": { "label": "Generic agent", "video": "ui/compare/generic.mp4", "poster": "…", "stats": ["…"] },
 //   "right": { "label": "Jiro", … } }
 //
-// In the dining room the two windows hang like menu boards on the calm upper
-// wall (small, so the diners and the belt stay visible). Click one to enlarge
-// it to a readable size (with its stats); click again, the backdrop, or Esc to
-// hang it back.
+// In the dining room the two windows fill almost the whole screen (the room is
+// dimmed behind them): one thin title line under the header, then two ~900 px
+// windows side by side down to just above the belt. The recordings are 1280x800,
+// so at 900 px their text stays readable without an enlarge step. Clicking a
+// window replays its recording from the start.
 
 interface Side { label: string; video: string; poster?: string; stats: string[]; verdict?: string }
 interface Spec { task: string; title?: string; left: Side; right: Side }
 
-/** [x, y, width] of each hung window in stage px. */
-export const COMPARE_BOX = { left: [80, 186, 500], right: [660, 186, 500] } as const;
-/** [x, y, width] of the enlarged window. */
-export const COMPARE_BIG = [360, 96, 1200] as const;
+/** [x, y, width] of each window in stage px (16:10 video + caption bar). */
+export const COMPARE_BOX = { left: [28, 128, 902], right: [960, 128, 902] } as const;
+/** Title line position [x, y, width]. */
+export const COMPARE_HEAD = [30, 74, 1560] as const;
 
 export function mountCompare(el: HTMLElement, api: Api) {
   const base = import.meta.env.BASE_URL;
   const head = html(el, `
-    <section class="copy compare-head" style="left:${COMPARE_BOX.left[0]}px;top:92px;width:1100px">
-      <h2 class="px">Generic agent vs. Jiro</h2>
+    <section class="copy compare-head">
+      <h2 class="px">Same ticket. Two kitchens.</h2>
       <p class="ticket"></p>
     </section>`);
-  const back = html(el, `<button class="cmp-back" aria-label="Close enlarged window"></button>`);
-  place(back, 0, 0, 1920, 1080);
-  let open: HTMLElement | null = null;
-  const hang = () => {
-    if (!open) return;
-    const [x, y, w] = COMPARE_BOX[open.dataset.side as "left" | "right"];
-    place(open, x, y, w);
-    open.classList.remove("big");
-    open = null;
-    back.classList.remove("on");
-  };
+  place(head, COMPARE_HEAD[0], COMPARE_HEAD[1], COMPARE_HEAD[2]);
+  const clicks = { left: 0, right: 0 };
   const mk = (k: "left" | "right") => {
     const [x, y, w] = COMPARE_BOX[k];
     const box = html(el, `
-      <figure class="cmp ${k}" data-side="${k}" tabindex="0" role="button" aria-label="Enlarge window">
-        <figcaption><b></b><span class="zoom">click to enlarge</span></figcaption>
+      <figure class="cmp ${k}" data-side="${k}" tabindex="0" role="button" aria-label="Replay recording">
+        <figcaption><b></b><span class="verdict"></span></figcaption>
         <video muted playsinline loop preload="auto"></video>
-        <p class="verdict"></p>
-        <ul class="stats"></ul>
       </figure>`);
     place(box, x, y, w);
-    const toggle = () => {
-      if (open === box) { hang(); api.sfx("whoosh"); return; }
-      hang();
-      const [bx, by, bw] = COMPARE_BIG;
-      place(box, bx, by, bw);
-      box.classList.add("big");
-      open = box;
-      back.classList.add("on");
+    const replay = () => {
+      const v = box.querySelector("video")!;
+      v.currentTime = 0;
+      v.play().catch(() => {});
       api.sfx("blip");
-      if (k === "left" && ++leftOpens === 3) api.egg("slop", "You watched the generic agent three times. It still didn't run the tests.");
+      clicks[k]++;
+      if (k === "left" && clicks.left === 3) api.egg("slop", "You watched the generic agent three times. It still didn't run the tests.");
+      if (k === "right" && clicks.right === 3) api.egg("dining-jiro", "Third replay. The diff is still 32 lines. Watching harder won't make it longer.");
     };
-    box.addEventListener("click", (e) => { e.stopPropagation(); toggle(); });
-    box.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+    box.addEventListener("click", (e) => { e.stopPropagation(); replay(); });
+    box.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); replay(); } });
     return box;
   };
-  let leftOpens = 0;
   const L = mk("left"), R = mk("right");
-  back.addEventListener("click", (e) => { e.stopPropagation(); hang(); });
-  addEventListener("keydown", (e) => { if (e.key === "Escape") hang(); });
   fetch(`${base}ui/compare/compare.json`).then((r) => r.json()).then((spec: Spec) => {
     if (spec.title) head.querySelector("h2")!.textContent = spec.title;
     head.querySelector(".ticket")!.textContent = spec.task;
     ([[L, spec.left], [R, spec.right]] as const).forEach(([box, s]) => {
       box.querySelector("b")!.textContent = s.label;
-      box.setAttribute("aria-label", `${s.label}: enlarge window`);
+      box.setAttribute("aria-label", `${s.label}: ${s.verdict ?? ""} ${s.stats.join(", ")}. Click to replay.`);
+      box.title = s.stats.join(" · ");
       const v = box.querySelector("video")!;
       if (s.poster) v.poster = base + s.poster;
       v.src = base + s.video;
       box.querySelector(".verdict")!.textContent = s.verdict ?? "";
-      box.querySelector(".stats")!.innerHTML = s.stats.map((t) => `<li>${t}</li>`).join("");
     });
   }).catch(() => {});
   return {
     enter() { el.querySelectorAll("video").forEach((v) => { v.currentTime = 0; v.play().catch(() => {}); }); },
-    leave() { hang(); },
+    leave() { el.querySelectorAll("video").forEach((v) => v.pause()); },
   };
 }

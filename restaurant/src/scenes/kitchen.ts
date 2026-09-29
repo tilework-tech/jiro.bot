@@ -56,6 +56,14 @@ export const kitchen: SceneDef = {
   // Starts under the swinging half-doors at the left end of the counter and
   // follows the painted trough to the right edge (kitchen>storage continues it).
   belt: { pts: [[578, 582, 0.8], [1945, 993, 1.12]], width: 54, plate: 50, fadeIn: 70, fadeOut: 20 },
+  // Where dragged plates may rest. The rice tub is deliberately not one.
+  surfaces: [
+    { poly: [[466, 800], [545, 766], [600, 757], [1585, 1080], [1161, 1080], [470, 812]], scale: 0.95, say: "On the pass. Order up!" },
+    { poly: [[1332, 694], [1420, 650], [1560, 658], [1742, 662], [1784, 732], [1690, 802], [1334, 704]], scale: 0.9, say: "On the cutting board. Jiro eyes it with a knife." },
+    { poly: [[812, 426], [860, 396], [1010, 352], [1160, 322], [1342, 316], [1372, 338], [1300, 374], [1000, 432], [828, 456]], scale: 0.72, say: "Back on the shelf, next to its friends." },
+    { poly: [[812, 180], [1000, 152], [1330, 118], [1342, 134], [1000, 184], [818, 204]], scale: 0.62, say: "Top shelf. Reserved for the good plates." },
+    { poly: [[1768, 498], [1920, 466], [1920, 562], [1782, 548]], scale: 0.82, say: "Seared. Jiro approves." },
+  ],
   under(g, now, api) {
     shade(g, 0, 0, 900, 1080, 0.5, 500, "left");
     // Drawn before the light passes so the patches get the same glow as the art.

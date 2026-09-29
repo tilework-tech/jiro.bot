@@ -1,6 +1,69 @@
 /* bar (hero) scene: keep the copy crisp over the busy counter. */
 .scene-ui[data-id="bar"] .hero-copy .lede { text-shadow: 0 2px 0 rgba(0,0,0,.55), 0 0 18px rgba(8,6,5,.9); }
-.scene-ui[data-id="bar"] .hero-copy .hint { text-shadow: 0 1px 0 #000, 0 0 10px rgba(8,6,5,.9); }
-.scene-ui[data-id="bar"] .hit[title="Wall opening"] { cursor: zoom-in; }
-/* Shorter hint line so it ends before the regular's chopsticks. */
-.scene-ui[data-id="bar"] .hero-copy .hint { font-size: 14px; }
+.scene-ui[data-id="bar"] .hero-copy .hint { font-size: 14px; text-shadow: 0 1px 0 #000, 0 0 10px rgba(8,6,5,.9); }
+.scene-ui[data-id="bar"] .hint .try-lantern { font: inherit; color: var(--copper); background: none; border: 0; padding: 0; cursor: pointer; border-bottom: 2px dotted rgba(217,138,74,.6); text-shadow: inherit; }
+.scene-ui[data-id="bar"] .hint .try-lantern:hover { color: #f5c451; border-bottom-color: #f5c451; }
+
+/* Hover: warm glow + pixel corner brackets + a tiny verb label. */
+.scene-ui[data-id="bar"] .bar-hit { --c: rgba(245,196,81,.9); --k: 16px; }
+.scene-ui[data-id="bar"] .bar-hit:hover,
+.scene-ui[data-id="bar"] .bar-hit:focus-visible {
+  outline: 0;
+  background:
+    linear-gradient(var(--c), var(--c)) left top / var(--k) 3px, linear-gradient(var(--c), var(--c)) left top / 3px var(--k),
+    linear-gradient(var(--c), var(--c)) right top / var(--k) 3px, linear-gradient(var(--c), var(--c)) right top / 3px var(--k),
+    linear-gradient(var(--c), var(--c)) left bottom / var(--k) 3px, linear-gradient(var(--c), var(--c)) left bottom / 3px var(--k),
+    linear-gradient(var(--c), var(--c)) right bottom / var(--k) 3px, linear-gradient(var(--c), var(--c)) right bottom / 3px var(--k),
+    radial-gradient(closest-side, rgba(255,205,130,.16), rgba(255,205,130,0));
+  background-repeat: no-repeat;
+}
+.scene-ui[data-id="bar"] .bar-hit.peek { cursor: zoom-in; }
+.scene-ui[data-id="bar"] .bar-tag {
+  position: absolute; left: 50%; top: -30px; transform: translate(-50%, 4px);
+  font: 14px/1 var(--px); letter-spacing: .04em; white-space: nowrap; color: var(--ink);
+  background: #f5c451; padding: 5px 8px 4px; box-shadow: 0 3px 0 rgba(0,0,0,.55);
+  opacity: 0; transition: opacity .15s, transform .15s steps(2); pointer-events: none;
+}
+.scene-ui[data-id="bar"] .bar-hit:hover .bar-tag,
+.scene-ui[data-id="bar"] .bar-hit:focus-visible .bar-tag { opacity: 1; transform: translate(-50%, 0); }
+
+/* "Click me" glint: a pixel sparkle, one 12 s cycle, glinting for ~1.4 s of it. */
+.scene-ui[data-id="bar"] .bar-glint {
+  position: absolute; width: 44px; height: 44px; pointer-events: none; z-index: 2;
+  filter: drop-shadow(0 0 6px rgba(255,214,130,.9));
+  animation: bar-glint 12s steps(1, end) infinite both;
+  transition: opacity .6s;
+}
+.scene-ui[data-id="bar"] .bar-glint svg { display: block; }
+.scene-ui[data-id="bar"] .bar-glint.quiet { opacity: 0 !important; animation: none; }
+@keyframes bar-glint {
+  0%   { opacity: 0;   transform: scale(0); }
+  1.5% { opacity: .7;  transform: scale(.4); }
+  3%   { opacity: 1;   transform: scale(.7); }
+  5%   { opacity: 1;   transform: scale(1); }
+  7.5% { opacity: 1;   transform: scale(.7); }
+  9.5% { opacity: .7;  transform: scale(.4); }
+  11%  { opacity: 0;   transform: scale(0); }
+  100% { opacity: 0;   transform: scale(0); }
+}
+
+/* One-time "drag a plate" note beside the belt. */
+.scene-ui[data-id="bar"] .bar-drag {
+  position: absolute; left: 610px; top: 872px; pointer-events: none;
+  display: flex; flex-direction: column; align-items: flex-start;
+  transition: opacity .5s;
+  animation: bar-drag-bob 6s ease-in-out infinite;
+}
+.scene-ui[data-id="bar"] .bar-drag span {
+  font: 16px/1 var(--px); color: var(--cream); letter-spacing: .04em;
+  background: rgba(11,10,9,.72); padding: 6px 9px 5px; box-shadow: 0 3px 0 rgba(0,0,0,.5);
+  transform: rotate(-4deg);
+}
+.scene-ui[data-id="bar"] .bar-drag svg { margin: 2px 0 0 40px; filter: drop-shadow(0 2px 0 rgba(0,0,0,.7)); }
+.scene-ui[data-id="bar"] .bar-drag.gone { opacity: 0; }
+@keyframes bar-drag-bob { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(3px, 3px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-ui[data-id="bar"] .bar-glint { animation: none; opacity: .55; transform: scale(.7); }
+  .scene-ui[data-id="bar"] .bar-drag { animation: none; }
+}

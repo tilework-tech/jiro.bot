@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>kitchen > storage (F)</title></head>
+<body>
+<div id="app"></div>
+<script type="module">
+import "/src/style.css";
+import { start } from "/src/engine/stage.ts";
+import { kitchen } from "/src/scenes/kitchen.ts";
+import { storage } from "/src/scenes/storage.ts";
+import { kitchenStorageF } from "/src/transitions/kitchen-storage-f.ts";
+start([kitchen, storage], [kitchenStorageF]);
+</script>
+</body>
+</html>

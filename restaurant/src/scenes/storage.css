@@ -1,3 +1,17 @@
-.scene-ui[data-id="storage"] .st-rims { position: absolute; pointer-events: none; image-rendering: pixelated; }
 .scene-ui[data-id="storage"] .copy { text-shadow: 0 2px 0 #000, 0 0 24px rgba(0,0,0,.8); }
+.scene-ui[data-id="storage"] .copy h2.px { font-size: 46px; }
+.scene-ui[data-id="storage"] .copy .kicker { font-size: 17px; margin-bottom: 18px; }
+.scene-ui[data-id="storage"] .copy .lede { font-size: 24px; }
 .scene-ui[data-id="storage"] .st-say { font-size: 20px; max-width: 360px; }
+/* Integrations: masking-tape labels, hand-lettered, slightly crooked. */
+.scene-ui[data-id="storage"] .st-tape {
+  position: absolute; transform: translate(-50%, -50%) rotate(var(--r, 0deg));
+  font: 400 15px/1.05 var(--px); letter-spacing: .02em; color: #2a170c; text-align: center;
+  background: #eadcb8; padding: 4px 6px 3px; border: 0; cursor: pointer; white-space: nowrap;
+  box-shadow: inset 0 -2px 0 rgba(120,90,50,.35), 0 2px 0 rgba(0,0,0,.55);
+  clip-path: polygon(0 8%, 6% 0, 50% 6%, 94% 0, 100% 10%, 97% 50%, 100% 92%, 92% 100%, 50% 94%, 8% 100%, 0 90%, 3% 50%);
+}
+.scene-ui[data-id="storage"] .st-tape:hover, .scene-ui[data-id="storage"] .st-tape:focus-visible { background: #f6ecd0; transform: translate(-50%, -54%) rotate(var(--r, 0deg)); outline: none; }
+.scene-ui[data-id="storage"] .st-plugs { position: absolute; margin: 0; width: 370px; font: 400 18px/1 var(--px); color: var(--copper); letter-spacing: .04em; text-shadow: 0 2px 0 #000; }
+.scene-ui[data-id="storage"] .st-plugs::before { content: "\2190  "; color: var(--green); }
+.scene-ui[data-id="storage"] .st-plugs span { display: block; margin-top: 10px; font: 18px/1.4 var(--sans); letter-spacing: 0; color: #e7d8bf; }

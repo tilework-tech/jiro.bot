@@ -14,7 +14,7 @@ import "./pond.css";
 // it leaps clean out of the water for. Everything is a pure function of `now`,
 // phase-locked to the belt, so the scene loops with no visible start or end.
 
-declareEggs(["pond-koi", "pond-jiro", "pond-duck", "pond-lantern", "pond-moon", "flappy-played", "flappy-5"]);
+declareEggs(["pond-koi", "pond-duck", "pond-lantern", "pond-moon", "flappy-played", "flappy-5"]);
 
 const END_X = 600;
 const PIER_Y = 530;
@@ -167,6 +167,28 @@ function lips(g: CanvasRenderingContext2D, api: Api, x: number, y: number, lift:
   drawKoi(g, api, fr, x, y - lift, -1.35, y, false, 0.12);
 }
 
+// Where dragged plates may rest; open water is not one of them.
+const pad = (cx: number, cy: number, rx: number, ry: number): [number, number][] =>
+  Array.from({ length: 12 }, (_, i) => [cx + rx * Math.cos((i * TAU) / 12), cy + ry * Math.sin((i * TAU) / 12)] as [number, number]);
+const LILY = "Lily pad rated for one (1) nigiri.";
+const POND_SURFACES = [
+  { poly: [[578, 568], [1920, 568], [1920, 602], [578, 602]] as [number, number][], scale: 1, say: "Parked on the pier. The koi is watching." },
+  { poly: [[1510, 165], [1600, 165], [1700, 195], [1800, 245], [1880, 300], [1920, 340], [1920, 440], [1880, 420], [1800, 330], [1700, 268], [1600, 228], [1510, 215]] as [number, number][], scale: 0.72, say: "On the bridge. Mind the trolls." },
+  { poly: [[163, 790], [190, 774], [240, 774], [274, 790], [256, 806], [180, 806]] as [number, number][], scale: 0.85, say: "Lantern-top dining. Very romantic." },
+  { poly: [[1590, 838], [1615, 820], [1672, 820], [1702, 838], [1682, 853], [1610, 853]] as [number, number][], scale: 0.85, say: "Lantern-top dining. Very romantic." },
+  { poly: [[1108, 56], [1135, 40], [1188, 40], [1216, 56], [1196, 69], [1130, 69]] as [number, number][], scale: 0.62, say: "Lantern-top dining. Very romantic." },
+  { poly: pad(1365, 812, 76, 44), scale: 0.9, say: LILY },
+  { poly: pad(605, 910, 76, 46), scale: 0.95, say: LILY },
+  { poly: pad(1505, 862, 46, 28), scale: 0.9, say: LILY },
+  { poly: pad(780, 945, 70, 34), scale: 0.95, say: LILY },
+  { poly: pad(1292, 930, 58, 38), scale: 0.95, say: LILY },
+  { poly: pad(1368, 400, 54, 30), scale: 0.7, say: LILY },
+  { poly: pad(1238, 385, 40, 22), scale: 0.7, say: LILY },
+  { poly: [[0, 760], [150, 740], [300, 800], [390, 880], [470, 960], [500, 1080], [0, 1080]] as [number, number][], scale: 0.95, say: "Picnic on the grass. Watch for ants." },
+  { poly: [[1580, 780], [1700, 700], [1920, 650], [1920, 1080], [1640, 1080], [1562, 990], [1562, 900]] as [number, number][], scale: 0.95, say: "Picnic on the grass. Watch for ants." },
+  { poly: [[880, 30], [1000, 0], [1390, 0], [1390, 130], [1370, 250], [1250, 272], [1100, 272], [1000, 255], [900, 200]] as [number, number][], scale: 0.62, say: "Picnic on the grass. Watch for ants." },
+];
+
 export const pond: SceneDef = {
   id: "pond",
   room: "Koi pond",
@@ -174,6 +196,7 @@ export const pond: SceneDef = {
   mood: "quiet",
   hold: 1.8,
   belt,
+  surfaces: POND_SURFACES,
   under(g, now) {
     // Keep the copy column calm: a soft night shade over the left water, and a floor for the footer.
     g.save();
@@ -347,20 +370,6 @@ export const pond: SceneDef = {
       g.fillRect(Math.round(x) - 3, Math.round(y) - 3, 9, 9);
     });
     g.restore();
-
-    // Jiro on the bridge blinks (twice in a row once per loop).
-    const bt = mod(now, 6);
-    const dbl = mod(now, LOOP) > 18;
-    if (bt < 0.14 || (dbl && bt > 0.3 && bt < 0.44)) {
-      g.save();
-      g.fillStyle = "#cbb89b";
-      g.fillRect(1617, 48, 10, 11);
-      g.fillRect(1638, 48, 11, 11);
-      g.fillStyle = "#2a3b52";
-      g.fillRect(1618, 54, 8, 2);
-      g.fillRect(1639, 54, 9, 2);
-      g.restore();
-    }
   },
   click(x, y, api) {
     // Open water (away from the pier and banks): drop a rubber duck.
@@ -391,7 +400,6 @@ export const pond: SceneDef = {
       const n = 4096 + Math.max(0, clock(lastNow).id);
       api.egg("pond-koi", `Plates eaten: ${n.toLocaleString("en-US")}. The koi is not full. The koi is never full.`);
     });
-    hotspot(el, 1590, 0, 110, 270, "Jiro on the bridge", () => { api.sfx("blip"); api.egg("pond-jiro", "Jiro is logging koi throughput. p99 gulp latency: 3.26 s."); });
     const LANT: [number, number, number, number][] = [[150, 740, 140, 210], [1100, 10, 130, 200], [1575, 790, 140, 200]];
     const lines = ["Lantern overclocked. It now runs at 4,000 lumens and slight regret.", "This lantern is serverless. There is definitely a server in it.", "The lantern has been promoted to staff lantern."];
     LANT.forEach(([x, y, w, h], i) => hotspot(el, x, y, w, h, "Stone lantern", () => {
