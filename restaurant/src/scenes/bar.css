@@ -1,0 +1,6 @@
+/* bar (hero) scene: keep the copy crisp over the busy counter. */
+.scene-ui[data-id="bar"] .hero-copy .lede { text-shadow: 0 2px 0 rgba(0,0,0,.55), 0 0 18px rgba(8,6,5,.9); }
+.scene-ui[data-id="bar"] .hero-copy .hint { text-shadow: 0 1px 0 #000, 0 0 10px rgba(8,6,5,.9); }
+.scene-ui[data-id="bar"] .hit[title="Wall opening"] { cursor: zoom-in; }
+/* Shorter hint line so it ends before the regular's chopsticks. */
+.scene-ui[data-id="bar"] .hero-copy .hint { font-size: 14px; }

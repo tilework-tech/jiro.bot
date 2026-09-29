@@ -1,5 +1,5 @@
 import { BELT_SPEED, PLATE_GAP, type BeltPath, type Plate } from "./types";
-import { itemFor, rimFor, itemImg } from "./items";
+import { itemFor, rimFor, itemImg, ITEMS } from "./items";
 
 // A belt path is resampled into points carrying cumulative "world" distance u.
 // Screen distance = u * scale, so plates slow down and shrink with perspective
@@ -150,24 +150,94 @@ export function platesOn(path: BeltPath, now: number, key: string): Plate[] {
   return out;
 }
 
+// ---- Plates: pre-rendered pixel-art sprites (hard edges, 2-tone rim, highlight),
+// cached per (rim colour, integer diameter) so a frame is just drawImage calls.
+
+function hexRgb(h: string): [number, number, number] {
+  const n = parseInt(h.slice(1), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function mix(c: [number, number, number], t: [number, number, number], f: number): [number, number, number] {
+  return [c[0] + (t[0] - c[0]) * f, c[1] + (t[1] - c[1]) * f, c[2] + (t[2] - c[2]) * f].map(Math.round) as [number, number, number];
+}
+
+const plateCache = new Map<string, HTMLCanvasElement>();
+/** Plate sprite: width d, anchored so the plate's centre is at (d/2, cy). Returns [canvas, cy]. */
+function plateSprite(rim: string, d: number): [HTMLCanvasElement, number] {
+  const key = rim + d;
+  const rx = d / 2, ry = Math.max(2, Math.round(d * 0.2));
+  const lip = Math.max(1, Math.round(d * 0.06));
+  const cy = ry + 1;
+  let c = plateCache.get(key);
+  if (c) return [c, cy];
+  const W = d + 2, H = ry * 2 + lip + 4;
+  c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const g = c.getContext("2d")!;
+  const img = g.createImageData(W, H);
+  const base = hexRgb(rim);
+  const dark = rim === "#1c1a18" ? ([12, 11, 10] as [number, number, number]) : mix(base, [20, 12, 10], 0.45);
+  const line = mix(dark, [8, 6, 5], 0.55);
+  const lite = mix(base, [255, 250, 240], 0.45);
+  const cream: [number, number, number] = [239, 231, 216], creamSh: [number, number, number] = [214, 202, 182], creamHi: [number, number, number] = [255, 252, 244];
+  const cx = W / 2;
+  const inE = (x: number, y: number, ex: number, ey: number, ox = 0, oy = 0) => {
+    const dx = (x - cx - ox) / ex, dy = (y - cy - oy) / ey;
+    return dx * dx + dy * dy <= 1;
+  };
+  const irx = rx * 0.68, iry = ry * 0.62;
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const px = x + 0.5, py = y + 0.5;
+      let col: [number, number, number] | null = null;
+      let alpha = 255;
+      const top = inE(px, py, rx, ry);
+      const side = !top && inE(px, py - lip, rx, ry) && py > cy;
+      if (inE(px, py, rx + 1, ry + 1) && !top && !side) col = line; // outline
+      else if (side) col = inE(px, py - lip, rx - 1, ry - 1) && py < cy + ry + lip - 0 ? dark : line;
+      else if (top) {
+        if (inE(px, py, irx, iry, 0, -0.5)) {
+          // Well: shaded under the back rim, bright elsewhere.
+          col = !inE(px, py, irx, iry, 0, 1.5) ? creamSh : cream;
+          if (inE(px, py, irx * 0.28, iry * 0.28, irx * 0.38, -iry * 0.3)) col = creamHi;
+        } else if (inE(px, py, irx + 1, iry + 1, 0, -0.5)) col = dark; // inner edge of rim
+        else {
+          col = py < cy - ry * 0.35 ? lite : base; // 2-tone rim: lit back, base front
+          // small specular glint on the back-left of the rim
+          if (py < cy - ry * 0.55 && px > cx - rx * 0.62 && px < cx - rx * 0.36) col = [255, 255, 250];
+        }
+      } else if (inE(px, py - lip - 1, rx, ry)) { col = [0, 0, 0]; alpha = 90; } // contact shadow
+      if (!col) continue;
+      const i = (y * W + x) * 4;
+      img.data[i] = col[0]; img.data[i + 1] = col[1]; img.data[i + 2] = col[2]; img.data[i + 3] = alpha;
+    }
+  }
+  g.putImageData(img, 0, 0);
+  plateCache.set(key, c);
+  return [c, cy];
+}
+
 export function drawPlates(g: CanvasRenderingContext2D, plates: Plate[], size: number, hidden?: Set<string>) {
   const prev = g.imageSmoothingEnabled;
   g.imageSmoothingEnabled = false;
   for (const pl of plates) {
     if (hidden?.has(pl.key) || pl.alpha <= 0) continue;
-    const d = size * pl.s;
+    const d = Math.max(6, Math.round(size * pl.s));
+    const x = Math.round(pl.x), y = Math.round(pl.y);
     g.globalAlpha = pl.alpha;
-    // Plate: foreshortened ellipse, rim colour ring.
-    g.fillStyle = "rgba(0,0,0,.35)";
-    g.beginPath(); g.ellipse(pl.x, pl.y + d * 0.1, d * 0.52, d * 0.22, 0, 0, Math.PI * 2); g.fill();
-    g.fillStyle = pl.rim;
-    g.beginPath(); g.ellipse(pl.x, pl.y, d * 0.5, d * 0.2, 0, 0, Math.PI * 2); g.fill();
-    g.fillStyle = "#efe7d8";
-    g.beginPath(); g.ellipse(pl.x, pl.y - d * 0.02, d * 0.4, d * 0.15, 0, 0, Math.PI * 2); g.fill();
+    // Soft drop shadow on the belt (hard-edged, one ellipse).
+    g.fillStyle = "rgba(0,0,0,.28)";
+    g.beginPath(); g.ellipse(x + 1, y + Math.round(d * 0.12), Math.round(d * 0.5), Math.round(d * 0.2), 0, 0, Math.PI * 2); g.fill();
+    const [spr, cy] = plateSprite(pl.rim, d);
+    g.drawImage(spr, x - (spr.width >> 1), y - cy);
     const im = itemImg(pl.item);
     if (im.complete && im.naturalWidth) {
-      const iw = d * 0.86, ih = (iw * im.naturalHeight) / im.naturalWidth;
-      g.drawImage(im, Math.round(pl.x - iw / 2), Math.round(pl.y - ih + d * 0.08), Math.round(iw), Math.round(ih));
+      // Fit inside a box (wide items as before; tall items no longer tower over the belt).
+      const f = Math.min((d * 0.86) / im.naturalWidth, (d * 0.92) / im.naturalHeight);
+      const iw = Math.round(im.naturalWidth * f), ih = Math.round(im.naturalHeight * f);
+      // Living passengers hop 1 px as they travel (tied to belt position, so it loops with the belt).
+      const hop = ITEMS[pl.item]?.animal && ((Math.floor((pl.x + pl.y * 0.5) / 18) & 3) === 0) ? 1 : 0;
+      g.drawImage(im, x - (iw >> 1), y - ih + Math.round(d * 0.1) - hop, iw, ih);
     }
   }
   g.globalAlpha = 1;

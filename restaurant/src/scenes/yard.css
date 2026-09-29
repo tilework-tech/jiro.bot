@@ -1,0 +1,34 @@
+/* yard: quiet night back yard. Copy sits on the shadowed back wall, left of the lamp. */
+
+.scene-ui[data-id="yard"] .copy {
+  width: 440px !important;
+}
+
+.scene-ui[data-id="yard"] .copy h2.px {
+  font-size: 50px;
+  text-shadow: 0 3px 0 rgba(0, 0, 0, .75);
+}
+
+.scene-ui[data-id="yard"] .copy .lede {
+  font-size: 24px;
+  max-width: 24ch;
+}
+
+.scene-ui[data-id="yard"] .yard-line {
+  position: absolute;
+  margin: 0;
+  font-size: 14px;
+  color: #f0b27a;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, .8);
+  pointer-events: none;
+}
+
+.scene-ui[data-id="yard"] .bubble.small {
+  font-size: 18px;
+  padding: 10px 14px;
+}
+
+/* Hotspots on the art: a faint pixel frame on hover/focus so curious people find them. */
+.scene-ui[data-id="yard"] .hit:hover {
+  box-shadow: inset 0 0 0 2px rgba(243, 230, 207, .18);
+}

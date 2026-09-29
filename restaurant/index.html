@@ -2,17 +2,83 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>jiro.bot — follow the belt</title>
-    <meta name="description" content="Jiro, your AI staff engineer. Cloud coding agents from Nori. Follow the sushi belt through the restaurant." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Jiro's Restaurant · jiro.bot, your AI staff engineer by Nori</title>
+    <meta name="description" content="Jiro is your AI staff engineer: cloud coding agents from Nori, the infrastructure for your agent army. Follow the sushi belt through the restaurant. Mind the rubber duck." />
     <meta name="theme-color" content="#0b0a09" />
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="jiro.bot" />
+    <meta property="og:title" content="Jiro's Restaurant · your AI staff engineer" />
+    <meta property="og:description" content="Cloud coding agents from Nori, served on a conveyor belt. Scroll to follow the belt; click anything that looks clickable." />
+    <meta property="og:url" content="https://jiro.bot/" />
+    <meta property="og:image" content="https://jiro.bot/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Jiro, a copper robot sushi chef, behind a pixel-art sushi bar" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Jiro's Restaurant · your AI staff engineer" />
+    <meta name="twitter:description" content="Cloud coding agents from Nori, served on a conveyor belt." />
+    <meta name="twitter:image" content="https://jiro.bot/og.jpg" />
+    <link rel="icon" href="./favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="./favicon.png" sizes="64x64" type="image/png" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="preload" as="image" href="./art/bar.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400;600&family=Silkscreen&display=swap" rel="stylesheet" />
+    <style>
+      /* Inline so the loader paints before the JS/CSS bundle arrives. */
+      html, body { margin: 0; background: #0b0a09; }
+      #loader { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; background: #0b0a09; color: #f3e6cf; font: 400 18px/1.4 "Silkscreen", monospace; transition: opacity .5s; }
+      #loader.done { opacity: 0; pointer-events: none; }
+      #loader .ld { display: grid; justify-items: center; gap: 18px; }
+      #loader img { width: 80px; height: 76px; image-rendering: pixelated; animation: ld-bob 1.2s steps(2) infinite; }
+      #loader .bar { width: 180px; height: 12px; border: 2px solid #f3e6cf; padding: 2px; }
+      #loader .bar i { display: block; height: 100%; width: 0; background: #6fdc8c; transition: width .3s steps(6); }
+      #loader small { font: 12px "JetBrains Mono", monospace; color: #bfae95; }
+      @keyframes ld-bob { 50% { transform: translateY(-4px); } }
+      @media (prefers-reduced-motion: reduce) { #loader, #loader * { animation: none !important; transition: none !important; } }
+    </style>
   </head>
   <body>
+    <div id="loader" role="status" aria-live="polite">
+      <div class="ld">
+        <img src="./items/mini-jiro.png" alt="" />
+        <span>Preparing the rice…</span>
+        <div class="bar"><i></i></div>
+        <small>seasoning with vinegar</small>
+      </div>
+    </div>
+    <script>
+      // Loader: fades once the bar art + first sprites are loaded AND the app has mounted; hard cap ~4 s.
+      (function () {
+        var el = document.getElementById("loader");
+        var q = new URLSearchParams(location.search);
+        if (q.has("seg") || q.has("p")) { el.remove(); return; }
+        var bar = el.querySelector(".bar i"), note = el.querySelector("small");
+        var lines = ["seasoning with vinegar", "fanning the rice", "sharpening the yanagiba", "warming the copper hands"], li = 0;
+        var lt = setInterval(function () { note.textContent = lines[++li % lines.length]; }, 900);
+        var urls = ["art/bar.jpg", "items/tuna.png", "items/salmon.png", "items/tamago.png", "items/maki.png", "items/ikura.png", "items/ebi.png", "items/duck.png"];
+        var n = 0, finished = false;
+        function done() {
+          if (finished) return; finished = true;
+          clearInterval(lt); el.classList.add("done");
+          setTimeout(function () { el.remove(); }, 600);
+        }
+        function check() {
+          if (n >= urls.length && document.querySelector("#app #stage")) setTimeout(done, 120);
+          else if (n >= urls.length) setTimeout(check, 100);
+        }
+        urls.forEach(function (u) {
+          var im = new Image();
+          im.onload = im.onerror = function () { n++; bar.style.width = Math.round((n / urls.length) * 100) + "%"; check(); };
+          im.src = "./" + u;
+        });
+        setTimeout(done, 4000);
+      })();
+    </script>
     <div id="app"></div>
+    <noscript><p style="color:#f3e6cf;font-family:sans-serif;padding:24px">Jiro's Restaurant needs JavaScript to run the conveyor belt. Meanwhile: <a style="color:#6fdc8c" href="https://noriagentic.com/">noriagentic.com</a></p></noscript>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -30,5 +30,23 @@ export function onEggs(f: () => void) {
 export function resetEggs() {
   found.clear();
   localStorage.removeItem("jiro-eggs");
+  for (const k of Object.keys(notes)) delete notes[k];
+  localStorage.removeItem("jiro-egg-notes");
   listeners.forEach((f) => f());
+}
+
+// Remembered egg texts (for the egg-counter popover). Stored separately so "jiro-eggs" stays a plain id list.
+const notes: Record<string, string> = (() => {
+  try { return JSON.parse(localStorage.getItem("jiro-egg-notes") || "{}"); } catch { return {}; }
+})();
+
+export function noteEgg(id: string, text: string) {
+  if (notes[id]) return;
+  notes[id] = text;
+  localStorage.setItem("jiro-egg-notes", JSON.stringify(notes));
+}
+
+/** Found eggs in discovery order, with their remembered text (or a prettified id). */
+export function foundEggs(): { id: string; text: string }[] {
+  return [...found].filter((f) => declared.has(f)).map((id) => ({ id, text: notes[id] ?? id.replace(/[-_]/g, " ") }));
 }

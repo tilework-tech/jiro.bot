@@ -50,6 +50,11 @@ export const FAQ: { q: string; a: string; item: string }[] = [
   {
     q: "Is Jiro a real sushi chef?",
     a: "Jiro is a real staff engineer. The sushi is load-bearing metaphor. Please do not eat the rock.",
+    item: "onigiri-happy",
+  },
+  {
+    q: "Does Jiro ever sleep?",
+    a: "Runtimes sleep when idle and wake on demand, so you only pay for work. Jiro himself blinks every six seconds and calls it a nap.",
     item: "onigiri-sleepy",
   },
 ];

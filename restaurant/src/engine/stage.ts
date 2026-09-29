@@ -1,7 +1,7 @@
 import { STAGE_W, STAGE_H, type Api, type Camera, type Plate, type SceneDef, type TransitionDef, type BeltPath } from "./types";
 import { drawBeltFull, hitPlate } from "./belt";
 import { ITEMS, preloadItems } from "./items";
-import { eggCount, eggFound, onEggs, resetEggs } from "./eggs";
+import { eggCount, eggFound, noteEgg, onEggs } from "./eggs";
 import { sfx, setSound, soundOn } from "./sfx";
 
 type Seg =
@@ -43,6 +43,7 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
   const total = acc;
 
   const root = document.getElementById("app")!;
+  const BASE = import.meta.env.BASE_URL;
   root.innerHTML = `
     <div id="scroll" style="height:${(total + 1) * 100}vh"></div>
     <div id="frame">
@@ -50,16 +51,26 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
       <div id="ui"></div>
     </div>
     <header class="top">
-      <a class="logo" href="#bar" data-goto="bar">jiro<span>.</span>bot</a>
-      <span class="by">by <a href="https://noriagentic.com" target="_blank" rel="noopener">Nori</a></span>
+      <a class="logo" href="#bar" data-goto="bar" aria-label="jiro.bot, back to the bar"><img src="${BASE}items/mini-jiro.png" alt="" width="34" height="32" /><b>jiro<span>.</span>bot</b></a>
+      <a class="by" href="https://noriagentic.com" target="_blank" rel="noopener">by <em>Nori</em></a>
       <div class="top-right">
-        <button class="pill" id="sound" title="Sound">${soundOn ? "♪ on" : "♪ off"}</button>
+        <button class="snd${soundOn ? "" : " off"}" id="sound" aria-pressed="${soundOn}" aria-label="Sound" title="Sound on/off">
+          <svg viewBox="0 0 16 16" width="20" height="20" shape-rendering="crispEdges" aria-hidden="true">
+            <path fill="currentColor" d="M1 6h3v4H1zM4 5h2v6H4zM6 3h2v10H6z"/>
+            <path class="w" fill="currentColor" d="M10 6h1v4h-1zM12 4h1v8h-1zM11 5h1v1h-1zM11 10h1v1h-1zM14 3h1v10h-1zM13 2h1v1h-1zM13 13h1v1h-1z"/>
+            <path class="x" fill="currentColor" d="M10 5h2v2h-2zM12 7h2v2h-2zM14 5h1v2h-1zM10 9h2v2h-2zM14 9h1v2h-1z"/>
+          </svg>
+        </button>
         <a class="cta" href="https://noriagentic.com/" target="_blank" rel="noopener">Reserve a seat</a>
       </div>
     </header>
-    <nav class="rail" aria-label="Rooms"></nav>
-    <button class="eggs" id="eggs" title="Easter eggs found (double-click to reset)"></button>
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <nav class="rail" aria-label="Rooms"><div class="track" aria-hidden="true"><b></b></div></nav>
+    <div class="eggbox">
+      <button class="eggs" id="eggs" aria-expanded="false" aria-controls="eggpop" title="Easter eggs found"></button>
+      <div class="eggpop" id="eggpop" role="dialog" aria-label="Easter eggs found" hidden></div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true"><span>scroll to follow the belt</span><i></i></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"><img src="${BASE}items/mini-jiro.png" alt="" /><p></p></div>
   `;
   const canvas = root.querySelector<HTMLCanvasElement>("#stage")!;
   const g = canvas.getContext("2d")!;
@@ -67,6 +78,7 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
   const frame = root.querySelector<HTMLDivElement>("#frame")!;
   const toastEl = root.querySelector<HTMLDivElement>("#toast")!;
   const eggsEl = root.querySelector<HTMLButtonElement>("#eggs")!;
+  const toastMsg = toastEl.querySelector("p")!;
   const rail = root.querySelector<HTMLElement>(".rail")!;
 
   let scale = 1, ox = 0, oy = 0;
@@ -93,13 +105,17 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
 
   const api: Api = {
     egg(id, text) {
+      noteEgg(id, text);
       if (eggFound(id)) {
         const [n, t] = eggCount();
-        api.toast(`✦ Easter egg ${n}/${t}: ${text}`, 3200);
+        api.toast(text, 3600);
+        toastEl.classList.add("egg");
+        toastEl.dataset.egg = `Easter egg ${n}/${t}`;
       } else api.toast(text);
     },
     toast(text, ms = 2600) {
-      toastEl.textContent = text;
+      toastMsg.textContent = text;
+      toastEl.classList.remove("egg");
       toastEl.classList.add("on");
       clearTimeout(toastTimer);
       toastTimer = window.setTimeout(() => toastEl.classList.remove("on"), ms);
@@ -162,6 +178,7 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
   scenes.forEach((s) => {
     const b = document.createElement("button");
     b.dataset.goto = s.id;
+    b.setAttribute("aria-label", `Go to the ${s.room}`);
     b.innerHTML = `<i></i><span>${s.room}</span>`;
     rail.appendChild(b);
   });
@@ -172,15 +189,16 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
 
   function renderEggs() {
     const [n, t] = eggCount();
-    eggsEl.textContent = `✦ ${n}/${t} easter eggs`;
+    eggsEl.innerHTML = `<i class="star" aria-hidden="true"></i><span class="n"><b>${n}</b>/${t}</span><span class="l">easter eggs</span>`;
+    eggsEl.setAttribute("aria-label", `${n} of ${t} easter eggs found`);
   }
   onEggs(renderEggs);
   renderEggs();
-  eggsEl.addEventListener("dblclick", () => { resetEggs(); api.toast("Easter eggs reset. Happy hunting."); });
   const soundBtn = root.querySelector<HTMLButtonElement>("#sound")!;
   soundBtn.addEventListener("click", () => {
     setSound(!soundOn);
-    soundBtn.textContent = soundOn ? "♪ on" : "♪ off";
+    soundBtn.classList.toggle("off", !soundOn);
+    soundBtn.setAttribute("aria-pressed", String(soundOn));
     if (soundOn) sfx("chime");
   });
 
@@ -213,7 +231,11 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
   });
 
   addEventListener("keydown", (e) => {
-    if ((e.target as HTMLElement).closest("input, textarea")) return;
+    const tgt = e.target as HTMLElement;
+    if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (tgt.closest("input, textarea, select, [contenteditable]")) return;
+    // Let focused buttons/links handle their own Space/Enter.
+    if ((e.key === " " || e.key === "Enter") && tgt.closest("button, a")) return;
     const sceneIdx = scenes.findIndex((s) => s.id === (active.kind === "scene" ? active.id : (active.def as TransitionDef).from));
     if (e.key === "ArrowDown" || e.key === "PageDown" || (e.key === " " && !e.shiftKey)) {
       const nxt = scenes[Math.min(scenes.length - 1, sceneIdx + 1)];
@@ -222,6 +244,12 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
       const cur = active.kind === "scene" ? sceneIdx - 1 : sceneIdx;
       const prv = scenes[Math.max(0, cur)];
       if (prv) { e.preventDefault(); api.goto(prv.id); }
+    } else if (e.key === "Home") {
+      e.preventDefault(); api.goto(scenes[0].id);
+    } else if (e.key === "End") {
+      e.preventDefault(); api.goto(scenes[scenes.length - 1].id);
+    } else if (/^[1-9]$/.test(e.key) && scenes[+e.key - 1]) {
+      api.goto(scenes[+e.key - 1].id);
     }
   });
 
@@ -295,7 +323,11 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
       if (lastScene) byId.get(lastScene)?.leave?.(api);
       if (curScene) byId.get(curScene)?.enter?.(api);
       lastScene = curScene;
-      rail.querySelectorAll<HTMLElement>("button").forEach((b) => b.classList.toggle("on", b.dataset.goto === curScene));
+      rail.querySelectorAll<HTMLElement>("button").forEach((b) => {
+        const on = b.dataset.goto === curScene;
+        b.classList.toggle("on", on);
+        if (on) b.setAttribute("aria-current", "location"); else b.removeAttribute("aria-current");
+      });
       if (curScene && history.replaceState) history.replaceState(null, "", `#${curScene}`);
     }
     document.body.dataset.segment = seg.id;

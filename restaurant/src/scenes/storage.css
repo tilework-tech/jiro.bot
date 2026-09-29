@@ -1,0 +1,3 @@
+.scene-ui[data-id="storage"] .st-rims { position: absolute; pointer-events: none; image-rendering: pixelated; }
+.scene-ui[data-id="storage"] .copy { text-shadow: 0 2px 0 #000, 0 0 24px rgba(0,0,0,.8); }
+.scene-ui[data-id="storage"] .st-say { font-size: 20px; max-width: 360px; }
