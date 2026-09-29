@@ -1,0 +1,97 @@
+{
+ "lockAbove": 56,
+ "thresh": 30,
+ "frames": [
+  {
+   "file": "gen/v2/keys/k0.png",
+   "ms": 900,
+   "note": "frame 0: the original art + rice tub + salmon block"
+  },
+  {
+   "file": "gen/v2/f-ib0-1.png",
+   "ms": 170
+  },
+  {
+   "file": "gen/v2/keys/k1.png",
+   "ms": 380,
+   "note": "pinch a slice off the salmon block"
+  },
+  {
+   "file": "gen/v2/f-ib1-1.png",
+   "ms": 170
+  },
+  {
+   "file": "gen/v2/keys/k2.png",
+   "ms": 380,
+   "note": "lift the slice"
+  },
+  {
+   "file": "gen/v2/f-ib2-2.png",
+   "ms": 170
+  },
+  {
+   "file": "gen/v2/keys/k3.png",
+   "ms": 380,
+   "note": "lay it on the rice"
+  },
+  {
+   "file": "gen/v2/f-ib3-1.png",
+   "ms": 180
+  },
+  {
+   "file": "gen/v2/keys/k4.png",
+   "ms": 420,
+   "note": "press"
+  },
+  {
+   "file": "gen/v2/f-ib4-1.png",
+   "ms": 170
+  },
+  {
+   "file": "gen/v2/keys/k5.png",
+   "ms": 380,
+   "note": "hold up the nigiri"
+  },
+  {
+   "file": "gen/v2/f-ib5-1.png",
+   "ms": 170
+  },
+  {
+   "file": "gen/v2/keys/k6.png",
+   "ms": 320,
+   "note": "lower the nigiri toward the edge"
+  },
+  {
+   "file": "gen/v2/f-ibA-3.png",
+   "ms": 150
+  },
+  {
+   "file": "gen/v2/keys/k6b.png",
+   "ms": 420,
+   "serve": true,
+   "note": "push it off the bottom of the frame"
+  },
+  {
+   "file": "gen/v2/f-ibB-2.png",
+   "ms": 170
+  },
+  {
+   "file": "gen/v2/keys/k7.png",
+   "ms": 400,
+   "note": "hand into the rice tub"
+  },
+  {
+   "file": "gen/v2/f-ib7-1.png",
+   "ms": 170
+  },
+  {
+   "file": "gen/v2/keys/k8.png",
+   "ms": 380,
+   "note": "lift a fresh rice ball"
+  },
+  {
+   "file": "gen/v2/f-ib8-1.png",
+   "ms": 180
+  }
+ ]
+}

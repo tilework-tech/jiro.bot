@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>jiro.bot — your AI Staff Engineer</title>
+    <meta name="description" content="Jiro, your AI Staff Engineer. Bring your own subscription." />
+    <meta name="theme-color" content="#120d0a" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400;600&family=Shippori+Mincho+B1:wght@600;800&family=Silkscreen&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <canvas id="world" aria-hidden="true"></canvas>
+
+    <header class="nav">
+      <a class="logo" href="#top" aria-label="jiro.bot home">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <span>jiro<span class="dot">.</span>bot</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#menu">Menu</a>
+        <a href="#antislop">Anti&nbsp;slop</a>
+        <a href="#reserve">Reserve</a>
+      </nav>
+      <div class="nav-tools">
+        <button class="pill tricks-pill" id="tricks-pill" title="Surprises discovered">
+          <span class="pill-spark" aria-hidden="true">✦</span>
+          <span id="tricks-count">0</span><span class="pill-dim">/<span id="tricks-total">0</span></span>
+        </button>
+        <button class="pill sound-btn" id="sound-btn" aria-pressed="true" title="Toggle sound">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+            <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" />
+            <path class="wave" d="M16 8.5c1.2 1 1.9 2.2 1.9 3.5s-.7 2.5-1.9 3.5M18.5 6c2 1.6 3 3.7 3 6s-1 4.4-3 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero wrap" id="hero">
+        <div class="hero-box" id="hero-box">
+          <div class="lamp-glow" aria-hidden="true"></div>
+          <div class="noren" id="noren" aria-hidden="true">
+            <span>次</span><span>郎</span><span class="noren-mark"></span><span>寿</span><span>司</span>
+          </div>
+
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="live-dot"></span> Counter open · 24/7</p>
+            <h1 class="hero-title">
+              <span class="line"><span class="word">Jiro,</span> <span class="word">your</span></span>
+              <span class="line"><em class="word">AI Staff</em> <em class="word">Engineer</em></span>
+            </h1>
+            <p class="hero-sub">Bring your own subscription.</p>
+            <div class="cta-row">
+              <a class="btn btn-primary solid" href="#reserve">Take a seat</a>
+              <a class="btn btn-ghost solid" href="#menu">See the menu <span aria-hidden="true">↓</span></a>
+            </div>
+            <ul class="byo" aria-label="Bring your own subscription">
+              <li><span class="plate-dot" style="--c:#d97757"></span>Claude</li>
+              <li><span class="plate-dot" style="--c:#e8e3d9"></span>Codex</li>
+              <li><span class="plate-dot" style="--c:#6d8cff"></span>Gemini</li>
+            </ul>
+          </div>
+
+          <div class="jiro-stage" id="jiro-stage">
+            <canvas id="jiro" width="179" height="179" aria-label="Jiro, a pixel-art robot sushi chef"></canvas>
+            <div class="speech" id="jiro-speech" role="status" aria-live="polite"></div>
+          </div>
+
+          <div class="bubbles" id="bubbles" aria-hidden="true"></div>
+
+          <div class="hint" id="hint" aria-hidden="true">
+            <svg viewBox="0 0 120 70" width="120" height="70">
+              <path d="M6 52 C 40 60, 84 50, 100 14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="1 7" />
+              <path d="M89 18 L100 11 L104 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span>psst — pick up the sushi</span>
+          </div>
+          <div class="ledge hero-floor" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <section class="counter wrap" id="menu">
+        <div class="counter-gutter">
+          <canvas id="diner" width="48" height="56" class="pixel diner" aria-label="A diner reaching for sushi"></canvas>
+        </div>
+        <div class="counter-main">
+          <header class="section-head reveal">
+            <p class="kicker">お品書き · The menu</p>
+            <h2>Three things to know about Jiro.</h2>
+          </header>
+          <div class="tables">
+            <article class="table reveal" data-tilt>
+              <div class="stools" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+              <div class="board solid" id="rock-table">
+                <span class="kanji" aria-hidden="true">岩</span>
+                <span class="hanko" aria-hidden="true">岩</span>
+                <h3>Jiro eats rocks.</h3>
+                <p>Flaky tests, 3,000-line migrations, the ticket nobody wants. He chews through the hard stuff so you don’t chip a tooth.</p>
+                <p class="board-foot">Try feeding him one ↑</p>
+              </div>
+            </article>
+            <article class="table reveal" data-tilt>
+              <div class="board solid" id="fast-table">
+                <span class="kanji" aria-hidden="true">速</span>
+                <span class="hanko" aria-hidden="true">速</span>
+                <h3>He makes you faster.</h3>
+                <p>Hand him the ticket. He opens the PR, runs the tests, and posts the proof. You taste, you ship.</p>
+                <p class="board-foot">Hover me. Watch the belt.</p>
+              </div>
+            </article>
+            <article class="table reveal" data-tilt>
+              <div class="board solid" id="night-table">
+                <span class="kanji" aria-hidden="true">夜</span>
+                <span class="hanko" aria-hidden="true">夜</span>
+                <h3>He never leaves the counter.</h3>
+                <p>Runs in the cloud, lives in your Slack. Ping him at 2am with a stack trace; he’s still slicing.</p>
+                <p class="board-foot">Lights stay on.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="seat wrap" id="seat">
+        <div class="seat-copy reveal">
+          <p class="kicker">席 · Seat 04</p>
+          <h2>This one’s yours.</h2>
+          <p>Pull up a stool, tag <code>@jiro</code>, hand over the ticket. Go get tea. Come back to a pull request with receipts.</p>
+        </div>
+        <div class="seat-scene">
+          <canvas id="you" width="72" height="56" class="pixel you" aria-label="You, sitting at the counter with a laptop"></canvas>
+          <span class="seat-tag">you ↓</span>
+        </div>
+        <div class="ledge seat-floor" aria-hidden="true"></div>
+      </section>
+
+      <section class="antislop wrap" id="antislop">
+        <h2 class="slop-title reveal">Optimized for <em>anti&nbsp;slop</em><span class="slop-strike" aria-hidden="true"></span></h2>
+        <div class="slop-cards">
+          <article class="slab solid reveal" data-tilt>
+            <span class="kanji" aria-hidden="true">問</span>
+            <p class="slab-num">01</p>
+            <h3>Asks before he cuts.</h3>
+            <p>Pins down what you actually want before writing a line. Not a yes-man. No vibes-driven guessing.</p>
+            <div class="chat">
+              <p class="msg you-msg">make the dashboard faster</p>
+              <p class="msg jiro-msg">Faster for whom? p95 page load is 4.1s but it’s one N+1 query. Fix that first?</p>
+            </div>
+          </article>
+          <article class="slab solid reveal" data-tilt>
+            <span class="kanji" aria-hidden="true">味</span>
+            <p class="slab-num">02</p>
+            <h3>Tastes before he serves.</h3>
+            <p>Every change ships with tests and proof: screenshots, traces, receipts. If it isn’t right, it doesn’t leave the kitchen.</p>
+            <div class="receipt">
+              <p><span>tests</span><span class="ok">142 passed</span></p>
+              <p><span>proof</span><span class="ok">screenshot attached</span></p>
+              <p><span>slop</span><span class="no">0 g</span></p>
+            </div>
+          </article>
+        </div>
+        <div class="ledge slop-floor" aria-hidden="true"></div>
+      </section>
+
+      <footer class="reserve wrap" id="reserve">
+        <div class="reserve-inner reveal">
+          <p class="kicker">予約 · Reservations</p>
+          <h2>Omakase for your backlog.</h2>
+          <p>Bring your own Claude, Codex, or Gemini subscription. Jiro brings the knife skills.</p>
+          <a class="btn btn-primary btn-big solid" href="mailto:hello@noriagentic.com?subject=A%20seat%20at%20Jiro%E2%80%99s%20counter">Reserve a seat</a>
+        </div>
+        <div class="wordmark" aria-hidden="true">jiro<span>.</span>bot</div>
+        <p class="fine">Made by a robot who eats rocks · <a href="https://noriagentic.com">Nori</a> · No sushi was harmed. Most of it, anyway.</p>
+        <div class="ledge footer-floor" aria-hidden="true"></div>
+      </footer>
+    </main>
+
+    <div class="toast-stack" id="toasts" aria-live="polite"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

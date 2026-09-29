@@ -1,0 +1,105 @@
+{
+ "size": 179,
+ "frames": [
+  {
+   "ms": 900,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 170,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 380,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 170,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 380,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 170,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 380,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 180,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 420,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 170,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 380,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 170,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 320,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 150,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 420,
+   "serve": true,
+   "headDy": 0
+  },
+  {
+   "ms": 170,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 400,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 170,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 380,
+   "serve": false,
+   "headDy": 0
+  },
+  {
+   "ms": 180,
+   "serve": false,
+   "headDy": 0
+  }
+ ]
+}
