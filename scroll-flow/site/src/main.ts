@@ -156,10 +156,11 @@ const plates = new Plates(scene, path, camera, fx, hooks);
 // ------------------------------------------------------------------ stops + camera rig
 interface Stop { card: number; close?: boolean }
 const STOPS: Stop[] = [
-  { card: 0 }, { card: 1 }, { card: 1, close: true }, { card: 2 }, { card: 3 }, { card: 3, close: true },
+  { card: 0 }, { card: 1 }, { card: 2 }, { card: 3 }, { card: 3, close: true },
   { card: 4 }, { card: 5 }, { card: 6 }, { card: 7 },
 ];
 const N = STOPS.length;
+const FAQ_STOP = STOPS.findIndex((x) => x.card === 4);
 
 function coverDist() {
   const a = camera.aspect;
@@ -288,9 +289,9 @@ const setNdc = (e: PointerEvent) => ndc.set((e.clientX / innerWidth) * 2 - 1, -(
 canvas.addEventListener("pointerdown", (e) => {
   setNdc(e);
   if (plates.pointerDown(ndc, e.clientX, e.clientY)) { canvas.setPointerCapture(e.pointerId); canvas.classList.add("grabbing"); return; }
-  const sc = project(toWorld(cards[0], [0.2, 1.6], 0));
+  const sc = project(toWorld(cards[0], [0.5, 1.9], 0));
   if (Math.round(s) === 0 && Math.hypot(sc.x - e.clientX, sc.y - e.clientY) < innerHeight * 0.12) {
-    hooks.bubble(toWorld(cards[0], [0.2, 3.3], 0), "Irasshaimase!", 1600); hooks.found("hero", "Jiro welcomes you in."); blip(620, 0.1); setTimeout(() => blip(830, 0.14), 110);
+    hooks.bubble(toWorld(cards[0], [0.5, 3.6], 0), "Irasshaimase!", 1600); hooks.found("hero", "Jiro welcomes you in."); blip(620, 0.1); setTimeout(() => blip(830, 0.14), 110);
   }
 });
 canvas.addEventListener("pointermove", (e) => {
@@ -337,6 +338,25 @@ const railFill = document.getElementById("rail-fill")!;
 const hint = document.getElementById("hint")!;
 let faqShown = false;
 
+const TABLE_STOP = STOPS.findIndex((x) => x.card === 3 && !x.close);
+const strayState = new Map<number, number>(); // stop -> landed-at time, or -1 once done
+function strayEvent(stop: number, delay: number, fire: () => boolean) {
+  const st = strayState.get(stop);
+  if (st === -1) return;
+  if (Math.abs(s - stop) > 0.02) { strayState.delete(stop); return; }
+  const now = performance.now() / 1000;
+  if (st === undefined) { strayState.set(stop, now); return; }
+  if (now - st > delay && fire()) strayState.set(stop, -1);
+}
+function platesOnCard(ci: number) {
+  const [s0, s1] = path.cardSpan[ci];
+  return plates.plates.filter((p) => {
+    if (p.mode !== "belt" || !p.sprite.visible) return false;
+    const q = project(p.sprite.position);
+    return q.x > 40 && q.x < innerWidth - 40 && q.y > 60 && q.y < innerHeight - 4 && q.z < 1 && s0 <= s1;
+  });
+}
+
 function updateOverlays(time: number) {
   for (const el of ovs) {
     const k = +el.dataset.stop!;
@@ -350,15 +370,27 @@ function updateOverlays(time: number) {
   railFill.style.height = `${(s / (N - 1)) * 100}%`;
   hint.style.opacity = s < 0.15 ? "0.85" : "0";
   // FAQ bubbles ride on the sushi
-  const faqOn = Math.abs(s - 6) < 0.3;
+  const faqOn = Math.abs(s - FAQ_STOP) < 0.3;
   if (faqOn && !faqShown) { faqEls.forEach((b, i) => setTimeout(() => b.classList.add("in"), 250 + i * 320)); faqShown = true; }
-  if (!faqOn && Math.abs(s - 6) > 0.9 && faqShown) { faqEls.forEach((b) => b.classList.remove("in")); faqShown = false; }
-  if (Math.abs(s - 6) < 1) faqEls.forEach((b, i) => {
+  if (!faqOn && Math.abs(s - FAQ_STOP) > 0.9 && faqShown) { faqEls.forEach((b) => b.classList.remove("in")); faqShown = false; }
+  if (Math.abs(s - FAQ_STOP) < 1) faqEls.forEach((b, i) => {
     const p = project(toWorld(cards[4], [FAQ[i].at[0], FAQ[i].at[1] + 0.35 + (i % 2) * 0.9], 0));
     b.style.left = `${p.x}px`; b.style.top = `${p.y}px`;
   });
+  // the two strays, once each per visit: a dish on the table scene's belt falls off,
+  // and one on the FAQ belt grows legs and wanders off into the scene
+  strayEvent(TABLE_STOP, 2.2, () => {
+    const p = platesOnCard(3)[3]; if (!p) return false;
+    plates.fallOff(p, cards[3].up.clone().multiplyScalar(0.6).addScaledVector(new THREE.Vector3(-1, 0, 0).applyQuaternion(cards[3].quat), 1.2));
+    return true;
+  });
+  strayEvent(FAQ_STOP, 3.4, () => {
+    const p = platesOnCard(4).find((q) => { const x = project(q.sprite.position).x; return x > innerWidth * 0.25 && x < innerWidth * 0.5; }); if (!p) return false;
+    plates.walkOff(p, cards[4].up.clone().multiplyScalar(0.55).addScaledVector(new THREE.Vector3(1, 0, 0).applyQuaternion(cards[4].quat), 1));
+    return true;
+  });
   // footer: stay 8s → a mini-Jiro parade
-  if (Math.abs(s - 9) < 0.05) {
+  if (Math.abs(s - (N - 1)) < 0.05) {
     footerSince ||= time;
     if (!paraded && time - footerSince > 8) {
       paraded = true; plates.paradeOfJiros(); hooks.found("stay", "Stayed after closing time.");

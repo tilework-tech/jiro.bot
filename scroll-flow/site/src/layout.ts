@@ -18,6 +18,11 @@ export interface CardDef {
   exitDir?: V2;
   entryDir?: V2;
   close?: { video: string; focus: V2; yaw: number; dist: number };
+  /** painted-lane cards (hero): full belt width as a card-local vector (lets the belt skew to the scene's isometric axis) */
+  beltWidth?: V2;
+  /** visual scale of belt + plates on this card (1 = default) */
+  beltScale?: number;
+  beltZ?: number;
   /** barrel roll on the transition INTO this card (turns). */
   spin?: number;
 }
@@ -33,13 +38,14 @@ export const CARDS: CardDef[] = [
   {
     id: "s0-hero", video: "v/s0-hero.mp4",
     pos: [0, 0, 0], rot: [0, 0, 0],
-    belt: [[-2.1, B + 0.02]], exitDir: [-0.83, -0.56],
+    // the belt lies on the painted wooden lane: out of the wall opening, down to the bottom-left edge
+    belt: [[6.72, 1.38], [-2.25, B]], exitDir: [-0.836, -0.549],
+    beltWidth: [0.5, -0.1], beltScale: 0.5, beltZ: 0.04,
   },
   {
     id: "s1-code", video: "v/s1-code.mp4",
     pos: [-15, -14, -8], rot: [0, 32, 0],
     belt: [[L, T], [L, B]], entryDir: [0, -1], exitDir: [0, -1],
-    close: { video: "v/s1-code-close.mp4", focus: [-3.2, -2.3], yaw: -14, dist: 3.0 },
   },
   {
     id: "s2-serve", video: "v/s2-serve.mp4",
@@ -82,7 +88,7 @@ export interface Card extends CardDef {
   center: THREE.Vector3;
 }
 
-export function toWorld(c: Card, p: V2, z = BELT_Z): THREE.Vector3 {
+export function toWorld(c: Card, p: V2, z = c.beltZ ?? BELT_Z): THREE.Vector3 {
   return new THREE.Vector3(p[0], p[1], z).applyMatrix4(c.object.matrixWorld);
 }
 

@@ -16,7 +16,8 @@ NEG = ("camera movement, zoom, pan, dolly, camera shake, cuts, scene change, tex
 
 
 def still_b64(path):
-    im = Image.open(path).convert("RGB").resize((1920, 1080), Image.LANCZOS)
+    sz = (3840, 2160) if os.environ.get("RES") == "4k" else (1920, 1080)
+    im = Image.open(path).convert("RGB").resize(sz, Image.LANCZOS)
     buf = io.BytesIO(); im.save(buf, "JPEG", quality=95)
     return base64.b64encode(buf.getvalue()).decode()
 
@@ -29,7 +30,7 @@ def main():
     inst = {"prompt": prompt,
             "image": {"bytesBase64Encoded": img, "mimeType": "image/jpeg"},
             "lastFrame": {"bytesBase64Encoded": img, "mimeType": "image/jpeg"}}
-    body = {"instances": [inst], "parameters": {"aspectRatio": "16:9", "resolution": "1080p",
+    body = {"instances": [inst], "parameters": {"aspectRatio": "16:9", "resolution": os.environ.get("RES", "1080p"),
                                                 "durationSeconds": 8, "negativePrompt": NEG}}
     for attempt in range(20):
         r = requests.post(f"{B}/models/{MODEL}:predictLongRunning?key={KEY}", json=body, timeout=120).json()

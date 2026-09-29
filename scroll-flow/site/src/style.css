@@ -62,10 +62,10 @@ body, h1, h2, h3, .bubble, .faq-bubble, .tag, .choice, .tab { font-variant-ligat
 .panel { background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(6px); box-shadow: 0 20px 60px rgba(0,0,0,.45); }
 
 /* hero */
-.hero-copy { position: absolute; left: 5vw; top: 16vh; max-width: 40vw; }
+.hero-copy { position: absolute; left: 4vw; top: 14vh; max-width: 46vw; }
 .hero-copy::before { content: ""; position: absolute; inset: -12vh -8vw -30vh -10vw; background: radial-gradient(closest-side, rgba(12,8,6,.72), rgba(12,8,6,0)); z-index: -1; }
 .kicker { font-size: 15px; color: var(--copper); margin: 0 0 12px; letter-spacing: 1px; }
-h1 { font-size: clamp(40px, 5.2vw, 88px); line-height: 1.02; margin: 0; text-shadow: 0 4px 0 rgba(0,0,0,.5); }
+h1 { font-size: clamp(36px, 4.2vw, 72px); line-height: 1.02; margin: 0; text-shadow: 0 4px 0 rgba(0,0,0,.5); }
 .sub { font-size: clamp(18px, 1.6vw, 26px); color: var(--cream-2); margin: 18px 0 0; }
 
 /* demo */

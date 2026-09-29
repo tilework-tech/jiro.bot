@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { BeltPath, Frame } from "./belt";
+import { BeltPath, Frame, BELT_W } from "./belt";
 import { Particles, pixelGrid, blip, boom } from "./fx";
 
 export const ITEMS = [
@@ -20,12 +20,12 @@ const WEIGHTS: Partial<Record<Item, number>> = {
 const RIMS = ["#3b6fd1", "#d13b3b", "#e8b33a", "#3ba15b", "#1c1c1c", "#e8e2d4"];
 
 export const SPACING = 1.25;
-export const BASE_SPEED = 0.42; // world units / s, calm
+export const BASE_SPEED = 0.38; // belt-space units / s, calm
 
 interface Plate {
   s: number; item: Item; group: THREE.Group; sprite: THREE.Sprite; disc: THREE.Mesh;
-  mode: "belt" | "drag" | "return" | "gone" | "fling";
-  pos: THREE.Vector3; vel: THREE.Vector3; t: number; scale: number; spin: number; puff: number;
+  mode: "belt" | "drag" | "return" | "gone" | "fling" | "walk" | "fall";
+  pos: THREE.Vector3; vel: THREE.Vector3; t: number; scale: number; spin: number; puff: number; sc: number;
 }
 
 export interface Hooks {
@@ -57,7 +57,10 @@ export class Plates {
   dragPlane = new THREE.Plane();
   down = { x: 0, y: 0, t: 0 };
   lastDrag: THREE.Vector3[] = [];
-  f: Frame = { p: new THREE.Vector3(), t: new THREE.Vector3(), b: new THREE.Vector3(), u: new THREE.Vector3() };
+  f: Frame = { p: new THREE.Vector3(), t: new THREE.Vector3(), b: new THREE.Vector3(), u: new THREE.Vector3(), w: new THREE.Vector3(), sc: 1, lift: new THREE.Vector3() };
+  legs: THREE.Sprite;
+  legTex: THREE.Texture[];
+  walker: Plate | null = null;
 
   constructor(public scene: THREE.Scene, public path: BeltPath, public camera: THREE.PerspectiveCamera,
     public fx: Particles, public hooks: Hooks) {
@@ -68,7 +71,10 @@ export class Plates {
       this.tex.set(it, t);
     }
     this.discTex = RIMS.map((r) => discTexture(r));
-    const n = Math.floor(path.length / SPACING);
+    this.legTex = [0, 1].map((k) => legTexture(k));
+    this.legs = new THREE.Sprite(new THREE.SpriteMaterial({ map: this.legTex[0], alphaTest: 0.5 }));
+    this.legs.visible = false; scene.add(this.legs);
+    const n = Math.floor(path.lengthU / SPACING);
     const bag = weightedBag();
     for (let i = 0; i < n; i++) this.plates.push(this.make(i * SPACING, bag()));
   }
@@ -82,7 +88,8 @@ export class Plates {
     sprite.userData.plate = true;
     group.add(disc);
     this.scene.add(group, sprite);
-    const p: Plate = { s, item, group, sprite, disc, mode: "belt", pos: new THREE.Vector3(), vel: new THREE.Vector3(), t: 0, scale: 1, spin: 0, puff: 1 };
+    group.matrixAutoUpdate = false;
+    const p: Plate = { s, item, group, sprite, disc, mode: "belt", pos: new THREE.Vector3(), vel: new THREE.Vector3(), t: 0, scale: 1, spin: 0, puff: 1, sc: 1 };
     sprite.userData.ref = p;
     return p;
   }
@@ -92,9 +99,9 @@ export class Plates {
   }
 
   slot(p: Plate, out: Frame) {
-    let s = (p.s + this.offset) % this.path.length;
-    if (s < 0) s += this.path.length;
-    return this.path.frameAt(s, out);
+    let s = (p.s + this.offset) % this.path.lengthU;
+    if (s < 0) s += this.path.lengthU;
+    return this.path.frameAtU(s, out);
   }
 
   update(dt: number, time: number) {
@@ -104,10 +111,10 @@ export class Plates {
     this.turbo -= dt; this.sleepy -= dt;
     const f = this.f;
     for (const p of this.plates) {
-      const raw = (p.s + this.offset) % this.path.length;
+      const raw = (p.s + this.offset) % this.path.lengthU;
       this.slot(p, f);
       // pop in at the hero exit, sink out at the footer end
-      const edge = Math.min(raw, this.path.length - raw);
+      const edge = Math.min(raw, this.path.lengthU - raw);
       const vis = THREE.MathUtils.clamp(edge / 0.8, 0, 1);
       if (p.mode === "gone") {
         p.t -= dt;
@@ -115,8 +122,9 @@ export class Plates {
         p.mode = "belt"; p.puff = 0.01; if (SUSHI.includes(p.item)) this.setItem(p, SUSHI[Math.floor(Math.random() * SUSHI.length)]);
       }
       if (raw < 0.2 && p.mode === "belt" && Math.random() < 0.02) this.setItem(p, weightedBag()());
-      const beltPos = f.p.clone().addScaledVector(f.u, 0.03);
-      if (p.mode === "belt") p.pos.copy(beltPos);
+      const beltPos = f.p.clone().addScaledVector(f.u, 0.03 * f.sc);
+      if (p.mode === "belt") { p.pos.copy(beltPos); p.sc = f.sc; }
+      else if (p.mode === "walk" || p.mode === "fall") { this.stray(p, dt, time); continue; }
       else if (p.mode === "return" || p.mode === "fling") {
         if (p.mode === "fling") {
           p.vel.multiplyScalar(Math.pow(0.04, dt)); p.pos.addScaledVector(p.vel, dt); p.t -= dt;
@@ -127,17 +135,63 @@ export class Plates {
         }
       }
       p.group.visible = p.sprite.visible = vis > 0.01;
-      p.group.position.copy(p.pos);
-      p.group.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), f.u);
+      // disc lies in the belt plane (skewed on the painted hero lane)
+      const k = vis * f.sc;
+      const X = f.t.clone().multiplyScalar(k), Y = f.w.clone().multiplyScalar(vis / (BELT_W / 2)), Z = f.u.clone().multiplyScalar(k);
+      p.group.matrix.makeBasis(X, Y, Z).setPosition(p.pos);
       p.spin *= Math.pow(0.02, dt);
-      const bob = p.mode === "drag" ? 0.12 : 0;
-      p.sprite.position.copy(p.pos).addScaledVector(f.u, 0.27 + bob);
+      p.sprite.position.copy(p.pos).add(f.lift);
+      if (p.mode === "drag") p.sprite.position.addScaledVector(f.lift, 0.5);
       p.puff += (1 - p.puff) * Math.min(1, dt * 1.5);
-      const sc = 0.62 * vis * p.puff * (1 + (p.mode === "drag" ? 0.15 : 0));
+      const sc = 0.62 * f.sc * vis * p.puff * (1 + (p.mode === "drag" ? 0.15 : 0));
       p.sprite.scale.set(sc, sc, 1);
       (p.sprite.material as THREE.SpriteMaterial).rotation = p.spin + (p.item === "onigiri-angry" && p.mode === "belt" ? Math.sin(time * 30) * 0.04 : 0);
-      p.group.scale.setScalar(vis);
     }
+  }
+
+  // ---------- the two strays: one dish grows legs and wanders off, one falls off ----------
+  walkOff(p: Plate, dir: THREE.Vector3) {
+    if (this.walker) return;
+    this.walker = p; p.mode = "walk"; p.t = 7; p.vel.copy(dir).normalize();
+    this.hooks.bubble(p.sprite.position.clone(), "!", 900);
+  }
+
+  fallOff(p: Plate, side: THREE.Vector3) {
+    p.mode = "fall"; p.t = 2.6; p.spin = 0;
+    p.vel.copy(side).multiplyScalar(1.1);
+    this.hooks.bubble(p.sprite.position.clone(), "whoa—", 900);
+  }
+
+  stray(p: Plate, dt: number, time: number) {
+    p.t -= dt;
+    const camUp = new THREE.Vector3(0, 1, 0).applyQuaternion(this.camera.quaternion);
+    const s = 0.62 * p.sc;
+    if (p.mode === "walk") {
+      const age = 7 - p.t;
+      const sprout = THREE.MathUtils.clamp(age / 0.6, 0, 1);         // legs pop out
+      const going = age > 1.1 && !(age > 3.0 && age < 3.6);            // pause once to look around
+      if (going) p.pos.addScaledVector(p.vel, dt * 0.9 * p.sc / 0.42 * 0.42);
+      const hop = going ? Math.abs(Math.sin(time * 11)) * 0.06 * p.sc : 0;
+      p.sprite.position.copy(p.pos).addScaledVector(camUp, s * 0.75 + hop);
+      p.sprite.scale.set(s, s, 1);
+      (p.sprite.material as THREE.SpriteMaterial).rotation = going ? Math.sin(time * 11) * 0.08 : Math.sin(time * 3) * 0.2;
+      this.legs.visible = true;
+      this.legs.material.map = this.legTex[going ? Math.floor(time * 8) % 2 : 0];
+      this.legs.position.copy(p.pos).addScaledVector(camUp, s * 0.28 * sprout + hop * 0.5);
+      this.legs.scale.set(s * 0.8, s * 0.6 * sprout, 1);
+      p.group.visible = false;
+      if (p.t <= 0) { p.mode = "gone"; p.t = 30; this.legs.visible = false; this.walker = null; p.sprite.visible = false; }
+      return;
+    }
+    // fall: tip over the edge, then drop with gravity (screen-down) and tumble
+    p.vel.addScaledVector(camUp, -6 * dt);
+    p.pos.addScaledVector(p.vel, dt);
+    p.spin += dt * 5;
+    p.group.visible = false;
+    p.sprite.position.copy(p.pos).addScaledVector(camUp, s * 0.4);
+    p.sprite.scale.set(s, s, 1);
+    (p.sprite.material as THREE.SpriteMaterial).rotation = p.spin;
+    if (p.t <= 0) { p.mode = "gone"; p.t = 20; p.sprite.visible = false; }
   }
 
   // ---------- interaction ----------
@@ -302,5 +356,19 @@ function discTexture(rim: string) {
   }
   const t = new THREE.CanvasTexture(c);
   t.magFilter = THREE.NearestFilter; t.minFilter = THREE.NearestFilter; t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+function legTexture(frame: number) {
+  // two little legs with shoes, 2-frame walk cycle
+  const c = document.createElement("canvas"); c.width = 16; c.height = 12;
+  const g = c.getContext("2d")!;
+  const leg = (x: number, lift: number) => {
+    g.fillStyle = "#e8c9a0"; g.fillRect(x, 0, 2, 8 - lift);
+    g.fillStyle = "#2a1a10"; g.fillRect(x - 1, 8 - lift, 4, 2);
+    g.fillStyle = "#c0392b"; g.fillRect(x - 1, 7 - lift, 4, 1);
+  };
+  leg(4, frame ? 2 : 0); leg(10, frame ? 0 : 2);
+  const t = new THREE.CanvasTexture(c); t.magFilter = THREE.NearestFilter; t.minFilter = THREE.NearestFilter; t.colorSpace = THREE.SRGBColorSpace;
   return t;
 }

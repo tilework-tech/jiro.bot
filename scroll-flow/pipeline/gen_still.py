@@ -32,7 +32,7 @@ def main():
     parts.append({"text": prompt + "\n\n" + STYLE})
     body = {
         "contents": [{"role": "user", "parts": parts}],
-        "generationConfig": {"responseModalities": ["IMAGE"], "imageConfig": {"aspectRatio": os.environ.get("AR", "16:9"), "imageSize": "2K"}},
+        "generationConfig": {"responseModalities": ["IMAGE"], "imageConfig": {"aspectRatio": os.environ.get("AR", "16:9"), "imageSize": os.environ.get("SIZE", "2K")}},
     }
     for attempt in range(4):
         r = requests.post(f"{B}/models/{MODEL}:generateContent?key={KEY}", json=body, timeout=300)
