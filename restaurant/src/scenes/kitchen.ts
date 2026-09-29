@@ -6,7 +6,7 @@ import { TABLE } from "../content/copy";
 import { mountTable } from "../content/table";
 import "./kitchen.css";
 
-declareEggs(["table-all", "table-jiro", "kitchen-pot", "kitchen-knife", "kitchen-jiro", "kitchen-cat", "kitchen-lift"]);
+declareEggs(["table-all", "table-jiro", "kitchen-pot", "kitchen-knife", "kitchen-jiro", "kitchen-cat", "kitchen-lift", "kitchen-moth", "kitchen-rice"]);
 
 // Comparison-table kitchen. The order board hangs on the dark tiled wall at the
 // left; Jiro works the lit prep counter in the centre; the belt drops straight
@@ -23,11 +23,57 @@ const GRILLE: [number, number] = [1236, 487];
 let pingAt = -9;
 let talkUntil = 0;
 let kickAt = -9;
+let mothAt = -99;
 const clock = () => performance.now() / 1000;
 
 function blinking(now: number) {
   const a = now % 6, b = now % 24;
   return (a > 5.2 && a < 5.34) || (b > 17.52 && b < 17.64);
+}
+
+/** Tiny pixel soup bubbles: each swells and pops on its own 3 s / 4 s cycle. */
+function bubbles(g: CanvasRenderingContext2D, now: number) {
+  const spots: [number, number, number, number][] = [[1462, 476, 3, 0], [1488, 478, 4, 1.3], [1506, 475, 3, 2.1], [1476, 480, 4, 3.4]];
+  g.save();
+  for (const [x, y, period, seed] of spots) {
+    const f = ((now + seed) % period) / period;
+    if (f > 0.5) continue; // quiet half of the cycle
+    const k = f / 0.5; // 0..1 swell, then pop
+    const r = k < 0.85 ? 2 + Math.round(k * 3) : 0;
+    if (r) {
+      g.globalAlpha = 0.85;
+      g.fillStyle = "#ffb45e";
+      g.fillRect(x - r, y - r, r * 2, r * 2);
+      g.fillStyle = "#fff0c8";
+      g.fillRect(x - r + 1, y - r + 1, 2, 2);
+    } else {
+      g.globalAlpha = 0.6;
+      g.fillStyle = "#fff0c8";
+      [[-6, -3], [5, -4], [0, -7]].forEach(([dx, dy]) => g.fillRect(x + dx, y + dy, 2, 2));
+    }
+  }
+  g.restore();
+}
+
+/** Clicked lantern: a pixel moth loops around it for a few seconds. */
+function moth(g: CanvasRenderingContext2D) {
+  const age = clock() - mothAt;
+  if (age < 0 || age > 7) return;
+  const a = age * 2.4;
+  const x = Math.round(1122 + Math.cos(a) * 92 + Math.sin(a * 2.3) * 14);
+  const y = Math.round(200 + Math.sin(a) * 60 + Math.cos(a * 1.7) * 10 - Math.max(0, age - 5.5) * 120);
+  const flap = Math.floor(age * 12) % 2;
+  // 4 px pixel sprite: dark body, dusty wings with a dark rim (reads on the bright lantern).
+  const P = 4;
+  const px = (c: string, cells: [number, number][]) => { g.fillStyle = c; cells.forEach(([u, v]) => g.fillRect(x + u * P, y + v * P, P, P)); };
+  g.save();
+  const wings: [number, number][] = flap
+    ? [[-3, -2], [-2, -2], [-3, -1], [-2, -1], [-1, -1], [1, -1], [2, -1], [3, -1], [2, -2], [3, -2]]
+    : [[-3, 0], [-2, 0], [-1, 0], [1, 0], [2, 0], [3, 0], [-2, 1], [2, 1]];
+  px("#2a1d15", wings.map(([u, v]) => [u, v + 1] as [number, number]));
+  px("#b39a7a", wings);
+  px("#1c140f", [[0, -1], [0, 0], [0, 1]]);
+  g.restore();
 }
 
 const QUIPS = [
@@ -68,7 +114,12 @@ export const kitchen: SceneDef = {
     // Steam: pot and rice tub.
     steam(g, 1478, 470, now, 0.1, 150, 6, 0.2);
     steam(g, 1500, 472, now, 3.1, 120, 6, 0.14);
-    steam(g, 1435, 640, now, 1.7, 90, 6, 0.12);
+    steam(g, 1462, 646, now, 1.7, 100, 6, 0.13);
+    bubbles(g, now);
+    // Burner flame: a tiny blue flicker under the pot.
+    glow(g, 1478, 580, 46, "rgba(90,160,255,.22)", now, 0.25, 2, 1.3);
+    // Jiro's eye LEDs breathe very slowly (12 s).
+    EYES.forEach(([x, y]) => glow(g, x, y, 16, "rgba(110,210,255,.16)", now, 0.35, 12));
     // Knife glints: one short sparkle sliding down a blade, each knife in turn.
     [1071, 1107, 1143].forEach((x, i) => {
       const f = ((now + i * 2.67) % 8) / 0.7;
@@ -83,6 +134,7 @@ export const kitchen: SceneDef = {
     });
   },
   over(g, now) {
+    moth(g);
     // Lift clicked: a warning light blinks on the hatch frame for a moment.
     const age = clock() - kickAt;
     if (age < 2.4 && Math.floor(age / 0.3) % 2 === 0) glow(g, 1770, 88, 40, "rgba(255,120,60,.6)", now, 0, 6);
@@ -131,6 +183,16 @@ export const kitchen: SceneDef = {
       clearTimeout(catT);
       catT = window.setTimeout(() => cat.classList.remove("on"), 2600);
       api.egg("kitchen-cat", "The kitchen cat. Job title: QA. Salary: tuna.");
+    });
+    hotspot(el, 1060, 100, 130, 200, "Lantern", () => {
+      api.sfx("chime");
+      mothAt = clock();
+      api.egg("kitchen-moth", "A moth. It has been circling this lantern since the last deploy freeze.");
+    });
+    hotspot(el, 1385, 640, 92, 100, "Rice tub", () => {
+      api.sfx("pop");
+      say("Rice at 36.5 °C. Not negotiable.");
+      api.egg("kitchen-rice", "Jiro checks the rice temperature more often than CI.");
     });
     const lift = () => {
       api.sfx("whoosh");

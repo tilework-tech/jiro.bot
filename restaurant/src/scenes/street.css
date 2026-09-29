@@ -20,7 +20,7 @@
   text-shadow: 0 0 6px rgba(255, 95, 200, .9);
   background: rgba(14, 6, 16, .7);
   margin: 0 0 22px;
-  animation: st-buzz 12s steps(1, end) infinite;
+  animation: st-buzz 12s ease-in-out infinite;
 }
 .scene-ui[data-id="street"] .st-open i {
   width: 8px; height: 8px; background: var(--green); box-shadow: 0 0 8px var(--green);
@@ -38,7 +38,7 @@
   font-style: normal;
   color: var(--cyan);
   text-shadow: 0 0 12px rgba(95, 240, 255, .7), 0 4px 0 rgba(0, 0, 0, .7);
-  animation: st-buzz 8s steps(1, end) -3s infinite;
+  animation: st-buzz 8s ease-in-out -3s infinite;
 }
 
 /* The board: dark wood frame + a thin cyan neon tube inside. */
@@ -78,7 +78,7 @@
   padding: 14px 14px 14px;
   border-bottom: 2px dashed rgba(243, 230, 207, .12);
 }
-.scene-ui[data-id="street"] .st-row:last-child { border-bottom: 0; }
+.scene-ui[data-id="street"] .st-row:last-of-type { border-bottom: 0; }
 .scene-ui[data-id="street"] .st-line {
   grid-column: 1 / -1;
   display: flex; align-items: baseline; gap: 10px;
@@ -98,7 +98,7 @@
   font: 15px var(--sans); color: var(--muted); margin-left: 6px;
 }
 .scene-ui[data-id="street"] .st-inc {
-  font: 16px/1.4 var(--sans); color: #d9d0e6; margin: 0;
+  font: 16px/1.4 var(--sans); color: #e4dcef; margin: 0;
 }
 .scene-ui[data-id="street"] .st-row .btn {
   font-size: 14px; padding: 10px 12px 9px; text-align: center; white-space: nowrap; min-width: 138px;
@@ -125,13 +125,33 @@
   font: 12px var(--mono); color: rgba(191, 174, 149, .7); margin: 10px 0 0; text-align: right;
 }
 
-/* Slight neon buzz: steady, with a couple of tiny dips per cycle (steps => instant, like a real tube). */
+/* Tired neon: steady, with one soft sag per cycle (eased, never a strobe). */
 @keyframes st-buzz {
-  0%, 100% { opacity: 1; }
-  61% { opacity: .72; }
-  61.6% { opacity: 1; }
-  62.4% { opacity: .8; }
-  63% { opacity: 1; }
+  0%, 56%, 70%, 100% { opacity: 1; }
+  61% { opacity: .78; }
+  64% { opacity: .9; }
+  66% { opacity: .8; }
+}
+
+/* Rain collecting on the board's bottom edge: a drop swells, lets go, falls, fades. */
+.scene-ui[data-id="street"] .st-drip {
+  position: absolute; bottom: -8px; width: 4px; height: 6px; pointer-events: none;
+  background: rgba(170, 215, 255, .75); box-shadow: inset -1px -2px 0 rgba(70, 110, 170, .6);
+  transform-origin: 50% 0; opacity: 0;
+  animation: st-drip 8s cubic-bezier(.5, 0, .7, .4) infinite;
+}
+.scene-ui[data-id="street"] .st-drip::before {
+  content: ""; position: absolute; left: 1px; top: 1px; width: 1px; height: 2px; background: #fff;
+}
+.scene-ui[data-id="street"] .st-drip:nth-of-type(1) { left: 74px; }
+.scene-ui[data-id="street"] .st-drip:nth-of-type(2) { left: 318px; animation-duration: 12s; animation-delay: -5s; }
+.scene-ui[data-id="street"] .st-drip:nth-of-type(3) { left: 530px; animation-duration: 6s; animation-delay: -2.5s; }
+@keyframes st-drip {
+  0% { opacity: 0; transform: translateY(0) scaleY(.3); }
+  10% { opacity: .9; transform: translateY(0) scaleY(.4); }
+  72% { opacity: .9; transform: translateY(0) scaleY(1.25); }
+  90% { opacity: 0; transform: translateY(46px) scaleY(1.6); }
+  100% { opacity: 0; transform: translateY(46px) scaleY(1.6); }
 }
 @keyframes st-glow {
   0%, 100% { box-shadow: 0 0 14px rgba(255, 95, 200, .36), inset 0 0 12px rgba(255, 95, 200, .14); }

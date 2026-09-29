@@ -1,34 +1,13 @@
-// Site chrome behaviour that lives outside the stage (the loader is inline in index.html): scroll affordance,
-// egg popover, rails progress, narrow-screen hint. Markup lives in engine/stage.ts start().
+// Site chrome behaviour that lives outside the stage (the loader is inline in index.html): egg popover,
+// narrow-screen hint (rail progress is driven from the stage tick). The scroll cue belongs to the hero (scenes/bar.ts, "belt-cue"). Markup lives in engine/stage.ts start().
 import type { Api } from "./engine/types";
 import { foundEggs, eggCount, onEggs, resetEggs } from "./engine/eggs";
 
 const BASE = import.meta.env.BASE_URL;
-const q = new URLSearchParams(location.search);
-/** Screenshot/debug modes (?seg=, ?p=) skip the loader and the scroll hint. */
-const pinned = q.has("seg") || q.has("p");
 
 export function setupChrome(api: Api) {
-  scrollHint();
   eggPopover(api);
-  railProgress();
   narrowHint();
-}
-
-/** Tiny "scroll to follow the belt" nudge; leaves after the first real scroll. */
-function scrollHint() {
-  const el = document.querySelector<HTMLElement>(".scroll-hint");
-  if (!el) return;
-  if (pinned || scrollY > 10 || location.hash.length > 1 && location.hash !== "#bar") { el.remove(); return; }
-  const off = () => {
-    if (scrollY < 30) return;
-    el.classList.add("gone");
-    removeEventListener("scroll", off);
-    setTimeout(() => el.remove(), 600);
-  };
-  addEventListener("scroll", off, { passive: true });
-  // Only show it once the loader is gone.
-  setTimeout(() => el.classList.add("on"), 1400);
 }
 
 function esc(s: string) {
@@ -71,19 +50,6 @@ function eggPopover(api: Api) {
     void btn.offsetWidth;
     btn.classList.add("bump");
   });
-}
-
-/** Fill the rail track with overall scroll progress. */
-function railProgress() {
-  const rail = document.querySelector<HTMLElement>(".rail");
-  if (!rail) return;
-  const upd = () => {
-    const max = document.documentElement.scrollHeight - innerHeight;
-    rail.style.setProperty("--prog", String(max > 0 ? Math.min(1, scrollY / max) : 0));
-  };
-  addEventListener("scroll", upd, { passive: true });
-  addEventListener("resize", upd);
-  upd();
 }
 
 /** Portrait phones: the 16:9 stage is tiny, so suggest a quarter turn (dismissable). */

@@ -71,15 +71,29 @@ export function pathLength(path: BeltPath): number {
   return bake(path).U;
 }
 
-const TREAD = "#2b2723";
-const TREAD_HI = "#3d3832";
-const RAIL = "#c9814a";
-const RAIL_DARK = "#6d3f22";
-const SEAM = "rgba(0,0,0,.45)";
+// Palette: warm charcoal tread with bevelled crescent slats (the classic kaiten
+// chain plates), copper rails with a lit top edge and rivets. Everything is drawn
+// with hard edges and whole-pixel widths so it sits in every room's pixel art.
+const TREAD = "#2a2521";
+const TREAD_LO = "#1f1b18";
+const SLAT_HI = "#443c35";
+const SEAM = "#110e0c";
+const RAIL_OUT = "#24150c";
+const RAIL = "#b8733f";
+const RAIL_HI = "#e9a765";
+const RAIL_LO = "#7a4524";
+const RIVET = "#4a2a16";
 const SEAM_STEP = 26;
+const RIVET_STEP = 78;
 
 function edge(samples: Sample[], side: number, w: number) {
   return samples.map((p) => [p.x + p.nx * side * (w * p.s) / 2, p.y + p.ny * side * (w * p.s) / 2]);
+}
+
+function strokePts(g: CanvasRenderingContext2D, pts: number[][], dy = 0) {
+  g.beginPath();
+  pts.forEach(([x, y], i) => (i ? g.lineTo(x, y + dy) : g.moveTo(x, y + dy)));
+  g.stroke();
 }
 
 export function drawTread(g: CanvasRenderingContext2D, path: BeltPath, now: number) {
@@ -88,43 +102,79 @@ export function drawTread(g: CanvasRenderingContext2D, path: BeltPath, now: numb
   const { samples, U } = bake(path);
   const w = path.width ?? 64;
   const L = edge(samples, -1, w), R = edge(samples, 1, w);
+  const Li = edge(samples, -1, w - 14), Ri = edge(samples, 1, w - 14);
+  const prevJoin = g.lineJoin, prevCap = g.lineCap;
+  g.lineJoin = "round"; g.lineCap = "butt";
   if (style === "full") {
-    // Shadow, body, top highlight band, rails.
-    g.fillStyle = "rgba(0,0,0,.35)";
+    // Hard drop shadow under the whole module (one flat tone, offset down).
+    g.fillStyle = "rgba(0,0,0,.38)";
     g.beginPath();
-    L.forEach(([x, y], i) => (i ? g.lineTo(x, y + 8 * samples[i].s) : g.moveTo(x, y + 8 * samples[i].s)));
-    for (let i = R.length - 1; i >= 0; i--) g.lineTo(R[i][0], R[i][1] + 8 * samples[i].s);
+    L.forEach(([x, y], i) => (i ? g.lineTo(x, y + 9 * samples[i].s) : g.moveTo(x, y + 9 * samples[i].s)));
+    for (let i = R.length - 1; i >= 0; i--) g.lineTo(R[i][0] + 2 * samples[i].s, R[i][1] + 9 * samples[i].s);
     g.closePath(); g.fill();
-    g.fillStyle = TREAD;
+    // Tread body, darker gutters along both rails.
+    g.fillStyle = TREAD_LO;
     g.beginPath();
     L.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y)));
     for (let i = R.length - 1; i >= 0; i--) g.lineTo(R[i][0], R[i][1]);
     g.closePath(); g.fill();
-    g.strokeStyle = TREAD_HI; g.lineWidth = 2;
+    g.fillStyle = TREAD;
     g.beginPath();
-    samples.forEach((p, i) => (i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y)));
-    g.stroke();
+    Li.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y)));
+    for (let i = Ri.length - 1; i >= 0; i--) g.lineTo(Ri[i][0], Ri[i][1]);
+    g.closePath(); g.fill();
   }
-  // Moving seams: identical world spacing and speed everywhere.
+  // Moving crescent slats: identical world spacing and speed everywhere. Each slat is a
+  // dark seam with a 1-step lit bevel just ahead of it, bowed forward in the middle.
   const off = (now * BELT_SPEED + (path.phase ?? 0)) % SEAM_STEP;
-  g.strokeStyle = SEAM;
-  g.lineWidth = 2;
-  g.beginPath();
+  const bow = 5;
+  const seams: [number, number, number, number, number, number][] = [];
   for (let u = off; u < U; u += SEAM_STEP) {
     const p = pointAt(path, u);
     const hw = (w * p.s) / 2 - 3;
-    g.moveTo(Math.round(p.x - p.nx * hw), Math.round(p.y - p.ny * hw));
-    g.lineTo(Math.round(p.x + p.nx * hw), Math.round(p.y + p.ny * hw));
+    const tx = p.ny, ty = -p.nx; // tangent (direction of travel)
+    const b = bow * p.s;
+    seams.push([p.x - p.nx * hw, p.y - p.ny * hw, p.x + tx * b, p.y + ty * b, p.x + p.nx * hw, p.y + p.ny * hw]);
   }
-  g.stroke();
+  const seamPass = (col: string, lw: number, shift: number) => {
+    g.strokeStyle = col; g.lineWidth = lw;
+    g.beginPath();
+    for (const [x0, y0, xm, ym, x1, y1] of seams) {
+      // shift along +tangent: approximate with the chord's normal
+      const dx = xm - (x0 + x1) / 2, dy = ym - (y0 + y1) / 2, l = Math.hypot(dx, dy) || 1;
+      const sx = (dx / l) * shift, sy = (dy / l) * shift;
+      g.moveTo(Math.round(x0 + sx), Math.round(y0 + sy));
+      g.lineTo(Math.round(xm + sx), Math.round(ym + sy));
+      g.lineTo(Math.round(x1 + sx), Math.round(y1 + sy));
+    }
+    g.stroke();
+  };
+  seamPass(SLAT_HI, 2, 2);
+  seamPass(SEAM, 2, 0);
   if (style === "full") {
-    for (const [pts, col, lw] of [[L, RAIL_DARK, 7], [R, RAIL_DARK, 7], [L, RAIL, 4], [R, RAIL, 4]] as const) {
+    // Rails: dark outline, copper body, darker underside, lit top edge.
+    for (const [pts, col, lw, dy] of [
+      [L, RAIL_OUT, 10, 1], [R, RAIL_OUT, 10, 1],
+      [L, RAIL_LO, 6, 1], [R, RAIL_LO, 6, 1],
+      [L, RAIL, 5, -0.5], [R, RAIL, 5, -0.5],
+      [L, RAIL_HI, 2, -2], [R, RAIL_HI, 2, -2],
+    ] as const) {
       g.strokeStyle = col; g.lineWidth = lw;
-      g.beginPath();
-      pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y)));
-      g.stroke();
+      strokePts(g, pts as number[][], dy);
+    }
+    // Static rivets along both rails (they belong to the frame, so they don't move).
+    g.fillStyle = RIVET;
+    for (let u = RIVET_STEP / 2; u < U; u += RIVET_STEP) {
+      const p = pointAt(path, u);
+      const hw = (w * p.s) / 2;
+      const r = Math.max(1, Math.round(2 * p.s));
+      for (const side of [-1, 1]) {
+        const x = Math.round(p.x + p.nx * side * hw) - (r >> 1), y = Math.round(p.y + p.ny * side * hw) - (r >> 1);
+        g.fillRect(x, y, r, r);
+      }
     }
   }
+  g.lineJoin = prevJoin; g.lineCap = prevCap;
 }
 
 /** Positions of every plate currently on the path. */
@@ -220,6 +270,65 @@ function plateSprite(rim: string, d: number): [HTMLCanvasElement, number] {
   return [c, cy];
 }
 
+// ---- Item sprites: the 160px source art is baked once per integer display size with
+// a proper area filter, then snapped to hard alpha and given a 1-px dark outline, so a
+// 45-px nigiri reads as clean pixel art instead of nearest-neighbour shimmer.
+const itemCache = new Map<string, HTMLCanvasElement>();
+const OUTLINE: [number, number, number] = [26, 18, 14];
+function itemSprite(im: HTMLImageElement, name: string, iw: number, ih: number): CanvasImageSource {
+  if (iw > 110 || ih > 110) return im; // close-ups (sushi cam): source pixels are already big enough
+  const key = `${name}:${iw}x${ih}`;
+  let c = itemCache.get(key);
+  if (c) return c;
+  if (itemCache.size > 1500) itemCache.clear();
+  const W = iw + 2, H = ih + 2;
+  c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const g = c.getContext("2d", { willReadFrequently: true })!;
+  g.imageSmoothingEnabled = true;
+  g.imageSmoothingQuality = "high";
+  g.drawImage(im, 1, 1, iw, ih);
+  const d = g.getImageData(0, 0, W, H);
+  const px = d.data;
+  const solid = new Uint8Array(W * H);
+  for (let i = 0; i < W * H; i++) {
+    const a = px[i * 4 + 3];
+    if (a >= 120) { px[i * 4 + 3] = 255; solid[i] = 1; // getImageData is already un-premultiplied
+    } else px[i * 4 + 3] = 0;
+  }
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const i = y * W + x;
+      if (solid[i]) continue;
+      const n = (x > 0 && solid[i - 1]) || (x < W - 1 && solid[i + 1]) || (y > 0 && solid[i - W]) || (y < H - 1 && solid[i + W]);
+      if (!n) continue;
+      px[i * 4] = OUTLINE[0]; px[i * 4 + 1] = OUTLINE[1]; px[i * 4 + 2] = OUTLINE[2]; px[i * 4 + 3] = 255;
+    }
+  }
+  g.putImageData(d, 0, 0);
+  itemCache.set(key, c);
+  return c;
+}
+
+// Flat, hard-edged pixel shadow ellipse under each plate (cached per diameter).
+const shadowCache = new Map<number, HTMLCanvasElement>();
+function shadowSprite(d: number): HTMLCanvasElement {
+  let c = shadowCache.get(d);
+  if (c) return c;
+  const rx = Math.max(2, Math.round(d * 0.52)), ry = Math.max(1, Math.round(d * 0.2));
+  c = document.createElement("canvas");
+  c.width = rx * 2; c.height = ry * 2;
+  const g = c.getContext("2d")!;
+  g.fillStyle = "#000";
+  for (let y = 0; y < ry * 2; y++) {
+    const dy = (y + 0.5 - ry) / ry;
+    const hw = Math.round(rx * Math.sqrt(Math.max(0, 1 - dy * dy)));
+    if (hw > 0) g.fillRect(rx - hw, y, hw * 2, 1);
+  }
+  shadowCache.set(d, c);
+  return c;
+}
+
 export function drawPlates(g: CanvasRenderingContext2D, plates: Plate[], size: number, hidden?: Set<string>) {
   const prev = g.imageSmoothingEnabled;
   g.imageSmoothingEnabled = false;
@@ -227,20 +336,24 @@ export function drawPlates(g: CanvasRenderingContext2D, plates: Plate[], size: n
     if (hidden?.has(pl.key) || pl.alpha <= 0) continue;
     const d = Math.max(6, Math.round(size * pl.s));
     const x = Math.round(pl.x), y = Math.round(pl.y);
+    // Hard-edged drop shadow on the belt, offset down-right like the tread's.
+    const sh = shadowSprite(d);
+    g.globalAlpha = pl.alpha * 0.34;
+    g.drawImage(sh, x + 2 - (sh.width >> 1), y + Math.round(d * 0.14) - (sh.height >> 1));
     g.globalAlpha = pl.alpha;
-    // Soft drop shadow on the belt (hard-edged, one ellipse).
-    g.fillStyle = "rgba(0,0,0,.28)";
-    g.beginPath(); g.ellipse(x + 1, y + Math.round(d * 0.12), Math.round(d * 0.5), Math.round(d * 0.2), 0, 0, Math.PI * 2); g.fill();
     const [spr, cy] = plateSprite(pl.rim, d);
     g.drawImage(spr, x - (spr.width >> 1), y - cy);
     const im = itemImg(pl.item);
     if (im.complete && im.naturalWidth) {
       // Fit inside a box (wide items as before; tall items no longer tower over the belt).
       const f = Math.min((d * 0.86) / im.naturalWidth, (d * 0.92) / im.naturalHeight);
-      const iw = Math.round(im.naturalWidth * f), ih = Math.round(im.naturalHeight * f);
+      const iw = Math.max(1, Math.round(im.naturalWidth * f)), ih = Math.max(1, Math.round(im.naturalHeight * f));
       // Living passengers hop 1 px as they travel (tied to belt position, so it loops with the belt).
       const hop = ITEMS[pl.item]?.animal && ((Math.floor((pl.x + pl.y * 0.5) / 18) & 3) === 0) ? 1 : 0;
-      g.drawImage(im, x - (iw >> 1), y - ih + Math.round(d * 0.1) - hop, iw, ih);
+      const spr2 = itemSprite(im, pl.item, iw, ih);
+      const top = y - ih + Math.round(d * 0.1) - hop;
+      if (spr2 === im) g.drawImage(im, x - (iw >> 1), top, iw, ih);
+      else g.drawImage(spr2, x - (iw >> 1) - 1, top - 1);
     }
   }
   g.globalAlpha = 1;

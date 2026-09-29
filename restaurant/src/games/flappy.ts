@@ -7,7 +7,7 @@ import { openArcade, ptext, shrink, type Arcade } from "./arcade";
 
 // Flappy Koi: Flappy Bird at the night pond. Flap a small koi between pier posts.
 
-declareEggs(["flappy-sushi", "flappy-20"]);
+declareEggs(["flappy-played", "flappy-5", "flappy-sushi", "flappy-20"]);
 
 const GRAV = 560, FLAP = -168, TERM = 280, SPEED = 62;
 const KX = 62, POST_W = 20, GAP = 54, SPACING = 96, WATER = 146;

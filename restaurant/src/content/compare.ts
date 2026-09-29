@@ -15,14 +15,14 @@ interface Side { label: string; video: string; poster?: string; stats: string[];
 interface Spec { task: string; title?: string; left: Side; right: Side }
 
 /** [x, y, width] of each hung window in stage px. */
-export const COMPARE_BOX = { left: [440, 150, 640], right: [1120, 150, 640] } as const;
+export const COMPARE_BOX = { left: [444, 136, 636], right: [1122, 136, 636] } as const;
 /** [x, y, width] of the enlarged window. */
 export const COMPARE_BIG = [400, 80, 1120] as const;
 
 export function mountCompare(el: HTMLElement, api: Api) {
   const base = import.meta.env.BASE_URL;
   const head = html(el, `
-    <section class="copy compare-head" style="left:${COMPARE_BOX.left[0]}px;top:72px;width:1320px">
+    <section class="copy compare-head" style="left:${COMPARE_BOX.left[0]}px;top:56px;width:1314px">
       <h2 class="px">Generic agent vs. Jiro</h2>
       <p class="ticket"></p>
     </section>`);

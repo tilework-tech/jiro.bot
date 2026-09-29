@@ -5,6 +5,8 @@
 }
 
 /* ── Order board on its ticket rail ── */
+/* #ui is pointer-events:none; the board opts back in so row hover/click work. */
+#ui .scene-ui[data-id="kitchen"].live .k-board { pointer-events: auto; }
 .scene-ui[data-id="kitchen"] .k-board {
   position: absolute; box-sizing: border-box; padding: 58px 36px 30px;
   background: rgba(16, 12, 10, .94); color: var(--cream);
@@ -34,11 +36,14 @@
 .scene-ui[data-id="kitchen"] .k-board thead th.lbl { width: auto; }
 .scene-ui[data-id="kitchen"] .k-board thead th.jiro { color: var(--green); font-size: 20px; }
 .scene-ui[data-id="kitchen"] .k-board tbody th {
-  font: 500 23px/1.25 var(--sans); color: #eadcc4; text-align: left; padding: 0 18px 0 4px;
+  font: 500 23px/1.25 var(--sans); color: #eadcc4; text-align: left; padding: 0 18px 0 14px; transition: box-shadow .2s;
 }
 .scene-ui[data-id="kitchen"] .k-board tbody tr { height: 70px; border-top: 2px dashed var(--k-line); cursor: default; }
 .scene-ui[data-id="kitchen"] .k-board tbody td { text-align: center; vertical-align: middle; }
-.scene-ui[data-id="kitchen"] .k-board tbody tr:hover { background: rgba(243, 230, 207, .05); }
+.scene-ui[data-id="kitchen"] .k-board tbody tr:nth-child(even) { background: rgba(243, 230, 207, .025); }
+.scene-ui[data-id="kitchen"] .k-board tbody tr { transition: background .2s; }
+.scene-ui[data-id="kitchen"] .k-board tbody tr:hover { background: rgba(217, 138, 74, .1); cursor: pointer; }
+.scene-ui[data-id="kitchen"] .k-board tbody tr:hover th { box-shadow: inset 4px 0 0 rgba(217, 138, 74, .8); }
 .scene-ui[data-id="kitchen"] .k-board tbody tr:hover th { color: #fff6e4; }
 
 /* The Jiro column: a green-edged ticket running the full height. */
@@ -53,7 +58,7 @@
 .scene-ui[data-id="kitchen"] .mk { display: inline-block; vertical-align: middle; width: 20px; height: 20px; border-radius: 50%; box-sizing: border-box; }
 .scene-ui[data-id="kitchen"] .mk.yes { background: var(--cream); }
 .scene-ui[data-id="kitchen"] .mk.part { border: 3px solid #cdbb9e; background: linear-gradient(90deg, #cdbb9e 50%, transparent 50%); }
-.scene-ui[data-id="kitchen"] .mk.no { width: 20px; height: 4px; border-radius: 0; background: rgba(243, 230, 207, .3); }
+.scene-ui[data-id="kitchen"] .mk.no { width: 20px; height: 4px; border-radius: 0; background: rgba(243, 230, 207, .34); }
 .scene-ui[data-id="kitchen"] td.jiro .mk.yes { background: var(--green); width: 24px; height: 24px; box-shadow: 0 0 14px rgba(111, 220, 140, .45); }
 .scene-ui[data-id="kitchen"] tbody tr:hover td.jiro .mk.yes { animation: k-ping .5s ease-out; }
 @keyframes k-ping { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }

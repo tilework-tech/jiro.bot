@@ -8,12 +8,22 @@
 /* Flappy Koi button sits on the grass bank under the copy. */
 .scene-ui[data-id="pond"] .game-start { left: 150px !important; top: 540px !important; font-size: 16px; padding: 12px 16px; }
 
-.pond-foot { position: absolute; left: 430px; top: 998px; width: 1330px; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 40px; row-gap: 8px; align-items: baseline; color: #bfae95; text-shadow: 0 2px 0 #000; }
-.pond-foot nav { display: flex; gap: 22px; font: 400 14px/1 var(--px); letter-spacing: .04em; }
+.pond-foot { position: absolute; left: 470px; top: 996px; width: 1300px; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 40px; row-gap: 10px; align-items: baseline; color: #bfae95; text-shadow: 0 2px 0 #000; }
+.pond-foot nav { display: flex; gap: 22px; align-items: baseline; font: 400 14px/1 var(--px); letter-spacing: .04em; }
 .pond-foot a { color: var(--cream); text-decoration: none; }
 .pond-foot nav a:hover, .pond-foot .by a:hover { color: var(--green); }
-.pond-foot .joke { margin: 0; font: italic 15px/1.3 var(--sans); color: #bfae95; text-align: right; }
-.pond-foot .by { grid-column: 1 / -1; margin: 0; font: 400 12px/1 var(--px); letter-spacing: .05em; color: #8d7f6c; }
+.pond-foot button { all: unset; cursor: pointer; }
+.pond-foot .again { font: 400 14px/1 var(--px); letter-spacing: .04em; color: var(--green); margin-left: 8px; }
+.pond-foot .again:hover { color: var(--cream); }
+.pond-foot .log { margin: 0; justify-self: end; font: 400 13px/1 var(--px); letter-spacing: .04em; color: #8d9bb8; white-space: nowrap; }
+.pond-foot .log b { font-weight: 400; color: var(--cream); }
+.pond-foot .log .sep { margin: 0 10px; color: #5d6780; }
+.pond-foot .log .dot { display: inline-block; width: 8px; height: 8px; margin-right: 10px; background: #e0773a; box-shadow: 0 0 0 2px #1b130d; animation: pond-dot 2s steps(2) infinite; }
+@keyframes pond-dot { 50% { background: #f4b183; } }
+.pond-foot .joke { font: italic 15px/1.3 var(--sans); color: #bfae95; }
+.pond-foot .joke:hover { color: var(--cream); }
+.pond-foot .joke { text-decoration: underline dotted rgba(191,174,149,.35); text-underline-offset: 4px; }
+.pond-foot .by { justify-self: end; margin: 0; font: 400 12px/1 var(--px); letter-spacing: .05em; color: #8d7f6c; }
 .pond-foot .by a { color: var(--green); }
 
 /* Idle egg: the koi's pun bubble. */

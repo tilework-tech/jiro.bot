@@ -14,7 +14,7 @@ import "./yard.css";
 // the hedge. Jiro washes plates under the one lantern, the cat sleeps, and the
 // towels (one per integration) hang on the line along the back wall.
 
-declareEggs(["snake-played", "snake-10", "yard-cat", "yard-plates", "yard-duck", "yard-laundry"]);
+declareEggs(["snake-played", "snake-10", "yard-cat", "yard-plates", "yard-duck", "yard-laundry", "yard-sign", "yard-moth"]);
 
 // ---- Laundry line: rope measured from the art (stage px). ----
 const ROPE: [number, number][] = [[1030, 62], [1300, 73], [1645, 66]];
@@ -129,59 +129,144 @@ const pulse = (now: number, period: number, at: number, w: number) => {
   return d < w ? 0.5 + 0.5 * Math.cos((d / w) * Math.PI) : 0;
 };
 
-// Art anchors (stage px, measured from art/yard.jpg).
-const LANTERN: [number, number] = [345, 545];
+// Art anchors (stage px, measured from public/art/yard.png, a 4-px pixel grid).
+const ART = "art/yard.png";
+const LANTERN: [number, number] = [350, 562];
+const LANTERN_BOX = { x: 308, y: 504, w: 84, h: 112 };
 const SPOUT: [number, number] = [372, 752];
 const TUB: [number, number] = [402, 800];
-const EYES: [number, number][] = [[505, 648], [555, 652]];
+// Jiro's eyes: x, y, w, h and the face colour around each.
+const EYES: [number, number, number, number, string][] = [[506, 646, 16, 20, "#eecfa1"], [554, 652, 20, 20, "#dbb37a"]];
 const HATCH = { x: 84, y: 0, w: 134, h: 88 };
+// The cat's back (the head stays put, only the body breathes).
+const CAT_BACK = { x: 556, y: 944, w: 88, h: 40 };
+const SIGN = { x: 1052, y: 872 };
+
+/** Smooth 0..1 breath with a soft hold at both ends (period divides LOOP). */
+const breath = (now: number, period: number, phase = 0) => {
+  const s = 0.5 - 0.5 * Math.cos((((now % LOOP) / period) * Math.PI * 2) + phase);
+  return s * s * (3 - 2 * s);
+};
 
 function fireflies(g: CanvasRenderingContext2D, now: number) {
-  // Out in the dark lawn and along the shrubs, well clear of the copy.
-  const F: [number, number, number][] = [[1720, 330, 0], [1810, 560, 2.1], [1640, 820, 4.2], [980, 930, 1.3], [1480, 980, 3.3], [700, 330, 5.1]];
+  // Out in the dark lawn, along the shrubs and the hedge; clear of the copy block.
+  const F: [number, number, number][] = [
+    [1720, 330, 0], [1810, 560, 2.1], [1640, 820, 4.2], [980, 930, 1.3], [1480, 980, 3.3],
+    [700, 330, 5.1], [300, 1010, 0.7], [880, 470, 2.8],
+  ];
   g.save();
   F.forEach(([x0, y0, s], i) => {
-    const x = x0 + 22 * wave(now, 24, s) + 8 * wave(now, 8, s * 2);
-    const y = y0 + 12 * wave(now, 12, s + 1);
-    const a = 0.25 + 0.55 * (0.5 + 0.5 * wave(now, [4, 6, 8][i % 3], s * 3));
-    g.globalAlpha = a * 0.35; g.fillStyle = "#ffe98a"; g.fillRect(Math.round(x) - 3, Math.round(y) - 3, 8, 8);
-    g.globalAlpha = a; g.fillStyle = "#fff6c2"; g.fillRect(Math.round(x) - 1, Math.round(y) - 1, 3, 3);
+    const x = Math.round((x0 + 22 * wave(now, 24, s) + 8 * wave(now, 8, s * 2)) / 2) * 2;
+    const y = Math.round((y0 + 14 * wave(now, 12, s + 1)) / 2) * 2;
+    const a = Math.pow(0.5 + 0.5 * wave(now, [4, 6, 8][i % 3], s * 3), 2);
+    if (a < 0.03) return;
+    // A round-ish pixel halo (plus + core), never a square box.
+    g.globalAlpha = a * 0.16; g.fillStyle = "#ffe98a";
+    g.fillRect(x - 6, y - 2, 16, 8); g.fillRect(x - 2, y - 6, 8, 16); g.fillRect(x - 4, y - 4, 12, 12);
+    g.globalAlpha = a * 0.3; g.fillRect(x - 2, y - 2, 8, 8);
+    g.globalAlpha = a; g.fillStyle = "#fff8cc"; g.fillRect(x - 1, y - 1, 4, 4);
   });
   g.restore();
 }
 
 function moth(g: CanvasRenderingContext2D, now: number) {
   const f = ((now % LOOP) / 8) * Math.PI * 2;
-  const x = LANTERN[0] + Math.cos(f) * 52 + Math.sin(f * 3) * 6;
-  const y = LANTERN[1] - 10 + Math.sin(f) * 30;
-  const flap = Math.floor(now * 8) % 2;
+  const x = Math.round(LANTERN[0] + Math.cos(f) * 60 + Math.sin(f * 3) * 6);
+  const y = Math.round(LANTERN[1] - 10 + Math.sin(f) * 34);
+  const flap = Math.floor((now % LOOP) * 6) % 2;
   g.fillStyle = "#e9dcc0";
-  g.fillRect(Math.round(x) - 3, Math.round(y) - (flap ? 2 : 0), 3, 2);
-  g.fillRect(Math.round(x) + 1, Math.round(y) - (flap ? 2 : 0), 3, 2);
-  g.fillStyle = "#6a5a44"; g.fillRect(Math.round(x), Math.round(y), 1, 3);
+  g.fillRect(x - 4, y - (flap ? 2 : 0), 4, 2);
+  g.fillRect(x + 2, y - (flap ? 2 : 0), 4, 2);
+  g.fillStyle = "#6a5a44"; g.fillRect(x, y, 2, 4);
+}
+
+/** Cut a sprite out of the art: keep pixels that pass `keep` (and, with grow>0, pixels within `grow` px of them). */
+const cuts = new Map<string, HTMLCanvasElement | null>();
+function cutout(art: HTMLImageElement, key: string, r: { x: number; y: number; w: number; h: number }, keep: (R: number, G: number, B: number) => boolean, grow = 0, soft?: (R: number, G: number, B: number) => boolean) {
+  if (cuts.has(key)) return cuts.get(key)!;
+  if (!art.complete || !art.naturalWidth) return null;
+  const c = document.createElement("canvas");
+  c.width = r.w; c.height = r.h;
+  const g = c.getContext("2d")!;
+  const k = art.naturalWidth / 1920;
+  g.imageSmoothingEnabled = false;
+  g.drawImage(art, r.x * k, r.y * k, r.w * k, r.h * k, 0, 0, r.w, r.h);
+  let d: ImageData;
+  try { d = g.getImageData(0, 0, r.w, r.h); } catch { cuts.set(key, null); return null; }
+  const on = new Uint8Array(r.w * r.h);
+  for (let i = 0; i < on.length; i++) on[i] = keep(d.data[i * 4], d.data[i * 4 + 1], d.data[i * 4 + 2]) ? 1 : 0;
+  const out = on.slice();
+  if (grow > 0 && soft) {
+    for (let y = 0; y < r.h; y++) for (let x = 0; x < r.w; x++) {
+      const i = y * r.w + x;
+      if (on[i] || !soft(d.data[i * 4], d.data[i * 4 + 1], d.data[i * 4 + 2])) continue;
+      search: for (let dy = -grow; dy <= grow; dy++) for (let dx = -grow; dx <= grow; dx++) {
+        const xx = x + dx, yy = y + dy;
+        if (xx >= 0 && yy >= 0 && xx < r.w && yy < r.h && on[yy * r.w + xx]) { out[i] = 1; break search; }
+      }
+    }
+  }
+  for (let i = 0; i < out.length; i++) if (!out[i]) d.data[i * 4 + 3] = 0;
+  g.putImageData(d, 0, 0);
+  cuts.set(key, c);
+  return c;
+}
+const lum = (R: number, G: number, B: number) => 0.3 * R + 0.59 * G + 0.11 * B;
+
+function lantern(g: CanvasRenderingContext2D, now: number, art: HTMLImageElement) {
+  // The paper glows a touch brighter and dimmer, like a candle breathing.
+  const b = 0.6 * breath(now, 6) + 0.4 * breath(now, 4, 1.3) * breath(now, 3, 0.4);
+  glow(g, LANTERN[0], LANTERN[1], 280, `rgba(255,190,110,${0.08 + 0.06 * b})`, now, 0.05, 6);
+  glow(g, LANTERN[0], LANTERN[1], 70, `rgba(255,214,150,${0.12 + 0.1 * b})`, now, 0.08, 6, 1);
+  // Brighten only the paper (bright pixels), never the grass around it.
+  const L = LANTERN_BOX;
+  const paper = cutout(art, "paper", L, (R, G, B) => lum(R, G, B) > 175);
+  if (!paper) return;
+  g.save();
+  g.globalCompositeOperation = "lighter";
+  g.globalAlpha = 0.08 + 0.14 * b;
+  g.drawImage(paper, L.x, L.y);
+  g.restore();
+}
+
+function catBreath(g: CanvasRenderingContext2D, now: number, art: HTMLImageElement) {
+  // The cat's back rises one pixel-cell every 4 s; cross-faded so it never pops.
+  const a = breath(now, 4);
+  if (a < 0.02) return;
+  const C = CAT_BACK;
+  // Orange fur, plus the dark outline pixels that hug it.
+  const fur = cutout(art, "cat", C, (R, G, B) => R > 120 && R > G + 25 && G > B + 10, 4, (R, G, B) => lum(R, G, B) < 70);
+  if (!fur) return;
+  g.save();
+  g.imageSmoothingEnabled = false;
+  g.globalAlpha = a;
+  g.drawImage(fur, C.x, C.y - 4);
+  g.restore();
 }
 
 function zzz(g: CanvasRenderingContext2D, now: number) {
+  // Three small z's drift up and to the left from the cat's nose, one every 2 s.
   g.save();
   g.fillStyle = "#cfe0ff";
   for (let k = 0; k < 3; k++) {
     const f = (((now % LOOP) / 6 + k / 3) % 1);
-    const x = Math.round(612 + f * 16 + Math.sin(f * 6) * 3), y = Math.round(958 - f * 64);
-    const s = 3 + (k % 2);
-    g.globalAlpha = 0.85 * Math.sin(f * Math.PI);
-    // pixel "z"
+    const s = f < 0.5 ? 2 : 4;
+    const x = Math.round((520 - f * 40 + Math.sin(f * 6.28) * 4) / 2) * 2;
+    const y = Math.round((958 - f * 70) / 2) * 2;
+    g.globalAlpha = 0.8 * Math.pow(Math.sin(f * Math.PI), 1.5);
     g.fillRect(x, y, 4 * s, s); g.fillRect(x + 2 * s, y + s, s, s); g.fillRect(x + s, y + 2 * s, s, s); g.fillRect(x, y + 3 * s, 4 * s, s);
   }
   g.restore();
 }
 
 function blink(g: CanvasRenderingContext2D, now: number) {
-  // Jiro's eyes glow softly and blink once per 12 s.
-  glow(g, 540, 660, 40, "rgba(90,220,255,.16)", now, 0.1, 4);
-  if (pulse(now, 12, 0.6, 0.012) > 0.1) {
-    for (const [x, y] of EYES) {
-      g.fillStyle = "#e9bb8c"; g.fillRect(x - 1, y - 1, 21, 23);
-      g.fillStyle = "#3d7bb0"; g.fillRect(x, y + 9, 19, 3);
+  // Jiro's eyes glow softly and blink twice per 24 s (a quick double blink at 18 s).
+  glow(g, 540, 660, 44, "rgba(90,220,255,.14)", now, 0.1, 4);
+  const shut = Math.max(pulse(now, 24, 0.25, 0.006), pulse(now, 24, 0.75, 0.006), pulse(now, 24, 0.765, 0.006));
+  if (shut > 0.1) {
+    for (const [x, y, w, h, skin] of EYES) {
+      g.fillStyle = skin; g.fillRect(x, y, w, h);
+      g.fillStyle = "#2a5a6a"; g.fillRect(x, y + h - 8, w, 4);
     }
   }
 }
@@ -190,6 +275,92 @@ function plateShine(g: CanvasRenderingContext2D, now: number) {
   // The plate in Jiro's hands catches the lantern light every 6 s.
   sparkle(g, 492, 786, pulse(now, 6, 0.35, 0.06), "#ffffff");
   sparkle(g, 772, 690, 0.8 * pulse(now, 8, 0.8, 0.05), "#ffffff");
+}
+
+function towelDrips(g: CanvasRenderingContext2D, now: number) {
+  // Freshly washed towels: a drop gathers at the hem, falls, and taps the grass.
+  const D: [number, number, number][] = [[2, 8, 0.1], [5, 12, 0.55], [8, 8, 0.6]];
+  g.save();
+  for (const [ti, period, at] of D) {
+    const t = towels[ti];
+    const x = Math.round((t.x + TW / 2 + 6) / 2) * 2;
+    const hem = t.y + TH + 4;
+    const f = (((now % LOOP) / period - at) % 1 + 1) % 1;
+    g.fillStyle = "#cfe8ff";
+    if (f < 0.6) {
+      // Swelling bead.
+      g.globalAlpha = 0.25 + 0.6 * (f / 0.6);
+      g.fillRect(x, hem, 2, f > 0.3 ? 4 : 2);
+    } else if (f < 0.72) {
+      const k = (f - 0.6) / 0.12;
+      g.globalAlpha = 0.85;
+      g.fillRect(x, Math.round(hem + k * k * 70), 2, 4);
+    } else if (f < 0.86) {
+      const k = (f - 0.72) / 0.14;
+      g.globalAlpha = 0.6 * (1 - k);
+      const y = hem + 74, r = Math.round(2 + k * 6);
+      g.fillRect(x - r, y, 2, 2); g.fillRect(x + r, y, 2, 2); g.fillRect(x - r + 2, y - 2, 2, 2); g.fillRect(x + r - 2, y - 2, 2, 2);
+    }
+  }
+  g.restore();
+}
+
+let signCanvas: HTMLCanvasElement | null = null;
+function paintSign(): HTMLCanvasElement {
+  // Painted at half resolution and drawn ×2 so it sits on the art's chunky grid.
+  const W = 56, H = 50;
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const g = c.getContext("2d")!;
+  const ink = "#1b130d";
+  // Stake.
+  g.fillStyle = ink; g.fillRect(25, 22, 6, 28);
+  g.fillStyle = "#6b4a2c"; g.fillRect(26, 22, 4, 27);
+  g.fillStyle = "#8a6038"; g.fillRect(26, 22, 2, 27);
+  // Board.
+  g.fillStyle = ink; g.fillRect(1, 1, W - 2, 26);
+  g.fillStyle = "#7a5233"; g.fillRect(2, 2, W - 4, 24);
+  g.fillStyle = "#8f6440"; g.fillRect(2, 2, W - 4, 3);
+  g.fillStyle = "#5f3f27"; g.fillRect(2, 13, W - 4, 1); g.fillRect(2, 24, W - 4, 2);
+  // Nails.
+  g.fillStyle = "#c9b48e"; g.fillRect(4, 4, 1, 1); g.fillRect(W - 5, 4, 1, 1);
+  // Painted letters.
+  g.fillStyle = "#efe3c8";
+  g.textAlign = "center"; g.textBaseline = "alphabetic";
+  g.font = "400 8px Silkscreen, monospace";
+  g.fillText("HOSE", W / 2, 12);
+  g.fillText("SNAKE", W / 2, 22);
+  // Hard-threshold the antialiasing so the letters stay crisp pixels.
+  const d = g.getImageData(0, 0, W, H);
+  for (let i = 0; i < d.data.length; i += 4) d.data[i + 3] = d.data[i + 3] > 110 ? 255 : 0;
+  g.putImageData(d, 0, 0);
+  return c;
+}
+function sign(g: CanvasRenderingContext2D, now: number) {
+  if (!signCanvas) signCanvas = paintSign();
+  g.save();
+  g.imageSmoothingEnabled = false;
+  // Soft shadow on the grass.
+  g.globalAlpha = 0.35; g.fillStyle = "#050807";
+  g.fillRect(SIGN.x + 36, SIGN.y + 96, 52, 8);
+  g.globalAlpha = 0.72; // it lives in the dark part of the lawn
+  g.drawImage(signCanvas, SIGN.x, SIGN.y, signCanvas.width * 2, signCanvas.height * 2);
+  g.restore();
+  // A firefly likes to rest on the sign now and then.
+  const a = pulse(now, 12, 0.4, 0.12);
+  if (a > 0.02) {
+    g.save();
+    g.globalAlpha = a * 0.3; g.fillStyle = "#ffe98a"; g.fillRect(SIGN.x + 94, SIGN.y - 4, 12, 4); g.fillRect(SIGN.x + 98, SIGN.y - 8, 4, 12);
+    g.globalAlpha = a; g.fillStyle = "#fff8cc"; g.fillRect(SIGN.x + 98, SIGN.y - 4, 4, 4);
+    g.restore();
+  }
+}
+
+let mothUntil = 0;
+function mothParty(g: CanvasRenderingContext2D, now: number) {
+  // Easter egg: click the lantern and a few extra moths join (for 12 s).
+  if (performance.now() > mothUntil) return;
+  for (let k = 1; k <= 3; k++) moth(g, now + k * 2.3);
 }
 
 let duckUntil = 0;
@@ -205,22 +376,31 @@ function duck(g: CanvasRenderingContext2D, now: number) {
 }
 
 function ripple(g: CanvasRenderingContext2D, now: number) {
-  // The tap trickles; a slow ring spreads in the tub (4 s cycle).
-  const f = ((now % LOOP) / 4) % 1;
+  // The tap lets go of one slow drop every 3 s; it lands and rings out in the tub.
+  const f = ((now % LOOP) / 3) % 1;
   g.save();
-  g.globalAlpha = 0.5; g.fillStyle = "#dff3ff";
-  const d = Math.floor(((now % LOOP) * 30) % 36);
-  g.fillRect(SPOUT[0] - 1, SPOUT[1] + d, 2, 4);
-  const r = f;
-  g.globalAlpha = 0.4 * (1 - r); g.strokeStyle = "#dff3ff"; g.lineWidth = 2;
-  g.beginPath(); g.ellipse(SPOUT[0] + 4, TUB[1] - 4, 5 + r * 28, 2 + r * 7, 0, 0, Math.PI * 2); g.stroke();
+  // Thin steady trickle in the spout's stream.
+  g.globalAlpha = 0.45; g.fillStyle = "#dff3ff";
+  const d = Math.floor(((now % LOOP) * 24) % 32);
+  g.fillRect(SPOUT[0] - 2, SPOUT[1] + d, 2, 4);
+  // The drop.
+  if (f < 0.25) {
+    const k = f / 0.25;
+    g.globalAlpha = 0.9; g.fillStyle = "#eef8ff";
+    g.fillRect(SPOUT[0] + 2, Math.round(SPOUT[1] + k * k * 40), 2, 4);
+  }
+  if (f >= 0.25) {
+    const r = (f - 0.25) / 0.75;
+    g.globalAlpha = 0.45 * (1 - r); g.strokeStyle = "#dff3ff"; g.lineWidth = 2;
+    g.beginPath(); g.ellipse(SPOUT[0] + 4, TUB[1] - 4, 5 + r * 28, 2 + r * 7, 0, 0, Math.PI * 2); g.stroke();
+  }
   g.restore();
 }
 
 export const yard: SceneDef = {
   id: "yard",
   room: "Back yard",
-  art: "art/yard.jpg",
+  art: ART,
   mood: "quiet",
   hold: 1.3,
   belt: {
@@ -229,26 +409,30 @@ export const yard: SceneDef = {
     pts: [[150, -10, 1], [150, 1090, 1]],
     width: 64, plate: 52, fadeIn: 0, fadeOut: 0,
   },
-  under(g, now) {
-    glow(g, LANTERN[0], LANTERN[1], 260, "rgba(255,190,110,.12)", now, 0.08, 6);
-    glow(g, LANTERN[0], LANTERN[1], 60, "rgba(255,210,140,.2)", now, 0.12, 6, 1);
+  under(g, now, api) {
+    const art = api.img(ART);
+    lantern(g, now, art);
     moth(g, now);
+    mothParty(g, now);
     fireflies(g, now);
-    steam(g, TUB[0] + 16, TUB[1] - 30, now, 0.4, 130, 6, 0.2);
-    steam(g, TUB[0] + 40, TUB[1] - 24, now, 3.1, 100, 4, 0.14);
+    steam(g, TUB[0] + 20, TUB[1] - 34, now, 0.4, 120, 4, 0.2);
+    steam(g, TUB[0] + 44, TUB[1] - 26, now, 3.1, 96, 4, 0.13);
     ripple(g, now);
     duck(g, now);
     drawTowels(g, now);
+    towelDrips(g, now);
+    sign(g, now);
     // Hose glint: two slow sparkles that take turns on the coil.
-    sparkle(g, 860, 975, 0.9 * pulse(now, 4, 0.2, 0.08));
-    sparkle(g, 930, 1030, 0.75 * pulse(now, 4, 0.7, 0.08));
+    sparkle(g, 860, 975, 0.8 * pulse(now, 4, 0.2, 0.08));
+    sparkle(g, 930, 1030, 0.65 * pulse(now, 4, 0.7, 0.08));
+    catBreath(g, now, art);
     zzz(g, now);
     blink(g, now);
     plateShine(g, now);
   },
   over(g, now, api) {
     // The hatch lintel sits in front of the belt so plates slide out from under it.
-    const art = api.img("art/yard.jpg");
+    const art = api.img(ART);
     if (art.complete && art.naturalWidth) {
       const k = art.naturalWidth / 1920;
       g.drawImage(art, HATCH.x * k, HATCH.y * k, HATCH.w * k, HATCH.h * k, HATCH.x, HATCH.y, HATCH.w, HATCH.h);
@@ -285,6 +469,23 @@ export const yard: SceneDef = {
       api.sfx("chime");
       api.toast(`Plates washed tonight: ${washed.toLocaleString()}. Broken: 0. Judged: all of them.`, 2800);
       api.egg("yard-plates", "Jiro has never chipped a plate. He has chipped a mug. We don't talk about the mug.");
+    });
+
+    // The sign next to the hose.
+    let reads = 0;
+    hotspot(el, SIGN.x, SIGN.y, 112, 100, "Hose Snake sign", () => {
+      reads++;
+      api.sfx("bonk");
+      const lines = ["HOSE SNAKE. Do not feed after midnight.", "It is always after midnight in the back yard.", "The sign was written by the snake."];
+      bubble(el, SIGN.x + 10, SIGN.y - 70, lines[(reads - 1) % lines.length], 2400, "small");
+      if (reads >= 3) api.egg("yard-sign", "You read the sign three times. The snake respects you now.");
+    });
+
+    // The lantern: a moth convention.
+    hotspot(el, LANTERN_BOX.x - 8, LANTERN_BOX.y - 20, LANTERN_BOX.w + 16, LANTERN_BOX.h + 28, "Paper lantern", () => {
+      mothUntil = performance.now() + 12000;
+      api.sfx("blip");
+      api.egg("yard-moth", "Moth stand-up: 'Blocked on lantern.' Same update since 2019.");
     });
 
     // The wash tub hides a duck.

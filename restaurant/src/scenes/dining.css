@@ -4,23 +4,30 @@
 .scene-ui[data-id="dining"] .compare-head h2.px { font-size: 40px; margin: 0; }
 .scene-ui[data-id="dining"] .compare-head .ticket { font: 17px var(--mono); color: var(--muted); margin: 0; text-shadow: 0 2px 0 rgba(0,0,0,.7); }
 
+/* Pixel frame: a lacquered wooden tray-frame on the 3 px grid (hard edges, hard drop
+   shadow, no blur), accent line inside: copper for the generic agent, green for Jiro. */
 .scene-ui[data-id="dining"] .cmp {
+  --acc: rgba(217,138,74,.55);
   cursor: zoom-in; z-index: 1; margin: 0;
   background: #0e0c0b;
-  border: 6px solid #3b2517;
-  outline: 2px solid #1a0f08;
-  box-shadow: inset 0 0 0 2px rgba(217,138,74,.45), 0 18px 40px rgba(0,0,0,.65), 0 0 0 1px rgba(0,0,0,.4);
+  border: 6px solid #4a2d1a;
+  box-shadow:
+    inset 0 0 0 3px #140b06, inset 0 0 0 6px var(--acc),
+    0 0 0 3px #140b06, 0 -3px 0 3px #6b4226,
+    12px 12px 0 3px rgba(4,3,2,.55);
   transition: left .35s ease, top .35s ease, width .35s ease, box-shadow .2s;
 }
-.scene-ui[data-id="dining"] .cmp.right { box-shadow: inset 0 0 0 2px rgba(111,220,140,.55), 0 18px 40px rgba(0,0,0,.65), 0 0 26px rgba(111,220,140,.14); }
-.scene-ui[data-id="dining"] .cmp:hover { box-shadow: inset 0 0 0 2px var(--copper), 0 22px 46px rgba(0,0,0,.7); }
-.scene-ui[data-id="dining"] .cmp.right:hover { box-shadow: inset 0 0 0 2px var(--green), 0 22px 46px rgba(0,0,0,.7), 0 0 30px rgba(111,220,140,.22); }
-.scene-ui[data-id="dining"] .cmp figcaption { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 8px 12px 7px; background: #1a1714; }
-.scene-ui[data-id="dining"] .cmp figcaption b { font: 400 17px var(--px); white-space: nowrap; }
+.scene-ui[data-id="dining"] .cmp.right { --acc: rgba(111,220,140,.6); }
+.scene-ui[data-id="dining"] .cmp:hover { --acc: var(--copper); }
+.scene-ui[data-id="dining"] .cmp.right:hover { --acc: var(--green); }
+.scene-ui[data-id="dining"] .cmp figcaption { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 10px 15px 8px; background: #1a1714; border-bottom: 3px solid #2b1f17; }
+.scene-ui[data-id="dining"] .cmp figcaption b { font: 400 18px var(--px); white-space: nowrap; color: #f0c08a; }
 .scene-ui[data-id="dining"] .cmp.right figcaption b { color: var(--green); }
-.scene-ui[data-id="dining"] .cmp .verdict { margin: 0; font: 13px/1.25 var(--mono); color: #e9b8a8; text-align: right; }
+.scene-ui[data-id="dining"] .cmp .verdict { margin: 0; font: 15px/1.25 var(--mono); color: #e9b8a8; text-align: right; }
 .scene-ui[data-id="dining"] .cmp.right .verdict { color: #cfe9d5; }
 .scene-ui[data-id="dining"] .cmp .screen { position: relative; }
+.scene-ui[data-id="dining"] .cmp .screen { margin: 0 6px 6px; }
+.scene-ui[data-id="dining"] .cmp figcaption { margin: 6px 6px 6px; }
 .scene-ui[data-id="dining"] .cmp video { display: block; width: 100%; aspect-ratio: 16/10; background: #0b0a09; }
 .scene-ui[data-id="dining"] .cmp .zoom { position: absolute; right: 8px; bottom: 8px; font: 12px var(--mono); color: var(--cream); background: rgba(11,10,9,.85); padding: 4px 8px; opacity: 0; transition: opacity .2s; pointer-events: none; }
 .scene-ui[data-id="dining"] .cmp:hover .zoom, .scene-ui[data-id="dining"] .cmp:focus-visible .zoom { opacity: 1; }
@@ -44,4 +51,4 @@
 .scene-ui[data-id="dining"] .bubble { font-size: 20px; max-width: 360px; }
 
 /* Soft dark pool behind the headline so it reads over the lanterns. */
-.scene-ui[data-id="dining"] .compare-head::before { content: ""; position: absolute; inset: -22px -60px -16px -60px; z-index: -1; background: radial-gradient(ellipse at 35% 50%, rgba(8,6,5,.7), rgba(8,6,5,.4) 55%, rgba(8,6,5,0) 78%); pointer-events: none; }
+.scene-ui[data-id="dining"] .compare-head::before { content: ""; position: absolute; inset: -26px -24px -20px -24px; z-index: -1; background: radial-gradient(closest-side, rgba(8,6,5,.72), rgba(8,6,5,.5) 70%, rgba(8,6,5,0)); pointer-events: none; }

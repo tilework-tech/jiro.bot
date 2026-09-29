@@ -7,7 +7,10 @@ import { drawPlates } from "../engine/belt";
 import { PRICING } from "../content/copy";
 import "./street.css";
 
-declareEggs(["street-bell", "street-neon", "street-jiro", "street-pm", "street-drain", "street-special", "street-chute", "street-cargo"]);
+declareEggs([
+  "street-bell", "street-neon", "street-jiro", "street-pm", "street-drain", "street-special", "street-chute", "street-cargo",
+  "street-puddle", "street-sushi", "street-bar",
+]);
 
 const TAU = Math.PI * 2;
 
@@ -55,12 +58,23 @@ const h = (i: number, k = 1) => {
 const fxAt = { lamp: -99, rOut: -99, blink: -99 };
 const clock = () => performance.now() / 1000;
 
-/** Tube flicker for the RAMEN "R": out during short sputters inside the 24 s loop. */
-function rIsOut(now: number): boolean {
-  if (now - fxAt.rOut >= 0 && now - fxAt.rOut < 1.6) return Math.floor((now - fxAt.rOut) * 9) % 3 !== 1;
+const smooth = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
+/** Soft sin² bump between a and b (0 outside), peaking at `peak`. */
+const bump = (t: number, a: number, b: number, peak: number) => (t <= a || t >= b ? 0 : peak * Math.sin((Math.PI * (t - a)) / (b - a)) ** 2);
+
+/**
+ * How dark the RAMEN "R" tube is (0 = lit, 1 = out). A tired tube, not a strobe: it sags once around 6 s,
+ * then around 17-19 s it browns out, tries once to come back, and warms up again. Every edge is eased.
+ * The egg: it goes out with a soft pop, sulks, makes one polite attempt, then relights.
+ */
+function rOff(now: number): number {
+  const e = now - fxAt.rOut;
+  if (e >= 0 && e < 2.6) {
+    const on = smooth(e / 0.18), off = 1 - smooth((e - 2.0) / 0.6);
+    return Math.min(on, off) * (1 - bump(e, 0.9, 1.35, 0.55));
+  }
   const t = lt(now);
-  const offs: [number, number][] = [[6.0, 6.07], [6.16, 6.21], [6.3, 6.36], [17.4, 17.46], [17.55, 18.3]];
-  return offs.some(([a, b]) => t >= a && t < b);
+  return Math.max(bump(t, 5.6, 6.8, 0.45), bump(t, 16.8, 18.0, 0.9), bump(t, 17.7, 19.4, 0.8));
 }
 
 /** Fine, calm rain: 1 px streaks; every drop's period divides LOOP so the field loops invisibly. */
@@ -145,6 +159,75 @@ function wheels(g: CanvasRenderingContext2D, now: number) {
   g.restore();
 }
 
+// ---- Puddle reflections: the wet street of the art itself, re-drawn in 3 px rows that sway 1-2 px sideways.
+// Only the reflective street (below the kerb, around the trike) is affected; its edges are feathered.
+const PUD_Y0 = 820;
+const PUD_RECTS: [number, number, number, number][] = [
+  // x0, y0, x1, y1 (stage px)
+  [-40, 842, 1046, 1120], [1648, 880, 1960, 1120], [1030, 1034, 1670, 1120],
+];
+let pudLayer: HTMLCanvasElement | null = null;
+const ripple = { x: 0, y: 0, at: -99 };
+
+/** Feathered membership of (x, y) in the reflective street, 0..1. */
+function pudMask(x: number, y: number): number {
+  let m = 0;
+  for (const [x0, y0, x1, y1] of PUD_RECTS) {
+    const f = Math.min(smooth((x - x0) / 36), smooth((x1 - x) / 36), smooth((y - y0) / 30), smooth((y1 - y) / 30));
+    if (f > m) m = f;
+  }
+  return m;
+}
+
+function buildPuddles(art: HTMLImageElement): HTMLCanvasElement {
+  const c = document.createElement("canvas");
+  c.width = 1920; c.height = 1080 - PUD_Y0;
+  const g = c.getContext("2d")!;
+  g.drawImage(art, 0, PUD_Y0, 1920, c.height, 0, 0, 1920, c.height);
+  const id = g.getImageData(0, 0, c.width, c.height);
+  for (let y = 0; y < c.height; y++) {
+    for (let x = 0; x < c.width; x++) id.data[(y * c.width + x) * 4 + 3] = Math.round(255 * pudMask(x, y + PUD_Y0));
+  }
+  g.putImageData(id, 0, 0);
+  return c;
+}
+
+function puddles(g: CanvasRenderingContext2D, now: number, api: { img(u: string): HTMLImageElement }) {
+  if (!pudLayer) {
+    const art = api.img("art/street.jpg");
+    if (!art.complete || !art.naturalWidth) return;
+    pudLayer = buildPuddles(art);
+  }
+  const t = lt(now);
+  const re = now - ripple.at;
+  for (let y = PUD_Y0; y < 1080; y += 3) {
+    // Two slow travelling swells (4 s and 6 s, both divide LOOP); stronger nearer the viewer.
+    const depth = 0.55 + 0.45 * ((y - PUD_Y0) / (1080 - PUD_Y0));
+    let dx = depth * (1.3 * Math.sin(TAU * (t / 4) + y * 0.11) + 0.8 * Math.sin(TAU * (t / 6) - y * 0.047));
+    // Egg: a click sends one ring of wobble out across the rows near the click.
+    if (re >= 0 && re < 2.2) {
+      const d = Math.abs(y - ripple.y) - re * 70;
+      dx += 4 * Math.exp(-(d * d) / 300) * (1 - re / 2.2) * Math.sin(y * 0.5);
+    }
+    const ix = Math.round(dx);
+    if (ix !== 0) g.drawImage(pudLayer, 0, y - PUD_Y0, 1920, 3, ix, y, 1920, 3);
+  }
+  if (re >= 0 && re < 2.2) {
+    const q = re / 2.2;
+    g.save();
+    g.lineWidth = 2;
+    for (let k = 0; k < 3; k++) {
+      const qq = q - k * 0.12;
+      if (qq <= 0) continue;
+      g.strokeStyle = `rgba(200,225,255,${(0.45 * (1 - qq)).toFixed(3)})`;
+      g.beginPath();
+      g.ellipse(ripple.x, ripple.y, 6 + qq * 110, 2 + qq * 32, 0, 0, TAU);
+      g.stroke();
+    }
+    g.restore();
+  }
+}
+
 export const street: SceneDef = {
   id: "street",
   room: "Delivery",
@@ -166,13 +249,17 @@ export const street: SceneDef = {
     glow(g, 965, 395, 90, "rgba(80,240,255,.10)", now, 0.1, 8, 5);
     glow(g, 1175, 385, 60, "rgba(255,170,80,.18)", now, 0.08, 12, 6);
 
-    // RAMEN "R" sputters (and blacks out for the egg).
-    if (rIsOut(now)) {
+    // RAMEN "R": a tired tube that sags and browns out gently (and goes out for the egg).
+    const rk = rOff(now);
+    if (rk > 0.01) {
       const r = api.img("art/street/r-off.png");
-      if (r.complete && r.naturalWidth) g.drawImage(r, 893, 78);
-    } else {
-      glow(g, 920, 122, 50, "rgba(255,95,200,.10)", now, 0.2, 3);
+      if (r.complete && r.naturalWidth) {
+        g.save(); g.globalAlpha = rk; g.drawImage(r, 893, 78); g.restore();
+      }
     }
+    if (rk < 0.99) glow(g, 920, 122, 50, `rgba(255,95,200,${(0.1 * (1 - rk)).toFixed(3)})`, now, 0.2, 3);
+
+    puddles(g, now, api);
 
     // Puddle neon reflections shimmer: thin horizontal pixel dashes sliding a few px.
     g.save();
@@ -253,6 +340,13 @@ export const street: SceneDef = {
       api.egg("street-chute", "The upstairs neighbour filed a complaint: sushi keeps passing his window. Status: working as intended.");
       return true;
     }
+    // Stepping in a puddle.
+    if (y > PUD_Y0 && pudMask(x, y) > 0.5) {
+      ripple.x = x; ripple.y = y; ripple.at = clock();
+      api.sfx("splash");
+      api.egg("street-puddle", "You stepped in a puddle. Your sock is now eventually consistent.");
+      return true;
+    }
     return false;
   },
   mount(el, api) {
@@ -274,6 +368,7 @@ export const street: SceneDef = {
         <div class="st-menu">
           <span class="st-tag">Tonight's menu</span>
           ${rows}
+          <i class="st-drip"></i><i class="st-drip"></i><i class="st-drip"></i>
         </div>
       </section>`);
 
@@ -308,6 +403,16 @@ export const street: SceneDef = {
       api.sfx("pop");
       bubble(el, 1330, 490, "Five plates, one address. The duck is a plus-one.");
       api.egg("street-cargo", "Jiro loads the trike straight off the belt. Zero handoffs, zero cold sushi.");
+    });
+    hotspot(el, 1305, 60, 80, 235, "Sushi sign", () => {
+      api.sfx("blip");
+      bubble(el, 1150, 300, "S-U-S-H-I. Vertical, so it still fits the mobile layout.");
+      api.egg("street-sushi", "The SUSHI sign is the only responsive element on this street.");
+    });
+    hotspot(el, 1590, 225, 115, 75, "Bar sign", () => {
+      api.sfx("chime");
+      bubble(el, 1440, 310, "Jiro doesn't drink. He does, occasionally, cache.");
+      api.egg("street-bar", "Last orders at the bar: one cold start, served warm.");
     });
     hotspot(el, 905, 495, 95, 150, "Sidewalk menu sign", () => {
       api.sfx("coin");

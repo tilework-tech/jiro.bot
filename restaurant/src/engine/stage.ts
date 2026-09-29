@@ -53,21 +53,22 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
     <header class="top">
       <a class="logo" href="#bar" data-goto="bar" aria-label="jiro.bot, back to the bar"><img src="${BASE}items/mini-jiro.png" alt="" width="34" height="32" /><b>jiro<span>.</span>bot</b></a>
       <a class="by" href="https://noriagentic.com" target="_blank" rel="noopener">by <em>Nori</em></a>
+      <div class="tools">
+        <div class="eggbox">
+          <button class="eggs" id="eggs" aria-expanded="false" aria-controls="eggpop" title="Easter eggs found"></button>
+          <div class="eggpop" id="eggpop" role="dialog" aria-label="Easter eggs found" hidden></div>
+        </div>
+        <button class="snd${soundOn ? "" : " off"}" id="sound" aria-pressed="${soundOn}" aria-label="Sound" title="Sound on/off">
+          <svg viewBox="0 0 16 16" width="16" height="16" shape-rendering="crispEdges" aria-hidden="true">
+            <path fill="currentColor" d="M1 6h3v4H1zM4 5h2v6H4zM6 3h2v10H6z"/>
+            <path class="w" fill="currentColor" d="M10 6h1v4h-1zM12 4h1v8h-1zM11 5h1v1h-1zM11 10h1v1h-1zM14 3h1v10h-1zM13 2h1v1h-1zM13 13h1v1h-1z"/>
+            <path class="x" fill="currentColor" d="M10 5h2v2h-2zM12 7h2v2h-2zM14 5h1v2h-1zM10 9h2v2h-2zM14 9h1v2h-1z"/>
+          </svg>
+        </button>
+      </div>
       <a class="cta" href="https://noriagentic.com/" target="_blank" rel="noopener">Reserve a seat</a>
-      <button class="snd${soundOn ? "" : " off"}" id="sound" aria-pressed="${soundOn}" aria-label="Sound" title="Sound on/off">
-        <svg viewBox="0 0 16 16" width="16" height="16" shape-rendering="crispEdges" aria-hidden="true">
-          <path fill="currentColor" d="M1 6h3v4H1zM4 5h2v6H4zM6 3h2v10H6z"/>
-          <path class="w" fill="currentColor" d="M10 6h1v4h-1zM12 4h1v8h-1zM11 5h1v1h-1zM11 10h1v1h-1zM14 3h1v10h-1zM13 2h1v1h-1zM13 13h1v1h-1z"/>
-          <path class="x" fill="currentColor" d="M10 5h2v2h-2zM12 7h2v2h-2zM14 5h1v2h-1zM10 9h2v2h-2zM14 9h1v2h-1z"/>
-        </svg>
-      </button>
     </header>
     <nav class="rail" aria-label="Rooms"><div class="track" aria-hidden="true"><b></b></div></nav>
-    <div class="eggbox">
-      <button class="eggs" id="eggs" aria-expanded="false" aria-controls="eggpop" title="Easter eggs found"></button>
-      <div class="eggpop" id="eggpop" role="dialog" aria-label="Easter eggs found" hidden></div>
-    </div>
-    <div class="scroll-hint" aria-hidden="true"><span>scroll to follow the belt</span><i></i></div>
     <div class="toast" id="toast" role="status" aria-live="polite"><img src="${BASE}items/mini-jiro.png" alt="" /><p></p></div>
   `;
   const canvas = root.querySelector<HTMLCanvasElement>("#stage")!;
@@ -91,11 +92,19 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
     const tf = `translate(${ox}px, ${oy}px) scale(${scale})`;
     canvas.style.transform = tf;
     ui.style.transform = tf;
+    // Belt lanes sit at stage x=150 and x=1770 (width 64). Chrome is laid out between/outside them.
+    const ds = document.documentElement.style;
+    ds.setProperty("--lane-l", `${Math.max(0, (150 + 32) * scale + ox).toFixed(1)}px`);
+    ds.setProperty("--lane-r", `${Math.max(0, vw - ((1770 - 32) * scale + ox)).toFixed(1)}px`);
+    ds.setProperty("--gut-r", `${Math.max(0, vw - ((1770 + 32) * scale + ox)).toFixed(1)}px`);
+    ds.setProperty("--stage-top", `${Math.max(0, oy).toFixed(1)}px`);
+    document.documentElement.classList.toggle("no-gutter", vw - ((1770 + 32) * scale + ox) < 12);
   }
   addEventListener("resize", fit);
   fit();
 
   let toastTimer = 0;
+  let booted = false; // deep links jump instantly instead of smooth-scrolling past every room
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const pops: Pop[] = [];
   let scenePlates: Plate[] = [];
@@ -132,7 +141,7 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
     },
     goto(id) {
       const s = segs.find((x) => x.id === id);
-      if (s) scrollTo({ top: (s.start + (s.kind === "scene" ? 0.02 : 0)) * innerHeight, behavior: reducedMotion ? "auto" : "smooth" });
+      if (s) scrollTo({ top: (s.start + (s.kind === "scene" ? 0.02 : 0)) * innerHeight, behavior: reducedMotion || !booted ? "auto" : "smooth" });
     },
     toStage(cx, cy) {
       return [(cx - ox) / scale, (cy - oy) / scale];
@@ -172,11 +181,14 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
     else seg.def.mount?.(el, api);
   }
 
-  // Side rail.
+  // Side rail: a thin progress track in the right gutter (outside the right belt lane).
+  // Each room pip sits where that room starts on the scroll, so the copper fill reaches a pip as you arrive.
   scenes.forEach((s) => {
+    const seg = segs.find((x) => x.id === s.id)!;
     const b = document.createElement("button");
     b.dataset.goto = s.id;
     b.setAttribute("aria-label", `Go to the ${s.room}`);
+    b.style.top = `${((seg.start / total) * 100).toFixed(2)}%`;
     b.innerHTML = `<i></i><span>${s.room}</span>`;
     rail.appendChild(b);
   });
@@ -252,10 +264,15 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
   });
 
   // Hash deep links (#kitchen).
-  if (location.hash.length > 1) setTimeout(() => api.goto(location.hash.slice(1)), 50);
+  // Read the hash now: the first tick rewrites it to the room in view (#bar) before this timeout fires.
+  const deep = location.hash.slice(1);
+  if (deep && segs.some((x) => x.id === deep)) setTimeout(() => { api.goto(deep); shown = scrollY / innerHeight; booted = true; }, 50);
+  else booted = true;
 
   let shown = scrollY / innerHeight;
-  let lastScene = "";
+  let lastScene = "", lastSegId = "", lastProg = "";
+  const layerEls = segs.map((x) => layers.get(x.id)!);
+  const layerO = segs.map(() => -1);
   const q = new URLSearchParams(location.search);
   const fixedT = q.get("t"); // ?t=seconds freezes time (for screenshots)
   const segQ = q.get("seg"); // ?seg=bar>office&tt=0.5 renders a segment at local progress tt (for screenshots)
@@ -264,7 +281,8 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
   (window as any).__segs = segs.map((s) => ({ id: s.id, start: s.start, len: s.len }));
 
   function tick() {
-    const now = fixedT ? parseFloat(fixedT) : performance.now() / 1000;
+    // Reduced motion: the canvas world holds still (belt, steam, blinks); scroll still moves between rooms.
+    const now = fixedT ? parseFloat(fixedT) : reducedMotion ? 3 : performance.now() / 1000;
     const target = fixedP ? parseFloat(fixedP) : scrollY / innerHeight;
     shown += (target - shown) * (reducedMotion || fixedP ? 1 : 0.18);
     if (Math.abs(target - shown) < 0.0005) shown = target;
@@ -301,21 +319,29 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
       g.restore();
     }
 
-    // DOM layer visibility.
+    // DOM layer visibility. Only touch the DOM when a value actually changes: style/class writes every
+    // frame on 15 layers cost style recalcs and wake the games' MutationObservers.
     const curScene = seg.kind === "scene" ? seg.id : "";
-    for (const s of segs) {
-      const el = layers.get(s.id)!;
+    for (let i = 0; i < segs.length; i++) {
+      const s = segs[i];
       let o = 0;
       if (s === seg) o = 1;
       if (seg.kind === "tr") {
         const t = (p - seg.start) / seg.len;
         const d = seg.def as TransitionDef;
+        // Most rooms have settled by ~80% of their transition; waiting until 88% left them sitting empty
+        // for a beat and then popping the copy in. Fade over 80-98% so it lands just before the hold.
         if (s.id === d.from) o = 1 - smooth(0, 0.12, t);
-        if (s.id === d.to) o = smooth(0.88, 1, t);
+        if (s.id === d.to) o = smooth(0.8, 0.98, t);
       }
+      o = Math.round(o * 100) / 100;
+      if (o === layerO[i]) continue;
+      const el = layerEls[i];
+      const was = layerO[i];
+      layerO[i] = o;
       el.style.opacity = String(o);
-      el.style.visibility = o > 0.01 ? "visible" : "hidden";
-      el.classList.toggle("live", o > 0.5);
+      if ((was > 0.01) !== (o > 0.01) || was < 0) el.style.visibility = o > 0.01 ? "visible" : "hidden";
+      if ((was > 0.5) !== (o > 0.5) || was < 0) el.classList.toggle("live", o > 0.5);
     }
     if (curScene !== lastScene) {
       if (lastScene) byId.get(lastScene)?.leave?.(api);
@@ -324,11 +350,15 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
       rail.querySelectorAll<HTMLElement>("button").forEach((b) => {
         const on = b.dataset.goto === curScene;
         b.classList.toggle("on", on);
+        b.classList.toggle("flash", on);
         if (on) b.setAttribute("aria-current", "location"); else b.removeAttribute("aria-current");
       });
       if (curScene && history.replaceState) history.replaceState(null, "", `#${curScene}`);
     }
-    document.body.dataset.segment = seg.id;
+    // Rail progress follows the eased view position (no scroll listener, no layout reads).
+    const prog = (p / total).toFixed(4);
+    if (prog !== lastProg) { lastProg = prog; rail.style.setProperty("--prog", prog); }
+    if (seg.id !== lastSegId) { document.body.dataset.segment = seg.id; lastSegId = seg.id; }
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);

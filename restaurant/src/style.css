@@ -27,54 +27,68 @@ a { color: inherit; }
 :root {
   --pxframe: 0 -3px 0 0 var(--edge, rgba(243,230,207,.28)), 0 3px 0 0 var(--edge, rgba(243,230,207,.28)), -3px 0 0 0 var(--edge, rgba(243,230,207,.28)), 3px 0 0 0 var(--edge, rgba(243,230,207,.28));
 }
-.top { position: fixed; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: 16px; padding: 14px 22px 22px; z-index: 5; pointer-events: none; background: linear-gradient(rgba(11,10,9,.62), rgba(11,10,9,.28) 55%, transparent); }
+/* Chrome never sits on a belt lane: stage.ts fit() publishes the lanes' viewport edges
+   (--lane-l = right edge of the left lane, --lane-r = distance from the viewport's right edge
+   to the right lane's left edge, --gut-r = gutter right of the right lane). The header lives
+   between the lanes; the room rail lives in the right gutter. */
+html { scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; }
+.top { position: fixed; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: 14px; padding: 14px calc(max(12px, var(--lane-r, 0px) + 20px)) 0 calc(max(12px, var(--lane-l, 0px) + 20px)); z-index: 5; pointer-events: none; }
 .top > * { pointer-events: auto; }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--cream); }
 .logo img { width: 34px; height: 32px; image-rendering: pixelated; filter: drop-shadow(0 2px 0 rgba(0,0,0,.6)); transition: transform .15s steps(2); }
 .logo:hover img { transform: rotate(-8deg) translateY(-2px); }
-.logo b { font: 400 22px/1 var(--px); letter-spacing: .02em; text-shadow: 0 2px 0 rgba(0,0,0,.7); }
+.logo b { font: 400 22px/1 var(--px); letter-spacing: .02em; text-shadow: 0 2px 0 rgba(0,0,0,.85), 0 0 10px rgba(0,0,0,.7); }
 .logo b span { color: var(--copper); }
-.by { font: 12px/1 var(--mono); color: var(--muted); text-decoration: none; padding: 5px 7px; margin-left: -4px; text-shadow: 0 1px 0 #000; }
+.by { font: 12px/1 var(--mono); color: var(--muted); text-decoration: none; padding: 5px 7px; margin-left: -4px; text-shadow: 0 1px 0 #000, 0 0 6px #000; }
 .by em { font-style: normal; color: var(--green); }
 .by:hover em { text-decoration: underline; text-underline-offset: 3px; }
-/* Sound toggle lives in the header markup but sits small above the egg counter, bottom-left. */
-.snd { position: fixed; left: 16px; bottom: 64px; z-index: 7; --edge: rgba(243,230,207,.24); width: 28px; height: 28px; display: grid; place-items: center; padding: 0; border: 0; cursor: pointer; background: rgba(20,16,13,.82); color: var(--cream); box-shadow: var(--pxframe), 0 5px 0 0 rgba(0,0,0,.55); }
+.top .tools { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+/* Sound toggle + egg counter: small pixel pills tucked in the header, left of the CTA. */
+.snd { --edge: rgba(243,230,207,.24); width: 30px; height: 30px; display: grid; place-items: center; padding: 0; border: 0; cursor: pointer; background: rgba(20,16,13,.82); color: var(--cream); box-shadow: var(--pxframe), 0 5px 0 0 rgba(0,0,0,.55); }
 .snd:hover { color: var(--green); --edge: var(--green); }
 .snd .x { display: none; }
 .snd.off { color: var(--muted); }
 .snd.off .w { display: none; }
 .snd.off .x { display: inline; }
-.top .cta { margin-left: auto; }
-.cta { font: 400 14px/1 var(--px); background: var(--copper); color: #1a0f07; padding: 11px 16px; text-decoration: none; box-shadow: 0 -3px 0 0 var(--copper), 0 3px 0 0 var(--copper), -3px 0 0 0 var(--copper), 3px 0 0 0 var(--copper), 0 6px 0 0 #7a4220; letter-spacing: .02em; }
+.cta { font: 400 14px/1 var(--px); background: var(--copper); color: #1a0f07; padding: 11px 16px; text-decoration: none; box-shadow: 0 -3px 0 0 var(--copper), 0 3px 0 0 var(--copper), -3px 0 0 0 var(--copper), 3px 0 0 0 var(--copper), 0 6px 0 0 #7a4220; letter-spacing: .02em; white-space: nowrap; }
 .cta:hover { filter: brightness(1.1); }
 .cta:active { transform: translateY(3px); box-shadow: 0 -3px 0 0 var(--copper), 0 3px 0 0 var(--copper), -3px 0 0 0 var(--copper), 3px 0 0 0 var(--copper); }
-.top a:focus-visible, .top button:focus-visible, .eggs:focus-visible, .eggpop button:focus-visible, .rail button:focus-visible i { outline: 2px dashed var(--green); outline-offset: 5px; }
+.top a:focus-visible, .top button:focus-visible, .eggpop button:focus-visible, .rail button:focus-visible i { outline: 2px dashed var(--green); outline-offset: 5px; }
 
-/* Rooms rail: slim track with square pips, labels on hover/focus and briefly for the active room. */
-.rail { position: fixed; right: 12px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; z-index: 5; padding: 4px 0; }
-.rail .track { position: absolute; left: 50%; top: 12px; bottom: 12px; width: 2px; margin-left: -1px; background: repeating-linear-gradient(rgba(243,230,207,.28) 0 2px, transparent 2px 4px); }
-.rail .track b { position: absolute; left: 0; top: 0; width: 2px; height: calc(var(--prog, 0) * 100%); background: var(--copper); }
-.rail button { position: relative; width: 22px; height: 18px; display: grid; place-items: center; background: none; border: 0; cursor: pointer; padding: 0; color: var(--muted); }
-.rail i { width: 8px; height: 8px; display: block; background: #1a1512; box-shadow: 0 0 0 2px rgba(243,230,207,.55), 0 2px 0 2px rgba(0,0,0,.5); transition: transform .12s steps(2); }
-.rail button:hover i { box-shadow: 0 0 0 2px var(--cream), 0 2px 0 2px rgba(0,0,0,.5); transform: scale(1.25); }
-.rail button.on i { background: var(--copper); box-shadow: 0 0 0 2px var(--copper), 0 0 0 4px rgba(11,10,9,.8); transform: scale(1.25); }
-.rail button span { position: absolute; right: 26px; top: 50%; transform: translate(4px, -50%); white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .15s, transform .15s; font: 400 11px/1 var(--px); letter-spacing: .04em; color: var(--cream); background: rgba(11,10,9,.88); padding: 5px 7px 4px; box-shadow: 0 2px 0 rgba(0,0,0,.6); }
+/* Rooms rail: a thin vertical progress track in the right gutter, beyond the right belt lane.
+   Pips sit where each room starts on the scroll; labels slide out to the left on hover/focus
+   and briefly for the room you just entered. */
+.rail { position: fixed; right: calc(var(--gut-r, 24px) / 2 - 5px); top: 50%; height: min(52vh, 420px); width: 10px; transform: translateY(-50%); z-index: 5; }
+.rail .track { position: absolute; left: 4px; top: 0; bottom: 0; width: 2px; background: repeating-linear-gradient(rgba(243,230,207,.3) 0 2px, transparent 2px 4px); }
+.rail .track b { position: absolute; left: 0; top: 0; width: 2px; height: calc(var(--prog, 0) * 100%); background: var(--copper); box-shadow: 0 0 6px rgba(217,138,74,.5); }
+.rail button { position: absolute; left: -6px; width: 22px; height: 18px; margin-top: -9px; display: grid; place-items: center; background: none; border: 0; cursor: pointer; padding: 0; color: var(--muted); }
+.rail i { width: 6px; height: 6px; display: block; background: #1a1512; box-shadow: 0 0 0 2px rgba(243,230,207,.5), 0 2px 0 2px rgba(0,0,0,.5); transition: transform .12s steps(2); }
+.rail button:hover i { box-shadow: 0 0 0 2px var(--cream), 0 2px 0 2px rgba(0,0,0,.5); transform: scale(1.3); }
+.rail button.on i { background: var(--copper); box-shadow: 0 0 0 2px var(--copper), 0 0 0 4px rgba(11,10,9,.8); transform: scale(1.3); }
+.rail button span { position: absolute; right: 24px; top: 50%; transform: translate(4px, -50%); white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .15s, transform .15s; font: 400 11px/1 var(--px); letter-spacing: .04em; color: var(--cream); background: rgba(11,10,9,.9); padding: 5px 7px 4px; box-shadow: 0 2px 0 rgba(0,0,0,.6); }
 .rail button:hover span, .rail button:focus-visible span { opacity: 1; transform: translate(0, -50%); }
-.rail button.on span { opacity: 1; transform: translate(0, -50%); color: var(--copper); animation: railflash 2.6s forwards; }
+.rail button.on span { color: var(--copper); }
+.rail button.on.flash span { opacity: 1; transform: translate(0, -50%); animation: railflash 2.2s forwards; }
 .rail:hover button.on span, .rail button.on:focus-visible span { animation: none; opacity: 1; }
-@keyframes railflash { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes railflash { 0%, 65% { opacity: 1; } 100% { opacity: 0; } }
+/* Screens so narrow that the right lane touches the edge: keep only the progress line. */
+.no-gutter .rail { right: 1px; width: 4px; }
+.no-gutter .rail .track { left: 1px; }
+.no-gutter .rail button { display: none; }
 
-/* Egg counter + ledger popover */
-.eggbox { position: fixed; left: 16px; bottom: 16px; z-index: 7; }
-.eggs { --edge: rgba(243,230,207,.28); display: flex; align-items: center; gap: 7px; font: 400 12px/1 var(--px); background: rgba(14,11,9,.88); color: var(--muted); border: 0; box-shadow: var(--pxframe), 0 5px 0 0 rgba(0,0,0,.55); padding: 8px 10px 7px; cursor: pointer; letter-spacing: .03em; }
+/* Egg counter (header) + ledger popover (drops down under it). */
+.eggbox { position: relative; }
+.eggs { --edge: rgba(243,230,207,.28); display: flex; align-items: center; gap: 7px; height: 30px; font: 400 12px/1 var(--px); background: rgba(14,11,9,.85); color: var(--muted); border: 0; box-shadow: var(--pxframe), 0 5px 0 0 rgba(0,0,0,.55); padding: 0 10px; cursor: pointer; letter-spacing: .03em; white-space: nowrap; }
 .eggs b { font-weight: 400; color: var(--cream); }
 .eggs:hover { --edge: var(--copper); color: var(--cream); }
 .eggs[aria-expanded="true"] { --edge: var(--copper); }
-.eggs .star { width: 10px; height: 10px; background: var(--copper); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); width: 12px; height: 12px; }
+.eggs:focus-visible { outline: 2px dashed var(--green); outline-offset: 5px; }
+.eggs .star { width: 12px; height: 12px; background: var(--copper); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); }
 .eggs.bump { animation: eggbump .5s steps(4); }
 .eggs.bump .star { background: var(--green); }
 @keyframes eggbump { 30% { transform: translateY(-5px); } 60% { transform: translateY(1px); } }
-.eggpop { --edge: var(--copper); position: absolute; left: 0; bottom: calc(100% + 16px); width: 340px; max-height: min(60vh, 440px); display: flex; flex-direction: column; background: #15110e; color: var(--cream); box-shadow: var(--pxframe), 0 7px 0 0 rgba(0,0,0,.6); }
+.eggpop { --edge: var(--copper); position: absolute; right: 0; top: calc(100% + 18px); width: 340px; max-height: min(60vh, 440px); display: flex; flex-direction: column; background: #15110e; color: var(--cream); box-shadow: var(--pxframe), 0 7px 0 0 rgba(0,0,0,.6); }
 .eggpop[hidden] { display: none; }
 .eggpop header { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 14px 8px; font: 400 14px/1 var(--px); color: var(--copper); border-bottom: 2px dashed rgba(243,230,207,.14); }
 .eggpop header span { color: var(--muted); font-size: 12px; }
@@ -86,21 +100,14 @@ a { color: inherit; }
 .eggpop .reset { background: none; border: 0; color: var(--muted); font: 11px var(--mono); text-decoration: underline; cursor: pointer; padding: 2px; }
 .eggpop .reset:hover { color: var(--copper); }
 
-/* Toast: Jiro speech bubble, bottom-left above the egg badge (clear of the belt focus and the hero copy). */
-.toast { --edge: #1b130d; position: fixed; left: 19px; bottom: 70px; transform: translateY(8px); opacity: 0; z-index: 6; display: flex; align-items: center; gap: 12px; background: var(--cream); color: #1b130d; box-shadow: var(--pxframe), 0 6px 0 0 rgba(0,0,0,.55); padding: 10px 16px 10px 12px; max-width: min(440px, 70vw); transition: opacity .2s, transform .2s steps(3); pointer-events: none; }
-.toast::after { content: ""; position: absolute; left: 18px; bottom: -12px; width: 12px; height: 12px; background: var(--cream); filter: drop-shadow(0 3px 0 rgba(0,0,0,.55)); clip-path: polygon(0 0, 100% 0, 100% 34%, 67% 34%, 67% 67%, 34% 67%, 34% 100%, 0 100%); }
+/* Toast: the header's mini Jiro talks. Speech bubble hangs under the logo, tail pointing up at him. */
+.toast { --edge: #1b130d; position: fixed; left: calc(max(12px, var(--lane-l, 0px) + 20px)); top: 72px; transform: translateY(-6px); opacity: 0; z-index: 6; display: flex; align-items: center; gap: 12px; background: var(--cream); color: #1b130d; box-shadow: var(--pxframe), 0 6px 0 0 rgba(0,0,0,.55); padding: 10px 16px 10px 12px; max-width: min(440px, calc(100vw - var(--lane-l, 0px) - var(--lane-r, 0px) - 40px)); transition: opacity .2s, transform .2s steps(3); pointer-events: none; }
+.toast::after { content: ""; position: absolute; left: 12px; top: -15px; width: 12px; height: 12px; background: var(--cream); clip-path: polygon(0 100%, 100% 100%, 100% 66%, 67% 66%, 67% 33%, 34% 33%, 34% 0, 0 0); }
 .toast img { width: 34px; height: 32px; image-rendering: pixelated; flex: none; align-self: flex-start; }
 .toast p { margin: 0; font: 500 15px/1.4 var(--sans); }
-.toast.egg::before { content: attr(data-egg) " found!"; position: absolute; left: 10px; top: -13px; font: 400 11px/1 var(--px); letter-spacing: .04em; color: #07130b; background: var(--green); padding: 5px 7px 4px; box-shadow: 0 2px 0 #2d7a45; font-family: var(--px), "Segoe UI Symbol", "Noto Sans Symbols 2", sans-serif; }
+.toast.egg { margin-top: 12px; }
+.toast.egg::before { content: attr(data-egg) " found!"; position: absolute; right: 10px; top: -13px; font: 400 11px/1 var(--px); letter-spacing: .04em; color: #07130b; background: var(--green); padding: 5px 7px 4px; box-shadow: 0 2px 0 #2d7a45; }
 .toast.on { opacity: 1; transform: none; }
-
-/* First-visit scroll nudge */
-.scroll-hint { position: fixed; left: 50%; bottom: 18px; transform: translate(-50%, 8px); z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 6px; font: 400 11px/1 var(--px); letter-spacing: .06em; color: var(--cream); text-shadow: 0 2px 0 #000; opacity: 0; transition: opacity .5s, transform .5s; pointer-events: none; }
-.scroll-hint span { background: rgba(11,10,9,.72); padding: 5px 8px 4px; }
-.scroll-hint i { width: 12px; height: 8px; background: var(--copper); clip-path: polygon(0 0, 17% 0, 17% 25%, 33% 25%, 33% 50%, 67% 50%, 67% 25%, 83% 25%, 83% 0, 100% 0, 100% 50%, 83% 50%, 83% 75%, 67% 75%, 67% 100%, 33% 100%, 33% 75%, 17% 75%, 17% 50%, 0 50%); animation: nudge 1.4s steps(3) infinite; }
-.scroll-hint.on { opacity: 1; transform: translate(-50%, 0); }
-.scroll-hint.gone { opacity: 0; }
-@keyframes nudge { 50% { transform: translateY(4px); } }
 
 /* Portrait phones: rotate hint (dismissable) */
 .rotate { display: none; }
@@ -114,23 +121,26 @@ a { color: inherit; }
   @keyframes tilt { 0%, 30% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }
 }
 /* Narrow screens: compact chrome so it doesn't eat the (small) stage. */
-@media (max-width: 700px) {
-  .top { padding: 8px 10px 12px; gap: 8px; }
+@media (max-width: 900px) {
+  .top { padding-top: 8px; gap: 8px; }
+  .top .tools { gap: 8px; }
+  .logo { gap: 6px; }
   .logo img { width: 24px; height: 23px; }
   .logo b { font-size: 15px; }
-  .by { font-size: 10px; }
-  .snd { width: 24px; height: 24px; left: 8px; bottom: 48px; }
-  .cta { font-size: 10px; padding: 7px 9px; }
-  .rail { right: 6px; gap: 2px; }
-  .rail button span { display: none; }
-  .eggbox { left: 8px; bottom: 8px; }
-  .eggs { font-size: 10px; padding: 6px 7px 5px; }
+  .by { display: none; }
+  .snd { width: 24px; height: 24px; }
+  .eggs { height: 24px; font-size: 10px; padding: 0 7px; gap: 5px; }
   .eggs .l { display: none; }
-  .eggpop { width: min(300px, calc(100vw - 24px)); }
-  .toast { bottom: 50px; left: 12px; }
+  .eggs .star { width: 10px; height: 10px; }
+  .cta { font-size: 10px; padding: 7px 9px; }
+  .eggpop { width: min(300px, calc(100vw - 24px)); right: -40px; }
+  .toast { top: 48px; }
   .toast p { font-size: 13px; }
   .toast img { width: 24px; height: 23px; }
-  .scroll-hint { display: none; }
+}
+@media (max-width: 420px), (max-height: 520px) {
+  /* Tiny stages (landscape phones): room headings start near the top edge, so the header shrinks to icons. */
+  .logo b, .by, .eggs .l { display: none; }
 }
 
 /* Copy blocks (stage px) */

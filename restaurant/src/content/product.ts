@@ -23,6 +23,10 @@ export const PRODUCT_BOX = { x: 312, y: 186, w: 1110 };
 /** Right-hand column: click hint, live caption, progress. */
 export const CAPTION_BOX = { x: 1462, y: 186, w: 290 };
 
+/** The screen currently shown (relative URL). Scenes paint it on the canvas too, so the monitor
+ * keeps showing the product while the DOM window is faded out during transitions. */
+export const productShot = { img: "ui/product/chat.png" };
+
 const TOUR = ["chat", "work", "code", "done", "pr", "new", "model", "menu", "release", "settings"];
 
 function leadFor(spec: Spec, from: string, visited: Set<string>, order: string[]): number {
@@ -90,6 +94,7 @@ export function mountProduct(el: HTMLElement, api: Api) {
       cur = id;
       back.disabled = history.length === 0;
       im.src = base + s.img;
+      productShot.img = s.img;
       cap.textContent = s.caption ?? "";
       cap.classList.remove("in"); void cap.offsetWidth; cap.classList.add("in");
       visited.add(id);
@@ -109,17 +114,27 @@ export function mountProduct(el: HTMLElement, api: Api) {
         const h = s.hotspots[lead];
         tag.textContent = h.label;
         tag.className = "tag on";
-        // Tag sits below the hotspot, or above it near the bottom; flips left near the right edge.
+        // Tag sits beside a small hotspot when there is room (so it never hides the text under
+        // it), otherwise below it, or above it near the bottom; flips left near the right edge.
+        const side = h.w < 0.3 && h.h < 0.06 && h.x + h.w < 0.62;
         const below = h.y + h.h < 0.86;
         const right = h.x > 0.6;
-        Object.assign(tag.style, {
-          left: right ? "auto" : `${h.x * 100}%`,
-          right: right ? `${(1 - h.x - h.w) * 100}%` : "auto",
-          top: below ? `calc(${(h.y + h.h) * 100}% + 10px)` : "auto",
-          bottom: below ? "auto" : `calc(${(1 - h.y) * 100}% + 10px)`,
-        });
-        tag.classList.toggle("up", !below);
-        tag.classList.toggle("right", right);
+        if (side) {
+          Object.assign(tag.style, {
+            left: `calc(${(h.x + h.w) * 100}% + 12px)`, right: "auto",
+            top: `calc(${(h.y + h.h / 2) * 100}% - 12px)`, bottom: "auto",
+          });
+        } else {
+          Object.assign(tag.style, {
+            left: right ? "auto" : `${h.x * 100}%`,
+            right: right ? `${(1 - h.x - h.w) * 100}%` : "auto",
+            top: below ? `calc(${(h.y + h.h) * 100}% + 10px)` : "auto",
+            bottom: below ? "auto" : `calc(${(1 - h.y) * 100}% + 10px)`,
+          });
+        }
+        tag.classList.toggle("side", side);
+        tag.classList.toggle("up", !side && !below);
+        tag.classList.toggle("right", !side && right);
       } else tag.className = "tag";
       dots.querySelectorAll<HTMLElement>("i").forEach((d) => {
         d.classList.toggle("seen", visited.has(d.dataset.id!));

@@ -1,23 +1,36 @@
-import type { SceneDef, BeltPath } from "../engine/types";
+import type { SceneDef, BeltPath, Api } from "../engine/types";
 import { LOOP } from "../engine/types";
 import { glow, shade, steam, motes, wave } from "../engine/fx";
 import { platesOn } from "../engine/belt";
 import { html, hotspot, bubble } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
-import { mountProduct } from "../content/product";
+import { mountProduct, productShot } from "../content/product";
 import "./office.css";
 
-// Back office: a dark, quiet plank room. The Nori product window is the hero in the middle.
+// Back office: a dark, quiet plank room. The Nori product window is the hero in the middle:
+// it sits in a big pixel-art monitor painted into the art (public/art/office/room.png, built by
+// .local/jiro/polish-office/build_room.py) and its light spills onto the wall and the floorboards
+// as a dithered 3 px light map, with dust drifting through it.
 // The belt is a "sushi lift": a glass-fronted copper paternoster shaft in the left wall that
 // comes down through the ceiling and drops through a hatch in the floor (a floor trench carries
 // it out toward the viewer). Every plate rides on its own little copper shelf.
 // Tiny Jiro types at a tiny desk in the bottom-right corner.
 // All ambient motion is a pure function of `now` with periods dividing LOOP.
 
-declareEggs(["office-jiro", "office-crt", "product-tour", "office-tea", "office-lamp", "office-cat", "office-lift", "office-binders"]);
+declareEggs(["office-jiro", "office-crt", "product-tour", "office-tea", "office-lamp", "office-cat", "office-lift", "office-binders", "office-mouse", "office-duck", "office-degauss"]);
 
-// Stage-space landmarks in public/art/office.jpg.
-const ART = "art/office.jpg";
+// Stage-space landmarks in public/art/office/room.png.
+const ART = "art/office/room.png";
+/** The product screen (DOM window) inside the painted monitor; must match PRODUCT_BOX. */
+const SCREEN = { x0: 312, y0: 186, x1: 1422, y1: 925 };
+const LED = { x: 1386, y: 931, w: 9, h: 6 };
+const FLOOR_Y = 929;
+/** Lucky cat's raised paw (waves) and the pixel of wall just right of it. */
+const PAW = { x: 1702, y: 476, w: 17, h: 15 };
+/** Mouse hole in the baseboard (dark interior). */
+const HOLE = { x: 1483, y: 904, w: 21, h: 21 };
+/** The J hook on the side wall; the rubber duck hangs from its bottom curve. */
+const HOOK: [number, number] = [1809, 611];
 const CRT = { x: 1670, y: 828, w: 29, h: 42 };
 const BULB: [number, number] = [1723, 841];
 const EYE = { x: 1741, y: 840, w: 5, h: 8 };
@@ -31,6 +44,178 @@ const SHAFT = { x: 66, w: 166, floor: 990 };
 const m = (a: number, b: number) => ((a % b) + b) % b;
 let lampOffUntil = 0;
 let crtMsgUntil = 0;
+let mouseUntil = 0;
+let duckOn = false;
+
+// ---- Monitor light: a precomputed, dithered 3 px light map (cool screen light on wall + floor).
+const PX = 3, LW = 640, LH = 360;
+let lightCv: HTMLCanvasElement | null = null;
+let lightF: Float32Array | null = null;
+const sstep = (a: number, b: number, v: number) => { const t = Math.max(0, Math.min(1, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
+function lightAt(x: number, y: number) {
+  const { x0, y0, x1, y1 } = SCREEN;
+  const B = 15;
+  if (x > x0 - B && x < x1 + B && y > y0 - B && y < y1 + 33) return 0;
+  if (y < FLOOR_Y) {
+    const dx = Math.max(x0 - x, 0, x - x1), dy = Math.max(y0 - y, 0, y - y1);
+    const d = Math.hypot(dx, dy) - B;
+    return 0.75 * Math.exp(-d / 60) + 0.3 * Math.exp(-d / 230);
+  }
+  // Floor: a pool that widens toward the viewer, plus the screen's soft reflection in the boards.
+  const u = (y - FLOOR_Y) / (1080 - FLOOR_Y);
+  const pad = 30 + u * 300;
+  const hx = sstep(x0 - pad - 90, x0 - pad + 60, x) * (1 - sstep(x1 + pad - 60, x1 + pad + 90, x));
+  const pool = hx * (1.4 * Math.pow(1 - u * 0.75, 1.4));
+  const rx = sstep(x0 + 10, x0 + 80, x) * (1 - sstep(x1 - 80, x1 - 10, x));
+  const refl = rx * 0.9 * Math.pow(1 - u, 2);
+  return pool + refl;
+}
+function buildLight() {
+  lightCv = document.createElement("canvas");
+  lightCv.width = LW; lightCv.height = LH;
+  const lg = lightCv.getContext("2d")!;
+  const im = lg.createImageData(LW, LH);
+  lightF = new Float32Array(LW * LH);
+  const bay = [[0, 2], [3, 1]];
+  const LEVELS = 7;
+  const col = [150, 218, 192];
+  for (let j = 0; j < LH; j++) for (let i = 0; i < LW; i++) {
+    const v = Math.min(1, lightAt(i * PX + 1, j * PX + 1));
+    lightF[j * LW + i] = v;
+    const q = Math.floor(v * LEVELS + bay[j % 2][i % 2] / 4) / LEVELS;
+    const k = (j * LW + i) * 4;
+    im.data[k] = col[0] * q; im.data[k + 1] = col[1] * q; im.data[k + 2] = col[2] * q; im.data[k + 3] = 255;
+  }
+  lg.putImageData(im, 0, 0);
+}
+const lightSample = (x: number, y: number) => {
+  if (!lightF) return 0;
+  const i = Math.floor(x / PX), j = Math.floor(y / PX);
+  return i < 0 || j < 0 || i >= LW || j >= LH ? 0 : lightF[j * LW + i];
+};
+
+/** Canvas copy of the product window (seen whenever the DOM window is faded, e.g. in transitions). */
+function screen(g: CanvasRenderingContext2D, api: Api) {
+  const { x0, y0, x1, y1 } = SCREEN;
+  const w = x1 - x0, bar = 45.5;
+  g.fillStyle = "#0f0d0c"; g.fillRect(x0, y0, w, y1 - y0);
+  g.fillStyle = "#1a1714"; g.fillRect(x0 + 2, y0 + 2, w - 4, bar - 2);
+  g.fillStyle = "#3a332d";
+  for (let i = 0; i < 3; i++) { g.beginPath(); g.arc(x0 + 20 + i * 19, y0 + 23, 6, 0, Math.PI * 2); g.fill(); }
+  g.fillStyle = "#0f0d0c"; g.fillRect(x0 + 120, y0 + 11, 200, 25);
+  const im = api.img(productShot.img);
+  if (im.complete && im.naturalWidth) g.drawImage(im, x0 + 2, y0 + bar, w - 4, y1 - y0 - bar - 2);
+}
+
+function screenLight(g: CanvasRenderingContext2D, now: number) {
+  if (!lightCv) buildLight();
+  // Slow breathing (8 s) plus a faint 3 s shimmer; both divide LOOP.
+  const k = 0.2 * (1 + 0.07 * wave(now, 8) + 0.025 * wave(now, 3, 1.3));
+  g.save();
+  g.globalCompositeOperation = "lighter";
+  g.globalAlpha = k;
+  g.imageSmoothingEnabled = false;
+  g.drawImage(lightCv!, 0, 0, LW * PX, LH * PX);
+  g.restore();
+  // Power LED on the monitor chin.
+  g.save();
+  g.globalAlpha = 0.55 + 0.45 * (0.5 + 0.5 * wave(now, 4));
+  g.fillStyle = "#6fdc8c";
+  g.fillRect(LED.x + 3, LED.y + 3, 3, 3);
+  g.globalAlpha *= 0.35;
+  g.fillRect(LED.x, LED.y, LED.w, LED.h);
+  g.restore();
+}
+
+/** Dust drifting down through the screen light: only visible where the light falls. */
+const DUST = Array.from({ length: 90 }, (_, i) => {
+  const h = (n: number) => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+  return { x: 240 + h(i * 1.3) * 1300, y: 110 + h(i * 2.9) * 980, span: 90 + h(i * 4.1) * 120, per: [24, 12, 24, 8][i % 4], ph: h(i * 5.7), sway: 6 + h(i * 7.3) * 12 };
+}).filter((d) => !(d.x > SCREEN.x0 - 20 && d.x < SCREEN.x1 + 20 && d.y > SCREEN.y0 && d.y + 60 < SCREEN.y1));
+function dust(g: CanvasRenderingContext2D, now: number) {
+  g.save();
+  g.fillStyle = "#d8fff0";
+  for (const d of DUST) {
+    const f = m(now / d.per + d.ph, 1);
+    const x = Math.round((d.x + d.sway * Math.sin(2 * Math.PI * (now / LOOP + d.ph))) / PX) * PX;
+    const y = Math.round((d.y + f * d.span - d.span / 2) / PX) * PX;
+    const a = Math.min(1, lightSample(x, y) * 2.2) * Math.sin(Math.PI * f);
+    if (a < 0.04) continue;
+    g.globalAlpha = 0.55 * a;
+    g.fillRect(x, y, PX, PX);
+  }
+  g.restore();
+}
+
+/** The lucky cat's paw beckons: the tip dips 3 px and back (a 4 s pendulum, eased by a wave). */
+function paw(g: CanvasRenderingContext2D, now: number, art: HTMLImageElement) {
+  if (!art.complete || !art.naturalWidth) return;
+  if (wave(now, 4) < 0.35) return;
+  const { x, y, w, h } = PAW;
+  g.fillStyle = "#21101a"; g.fillRect(x, y, w, 3);
+  g.drawImage(art, x, y, w, h, x, y + 3, w, h);
+}
+
+const MOUSE = [
+  "..gg.......",
+  ".gppg......",
+  ".gggggg....",
+  "ggeggggg...",
+  "gggggggggr.",
+  ".ggggggg..r",
+  "..w..w.....",
+];
+function mouse(g: CanvasRenderingContext2D, now: number, t: number) {
+  const { x, y, w, h } = HOLE;
+  if (t < mouseUntil) {
+    // Out of the hole, holding one grain of rice, bobbing.
+    const bob = m(t * 4, 1) < 0.5 ? 0 : 1;
+    const ox = x - 6, oy = y + h - MOUSE.length * PX + 3 - bob;
+    const pal: Record<string, string> = { g: "#8d8580", p: "#e7a0a8", e: "#0b0707", r: "#b37b74", w: "#e9dfd0" };
+    MOUSE.forEach((row, j) => [...row].forEach((c, i) => {
+      if (c === ".") return;
+      g.fillStyle = pal[c];
+      g.fillRect(ox + (MOUSE[0].length - 1 - i) * PX, oy + j * PX, PX, PX);
+    }));
+    g.fillStyle = "#f6f1e6"; g.fillRect(ox - 3, oy + 12, 6, 3);
+    return;
+  }
+  // Two eyes peek out for 6 of every 12 s (faded in and out), with a blink.
+  const p = m(now, 12);
+  const a = sstep(1, 2.5, p) * (1 - sstep(6, 7.5, p));
+  if (a < 0.02 || m(now, 3) < 0.15) return;
+  g.save();
+  g.globalAlpha = a * 0.9;
+  g.fillStyle = "#e8e2c8";
+  const ex = x + 6 + (p > 4 ? 3 : 0);
+  g.fillRect(ex, y + 12, 3, 3); g.fillRect(ex + 6, y + 12, 3, 3);
+  g.restore();
+}
+
+const DUCK = [
+  "..yy...",
+  ".yyey..",
+  ".yyyyoo",
+  "yyyyy..",
+  "yyyyyy.",
+  ".yyyy..",
+];
+function duck(g: CanvasRenderingContext2D, now: number) {
+  if (!duckOn) return;
+  const [hx, hy] = HOOK;
+  const sway = Math.round(wave(now, 6) * 1.4);
+  g.fillStyle = "#d9cdb4";
+  g.fillRect(hx, hy, 2, 9);
+  const ox = hx - 9 + sway, oy = hy + 9;
+  const pal: Record<string, string> = { y: "#f4c534", e: "#1b130d", o: "#e8743b" };
+  DUCK.forEach((row, j) => [...row].forEach((c, i) => {
+    if (c === ".") return;
+    g.fillStyle = pal[c];
+    g.fillRect(ox + i * PX, oy + j * PX, PX, PX);
+  }));
+  g.fillStyle = "rgba(0,0,0,.25)";
+  g.fillRect(ox + 3, oy + DUCK.length * PX, 15, 3);
+}
 
 function crt(g: CanvasRenderingContext2D, now: number, t: number) {
   const { x, y, w, h } = CRT;
@@ -137,6 +322,11 @@ export const office: SceneDef = {
   under(g, now, api) {
     const t = performance.now() / 1000;
     const lampOn = t >= lampOffUntil;
+    screen(g, api);
+    screenLight(g, now);
+    paw(g, now, api.img(ART));
+    mouse(g, now, t);
+    duck(g, now);
     if (lampOn) {
       glow(g, 1720, 900, 170, "rgba(255,180,100,.06)", now, 0.06, 12);
       glow(g, BULB[0], BULB[1], 30, "rgba(255,210,140,.26)", now, 0.1, 8, 1);
@@ -153,6 +343,7 @@ export const office: SceneDef = {
     steam(g, TEA[0], TEA[1], now, 0, 30, 2, 0.3);
     // Faint warm spill from the lift's hatch in the floor.
     glow(g, 150, 1000, 120, "rgba(255,170,90,.05)", now, 0.05, 8, 3);
+    dust(g, now);
   },
   over(g, now) {
     trays(g, office.belt, now);
@@ -202,6 +393,24 @@ export const office: SceneDef = {
     hotspot(el, 1500, 458, 150, 96, "Binders", () => {
       api.sfx("pop");
       api.egg("office-binders", "Binders: RUNBOOKS, MORE RUNBOOKS, and one labeled \"do not read before coffee\".");
+    });
+    hotspot(el, 1470, 890, 48, 42, "Mouse hole", () => {
+      api.sfx("blip");
+      mouseUntil = performance.now() / 1000 + 3;
+      bubble(el, 1330, 790, "Floor mouse here. Blocker: I only have one grain of rice.", 2800, "office-bubble");
+      api.egg("office-mouse", "A floor mouse from the crawlspace standup came up to report a blocker. It is the rice.");
+    });
+    hotspot(el, 1788, 570, 44, 80, "Hook", () => {
+      duckOn = !duckOn;
+      api.sfx("quack");
+      if (duckOn) bubble(el, 1560, 640, "Every bug gets explained to the duck first.", 2400, "office-bubble");
+      api.egg("office-duck", "Jiro's rubber duck lives on the hook. It has reviewed more PRs than most staff engineers.");
+    });
+    hotspot(el, 1370, 926, 40, 22, "Monitor power LED", () => {
+      api.sfx("boom");
+      const w = el.querySelector<HTMLElement>(".product-win");
+      if (w) { w.classList.remove("degauss"); void w.offsetWidth; w.classList.add("degauss"); }
+      api.egg("office-degauss", "Degaussed. Nobody under thirty knows what that button did, and it still feels great.");
     });
     hotspot(el, 40, 380, 220, 420, "Sushi lift", () => {
       api.sfx("whoosh");

@@ -63,7 +63,7 @@ function run(a: Arcade, api: Api) {
   };
   const ready = () => {
     reset(); state = "ready";
-    a.msg("HOSE SNAKE", "Arrows / WASD or swipe to steer. Eat sushi.", "Space or tap to start · Esc pause");
+    a.msg("HOSE SNAKE", "Arrows / WASD or swipe to steer. Eat sushi.", "Space or tap to start · Esc pause", "top");
   };
   const go = () => { if (state !== "play") { if (state === "over") reset(); state = "play"; a.msg(""); api.sfx("blip"); } };
   const turn = (d: P) => {
