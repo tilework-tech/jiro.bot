@@ -269,9 +269,13 @@ export const yardStreet: TransitionDef = {
     drawPlates(g, platesOn(B, now, "street"), B.plate ?? 52);
     hopper(g, now);
 
-    // Room frames (their own belt is identical to A / B where they overlap).
-    g.drawImage(frame(api, "yard", offY, now, fy, ["b"]), 0, 0);
-    g.drawImage(frame(api, "street", offS, now, fs, ["t", "l"]), OX, OY);
+    // Room frames (their own belt is identical to A / B where they overlap). A frame that lies
+    // entirely outside the (rotated, zoomed) view is neither rendered nor drawn.
+    const ex = (W / 2 * Math.abs(Math.cos(cam.rot)) + H / 2 * Math.abs(Math.sin(cam.rot))) / cam.z + 4;
+    const ey = (W / 2 * Math.abs(Math.sin(cam.rot)) + H / 2 * Math.abs(Math.cos(cam.rot))) / cam.z + 4;
+    const seen = (x: number, y: number) => x < cam.cx + ex && x + W > cam.cx - ex && y < cam.cy + ey && y + H > cam.cy - ey;
+    if (seen(0, 0)) g.drawImage(frame(api, "yard", offY, now, fy, ["b"]), 0, 0);
+    if (seen(OX, OY)) g.drawImage(frame(api, "street", offS, now, fs, ["t", "l"]), OX, OY);
     g.restore();
 
     rainNear(g, now, cam.cy, smooth(0.14, 0.42, t) * (1 - smooth(0.82, 1, t)));

@@ -74,21 +74,40 @@ const CONT: BeltPath = {
   phase: (dining.belt.phase ?? 0) - (D_U - 80),
 };
 
-/** Ground texture: the live dining frame, its edges continued east and south up to the wall. */
-export function paintGround(now: number, api: Api): HTMLCanvasElement {
+export type Rect = [number, number, number, number];
+let edge: HTMLCanvasElement | null = null;
+
+/** Ground texture: the live dining frame, its edges continued east and south up to the wall.
+ *  Only `rect` (the texels the camera samples this frame, see floorRect) is repainted. */
+export function paintGround(now: number, api: Api, rect: Rect = [0, 0, GW, GH]): HTMLCanvasElement {
   gt ??= canvas(GW, GH);
   const g = gt.getContext("2d")!;
   g.setTransform(1, 0, 0, 1, 0, 0);
   g.globalAlpha = 1;
   g.imageSmoothingEnabled = false;
+  g.save();
+  g.beginPath(); g.rect(...rect); g.clip();
   g.fillStyle = "#0b0908";
   g.fillRect(0, 0, GW, GH);
   g.save();
   g.beginPath(); g.rect(0, 0, STAGE_W, STAGE_H); g.clip();
   api.drawScene("dining", g, now);
   g.restore();
-  // East: stretch the edge columns, darkening outward.
-  g.drawImage(gt, STAGE_W - 3, 0, 2, STAGE_H, STAGE_W, 0, GW - STAGE_W, STAGE_H);
+  // East: stretch the edge columns, darkening outward. The two columns are rendered into a
+  // 2-px canvas (same pixels) instead of copying gt into itself, which snapshots all of gt.
+  if (rect[0] + rect[2] > STAGE_W) {
+    edge ??= canvas(2, STAGE_H);
+    const e = edge.getContext("2d")!;
+    e.setTransform(1, 0, 0, 1, 0, 0);
+    e.globalAlpha = 1;
+    e.imageSmoothingEnabled = false;
+    e.fillStyle = "#0b0908";
+    e.fillRect(0, 0, 2, STAGE_H);
+    e.translate(-(STAGE_W - 3), 0);
+    e.beginPath(); e.rect(0, 0, STAGE_W, STAGE_H); e.clip();
+    api.drawScene("dining", e, now);
+    g.drawImage(edge, 0, 0, 2, STAGE_H, STAGE_W, 0, GW - STAGE_W, STAGE_H);
+  }
   let grd = g.createLinearGradient(STAGE_W, 0, GW, 0);
   grd.addColorStop(0, "rgba(10,7,5,.15)"); grd.addColorStop(1, "rgba(10,7,5,.85)");
   g.fillStyle = grd; g.fillRect(STAGE_W, 0, GW - STAGE_W, STAGE_H);
@@ -109,7 +128,41 @@ export function paintGround(now: number, api: Api): HTMLCanvasElement {
   // Wall top seen from above, and dark beyond.
   g.fillStyle = "#1d120c"; g.fillRect(0, YW, GW, GH - YW);
   g.fillStyle = "#3a2417"; g.fillRect(0, YW, GW, 6);
+  g.restore();
   return gt;
+}
+
+/** Texel rect of the ground that drawFloor(…, y0, y1) samples for camera c (+2 px), or null. */
+export function floorRect(c: Cam, y0: number, y1: number): Rect | null {
+  const sn = Math.sin(c.phi), cs = Math.cos(c.phi);
+  const at = (Y: number) => {
+    const dy = Y - c.cy;
+    const depth = dy * cs + c.h * sn;
+    return { depth, sy: STAGE_H / 2 + c.sh + (F * (-dy * sn + c.h * cs)) / depth };
+  };
+  let rx0 = Infinity, rx1 = -Infinity, ry0 = Infinity, ry1 = -Infinity;
+  let r = Math.max(0, Math.floor(y0));
+  while (r < y1) {
+    const a = at(r);
+    if (a.depth < NEAR) { r += 1; continue; }
+    const per = Math.abs(at(r + 1).sy - a.sy) || 0.001;
+    const n = Math.max(1, Math.min(48, Math.floor(2 / per)));
+    const r1 = Math.min(y1, r + n);
+    const b = at(r1);
+    const top = Math.floor(Math.min(a.sy, b.sy)), bot = Math.ceil(Math.max(a.sy, b.sy));
+    if (bot >= -4 && top <= STAGE_H + 4) {
+      const k = F / ((a.depth + b.depth) / 2);
+      // Mirrored: texel column ix lands at screen x = STAGE_W / 2 + k * (c.cx - ix).
+      const i0 = c.cx - STAGE_W / 2 / k, i1 = c.cx + STAGE_W / 2 / k;
+      rx0 = Math.min(rx0, i0); rx1 = Math.max(rx1, i1);
+      ry0 = Math.min(ry0, r); ry1 = Math.max(ry1, r1);
+    }
+    r = r1;
+  }
+  if (ry0 === Infinity) return null;
+  const x0 = Math.max(0, Math.floor(rx0) - 2), x1 = Math.min(GW, Math.ceil(rx1) + 2);
+  const yy0 = Math.max(0, ry0 - 2), yy1 = Math.min(GH, ry1 + 2);
+  return x1 > x0 && yy1 > yy0 ? [x0, yy0, x1 - x0, yy1 - yy0] : null;
 }
 
 function wallTex(api: Api): HTMLCanvasElement | null {

@@ -2,7 +2,8 @@ import type { Api, Camera, TransitionDef } from "../engine/types";
 import { STAGE_W, STAGE_H } from "../engine/types";
 import { declareEggs } from "../engine/eggs";
 import { hotspot } from "../engine/dom";
-import { F, BX, YW, K_EYES, backdropXf, drawWorld, paintGround, type Cam } from "./dining-kitchen/world";
+import { F, BX, YW, K_EYES, backdropXf, drawWorld, paintGround, floorRect, type Cam, type Rect } from "./dining-kitchen/world";
+import { vignette } from "../engine/fx";
 import { layerCtx, dissolve } from "./dining-kitchen/dissolve";
 
 // dining -> kitchen: the SUSHI CAM. See dining-kitchen.md.
@@ -70,13 +71,30 @@ function mixCam(a: Camera, b: Camera, k: number): Camera {
 }
 const ID: Camera = { zoom: 1, cx: 960, cy: 540 };
 
-/** Swoop (phase A): the dining floor texture under a 2D camera (zoom + heading rotation). */
-function swoop(g: CanvasRenderingContext2D, t: number, tex: HTMLCanvasElement) {
+function swoopCam(t: number) {
   const kA = smooth(0, A1, t);
   const z = Math.pow(Z1, kA);
   const w = (1 - 1 / z) / (1 - 1 / Z1);
-  const cx = lerp(960, P1.x, w), cy = lerp(540, P1.y, w);
-  const rot = -Math.PI * smooth(0.06, A1, t);
+  return { z, cx: lerp(960, P1.x, w), cy: lerp(540, P1.y, w), rot: -Math.PI * smooth(0.06, A1, t) };
+}
+
+/** Ground texels visible during the swoop (the screen corners mapped back, +4 px). */
+function swoopRect(t: number): Rect {
+  const { z, cx, cy, rot } = swoopCam(t);
+  const cs = Math.cos(rot), sn = Math.sin(rot);
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  for (const [sx, sy] of [[0, 0], [STAGE_W, 0], [0, STAGE_H], [STAGE_W, STAGE_H]]) {
+    const dx = sx - STAGE_W / 2, dy = sy - STAGE_H / 2;
+    const wx = cx + (dx * cs + dy * sn) / z, wy = cy + (-dx * sn + dy * cs) / z;
+    x0 = Math.min(x0, wx); x1 = Math.max(x1, wx); y0 = Math.min(y0, wy); y1 = Math.max(y1, wy);
+  }
+  const X0 = Math.max(0, Math.floor(x0) - 4), Y0 = Math.max(0, Math.floor(y0) - 4);
+  return [X0, Y0, Math.max(1, Math.min(4000, Math.ceil(x1) + 4) - X0), Math.max(1, Math.min(4000, Math.ceil(y1) + 4) - Y0)];
+}
+
+/** Swoop (phase A): the dining floor texture under a 2D camera (zoom + heading rotation). */
+function swoop(g: CanvasRenderingContext2D, t: number, tex: HTMLCanvasElement) {
+  const { z, cx, cy, rot } = swoopCam(t);
   g.save();
   g.fillStyle = "#0b0908";
   g.fillRect(0, 0, STAGE_W, STAGE_H);
@@ -131,7 +149,9 @@ export const diningKitchen: TransitionDef = {
     }
     const c = camAt(Math.max(t, A1));
     // The dining floor is only needed until we are through the wall.
-    const tex = t < A1 || c.cy < YW ? paintGround(now, api) : null;
+    // Only the part of the ground the camera samples is repainted (and none once past the wall).
+    const rect = t < A1 ? swoopRect(t) : c.cy < YW ? floorRect(c, 0, YW) : null;
+    const tex = rect ? paintGround(now, api, rect) : null;
     if (t < A1) { swoop(g, t, tex!); return; }
     drawWorld(g, c, now, api, tex, "base", smooth(LOCK0, LOCK1, t));
     const kL = smooth(LOCK0, LOCK1, t);
@@ -143,13 +163,7 @@ export const diningKitchen: TransitionDef = {
     }
     // Lens vignette: we are a very small camera.
     const vk = smooth(A1, 0.34, t) * (1 - kOut);
-    if (vk > 0) {
-      const vg = g.createRadialGradient(960, 540, 480, 960, 540, 1150);
-      vg.addColorStop(0, "rgba(0,0,0,0)");
-      vg.addColorStop(1, `rgba(0,0,0,${(0.45 * vk).toFixed(3)})`);
-      g.fillStyle = vg;
-      g.fillRect(0, 0, STAGE_W, STAGE_H);
-    }
+    if (vk > 0) vignette(g, "0,0,0", +(0.45 * vk).toFixed(3), 960, 540, 480, 1150);
     if (kOut > 0) {
       // Top first: the kitchen settles in from the ceiling down while the belt drops away.
       const cam = mixCam(kitchenMatch(camAt(Math.min(t, OUT1))), ID, smooth(0.88, 1, t));

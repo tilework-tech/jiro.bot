@@ -349,7 +349,7 @@ export const streetPond: TransitionDef = {
       const mg = g.createRadialGradient(1260, 1700, 0, 1260, 1700, 700);
       mg.addColorStop(0, `rgba(120,150,220,${0.1 * calm})`);
       mg.addColorStop(1, "rgba(0,0,0,0)");
-      g.fillStyle = mg; g.fillRect(400, 1100, 1800, 1200);
+      g.fillStyle = mg; g.fillRect(560, 1100, 1400, 1200); // = the old 400..2200 box clipped to the gradient's radius (transparent beyond it)
       g.restore();
     }
     fireflies(g, now, calm);

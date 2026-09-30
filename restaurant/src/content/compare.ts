@@ -78,8 +78,21 @@ export function mountCompare(el: HTMLElement, api: Api) {
       box.querySelector(".stats")!.innerHTML = s.stats.map((t) => `<li>${t}</li>`).join("");
     });
   }).catch(() => {});
+  // Pause both recordings while the room's layer is hidden (the stage toggles its visibility),
+  // so they don't keep decoding in every other room; resume them as it fades back in.
+  let entered = false;
+  new MutationObserver(() => {
+    const hidden = el.style.visibility === "hidden";
+    el.querySelectorAll("video").forEach((v) => {
+      if (hidden) v.pause();
+      else if (entered && v.paused) v.play().catch(() => {});
+    });
+  }).observe(el, { attributes: true, attributeFilter: ["style"] });
   return {
-    enter() { el.querySelectorAll("video").forEach((v) => { v.currentTime = 0; v.play().catch(() => {}); }); },
+    enter() {
+      entered = true;
+      el.querySelectorAll("video").forEach((v) => { v.currentTime = 0; v.play().catch(() => {}); });
+    },
     leave() { hang(); },
   };
 }

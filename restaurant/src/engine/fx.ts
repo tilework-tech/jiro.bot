@@ -15,7 +15,10 @@ export function glow(g: CanvasRenderingContext2D, x: number, y: number, r: numbe
   g.save();
   g.globalCompositeOperation = "lighter";
   g.fillStyle = grd;
-  g.fillRect(x - r * 1.3, y - r * 1.3, r * 2.6, r * 2.6);
+  // Outside radius r*k the gradient is fully transparent, which adds nothing under "lighter",
+  // so fill only the gradient's own square (was a fixed r*1.3 box: ~45% more pixels, same result).
+  const R = Math.min(r * 1.3, r * k + 1);
+  g.fillRect(x - R, y - R, R * 2, R * 2);
   g.restore();
 }
 
@@ -101,5 +104,50 @@ export function hole(g: CanvasRenderingContext2D, x: number, y: number, w: numbe
   g.save();
   g.fillStyle = "#050404";
   g.fillRect(x, y, w, h);
+  g.restore();
+}
+
+// ---- Cached static layers. Big gradient fills cost several ms each in software rendering;
+// a layer painted once and blitted (with globalAlpha for a varying strength) is ~10x cheaper.
+const layers = new Map<string, HTMLCanvasElement>();
+/** A canvas of size w x h painted once by `paint` and cached under `key`. */
+export function cachedLayer(key: string, w: number, h: number, paint: (g: CanvasRenderingContext2D) => void): HTMLCanvasElement {
+  let c = layers.get(key);
+  if (!c) {
+    c = document.createElement("canvas");
+    c.width = w; c.height = h;
+    paint(c.getContext("2d")!);
+    layers.set(key, c);
+  }
+  return c;
+}
+
+/** Fill (x, y, w, h) with a vertical gradient from rgb at `alpha` (at y0) to transparent (at y1),
+ *  equivalent to a createLinearGradient(0, y0, 0, y1) fill with stops [rgba(rgb,alpha), rgba(rgb,0)].
+ *  The gradient is baked once per (rgb, y0, y1) as a 1-px column and stretched with nearest sampling. */
+export function vFade(g: CanvasRenderingContext2D, rgb: string, alpha: number, y0: number, y1: number, x: number, y: number, w: number, h: number) {
+  const top = Math.min(y, y + h), bot = Math.max(y, y + h);
+  const c = cachedLayer(`vfade:${rgb}:${y0}:${y1}:${top}:${bot}`, 1, Math.max(1, Math.round(bot - top)), (cg) => {
+    const gr = cg.createLinearGradient(0, y0 - top, 0, y1 - top);
+    gr.addColorStop(0, `rgba(${rgb},1)`); gr.addColorStop(1, `rgba(${rgb},0)`);
+    cg.fillStyle = gr; cg.fillRect(0, 0, 1, bot - top);
+  });
+  g.save();
+  g.globalAlpha *= alpha;
+  g.imageSmoothingEnabled = false;
+  g.drawImage(c, x, top, w, bot - top);
+  g.restore();
+}
+
+/** Full-stage radial vignette: transparent inside r0, rgba(rgb, alpha) at r1 and beyond. */
+export function vignette(g: CanvasRenderingContext2D, rgb: string, alpha: number, cx: number, cy: number, r0: number, r1: number, w = 1920, h = 1080) {
+  const c = cachedLayer(`vig:${rgb}:${cx}:${cy}:${r0}:${r1}:${w}:${h}`, w, h, (cg) => {
+    const gr = cg.createRadialGradient(cx, cy, r0, cx, cy, r1);
+    gr.addColorStop(0, `rgba(${rgb},0)`); gr.addColorStop(1, `rgba(${rgb},1)`);
+    cg.fillStyle = gr; cg.fillRect(0, 0, w, h);
+  });
+  g.save();
+  g.globalAlpha *= alpha;
+  g.drawImage(c, 0, 0);
   g.restore();
 }

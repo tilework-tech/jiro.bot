@@ -52,7 +52,15 @@ function camera(t: number) {
 
 let buf: HTMLCanvasElement | null = null;
 
+/** World y range [top, bottom] the camera can see (generous: covers the roll and the keystone). */
+function visibleY(t: number): [number, number] {
+  const { cy, z, rot } = camera(t);
+  const h = (STAGE_H / 2 + STAGE_W / 2 * Math.abs(Math.sin(rot))) / z + 80;
+  return [cy - h, cy + h];
+}
+
 function world(g: CanvasRenderingContext2D, t: number, now: number, api: Api) {
+  const [vy0, vy1] = visibleY(t);
   g.fillStyle = "#0b0908";
   g.fillRect(-200, -200, STAGE_W + 400, OY + STAGE_H + 400);
 
@@ -70,11 +78,14 @@ function world(g: CanvasRenderingContext2D, t: number, now: number, api: Api) {
   drip(g, now);
 
   // 2. Rooms. Storage first; the kitchen bottom meets the floor sleeve.
-  g.save();
-  g.translate(0, OY);
-  api.drawScene("storage", g, now);
-  g.restore();
-  api.drawScene("kitchen", g, now);
+  // (A room entirely outside the view is skipped: it would only be drawn off-canvas.)
+  if (vy1 > OY - 150 && vy0 < OY + STAGE_H + 150) {
+    g.save();
+    g.translate(0, OY);
+    api.drawScene("storage", g, now);
+    g.restore();
+  }
+  if (vy0 < STAGE_H + 150) api.drawScene("kitchen", g, now);
 
   // 3. Seam shading where each room meets the cutaway (0 at the ends, so frames stay exact).
   const k = smooth(0, 0.12, t) * smooth(0, 0.12, 1 - t);

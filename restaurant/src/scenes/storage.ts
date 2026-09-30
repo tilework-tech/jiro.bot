@@ -280,7 +280,7 @@ export const storage: SceneDef = {
       const b = html(el, `<button class="st-sushi${i % 2 ? " dbl" : ""}" style="--d:${(-i * 1.9).toFixed(2)}s;--bp:${[6, 8, 12, 8, 6][i]}s;--bd:${(-i * 2.3 - 1).toFixed(2)}s;--br:${(-i * 0.7).toFixed(2)}s;--bob:${[6, 8, 6, 8, 6][i]}s" aria-label="${f.q}">
         <span class="shadow"></span>
         <span class="sprite" style="background-image:url(${BASE}art/storage/faq-${f.item}.png)"></span>
-        <span class="think" aria-hidden="true"><span class="txt">${f.q}</span><i></i><i></i><i></i></span>
+        <span class="think" aria-hidden="true"><span class="bub"><span class="txt">${f.q}</span></span><i></i><i></i><i></i></span>
       </button>`) as HTMLButtonElement;
       place(b, x - w / 2, y - h, w, h);
       b.querySelector<HTMLElement>(".think")!.style.width = `${BW}px`;

@@ -90,10 +90,13 @@ function margins(g: CanvasRenderingContext2D, art: HTMLImageElement) {
 
 let catAwakeUntil = 0;
 
-function paintWallTex(now: number, api: Api) {
+/** Repaint the wall texture, rasterising only `clip` (the part the camera samples this frame). */
+function paintWallTex(now: number, api: Api, clip: [number, number, number, number]) {
   const g = wallTex!.getContext("2d")!;
   g.setTransform(1, 0, 0, 1, 0, 0);
   g.globalAlpha = 1;
+  g.save();
+  g.beginPath(); g.rect(...clip); g.clip();
   g.drawImage(wallBase!, 0, 0);
   g.save();
   g.translate(M, 0);
@@ -135,12 +138,15 @@ function paintWallTex(now: number, api: Api) {
   const grd = g.createLinearGradient(0, YF - 60, 0, YF);
   grd.addColorStop(0, "rgba(0,0,0,0)"); grd.addColorStop(1, "rgba(0,0,0,.55)");
   g.fillStyle = grd; g.fillRect(0, YF - 60, TW, 60);
+  g.restore();
 }
 
-function paintFloorTex(now: number, api: Api) {
+function paintFloorTex(now: number, api: Api, clip: [number, number, number, number]) {
   const g = floorTex!.getContext("2d")!;
   g.setTransform(1, 0, 0, 1, 0, 0);
   g.globalAlpha = 1;
+  g.save();
+  g.beginPath(); g.rect(...clip); g.clip();
   g.fillStyle = "#0b0908";
   g.fillRect(0, 0, TW, FLOOR_H);
   g.save();
@@ -158,6 +164,7 @@ function paintFloorTex(now: number, api: Api) {
   const grd = g.createLinearGradient(0, STAGE_H, 0, FLOOR_H);
   grd.addColorStop(0, "rgba(8,6,5,.2)"); grd.addColorStop(1, "rgba(8,6,5,.9)");
   g.fillStyle = grd; g.fillRect(0, STAGE_H, TW, M);
+  g.restore();
 }
 
 // ---- Camera. Target C (at screen centre, distance F along the view axis), pitch th.
@@ -192,7 +199,9 @@ function project(cam: Cam, X: number, Y: number, Z: number): [number, number] | 
  * Draw a plane as horizontal strips. rowWorld(r) gives [Y, Z] of texture row r.
  * Texture x → world X = x - M.
  */
-function drawPlane(g: CanvasRenderingContext2D, tex: HTMLCanvasElement, rows: number, cam: Cam, rowWorld: (r: number) => [number, number]) {
+type Strip = [number, number, number, number, number, number, number, number];
+function planeStrips(rows: number, cam: Cam, rowWorld: (r: number) => [number, number]): Strip[] {
+  const out: Strip[] = [];
   const at = (r: number) => {
     const [Y, Z] = rowWorld(r);
     const dy = Y - cam.py, dz = Z - cam.pz;
@@ -221,17 +230,38 @@ function drawPlane(g: CanvasRenderingContext2D, tex: HTMLCanvasElement, rows: nu
       // Snap to whole pixels; overlap by a fraction to hide seams (none when the mapping is 1:1).
       const top = Math.floor(y0 + 1e-3), bot = Math.ceil(y1 - 1e-3);
       const ext = Math.abs(bot - top - (r1 - r)) < 1e-3 && Math.abs(k - 1) < 1e-6 ? 0 : 0.6;
-      if (c1 > c0) g.drawImage(tex, c0, r, c1 - c0, r1 - r, x0 + c0 * k, top, (c1 - c0) * k, Math.max(1, bot - top) + ext);
+      if (c1 > c0) out.push([c0, r, c1 - c0, r1 - r, x0 + c0 * k, top, (c1 - c0) * k, Math.max(1, bot - top) + ext]);
     }
     r = r1;
   }
+  return out;
+}
+
+/** Texture rect [x, y, w, h] the strips sample (+2 px), or null when the plane is off screen. */
+function stripsRect(strips: Strip[]): [number, number, number, number] | null {
+  if (!strips.length) return null;
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const s of strips) {
+    x0 = Math.min(x0, s[0]); y0 = Math.min(y0, s[1]);
+    x1 = Math.max(x1, s[0] + s[2]); y1 = Math.max(y1, s[1] + s[3]);
+  }
+  return [Math.floor(x0) - 2, Math.floor(y0) - 2, Math.ceil(x1 - x0) + 4, Math.ceil(y1 - y0) + 4];
+}
+
+function drawPlane(g: CanvasRenderingContext2D, tex: HTMLCanvasElement, strips: Strip[]) {
+  for (const s of strips) g.drawImage(tex, ...s);
 }
 
 function render3d(g: CanvasRenderingContext2D, t: number, now: number, api: Api) {
   ensure();
-  paintWallTex(now, api);
-  paintFloorTex(now, api);
   const cam = camAt(t);
+  // Work out which texture rows/columns the camera samples, then paint only those (a plane
+  // that is entirely off screen is not painted at all).
+  const wallStrips = planeStrips(YF, cam, (r) => [r, 0]);
+  const floorStrips = planeStrips(FLOOR_H, cam, (r) => [YF, -r]);
+  const wr = stripsRect(wallStrips), fr = stripsRect(floorStrips);
+  if (wr) paintWallTex(now, api, wr);
+  if (fr) paintFloorTex(now, api, fr);
   // Project both planes into an axis-aligned frame (fast strips), then bank it in one blit.
   if (!frameTex) frameTex = canvas(STAGE_W, STAGE_H);
   const f = frameTex.getContext("2d")!;
@@ -239,8 +269,8 @@ function render3d(g: CanvasRenderingContext2D, t: number, now: number, api: Api)
   f.fillStyle = "#0b0908";
   f.fillRect(0, 0, STAGE_W, STAGE_H);
   f.imageSmoothingEnabled = false;
-  drawPlane(f, wallTex!, YF, cam, (r) => [r, 0]);
-  drawPlane(f, floorTex!, FLOOR_H, cam, (r) => [YF, -r]);
+  if (wr) drawPlane(f, wallTex!, wallStrips);
+  if (fr) drawPlane(f, floorTex!, floorStrips);
   g.fillStyle = "#0b0908";
   g.fillRect(0, 0, STAGE_W, STAGE_H);
   g.save();

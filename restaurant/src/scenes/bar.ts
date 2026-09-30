@@ -77,9 +77,18 @@ function getVideo(reduced: boolean): HTMLVideoElement | null {
       addEventListener("scroll", kick, { once: true, passive: true });
     }
     video = v;
+    if (!reduced) {
+      // Nothing shows the hero outside the bar (and its transition): pause the 1080p decode
+      // after a second without a draw, resume on the next draw (see drawPicture).
+      setInterval(() => {
+        if (!v.paused && performance.now() - lastDraw > 1000) { v.pause(); idlePaused = true; }
+      }, 500);
+    }
   }
   return video;
 }
+let lastDraw = 0;
+let idlePaused = false;
 
 const smooth = (t: number) => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); };
 
@@ -111,23 +120,49 @@ function getMask() {
   return (mask = c);
 }
 
+// The masked picture is re-composited only when the video presents a new frame (24 fps) or the
+// source switches (still -> video); every other draw in the same or later ticks reuses `buf`.
+let bufKey = "";
+let frameSeq = 0;
+let rvfc = false;
+let lastFrameAt = -1e9;
+function watchFrames(v: HTMLVideoElement) {
+  const r = (v as unknown as { requestVideoFrameCallback?: (cb: () => void) => number }).requestVideoFrameCallback;
+  if (!r || rvfc) return;
+  rvfc = true;
+  const onFrame = () => { frameSeq++; lastFrameAt = performance.now(); r.call(v, onFrame); };
+  r.call(v, onFrame);
+}
+
 /** Draw the masked picture (live video, or the still until it can play) into g. */
 function drawPicture(g: CanvasRenderingContext2D, api: Parameters<NonNullable<SceneDef["under"]>>[2]) {
   const v = getVideo(api.reducedMotion);
+  lastDraw = performance.now();
+  if (v && idlePaused) { idlePaused = false; v.play().catch(() => {}); }
   const still = api.img(STILL);
-  let src: CanvasImageSource | null = null, sy = 0, sh = 0;
-  if (v && v.readyState >= 2 && !api.reducedMotion) { src = v; sy = SRC.y; sh = SRC.h; }
-  else if (still.complete && still.naturalWidth) { src = still; sy = 0; sh = still.naturalHeight; }
+  let src: CanvasImageSource | null = null, sy = 0, sh = 0, sw = 1920, key = "";
+  if (v && v.readyState >= 2 && !api.reducedMotion) {
+    // hero.mp4 is pre-cropped and pre-scaled to the drawn size (1080x600), so decode stays cheap.
+    src = v; sy = 0; sh = VB.h; sw = VB.w;
+    watchFrames(v);
+    // Without (recent) requestVideoFrameCallback ticks, e.g. if a browser stops presenting the
+    // invisible <video>, fall back to the 24 fps frame index of currentTime.
+    const live = rvfc && (v.paused || performance.now() - lastFrameAt < 150);
+    key = live ? `v${frameSeq}` : `t${Math.floor(v.currentTime * 24)}`;
+  } else if (still.complete && still.naturalWidth) { src = still; sy = 0; sh = still.naturalHeight; sw = still.naturalWidth; key = "still"; }
   if (!src) return;
   if (!buf) { buf = document.createElement("canvas"); buf.width = VB.w; buf.height = VB.h; }
-  const b = buf.getContext("2d")!;
-  b.globalCompositeOperation = "copy";
-  b.imageSmoothingEnabled = true;
-  b.imageSmoothingQuality = "high";
-  b.drawImage(src, 0, sy, 1920, sh, 0, 0, VB.w, VB.h);
-  b.globalCompositeOperation = "destination-in";
-  b.drawImage(getMask(), 0, 0);
-  b.globalCompositeOperation = "source-over";
+  if (key !== bufKey) {
+    bufKey = key;
+    const b = buf.getContext("2d")!;
+    b.globalCompositeOperation = "copy";
+    b.imageSmoothingEnabled = true;
+    b.imageSmoothingQuality = "high";
+    b.drawImage(src, 0, sy, sw, sh, 0, 0, VB.w, VB.h);
+    b.globalCompositeOperation = "destination-in";
+    b.drawImage(getMask(), 0, 0);
+    b.globalCompositeOperation = "source-over";
+  }
   g.drawImage(buf, VB.x, VB.y);
 }
 
@@ -136,10 +171,17 @@ function side(y: number, off: number): [number, number] {
   return [xAt(y) + off * K, y];
 }
 
-/** The belt's trough continuing below the picture, over the dark page. */
-function drawTrough(g: CanvasRenderingContext2D, now: number) {
+/** The trough's soft page shadow, baked once: a per-frame blur filter is slow. (The bands stay
+ *  vector so they remain crisp under the transitions' camera zoom.) */
+const TR_BOX = { x: 480, y: 700, w: 940, h: 460 };
+let troughLayer: HTMLCanvasElement | null = null;
+function getTroughLayer() {
+  if (troughLayer) return troughLayer;
   const y0 = JOIN[1], y1 = 1130;
-  g.save();
+  const c = document.createElement("canvas");
+  c.width = TR_BOX.w; c.height = TR_BOX.h;
+  const g = c.getContext("2d")!;
+  g.translate(-TR_BOX.x, -TR_BOX.y);
   g.beginPath(); g.rect(0, y0, 1920, 1080 - y0 + 60); g.clip();
   // Soft shadow on the page below/right of the trough.
   g.fillStyle = "rgba(0,0,0,.5)";
@@ -149,6 +191,16 @@ function drawTrough(g: CanvasRenderingContext2D, now: number) {
   g.moveTo(s0[0] + 14, s0[1] + 30); g.lineTo(s1[0] + 14, s1[1] + 30); g.lineTo(s2[0] + 14, s2[1] + 30); g.lineTo(s3[0] + 14, s3[1] + 30);
   g.closePath(); g.fill();
   g.filter = "none";
+  return (troughLayer = c);
+}
+
+/** The belt's trough continuing below the picture, over the dark page. */
+function drawTrough(g: CanvasRenderingContext2D, now: number) {
+  const y0 = JOIN[1];
+  g.save();
+  g.beginPath(); g.rect(0, y0, 1920, 1080 - y0 + 60); g.clip();
+  g.drawImage(getTroughLayer(), TR_BOX.x, TR_BOX.y);
+  const y1 = 1130;
   for (const [a, b, col] of BANDS) {
     const p0 = side(y0 - 2, a), p1 = side(y1, a), p2 = side(y1, b), p3 = side(y0 - 2, b);
     g.fillStyle = col;

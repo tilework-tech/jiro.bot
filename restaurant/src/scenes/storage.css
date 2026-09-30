@@ -57,10 +57,17 @@
   --ol: var(--st-ink);
   position: absolute; left: 50%; bottom: calc(100% + 34px); margin-left: -110px; box-sizing: border-box;
   color: var(--st-ink); font: 600 16px/1.25 var(--sans); text-align: center; text-wrap: balance;
-  filter: drop-shadow(3px 0 0 var(--ol)) drop-shadow(-3px 0 0 var(--ol)) drop-shadow(0 3px 0 var(--ol)) drop-shadow(0 -3px 0 var(--ol)) drop-shadow(0 6px 0 rgba(0,0,0,.38));
   animation: st-bob var(--bob, 6s) ease-in-out infinite var(--d);
   transition: opacity .2s;
 }
+/* The outline filter sits on the static bubble and on each dot separately (not on the bobbing
+   .think around the animated dots), so no filter is re-run per frame; the dots never touch the
+   bubble's outline, so it looks exactly like the single filtered group. */
+.scene-ui[data-id="storage"] .st-sushi .think .bub,
+.scene-ui[data-id="storage"] .st-sushi .think i {
+  filter: drop-shadow(3px 0 0 var(--ol)) drop-shadow(-3px 0 0 var(--ol)) drop-shadow(0 3px 0 var(--ol)) drop-shadow(0 -3px 0 var(--ol)) drop-shadow(0 6px 0 rgba(0,0,0,.38));
+}
+.scene-ui[data-id="storage"] .st-sushi .think .bub { display: block; position: relative; }
 .scene-ui[data-id="storage"] .st-sushi .think .txt {
   display: block; padding: 10px 14px 11px; background: var(--st-paper); clip-path: polygon(0 10px, 5px 10px, 5px 5px, 10px 5px, 10px 0, calc(100% - 10px) 0, calc(100% - 10px) 5px, calc(100% - 5px) 5px, calc(100% - 5px) 10px, 100% 10px, 100% calc(100% - 10px), calc(100% - 5px) calc(100% - 10px), calc(100% - 5px) calc(100% - 5px), calc(100% - 10px) calc(100% - 5px), calc(100% - 10px) 100%, 10px 100%, 10px calc(100% - 5px), 5px calc(100% - 5px), 5px calc(100% - 10px), 0 calc(100% - 10px));
   box-shadow: inset 0 -4px 0 rgba(150,105,60,.16); transition: background .15s;
@@ -78,7 +85,7 @@
 .scene-ui[data-id="storage"] .st-sushi:hover .think .txt,
 .scene-ui[data-id="storage"] .st-sushi.hl .think .txt,
 .scene-ui[data-id="storage"] .st-sushi:focus-visible .think .txt { background: #fff6e4; }
-.scene-ui[data-id="storage"] .st-sushi.asked .think::before {
+.scene-ui[data-id="storage"] .st-sushi.asked .think .bub::before {
   content: "✓"; position: absolute; z-index: 1; right: -10px; top: -12px; width: 21px; height: 21px; display: grid; place-items: center;
   background: var(--green); color: #07130b; font: 700 13px/1 var(--sans);
 }

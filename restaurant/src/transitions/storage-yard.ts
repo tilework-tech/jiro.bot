@@ -1,6 +1,7 @@
 import { STAGE_W, STAGE_H, BELT_SPEED, PLATE_GAP, LOOP, type Api, type BeltPath, type TransitionDef } from "../engine/types";
 import { drawTread, drawPlates, pathLength, platesOn } from "../engine/belt";
 import { smooth } from "../engine/stage";
+import { vFade, vignette } from "../engine/fx";
 import { hotspot, bubble } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
 import { storage } from "../scenes/storage";
@@ -111,6 +112,37 @@ function toScreen(v: View, x: number, y: number): [number, number, number] {
   return [960 + dx * cs - dy * sn, 540 + dx * sn + dy * cs, k * v.z];
 }
 
+/** Source rows [top, bottom) of the layer at world y `oy` that drawPlane would actually draw, or null. */
+function visibleRows(v: View, oy: number): [number, number] | null {
+  const flat = (oy < HINGE ? v.a : 1 - v.a) < 1e-4;
+  const [, yc] = proj(v, v.x0, v.c);
+  const vis = 760 / v.z;
+  if (flat) {
+    const [, Y0] = proj(v, 0, oy);
+    if (Y0 > yc + vis || Y0 + H < yc - vis) return null;
+    // Clamp to the rows inside the view band (+ a strip of slack for rounding).
+    return [Math.max(0, Math.floor(yc - vis - Y0) - 8), Math.min(H, Math.ceil(yc + vis - Y0) + 8)];
+  }
+  const STEP = 6;
+  let lo = -1, hi = -1;
+  for (let sy = 0; sy < H; sy += STEP) {
+    const [, ya] = proj(v, 0, oy + sy);
+    const [, ye] = proj(v, 0, oy + sy + STEP);
+    const top = Math.min(ya, ye), bot = Math.max(ya, ye);
+    if (bot < yc - vis || top > yc + vis) continue;
+    if (lo < 0) lo = sy;
+    hi = sy + STEP;
+  }
+  return lo < 0 ? null : [lo, Math.min(H, hi)];
+}
+
+/** Union of two row ranges (either may be null). */
+function rowsUnion(a: [number, number] | null, b: [number, number] | null): [number, number] | null {
+  if (!a) return b;
+  if (!b) return a;
+  return [Math.min(a[0], b[0]), Math.max(a[1], b[1])];
+}
+
 /** Draw a 1920x1080 layer whose top sits at world y `oy`, warped by the fold (in camera space). */
 function drawPlane(g: CanvasRenderingContext2D, v: View, src: HTMLCanvasElement, oy: number) {
   const flat = (oy < HINGE ? v.a : 1 - v.a) < 1e-4;
@@ -161,8 +193,18 @@ function trestles(g: CanvasRenderingContext2D) {
 }
 
 /** Blend the storage frame's bottom row down into the crawlspace, and the yard's top row up. */
+const featherBufs = new Map<string, CanvasRenderingContext2D>();
 function seamFeather(g: CanvasRenderingContext2D, row: HTMLCanvasElement, srcY: number, y0: number, h: number, fromTop: boolean) {
-  const f = buf("feather");
+  // A small dedicated W x h buffer (was a full 1920x1080 clear per call); its gradient mask is built once.
+  const key = `${h}:${fromTop}`;
+  let f = featherBufs.get(key);
+  if (!f) {
+    const c = document.createElement("canvas"); c.width = W; c.height = h;
+    f = c.getContext("2d")!;
+    f.imageSmoothingEnabled = false;
+    featherBufs.set(key, f);
+  }
+  f.globalCompositeOperation = "copy";
   f.drawImage(row, 0, srcY, W, 1, 0, 0, W, h);
   f.globalCompositeOperation = "destination-in";
   const gr = f.createLinearGradient(0, 0, 0, h);
@@ -170,7 +212,8 @@ function seamFeather(g: CanvasRenderingContext2D, row: HTMLCanvasElement, srcY: 
   gr.addColorStop(1, fromTop ? "rgba(0,0,0,0)" : "rgba(0,0,0,1)");
   f.fillStyle = gr;
   f.fillRect(0, 0, W, h);
-  g.drawImage(f.canvas, 0, 0, W, h, 0, y0, W, h);
+  f.globalCompositeOperation = "source-over";
+  g.drawImage(f.canvas, 0, y0);
 }
 
 /** Rubber flap curtain where the belt ducks under the sill; strips kick as plates pass. */
@@ -248,12 +291,15 @@ function moonFx(g: CanvasRenderingContext2D) {
   g.restore();
 }
 
-function renderBand(api: Api, now: number, stBuf: HTMLCanvasElement, yardBuf: HTMLCanvasElement): HTMLCanvasElement | null {
+function renderBand(api: Api, now: number, stBuf: HTMLCanvasElement, yardBuf: HTMLCanvasElement, rows: [number, number]): HTMLCanvasElement | null {
   const im = api.img(ART);
   const g = buf("band");
+  // Only the rows drawPlane will show are rasterised; everything else is clipped away.
+  g.save();
+  g.beginPath(); g.rect(0, rows[0], W, rows[1] - rows[0]); g.clip();
   g.fillStyle = BASE; g.fillRect(0, 0, W, H);
   if (im.complete && im.naturalWidth) g.drawImage(im, 0, 0, W, H);
-  seamFeather(g, stBuf, H - 1, 0, 90, true);
+  if (rows[0] < 90) seamFeather(g, stBuf, H - 1, 0, 90, true);
   lightFx(g);
   trapdoorSlot(g);
   trestles(g);
@@ -268,26 +314,69 @@ function renderBand(api: Api, now: number, stBuf: HTMLCanvasElement, yardBuf: HT
   moonFx(g);
   flaps(g, now);
   motes(g, now);
-  seamFeather(g, yardBuf, 0, H - 70, 70, false);
+  if (rows[1] > H - 70) seamFeather(g, yardBuf, 0, H - 70, 70, false);
+  g.restore();
   return g.canvas;
 }
 
 // ---- render ----------------------------------------------------------------
+/** Padding around the unrotated camera buffer so the banked frame never shows its edge. */
+const CAM_PAD = 48;
+let camBuf: HTMLCanvasElement | null = null;
+function camCanvas() {
+  if (!camBuf) { camBuf = document.createElement("canvas"); camBuf.width = W + 2 * CAM_PAD; camBuf.height = H + 2 * CAM_PAD; }
+  return camBuf;
+}
 function render(g: CanvasRenderingContext2D, t: number, now: number, api: Api) {
   if (t <= 0) { api.drawScene("storage", g, now); return; }
   if (t >= 1) { api.drawScene("yard", g, now); return; }
   const v = view(t);
-  const st = buf("storage"); api.drawScene("storage", st, now);
-  const yd = buf("yard"); api.drawScene("yard", yd, now);
-  const bd = renderBand(api, now, st.canvas, yd.canvas);
+  // Render each layer only where it will be seen: rows outside the view are clipped off (and a
+  // layer that is not visible at all is skipped), except the single seam rows the band feathers.
+  const stRows = visibleRows(v, 0), bdRows = visibleRows(v, H), ydRows = visibleRows(v, 2 * H);
+  const needStRow = !!bdRows && bdRows[0] < 90, needYdRow = !!bdRows && bdRows[1] > H - 70;
+  const layer = (name: string, id: string, rows: [number, number] | null) => {
+    const b = buf(name);
+    if (rows) {
+      b.save();
+      b.beginPath(); b.rect(0, rows[0], W, rows[1] - rows[0]); b.clip();
+      api.drawScene(id, b, now);
+      b.restore();
+    }
+    return b;
+  };
+  const st = layer("storage", "storage", rowsUnion(stRows, needStRow ? [H - 1, H] : null));
+  const yd = layer("yard", "yard", rowsUnion(ydRows, needYdRow ? [0, 1] : null));
+  const bd = bdRows ? renderBand(api, now, st.canvas, yd.canvas, bdRows) : null;
 
   g.save();
   g.fillStyle = BASE; g.fillRect(0, 0, W, H);
   g.imageSmoothingEnabled = false;
-  applyCam(g, v);
-  drawPlane(g, v, yd.canvas, 2 * H);
-  if (bd) drawPlane(g, v, bd, H);
-  drawPlane(g, v, st.canvas, 0);
+  if (Math.abs(v.rot) < 1e-5) {
+    applyCam(g, v);
+    if (ydRows) drawPlane(g, v, yd.canvas, 2 * H);
+    if (bd) drawPlane(g, v, bd, H);
+    if (stRows) drawPlane(g, v, st.canvas, 0);
+  } else {
+    // ~500 strip draws under a rotation are very slow (each becomes an AA'd rotated quad), so the
+    // planes are composed unrotated (zoom only) into a padded buffer and the bank is applied once.
+    const c = camCanvas();
+    const cg = c.getContext("2d")!;
+    cg.setTransform(1, 0, 0, 1, 0, 0);
+    cg.globalAlpha = 1; cg.globalCompositeOperation = "source-over";
+    cg.imageSmoothingEnabled = false;
+    cg.fillStyle = BASE; cg.fillRect(0, 0, c.width, c.height);
+    const [, yc] = proj(v, v.x0, v.c);
+    cg.translate(CAM_PAD + 960, CAM_PAD + 540);
+    cg.scale(v.z, v.z);
+    cg.translate(-v.x0, -yc);
+    if (ydRows) drawPlane(cg, v, yd.canvas, 2 * H);
+    if (bd) drawPlane(cg, v, bd, H);
+    if (stRows) drawPlane(cg, v, st.canvas, 0);
+    g.translate(960, 540);
+    g.rotate(v.rot);
+    g.drawImage(c, -960 - CAM_PAD, -540 - CAM_PAD);
+  }
   g.restore();
 
   // Light: the storage bulb's warmth fades as the moonlight takes over.
@@ -295,24 +384,12 @@ function render(g: CanvasRenderingContext2D, t: number, now: number, api: Api) {
   const cool = 0.16 * smooth(0.45, 0.72, t) * (1 - smooth(0.72, 1, t));
   g.save();
   g.globalCompositeOperation = "lighter";
-  if (warm > 0.002) {
-    const gr = g.createLinearGradient(0, 0, 0, H);
-    gr.addColorStop(0, `rgba(255,170,90,${warm})`); gr.addColorStop(1, "rgba(255,170,90,0)");
-    g.fillStyle = gr; g.fillRect(0, 0, W, H);
-  }
-  if (cool > 0.002) {
-    const gr = g.createLinearGradient(0, H, 0, 0);
-    gr.addColorStop(0, `rgba(80,120,220,${cool})`); gr.addColorStop(1, "rgba(80,120,220,0)");
-    g.fillStyle = gr; g.fillRect(0, 0, W, H);
-  }
+  if (warm > 0.002) vFade(g, "255,170,90", warm, 0, H, 0, 0, W, H);
+  if (cool > 0.002) vFade(g, "80,120,220", cool, H, 0, 0, 0, W, H);
   g.restore();
   // Vignette over the fold, strongest mid-way (depth).
   const vig = 0.45 * Math.sin(Math.PI * t) ** 2;
-  if (vig > 0.003) {
-    const gr = g.createRadialGradient(960, 540, 420, 960, 540, 1150);
-    gr.addColorStop(0, "rgba(7,5,4,0)"); gr.addColorStop(1, `rgba(7,5,4,${vig})`);
-    g.fillStyle = gr; g.fillRect(0, 0, W, H);
-  }
+  if (vig > 0.003) vignette(g, "7,5,4", vig, 960, 540, 420, 1150);
 }
 
 let tanukiBtn: HTMLElement | null = null;
