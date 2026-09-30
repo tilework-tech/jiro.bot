@@ -7,6 +7,7 @@ import { Particles, blip } from "./fx";
 import { FAQ, initCompare, initDemo, initFaq, initPricing, initTable } from "./content";
 import { buildDoors, animateDoors } from "./doors";
 import { Koi } from "./ending";
+import { buildParallax } from "./parallax";
 
 // ------------------------------------------------------------------ renderer
 const canvas = document.getElementById("gl") as HTMLCanvasElement;
@@ -310,6 +311,18 @@ function cameraCrossing(ci: number, planePoint: THREE.Vector3, normal: THREE.Vec
   return null;
 }
 const doors = buildDoors(scene, path, path.cardSpan, lanternTex, doorViews, cameraCrossing);
+
+// parallax props along every scene-to-scene ride (never inside a landed view)
+buildParallax(scene,
+  STOPS.slice(0, -1).map((A, k) => ({ A, B: STOPS[k + 1], k })).filter(({ A, B }) => A.card !== B.card).map(({ A, B, k }) => {
+    const c = transitionCurves(k);
+    return { pos: c.pos, tgt: c.tgt, upA: views[A.card].card.up, upB: views[B.card].card.up };
+  }),
+  STOPS.map((st) => {
+    const p = stopPose(st), cam = new THREE.PerspectiveCamera(FOV * 1.08, camera.aspect, 0.05, 400);
+    cam.position.copy(p.pos); cam.up.copy(p.up); cam.lookAt(p.target); return cam;
+  }),
+  lanternTex);
 
 // ------------------------------------------------------------------ scroll: scrub between stops, snap to scenes
 let s = 0, target = 0, landed = 0, lastInput = 0;
