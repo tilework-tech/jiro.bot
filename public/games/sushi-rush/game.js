@@ -46,7 +46,7 @@ class Rush {
       hud: (m) => [['BOSS STAGE', '#f2cc60'], `Eat ${Math.max(0, BOSS_RICE - m.eaten)} more rice`, ['One hit and you are out', '#9c8a74']],
     });
     this.cur.score = this.carry;
-    // boss.js plays the full-screen boss intro on 'bossStart', so no engine banner here.
+    this.cur.say('BOSS: Giant Puffer!', 1.2);
     EVT.emit('bossStart', { rush: this, stage: this.stage });
   }
   update(dt) { this.cur.update(dt); }

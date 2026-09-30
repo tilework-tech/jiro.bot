@@ -2,86 +2,26 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sushi Rush · jiro.bot</title>
-    <meta name="description" content="Sushi Rush: a pixel-art sushi runner from Jiro's counter. Jump and duck through 12-second stages, then out-eat the Giant Puffer every third stage." />
-    <meta name="theme-color" content="#120d0a" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="jiro.bot" />
-    <meta property="og:title" content="Sushi Rush · jiro.bot" />
-    <meta property="og:description" content="Run the counter as a runaway nigiri. 12-second stages, a Giant Puffer boss every third stage. Eat 40 rice to win." />
-    <meta property="og:url" content="https://jiro.bot/games/sushi-rush/" />
-    <meta property="og:image" content="https://jiro.bot/sprites/jiro-frame0.png" />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Sushi Rush · jiro.bot" />
-    <meta name="twitter:description" content="A pixel-art sushi runner with a Giant Puffer boss. Play it at Jiro's counter." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..800&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400;600&family=Shippori+Mincho+B1:wght@600;800&family=Silkscreen&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./ui.css" />
+    <style>
+      body { margin: 0; background: #120d0a; color: #f4ead7; font-family: 'Instrument Sans', system-ui, sans-serif; }
+      main { max-width: 1320px; margin: 0 auto; padding: 24px; }
+      canvas#game { display: block; width: 100%; height: auto; image-rendering: pixelated; }
+    </style>
   </head>
   <body>
-    <div class="grain" aria-hidden="true"></div>
-
-    <header class="nav">
-      <a class="logo" href="/" aria-label="jiro.bot home">
-        <span class="logo-mark" aria-hidden="true"></span>
-        <span>jiro<span class="dot">.</span>bot</span>
-      </a>
-      <nav class="nav-links" aria-label="Games">
-        <a class="is-current" href="./" aria-current="page">Sushi Rush</a>
-        <a href="../daily-roll/">Daily Roll</a>
-      </nav>
-      <div class="nav-tools" id="toolbar"></div>
-    </header>
-
-    <main class="wrap">
-      <section class="intro">
-        <p class="kicker"><span class="jp-inline">遊技場</span> · Arcade corner</p>
-        <h1>Sushi <em>Rush</em></h1>
-        <p class="lede">A runaway nigiri, a very long counter, and a Giant Puffer that wants a word.</p>
-      </section>
-
-      <section class="cabinet" aria-label="Sushi Rush game">
-        <div class="noren" aria-hidden="true">
-          <span>寿</span><span>司</span><span class="noren-mark"></span><span>走</span><span>る</span>
-        </div>
-        <div class="frame">
-          <div class="lamp" aria-hidden="true"></div>
-          <div id="stage"><canvas id="game" aria-label="Sushi Rush game canvas. Press Space or tap to play."></canvas></div>
-        </div>
-        <div class="counter-ledge" aria-hidden="true"></div>
-        <p class="tap-hint">Tap the screen to jump · swipe in the boss stage</p>
-      </section>
-
-      <section id="below" class="below">
-        <article class="card">
-          <h2><span class="jp" aria-hidden="true">操</span> How to play</h2>
-          <ul class="keys">
-            <li><span class="k"><kbd>Space</kbd><kbd>↑</kbd></span> Jump</li>
-            <li><span class="k"><kbd>↓</kbd></span> Duck</li>
-            <li><span class="k"><kbd>Tap</kbd></span> Jump on mobile</li>
-            <li><span class="k"><kbd>←</kbd><kbd>↑</kbd><kbd>→</kbd><kbd>↓</kbd> / <kbd>WASD</kbd></span> Steer in the boss stage (swipe on mobile)</li>
-            <li><span class="k"><kbd>Esc</kbd></span> Pause</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h2><span class="jp" aria-hidden="true">掟</span> House rules</h2>
-          <ol class="rules">
-            <li>Every stage lasts <strong>12 seconds</strong>. Survive it and the next one gets faster.</li>
-            <li>Every <strong>3rd stage</strong> is a boss: the <strong class="puffer">Giant Puffer</strong>. One hit and you are out.</li>
-            <li>Eat <strong>40 rice</strong> in the boss maze to win it and bank <strong>+500</strong>.</li>
-          </ol>
-        </article>
-      </section>
-
-      <footer class="foot">
-        <a href="/">← Back to Jiro's counter</a>
-        <a href="../daily-roll/">Try Daily Roll →</a>
-      </footer>
+    <main>
+      <h1>Sushi Rush</h1>
+      <div id="toolbar"></div>
+      <div id="stage"><canvas id="game"></canvas></div>
+      <div id="below"></div>
     </main>
-
     <script src="../shared/maps.js"></script>
     <script src="../shared/engine.js"></script>
     <script src="../shared/shell.js"></script>
