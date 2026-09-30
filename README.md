@@ -1,38 +1,26 @@
-# jiro.bot
+# Demo2: Jiro's Restaurant
 
-Landing page for Jiro, your AI Staff Engineer. A sushi bar you can play with: a
-conveyor belt runs down the page, every piece of sushi can be picked up with
-chopsticks, and there are 35 hidden surprises to find.
+This branch freezes review item 1 from Martin's September 30 Jiro.bot review. It is the eight-room pixel-art restaurant tour from `restaurant-belt`, original source commit `ae63ce88e83b7f1df1475c4010b219f26f0e7746` and PR #6. The site, source art, final served assets, recreation tools, exact feedback, visual reference frames, and an asset checksum manifest live under `restaurant/`.
+
+Demo1 is a different 3D scroll-flow site. Review item 2 was checked against Demo1 and skipped because all 64 website files match byte for byte. Review item 4 is preserved separately as Demo4. Demo3 is intentionally unused.
+
+## Run this snapshot
 
 ```bash
-npm install
-npm run dev      # vite on :5173
-npm run build    # static build in dist/
+cd restaurant
+npm ci
+npm run build
+npm run dev
 ```
 
-## Layout
+Node 22 is recommended. The development server listens on port 3000. The app is a Vite and TypeScript canvas site, with no WebGL requirement.
 
-- `src/main.ts`: page wiring (belt path, feeding, discovery toasts, DOM effects)
-- `src/world.ts`: physics, belt, chopstick cursor, rendering
-- `src/tricks.ts`: the surprise engine
-- `src/sushi.ts`: procedural sushi art
-- `src/jiroSprite.ts`: Jiro's sushi-making animation plus live eyes/mouth
-- `src/chars.ts`: the diner and "you" pixel characters
-- `src/audio.ts`: synthesized sound effects
+## Reconstruction map
 
-## Jiro's animation
+- `restaurant/docs/RECREATE.md`: snapshot identity, run and verification steps, known limits.
+- `restaurant/docs/00-history.md` through `06-art-and-tooling.md`: detailed scene, belt, transition, moodboard, art, feedback, and tool documentation already developed for PR #6.
+- `restaurant/docs/ASSETS.md`: size and SHA-256 of every binary asset and saved reference frame.
+- `restaurant/reference/`: browser captures of every scene and each transition midpoint at 1600 by 900, with capture settings in `capture.json`.
+- `restaurant/tools/`: original art and QA scripts, plus `asset_manifest.py` to verify the saved binaries.
 
-`src/assets/jiro-make.png` is a 20-frame sprite sheet (timings and the serve
-frame are in `jiro-make.json`). Every frame was drawn by Gemini
-(`gemini-3-pro-image`) from the original pixel art, then fitted back onto the
-art's 179px grid:
-
-- `art/gen.mjs`: ask Gemini to redraw a frame from reference images
-- `art/fit.mjs` + `art/fit.js`: align a generated frame to the grid and snap it
-  to the reference's colours
-- `art/sequence.json`: the chosen frames and their timings
-- `art/compose.mjs`: build the sheet; static areas are locked to frame 0 and
-  anything not connected to Jiro's arms is reverted
-
-The art scripts drive the Nori session browser over CDP (`playwright-core`).
-`public/sprites/jiro-making-sushi.gif` is the loop as a GIF.
+The saved files, rather than regenerated images or videos, are the exact version Martin selected. Do not substitute assets from another Jiro demo.
