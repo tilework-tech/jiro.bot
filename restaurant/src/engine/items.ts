@@ -60,32 +60,41 @@ export const ITEMS: Record<string, ItemDef> = {
 
 const ALL = Object.keys(ITEMS);
 
-function hash(n: number, key: string): number {
+/** Deterministic 32-bit hash of an integer and a salt string. */
+export function hash(n: number, key: string): number {
   let h = 2166136261 ^ n;
   for (let i = 0; i < key.length; i++) h = Math.imul(h ^ key.charCodeAt(i), 16777619);
   h = Math.imul(h ^ (h >>> 15), 2246822507);
   h = Math.imul(h ^ (h >>> 13), 3266489909);
   return (h ^ (h >>> 16)) >>> 0;
 }
+/** Deterministic 0..1 from an integer and a salt. */
+export const hash01 = (n: number, key: string) => hash(n, key) / 4294967296;
 
 /** Global override (Konami code turns every plate into a duck). */
 export const override: { item: string | null } = { item: null };
 
-export function itemFor(id: number, key: string, pool?: string[]): string {
+const TOTAL = ALL.reduce((a, k) => a + ITEMS[k].weight, 0);
+
+/**
+ * What rides on global plate `id`. Depends ONLY on the id, so a plate carries the same
+ * item from the bar wall to the koi. The old `key`/`pool` arguments are accepted and
+ * ignored (legacy call sites); per-scene pools would break plate identity.
+ */
+export function itemFor(id: number, _key?: string, _pool?: string[]): string {
   if (override.item) return override.item;
-  const list = pool && pool.length ? pool : ALL;
-  const total = list.reduce((a, k) => a + (ITEMS[k]?.weight ?? 1), 0);
-  let r = (hash(id, key) % 10000) / 10000 * total;
-  for (const k of list) {
-    r -= ITEMS[k]?.weight ?? 1;
+  let r = ((hash(id, "item") % 100000) / 100000) * TOTAL;
+  for (const k of ALL) {
+    r -= ITEMS[k].weight;
     if (r <= 0) return k;
   }
-  return list[0];
+  return ALL[0];
 }
 
-const RIMS = ["#c8483f", "#3a6fc4", "#e0b33a", "#4ea36a", "#d9d2c3", "#1c1a18"];
+/** Plate glaze: one ceramic style, three barely-different cream glazes (fired in different batches). */
+const GLAZES = ["#efe6d3", "#ece2cd", "#f1e9d8"];
 export function rimFor(id: number): string {
-  return RIMS[hash(id, "rim") % RIMS.length];
+  return GLAZES[hash(id, "glaze") % GLAZES.length];
 }
 
 const imgs = new Map<string, HTMLImageElement>();

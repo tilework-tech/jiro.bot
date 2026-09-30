@@ -6,7 +6,7 @@ const errs = [];
 pg.on("pageerror", (e) => errs.push(String(e)));
 pg.on("console", (m) => m.type() === "error" && errs.push(m.text()));
 for (const p of ps) {
-  await pg.goto(`${base}?p=${p}&t=5`, { waitUntil: "networkidle" });
+  await pg.goto(`${base}?p=${p}&freeze=5`, { waitUntil: "networkidle" });
   await pg.waitForTimeout(700);
   await pg.screenshot({ path: `${out}/p${p}.png` });
 }

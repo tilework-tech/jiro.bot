@@ -3,13 +3,12 @@ import { glow, motes, shade, wave } from "../engine/fx";
 import { bubble, html, hotspot, place } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
 import { INTEGRATIONS } from "../content/copy";
-import { mountSnake } from "../games/snake";
 import "./storage.css";
 
 declareEggs(["storage-bulb", "storage-jars", "storage-mouse", "storage-jiro", "storage-all-jars"]);
 
-// Quiet storage room. The coiled garden hose on the floor is Hose Snake (mini
-// game 2); the integrations are hand-lettered tape labels on the pickling jars
+// Quiet storage room. The coiled garden hose on the floor is decoration (Hose Snake
+// was removed in v3; Flappy Koi is the only mini game); the integrations are hand-lettered tape labels on the pickling jars
 // and crates. Ambient: bulb breathing, dust in the cone, Jiro blinking, a mouse
 // peeking from a hole in the counter.
 
@@ -133,8 +132,6 @@ export const storage: SceneDef = {
     shade(g, 1470, 0, 450, 760, 0.35, 200, "right");
   },
   mount(el, api) {
-    mountSnake(el, api, { copy: [1496, 112, 384], btn: [1496, 470], hose: [690, 790, 235, 215], arcade: [470, 250] });
-
     // Integrations: hand-lettered tape on the jars and crates.
     html(el, `<p class="st-plugs">Everything plugs in<span>Ten jars on the shelf. Hundreds more in the back.</span></p>`).style.cssText = "left:1496px;top:600px";
     const seen = new Set<number>();

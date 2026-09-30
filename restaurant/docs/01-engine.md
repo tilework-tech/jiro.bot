@@ -134,8 +134,10 @@ export const STAGE_W = 1920;
 export const STAGE_H = 1080;
 /** Belt speed in stage px per second at scale 1. Identical in every scene and transition. */
 export const BELT_SPEED = 46;
-/** Distance between plate centres along the belt at scale 1. */
-export const PLATE_GAP = 150;
+/** Distance between plate slots along the belt at scale 1 (world units). Many slots are empty. */
+export const PLATE_GAP = 130;
+/** Tread slat pitch in world units. Divides PLATE_GAP so seams stay continuous when phases shift by whole slots. */
+export const SLAT = 26;
 /** Master ambient loop length in seconds; periodic ambient motion should divide this. */
 export const LOOP = 24;
 
@@ -152,9 +154,14 @@ export interface BeltPath {
   width?: number;
   /** Plate size in px at scale 1 (default 52). */
   plate?: number;
-  /** Offset so plate positions line up with the previous room's exit (set by transitions). */
+  /**
+   * Belt phase: plate slot `id` sits at local u = now * BELT_SPEED + phase - id * PLATE_GAP.
+   * Scene belts: the engine OVERWRITES this at start() by chaining scenes in scroll order
+   * (see engine/belt.ts setChain), so read it lazily (per frame), never at module load.
+   * Transition paths: derive it with beltPhase(sceneId, u).
+   */
   phase?: number;
-  /** Items allowed in this scene; default is the global pool. */
+  /** Deprecated and ignored: items depend only on the global plate id. */
   pool?: string[];
   /** Draw a darkness mask this many px at either end so plates vanish into wall openings. */
   fadeIn?: number;
@@ -164,6 +171,19 @@ export interface BeltPath {
 export interface Plate {
   x: number; y: number; s: number; angle: number;
   item: string; rim: string; key: string; alpha: number;
+  /** Global plate id (same in every room and transition). */
+  id?: number;
+  /** Rotation in radians around the plate centre (wobble / tipping over). */
+  rot?: number;
+  /** Tiny speech-bubble glyph shown above the plate ("dots", "bang", "heart", "fish", "q", "note"). */
+  bubble?: string;
+  /** 0..1 while the plate lies shattered on the floor (drawn as shards, not hittable). */
+  shatter?: number;
+  /** True while falling / shattering: drawn but not clickable or draggable. */
+  falling?: boolean;
+  /** Walking legs: frame 0/1 of the 2-frame cycle; `dir` = facing (+1 right, -1 left). */
+  legs?: 0 | 1;
+  dir?: number;
 }
 
 export interface Api {
@@ -175,8 +195,12 @@ export interface Api {
   img(url: string): HTMLImageElement;
   /** Draw a scene's full frame (art + ambient + belt + plates) into g with an optional camera. Used by transitions. */
   drawScene(id: string, g: CanvasRenderingContext2D, now: number, cam?: Camera): void;
-  /** Draw the belt tread + plates for an arbitrary path at the global belt speed. Returns the plates drawn. */
-  drawBelt(g: CanvasRenderingContext2D, path: BeltPath, now: number, key?: string): Plate[];
+  /**
+   * Draw the belt tread + plates for an arbitrary path at the global belt speed. Returns the plates drawn.
+   * `phase` (number) overrides path.phase; get it from beltPhase(sceneId, u) so plate ids are global.
+   * A string is accepted for legacy call sites and ignored (ids never depend on a key any more).
+   */
+  drawBelt(g: CanvasRenderingContext2D, path: BeltPath, now: number, phase?: number | string): Plate[];
   /** Current scene plates hit test in stage coords. */
   plateAt(x: number, y: number): Plate | null;
   /** Scroll smoothly to a segment id (scene id or "from>to"). */
@@ -237,6 +261,13 @@ export interface TransitionDef {
   length: number;
   /** One-line description of the belt's route through the wall. */
   route: string;
+  /**
+   * World length of belt between the end of the `from` scene path and the start of the `to`
+   * scene path (hidden in walls or drawn by this transition). The engine chains scene phases
+   * with it: phase[to] = phase[from] - pathLength(from) - gap. Undeclared: the engine picks the
+   * smallest gap >= 0 that keeps the `to` belt's declared phase residue mod PLATE_GAP.
+   */
+  gap?: number;
   /** t in [0,1]. At t=0 must equal the `from` scene frame, at t=1 the `to` scene frame. */
   render(g: CanvasRenderingContext2D, t: number, now: number, api: Api): void;
   mount?(el: HTMLElement, api: Api): void;
@@ -552,304 +583,76 @@ export function ease(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t +
 
 ---
 
-## 7. The belt (`src/engine/belt.ts`)
+## 7. The belt (`src/engine/belt.ts`) — v3: one belt, global plate identity
 
 ### 7.1 Model
 
-A belt is a polyline of `[x, y, scale?]` points, with scale defaulting to 1. The scale is perspective. It multiplies:
+A belt path is a polyline of `[x, y, scale?]` points (scale = perspective; it multiplies belt width, plate size and local screen speed). The engine works in **world distance** `u` = screen distance / local scale. Everything moves at `BELT_SPEED = 46` world units/s, so a plate at scale `s` moves `46·s` px/s.
 
-- belt width
-- plate size
-- **local screen speed**
+**Slots and global ids.** Slots are `PLATE_GAP = 130` world units apart. On any path, global slot `id` sits at
 
-The engine works in **world distance** `u`: screen distance divided by the local scale. Everything moves at `BELT_SPEED = 46` world units per second. On screen, a plate at scale `s` therefore moves `46·s` px/s. Plates slow and shrink into the distance while keeping identical world spacing and speed in every room and transition. This invariant is what makes the plates continuous across rooms.
-
-### 7.2 Baking (verbatim)
-
-Baking resamples the path every ≤6 screen px and accumulates `u += segLen / avgScale`. For closed paths, `pts[0]` is appended so the loop closes. Normals are computed from neighbours `i-1` and `i+1`. On closed paths, the first and last samples wrap across the join, using `out[last-1]` and `out[1]`, so the tread has no notch.
-
-Results are cached in a `WeakMap` keyed by the **path object identity**. Never mutate a path's `pts` after first use. Build a new object instead.
-
-```ts
-interface Sample { x: number; y: number; s: number; u: number; nx: number; ny: number; a: number }
-interface Baked { samples: Sample[]; U: number }
-
-const cache = new WeakMap<BeltPath, Baked>();
-
-function bake(path: BeltPath): Baked {
-  const hit = cache.get(path);
-  if (hit) return hit;
-  const pts = path.pts.map(([x, y, s]) => [x, y, s ?? 1] as [number, number, number]);
-  if (path.closed) pts.push(pts[0]);
-  const out: Sample[] = [];
-  let u = 0;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const [x0, y0, s0] = pts[i];
-    const [x1, y1, s1] = pts[i + 1];
-    const len = Math.hypot(x1 - x0, y1 - y0);
-    const n = Math.max(1, Math.ceil(len / 6));
-    for (let j = 0; j < n; j++) {
-      const f = j / n;
-      const x = x0 + (x1 - x0) * f, y = y0 + (y1 - y0) * f, s = s0 + (s1 - s0) * f;
-      if (out.length) {
-        const p = out[out.length - 1];
-        u += Math.hypot(x - p.x, y - p.y) / ((s + p.s) / 2);
-      }
-      out.push({ x, y, s, u, nx: 0, ny: 0, a: 0 });
-    }
-  }
-  const [xl, yl, sl] = pts[pts.length - 1];
-  const p = out[out.length - 1];
-  u += Math.hypot(xl - p.x, yl - p.y) / ((sl + p.s) / 2);
-  out.push({ x: xl, y: yl, s: sl, u, nx: 0, ny: 0, a: 0 });
-  const last = out.length - 1;
-  for (let i = 0; i < out.length; i++) {
-    // Closed loops wrap neighbours across the join so the tread has no notch there.
-    const a = path.closed && i === 0 ? out[last - 1] : out[Math.max(0, i - 1)];
-    const b = path.closed && i === last ? out[1] : out[Math.min(last, i + 1)];
-    const dx = b.x - a.x, dy = b.y - a.y, l = Math.hypot(dx, dy) || 1;
-    out[i].nx = -dy / l; out[i].ny = dx / l; out[i].a = Math.atan2(dy, dx);
-  }
-  const baked = { samples: out, U: u };
-  cache.set(path, baked);
-  return baked;
-}
+```
+u = now·46 + path.phase − id·130
 ```
 
-`pointAt(path, u)`:
+and scene phases are **chained** at `start()` (`setChain`), so a plate leaving scene *i* re-enters scene *i+1* with the same id. Everything about a plate (occupancy, item, glaze, chats, falls) depends only on its id (and time), so it is the same object in every room and transition, from the bar wall to the koi.
 
-- On closed paths, `u` wraps: `((u % U) + U) % U`. Otherwise it is clamped to `[0, U]`.
-- A binary search over `samples[].u` finds the bracketing pair.
-- `x`, `y`, and `s` are linearly interpolated between the pair. `nx`, `ny`, and `a` come from the lower sample. The returned `u` is the wrapped or clamped value.
+### 7.2 Phase chain (`setChain`, called by `stage.start`)
 
-`pathLength(path)` returns `U`.
+```
+phase[0]   = bar.belt.phase ?? 0
+phase[i+1] = phase[i] − pathLength(scene i) − gap(i)
+```
 
-### 7.3 Tread drawing (`drawTread`)
+- `gap(i)` = `TransitionDef.gap` of the `i>i+1` transition: world length of belt between the end of the from-scene path and the start of the to-scene path (hidden in walls or drawn by the transition).
+- Undeclared: the smallest gap ≥ 0 that keeps scene *i+1*'s declared phase residue mod 130 (so pre-v3 positions stay put; identities do not).
+- Consecutive scenes sharing one belt object (storage → pantry) share the phase (gap reported as `−U`).
+- The engine **writes** the chained value into `scene.belt.phase`. Read it lazily (per frame / lazily built geometry), never at module load: modules load before `start()`.
+- Global belt distance of a plate: `J = globalU(id, now) = now·46 + phase[0] − id·130`. Scene *i* covers `J ∈ [off_i, off_i + U_i]`, `off_i = phase[0] − phase[i]`.
+- `window.__chain` lists `{id, phase, U, off, gap}`; `node tools/qa/chain.mjs` prints it, `node tools/qa/align.mjs` lists every path each transition draws with its `off` and the delta at joins (0 = same plate continues; delta/130 = slot shift).
 
-Constants:
+### 7.3 Exported API (for scenes and transitions)
 
-| Name | Value |
+| Export | Meaning |
 |---|---|
-| `TREAD` | `#2b2723` |
-| `TREAD_HI` | `#3d3832` |
-| `RAIL` | `#c9814a` |
-| `RAIL_DARK` | `#6d3f22` |
-| `SEAM` | `rgba(0,0,0,.45)` |
-| `SEAM_STEP` | `26` world units |
+| `beltPhase(sceneId, u = 0)` | Phase for a path whose `u = 0` sits at local `u` on that scene's belt. `beltPhase("kitchen", pathLength(kitchen.belt))` starts a path where the kitchen belt ends; negative `u` feeds a scene from before its start. |
+| `globalU(id, now)` | Global belt distance `J` of plate `id`. |
+| `plateIdAt(path, u, now, phase?)` | Nearest slot id at local `u` on a path. |
+| `slotOccupied(id)` | Does the slot carry a plate (~47 % do; clustered runs). |
+| `itemOf(id)` / `itemFor(id)` | Item on plate `id` (legacy `key`/`pool` args ignored). `rimFor(id)` = glaze. |
+| `plateBehaviour(id, now)` | `{du, off, drop, rot, bubble, shatter, falling, gone}`: chat slide, fall stage, bubble glyph. |
+| `fallAt(id)` | Global `J` where the plate starts to wobble off, or `null`. |
+| `chainInfo()` | The chain links. |
+| `platesOn(path, now, phase?)` | Plates on a path with life applied (skips empty and fallen slots). Returns `Plate` with `id`, `rot`, `bubble`, `shatter`, `falling`. |
+| `drawTread`, `drawPlates`, `drawBeltFull(g, path, now, phase?, hidden?)`, `pointAt`, `pathLength`, `hitPlate` | As before; string keys are accepted and ignored. |
+| `api.drawBelt(g, path, now, phase?)` | Same as `drawBeltFull`; a number overrides `path.phase`. |
 
-The default width `w` is `path.width ?? 64`. Edges are `L`/`R = sample ± n · (w·s)/2`, with `L` using side −1.
+Pond-style scenes that animate plates past the end of a path must use `slotOccupied(id)`, `plateBehaviour(id, now).gone` and `itemFor(id)` with the global id `floor((now·46 + phase − U)/130)`.
 
-`style` behaviour:
+### 7.4 Occupancy (irregular belt)
 
-- **`"none"`:** return immediately. Plates are still drawn by `drawBeltFull`.
-- **`"full"`** (default), in order:
-  1. **Shadow:** a polygon of `L` forward then `R` backward, every point offset `y + 8·s`, filled `rgba(0,0,0,.35)`.
-  2. **Body:** the same polygon without the offset, filled `TREAD`.
-  3. **Centre line:** the polyline through the samples, stroked `TREAD_HI`, lineWidth 2.
-- **Seams** (both `"full"` and `"seams"`):
-  - `off = (now·46 + (phase ?? 0)) % 26`
-  - for `u = off; u < U; u += 26`: take `p = pointAt(u)` and `hw = (w·p.s)/2 − 3`
-  - draw a line from `(round(p.x − nx·hw), round(p.y − ny·hw))` to `(round(p.x + nx·hw), round(p.y + ny·hw))`
-  - all seams go in one path, stroked `SEAM` with lineWidth 2
-- **Rails** (`"full"` only), stroked in this order:
-  1. `L` in `RAIL_DARK` at width 7
-  2. `R` in `RAIL_DARK` at width 7
-  3. `L` in `RAIL` at width 4
-  4. `R` in `RAIL` at width 4
+Deterministic per 32-slot block (`hash(block, "occ")`): alternating runs, plate runs from `[1,2,2,3,3,3,4,4]`, empty runs from `[1,1,2,3,3,4,5,6]` (~53 % empty, big gaps common). The bar (≈11.6 slots) typically shows 4–9 plates. Absurd items stay ≈ 1 in 5 of occupied plates (catalogue weights, §9).
 
-### 7.4 Plate positions (`platesOn`, verbatim)
+### 7.5 Plate life (pure functions of id + time)
 
-```ts
-export function platesOn(path: BeltPath, now: number, key: string): Plate[] {
-  const { U } = bake(path);
-  const head = now * BELT_SPEED + (path.phase ?? 0);
-  const first = ((head % PLATE_GAP) + PLATE_GAP) % PLATE_GAP;
-  const cycle = Math.floor(head / PLATE_GAP);
-  const out: Plate[] = [];
-  const fi = path.fadeIn ?? 40, fo = path.fadeOut ?? 40;
-  for (let k = 0, u = first; u <= U; k++, u += PLATE_GAP) {
-    const p = pointAt(path, u);
-    const id = cycle - k;
-    let alpha = 1;
-    if (!path.closed) {
-      if (u < fi) alpha = u / fi;
-      if (U - u < fo) alpha = Math.min(alpha, (U - u) / fo);
-    }
-    out.push({
-      x: p.x, y: p.y, s: p.s, angle: p.a, alpha,
-      item: itemFor(id, key, path.pool), rim: rimFor(id), key: `${key}:${id}`,
-    });
-  }
-  // Painter's order: farther (smaller y) first.
-  out.sort((a, b) => a.y - b.y);
-  return out;
-}
-```
+- **Chat.** Pair `(a, a+1)` (both occupied, neither falls, `hash < 0.45`, never overlapping another pair) chats once every 2800 world units of travel at a hashed offset. One plate (hashed) slides 70 world units toward the other at 8 u/s (≈ 8.8 s), both show a 5×5 pixel bubble (`dots`, `bang`, `heart`, `fish`, `q`, `note`) for ≈ 4.5 s, then it drifts back.
+- **Fall.** ≈ 1 in 30 plates. The start `J` is hashed into the usable span of a non-final scene belt (≥ 160–220 world units clear of both ends, so never inside a wall opening; pond excluded). Timeline: wobble 1.8 s → slide over the rail 1.1 s (toward the viewer, `ny > 0` side) → stops travelling, tips and drops 110 px·s (gravity 900) → 6 pixel shards for 1 s → `gone` for the rest of the journey (every later room skips it).
+- **Hop.** Animal items still hop 1 px tied to position.
+- `?debugplates=1`: all eligible pairs chat every 1100 u, 1 in 3 plates falls, every rested plate grows legs after 0.6 s.
 
-How plate identity works:
+### 7.6 Baking and corners
 
-- Plates sit at `u = first + k·150`.
-- A plate's integer `id = cycle − k` stays constant while it travels. A new id appears at `u ≈ 0` every 150/46 ≈ 3.26 s.
-- `key` is the scene id for live scenes and `api.drawScene`, and `"tr"` by default for `api.drawBelt`.
-- The **item** depends on `(id, key)`. The **rim colour** depends on `id` only.
-- Transitions that want the same sushi to continue must pass the same key and a `phase` aligned with the neighbouring room's exit.
-- **Painter's order** is ascending `y`, so plates higher on screen (farther away) are drawn first.
+`bake(path)` (cached per path object in a `WeakMap`, including rail edge polylines) first **fillets** every interior polyline corner with a circular arc: radius `1.2 × width × scale` at the vertex, clamped so the tangent length is ≤ half the shorter adjacent segment. Then it resamples every ≤ 6 px with cumulative `u`. `pointAt` interpolates position, scale and heading. Transition paths that build their own arcs (e.g. street>pond `corner()`) are kept as drawn; they should use a centre-line radius ≥ 1.2 × width.
 
-### 7.5 Item and rim hashing (`src/engine/items.ts`, verbatim)
+### 7.7 Tread (`drawTread`)
 
-```ts
-function hash(n: number, key: string): number {
-  let h = 2166136261 ^ n;
-  for (let i = 0; i < key.length; i++) h = Math.imul(h ^ key.charCodeAt(i), 16777619);
-  h = Math.imul(h ^ (h >>> 15), 2246822507);
-  h = Math.imul(h ^ (h >>> 13), 3266489909);
-  return (h ^ (h >>> 16)) >>> 0;
-}
+- `full`: shadow (+8·s), body `#2b2723`, **slats**, rails (`#6d3f22` 7 px under `#c9814a` 4 px, round joins).
+- **Slats** every `SLAT = 26` world units (divides 130, so seams stay continuous when phases shift by whole slots). Each seam is a crescent bowing forward (edges trail by `0.32·half-width`), perpendicular to the path. The seam is a dark gap wedge (`#0e0c0b`) 2 px wide plus the extra spacing on the **outside** of a curve (`−κ·offset·SLAT·s·0.9`), so slats fan open outside and stay tight inside; a `#4a433b` lip line marks the overlapping slat.
+- `seams`: only the crescent seams (for belts painted into the art). `none`: plates only.
 
-/** Global override (Konami code turns every plate into a duck). */
-export const override: { item: string | null } = { item: null };
+### 7.8 Plates
 
-export function itemFor(id: number, key: string, pool?: string[]): string {
-  if (override.item) return override.item;
-  const list = pool && pool.length ? pool : ALL;
-  const total = list.reduce((a, k) => a + (ITEMS[k]?.weight ?? 1), 0);
-  let r = (hash(id, key) % 10000) / 10000 * total;
-  for (const k of list) {
-    r -= ITEMS[k]?.weight ?? 1;
-    if (r <= 0) return k;
-  }
-  return list[0];
-}
-
-const RIMS = ["#c8483f", "#3a6fc4", "#e0b33a", "#4ea36a", "#d9d2c3", "#1c1a18"];
-export function rimFor(id: number): string {
-  return RIMS[hash(id, "rim") % RIMS.length];
-}
-```
-
-- `ALL = Object.keys(ITEMS)` in declaration order. The order matters for the weighted walk.
-- Rim colours are red, blue, gold, green, bone, and black.
-- `itemImg(name)` is a cached `Image` at `${BASE_URL}items/${name}.png`. `preloadItems()` touches every key.
-
-### 7.6 Plate sprite (`plateSprite`, verbatim)
-
-Each plate is a pixel-art sprite built once per `(rim, integer diameter d)` into an offscreen canvas via `ImageData`. It has hard edges and no antialiasing. The cache key is `rim + d`.
-
-Geometry:
-
-| Name | Formula |
-|---|---|
-| `W` | `d + 2` |
-| `rx` | `d/2` |
-| `ry` | `max(2, round(0.2d))` |
-| `lip` | `max(1, round(0.06d))` |
-| `cy` | `ry + 1`. This is the plate centre's y inside the sprite |
-| `H` | `2ry + lip + 4` |
-
-```ts
-function hexRgb(h: string): [number, number, number] {
-  const n = parseInt(h.slice(1), 16);
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-}
-function mix(c: [number, number, number], t: [number, number, number], f: number): [number, number, number] {
-  return [c[0] + (t[0] - c[0]) * f, c[1] + (t[1] - c[1]) * f, c[2] + (t[2] - c[2]) * f].map(Math.round) as [number, number, number];
-}
-
-const plateCache = new Map<string, HTMLCanvasElement>();
-/** Plate sprite: width d, anchored so the plate's centre is at (d/2, cy). Returns [canvas, cy]. */
-function plateSprite(rim: string, d: number): [HTMLCanvasElement, number] {
-  const key = rim + d;
-  const rx = d / 2, ry = Math.max(2, Math.round(d * 0.2));
-  const lip = Math.max(1, Math.round(d * 0.06));
-  const cy = ry + 1;
-  let c = plateCache.get(key);
-  if (c) return [c, cy];
-  const W = d + 2, H = ry * 2 + lip + 4;
-  c = document.createElement("canvas");
-  c.width = W; c.height = H;
-  const g = c.getContext("2d")!;
-  const img = g.createImageData(W, H);
-  const base = hexRgb(rim);
-  const dark = rim === "#1c1a18" ? ([12, 11, 10] as [number, number, number]) : mix(base, [20, 12, 10], 0.45);
-  const line = mix(dark, [8, 6, 5], 0.55);
-  const lite = mix(base, [255, 250, 240], 0.45);
-  const cream: [number, number, number] = [239, 231, 216], creamSh: [number, number, number] = [214, 202, 182], creamHi: [number, number, number] = [255, 252, 244];
-  const cx = W / 2;
-  const inE = (x: number, y: number, ex: number, ey: number, ox = 0, oy = 0) => {
-    const dx = (x - cx - ox) / ex, dy = (y - cy - oy) / ey;
-    return dx * dx + dy * dy <= 1;
-  };
-  const irx = rx * 0.68, iry = ry * 0.62;
-  for (let y = 0; y < H; y++) {
-    for (let x = 0; x < W; x++) {
-      const px = x + 0.5, py = y + 0.5;
-      let col: [number, number, number] | null = null;
-      let alpha = 255;
-      const top = inE(px, py, rx, ry);
-      const side = !top && inE(px, py - lip, rx, ry) && py > cy;
-      if (inE(px, py, rx + 1, ry + 1) && !top && !side) col = line; // outline
-      else if (side) col = inE(px, py - lip, rx - 1, ry - 1) && py < cy + ry + lip - 0 ? dark : line;
-      else if (top) {
-        if (inE(px, py, irx, iry, 0, -0.5)) {
-          // Well: shaded under the back rim, bright elsewhere.
-          col = !inE(px, py, irx, iry, 0, 1.5) ? creamSh : cream;
-          if (inE(px, py, irx * 0.28, iry * 0.28, irx * 0.38, -iry * 0.3)) col = creamHi;
-        } else if (inE(px, py, irx + 1, iry + 1, 0, -0.5)) col = dark; // inner edge of rim
-        else {
-          col = py < cy - ry * 0.35 ? lite : base; // 2-tone rim: lit back, base front
-          // small specular glint on the back-left of the rim
-          if (py < cy - ry * 0.55 && px > cx - rx * 0.62 && px < cx - rx * 0.36) col = [255, 255, 250];
-        }
-      } else if (inE(px, py - lip - 1, rx, ry)) { col = [0, 0, 0]; alpha = 90; } // contact shadow
-      if (!col) continue;
-      const i = (y * W + x) * 4;
-      img.data[i] = col[0]; img.data[i + 1] = col[1]; img.data[i + 2] = col[2]; img.data[i + 3] = alpha;
-    }
-  }
-  g.putImageData(img, 0, 0);
-  plateCache.set(key, c);
-  return [c, cy];
-}
-```
-
-Pixel classes, in priority order:
-
-1. **Outline** (`line`): a 1-px ring outside the top ellipse.
-2. **Lip/side band** (`dark`, with `line` at its edge).
-3. **Top face**, which splits into:
-   - the cream **well**, shaded `creamSh` on its back edge, with a `creamHi` highlight blob up and to the right
-   - a `dark` inner rim ring
-   - the rim itself: `lite` on the back 35% and `base` in front, with a near-white glint on the back-left
-4. **Contact shadow**: black at alpha 90, one pixel below the lip.
-
-### 7.7 Drawing plates (`drawPlates`)
-
-For each plate, skipping keys in `hidden` and `alpha <= 0`, with `imageSmoothingEnabled = false` for the whole call:
-
-1. `d = max(6, round(size·s))`, where `size = path.plate ?? 52`. Then `x = round(pl.x)`, `y = round(pl.y)`, and `globalAlpha = pl.alpha`.
-2. **Drop shadow:** an ellipse centred at `(x+1, y+round(0.12d))` with radii `round(0.5d)` and `round(0.2d)`, filled `rgba(0,0,0,.28)`.
-3. **Sprite:** drawn at `(x − (W>>1), y − cy)`.
-4. **Item image** (if loaded):
-   - fit factor `f = min(0.86d / naturalWidth, 0.92d / naturalHeight)`
-   - `iw = round(nw·f)`, `ih = round(nh·f)`
-   - drawn at `(x − (iw>>1), y − ih + round(0.1d) − hop)`, so it sits on the plate with its bottom 0.1d below centre
-5. **Animal hop:** `hop = 1` when `ITEMS[item].animal && ((floor((pl.x + pl.y·0.5)/18) & 3) === 0)`. It uses unrounded `pl.x`/`pl.y`. The hop is tied to position, so it loops with the belt.
-6. Restore `globalAlpha = 1` and the previous smoothing setting.
-
-`drawBeltFull(g, path, now, key, hidden?)` runs `drawTread`, then `platesOn`, then `drawPlates(plates, path.plate ?? 52, hidden)`, and returns **all** plates, including hidden ones. `renderScene` filters out hidden plates before storing them for hit-testing.
-
-### 7.8 Hit test (`hitPlate`)
-
-For each plate, with `d = size·s`, the hit region is an ellipse centred at `(p.x, p.y − 0.35d)` with radii `0.6d` (x) and `0.7d` (y). Among plates with a normalised distance below 1, the nearest one wins.
-
-`api.plateAt(x, y)` returns:
-
-1. `drag.hitRested(scene)`: rested plates tested top-most first, which is the reverse of list order, using the same ellipse.
-2. Otherwise, `hitPlate(scenePlates)`.
-
-It only returns plates while a scene is active.
-
----
+One ceramic style: cream glaze (three near-identical glazes, `rimFor(id)`), a thin warm-brown rim band, shaded well, foot ring, glint, dark 1 px outline, contact shadow; pixel sprites cached per (glaze, diameter). `drawPlates` handles `rot` (wobble/tip), `bubble`, `shatter` (shards), `legs`/`dir` (walking rested plates, item mirrored when walking left). `hitPlate` ignores falling/shattered plates.
 
 ## 8. Drag and drop (`src/engine/drag.ts`)
 
@@ -905,7 +708,7 @@ Set `suppressUntil = now + 80 ms`, then test the drop point `(held.x, held.y)` a
 
 **On a surface:**
 
-1. Push `{...held, s: surface.scale ?? held.s}` into `rested[scene]`.
+1. Push `{...held, s: surface.scale ?? held.s, t0, walker, xl, xr}` into `rested[scene]`. `walker` (≈ 1 in 3, all with `?debugplates=1`; only if the row is wider than the plate): after 1.5 s the plate grows two outlined pixel legs (2-frame cycle, 4 fps) and toddles back and forth at 5 px/s along its drop row, turning at the polygon edges (`rowSpan`, inset by the plate radius). `pose(r, t)` gives the current position; hit tests and pick-ups use it.
 2. Sort the list by `y` ascending, which is also the draw order.
 3. While the list is longer than 14, `shift()` the plate with the **smallest y** (the farthest back, not necessarily the oldest) into a `vanish` animation.
 4. `sfx("blip")` and `api.egg("plate-parked", surface.say ?? "Plate parked. Jiro approves of tidy surfaces.")`. The first park anywhere is the egg. Later parks just toast the surface's line.
@@ -1081,10 +884,9 @@ Catalogue notes:
 | `scenes/pantry.ts` (1) | mood-all |
 | `scenes/street.ts` (6) | street-bell, street-neon, street-jiro, street-pm, street-drain, street-special |
 | `scenes/pond.ts` (6) | pond-koi, pond-duck, pond-lantern, pond-moon, flappy-played, flappy-5 |
-| `games/snake.ts` (3) | snake-played, snake-10, snake-gold |
 | `games/flappy.ts` (2) | flappy-sushi, flappy-20 |
 
-`games/snake.ts` is imported via storage and `games/flappy.ts` via pond. The **total at load is 88**.
+`games/flappy.ts` is imported via pond (Hose Snake was removed in v3; Flappy Koi is the only mini game). The total at load was 85 right after the snake removal; scenes keep adding eggs (89 at the time of writing), so read the badge.
 
 **Known quirk:** the moodboard versions (`src/moodboard/v*.ts`) call `api.egg` with 13 ids that are never declared:
 
@@ -1470,7 +1272,8 @@ console.log(
 
 | Param | Where | Effect |
 |---|---|---|
-| `?t=<seconds>` | stage.ts | Freezes `now` for all scene, belt, and transition drawing (deterministic frames). Pops and drag animations still use real time |
+| `?freeze=<seconds>` | stage.ts | Freezes `now` for all scene, belt, and transition drawing (deterministic frames). Pops and drag animations still use real time. `?t=` is **ignored** since v3 (old shared links carried `?t=<unix time>` and froze the belt). `tools/qa/seg.mjs --t=N` passes `freeze=N` |
+| `?debugplates=1` | belt.ts, drag.ts | Boosts chats, falls and walking legs (§7.5) |
 | `?p=<vh>` | stage.ts | Fixes the scroll position in viewport heights (e.g. `?p=8.5`). Smoothing is off, and real scrolling is ignored |
 | `?seg=<id>&tt=<0..1>` | stage.ts | Renders segment `id` at local progress `tt`: `p = start + min(0.9999, tt ?? 0.5)·len`. Encode `>` as `%3E` for transitions, e.g. `?seg=bar%3Eoffice&tt=0.5`. An unknown `seg` falls back to `?p`. If `?p` is also missing, the page scrolls normally |
 | `?seg` or `?p` present | index.html, chrome.ts | The loader is removed instantly, and the scroll hint never shows |
@@ -1479,7 +1282,7 @@ console.log(
 
 Other debug hooks:
 
-- `window.__segs` holds the segment table.
+- `window.__segs` holds the segment table; `window.__chain` the belt chain; `window.__belt` / `window.__scenes` the live belt module and scene map (QA scripts `plates.mjs`, `life-scan.mjs`, `legs.mjs`); `window.__beltProbe(path, phase, U, off)`, if set, is called for every `platesOn` (used by `align.mjs`).
 - `document.body.dataset.segment` holds the active segment id.
 
 ---
@@ -1506,7 +1309,6 @@ For completeness, the engine and chrome own `jiro-eggs`, `jiro-egg-notes`, and `
 |---|---|
 | `jiro-bar-poked` | `scenes/bar.ts` |
 | `jiro-dragged` | `scenes/bar.ts`, the drag-hint once flag |
-| `jiro-best-snake` | `games/snake.ts` |
 | `jiro-best-flappy` | `games/flappy.ts` |
 
 ---

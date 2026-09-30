@@ -1,8 +1,9 @@
 import type { Api, Plate, SceneDef, Surface } from "./types";
-import { platesOn, drawPlates, pathLength, pointAt } from "./belt";
+import { platesOn, drawPlates, pathLength, pointAt, debugPlates } from "./belt";
 
 // Drag plates off the belt and drop them anywhere in the room.
-// Dropped on a scene surface (SceneDef.surfaces) → the plate rests there.
+// Dropped on a scene surface (SceneDef.surfaces) → the plate rests there; after a moment
+// about 1 in 3 rested plates grows two tiny pixel legs and toddles back and forth on it.
 // Dropped anywhere else → it zooms back onto its spot on the belt, vanishes, or explodes.
 
 interface Anim {
@@ -14,6 +15,16 @@ interface Anim {
 }
 
 const MAX_RESTED = 14;
+/** Toddle speed in stage px per second, and the delay before legs appear. */
+const WALK_SPEED = 5;
+const LEGS_AFTER = debugPlates ? 0.6 : 1.5;
+
+/** A plate resting on a surface. Walkers pace between xl and xr along their row. */
+interface Rested extends Plate {
+  t0: number;
+  walker: boolean;
+  x0: number; xl: number; xr: number;
+}
 const DUR = { return: 0.55, vanish: 0.35, explode: 0.5 };
 
 export function inPoly(x: number, y: number, poly: [number, number][]): boolean {
@@ -25,6 +36,18 @@ export function inPoly(x: number, y: number, poly: [number, number][]): boolean 
   return inside;
 }
 
+/** Horizontal extent [xl, xr] of the polygon's row through (x, y) that contains x. */
+function rowSpan(poly: [number, number][], x: number, y: number): [number, number] {
+  const xs: number[] = [];
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i], [xj, yj] = poly[j];
+    if ((yi > y) !== (yj > y)) xs.push(((xj - xi) * (y - yi)) / (yj - yi) + xi);
+  }
+  xs.sort((a, b) => a - b);
+  for (let k = 0; k + 1 < xs.length; k += 2) if (x >= xs[k] && x <= xs[k + 1]) return [xs[k], xs[k + 1]];
+  return [x, x];
+}
+
 function hash(s: string): number {
   let h = 2166136261;
   for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
@@ -34,7 +57,7 @@ function hash(s: string): number {
 export class Drag {
   /** Belt plate keys currently off the belt (held, resting somewhere, or animating back). */
   hidden = new Set<string>();
-  rested = new Map<string, Plate[]>();
+  rested = new Map<string, Rested[]>();
   held: (Plate & { scene: string; from: "belt" | "rest" }) | null = null;
   anims: Anim[] = [];
   private down: { x: number; y: number; plate: Plate; from: "belt" | "rest"; scene: string } | null = null;
@@ -42,7 +65,7 @@ export class Drag {
 
   constructor(private api: Api) {}
 
-  restedIn(scene: string): Plate[] {
+  restedIn(scene: string): Rested[] {
     let r = this.rested.get(scene);
     if (!r) this.rested.set(scene, (r = []));
     return r;
@@ -52,8 +75,8 @@ export class Drag {
   hitRested(scene: string, size: number, x: number, y: number): Plate | null {
     const list = this.restedIn(scene);
     for (let i = list.length - 1; i >= 0; i--) {
-      const p = list[i], d = size * p.s;
-      if (Math.hypot((x - p.x) / (d * 0.6), (y - (p.y - d * 0.35)) / (d * 0.7)) < 1) return p;
+      const p = this.pose(list[i], performance.now() / 1000), d = size * p.s;
+      if (Math.hypot((x - p.x) / (d * 0.6), (y - (p.y - d * 0.35)) / (d * 0.7)) < 1) return list[i];
     }
     return null;
   }
@@ -74,11 +97,13 @@ export class Drag {
     if (this.down && !this.held && Math.hypot(x - this.down.x, y - this.down.y) > 6) {
       const { plate, from, scene } = this.down;
       if (from === "belt") this.hidden.add(plate.key);
-      else {
+      let p: Plate = plate;
+      if (from === "rest") {
         const list = this.restedIn(scene);
-        list.splice(list.indexOf(plate), 1);
+        list.splice(list.indexOf(plate as Rested), 1);
+        p = this.pose(plate as Rested, performance.now() / 1000);
       }
-      this.held = { ...plate, alpha: 1, scene, from };
+      this.held = { ...p, alpha: 1, scene, from, rot: undefined, bubble: undefined, legs: undefined, dir: undefined };
       this.api.sfx("pop");
     }
     if (this.held) { this.held.x = x; this.held.y = y + 18 * this.held.s; }
@@ -94,7 +119,18 @@ export class Drag {
     const surf = (scene.surfaces ?? []).find((s: Surface) => inPoly(h.x, h.y, s.poly));
     if (surf) {
       const list = this.restedIn(scene.id);
-      list.push({ ...h, s: surf.scale ?? h.s });
+      const { scene: _sc, from: _fr, ...plate } = h;
+      void _sc; void _fr;
+      const [xl, xr] = rowSpan(surf.poly, h.x, h.y);
+      const d = (scene.belt.plate ?? 52) * (surf.scale ?? h.s);
+      const m = Math.min(d * 0.45, Math.max(0, (xr - xl) / 2 - 1));
+      const tn = performance.now() / 1000;
+      const walkerP = debugPlates ? 1 : 1 / 3;
+      list.push({
+        ...plate, s: surf.scale ?? h.s, t0: tn, x0: h.x,
+        walker: hash(h.key + ":legs:" + Math.round(tn * 7)) < walkerP && xr - xl > d * 0.9 + 6,
+        xl: Math.min(h.x, xl + m), xr: Math.max(h.x, xr - m),
+      });
       list.sort((a, b) => a.y - b.y);
       while (list.length > MAX_RESTED) this.startAnim("vanish", list.shift()!, scene.id);
       this.api.sfx("blip");
@@ -123,6 +159,25 @@ export class Drag {
     return false;
   }
 
+  /** Where a rested plate is right now (walkers toddle a triangle wave between xl and xr). */
+  pose(r: Rested, tn: number): Plate {
+    const base: Plate = { x: r.x, y: r.y, s: r.s, angle: r.angle, item: r.item, rim: r.rim, key: r.key, alpha: r.alpha, id: r.id };
+    const age = tn - r.t0 - LEGS_AFTER;
+    if (!r.walker || age < 0) return base;
+    // Legs pop out, a short pause, then pacing. Distance travelled -> position on a
+    // back-and-forth path starting at the drop point, heading right first.
+    const walkT = Math.max(0, age - 0.6);
+    const span = r.xr - r.xl;
+    if (span < 2) return { ...base, legs: 0, dir: 1 };
+    const L = 2 * span;
+    const s0 = r.x0 - r.xl; // start position along the 0..span ramp
+    const d = (s0 + walkT * WALK_SPEED) % L;
+    const x = d < span ? r.xl + d : r.xr - (d - span);
+    const dir = d < span ? 1 : -1;
+    const moving = walkT > 0;
+    return { ...base, x, dir, legs: moving ? ((Math.floor(tn * 4) & 1) as 0 | 1) : 0 };
+  }
+
   private startAnim(kind: Anim["kind"], plate: Plate, scene: string) {
     this.anims.push({ kind, plate: { ...plate }, x0: plate.x, y0: plate.y, s0: plate.s, t0: performance.now() / 1000, scene });
   }
@@ -131,8 +186,8 @@ export class Drag {
   drawScene(g: CanvasRenderingContext2D, scene: SceneDef, now: number) {
     const size = scene.belt.plate ?? 52;
     const list = this.rested.get(scene.id);
-    if (list?.length) drawPlates(g, list, size);
     const tn = performance.now() / 1000;
+    if (list?.length) drawPlates(g, list.map((r) => this.pose(r, tn)).sort((a, b) => a.y - b.y), size);
     for (let i = this.anims.length - 1; i >= 0; i--) {
       const a = this.anims[i];
       if (a.scene !== scene.id) continue;
