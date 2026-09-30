@@ -1,0 +1,10 @@
+import { chromium } from "playwright";
+const [url, out] = process.argv.slice(2);
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 1600, height: 1000 }, deviceScaleFactor: 1, colorScheme: "dark", reducedMotion: "reduce", timezoneId: "America/New_York" });
+const pg = await ctx.newPage();
+pg.on("pageerror", (e) => console.log("ERR", String(e)));
+await pg.goto(url, { waitUntil: "networkidle" });
+await pg.waitForTimeout(1500);
+await pg.screenshot({ path: out });
+await b.close();

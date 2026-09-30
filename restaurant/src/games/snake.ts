@@ -32,7 +32,7 @@ export interface SnakeLayout {
 export function mountSnake(el: HTMLElement, api: Api, at: SnakeLayout) {
   html(el, `
     <section class="copy" style="left:${at.copy[0]}px;top:${at.copy[1]}px;width:${at.copy[2]}px">
-      <p class="kicker">Storage room · mini game 2 of 3</p>
+      <p class="kicker">Storage room · mini game 1 of 2</p>
       <h2 class="px">That hose is a snake.</h2>
       <p class="lede">Nobody remembers why a sushi bar owns a garden hose. Steer it, eat the sushi, don't tie yourself in a knot.</p>
     </section>`);

@@ -1,3 +1,5 @@
+> Round-1 brief. The current state (yard removed, Whack-a-Bug removed, pantry moodboard added, etc.) is documented in [docs/](docs/README.md); docs/00-history.md is authoritative.
+
 # Jiro's Restaurant — scroll site bible
 
 Brief (Martin, 2026-09-29): an entertaining scroll website that follows ONE sushi

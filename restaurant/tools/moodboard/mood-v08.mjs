@@ -1,0 +1,21 @@
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const pg = await b.newPage({ viewport: { width: 1600, height: 900 } });
+const errs = [];
+pg.on("pageerror", (e) => errs.push(String(e)));
+pg.on("console", (m) => m.type() === "error" && errs.push(m.text()));
+await pg.goto("http://localhost:3000/?seg=pantry&tt=0.5&t=5&mood=8", { waitUntil: "networkidle" });
+const D = "/tmp/v08/";
+await pg.waitForTimeout(2500); await pg.screenshot({ path: D + "s1.png", timeout: 90000 });
+await pg.waitForTimeout(6500); await pg.screenshot({ path: D + "s2.png", timeout: 90000 });
+// hover a cut
+const box = await pg.locator(".mv08").boundingBox();
+const k = box.width / 1640;
+const at = (x, y) => [box.x + x * k, box.y + y * k];
+await pg.mouse.move(...at(30 + 236 * 2, 164 + 170 * 2)); await pg.waitForTimeout(400);
+await pg.screenshot({ path: D + "s3.png", timeout: 90000 });
+await pg.locator(".mv08 .menu button").nth(3).click();
+await pg.waitForTimeout(1800); await pg.screenshot({ path: D + "s4.png", timeout: 90000 });
+await pg.waitForTimeout(5000); await pg.screenshot({ path: D + "s5.png", timeout: 90000 });
+console.log(errs.length ? errs.join("\n") : "no errors");
+await b.close();

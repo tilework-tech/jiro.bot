@@ -1,0 +1,3 @@
+const PX=-351,PY=1665;const KEYS=[[0,960,540,1],[0.22,1110,650,1.2],[0.48,1110,1290,1.2],[0.76,960,1950,1.08],[1,PX+960,PY+540,1]];
+function cam(t){let i=0;while(i<KEYS.length-2&&t>KEYS[i+1][0])i++;const a=KEYS[i],b=KEYS[i+1];const u=Math.max(0,Math.min(1,(t-a[0])/(b[0]-a[0])));const h=b[0]-a[0];const tan=(k,c)=>{if(k===0||k===KEYS.length-1)return 0;const p=KEYS[k-1],n=KEYS[k+1];return((n[c]-p[c])/(n[0]-p[0]))*h*0.8};const u2=u*u,u3=u2*u;const h00=2*u3-3*u2+1,h10=u3-2*u2+u,h01=-2*u3+3*u2,h11=u3-u2;const v=c=>h00*a[c]+h10*tan(i,c)+h01*b[c]+h11*tan(i+1,c);return[v(1),v(2),v(3)]}
+for(const t of [0.2,0.35,0.4,0.5,0.6,0.65,0.8]){const [cx,cy,z]=cam(t);console.log(t,cx.toFixed(0),cy.toFixed(0),z.toFixed(2),'viewY',(cy-540/z).toFixed(0),(cy+540/z).toFixed(0))}
