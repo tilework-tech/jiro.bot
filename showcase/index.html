@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#151411">
+  <title>Jiro.bot | Demo gallery</title>
+  <style>
+    :root { color-scheme: dark; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #14130f; color: #f3ecdc; }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; }
+    body { display: flex; flex-direction: column; overflow: hidden; }
+    button, a { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; }
+    .shell { flex: 0 0 auto; background: #171612; border-bottom: 1px solid #4c3b2b; box-shadow: 0 12px 32px #09080666; z-index: 2; }
+    .topline { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 15px 26px 12px; }
+    .brand { display: flex; align-items: center; gap: 11px; text-decoration: none; white-space: nowrap; }
+    .mark { width: 33px; height: 33px; display: grid; place-items: center; border: 2px solid #e9ab67; border-radius: 8px; background: #634028; color: #fff4d9; font: 800 19px/1 ui-monospace, monospace; box-shadow: inset 3px 3px #aa7048; }
+    .brand strong { letter-spacing: .13em; font: 800 16px/1 ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .brand strong span { color: #e9ab67; }
+    .title { margin: 0; font-size: 13px; font-weight: 500; color: #cbbba4; text-align: right; }
+    .title b { color: #f3ecdc; font-weight: 700; }
+    .tabs { display: flex; align-items: end; gap: 4px; padding: 0 20px; overflow-x: auto; scrollbar-width: thin; }
+    .tab { position: relative; min-width: 175px; padding: 11px 15px 13px; border: 1px solid transparent; border-bottom: 0; border-radius: 10px 10px 0 0; background: transparent; color: #aa9c89; text-align: left; white-space: nowrap; }
+    .tab:hover { color: #f2ddc0; background: #29231d; }
+    .tab[aria-selected="true"] { color: #fff2d9; border-color: #4c3b2b; background: #2c241c; }
+    .tab[aria-selected="true"]::after { content: ""; position: absolute; bottom: 0; left: 12px; right: 12px; height: 3px; background: #e3a363; border-radius: 4px 4px 0 0; }
+    .tab-number { display: inline-flex; align-items: center; justify-content: center; width: 23px; height: 23px; margin-right: 8px; border: 1px solid #8f6947; border-radius: 5px; color: #e9ab67; font: 700 12px ui-monospace, monospace; }
+    .tab-label { font-size: 13px; font-weight: 700; }
+    .tab-note { display: block; padding: 4px 0 0 32px; color: #ad9f8d; font-size: 11px; }
+    .tab[aria-selected="true"] .tab-note { color: #d2b99d; }
+    .viewer { position: relative; flex: 1 1 auto; min-height: 0; background: #0b0c0d; }
+    #viewer-frame { display: block; width: 100%; height: 100%; border: 0; background: #090a0b; }
+    .loading { position: absolute; inset: 0; display: grid; place-items: center; z-index: 1; pointer-events: none; background: #0b0c0d; color: #c1b4a3; letter-spacing: .12em; font: 12px ui-monospace, monospace; }
+    .loading[hidden] { display: none; }
+    .duplicate-note { position: absolute; top: 14px; left: 14px; z-index: 2; max-width: min(390px, calc(100% - 28px)); padding: 10px 13px; border: 1px solid #bd9469; border-radius: 7px; background: #1e1b17ed; color: #ffe4ba; font-size: 12px; line-height: 1.45; box-shadow: 0 8px 20px #0008; }
+    .duplicate-note[hidden] { display: none; }
+    .viewer-link { position: absolute; right: 15px; bottom: 15px; z-index: 2; padding: 8px 11px; border: 1px solid #a1764c; border-radius: 6px; background: #1c1a17df; color: #ffdfad; font-size: 12px; text-decoration: none; }
+    .viewer-link:hover { background: #3b2c20; }
+    .viewer-link[hidden] { display: none; }
+    @media (max-width: 720px) { .topline { padding: 11px 14px; } .title { font-size: 11px; } .tabs { padding: 0 7px; } .tab { min-width: 148px; padding: 9px 11px 11px; } .tab-label { font-size: 12px; } .tab-note { font-size: 10px; } }
+  </style>
+</head>
+<body>
+  <header class="shell">
+    <div class="topline">
+      <a class="brand" href="#demo1" aria-label="Jiro.bot demo gallery"><span class="mark" aria-hidden="true">J</span><strong>JIRO<span>.</span>BOT</strong></a>
+      <p class="title">One place to review <b>every saved demo</b></p>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Jiro website demos">
+      <button class="tab" id="tab-demo1" role="tab" aria-controls="viewer" aria-selected="true" data-demo="demo1"><span class="tab-number">1</span><span class="tab-label">3D scroll</span><span class="tab-note">Koi pond ending</span></button>
+      <button class="tab" id="tab-demo2" role="tab" aria-controls="viewer" aria-selected="false" data-demo="demo2" tabindex="-1"><span class="tab-number">2</span><span class="tab-label">Restaurant tour</span><span class="tab-note">Eight illustrated rooms</span></button>
+      <button class="tab" id="tab-demo3" role="tab" aria-controls="viewer" aria-selected="false" data-demo="demo3" tabindex="-1"><span class="tab-number">3</span><span class="tab-label">Duplicate check</span><span class="tab-note">Same build as Demo 1</span></button>
+      <button class="tab" id="tab-demo4" role="tab" aria-controls="viewer" aria-selected="false" data-demo="demo4" tabindex="-1"><span class="tab-number">4</span><span class="tab-label">Sketch belt</span><span class="tab-note">Crisp pixel-art hero</span></button>
+    </nav>
+  </header>
+  <main class="viewer" id="viewer" role="tabpanel" aria-labelledby="tab-demo1">
+    <div class="loading" id="loading" role="status">LOADING DEMO 1</div>
+    <iframe id="viewer-frame" title="Jiro.bot Demo 1" allow="autoplay; fullscreen"></iframe>
+    <div class="duplicate-note" id="duplicate-note" hidden>Demo 3 displays Demo 1. Their 64 website files match byte for byte, so no separate build was saved.</div>
+    <a class="viewer-link" id="viewer-link" href="/demo1/" target="_blank" rel="noopener">Open full size ↗</a>
+  </main>
+  <script>
+    const demos = ["demo1", "demo2", "demo3", "demo4"];
+    const tabs = [...document.querySelectorAll(".tab")];
+    const viewer = document.getElementById("viewer");
+    const frame = document.getElementById("viewer-frame");
+    const duplicateNote = document.getElementById("duplicate-note");
+    const loading = document.getElementById("loading");
+    const viewerLink = document.getElementById("viewer-link");
+    let active = "";
+    let generation = 0;
+
+    function selectDemo(id, updateHash = true) {
+      if (!demos.includes(id)) id = "demo1";
+      if (id === active) return;
+      active = id;
+      const tab = document.getElementById(`tab-${id}`);
+      for (const button of tabs) {
+        const selected = button === tab;
+        button.setAttribute("aria-selected", String(selected));
+        button.tabIndex = selected ? 0 : -1;
+      }
+      viewer.setAttribute("aria-labelledby", tab.id);
+      const isDuplicate = id === "demo3";
+      duplicateNote.hidden = !isDuplicate;
+      generation++;
+      const thisGeneration = generation;
+      loading.textContent = `LOADING DEMO ${id.slice(-1)}`;
+      loading.hidden = false;
+      frame.title = `Jiro.bot Demo ${id.slice(-1)}`;
+      frame.onload = () => { if (thisGeneration === generation) loading.hidden = true; };
+      frame.src = `/${isDuplicate ? "demo1" : id}/`;
+      viewerLink.href = `/${isDuplicate ? "demo1" : id}/`;
+      viewerLink.textContent = isDuplicate ? "Open Demo 1 full size ↗" : "Open full size ↗";
+      if (updateHash && location.hash !== `#${id}`) history.replaceState(null, "", `#${id}`);
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => selectDemo(tab.dataset.demo));
+      tab.addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+        event.preventDefault();
+        const current = demos.indexOf(tab.dataset.demo);
+        const next = event.key === "Home" ? 0 : event.key === "End" ? 3 : (current + (event.key === "ArrowRight" ? 1 : 3)) % 4;
+        tabs[next].focus();
+        selectDemo(demos[next]);
+      });
+    });
+    addEventListener("hashchange", () => selectDemo(location.hash.slice(1), false));
+    selectDemo(location.hash.slice(1) || "demo1", false);
+  </script>
+</body>
+</html>

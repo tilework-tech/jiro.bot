@@ -2,6 +2,8 @@
 
 These directories freeze distinct website experiences for review and exact reconstruction. They are source snapshots, not production deployments. Keep each demo's code, final media, documentation, and reference captures together.
 
+Open the [four-tab review gallery](showcase/README.md) to click through the saved experiences on one page. Demo3 displays Demo1 with a duplicate notice.
+
 | Demo | September 30 review item | Experience | Run from this repository root | Status |
 |---|---:|---|---|---|
 | [Demo1](demo1/README.md) | 2 | Seven-stop 3D scroll with a procedural koi ending | `cd demo1/site && npm ci && npm run build && node serve.mjs` | Existing approved snapshot, unchanged here. |
