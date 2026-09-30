@@ -1,0 +1,80 @@
+{
+  "source": "demo4/restaurant",
+  "viewport": {
+    "width": 1600,
+    "height": 900
+  },
+  "params": {
+    "tt": 0.5,
+    "t": 5
+  },
+  "segments": [
+    {
+      "id": "bar",
+      "start": 0,
+      "len": 1.2
+    },
+    {
+      "id": "bar>office",
+      "start": 1.2,
+      "len": 1.5
+    },
+    {
+      "id": "office",
+      "start": 2.7,
+      "len": 1.6
+    },
+    {
+      "id": "office>dining",
+      "start": 4.300000000000001,
+      "len": 1.6
+    },
+    {
+      "id": "dining",
+      "start": 5.9,
+      "len": 1.6
+    },
+    {
+      "id": "dining>kitchen",
+      "start": 7.5,
+      "len": 1.4
+    },
+    {
+      "id": "kitchen",
+      "start": 8.9,
+      "len": 1.6
+    },
+    {
+      "id": "kitchen>storage",
+      "start": 10.5,
+      "len": 1.4
+    },
+    {
+      "id": "storage",
+      "start": 11.9,
+      "len": 1.6
+    },
+    {
+      "id": "storage>street",
+      "start": 13.5,
+      "len": 1.4
+    },
+    {
+      "id": "street",
+      "start": 14.9,
+      "len": 1.6
+    },
+    {
+      "id": "street>pond",
+      "start": 16.5,
+      "len": 1.4
+    },
+    {
+      "id": "pond",
+      "start": 17.9,
+      "len": 1.8
+    }
+  ],
+  "browser": "Chromium via Nori session Chrome CDP",
+  "pageErrors": []
+}
