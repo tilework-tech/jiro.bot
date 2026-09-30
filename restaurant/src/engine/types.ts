@@ -4,7 +4,7 @@
 export const STAGE_W = 1920;
 export const STAGE_H = 1080;
 /** Belt speed in stage px per second at scale 1. Identical in every scene and transition. */
-export const BELT_SPEED = 56;
+export const BELT_SPEED = 12;
 /** Distance between plate centres along the belt at scale 1. */
 export const PLATE_GAP = 72;
 /** Master ambient loop length in seconds; periodic ambient motion should divide this. */

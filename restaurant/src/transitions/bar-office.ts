@@ -7,7 +7,7 @@ import { Y_B, Y_OFF, MICE, MICE_H, drawBetween, drawNear } from "./bar-office/wo
 // bar -> office: the camera glides straight down a tall world column (bar frame on top,
 // office frame at Y_OFF) following the plates: the hero trough runs on down-left across the
 // dark page, banks into the left lane, drops through a copper hatch in the bar floor, rides
-// a lift shaft through the crawlspace where the floor mice live, and enters the office
+// a lift shaft through the crawlspace where the soot sprites live, and enters the office
 // ceiling as the office's sushi lift. See bar-office.md.
 
 declareEggs(["tr-floor-mice"]);
@@ -53,7 +53,7 @@ export const barOffice: TransitionDef = {
   from: "bar",
   to: "office",
   length: 1.5,
-  route: "Down-left off the hero picture across the dark page, banking into the left lane, through a copper hatch in the bar floor, down the crawlspace where the floor mice live, into the office's sushi lift",
+  route: "Down-left off the hero picture across the dark page, banking into the left lane, through a copper hatch in the bar floor, down the crawlspace where the soot sprites live, into the office's sushi lift",
   render(g, t, now, api) {
     if (t <= 0) { api.drawScene("bar", g, now); return; }
     if (t >= T_END) { api.drawScene("office", g, now); return; }
@@ -78,17 +78,17 @@ export const barOffice: TransitionDef = {
   },
   mount(el, api) {
     const lines = [
-      "Squeak. (Daily standup. The candle is the build light.)",
-      "Squeak squeak. (We only eat what falls off the belt. Nothing ever falls off.)",
-      "Squeak! (Tiny Jiro upstairs pays rent in rice.)",
+      "The soot sprites meet by candlelight every night.",
+      "They only eat what falls off the belt. Nothing ever falls off.",
+      "Tiny Jiro upstairs pays rent in rice.",
     ];
     let n = 0;
-    const h = hotspot(el, 0, 0, MICE.w, MICE_H, "Floor mice", () => {
+    const h = hotspot(el, 0, 0, MICE.w, MICE_H, "Soot sprites", () => {
       api.sfx("pop");
       const r = h.getBoundingClientRect();
       const [x, y] = api.toStage(r.left, r.top);
       bubble(el, x - 60, y - 70, lines[n++ % lines.length], 2600);
-      api.egg("tr-floor-mice", "The floor mice hold standup under the bar every night. Nobody knows who the PM is.");
+      api.egg("tr-floor-mice", "The soot sprites gather under the bar every night. Nobody knows who the PM is.");
     });
     h.dataset.mice = "1";
   },

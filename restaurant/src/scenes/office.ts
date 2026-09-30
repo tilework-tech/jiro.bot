@@ -27,7 +27,7 @@ const LED = { x: 1386, y: 931, w: 9, h: 6 };
 const FLOOR_Y = 929;
 /** Lucky cat's raised paw (waves) and the pixel of wall just right of it. */
 const PAW = { x: 1702, y: 476, w: 17, h: 15 };
-/** Mouse hole in the baseboard (dark interior). */
+/** Small opening in the baseboard (dark interior). */
 const HOLE = { x: 1483, y: 904, w: 21, h: 21 };
 /** The J hook on the side wall; the rubber duck hangs from its bottom curve. */
 const HOOK: [number, number] = [1809, 611];
@@ -156,26 +156,26 @@ function paw(g: CanvasRenderingContext2D, now: number, art: HTMLImageElement) {
   g.drawImage(art, x, y, w, h, x, y + 3, w, h);
 }
 
-const MOUSE = [
-  "..gg.......",
-  ".gppg......",
-  ".gggggg....",
-  "ggeggggg...",
-  "gggggggggr.",
-  ".ggggggg..r",
-  "..w..w.....",
+const SOOT = [
+  "..s.s.s....",
+  ".sssssss...",
+  "sswsswsss..",
+  "ssbssbssss.",
+  "ssssssssss.",
+  ".ssssssss..",
+  "..s.s.s....",
 ];
-function mouse(g: CanvasRenderingContext2D, now: number, t: number) {
+function soot(g: CanvasRenderingContext2D, now: number, t: number) {
   const { x, y, w, h } = HOLE;
   if (t < mouseUntil) {
-    // Out of the hole, holding one grain of rice, bobbing.
+    // Out of the opening, bobbing with a grain of rice.
     const bob = m(t * 4, 1) < 0.5 ? 0 : 1;
-    const ox = x - 6, oy = y + h - MOUSE.length * PX + 3 - bob;
-    const pal: Record<string, string> = { g: "#8d8580", p: "#e7a0a8", e: "#0b0707", r: "#b37b74", w: "#e9dfd0" };
-    MOUSE.forEach((row, j) => [...row].forEach((c, i) => {
+    const ox = x - 6, oy = y + h - SOOT.length * PX + 3 - bob;
+    const pal: Record<string, string> = { s: "#171319", w: "#f6f1e6", b: "#120d12" };
+    SOOT.forEach((row, j) => [...row].forEach((c, i) => {
       if (c === ".") return;
       g.fillStyle = pal[c];
-      g.fillRect(ox + (MOUSE[0].length - 1 - i) * PX, oy + j * PX, PX, PX);
+      g.fillRect(ox + (SOOT[0].length - 1 - i) * PX, oy + j * PX, PX, PX);
     }));
     g.fillStyle = "#f6f1e6"; g.fillRect(ox - 3, oy + 12, 6, 3);
     return;
@@ -325,7 +325,7 @@ export const office: SceneDef = {
     screen(g, api);
     screenLight(g, now);
     paw(g, now, api.img(ART));
-    mouse(g, now, t);
+    soot(g, now, t);
     duck(g, now);
     if (lampOn) {
       glow(g, 1720, 900, 170, "rgba(255,180,100,.06)", now, 0.06, 12);
@@ -394,11 +394,11 @@ export const office: SceneDef = {
       api.sfx("pop");
       api.egg("office-binders", "Binders: RUNBOOKS, MORE RUNBOOKS, and one labeled \"do not read before coffee\".");
     });
-    hotspot(el, 1470, 890, 48, 42, "Mouse hole", () => {
+    hotspot(el, 1470, 890, 48, 42, "Soot sprite opening", () => {
       api.sfx("blip");
       mouseUntil = performance.now() / 1000 + 3;
-      bubble(el, 1330, 790, "Floor mouse here. Blocker: I only have one grain of rice.", 2800, "office-bubble");
-      api.egg("office-mouse", "A floor mouse from the crawlspace standup came up to report a blocker. It is the rice.");
+      bubble(el, 1330, 790, "Soot sprite here. Found one grain of rice.", 2800, "office-bubble");
+      api.egg("office-mouse", "A soot sprite from the crawlspace came up with a grain of rice.");
     });
     hotspot(el, 1788, 570, 44, 80, "Hook", () => {
       duckOn = !duckOn;

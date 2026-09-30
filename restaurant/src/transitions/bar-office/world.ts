@@ -1,7 +1,7 @@
 // bar -> office world: one tall column in stage-x / world-y.
 //   y 0 .. 1080          the bar frame (hero page + video), drawn by the bar scene
 //   y 1080 .. Y_B        dark page: the hero trough keeps running down-left, bends into the left lane
-//   y Y_B .. Y_OFF       cutaway of the crawlspace under the bar floor (mice live here)
+//   y Y_B .. Y_OFF       cutaway of the crawlspace under the bar floor (soot sprites live here)
 //   y Y_OFF .. +1080     the office frame, drawn by the office scene
 // The belt is one path W from the bar belt's first point to the office belt's first point.
 // Its length is a whole number of PLATE_GAPs, so plates line up with the bar AND the office.

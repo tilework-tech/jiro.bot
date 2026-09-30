@@ -146,7 +146,7 @@ export const kitchenStorage: TransitionDef = {
   from: "kitchen",
   to: "storage",
   length: 1.4,
-  route: "Down the steel sushi lift, through a riveted sleeve in the kitchen floor, past the mouse family's flat and a pile of dust bunnies, out of the storage ceiling hatch.",
+  route: "Down the steel sushi lift, through a riveted sleeve in the kitchen floor, past the soot sprites' flat and a pile of dust bunnies, out of the storage ceiling hatch.",
   render(g, t, now, api) {
     if (t <= 0) { api.drawScene("kitchen", g, now); return; }
     if (t >= 1) { api.drawScene("storage", g, now); return; }
@@ -181,9 +181,9 @@ export const kitchenStorage: TransitionDef = {
     g.imageSmoothingEnabled = prev;
   },
   mount(el, api) {
-    hotMice = hotspot(el, 0, 0, 10, 10, "The mouse family", () => {
+    hotMice = hotspot(el, 0, 0, 10, 10, "The soot sprite family", () => {
       api.sfx("blip");
-      api.egg("ks-mice", "The Nezumi family. Rent: one grain of rice a month. Jiro has never raised it.");
+      api.egg("ks-mice", "The soot sprite family. Rent: one grain of rice a month. Jiro has never raised it.");
     });
     hotBunnies = hotspot(el, 0, 0, 10, 10, "Dust bunnies", () => {
       api.sfx("pop");

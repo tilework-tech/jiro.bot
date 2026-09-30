@@ -50,7 +50,7 @@ const belt = {
 // Every piece is a pure function of belt time, and each leap is drawn for the previous,
 // current and next set, so nothing is ever cut off when a new set starts.
 const SET = 6;
-const P = PLATE_GAP / BELT_SPEED; // seconds between plates (~1.29)
+const P = PLATE_GAP / BELT_SPEED; // seconds between plates (6)
 const CYCLE = SET * P; // one leap every ~7.7 s
 const GP = 360; // plate gravity (a soft, moonlit gravity)
 const LOB = { vx: -100, vy: -334 };

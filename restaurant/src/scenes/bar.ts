@@ -14,7 +14,7 @@ declareEggs(["bar-jiro", "bar-sake", "bar-lantern", "bar-customer", "bar-plates"
 // the picture at its bottom edge; the engine belt continues it down-left to the OUT port.
 
 const PAGE = "art/bar/page.jpg";   // dark quiet page behind everything
-const STILL = "art/bar/still.jpg"; // first video frame (rows 6..1072), shown until the video plays
+const STILL = "art/bar/hero-downward-still.jpg"; // first frame of the downward loop, shown until playback
 const VIDEO = "video/hero.mp4";
 
 /** Source crop: the video has 5-6 black rows at top and bottom. */
