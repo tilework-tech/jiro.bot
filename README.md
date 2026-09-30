@@ -10,6 +10,12 @@ npm run dev      # vite on :5173
 npm run build    # static build in dist/
 ```
 
+## Mini-games
+
+The final arcade lives at `/games/arcade/`: Sushi Rush and Daily Roll side by side,
+with mouse controls and a Japanese sushi-counter theme. Static files are in
+`public/games/`. See [docs/games.md](docs/games.md) for controls and maintenance.
+
 ## Layout
 
 - `src/main.ts`: page wiring (belt path, feeding, discovery toasts, DOM effects)
