@@ -55,5 +55,3 @@ class Rush {
   tap() { this.cur.tap && this.cur.tap(); }
   swipe(d) { this.cur.swipe && this.cur.swipe(d); }
 }
-
-if (document.getElementById('game')) Shell.init({ canvas: document.getElementById('game'), id: 'rush', pixelScale: 2, make: () => new Rush(RUSH_W, RUSH_H) });

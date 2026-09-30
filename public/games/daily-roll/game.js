@@ -36,9 +36,7 @@ EVT.on('gameover', ({ engine: m }) => {
   };
   if (!prev) localStorage.setItem(key, result.score);
   const full = Math.round(result.pct / 10);
-  result.text = `Daily Roll #${result.number} 🍣\n${'🟩'.repeat(full)}${'⬛'.repeat(10 - full)} ${result.pct}%\n${'🍣'.repeat(result.lives)}${'⬛'.repeat(3 - result.lives)} · ${result.score} pts\njiro.bot/games/daily-roll/`;
+  result.text = `Daily Roll #${result.number} 🍣\n${'🟩'.repeat(full)}${'⬛'.repeat(10 - full)} ${result.pct}%\n${'🍣'.repeat(result.lives)}${'⬛'.repeat(3 - result.lives)} · ${result.score} pts\njiro.bot/games/arcade/#daily`;
   DAILY.result = result;
   EVT.emit('dailyResult', { result });
 });
-
-if (document.getElementById('game')) Shell.init({ canvas: document.getElementById('game'), id: 'daily-' + DAILY.date, pixelScale: 2, make: () => new Maze(DAILY_W, DAILY_H, dailyMode()) });

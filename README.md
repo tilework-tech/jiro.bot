@@ -12,7 +12,9 @@ npm run build    # static build in dist/
 
 ## Mini-games
 
-Two simple arcade games live at `/games/sushi-rush/` and `/games/daily-roll/` (static files in `public/games/`). See [docs/games.md](docs/games.md).
+The final arcade lives at `/games/arcade/`: Sushi Rush and Daily Roll side by side,
+with mouse controls and a Japanese sushi-counter theme. Static files are in
+`public/games/`. See [docs/games.md](docs/games.md) for controls and maintenance.
 
 ## Layout
 
