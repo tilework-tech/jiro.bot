@@ -9,12 +9,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script>
     (() => {
-      const fallback = () => location.replace(new URL("fallback/", location.href));
+      const fallback = (why) => { try { navigator.sendBeacon("__diag", JSON.stringify({ kind: "fallback", why: String(why), ua: navigator.userAgent })); } catch (_) {} location.replace(new URL("fallback/", location.href)); };
       let supported = false;
       try { supported = !!document.createElement("canvas").getContext("webgl2"); } catch (_) {}
-      if (!supported) fallback();
-      // never fail silently: show what broke and offer the plain scene reel
+      if (!supported) fallback("no webgl2");
+      // never fail silently: report to the preview server, show what broke, offer the scene reel
+      const diag = (kind, data) => {
+        try { navigator.sendBeacon("__diag", JSON.stringify({ kind, href: location.href, t: Math.round(performance.now()), ...data })); } catch (_) {}
+      };
+      window.__diag = diag;
       const report = (msg) => {
+        diag("fatal", { msg: String(msg), frames: window.__jiroFrames || 0 });
         if (document.getElementById("boot-error")) return;
         const d = document.createElement("div"); d.id = "boot-error";
         d.style.cssText = "position:fixed;inset:auto 24px 24px 24px;z-index:99;background:#2a1a12;color:#f2e7d7;border:1px solid #e0894c;padding:14px 18px;font:14px system-ui,sans-serif";
@@ -22,11 +27,24 @@
         d.querySelector("small").textContent = String(msg) + " | " + navigator.userAgent;
         (document.body || document.documentElement).appendChild(d);
       };
-      addEventListener("error", (e) => report(e.message || (e.target && e.target.src ? "failed to load " + e.target.src : "error")), true);
-      addEventListener("unhandledrejection", (e) => report(e.reason));
-      setTimeout(() => { if (!window.__jiroFrames) report("no frame rendered after 8s"); }, 8000);
+      addEventListener("error", (e) => {
+        const t = e.target;
+        if (t && t !== window && t.tagName) { diag("resource", { tag: t.tagName, src: t.currentSrc || t.src || t.href, code: t.error && t.error.code }); return; }
+        report((e.message || "error") + (e.filename ? " @ " + e.filename + ":" + e.lineno + ":" + e.colno : "") + (e.error && e.error.stack ? " | " + e.error.stack : ""));
+      }, true);
+      addEventListener("unhandledrejection", (e) => report("unhandled: " + (e.reason && e.reason.stack || e.reason)));
+      const snapshot = (label) => {
+        const vids = (window.__jiroVideos || []).map((v) => ({ src: v.currentSrc.split("/").pop(), rs: v.readyState, ns: v.networkState, paused: v.paused, err: v.error && v.error.code, t: +v.currentTime.toFixed(2) }));
+        let gl = {};
+        try { const c = document.getElementById("gl"), x = c && (c.__ctx || null); gl = { w: c.width, h: c.height, lost: x ? x.isContextLost() : null, info: window.__jiroGL || null }; } catch (_) {}
+        diag(label, { frames: window.__jiroFrames || 0, dpr: devicePixelRatio, vw: innerWidth, vh: innerHeight, gl, vids });
+      };
+      diag("boot", { ua: navigator.userAgent, dpr: devicePixelRatio, vw: innerWidth, vh: innerHeight });
+      setTimeout(() => snapshot("t3"), 3000);
+      setTimeout(() => { snapshot("t10"); if (!window.__jiroFrames) report("no frame rendered after 10s"); }, 10000);
+      setTimeout(() => snapshot("t30"), 30000);
       addEventListener("DOMContentLoaded", () => {
-        document.getElementById("gl")?.addEventListener("webglcontextlost", fallback);
+        document.getElementById("gl")?.addEventListener("webglcontextlost", () => fallback("context lost"));
       });
     })();
   </script>

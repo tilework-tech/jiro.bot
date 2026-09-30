@@ -14,6 +14,11 @@ const canvas = document.getElementById("gl") as HTMLCanvasElement;
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
+{ // for the preview diagnostics beacon (index.html)
+  const gl = renderer.getContext(); const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+  (canvas as any).__ctx = gl;
+  (window as any).__jiroGL = { renderer: dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER), maxTex: gl.getParameter(gl.MAX_TEXTURE_SIZE) };
+}
 const scene = new THREE.Scene();
 const BG = new THREE.Color("#0c0806");
 scene.background = BG;
@@ -70,6 +75,8 @@ const views: CardView[] = cards.map((card) => {
   }
   return view;
 });
+
+(window as any).__jiroVideos = views.map((v) => v.video);
 
 function ensureLoaded(v: HTMLVideoElement) {
   if (v.src) return;
