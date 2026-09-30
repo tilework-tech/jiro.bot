@@ -3,11 +3,12 @@ import { html, hotspot, bubble } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
 import { PRICING } from "../content/copy";
 import { streetDetails, streetFx, streetClock, CAT_POS } from "./street/details";
+import { drawStreetVideo } from "./street/video";
 import "./street.css";
 
-// Reference recording: fixed rider, passing close shopfronts and a deep lantern alley.
-// A repeating panorama and four bicycle poses keep motion independent of scroll.
-// All ambient periods divide 24 seconds; the conveyor retains its own steady clock.
+// Original seven-second street footage recovered from nori-monorepo PR #152.
+// Only the old rider/motorcycle region is reconstructed; the approved bicycle
+// stays a separate sprite. No conveyor crosses this street.
 const TAU=Math.PI*2, PX=3;
 const mod=(a:number,b:number)=>((a%b)+b)%b;
 const snap=(x:number)=>Math.round(x/PX)*PX;
@@ -17,85 +18,46 @@ for(let i=1;i<=12;i++){const a=Math.PI-i/12*Math.PI/2;pts.push([252+Math.cos(a)*
 pts.push([1680,1020,1]);
 for(let i=1;i<=12;i++){const a=-Math.PI/2+i/12*Math.PI/2;pts.push([1680+Math.cos(a)*90,1110+Math.sin(a)*90,1]);}
 pts.push([1770,1140,1]);
-declareEggs(["street-bell","street-lamp","street-jiro","street-cargo","street-drain","street-puddle","street-cat","street-neon"]);
+declareEggs(["street-bell","street-lamp","street-jiro","street-cargo","street-puddle","street-cat","street-neon"]);
 
 export const street:SceneDef={
- id:"street",room:"Delivery",art:"art/street/panorama.png",mood:"bustling",hold:1.6,
+ id:"street",room:"Delivery",art:"art/street/street-poster.png",mood:"bustling",hold:1.6,hideBelt:true,
  belt:{pts,width:64,plate:48,fadeIn:0,fadeOut:0},
  under(g,now,api){
   const t=mod(now,24);g.save();g.imageSmoothingEnabled=false;
-  const bg=api.img("art/street/panorama.png"), rider=api.img("art/street/pedal-sheet.png");
-  // 1080 native pixels at exactly 3x. A foreground drainpipe hides the tile join.
-  const width=3240, shift=snap(mod(t/12*width,width));
-  g.fillStyle="#101b28";g.fillRect(0,0,1920,1080);
-  if(bg.complete && bg.naturalWidth)for(let x=-shift;x<1920;x+=width){
-   g.drawImage(bg,x,0,width,1080);
-   // Reflected shop light shivers in the water independently of the passing buildings.
-   for(let y=828;y<1080;y+=3){
-    const depth=(y-828)/252;
-    const drift=snap(depth*(Math.sin(t*TAU/4+y*.09)*6+Math.sin(t*TAU/6-y*.05)*3));
-    g.drawImage(bg,0,y/3,1080,1,x+drift,y,width,3);
-   }
-   g.fillStyle="#101c29";g.fillRect(x-18,0,36,816);
-   g.fillStyle="#2d3e49";g.fillRect(x-9,0,9,816);
-   g.fillStyle="#43525a";g.fillRect(x,0,3,816);
-   for(let y=96;y<810;y+=240){g.fillStyle="#101923";g.fillRect(x-24,y,48,12);}
-   g.fillStyle="#14232e";g.fillRect(x-27,816,54,9);
-  }
-  // Warm light projects ahead of the fixed rider; hard bands retain the pixel grid.
-  for(let i=0;i<5;i++){
-   const lampAge=now-streetFx.lamp;
-   const boost=lampAge>=0&&lampAge<2?Math.sin(Math.PI*lampAge/2)*.06:0;
-   g.fillStyle=`rgba(246,190,99,${.026+i*.004+boost})`;
-   g.beginPath();g.moveTo(825,600);g.lineTo(1920,420+i*27);g.lineTo(1920,984-i*24);g.closePath();g.fill();
+  drawStreetVideo(g,now,api);
+  g.imageSmoothingEnabled=false;
+  const rider=api.img("art/street/pedal-sheet.png");
+  // The original headlight already belongs to the footage. Only its click response is added.
+  const lampAge=now-streetFx.lamp;
+  if(lampAge>=0&&lampAge<2){
+   g.fillStyle=`rgba(246,190,99,${Math.sin(Math.PI*lampAge/2)*.12})`;
+   g.beginPath();g.moveTo(861,660);g.lineTo(1920,474);g.lineTo(1920,1020);g.closePath();g.fill();
   }
   // A wet silhouette travels with the bike, broken into horizontal water bands.
   if(rider.complete && rider.naturalWidth){
    const pose=Math.floor(t/.3)%4;
-   g.save();g.translate(360,1836);g.scale(1,-1);g.globalAlpha=.13;
-   for(let y=750;y<918;y+=12){g.save();g.beginPath();g.rect(0,y,576,6);g.clip();g.drawImage(rider,pose*192,0,192,256,0,228,576,768);g.restore();}
+   g.save();g.translate(396,1956);g.scale(1,-1);g.globalAlpha=.13;
+   for(let y=810;y<978;y+=12){g.save();g.beginPath();g.rect(0,y,576,6);g.clip();g.drawImage(rider,pose*192,0,192,256,0,288,576,768);g.restore();}
    g.restore();
-   g.drawImage(rider,pose*192,0,192,256,360,228,576,768);
+   g.drawImage(rider,pose*192,0,192,256,396,288,576,768);
   }
   // Small bright spoke pixels rotate without redrawing the rim or bicycle geometry.
-  for(const [x,y] of [[495,807],[831,807]])for(let i=0;i<6;i++){
+  for(const [x,y] of [[531,867],[867,867]])for(let i=0;i<6;i++){
    const a=t*TAU/1.2+i*TAU/6;g.fillStyle="rgba(214,220,204,.35)";
    for(let r=24;r<87;r+=9)g.fillRect(snap(x+Math.cos(a)*r),snap(y+Math.sin(a)*r),3,3);
   }
   // Shallow tire spray and ripples stay in the foreground while the shops pass.
   for(let i=0;i<18;i++){
-   const f=mod(t/.6+hash(i),1),x=(i%2?495:831)-f*90;
+   const f=mod(t/.6+hash(i),1),x=(i%2?531:867)-f*90;
    g.globalAlpha=(1-f)*.4;g.fillStyle="#b8c7cd";
-   g.fillRect(snap(x),snap(903-Math.sin(f*Math.PI)*18),6,3);
+   g.fillRect(snap(x),snap(963-Math.sin(f*Math.PI)*18),6,3);
   }
   g.globalAlpha=1;
   streetDetails(g,now);
   g.restore();
  },
- over(g,now){
-  const t=mod(now,24);g.save();g.fillStyle="#c5d4de";
-  for(let i=0;i<110;i++){
-   const period=[1.5,2,2.4][i%3],f=mod(t/period+hash(i+80),1);
-   const x=hash(i+190)*2180-f*220,y=-30+f*1140;
-   g.globalAlpha=i%3===0?.3:.15;
-   for(let k=0;k<4;k++)g.fillRect(snap(x-k*1.5),snap(y+k*3),3,3);
-  }
-  for(let i=0;i<25;i++){
-   const age=mod(t/2+hash(i+300),1);if(age>.2)continue;
-   const x=snap(hash(i+410)*1880),y=snap(928+hash(i+501)*140);
-   g.globalAlpha=.4*(1-age/.2);g.fillRect(x-snap(age*35),y-snap(age*20),3,3);g.fillRect(x+snap(age*35),y,3,3);
-  }
-  // Larger, closer drops pass the camera; the finer layer stays behind them.
-  for(let i=0;i<38;i++){
-   const f=mod(t/[1,1.2,1.5][i%3]+hash(i+620),1);
-   const x=hash(i+700)*2180-f*160,y=-48+f*1180;
-   g.globalAlpha=.22;
-   for(let k=0;k<7;k++)g.fillRect(snap(x-k),snap(y+k*3),3,3);
-  }
-  g.restore();
- },
  click(x,y,api){
-  if(y>980&&x>1690){api.sfx("splash");api.egg("street-drain","(from the drain) …works on my machine… Follow the belt.");return true;}
   if(y>828&&y<990&&!(x>350&&x<945)){
    streetFx.rx=x;streetFx.ry=y;streetFx.ripple=streetClock();
    api.sfx("splash");api.egg("street-puddle","You stepped in a puddle. Your sock is now eventually consistent.");return true;
@@ -126,10 +88,10 @@ export const street:SceneDef={
         </div>
       </section>`);
 
-    hotspot(el,752,570,54,58,"Bike bell",()=>{streetFx.bell=streetClock();api.sfx("chime");bubble(el,650,510,"Ring ring. Delivery for main.");api.egg("street-bell","The bell is the CI notification.");});
-    hotspot(el,804,570,66,82,"Headlamp",()=>{streetFx.lamp=streetClock();api.sfx("blip");bubble(el,858,500,"High beams: now with full observability.");api.egg("street-lamp","Jiro's headlamp is the only light in town with 100% uptime.");});
-    hotspot(el,572,303,165,165,"Jiro",()=>{streetFx.blink=streetClock();api.sfx("blip");bubble(el,550,240,"Tips? I only accept well-scoped tickets.");api.egg("street-jiro","Zero emissions. Carefully reviewed deliveries.");});
-    hotspot(el,383,432,190,247,"Delivery boxes",()=>{api.sfx("pop");bubble(el,330,300,"Five orders, one route. Batched, never cold.");api.egg("street-cargo","The boxes are stacked in dependency order.");});
+    hotspot(el,788,630,54,58,"Bike bell",()=>{streetFx.bell=streetClock();api.sfx("chime");bubble(el,650,510,"Ring ring. Delivery for main.");api.egg("street-bell","The bell is the CI notification.");});
+    hotspot(el,840,630,66,82,"Headlamp",()=>{streetFx.lamp=streetClock();api.sfx("blip");bubble(el,858,500,"High beams: now with full observability.");api.egg("street-lamp","Jiro's headlamp is the only light in town with 100% uptime.");});
+    hotspot(el,608,363,165,165,"Jiro",()=>{streetFx.blink=streetClock();api.sfx("blip");bubble(el,550,240,"Tips? I only accept well-scoped tickets.");api.egg("street-jiro","Zero emissions. Carefully reviewed deliveries.");});
+    hotspot(el,419,492,190,247,"Delivery boxes",()=>{api.sfx("pop");bubble(el,330,300,"Five orders, one route. Batched, never cold.");api.egg("street-cargo","The boxes are stacked in dependency order.");});
     hotspot(el,CAT_POS.x-6,CAT_POS.y-9,57,57,"Cat on the boxes",()=>{streetFx.cat=streetClock();api.sfx("meow");bubble(el,350,285,"(the cat is supervising the delivery)");api.egg("street-cat","The cat rides for free. In return it reviews every order.");});
   },
 };

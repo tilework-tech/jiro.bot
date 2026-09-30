@@ -9,8 +9,8 @@ import { street } from "../scenes/street";
 import { pond } from "../scenes/pond";
 
 // street -> pond: "Drains to pond".
-// The street belt dives down through the kerb into a storm drain. The camera dollies
-// in after it, the ground opens into a cutaway: a lamp-lit brick drain shaft where a
+// The camera leaves the delivery street and dollies below the kerb into a cutaway:
+// an underground belt runs through a lamp-lit brick drain shaft where a
 // kappa sits on a ledge with a laptop. The shaft runs under an old mossy garden wall
 // and the belt comes out of a round stone culvert onto the wooden walkway, straight
 // into the koi garden. Neon dims, the rain turns into drips, then moonlight and
@@ -32,8 +32,7 @@ const MOUTH_Y = 1688;
 const LAMP = { x: 1662, y: 1262 };
 const KAPPA = { x: 1606, y: 1452 };
 
-// Street side: the scene's own belt continued straight down the shaft. Same pts,
-// phase and key as the street, so it lies exactly on top of the street's belt.
+// Preserve the hidden street route's phase, but reveal the belt only underground.
 const sb = street.belt;
 const DOWN: BeltPath = {
   pts: [...sb.pts.slice(0, -1), [LANE, SINK_Y, 1]],
@@ -283,7 +282,7 @@ export const streetPond: TransitionDef = {
   from: "street",
   to: "pond",
   length: 1.4,
-  route: "Drains to pond: the belt dives through the kerb into a storm drain, rides down a lamp-lit brick shaft past a kappa on a laptop, and comes out of a round stone culvert onto the garden walkway.",
+  route: "Below the rainy street, an underground belt rides down a lamp-lit brick shaft past a kappa on a laptop, then comes out of a round stone culvert onto the garden walkway.",
   render(g, t, now, api) {
     if (t <= 0) { api.drawScene("street", g, now); return; }
     if (t >= 1) { api.drawScene("pond", g, now); return; }
@@ -310,10 +309,10 @@ export const streetPond: TransitionDef = {
       if (dim > 0) { g.fillStyle = `rgba(6,8,18,${dim})`; g.fillRect(0, 0, W, H); }
     }
 
-    // Down the shaft: the street's own belt, continued (clipped below the street's feathered edge).
-    if (vy0 < SINK_Y && vy1 > H - 30) {
+    // Reveal the belt inside the shaft, wholly below the street frame and its feather.
+    if (vy0 < SINK_Y && vy1 > SHAFT.y0) {
       g.save();
-      g.beginPath(); g.rect(SHAFT.x0 - 60, H - 26 * inS - 1, 400, SINK_Y - H + 30); g.clip();
+      g.beginPath(); g.rect(SHAFT.x0 - 60, SHAFT.y0, 400, SINK_Y - SHAFT.y0 + 2); g.clip();
       brackets(g);
       drawTread(g, DOWN, now);
       drawPlates(g, platesOn(DOWN, now, "street"), DOWN.plate ?? 52);

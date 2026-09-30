@@ -29,3 +29,12 @@ phases are preserved. The street top is now a scrolling panorama, so the old
 static-sky registration assumptions above are historical; the transition feathers
 its top edge into the remaining short sky band. Do not rerun the old street art
 builder to regenerate the active panorama or pedal sheet.
+
+## Original-video update (2026-09-30)
+
+The street is now the recovered original seven-second video with the approved
+bicycle composited over it. No exposed conveyor crosses the street. Path A ends
+inside the flap housing; path B has been removed. The exterior support painted
+into the old band is covered with its neighboring sky texture. The full street
+width is feathered at the top. Previous static-sky and matching-belt requirements
+above are historical; do not restore them.

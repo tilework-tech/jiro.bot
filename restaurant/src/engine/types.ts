@@ -75,6 +75,8 @@ export interface SceneDef {
   art: string;
   mood: "bustling" | "quiet";
   belt: BeltPath;
+  /** Retain route timing for adjacent scenes without drawing or hit-testing a belt here. */
+  hideBelt?: boolean;
   /** Scroll length of the hold in viewport heights. */
   hold: number;
   /** Draw ambient animation over the art, under the belt (stage coords). */

@@ -164,7 +164,7 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
     if (art.complete && art.naturalWidth) gg.drawImage(art, 0, 0, STAGE_W, STAGE_H);
     else { gg.fillStyle = "#0b0a09"; gg.fillRect(0, 0, STAGE_W, STAGE_H); }
     s.under?.(gg, now, api);
-    const plates = drawBeltFull(gg, s.belt, now, s.id);
+    const plates = s.hideBelt ? [] : drawBeltFull(gg, s.belt, now, s.id);
     if (live) { scenePlates = plates; sceneBeltSize = s.belt.plate ?? 52; }
     s.over?.(gg, now, api);
     gg.restore();

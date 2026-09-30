@@ -14,3 +14,10 @@
 ## What the scene art must keep
 - **street:** the belt leaves the bottom edge at x 1770 through the drain inlet in the static kerb. Everything in the street's bottom 156 px (kerb, sidewalk, inlet: `public/art/street/front.png`) is static; the parallax layers stop at the kerb (y 924), so the join at world 1080 never moves. If the street's front layer changes, re-run `src/scenes/street/build_art.py` (it rebuilds drain.png too).
 - **pond:** the belt enters the top edge at x 1770 on a walkway about x 1705–1835 wide. The top edge has dark foliage on the left, the creek at x ≈ 1200–1530 and the bridge with Jiro. If the pond is repainted, regenerate the drain band the same way (into `drain_src.jpg`) (composite 1920×2880, street at 0, pond at 1812, AR 2:3), then re-measure SHAFT, MOUTH_Y and the lamp.
+
+## Belt-free street update (2026-09-30)
+
+The delivery street now uses the recovered original footage and has no visible
+conveyor. Its hidden path remains only for route/phase continuity. Clip DOWN to
+`SHAFT.y0` (1098): the conveyor first becomes visible underground, entirely below
+the street frame and its feather. Do not reintroduce a kerb-level belt.

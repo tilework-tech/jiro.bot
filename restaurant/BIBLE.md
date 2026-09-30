@@ -233,3 +233,39 @@ recordings, five sushi FAQs, pond finale and Flappy Koi.
   it must not replace the entire crisp cutaway again.
 - Preserve the later requests: larger comparison windows, hero belt styling,
   constant wall-time belt speed, fewer spirits and arrival-timed pond catches.
+
+# v6 — Original street footage, approved bicycle (2026-09-30)
+
+Overrides the approximated backgrounds in v4/v5. Martin wants the camera,
+architecture, moving alley perspective and wet reflections from his recording,
+while keeping the approved Jiro and pedal bicycle. He explicitly removed the
+conveyor from the street.
+
+- Recovered the original clean source from `tilework-tech/nori-monorepo`, commit
+  `13ba63a6938bb559502373da98f85d0c8bcdc4a0`,
+  `docs/specs/jiro-scroller/site/vid/bike.mp4` (PR #152). It is 1280×720,
+  24 fps, seven seconds, with the original end crossfade. This is the source of
+  the Slack screen recording, without its webpage overlays.
+- `public/video/street-clean.mp4` preserves that footage outside a local mask
+  around the old motorcycle, rider, cargo and their reflection. Hidden scenery
+  is reconstructed from four edited keyframes, registered to the originals and
+  motion-aligned between frames. Do not describe the replaced area as exact
+  recovered pixels. The remaining street, camera, rain, lanterns, signs, beam
+  and reflections come from the original video, subject to video re-encoding.
+- Image-edit prompt: remove only the original robot, cargo motorcycle and their
+  reflected silhouette; reconstruct the occluded shopfront, curb and wet road;
+  preserve perspective, storefront geometry, signs, rain, lighting and the
+  headlamp cone/amber road pool; no reframing or redesign. Four input frames:
+  0, 42, 84 and 126. The compositor copies only the masked region into the video.
+- `art/street-video/` holds the aligned keyframes, mask and compositor. The
+  original source stays in the referenced immutable Git commit.
+- Keep the existing `public/art/street/pedal-sheet.png` unchanged. Its 192×256
+  cells render at stage `(396,288)`, size 576×768. Lamp `(861,660)` and wheel
+  centers `(531,867)` / `(867,867)` register with the original composition.
+- Native video playback is independent of scroll, pauses when no scene or
+  transition draws it, and uses a poster if unavailable. Reduced motion holds
+  frame time 3 s; `?t=` seeks a fixed frame for review. Bicycle pose, cat, bell,
+  headlamp reaction and puddle interactions remain separate canvas layers.
+- `hideBelt` suppresses both visible conveyor and plate hit targets in this room.
+  The incoming route ends inside the loft flap; the next visible belt starts
+  underground below the street. Pricing remains on the right.

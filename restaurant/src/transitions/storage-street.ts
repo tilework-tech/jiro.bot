@@ -7,7 +7,7 @@ import { hotspot, bubble } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
 import { storage } from "../scenes/storage";
 import { street } from "../scenes/street";
-import { drawCollar, drawFlapBox, drawHanger, drawTanuki, FLAP, TANUKI } from "./storage-street/props";
+import { drawCollar, drawFlapBox, drawHanger, drawTanuki, TANUKI } from "./storage-street/props";
 
 declareEggs(["ss-tanuki"]);
 
@@ -15,9 +15,8 @@ declareEggs(["ss-tanuki"]);
 // World space = storage stage space extended downward: storage frame at y 0, the painted band
 // (band.png: the loft's cut floor, its crawl space, the soffit and the rainy upper storeys of
 // the alley) ending at y OY, street frame at y OY. The belt leaves the storage through its floor
-// trapdoor, runs down through the crawl space (past a tanuki sheltering from the rain), pushes
-// out through a cat flap in the loft's underside and rides down the street's steel belt column
-// (bolted to the soffit) through the open night sky into the street. See storage-street.md.
+// trapdoor and runs through the crawl space (past a tanuki sheltering from the rain), then
+// disappears into the enclosed cat-flap housing. The delivery street has no exposed belt.
 
 const W = STAGE_W, H = STAGE_H;
 const sb = storage.belt, tb = street.belt;
@@ -48,13 +47,6 @@ const A: BeltPath = {
   pts: [...sb.pts, [LANE, YSW + 40, 1]] as BeltPt[],
   width: sb.width, plate: sb.plate, phase: sb.phase, fadeIn: 0, fadeOut: 0, pool: sb.pool,
 };
-/** Street side: the street belt continued straight up into the flap box. L ≡ 0 (mod GAP) keeps plate ids. */
-const L = PLATE_GAP * Math.ceil((OY + T0 - (YSW - 40)) / PLATE_GAP);
-const B: BeltPath = {
-  pts: [[LANE, OY + T0 - L, 1], ...tb.pts.map(([x, y, s]) => [x, y + OY, s ?? 1] as BeltPt)],
-  width: tb.width, plate: tb.plate, phase: (tb.phase ?? 0) + L, fadeIn: 0, fadeOut: 0, pool: tb.pool,
-};
-
 const COLLAR_Y = STAGE_H + 9;
 const HANGERS = [AY(150), AY(222)];
 const EXT_Y = AY(328); // soffit bottom: outside (open sky) from here down
@@ -141,9 +133,7 @@ function streetBuf(now: number, api: Api, feather: number): HTMLCanvasElement {
     gr.addColorStop(0, "rgba(0,0,0,1)");
     gr.addColorStop(1, "rgba(0,0,0,0)");
     x.fillStyle = gr;
-    // Feather the scenery only: keep the belt lane crisp (the band belt meets it exactly).
-    x.fillRect(0, 0, LANE - 36, feather);
-    x.fillRect(LANE + 36, 0, W - LANE - 36, feather);
+    x.fillRect(0, 0, W, feather);
     x.globalCompositeOperation = "source-over";
   }
   return buf;
@@ -165,6 +155,10 @@ function world(g: CanvasRenderingContext2D, t: number, now: number, api: Api, cy
   if (art.complete && art.naturalWidth && vy1 > STAGE_H && vy0 < OY + 80) {
     g.drawImage(art, 0, 0, ART.w, 380, 0, AY(0), ART.w, 380);
     g.drawImage(art, 0, 740, ART.w, ART.h - 740, 0, AY(740), ART.w, ART.h - 740);
+    // The old art includes an exterior conveyor support. Continue the adjacent night
+    // backdrop across that narrow strip, leaving the loft and enclosed flap intact.
+    g.drawImage(art, 216, 328, 123, 52, 90, AY(328), 123, 52);
+    g.drawImage(art, 216, 740, 123, ART.h - 740, 90, AY(740), 123, ART.h - 740);
   }
 
   // Rooms, each clipped to its own frame so the belts can hand over at the frame edges.
@@ -182,26 +176,18 @@ function world(g: CanvasRenderingContext2D, t: number, now: number, api: Api, cy
   // Crawl space: the tanuki, the hangers, the floor sleeve.
   drawTanuki(g, TAN.x, TAN.y, now, sackAt());
   for (const y of HANGERS) drawHanger(g, LANE, y);
-  // Outside, the belt rides the street's steel column (painted in band.png, same plates and phase).
-
-  // Belt, storage side (storage items) down to the swap line; street side (street items) below.
+  // The storage route ends inside the housing, before the exterior backdrop begins.
   const aPlates = platesOn(A, now, "storage");
-  const bPlates = platesOn(B, now, "street");
   g.save(); g.beginPath(); g.rect(0, STAGE_H, W, YSW - STAGE_H); g.clip();
   drawTread(g, A, now);
   drawPlates(g, aPlates, A.plate ?? 52);
   g.restore();
-  g.save(); g.beginPath(); g.rect(0, YSW, W, OY - YSW); g.clip();
-  drawTread(g, B, now);
-  drawPlates(g, bPlates, B.plate ?? 52);
-  g.restore();
   drawCollar(g, LANE, COLLAR_Y);
 
   // Flap swings out while a plate pushes through underneath.
-  const bot = YSW + FLAP.down;
   let lift = 0;
-  for (const p of bPlates) {
-    const d = p.y - bot;
+  for (const p of aPlates) {
+    const d = p.y - YSW;
     if (d > -30 && d < 60) lift = Math.max(lift, Math.sin(Math.PI * smooth(-30, 60, d)));
   }
   drawFlapBox(g, LANE, YSW, lift);
@@ -221,7 +207,7 @@ export const storageStreet: TransitionDef = {
   from: "storage",
   to: "street",
   length: 1.15,
-  route: "Straight down the left lane: through the storage floor trapdoor, past a tanuki in the crawl space, out through a cat flap under the loft and down the outside wall into the rainy street.",
+  route: "Through the storage floor trapdoor, past a tanuki in the crawl space and into an enclosed cat flap; the camera continues down into the rainy delivery street.",
   render(g, t, now, api) {
     if (t <= 0) { api.drawScene("storage", g, now); return; }
     if (t >= 1) { api.drawScene("street", g, now); return; }

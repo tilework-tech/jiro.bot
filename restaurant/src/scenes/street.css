@@ -1,5 +1,4 @@
-/* street: night delivery / pricing. The menu board floats over the calm, darkened left side of the street (street.ts shades
-   around it), right of the belt's steel column (x 100-200). */
+/* Night delivery pricing stays to the right of the rider and wet foreground. */
 
 .scene-ui[data-id="street"] .st-board {
   position: absolute;

@@ -4,7 +4,7 @@ const PX = 3, TAU = Math.PI * 2;
 const snap = (v: number) => Math.round(v / PX) * PX;
 export const streetFx = { bell: -99, lamp: -99, blink: -99, cat: -99, ripple: -99, rx: 0, ry: 0 };
 export const streetClock = () => performance.now() / 1000;
-export const CAT_POS = { x: 444, y: 390 };
+export const CAT_POS = { x: 480, y: 450 };
 const CAT = [
   ".o......o.", ".oo....oo.", ".hoooooooo", "hooooooooo",
   "hoyyooyyoo", "hoypooypoo", "hoooonoooo", ".oooooooo.",
@@ -36,16 +36,16 @@ export function streetDetails(g: CanvasRenderingContext2D, now: number) {
   }
   const blinkAge = now - streetFx.blink;
   if ((t % 8 > 3 && t % 8 < 3.15) || (blinkAge >= 0 && blinkAge < .9 && Math.floor(blinkAge / .15) % 3 === 0)) {
-    g.fillStyle = "#d6bd90"; g.fillRect(696, 387, 12, 21);
-    g.fillStyle = "#705238"; g.fillRect(696, 402, 12, 3);
+    g.fillStyle = "#d6bd90"; g.fillRect(732, 447, 12, 21);
+    g.fillStyle = "#705238"; g.fillRect(732, 462, 12, 3);
   }
   const bellAge = now - streetFx.bell;
   if (bellAge >= 0 && bellAge < 1) {
     g.fillStyle = `rgba(255,230,150,${1-bellAge})`;
     for (let i=0;i<3;i++) {
       const r=9+i*9+(Math.floor(bellAge*10)%2)*3;
-      g.fillRect(780-r,snap(585-r/2),3,6);
-      g.fillRect(786+r,snap(585-r/2),3,6);
+      g.fillRect(816-r,snap(645-r/2),3,6);
+      g.fillRect(822+r,snap(645-r/2),3,6);
     }
   }
   const rippleAge = now - streetFx.ripple;
