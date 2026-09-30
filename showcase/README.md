@@ -1,6 +1,6 @@
 # One-page Jiro demo gallery
 
-The gallery keeps five tabs at the top while displaying each selected site below. Demo 3 shows the Demo 1 build with an explicit duplicate notice because their selected 3D sites are byte-identical; no separate Demo 3 build is invented.
+The gallery keeps four tabs at the top: Demo 1, Demo 2, Demo 4, and Demo 5. Demo 3 was removed because it duplicated Demo 1. Existing demo numbers are preserved.
 
 From the repository root, build the four distinct sites, one at a time:
 
@@ -12,7 +12,7 @@ cd demo5/site && npm ci && npm run build && cd ../..
 node showcase/serve.mjs
 ```
 
-Open `http://localhost:3200/`. The server keeps all four sites on one origin, supports MP4 byte-range requests for Safari, and serves the gallery. The tabs load one site at a time. A tab hash such as `/#demo5` opens a selected demo. The third tab shows Demo 1 again, with the duplication clearly labeled.
+Open `http://localhost:3200/`. The server keeps all four sites on one origin, supports MP4 byte-range requests for Safari, and serves the gallery. The tabs load one site at a time. A tab hash such as `/#demo5` opens a selected demo.
 
 Demo 1 requires WebGL2. If a browser does not support it, its saved seven-scene reel loads automatically in the same tab.
 

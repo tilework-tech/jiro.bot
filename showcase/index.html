@@ -34,8 +34,6 @@
     #viewer-frame { display: block; width: 100%; height: 100%; border: 0; background: #090a0b; }
     .loading { position: absolute; inset: 0; display: grid; place-items: center; z-index: 1; pointer-events: none; background: #0b0c0d; color: #c1b4a3; letter-spacing: .12em; font: 12px ui-monospace, monospace; }
     .loading[hidden] { display: none; }
-    .duplicate-note { position: absolute; top: 14px; left: 14px; z-index: 2; max-width: min(390px, calc(100% - 28px)); padding: 10px 13px; border: 1px solid #bd9469; border-radius: 7px; background: #1e1b17ed; color: #ffe4ba; font-size: 12px; line-height: 1.45; box-shadow: 0 8px 20px #0008; }
-    .duplicate-note[hidden] { display: none; }
     .viewer-link { position: absolute; right: 15px; bottom: 15px; z-index: 2; padding: 8px 11px; border: 1px solid #a1764c; border-radius: 6px; background: #1c1a17df; color: #ffdfad; font-size: 12px; text-decoration: none; }
     .viewer-link:hover { background: #3b2c20; }
     .viewer-link[hidden] { display: none; }
@@ -51,7 +49,6 @@
     <nav class="tabs" role="tablist" aria-label="Jiro website demos">
       <button class="tab" id="tab-demo1" role="tab" aria-controls="viewer" aria-selected="true" data-demo="demo1"><span class="tab-number">1</span><span class="tab-label">3D scroll</span><span class="tab-note">Koi pond ending</span></button>
       <button class="tab" id="tab-demo2" role="tab" aria-controls="viewer" aria-selected="false" data-demo="demo2" tabindex="-1"><span class="tab-number">2</span><span class="tab-label">Restaurant tour</span><span class="tab-note">Eight illustrated rooms</span></button>
-      <button class="tab" id="tab-demo3" role="tab" aria-controls="viewer" aria-selected="false" data-demo="demo3" tabindex="-1"><span class="tab-number">3</span><span class="tab-label">Duplicate check</span><span class="tab-note">Same build as Demo 1</span></button>
       <button class="tab" id="tab-demo4" role="tab" aria-controls="viewer" aria-selected="false" data-demo="demo4" tabindex="-1"><span class="tab-number">4</span><span class="tab-label">Sketch belt</span><span class="tab-note">Crisp pixel-art hero</span></button>
       <button class="tab" id="tab-demo5" role="tab" aria-controls="viewer" aria-selected="false" data-demo="demo5" tabindex="-1"><span class="tab-number">5</span><span class="tab-label">One-belt scroller</span><span class="tab-note">Seven scenes · 2D v4</span></button>
     </nav>
@@ -59,15 +56,13 @@
   <main class="viewer" id="viewer" role="tabpanel" aria-labelledby="tab-demo1">
     <div class="loading" id="loading" role="status">LOADING DEMO 1</div>
     <iframe id="viewer-frame" title="Jiro.bot Demo 1" allow="autoplay; fullscreen"></iframe>
-    <div class="duplicate-note" id="duplicate-note" hidden>Demo 3 displays Demo 1. Their 64 website files match byte for byte, so no separate build was saved.</div>
     <a class="viewer-link" id="viewer-link" href="/demo1/" target="_blank" rel="noopener">Open full size ↗</a>
   </main>
   <script>
-    const demos = ["demo1", "demo2", "demo3", "demo4", "demo5"];
+    const demos = ["demo1", "demo2", "demo4", "demo5"];
     const tabs = [...document.querySelectorAll(".tab")];
     const viewer = document.getElementById("viewer");
     const frame = document.getElementById("viewer-frame");
-    const duplicateNote = document.getElementById("duplicate-note");
     const loading = document.getElementById("loading");
     const viewerLink = document.getElementById("viewer-link");
     let active = "";
@@ -84,17 +79,15 @@
         button.tabIndex = selected ? 0 : -1;
       }
       viewer.setAttribute("aria-labelledby", tab.id);
-      const isDuplicate = id === "demo3";
-      duplicateNote.hidden = !isDuplicate;
       generation++;
       const thisGeneration = generation;
       loading.textContent = `LOADING DEMO ${id.slice(-1)}`;
       loading.hidden = false;
       frame.title = `Jiro.bot Demo ${id.slice(-1)}`;
       frame.onload = () => { if (thisGeneration === generation) loading.hidden = true; };
-      frame.src = `/${isDuplicate ? "demo1" : id}/`;
-      viewerLink.href = `/${isDuplicate ? "demo1" : id}/`;
-      viewerLink.textContent = isDuplicate ? "Open Demo 1 full size ↗" : "Open full size ↗";
+      frame.src = `/${id}/`;
+      viewerLink.href = `/${id}/`;
+      viewerLink.textContent = "Open full size ↗";
       if (updateHash && location.hash !== `#${id}`) history.replaceState(null, "", `#${id}`);
     }
 
