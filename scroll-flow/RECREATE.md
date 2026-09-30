@@ -129,13 +129,23 @@ e1-pond     pos [12.7,-110,29.2] rot [-6,155,0]   belt [[8.4,0.08],[-8.8,0.08]] 
 - The camera's up slerps from A's up to B's up, so a change of orientation is a gentle tilt. There are no barrel rolls.
 - Easing is a cosine ease-in-out.
 
-### 6.3 Scroll and snapping
-- The wheel is converted to scroll units at dy/650, with resistance of 0.55 + 1.0 × the distance from a stop.
-- After 160 ms with no input the page snaps. A push over 0.07 goes to the next stop; anything smaller springs back.
-- After a snap, further wheel input (trackpad inertia) is ignored for 450 ms, extended up to 1.4 s while it keeps coming.
-- The camera eases toward the target at 1 − e^(−6·dt) while scrolling and 1 − e^(−2.6·dt) while settling.
-- Keyboard: ↓ / PgDn / Space go to the next stop, ↑ / PgUp to the previous one, and Home / End jump to the ends. Touch is supported.
-- Debug hooks: `?s=3.5` in the URL freezes the camera at that position. `window.__jiro.set(v)` also exists, along with `.koi()` and `.jump()`.
+### 6.3 Scroll and snapping (reworked after Demo1)
+- **One gesture = one scene.**
+  - A trackpad swipe or wheel turn commits to the next scene as soon as it has travelled 70 px (`COMMIT_PX`). It doesn't wait for the wheel to stop.
+  - Before that, the camera leans up to 0.06 of a stop toward the next scene (`PREVIEW`). A gesture that ends short springs back.
+- **Momentum is swallowed; new swipes are not.** After a commit, the rest of the gesture is ignored, including trackpad momentum. A new gesture is recognised immediately, even mid-ride, when any of these is true:
+  - more than 700 ms of silence
+  - more than 180 ms of silence and a delta that is not decaying (so a stall during momentum doesn't count)
+  - a direction flip
+  - a speed-up of more than 1.4× once the camera is within 0.35 of the scene
+- **Camera:** `s` follows `target` on a critically damped spring (ω = 7.5, 4 substeps per frame).
+  - A one-scene ride reaches 90% in 0.53 s, 98% in 0.8 s, and lands at about 1 s. The old version took 1.5–2 s to settle and then locked input for up to 1.4 s.
+  - It starts and ends with zero velocity, never overshoots, and keeps its velocity if retargeted mid-ride.
+- **Keyboard:** ↓ / PgDn / Space go to the next stop, ↑ / PgUp to the previous one, and Home / End jump to the ends. Touch uses the same gesture logic.
+- **Debug hooks:**
+  - `?s=3.5` in the URL freezes the camera at that position. `window.__jiro.set(v)` does the same at runtime.
+  - `window.__jiro.wheel(dy, t)` feeds wheel deltas with explicit timestamps, for deterministic tests.
+  - `.koi()` and `.jump()` also exist.
 
 ### 6.4 Doors (`site/src/doors.ts`)
 - Each connector longer than 10 units gets one free-standing wall at its midpoint, facing along the belt.

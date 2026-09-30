@@ -331,51 +331,67 @@ buildParallax(scene,
   }),
   lanternTex);
 
-// ------------------------------------------------------------------ scroll: scrub between stops, snap to scenes
-let s = 0, target = 0, landed = 0, lastInput = 0;
-// after a snap, trackpad inertia keeps firing wheel events; swallow them until they stop
-let lockUntil = 0, lockMax = 0;
-const clampT = (v: number) => THREE.MathUtils.clamp(v, Math.max(0, landed - 1), Math.min(N - 1, landed + 1));
-function nudge(delta: number) {
-  const now = performance.now();
-  if (now < lockUntil) { lockUntil = Math.min(lockMax, now + 140); return; }
-  // resistance: sticky right at a scene, freer in the belt run between scenes
-  const frac = Math.abs(target - Math.round(target));
-  const res = 0.55 + 1.0 * frac;
-  target = clampT(target + delta * res);
-  lastInput = now;
+// ------------------------------------------------------------------ scroll: one gesture = one scene, spring camera
+// The camera position `s` follows `target` on a critically damped spring, so every move starts and ends
+// calmly, keeps its velocity if retargeted mid-ride, and never overshoots.
+// Input is read as gestures: a scroll that travels past COMMIT_PX commits to the next scene at once
+// (no waiting for the wheel to stop). The rest of that gesture, including trackpad momentum, is ignored,
+// but a new gesture (after a pause, or when the wheel speeds up again) is accepted immediately, even mid-ride.
+let s = 0, target = 0, landed = 0, vel = 0;
+const SPRING = 7.5;           // rad/s: a one-scene ride lands in about 0.8 s
+const COMMIT_PX = 70;         // scroll distance that commits to the next scene
+const PREVIEW = 0.06;         // how far the camera leans toward the next scene before committing
+const GESTURE_GAP = 180;      // ms of silence that ends a gesture
+let accum = 0, used = false, lastWheel = 0, lastAbs = 0, lastSign = 0;
+function go(i: number) {
+  landed = THREE.MathUtils.clamp(i, 0, N - 1); target = landed; accum = 0;
 }
-function go(i: number) { landed = THREE.MathUtils.clamp(i, 0, N - 1); target = landed; lastInput = 0; }
+function gesture(px: number, now: number, fresh: boolean) {
+  if (fresh) { accum = 0; used = false; }
+  if (used) return;
+  accum += px;
+  if (Math.abs(accum) >= COMMIT_PX) {
+    const next = THREE.MathUtils.clamp(landed + Math.sign(accum), 0, N - 1);
+    used = true;
+    if (next !== landed) go(next); else { accum = 0; target = landed; }
+  } else {
+    target = landed + THREE.MathUtils.clamp(accum / COMMIT_PX, -1, 1) * PREVIEW;
+  }
+}
 window.addEventListener("wheel", (e) => {
   e.preventDefault();
-  const dy = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
-  nudge(dy / 650);
+  onWheel(e.deltaMode === 1 ? e.deltaY * 32 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY, performance.now());
 }, { passive: false });
+function onWheel(dy: number, now: number) {
+  const abs = Math.abs(dy);
+  // momentum only ever decays; a pause, a direction flip or a speed-up means a new swipe or wheel turn
+  const flipped = lastSign !== 0 && Math.sign(dy) !== lastSign;
+  // (a stall during momentum, e.g. while a video decodes, also leaves a gap, but the next event is still smaller)
+  const gap = now - lastWheel;
+  const fresh = gap > 700 || (gap > GESTURE_GAP && abs >= lastAbs * 0.98) || flipped
+    || (used && abs > lastAbs * 1.4 + 2 && Math.abs(s - landed) < 0.35);
+  lastAbs = abs; lastSign = Math.sign(dy) || lastSign; lastWheel = now;
+  gesture(dy, now, fresh);
+}
 window.addEventListener("keydown", (e) => {
-  if (["ArrowDown", "PageDown", " "].includes(e.key)) { e.preventDefault(); go(Math.round(target) + 1); }
-  if (["ArrowUp", "PageUp"].includes(e.key)) { e.preventDefault(); go(Math.round(target) - 1); }
+  if (["ArrowDown", "PageDown", " "].includes(e.key)) { e.preventDefault(); go(landed + 1); }
+  if (["ArrowUp", "PageUp"].includes(e.key)) { e.preventDefault(); go(landed - 1); }
   if (e.key === "Home") go(0);
   if (e.key === "End") go(N - 1);
   konami(e.key);
 });
 let touchY: number | null = null;
-window.addEventListener("touchstart", (e) => { touchY = e.touches[0].clientY; }, { passive: true });
+window.addEventListener("touchstart", (e) => { touchY = e.touches[0].clientY; lastWheel = performance.now(); gesture(0, lastWheel, true); }, { passive: true });
 window.addEventListener("touchmove", (e) => {
   if (touchY === null || plates.drag) return;
-  const y = e.touches[0].clientY; nudge((touchY - y) / 420); touchY = y;
+  const y = e.touches[0].clientY; lastWheel = performance.now(); gesture((touchY - y) * 1.6, lastWheel, false); touchY = y;
 }, { passive: true });
 window.addEventListener("touchend", () => { touchY = null; });
 document.querySelectorAll<HTMLElement>("[data-go]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); go(+a.dataset.go!); }));
 
-function snap() {
-  const now = performance.now();
-  if (!lastInput || now - lastInput < 160) return;
-  const d = target - landed;
-  // a small push is enough to pull you to the next scene; a tiny one springs back
-  const next = Math.abs(d) > 0.07 ? landed + Math.sign(d) : landed;
-  if (next !== landed) { lockUntil = now + 450; lockMax = now + 1400; }
-  landed = THREE.MathUtils.clamp(next, 0, N - 1);
-  target = landed; lastInput = 0;
+// a gesture that ended before committing springs back to the scene
+function release(now: number) {
+  if (!used && accum !== 0 && now - lastWheel > GESTURE_GAP && touchY === null) { accum = 0; target = landed; }
 }
 
 // ------------------------------------------------------------------ pointer: drag / poke plates, click hero Jiro
@@ -537,9 +553,14 @@ const tmpQ = new THREE.Quaternion();
 function frame() {
   (window as any).__jiroFrames = ((window as any).__jiroFrames || 0) + 1;
   const dt = Math.min(clock.getDelta(), 0.05), time = clock.elapsedTime;
-  snap();
-  s += (target - s) * (1 - Math.exp(-dt * (lastInput ? 6 : 2.6)));
-  if (Math.abs(target - s) < 1e-4) s = target;
+  release(performance.now());
+  // critically damped spring toward target (semi-implicit, sub-stepped for stability)
+  for (let k = 0; k < 4; k++) {
+    const h = dt / 4;
+    vel += (SPRING * SPRING * (target - s) - 2 * SPRING * vel) * h;
+    s += vel * h;
+  }
+  if (Math.abs(target - s) < 1e-4 && Math.abs(vel) < 1e-3) { s = target; vel = 0; }
 
   const roll = poseAt(s);
   // tiny breathing + mouse parallax, fades out during transitions
@@ -608,10 +629,11 @@ requestAnimationFrame(frame);
 
 // debug handle for screenshots: ?s=3.5 freezes the camera at a scroll position
 const qs = new URLSearchParams(location.search);
-if (qs.has("s")) { const v = +qs.get("s")!; s = target = v; landed = Math.round(v); lastInput = 0; }
+if (qs.has("s")) { const v = +qs.get("s")!; s = target = v; landed = Math.round(v); }
 (window as any).__jiro = {
-  go, set: (v: number) => { s = target = v; landed = Math.round(v); lastInput = 0; },
+  go, set: (v: number) => { s = target = v; vel = 0; landed = Math.round(v); },
   state: () => ({ s, target, landed }),
+  wheel: onWheel, // test hook: feed wheel deltas with explicit timestamps
   plateOnScreen: (item?: string) => {
     for (const p of plates.plates) {
       if (!p.sprite.visible || p.mode !== "belt" || (item && p.item !== item)) continue;
