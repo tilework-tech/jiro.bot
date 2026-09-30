@@ -1,0 +1,69 @@
+{
+  "checkedAt": "2026-09-30T23:44:52.669Z",
+  "errors": [],
+  "metrics": {
+    "slots": 110,
+    "occupied": 58,
+    "fill": 0.5272727272727272,
+    "categories": {
+      "food": 38,
+      "surprise": 14,
+      "animated": 6
+    },
+    "pathNodes": 13,
+    "placed": 0,
+    "speed": 0.32
+  },
+  "eggTotal": "99",
+  "heroEggFound": "1",
+  "dragTarget": {
+    "from": [
+      1400.0275581269777,
+      411.46293895813454
+    ],
+    "to": [
+      728.5,
+      504
+    ]
+  },
+  "placedAfterDrag": 1,
+  "demoStep": "1#eng-dashboard\n2Pull request\n3Environment\nY\nyou9:41\n@jiro the dashboard is slow, make it faster\nJ\nJiro9:41\nWhich screen feels slow? I found repeated widget lookups in loadWidgets(). Fix that first, or take a broader pass?\nFix the N+1 first\nBroader pass",
+  "faqAnswer": "Which agents can I run?\nClaude Code, Codex, and Cursor. Any agent that speaks the Agent Client Protocol can be registered alongside them, and you can mix agents across tasks.",
+  "rushDialogOpen": true,
+  "rushFrameSrc": "/games/arcade/?game=rush",
+  "rushCanvasCount": 2,
+  "dailyDialogOpen": true,
+  "dailyFrameSrc": "/games/arcade/?game=daily",
+  "dailyCanvasCount": 2,
+  "fallbackTitle": "Jiro.bot: seven-scene still review",
+  "fallbackImages": [
+    {
+      "ok": true,
+      "src": "/p/s0-hero.jpg"
+    },
+    {
+      "ok": true,
+      "src": "/p/s1-code-small.jpg"
+    },
+    {
+      "ok": true,
+      "src": "/p/s2-serve.jpg"
+    },
+    {
+      "ok": false,
+      "src": "/p/s7-closing-small.jpg"
+    },
+    {
+      "ok": false,
+      "src": "/p/s4-omakase.jpg"
+    },
+    {
+      "ok": false,
+      "src": "/p/s6-delivery.jpg"
+    },
+    {
+      "ok": false,
+      "src": "/p/e1-pond.jpg"
+    }
+  ]
+}
