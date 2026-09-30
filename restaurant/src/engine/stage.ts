@@ -1,5 +1,5 @@
 import { STAGE_W, STAGE_H, type Api, type Camera, type Plate, type SceneDef, type TransitionDef, type BeltPath } from "./types";
-import { drawBeltFull, hitPlate } from "./belt";
+import { drawBeltFull, hitPlate, pushBelt } from "./belt";
 import { ITEMS, preloadItems } from "./items";
 import { eggCount, eggFound, noteEgg, onEggs } from "./eggs";
 import { sfx, setSound, soundOn } from "./sfx";
@@ -18,6 +18,9 @@ export function img(url: string): HTMLImageElement {
   }
   return im;
 }
+
+/** Extra belt travel per viewport height scrolled, in belt seconds (18 s = three plate gaps). */
+const SCROLL_PUSH = 18;
 
 interface Pop { x: number; y: number; t0: number; kind: "spark" | "boom" | "coin" }
 
@@ -284,8 +287,11 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
     // Reduced motion: the canvas world holds still (belt, steam, blinks); scroll still moves between rooms.
     const now = fixedT ? parseFloat(fixedT) : reducedMotion ? 3 : performance.now() / 1000;
     const target = fixedP ? parseFloat(fixedP) : scrollY / innerHeight;
+    const before = shown;
     shown += (target - shown) * (reducedMotion || fixedP ? 1 : 0.18);
     if (Math.abs(target - shown) < 0.0005) shown = target;
+    // Scrolling either way carries the belt forward (down), eased like the view, never backward.
+    if (!reducedMotion && !fixedT) pushBelt(Math.abs(shown - before) * SCROLL_PUSH);
     const p = Math.max(0, Math.min(total - 0.0001, shown));
     const seg = segs.find((s) => p >= s.start && p < s.start + s.len) ?? segs[segs.length - 1];
     active = seg;

@@ -7,7 +7,7 @@
 // Its length is a whole number of PLATE_GAPs, so plates line up with the bar AND the office.
 
 import { BELT_SPEED, PLATE_GAP, type Api, type BeltPath, type BeltPt } from "../../engine/types";
-import { pointAt, pathLength, platesOn } from "../../engine/belt";
+import { pointAt, pathLength, platesOn, beltTime } from "../../engine/belt";
 import { glow, wave } from "../../engine/fx";
 import { bar } from "../../scenes/bar";
 import { office } from "../../scenes/office";
@@ -151,7 +151,7 @@ export function drawTrough(g: CanvasRenderingContext2D, now: number) {
   g.save();
   g.drawImage(troughCanvas(), TC.x, TC.y);
   // Marble streaks: same hash and spacing as the bar's, keyed by distance along the bar belt.
-  const head = now * BELT_SPEED;
+  const head = beltTime(now) * BELT_SPEED;
   const STEP = 23;
   const U = pathLength(beltA);
   for (let u = ((head - D_A0) % STEP + STEP) % STEP; u < U; u += STEP) {

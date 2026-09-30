@@ -5,6 +5,18 @@ import { itemFor, rimFor, itemImg, ITEMS } from "./items";
 // Screen distance = u * scale, so plates slow down and shrink with perspective
 // while moving at the same world speed everywhere.
 
+// Belt clock. The belt runs at BELT_SPEED on its own, and scrolling (either way) pushes it further
+// forward, so it never stops or reverses. Everything that moves with the belt reads beltTime().
+let boost = 0;
+/** Belt time in seconds: wall time plus the extra travel added by scrolling. */
+export function beltTime(now: number): number {
+  return now + boost;
+}
+/** Advance the belt by `s` extra seconds of travel (called by the stage while scrolling). */
+export function pushBelt(s: number) {
+  boost += s;
+}
+
 interface Sample { x: number; y: number; s: number; u: number; nx: number; ny: number; a: number }
 interface Baked { samples: Sample[]; U: number }
 
@@ -126,7 +138,7 @@ export function drawTread(g: CanvasRenderingContext2D, path: BeltPath, now: numb
   }
   // Moving crescent slats: identical world spacing and speed everywhere. Each slat is a
   // dark seam with a 1-step lit bevel just ahead of it, bowed forward in the middle.
-  const off = (now * BELT_SPEED + (path.phase ?? 0)) % SEAM_STEP;
+  const off = (beltTime(now) * BELT_SPEED + (path.phase ?? 0)) % SEAM_STEP;
   const bow = 5;
   const seams: [number, number, number, number, number, number][] = [];
   for (let u = off; u < U; u += SEAM_STEP) {
@@ -180,7 +192,7 @@ export function drawTread(g: CanvasRenderingContext2D, path: BeltPath, now: numb
 /** Positions of every plate currently on the path. */
 export function platesOn(path: BeltPath, now: number, key: string): Plate[] {
   const { U } = bake(path);
-  const head = now * BELT_SPEED + (path.phase ?? 0);
+  const head = beltTime(now) * BELT_SPEED + (path.phase ?? 0);
   const first = ((head % PLATE_GAP) + PLATE_GAP) % PLATE_GAP;
   const cycle = Math.floor(head / PLATE_GAP);
   const out: Plate[] = [];

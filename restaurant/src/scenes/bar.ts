@@ -1,7 +1,7 @@
-import type { SceneDef, BeltPt } from "../engine/types";
+import type { SceneDef, BeltPt, BeltPath } from "../engine/types";
 import { BELT_SPEED, LOOP } from "../engine/types";
 import { glow } from "../engine/fx";
-import { pointAt, pathLength } from "../engine/belt";
+import { pointAt, pathLength, platesOn, drawPlates, beltTime } from "../engine/belt";
 import { html, hotspot, bubble } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
 import { HERO } from "../content/copy";
@@ -200,23 +200,52 @@ function drawTrough(g: CanvasRenderingContext2D, now: number) {
   g.save();
   g.beginPath(); g.rect(0, y0, 1920, 1080 - y0 + 60); g.clip();
   g.drawImage(getTroughLayer(), TR_BOX.x, TR_BOX.y);
-  const y1 = 1130;
+  bands(g, y0 - 2, 1130);
+  // Moving marble streaks on the grey belt, carried at the belt speed (world px/s).
+  streaks(g, BELT, now, 0, y0 - 6);
+  g.restore();
+}
+
+// ---- The belt inside the picture ----
+// The video's own plates stutter (it is a generated loop), so the engine paints the belt over
+// the video's belt from the picture's right edge down to the join: the same trough bands, in
+// perspective, carrying the same plates at the same speed as everywhere else. It is composited
+// through the picture mask, so plates fade in out of the dark at the right edge.
+
+/** Top of the in-picture belt (just past the picture's right edge) and its perspective scale there. */
+const UP_Y = 262;
+const UP_S = 0.62;
+/** Perspective scale of the trough at stage height y (1 from the bar belt's first point down). */
+const upS = (y: number) => y >= BELT_PTS[0][1] ? 1 : UP_S + (1 - UP_S) * (y - UP_Y) / (BELT_PTS[0][1] - UP_Y);
+const UPPER: BeltPath = {
+  pts: [[xAt(UP_Y), UP_Y, UP_S], [BELT_PTS[0][0], BELT_PTS[0][1], 1]],
+  style: "none", width: 72, plate: 50, fadeIn: 0, fadeOut: 0,
+};
+/** World length of the in-picture belt; as the phase it puts every plate exactly on the bar belt's. */
+const UP_U = pathLength(UPPER);
+UPPER.phase = UP_U;
+
+/** Trough bands from y0 to y1, narrowed by the perspective scale. */
+function bands(g: CanvasRenderingContext2D, y0: number, y1: number) {
   for (const [a, b, col] of BANDS) {
-    const p0 = side(y0 - 2, a), p1 = side(y1, a), p2 = side(y1, b), p3 = side(y0 - 2, b);
+    const p0 = side(y0, a * upS(y0)), p1 = side(y1, a * upS(y1)), p2 = side(y1, b * upS(y1)), p3 = side(y0, b * upS(y0));
     g.fillStyle = col;
     g.beginPath(); g.moveTo(...p0); g.lineTo(...p1); g.lineTo(...p2); g.lineTo(...p3); g.closePath(); g.fill();
   }
-  // Moving marble streaks on the grey belt, carried at the belt speed (world px/s).
-  const U = pathLength(BELT);
-  const head = now * BELT_SPEED;
+}
+
+/** Marble streaks on the grey belt; `du` maps path distance to distance along the bar belt. */
+function streaks(g: CanvasRenderingContext2D, path: BeltPath, now: number, du: number, yMin: number) {
+  const U = pathLength(path);
+  const head = beltTime(now) * BELT_SPEED;
   const STEP = 23;
-  for (let u = ((head % STEP) + STEP) % STEP; u < U; u += STEP) {
-    const p = pointAt(BELT, u);
-    if (p.y < y0 - 6) continue;
-    const k = Math.round((u - head) / STEP);
+  for (let u = (((head - du) % STEP) + STEP) % STEP; u < U; u += STEP) {
+    const p = pointAt(path, u);
+    if (p.y < yMin) continue;
+    const k = Math.round((u + du - head) / STEP);
     const h = ((k * 2654435761) >>> 0) / 4294967296;
-    const off = (h - 0.5) * 100 * K; // stays inside the grey band
-    const len = Math.round(5 + ((h * 7919) % 1) * 12);
+    const off = (h - 0.5) * 100 * K * p.s; // stays inside the grey band
+    const len = Math.round((5 + ((h * 7919) % 1) * 12) * p.s);
     g.save();
     g.translate(Math.round(p.x + off), Math.round(p.y));
     g.rotate(p.a);
@@ -224,7 +253,24 @@ function drawTrough(g: CanvasRenderingContext2D, now: number) {
     g.fillRect(-len / 2, -1, len, 2);
     g.restore();
   }
-  g.restore();
+}
+
+let upBuf: HTMLCanvasElement | null = null;
+/** The in-picture belt (trough, streaks, plates), masked like the picture. */
+function drawUpperBelt(g: CanvasRenderingContext2D, now: number) {
+  if (!upBuf) { upBuf = document.createElement("canvas"); upBuf.width = VB.w; upBuf.height = VB.h; }
+  const b = upBuf.getContext("2d")!;
+  b.setTransform(1, 0, 0, 1, 0, 0);
+  b.clearRect(0, 0, VB.w, VB.h);
+  b.translate(-VB.x, -VB.y);
+  bands(b, UP_Y, JOIN[1] + 2);
+  streaks(b, UPPER, now, -UP_U, UP_Y);
+  drawPlates(b, platesOn(UPPER, now, "bar"), BELT.plate);
+  b.setTransform(1, 0, 0, 1, 0, 0);
+  b.globalCompositeOperation = "destination-in";
+  b.drawImage(getMask(), 0, 0);
+  b.globalCompositeOperation = "source-over";
+  g.drawImage(upBuf, VB.x, VB.y);
 }
 
 /** 0..1 smooth pulse that is 1 for `len` seconds starting at `at`, repeating every `period`. */
@@ -386,7 +432,7 @@ function R(x: number, y: number, w: number, h: number): [number, number, number,
   return [Math.round(sx), Math.round(sy), Math.round(w * K), Math.round(h * K)];
 }
 
-const BELT = { pts: BELT_PTS, style: "none" as const, width: 72, plate: 50, fadeIn: 20, fadeOut: 1 };
+const BELT = { pts: BELT_PTS, style: "none" as const, width: 72, plate: 50, fadeIn: 0, fadeOut: 1 };
 
 export const bar: SceneDef = {
   id: "bar",
@@ -401,18 +447,9 @@ export const bar: SceneDef = {
     // A faint warm pool from the lanterns spilling onto the dark page.
     LANTERNS_V.forEach(([x, y], i) => { const [sx, sy] = V(x, y); glow(g, sx, sy, 150, "rgba(255,190,110,.07)", now, 0.1, 6, i); });
     drawTrough(g, now);
+    drawUpperBelt(g, now);
   },
   over(g, now, api) {
-    // Plates slide out from UNDER the picture's bottom edge: redraw the picture over the
-    // belt just above the join (page first, so the soft mask composites exactly as before).
-    const [x0, x1] = [JOIN[0] - 150, JOIN[0] + 150];
-    g.save();
-    g.beginPath(); g.rect(x0, JOIN[1] - 170, x1 - x0, 170); g.clip();
-    const page = api.img(PAGE);
-    if (page.complete && page.naturalWidth) g.drawImage(page, 0, 0, 1920, 1080);
-    drawSpill(g, now);
-    drawPicture(g, api);
-    g.restore();
     drawNoren(g, now);
     drawMoth(g, now);
     // Something lives in the wall opening. Once per loop it opens its eyes for a moment.

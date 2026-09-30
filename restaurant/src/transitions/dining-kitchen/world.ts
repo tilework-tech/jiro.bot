@@ -1,6 +1,6 @@
 import { BELT_SPEED, STAGE_W, STAGE_H, type Api, type BeltPath, type BeltPt } from "../../engine/types";
 import { itemFor, rimFor, itemImg } from "../../engine/items";
-import { pathLength } from "../../engine/belt";
+import { pathLength, beltTime } from "../../engine/belt";
 import { glow, steam, wave } from "../../engine/fx";
 import { dining } from "../../scenes/dining";
 
@@ -283,7 +283,7 @@ export function drawBeltRows(g: CanvasRenderingContext2D, c: Cam, y0: number, y1
     const tau = c.h / den;
     return { Y: c.cy + tau * (cs - bb * sn), tau };
   };
-  const move = now * BELT_SPEED;
+  const move = beltTime(now) * BELT_SPEED;
   const rail = steel ? [150, 156, 160] : [109, 63, 34];
   const railHi = steel ? [200, 206, 210] : [201, 129, 74];
   for (let r = 0; r < BH; r++) {

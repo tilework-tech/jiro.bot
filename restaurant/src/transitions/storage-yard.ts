@@ -1,5 +1,5 @@
 import { STAGE_W, STAGE_H, BELT_SPEED, PLATE_GAP, LOOP, type Api, type BeltPath, type TransitionDef } from "../engine/types";
-import { drawTread, drawPlates, pathLength, platesOn } from "../engine/belt";
+import { drawTread, drawPlates, pathLength, platesOn, beltTime } from "../engine/belt";
 import { smooth } from "../engine/stage";
 import { vFade, vignette } from "../engine/fx";
 import { hotspot, bubble } from "../engine/dom";
@@ -218,7 +218,7 @@ function seamFeather(g: CanvasRenderingContext2D, row: HTMLCanvasElement, srcY: 
 
 /** Rubber flap curtain where the belt ducks under the sill; strips kick as plates pass. */
 function flaps(g: CanvasRenderingContext2D, now: number) {
-  const head = now * BELT_SPEED + (band.phase ?? 0);
+  const head = beltTime(now) * BELT_SPEED + (band.phase ?? 0);
   const past = (((head - SILL) % PLATE_GAP) + PLATE_GAP) % PLATE_GAP;
   const kick = Math.exp(-past / 26) * 10;
   g.fillStyle = "rgba(0,0,0,.55)";

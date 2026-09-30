@@ -4,7 +4,7 @@ import { html, hotspot } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
 import { CTA, LINKS } from "../content/copy";
 import { BELT_SPEED, LOOP, PLATE_GAP } from "../engine/types";
-import { drawPlates, pathLength } from "../engine/belt";
+import { drawPlates, pathLength, beltTime } from "../engine/belt";
 import { itemFor, itemImg, rimFor } from "../engine/items";
 import { mountFlappy } from "../games/flappy";
 import "./pond.css";
@@ -93,7 +93,7 @@ const px3 = (v: number) => Math.round(v / 3) * 3;
 
 /** Belt clock: id of the last plate to reach the end roller, and seconds since it did. */
 function clock(now: number) {
-  const head = now * BELT_SPEED + (pond.belt.phase ?? 0);
+  const head = beltTime(now) * BELT_SPEED + (pond.belt.phase ?? 0);
   const U = pathLength(pond.belt);
   const id = Math.floor((head - U) / PLATE_GAP);
   const ts = (head - id * PLATE_GAP - U) / BELT_SPEED;
@@ -335,7 +335,7 @@ function roller(g: CanvasRenderingContext2D, now: number) {
   // Turning seams: world speed on a drum of radius 10 (plus a spin when clicked).
   g.fillStyle = "rgba(60,30,12,.7)";
   const spin = now - rollerT0 > 0 && now - rollerT0 < 1.5 ? 40 * (1 - (1 - (now - rollerT0) / 1.5) ** 3) : 0;
-  const ph = mod(now * BELT_SPEED / 10 + spin, TAU);
+  const ph = mod(beltTime(now) * BELT_SPEED / 10 + spin, TAU);
   for (let k = 0; k < 3; k++) {
     const a = ph + (k * TAU) / 3, c = Math.cos(a);
     if (c < 0) continue;
