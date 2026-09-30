@@ -1,0 +1,108 @@
+{
+  "population": {
+    "occupied": 50035,
+    "normal": 29966,
+    "absurd": 17585,
+    "clever": 2484,
+    "longestGap": 18,
+    "agencyFrames": 852,
+    "joinError": 1.8189894035458565e-12
+  },
+  "art": [
+    {
+      "id": "bar",
+      "width": 240,
+      "height": 135,
+      "animatedPixels": 496
+    },
+    {
+      "id": "office",
+      "width": 240,
+      "height": 135,
+      "animatedPixels": 82
+    },
+    {
+      "id": "dining",
+      "width": 240,
+      "height": 135,
+      "animatedPixels": 619
+    },
+    {
+      "id": "kitchen",
+      "width": 240,
+      "height": 135,
+      "animatedPixels": 172
+    },
+    {
+      "id": "storage",
+      "width": 240,
+      "height": 135,
+      "animatedPixels": 115
+    },
+    {
+      "id": "pantry",
+      "width": 240,
+      "height": 135,
+      "animatedPixels": 115
+    },
+    {
+      "id": "street",
+      "width": 240,
+      "height": 135,
+      "animatedPixels": 352
+    },
+    {
+      "id": "pond",
+      "width": 240,
+      "height": 135,
+      "animatedPixels": 1028
+    }
+  ],
+  "frames": [
+    "bar-0.5.png",
+    "office-0.5.png",
+    "dining-0.5.png",
+    "kitchen-0.5.png",
+    "storage-0.5.png",
+    "pantry-0.5.png",
+    "street-0.5.png",
+    "pond-0.5.png",
+    "bar-office-0.01.png",
+    "bar-office-0.5.png",
+    "bar-office-0.99.png",
+    "office-dining-0.01.png",
+    "office-dining-0.5.png",
+    "office-dining-0.99.png",
+    "dining-kitchen-0.01.png",
+    "dining-kitchen-0.5.png",
+    "dining-kitchen-0.99.png",
+    "kitchen-storage-0.01.png",
+    "kitchen-storage-0.5.png",
+    "kitchen-storage-0.99.png",
+    "storage-pantry-0.01.png",
+    "storage-pantry-0.5.png",
+    "storage-pantry-0.99.png",
+    "pantry-street-0.01.png",
+    "pantry-street-0.5.png",
+    "pantry-street-0.99.png",
+    "street-pond-0.01.png",
+    "street-pond-0.5.png",
+    "street-pond-0.99.png"
+  ],
+  "drag": {
+    "removed": true,
+    "toast": "Jiro inspects it. LGTM. Back to work."
+  },
+  "pond": {
+    "count": {
+      "leap": 3,
+      "wait": 60,
+      "miss": 9
+    },
+    "bad": []
+  },
+  "game": "play,56,92,-93,0",
+  "liveClock": true,
+  "portraitHint": true,
+  "errors": []
+}
