@@ -1,5 +1,5 @@
 import { BELT_SPEED, PLATE_GAP, SLAT, type BeltPath, type Plate } from "./types";
-import { itemFor, rimFor, itemImg, ITEMS, hash, hash01 } from "./items";
+import { itemFor, rimFor, itemImg, ITEMS, hash, hash01, passengerKind } from "./items";
 
 // ONE belt. Every plate slot has a global integer id. On any path, slot `id` sits at
 //   u = now * BELT_SPEED + path.phase - id * PLATE_GAP
@@ -211,25 +211,24 @@ export function plateIdAt(path: BeltPath, u: number, now: number, phase = path.p
   return Math.round((now * V + phase - u) / PLATE_GAP);
 }
 
-// Occupancy: irregular runs, deterministic per 64-slot block. About 62% of slots are empty:
-// mostly lone plates and pairs, now and then a train of 4-5, and gaps from one slot to long
-// stretches of bare belt (up to 13 slots, a whole room). Heavy-tailed on purpose so the belt
-// never settles into a rhythm.
+// Occupancy: irregular runs, deterministic per 64-slot block. Half the slots are empty:
+// Lone plates, clusters and gaps use the same heavy-tailed distribution. Adjacent
+// block edges can join into an 18-slot gap; no repeating alternating-slot rhythm.
 const OCC_B = 64;
-const RUN_FULL = [1, 1, 1, 2, 2, 2, 2, 3, 3, 4, 5];
-const RUN_EMPTY = [1, 1, 1, 2, 2, 2, 3, 3, 4, 5, 7, 9, 12];
+const RUN_FULL = [1, 1, 2, 2, 3, 4, 5, 7, 9];
+const RUN_EMPTY = RUN_FULL;
 const occCache = new Map<number, Uint8Array>();
 function occBlock(b: number): Uint8Array {
   let a = occCache.get(b);
   if (a) return a;
   a = new Uint8Array(OCC_B);
-  let s = hash(b, "occ2") | 0;
+  let s = hash(b, "garden-occupancy") | 0;
   const r = () => {
     s = (Math.imul(s ^ (s >>> 15), 2246822507) + 0x6d2b79f5) | 0;
     s ^= s >>> 13; s = Math.imul(s, 3266489909);
     return ((s ^ (s >>> 16)) >>> 0) / 4294967296;
   };
-  let full = r() < 0.4, i = 0;
+  let full = r() < 0.5, i = 0;
   while (i < OCC_B) {
     const runs = full ? RUN_FULL : RUN_EMPTY;
     const len = runs[Math.floor(r() * runs.length)];
@@ -296,11 +295,11 @@ const SCRIPTS: [string, string, string][] = [
 // behind page text, never where the belt has no floor under it (street wall, pond pier).
 /** Per scene: usable span as fractions of the scene path, fall share, drop to the floor (stage px). */
 const FALL_ZONES: Record<string, { from: number; to: number; p: number; drop: number }> = {
-  bar: { from: 0.26, to: 0.46, p: 0.08, drop: 190 },
-  office: { from: 0.06, to: 0.94, p: 0.05, drop: 88 },
-  dining: { from: 0.08, to: 0.92, p: 0.05, drop: 150 },
-  kitchen: { from: 0.56, to: 0.9, p: 0.05, drop: 140 },
-  storage: { from: 0.12, to: 0.62, p: 0.05, drop: 70 },
+  bar: { from: 0.26, to: 0.46, p: 0.025, drop: 190 },
+  office: { from: 0.06, to: 0.94, p: 0.015, drop: 88 },
+  dining: { from: 0.08, to: 0.92, p: 0.015, drop: 150 },
+  kitchen: { from: 0.56, to: 0.9, p: 0.015, drop: 140 },
+  storage: { from: 0.12, to: 0.62, p: 0.015, drop: 70 },
 };
 const FALL_SCALE = debugPlates ? 3 : 1;
 const WOB = 1.3, SLIDE = 0.9, TIP = 0.32, GRAV = 1500, SHARDS = 3.2;
@@ -353,7 +352,7 @@ function ahead(a: number): number | null {
 function chatRaw(a: number): boolean {
   if (!slotOccupied(a)) return false;
   const b = behind(a);
-  return b !== null && hash01(a, lifeSalt.chat) < CHAT_P && !falls(a) && !falls(b);
+  return b !== null && (passengerKind(a) === "clever" || hash01(a, lifeSalt.chat) < CHAT_P * .35) && !falls(a) && !falls(b);
 }
 /** Leader `a` chats with behind(a); a plate is never in two pairs. */
 function chatPair(a: number): boolean {
@@ -456,6 +455,17 @@ export function plateBehaviour(id: number, now: number): PlateLife {
       life.hop = (Math.floor(tt * 4) & 1) === 0 ? 1 : 0;
     }
   }
+  if (passengerKind(id) === "clever" && !life.falling) {
+    // Bounded motion is independent of the belt motor and continuous across rooms.
+    // Clever passengers hesitate, catch up, tilt and bounce.
+    const t = now + hash01(id, 'agency-phase') * 24;
+    life.du += 18 * Math.sin(t * Math.PI / 6);
+    life.hop = Math.round(4 + 4 * Math.sin(t * Math.PI / 2));
+    life.rot = Math.sin(t * Math.PI / 3) * .07;
+    const cycle = ((t % 12) + 12) % 12;
+    if (!life.bubble && cycle < 2.6) life.bubble = ['q','star','fish'][hash(id,'agency-voice')%3];
+    else if (!life.bubble && cycle > 7 && cycle < 8.5) life.bubble = 'bang';
+  }
   return life;
 }
 
@@ -470,7 +480,7 @@ export function plateBehaviour(id: number, now: number): PlateLife {
 // transition camera the cells scale with the art like any other pixel.
 
 /** Tread pixel size in stage px. */
-const TPX = 3;
+const TPX = 4;
 
 const TREAD = "#2b2723";
 const TREAD_HI = "#4a433b";
@@ -949,7 +959,23 @@ function drawLegs(g: CanvasRenderingContext2D, d: number, legH: number, frame: 0
   }
 }
 
+// Composite passengers on one four-stage-pixel grid, including perspective and rotations.
+// Plate coordinates and hit tests retain full precision, so the motor never jitters.
+const passengerBuffers = new Map<string, HTMLCanvasElement>();
 export function drawPlates(g: CanvasRenderingContext2D, plates: Plate[], size: number, hidden?: Set<string>) {
+  const pitch = g.canvas.width > 480 ? 4 : 1;
+  const w = Math.ceil(g.canvas.width / pitch), h = Math.ceil(g.canvas.height / pitch);
+  const key = `${w}:${h}`;
+  let c = passengerBuffers.get(key);
+  if (!c) { c = document.createElement('canvas'); c.width = w; c.height = h; passengerBuffers.set(key,c); }
+  const p = c.getContext('2d')!;
+  p.setTransform(1,0,0,1,0,0); p.clearRect(0,0,w,h);
+  const m=g.getTransform(); p.setTransform(m.a/pitch,m.b/pitch,m.c/pitch,m.d/pitch,m.e/pitch,m.f/pitch);
+  drawPlatesRaw(p,plates,size,hidden);
+  g.save(); g.setTransform(1,0,0,1,0,0); g.imageSmoothingEnabled=false;
+  g.drawImage(c,0,0,w*pitch,h*pitch); g.restore();
+}
+function drawPlatesRaw(g: CanvasRenderingContext2D, plates: Plate[], size: number, hidden?: Set<string>) {
   const prev = g.imageSmoothingEnabled;
   g.imageSmoothingEnabled = false;
   const bubbles: [number, number, number, string][] = [];
@@ -977,11 +1003,12 @@ export function drawPlates(g: CanvasRenderingContext2D, plates: Plate[], size: n
     g.translate(x, y - legH);
     if (pl.rot) g.rotate(pl.rot);
     if (legH) drawLegs(g, d, legH, pl.stand ? -1 : (pl.legs as 0 | 1), pl.dir ?? 1);
-    const [spr, cy] = plateSprite(pl.rim, d);
-    g.drawImage(spr, -(spr.width >> 1), -cy);
+    const platePixel = 4;
+    const [spr, cy] = plateSprite(pl.rim, Math.max(4, Math.round(d / platePixel)));
+    g.drawImage(spr, -(spr.width >> 1) * platePixel, -cy * platePixel, spr.width * platePixel, spr.height * platePixel);
     const im = itemImg(pl.item);
     if (im.complete && im.naturalWidth) {
-      const f = Math.min((d * 0.86) / im.naturalWidth, (d * 0.92) / im.naturalHeight);
+      const f = Math.min((d * 1.08) / im.naturalWidth, (d * 1.15) / im.naturalHeight);
       const iw = Math.round(im.naturalWidth * f), ih = Math.round(im.naturalHeight * f);
       // Living passengers hop 1 px as they travel (tied to position, so it loops with the belt).
       const hop = ITEMS[pl.item]?.animal && ((Math.floor((pl.x + pl.y * 0.5) / 18) & 3) === 0) ? 1 : 0;

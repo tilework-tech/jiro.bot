@@ -1,3 +1,4 @@
+import { installGardenArt } from "./art/rooms";
 import "./style.css";
 import { start } from "./engine/stage";
 import { declareEggs, eggCount } from "./engine/eggs";
@@ -32,6 +33,8 @@ declareEggs([
   // street > pond garden soot (transitions/street-pond.ts has no declareEggs of its own)
   "soot-rice",
 ]);
+
+installGardenArt([bar, office, dining, kitchen, storage, pantry, street, pond]);
 
 const api = start(
   [bar, office, dining, kitchen, storage, pantry, street, pond],

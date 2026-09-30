@@ -29,8 +29,8 @@ const PLATE = 54;
 const GRAV = 500; // px/s^2 for falling plates
 const TAU = Math.PI * 2;
 
-// The art's pixel grid (1920 px = 238 art pixels). Overlays snap to it.
-const GP = 1920 / 238, GX = 7.45, GY = 3.1;
+// Shared garden grid (1920 stage units = 240 art pixels). Overlays snap to it.
+const GP = 8, GX = 0, GY = 0;
 const gx = (i: number) => Math.round(GX + i * GP);
 const gy = (j: number) => Math.round(GY + j * GP);
 const ci = (x: number) => Math.floor((x - GX) / GP);

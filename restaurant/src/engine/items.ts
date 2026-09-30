@@ -1,7 +1,9 @@
+import { passengerCanvas } from "../art/passengers";
 // Belt item catalog: what rides the belt, how often, and what happens when you click it.
 
 export interface ItemDef {
   weight: number;
+  clever?: boolean;
   /** Click reaction: toast text (first click also counts as an egg when `egg` is set). */
   say: string[];
   egg?: string;
@@ -41,8 +43,8 @@ export const ITEMS: Record<string, ItemDef> = {
   lobster: { weight: 0.4, say: ["A lobster. This is a sushi bar, sir.", "Lobster escaped the kitchen. Classic."], egg: "lobster", sfx: "bonk", absurd: true, animal: true },
   ramen: { weight: 1, say: ["Ramen on a sushi belt. Wrong room, right vibe."], egg: "ramen" },
   // The menagerie: absurd comic/animal passengers. Low weights; together with the
-  // legacy oddities above they make roughly 1 plate in 5 absurd.
-  // (Weights were trimmed in the V3 polish so the 20 newcomers below fit without raising that share.)
+  // legacy oddities above they supply the explicitly selected absurd category.
+  // Weights affect variety within a category; category shares are fixed below.
   hamster: { weight: 0.35, say: ["A hamster is surfing a salmon nigiri. Cowabunga, reviewed.", "Hamster on the wheel? No. Hamster on the belt. Scales horizontally.", "He's not on-call. He's on-salmon."], egg: "hamster", sfx: "blip", absurd: true, animal: true },
   octopus: { weight: 0.35, say: ["Octopus says hi with 1 of 8 arms. The other 7 are running agents.", "Eight arms, eight parallel sessions. Show-off.", "Gunkan occupied. Please take the next plate."], egg: "octopus", sfx: "splash", absurd: true, animal: true },
   crab: { weight: 0.35, say: ["Crab in sunglasses. Too cool to review your PR.", "He's walking sideways around the flaky test.", "Deal with it. ⌐■_■"], egg: "crab", sfx: "bonk", absurd: true, animal: true },
@@ -81,7 +83,18 @@ export const ITEMS: Record<string, ItemDef> = {
   narwhal: { weight: 0.4, say: ["A narwhal made an ikura kebab. Unicorn of the sea, chef of the belt.", "Three roe on a tusk. Stacked commits.", "It's a unicorn startup. Revenue: ikura."], egg: "narwhal", sfx: "splash", absurd: true, animal: true },
 };
 
+Object.assign(ITEMS, {
+  'scout-nigiri': { weight: 1, clever: true, animal: true, egg: 'scout-nigiri', say: ['The scout checks the next plate, then reports back. Rice with a plan.'], sfx: 'blip' },
+  'wizard-maki': { weight: 1, clever: true, animal: true, egg: 'wizard-maki', say: ['The maki levitates, considers your cursor, and politely declines gravity.'], sfx: 'chime' },
+  'sleepwalker': { weight: 1, clever: true, animal: true, egg: 'sleepwalker', say: ['This nigiri stops to think, catches up, and pretends nothing happened.'], sfx: 'pop' },
+} satisfies Record<string, ItemDef>);
+// Category first, variety second: adding a new joke can never dilute the 60/35/5 mix.
+const NORMAL = new Set(['tuna','salmon','tamago','ikura','ebi','maki','onigiri-happy','onigiri-angry','onigiri-sleepy','bowl-miso','cup-tea','cup-matcha','ramen','fortune']);
 const ALL = Object.keys(ITEMS);
+export type PassengerKind = 'normal' | 'absurd' | 'clever';
+export const kindOf = (name: string): PassengerKind => ITEMS[name]?.clever ? 'clever' : NORMAL.has(name) ? 'normal' : 'absurd';
+export const passengerKind = (id: number): PassengerKind => { const r=hash01(id, 'passenger-category'); return r<.60?'normal':r<.95?'absurd':'clever'; };
+const POOLS = Object.fromEntries(['normal','absurd','clever'].map(kind => [kind, ALL.filter(k=>kindOf(k)===kind)])) as Record<PassengerKind,string[]>;
 
 /** Deterministic 32-bit hash of an integer and a salt string. */
 export function hash(n: number, key: string): number {
@@ -97,8 +110,6 @@ export const hash01 = (n: number, key: string) => hash(n, key) / 4294967296;
 /** Global override (Konami code turns every plate into a duck). */
 export const override: { item: string | null } = { item: null };
 
-const TOTAL = ALL.reduce((a, k) => a + ITEMS[k].weight, 0);
-
 /**
  * What rides on global plate `id`. Depends ONLY on the id, so a plate carries the same
  * item from the bar wall to the koi. The old `key`/`pool` arguments are accepted and
@@ -106,12 +117,13 @@ const TOTAL = ALL.reduce((a, k) => a + ITEMS[k].weight, 0);
  */
 export function itemFor(id: number, _key?: string, _pool?: string[]): string {
   if (override.item) return override.item;
-  let r = ((hash(id, "item") % 100000) / 100000) * TOTAL;
-  for (const k of ALL) {
+  const pool = POOLS[passengerKind(id)];
+  let r = hash01(id, "item") * pool.reduce((sum,k)=>sum+ITEMS[k].weight,0);
+  for (const k of pool) {
     r -= ITEMS[k].weight;
     if (r <= 0) return k;
   }
-  return ALL[0];
+  return pool[0];
 }
 
 /** Plate glaze: one ceramic style, three barely-different cream glazes (fired in different batches). */
@@ -125,7 +137,7 @@ export function itemImg(name: string): HTMLImageElement {
   let im = imgs.get(name);
   if (!im) {
     im = new Image();
-    im.src = `${import.meta.env.BASE_URL}items/${name}.png`;
+    im.src = passengerCanvas(name).toDataURL();
     imgs.set(name, im);
   }
   return im;

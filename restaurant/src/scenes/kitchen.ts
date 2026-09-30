@@ -1,3 +1,4 @@
+import { itemImg } from "../engine/items";
 import type { SceneDef } from "../engine/types";
 import { glow, shade, steam } from "../engine/fx";
 import { bubble, html, hotspot, place } from "../engine/dom";
@@ -354,7 +355,7 @@ export const kitchen: SceneDef = {
       const w = Math.round(76 * s), h = Math.round(w * (ASPECT[f.item] ?? 1));
       const b = html(el, `<button class="faq-sushi" style="z-index:${10 + i % 2}" aria-label="${f.q}">
         <span class="shadow"></span>
-        <span class="sprite" style="background-image:url(${BASE}art/kitchen/faq-${f.item}.png)"></span>
+        <span class="sprite" style="background-image:url(${itemImg(f.item).src});background-size:100% 100%"></span>
         <span class="qb">?</span>
         <span class="tip">${f.q}</span>
       </button>`);

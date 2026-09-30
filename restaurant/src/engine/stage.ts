@@ -1,8 +1,9 @@
+import { transitionArt, smallWorldArt } from "../art/rooms";
 import { STAGE_W, STAGE_H, type Api, type Camera, type Plate, type SceneDef, type TransitionDef, type BeltPath } from "./types";
 import { drawBeltFull, hitPlate, setChain, chainInfo } from "./belt";
 import * as beltMod from "./belt";
 import { Drag } from "./drag";
-import { ITEMS, preloadItems } from "./items";
+import { ITEMS, preloadItems, itemImg } from "./items";
 import { eggCount, eggFound, noteEgg, onEggs } from "./eggs";
 import { sfx, setSound, soundOn } from "./sfx";
 
@@ -15,7 +16,7 @@ export function img(url: string): HTMLImageElement {
   let im = imgCache.get(url);
   if (!im) {
     im = new Image();
-    im.src = url.startsWith("http") || url.startsWith("data:") ? url : `${import.meta.env.BASE_URL}${url.replace(/^\//, "")}`;
+    im.src = smallWorldArt(url) ?? transitionArt(url) ?? (url.startsWith("http") || url.startsWith("data:") ? url : `${import.meta.env.BASE_URL}${url.replace(/^\//, "")}`);
     imgCache.set(url, im);
   }
   return im;
@@ -186,6 +187,12 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
     else seg.def.mount?.(el, api);
   }
 
+  // Scene DOM props and chrome share the new sprite vocabulary too.
+  root.querySelectorAll<HTMLImageElement>('img').forEach(im => {
+    const name = /\/items\/([^/]+)\.png$/.exec(im.src)?.[1];
+    if (name && ITEMS[name]) im.src = itemImg(name).src;
+  });
+
   // Side rail.
   scenes.forEach((s) => {
     const b = document.createElement("button");
@@ -315,7 +322,7 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
 
     g.setTransform(1, 0, 0, 1, 0, 0);
     g.globalAlpha = 1;
-    g.imageSmoothingEnabled = true;
+    g.imageSmoothingEnabled = false;
     if (seg.kind === "scene") {
       renderScene(seg.def, g, now, undefined, true);
       drag.drawHeld(g, seg.def.belt.plate ?? 52);

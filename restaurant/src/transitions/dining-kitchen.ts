@@ -56,7 +56,7 @@ function baseCtx(): CanvasRenderingContext2D {
   const g = base.getContext("2d")!;
   g.setTransform(1, 0, 0, 1, 0, 0);
   g.globalAlpha = 1;
-  g.imageSmoothingEnabled = true;
+  g.imageSmoothingEnabled = false;
   return g;
 }
 

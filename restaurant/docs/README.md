@@ -1,6 +1,6 @@
 # Jiro's Restaurant: recreation docs
 
-A pixel-art scroll website for jiro.bot: one sushi conveyor belt runs through the rooms of Jiro's restaurant, carrying noriagentic.com's content. These docs describe it in enough detail to rebuild it identically from this branch (`restaurant-belt-v3`, V3: one continuous belt animation; see 00-history round 5 and `../V3-BRIEF.md`).
+A pixel-art scroll website for jiro.bot: one sushi conveyor belt runs through the rooms of Jiro's restaurant, carrying noriagentic.com's content. The current redraw uses a shared 240×135 scene grid and a finer belt layer. Start with [07-garden-redraw.md](07-garden-redraw.md); chapters 01–06 document the original V3 renderer and retained interaction/transition contracts.
 
 ![bar](img/scene-bar.jpg)
 
