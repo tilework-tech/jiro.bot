@@ -1,0 +1,12 @@
+{
+  "frames": 168,
+  "fps": 24,
+  "duration": 7,
+  "width": 1280,
+  "height": 720,
+  "maskFullPixels": 139260,
+  "maskTouchedPixels": 169534,
+  "exactOutsideFraction": 0.8160438368055556,
+  "maximumUnmaskedPreencodeDifference": 0,
+  "encode": "h264 crf16 yuv420p"
+}

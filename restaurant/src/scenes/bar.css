@@ -1,0 +1,28 @@
+/* bar (hero) scene: quiet dark copy column on the left of the pixel-art bar. */
+.scene-ui[data-id="bar"] .hero-copy { left: 170px; top: 214px; width: 640px; }
+.scene-ui[data-id="bar"] .hero-copy .kicker { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; font-size: 19px; letter-spacing: .08em; }
+/* The "open" light: a tiny green pixel lamp that breathes (4 s, loops cleanly). */
+.scene-ui[data-id="bar"] .hero-copy .open { width: 10px; height: 10px; background: var(--green); box-shadow: 0 0 0 2px rgba(11,10,9,.9), 0 0 14px 2px rgba(111,220,140,.45); animation: bar-open 4s ease-in-out infinite; }
+@keyframes bar-open { 50% { opacity: .55; box-shadow: 0 0 0 2px rgba(11,10,9,.9), 0 0 6px 0 rgba(111,220,140,.25); } }
+.scene-ui[data-id="bar"] .hero-copy h1.px { max-width: 560px; font-size: 74px; line-height: 1.1; text-shadow: 0 5px 0 rgba(0,0,0,.65); }
+.scene-ui[data-id="bar"] .hero-copy h1 .jiro { color: var(--copper); }
+/* A short pixel rule between the name and the promise. */
+.scene-ui[data-id="bar"] .hero-copy .rule { display: block; width: 72px; height: 6px; margin: 34px 0 0; background: var(--copper); box-shadow: 12px 6px 0 -0px rgba(0,0,0,.55); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); opacity: .9; }
+.scene-ui[data-id="bar"] .hero-copy .lede { margin-top: 26px; font-size: 31px; line-height: 1.3; font-weight: 500; color: var(--cream); text-shadow: 0 2px 0 rgba(0,0,0,.55), 0 0 18px rgba(8,6,5,.9); }
+.scene-ui[data-id="bar"] .hero-copy .byo { all: unset; cursor: pointer; background-image: linear-gradient(var(--copper), var(--copper)); background-size: 0 3px; background-position: 0 100%; background-repeat: no-repeat; transition: background-size .35s steps(6); }
+.scene-ui[data-id="bar"] .hero-copy .byo:hover, .scene-ui[data-id="bar"] .hero-copy .byo:focus-visible { background-size: 100% 3px; }
+.scene-ui[data-id="bar"] .hero-copy .sub { margin: 14px 0 0; max-width: 31ch; font-size: 19px; line-height: 1.5; color: var(--muted); text-shadow: 0 2px 6px rgba(0,0,0,.8); }
+
+/* "scroll · follow the belt": lies along the belt, chevrons chase downstream (1.5 s loop). */
+.scene-ui[data-id="bar"] .belt-cue { position: absolute; transform-origin: 0 50%; display: flex; align-items: center; gap: 12px; padding: 6px 8px; background: none; border: 0; cursor: pointer; font: 400 14px/1 var(--px); letter-spacing: .1em; color: rgba(243,230,207,.62); text-shadow: 0 2px 0 #000; white-space: nowrap; transition: color .2s; }
+.scene-ui[data-id="bar"] .belt-cue:hover, .scene-ui[data-id="bar"] .belt-cue:focus-visible { color: var(--cream); }
+.scene-ui[data-id="bar"] .belt-cue .chev { display: flex; gap: 3px; }
+.scene-ui[data-id="bar"] .belt-cue .chev i { width: 8px; height: 12px; background: var(--copper); clip-path: polygon(100% 0, 50% 0, 0 50%, 50% 100%, 100% 100%, 50% 50%); opacity: .25; animation: bar-chev 1.5s steps(1) infinite; }
+.scene-ui[data-id="bar"] .belt-cue .chev i:nth-child(1) { animation-delay: -1s; }
+.scene-ui[data-id="bar"] .belt-cue .chev i:nth-child(2) { animation-delay: -.5s; }
+.scene-ui[data-id="bar"] .belt-cue .chev i:nth-child(3) { animation-delay: 0s; }
+@keyframes bar-chev { 0% { opacity: .95; } 33.3% { opacity: .5; } 66.6% { opacity: .22; } }
+@media (prefers-reduced-motion: reduce) {
+  .scene-ui[data-id="bar"] .belt-cue .chev i, .scene-ui[data-id="bar"] .hero-copy .open { animation: none; opacity: .8; }
+}
+.scene-ui[data-id="bar"] .hit[title="Wall opening"] { cursor: zoom-in; }
