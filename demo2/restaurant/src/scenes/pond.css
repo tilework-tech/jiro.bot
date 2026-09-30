@@ -1,0 +1,4 @@
+/* Koi pond (ending). Scoped to the pond scene layer. */
+.scene-ui[data-id="pond"] .ending .lede { max-width: 30ch; }
+/* Flappy Koi button sits on the grass bank, clear of the koi's leap. */
+.scene-ui[data-id="pond"] .game-start { left: 110px !important; top: 900px !important; }

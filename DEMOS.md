@@ -1,0 +1,18 @@
+# Jiro.bot preserved website demos
+
+These directories freeze distinct website experiences for review and exact reconstruction. They are source snapshots, not production deployments. Keep each demo's code, final media, documentation, and reference captures together.
+
+| Demo | September 30 review item | Experience | Run from this repository root | Status |
+|---|---:|---|---|---|
+| [Demo1](demo1/README.md) | 2 | Seven-stop 3D scroll with a procedural koi ending | `cd demo1/site && npm ci && npm run build && node serve.mjs` | Existing approved snapshot, unchanged here. |
+| [Demo2](demo2/README.md) | 1 | Eight-room 2D restaurant tour with a conveyor and koi finale | `cd demo2/restaurant && npm ci && npm run build && npm run dev` | Preserved from `restaurant-belt` commit `ae63ce88e83b7f1df1475c4010b219f26f0e7746`. |
+| Demo3 | 2 | Would duplicate Demo1 | None | Intentionally skipped. All 64 website files in review item 2 and Demo1 match byte for byte. |
+| [Demo4](demo4/README.md) | 4 | Sketch-led 2D conveyor with a crisp animated pixel-art hero | `cd demo4/restaurant && npm ci && npm run build && npm run dev` | Preserved from `scroll-sketch-belt` commit `6dfaa7a8e9af6c45f0311ae9e218ba25b861e00e`. |
+
+The Demo1 comparison used every blob under `demo1/site/` in the `demo1-folder` snapshot and `scroll-flow/site/` in the latest `scroll-flow-3d` branch. Each tree had 64 files, and every corresponding Git blob ID matched. Documentation or other branch files may differ, but the website source and assets are identical.
+
+## Reconstruction material
+
+Demo2 and Demo4 each contain a `restaurant/docs/RECREATE.md` guide, an `ASSETS.md` manifest with SHA-256 hashes, `restaurant/reference/` frames for every scene and transition, and the complete source and final assets. Demo2 retains its detailed original history, engine, scene, transition, moodboard, art, and tooling guides. Demo4 adds Martin's source-linked verbatim feedback and an art provenance note. The saved binaries are the exact visual inputs; generating new art is unnecessary for reproduction.
+
+The source branch and exact commit are recorded in each demo's README. Continue work on a copy of a selected demo, and preserve the original snapshot for comparison.

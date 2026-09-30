@@ -1,0 +1,23 @@
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 900, height: 600 }, hasTouch: true, isMobile: true });
+const pg = await ctx.newPage(); const errs = [];
+pg.on("pageerror", (e) => errs.push(String(e)));
+await pg.routeWebSocket(/.*/, () => {});
+await pg.goto("http://localhost:3000/?seg=pond&tt=0.5", { waitUntil: "networkidle" }); await pg.waitForTimeout(800);
+await pg.tap("text=Flappy Koi"); await pg.waitForTimeout(300);
+for (let i = 0; i < 6; i++) { await pg.tap(".arcade canvas"); await pg.waitForTimeout(250); }
+console.log("flappy", await pg.$eval(".arcade canvas", (c) => c.dataset.s));
+await pg.screenshot({ path: "/tmp/gshots/touch-flappy.png" });
+await pg.goto("http://localhost:3000/?seg=yard&tt=0.5", { waitUntil: "networkidle" }); await pg.waitForTimeout(800);
+await pg.tap("text=Play Hose Snake"); await pg.waitForTimeout(300);
+await pg.tap(".arcade canvas"); await pg.waitForTimeout(300);
+const s0 = await pg.$eval(".arcade canvas", (c) => c.dataset.s);
+const bb = await (await pg.$(".arcade canvas")).boundingBox();
+await pg.tap(".arcade canvas", { position: { x: bb.width / 2, y: 5 } }); await pg.waitForTimeout(400);
+console.log("snake", s0, "->", await pg.$eval(".arcade canvas", (c) => c.dataset.s));
+await pg.goto("http://localhost:3000/?seg=storage&tt=0.5", { waitUntil: "networkidle" }); await pg.waitForTimeout(800);
+await pg.tap(".layer.live .mole >> nth=0"); await pg.waitForTimeout(500);
+console.log("whack started", await pg.$eval(".layer.live .whack-hud", (h) => !h.hidden));
+console.log(errs.join("\n") || "no errors");
+await b.close();

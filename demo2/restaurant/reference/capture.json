@@ -1,0 +1,90 @@
+{
+  "source": "demo2/restaurant",
+  "viewport": {
+    "width": 1600,
+    "height": 900
+  },
+  "params": {
+    "tt": 0.5,
+    "t": 5
+  },
+  "segments": [
+    {
+      "id": "bar",
+      "start": 0,
+      "len": 1.2
+    },
+    {
+      "id": "bar>office",
+      "start": 1.2,
+      "len": 0.9
+    },
+    {
+      "id": "office",
+      "start": 2.1,
+      "len": 1.6
+    },
+    {
+      "id": "office>dining",
+      "start": 3.7,
+      "len": 2
+    },
+    {
+      "id": "dining",
+      "start": 5.7,
+      "len": 1.3
+    },
+    {
+      "id": "dining>kitchen",
+      "start": 7,
+      "len": 0.7
+    },
+    {
+      "id": "kitchen",
+      "start": 7.7,
+      "len": 1.6
+    },
+    {
+      "id": "kitchen>storage",
+      "start": 9.3,
+      "len": 0.7
+    },
+    {
+      "id": "storage",
+      "start": 10,
+      "len": 1.1
+    },
+    {
+      "id": "storage>pantry",
+      "start": 11.1,
+      "len": 0.35
+    },
+    {
+      "id": "pantry",
+      "start": 11.45,
+      "len": 1.5
+    },
+    {
+      "id": "pantry>street",
+      "start": 12.95,
+      "len": 0.7
+    },
+    {
+      "id": "street",
+      "start": 13.649999999999999,
+      "len": 1.6
+    },
+    {
+      "id": "street>pond",
+      "start": 15.249999999999998,
+      "len": 0.8
+    },
+    {
+      "id": "pond",
+      "start": 16.049999999999997,
+      "len": 1.8
+    }
+  ],
+  "browser": "Chromium via Nori session Chrome CDP",
+  "pageErrors": []
+}
