@@ -10,6 +10,10 @@ npm run dev      # vite on :5173
 npm run build    # static build in dist/
 ```
 
+## Mini-games
+
+Two simple arcade games live at `/games/sushi-rush/` and `/games/daily-roll/` (static files in `public/games/`). See [docs/games.md](docs/games.md).
+
 ## Layout
 
 - `src/main.ts`: page wiring (belt path, feeding, discovery toasts, DOM effects)
