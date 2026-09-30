@@ -1,6 +1,6 @@
-# Pixel pipeline (true pixel art, 480×270 at 4×)
+# Pixel pipeline (true pixel art, 960×540 at 2×)
 
-Every scene is authored at 480×270 native pixels in one shared 52-colour palette and shown at exactly 4×. The rules are in `STYLE.md`.
+Every scene is authored at 960×540 native pixels in one shared 52-colour palette and shown at exactly 2×. (The first pass was 480×270 at 4×; the client asked for pixels half that size. `PX_W`, `PX_H` and `PX_S` switch it back.) Coordinates in `ops/*.json` and `--static` stay in 480×270 space and are scaled automatically. A 1-pixel move there becomes 2 native pixels, keeping the same on-screen amplitude. The rules are in `STYLE.md`.
 
 1. **`restyle.sh [scene…]`: redraw.** Gemini redraws each current scene in the pond's pixel style, keeping its content and layout (the output overlays the original within a few pixels, so the belt lanes and anchors still line up). Inputs are the scene still, the pond as style reference, and `ref/jiro-char.png` where Jiro appears. The picked takes are `raw/<scene>.png`.
 2. **`pixelize.py palette palette.json raw/*.png`: palette.** k-means in Lab space, weighted toward vivid colours, plus fixed anchors (eye cyan, lantern amber, cream, copper, indigo, tuna red). The darkest tone is floored to a very dark indigo-brown. Result: 52 colours.
@@ -29,7 +29,7 @@ Every scene is authored at 480×270 native pixels in one shared 52-colour palett
 Posters are `out/<s>.png` saved as JPEG at quality 95 with 4:4:4 chroma. The videos are H.264 at 1920×1080: each native pixel is an aligned 4×4 block, so 4:2:0 chroma stays exact. All 7 videos total 3.1 MB.
 
 **In the site** (`site/src/pixelpass.ts`):
-- The whole 3D scene renders at ⌈viewport/4⌉ with no antialiasing.
-- A shader snaps every pixel to `src/palette.ts` (the same palette), using the same sparse Bayer dithering.
-- The canvas is scaled by exactly 4× with `image-rendering: pixelated`.
-- Video and poster textures use nearest filtering. The landed camera covers the card exactly (factor 1.0), and the landed breathing and mouse parallax were removed so the art maps 1:1 without crawling.
+- The scene videos carry the pixel grid themselves: native pixels are aligned 2×2 blocks, and the textures use nearest filtering. The landed camera covers the card exactly, and there is no landed drift, so the art maps 1:1.
+- The 3D scene renders at full resolution (device pixels, capped at 2×) with 4× MSAA. The belt and everything on it therefore move smoothly with fine, readable pixels, about 4× smaller than the scene pixels.
+- A final pass snaps every pixel to the shared palette (`src/palette.ts`), with no dithering, because dither shimmers on moving things.
+- An earlier version rendered everything on the coarse 4× grid, and the belt pulsed and flashed. The client asked for this change.

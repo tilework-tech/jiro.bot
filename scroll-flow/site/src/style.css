@@ -14,8 +14,7 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; overflow: hidden; background: #0c0806; color: var(--cream); font-family: var(--sans); }
 body { overscroll-behavior: none; -webkit-font-smoothing: antialiased; }
-#gl { position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; display: block; touch-action: none; image-rendering: pixelated; image-rendering: crisp-edges; }
-#gl { image-rendering: pixelated; }
+#gl { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; touch-action: none; }
 #gl.grab { cursor: grab; }
 #gl.grabbing { cursor: grabbing; }
 

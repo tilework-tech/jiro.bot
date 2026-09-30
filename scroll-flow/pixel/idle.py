@@ -16,7 +16,7 @@ import argparse, glob, json, os, subprocess
 import numpy as np
 from PIL import Image
 import imageio_ffmpeg
-from pixelize import srgb_to_lab, W, H, S
+from pixelize import srgb_to_lab, W, H, S, K
 
 FF = imageio_ffmpeg.get_ffmpeg_exe()
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -39,8 +39,11 @@ def main():
     for i in range(len(pal)):  # nearest palette colour that is darker, same-ish hue
         cand = [j for j in range(len(pal)) if lum[j] < lum[i] - 8]
         darker[i] = min(cand, key=lambda j: ((srgb_to_lab(pal[j].astype(float)) - srgb_to_lab(pal[i].astype(float))) ** 2).sum()) if cand else i
+    D = max(1, int(round(K)))  # moves are 1 px in 480x270 space = D native px
     for o in ops:
-        x0, y0, x1, y1 = o["rect"]
+        x0, y0, x1, y1 = (int(round(v * K)) for v in o["rect"])
+        if "pivot" in o: o = {**o, "pivot": int(round(o["pivot"] * K))}
+        if "exclude_from" in o: o = {**o, "exclude_from": [int(round(v * K)) for v in o["exclude_from"]]}
         src = still[y0:y1, x0:x1]
         keep = np.ones_like(src, bool)
         if "exclude_from" in o:
@@ -53,9 +56,10 @@ def main():
                 p = o["pivot"] - y0
                 moved = src.copy(); mk = keep.copy()
                 if o["op"] == "stretch":
-                    moved[:p] = src[1:p + 1]; mk[:p] = keep[1:p + 1]
+                    moved[:p] = src[D:p + D]; mk[:p] = keep[D:p + D]
                 else:
                     mk[:p] = False
+                    v = v * D
                     if v > 0: moved[:p, v:] = src[:p, :-v]; mk[:p, v:] = keep[:p, :-v]
                     else: moved[:p, :v] = src[:p, -v:]; mk[:p, :v] = keep[:p, -v:]
                 region = fr[y0:y1, x0:x1]
@@ -63,11 +67,11 @@ def main():
                 clear = keep.copy(); clear[p:] = False
                 region[clear] = still[y0:y1, x0:x1][clear] if "bg" not in o else o["bg"]
                 if "exclude_from" in o:  # uncovered pixels take the board colour just below them
-                    below = np.vstack([region[1:], region[-1:]]); region[clear & ~mk] = below[clear & ~mk]
+                    below = np.vstack([region[D:], np.repeat(region[-1:], D, 0)]); region[clear & ~mk] = below[clear & ~mk]
                 region[mk] = moved[mk]
             elif o["op"] == "jaw":
                 region = fr[y0:y1, x0:x1]
-                region[1:] = src[:-1]; region[0] = int(np.argmin(lum))
+                region[D:] = src[:-D]; region[:D] = int(np.argmin(lum))
             elif o["op"] in ("blink", "flicker"):
                 region = fr[y0:y1, x0:x1]
                 thr = np.percentile(lum[src], 80)

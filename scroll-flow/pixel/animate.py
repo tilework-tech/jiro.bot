@@ -17,7 +17,7 @@ import argparse, json, os, subprocess
 import numpy as np
 from PIL import Image
 import imageio_ffmpeg
-from pixelize import srgb_to_lab, W, H, S
+from pixelize import srgb_to_lab, W, H, S, K
 
 FF = imageio_ffmpeg.get_ffmpeg_exe()
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -88,7 +88,7 @@ def main():
     m = np.pad(moving, 1)
     moving = np.any([m[1 + dy:1 + dy + H, 1 + dx:1 + dx + W] for dy in (-1, 0, 1) for dx in (-1, 0, 1)], 0)
     for r in filter(None, a.static.split(";")):
-        x0, y0, x1, y1 = map(int, r.split(",")); moving[y0:y1, x0:x1] = False
+        x0, y0, x1, y1 = (int(round(v * K)) for v in map(int, r.split(","))); moving[y0:y1, x0:x1] = False  # rects in 480x270 space
     seq = np.stack([snap(f, lut, len(pal)) for f in corr])
     # 3) 3-frame temporal majority (cyclic) on moving pixels; everything else is the still
     prev, nxt = np.roll(seq, 1, 0), np.roll(seq, -1, 0)
@@ -102,11 +102,11 @@ def main():
     seq = seq[:end]
     seq[0] = still
     # 5) pixel dissolve over the last K frames back into the still (scattered order, no crossfade colours)
-    K = min(8, len(seq) // 4)
+    KD = min(8, len(seq) // 4)
     rank = np.random.default_rng(1).random((H, W))
-    for j in range(K):
-        i = len(seq) - K + j
-        back = rank < (j + 1) / (K + 1)
+    for j in range(KD):
+        i = len(seq) - KD + j
+        back = rank < (j + 1) / (KD + 1)
         seq[i] = np.where(back, still, seq[i])
     steps = [(seq[i] != seq[i + 1]).sum() for i in range(len(seq) - 1)]
     seam = (seq[-1] != seq[0]).sum()

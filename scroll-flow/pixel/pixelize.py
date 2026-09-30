@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""True pixel art: force an image onto the 480x270 grid and the shared palette.
+"""True pixel art: force an image onto the native grid (960x540 at 2x; PX_W/PX_H/PX_S) and the shared palette.
 
   pixelize.py palette OUT.json IMG...        build the shared palette from several images
   pixelize.py still PALETTE.json IN OUT      IN -> OUT-native.png (480x270) + OUT.png (1920x1080, 4x nearest)
@@ -13,7 +13,10 @@ import json, sys
 import numpy as np
 from PIL import Image
 
-W, H, S = 480, 270, 4
+import os
+# native art size and upscale: 960x540 at 2x (was 480x270 at 4x until the client asked for finer pixels)
+W, H, S = int(os.environ.get("PX_W", 960)), int(os.environ.get("PX_H", 540)), int(os.environ.get("PX_S", 2))
+K = W / 480  # scale for coordinates written in the original 480x270 space
 FLOOR = np.array([22, 16, 26])  # darkest allowed tone: very dark indigo-brown
 ANCHORS = [  # colours that must exist in the palette (style rules + canon Jiro)
     (95, 212, 255), (200, 244, 255),          # Jiro's eye glow + core
@@ -131,7 +134,7 @@ def pixelize(pal_path, src, out_base, cleanup=True, dither=True):
     if dither: nat = dither_smooth(nat, block_mean_lab(rgb), pal_lab)
     rgb = pal[nat].astype(np.uint8)
     Image.fromarray(rgb).save(out_base + "-native.png")
-    Image.fromarray(rgb).resize((W * S, H * S), Image.NEAREST).save(out_base + ".png")
+    Image.fromarray(rgb).resize((W * S, H * S), Image.NEAREST).save(out_base + ".png")  # 1920x1080
     used = len(np.unique(nat))
     print(out_base, "colours used:", used)
     return nat
