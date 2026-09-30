@@ -2,26 +2,117 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Daily Roll · jiro.bot</title>
+    <meta name="description" content="Daily Roll: one pixel-art sushi maze a day, the same for everyone. Roll through the rice as a maki, dodge the condiment ghosts, and share your score. First run counts." />
+    <meta name="theme-color" content="#120d0a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="jiro.bot" />
+    <meta property="og:title" content="Daily Roll · jiro.bot" />
+    <meta property="og:description" content="One seeded sushi maze a day. Same map, same ghosts for everyone. Your first run is the official score." />
+    <meta property="og:url" content="https://jiro.bot/games/daily-roll/" />
+    <meta property="og:image" content="https://jiro.bot/sprites/jiro-frame0.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Daily Roll · jiro.bot" />
+    <meta name="twitter:description" content="One seeded sushi maze a day. First run counts. Share your roll." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..800&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400;600&family=Shippori+Mincho+B1:wght@600;800&family=Silkscreen&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./ui.css" />
-    <style>
-      body { margin: 0; background: #120d0a; color: #f4ead7; font-family: 'Instrument Sans', system-ui, sans-serif; }
-      main { max-width: 1320px; margin: 0 auto; padding: 24px; }
-      canvas#game { display: block; width: 100%; height: auto; image-rendering: pixelated; }
-    </style>
   </head>
   <body>
-    <main>
-      <h1>Daily Roll</h1>
-      <div id="toolbar"></div>
-      <div id="stage"><canvas id="game"></canvas></div>
-      <div id="below"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="nav">
+      <a class="logo" href="/" aria-label="jiro.bot home">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <span>jiro<span class="dot">.</span>bot</span>
+      </a>
+      <nav class="nav-links" aria-label="Games">
+        <a href="../sushi-rush/">Sushi Rush</a>
+        <a class="is-current" href="./" aria-current="page">Daily Roll</a>
+      </nav>
+      <div class="nav-tools" id="toolbar"></div>
+    </header>
+
+    <main class="wrap">
+      <section class="intro">
+        <p class="kicker">毎日 · Today's puzzle</p>
+        <h1>Daily Roll <em id="dr-num">#1</em></h1>
+        <p class="lede"><span id="dr-date">Today</span> · <span id="dr-map">Sushi Counter</span><br />Same maze for everyone. Your first run counts.</p>
+      </section>
+
+      <section class="cabinet" aria-label="Daily Roll game">
+        <div class="noren" aria-hidden="true">
+          <span>毎</span><span>日</span><span class="noren-mark"></span><span>巻</span><span>き</span>
+        </div>
+        <div class="frame">
+          <div class="lamp" aria-hidden="true"></div>
+          <div id="stage"><canvas id="game" aria-label="Daily Roll game canvas. Press Space or tap to play; steer with arrow keys, WASD or swipe."></canvas></div>
+        </div>
+        <div class="counter-ledge" aria-hidden="true"></div>
+        <p class="tap-hint">Tap to start · swipe to steer</p>
+      </section>
+
+      <section id="below" class="below">
+        <article class="card share-card" id="dr-share" hidden>
+          <span class="hanko" aria-hidden="true">巻</span>
+          <div class="share-main">
+          <p class="share-tag" id="dr-tag">Official run</p>
+          <h2 id="dr-verdict">Rolled!</h2>
+          <pre class="share-text" id="dr-text"></pre>
+          <div class="share-actions">
+            <button class="btn btn-primary" id="dr-copy" type="button">Copy result</button>
+            <button class="btn btn-ghost" id="dr-img" type="button">Save image</button>
+            <button class="btn btn-ghost" id="dr-again" type="button">Practice run</button>
+          </div>
+          <p class="share-note" id="dr-note"></p>
+          </div>
+          <figure class="share-preview">
+            <canvas id="dr-preview" width="1200" height="630" aria-label="Share image preview"></canvas>
+            <figcaption>Share image · 1200×630</figcaption>
+          </figure>
+        </article>
+
+        <article class="card stats-card">
+          <h2><span class="jp" aria-hidden="true">記</span> Your rolls</h2>
+          <dl class="stats">
+            <div><dt>Played</dt><dd id="st-played">0</dd></div>
+            <div><dt>Cleared</dt><dd id="st-clear">0%</dd></div>
+            <div><dt>Streak</dt><dd id="st-streak">0</dd></div>
+            <div><dt>Max streak</dt><dd id="st-max">0</dd></div>
+            <div><dt>Best</dt><dd id="st-best">0</dd></div>
+          </dl>
+          <div class="next">
+            <span>Next roll in</span>
+            <strong id="dr-countdown">--:--:--</strong>
+          </div>
+          <p class="fine-print">Only official runs count, one per day. Streak is consecutive days rolled. Days turn over at 00:00 UTC.</p>
+        </article>
+
+        <article class="card">
+          <h2><span class="jp" aria-hidden="true">操</span> How to play</h2>
+          <ul class="keys">
+            <li><span class="k"><kbd>←</kbd><kbd>↑</kbd><kbd>→</kbd><kbd>↓</kbd> / <kbd>WASD</kbd></span> Steer the maki</li>
+            <li><span class="k"><kbd>Swipe</kbd></span> Steer on mobile</li>
+            <li><span class="k"><kbd>Space</kbd> / <kbd>Tap</kbd></span> Start</li>
+            <li><span class="k"><kbd>Esc</kbd></span> Pause</li>
+          </ul>
+          <ol class="rules">
+            <li>Clear <strong>every grain of rice</strong> to finish the roll.</li>
+            <li>Salmon <strong class="roe">roe</strong> makes the ghosts edible for a few seconds. Chain them for more points.</li>
+            <li>Three lives. Your <strong>first finished run</strong> each day is official; the rest are practice.</li>
+          </ol>
+        </article>
+      </section>
+
+      <footer class="foot">
+        <a href="/">← Back to Jiro's counter</a>
+        <a href="../sushi-rush/">Play Sushi Rush →</a>
+      </footer>
     </main>
+
     <script src="../shared/maps.js"></script>
     <script src="../shared/engine.js"></script>
     <script src="../shared/shell.js"></script>
