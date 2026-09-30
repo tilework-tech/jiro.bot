@@ -63,3 +63,7 @@ Then open the site, move through each of the eight rooms, and compare with `refe
 - No separate full-scroll recording was located for this branch. The scene and transition source, hero art, koi art, and still references are saved.
 - This branch includes the original product facts and visuals of the draft. Review current facts before any public launch.
 - The site's eight-room structure and hover or click interactions should be tested on the target device before release. This preservation task checked a local Chromium build and all saved reference frames, not Safari on Martin's Mac.
+
+## Preservation audit addendum (2026-09-30)
+
+A new continuous walkthrough and five-position samples of every transition are now saved in `preservation/evidence/demo2/` at repository root. The [preservation runbook](../../../../preservation/README.md) describes ready-built archives with local fonts, integrity checks and the network-blocked capture method. The original references and app source are unchanged. This addendum supersedes any earlier statement that no full-scroll recording is available.

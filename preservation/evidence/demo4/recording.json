@@ -1,0 +1,91 @@
+{
+  "browser": "154.0.8037.57",
+  "viewport": {
+    "width": 1600,
+    "height": 900
+  },
+  "capture": "CDP screencast, every second rendered frame, 24fps encoded with original frame timestamps; no audio; browser performance is not benchmarked",
+  "trace": [
+    {
+      "id": "bar",
+      "wallTime": 1790806052136,
+      "scrollStart": 0,
+      "length": 1.2
+    },
+    {
+      "id": "bar>office",
+      "wallTime": 1790806055950,
+      "scrollStart": 1.2,
+      "length": 1.5
+    },
+    {
+      "id": "office",
+      "wallTime": 1790806059229,
+      "scrollStart": 2.7,
+      "length": 1.6
+    },
+    {
+      "id": "office>dining",
+      "wallTime": 1790806063129,
+      "scrollStart": 4.300000000000001,
+      "length": 1.6
+    },
+    {
+      "id": "dining",
+      "wallTime": 1790806066393,
+      "scrollStart": 5.9,
+      "length": 1.6
+    },
+    {
+      "id": "dining>kitchen",
+      "wallTime": 1790806070232,
+      "scrollStart": 7.5,
+      "length": 1.4
+    },
+    {
+      "id": "kitchen",
+      "wallTime": 1790806073496,
+      "scrollStart": 8.9,
+      "length": 1.6
+    },
+    {
+      "id": "kitchen>storage",
+      "wallTime": 1790806077337,
+      "scrollStart": 10.5,
+      "length": 1.4
+    },
+    {
+      "id": "storage",
+      "wallTime": 1790806080594,
+      "scrollStart": 11.9,
+      "length": 1.6
+    },
+    {
+      "id": "storage>street",
+      "wallTime": 1790806084487,
+      "scrollStart": 13.5,
+      "length": 1.4
+    },
+    {
+      "id": "street",
+      "wallTime": 1790806087705,
+      "scrollStart": 14.9,
+      "length": 1.6
+    },
+    {
+      "id": "street>pond",
+      "wallTime": 1790806091565,
+      "scrollStart": 16.5,
+      "length": 1.4
+    },
+    {
+      "id": "pond",
+      "wallTime": 1790806094843,
+      "scrollStart": 17.9,
+      "length": 1.8
+    }
+  ],
+  "frameCount": 352,
+  "durationSeconds": 50.11207914352417,
+  "errors": []
+}

@@ -50,6 +50,7 @@
       <button class="tab" id="tab-demo1" role="tab" aria-controls="viewer" aria-selected="true" data-demo="demo1"><span class="tab-number">1</span><span class="tab-label">3D scroll</span><span class="tab-note">Koi pond ending</span></button>
       <button class="tab" id="tab-demo2" role="tab" aria-controls="viewer" aria-selected="false" data-demo="demo2" tabindex="-1"><span class="tab-number">2</span><span class="tab-label">Restaurant tour</span><span class="tab-note">Eight illustrated rooms</span></button>
       <button class="tab" id="tab-demo4" role="tab" aria-controls="viewer" aria-selected="false" data-demo="demo4" tabindex="-1"><span class="tab-number">4</span><span class="tab-label">Sketch belt</span><span class="tab-note">Crisp pixel-art hero</span></button>
+      <button class="tab" id="tab-demo5" role="tab" aria-controls="viewer" aria-selected="false" data-demo="demo5" tabindex="-1"><span class="tab-number">5</span><span class="tab-label">One-belt scroller</span><span class="tab-note">Seven scenes · 2D v4</span></button>
     </nav>
   </header>
   <main class="viewer" id="viewer" role="tabpanel" aria-labelledby="tab-demo1">
@@ -58,7 +59,7 @@
     <a class="viewer-link" id="viewer-link" href="/demo1/" target="_blank" rel="noopener">Open full size ↗</a>
   </main>
   <script>
-    const demos = ["demo1", "demo2", "demo4"];
+    const demos = ["demo1", "demo2", "demo4", "demo5"];
     const tabs = [...document.querySelectorAll(".tab")];
     const viewer = document.getElementById("viewer");
     const frame = document.getElementById("viewer-frame");
@@ -68,7 +69,7 @@
     let generation = 0;
 
     function selectDemo(id, updateHash = true) {
-      if (!demos.includes(id)) { id = "demo1"; updateHash = true; }
+      if (!demos.includes(id)) id = "demo1";
       if (id === active) return;
       active = id;
       const tab = document.getElementById(`tab-${id}`);
@@ -86,6 +87,7 @@
       frame.onload = () => { if (thisGeneration === generation) loading.hidden = true; };
       frame.src = `/${id}/`;
       viewerLink.href = `/${id}/`;
+      viewerLink.textContent = "Open full size ↗";
       if (updateHash && location.hash !== `#${id}`) history.replaceState(null, "", `#${id}`);
     }
 

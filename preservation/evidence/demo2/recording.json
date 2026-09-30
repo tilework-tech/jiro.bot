@@ -1,0 +1,103 @@
+{
+  "browser": "154.0.8037.57",
+  "viewport": {
+    "width": 1600,
+    "height": 900
+  },
+  "capture": "CDP screencast, every second rendered frame, 24fps encoded with original frame timestamps; no audio; browser performance is not benchmarked",
+  "trace": [
+    {
+      "id": "bar",
+      "wallTime": 1790805962341,
+      "scrollStart": 0,
+      "length": 1.2
+    },
+    {
+      "id": "bar>office",
+      "wallTime": 1790805966215,
+      "scrollStart": 1.2,
+      "length": 0.9
+    },
+    {
+      "id": "office",
+      "wallTime": 1790805969470,
+      "scrollStart": 2.1,
+      "length": 1.6
+    },
+    {
+      "id": "office>dining",
+      "wallTime": 1790805973370,
+      "scrollStart": 3.7,
+      "length": 2
+    },
+    {
+      "id": "dining",
+      "wallTime": 1790805976629,
+      "scrollStart": 5.7,
+      "length": 1.3
+    },
+    {
+      "id": "dining>kitchen",
+      "wallTime": 1790805980523,
+      "scrollStart": 7,
+      "length": 0.7
+    },
+    {
+      "id": "kitchen",
+      "wallTime": 1790805983787,
+      "scrollStart": 7.7,
+      "length": 1.6
+    },
+    {
+      "id": "kitchen>storage",
+      "wallTime": 1790805987661,
+      "scrollStart": 9.3,
+      "length": 0.7
+    },
+    {
+      "id": "storage",
+      "wallTime": 1790805990920,
+      "scrollStart": 10,
+      "length": 1.1
+    },
+    {
+      "id": "storage>pantry",
+      "wallTime": 1790805994751,
+      "scrollStart": 11.1,
+      "length": 0.35
+    },
+    {
+      "id": "pantry",
+      "wallTime": 1790805998030,
+      "scrollStart": 11.45,
+      "length": 1.5
+    },
+    {
+      "id": "pantry>street",
+      "wallTime": 1790806001869,
+      "scrollStart": 12.95,
+      "length": 0.7
+    },
+    {
+      "id": "street",
+      "wallTime": 1790806005147,
+      "scrollStart": 13.649999999999999,
+      "length": 1.6
+    },
+    {
+      "id": "street>pond",
+      "wallTime": 1790806009015,
+      "scrollStart": 15.249999999999998,
+      "length": 0.8
+    },
+    {
+      "id": "pond",
+      "wallTime": 1790806012248,
+      "scrollStart": 16.049999999999997,
+      "length": 1.8
+    }
+  ],
+  "frameCount": 367,
+  "durationSeconds": 57.30583715438843,
+  "errors": []
+}

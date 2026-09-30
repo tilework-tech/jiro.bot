@@ -5,10 +5,13 @@ import { resolve, sep, extname } from "node:path";
 
 const repo = resolve(import.meta.dirname, "..");
 const port = Number(process.env.PORT || 3200);
+const preserved = process.env.JIRO_PRESERVED_ROOT;
+const demoRoot = (name, source) => preserved ? resolve(preserved, name) : resolve(repo, source);
 const roots = {
-  "/demo1/": resolve(repo, "demo1/site/dist"),
-  "/demo2/": resolve(repo, "demo2/restaurant/dist"),
-  "/demo4/": resolve(repo, "demo4/restaurant/dist"),
+  "/demo1/": demoRoot("demo1", "demo1/site/dist"),
+  "/demo2/": demoRoot("demo2", "demo2/restaurant/dist"),
+  "/demo4/": demoRoot("demo4", "demo4/restaurant/dist"),
+  "/demo5/": demoRoot("demo5", "demo5/site/dist"),
   "/reference/demo1/": resolve(repo, "demo1/reference/stops"),
   "/showcase/": resolve(repo, "showcase"),
 };
@@ -31,7 +34,7 @@ const types = {
 
 function target(pathname) {
   if (pathname === "/" || pathname === "/showcase") return resolve(repo, "showcase/index.html");
-  if (["/demo1", "/demo2", "/demo4"].includes(pathname)) return null;
+  if (["/demo1", "/demo2", "/demo4", "/demo5"].includes(pathname)) return null;
   const prefix = Object.keys(roots).find((candidate) => pathname.startsWith(candidate));
   if (!prefix) return false;
   const base = roots[prefix];
@@ -50,7 +53,7 @@ createServer((req, res) => {
     req.on("end", () => res.writeHead(204).end());
     return;
   }
-  if (["/demo1", "/demo2", "/demo4"].includes(url.pathname)) {
+  if (["/demo1", "/demo2", "/demo4", "/demo5"].includes(url.pathname)) {
     res.writeHead(301, { Location: url.pathname + "/" + url.search }).end();
     return;
   }
