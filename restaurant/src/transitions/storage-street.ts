@@ -7,7 +7,7 @@ import { hotspot, bubble } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
 import { storage } from "../scenes/storage";
 import { street } from "../scenes/street";
-import { drawClamp, drawCollar, drawFlapBox, drawHanger, drawTanuki, FLAP, TANUKI } from "./storage-street/props";
+import { drawCollar, drawFlapBox, drawHanger, drawTanuki, FLAP, TANUKI } from "./storage-street/props";
 
 declareEggs(["ss-tanuki"]);
 
@@ -16,8 +16,8 @@ declareEggs(["ss-tanuki"]);
 // (band.png: the loft's cut floor, its crawl space, the soffit and the rainy upper storeys of
 // the alley) ending at y OY, street frame at y OY. The belt leaves the storage through its floor
 // trapdoor, runs down through the crawl space (past a tanuki sheltering from the rain), pushes
-// out through a cat flap in the loft's underside and runs down the outside wall on clamps into
-// the street's own drainpipe lane. See storage-street.md.
+// out through a cat flap in the loft's underside and rides down the street's steel belt column
+// (bolted to the soffit) through the open night sky into the street. See storage-street.md.
 
 const W = STAGE_W, H = STAGE_H;
 const sb = storage.belt, tb = street.belt;
@@ -56,11 +56,10 @@ const B: BeltPath = {
 
 const COLLAR_Y = STAGE_H + 9;
 const HANGERS = [AY(150), AY(222)];
-const EXT_Y = AY(328); // soffit bottom: outside from here down
-const CLAMPS = [0, 1, 2, 3, 4].map((k) => OY + 90 - 170 * (k + 1)).filter((y) => y > EXT_Y + 40);
+const EXT_Y = AY(328); // soffit bottom: outside (open sky) from here down
 const TAN = { x: 486, y: AY(303) };
-const LANTERN = { x: 1755, y: AY(430) };
-const EAVE_DRIP = { x: 1385, y: AY(598) };
+/** Rain collecting on the soffit's bottom edge drips off here. */
+const EAVE_DRIP = { x: 1385, y: AY(330) };
 
 /** Camera: straight down. Eases out of the storage, lingers on the cutaway, eases into the street. */
 function camY(t: number) {
@@ -163,11 +162,6 @@ function world(g: CanvasRenderingContext2D, t: number, now: number, api: Api, cy
 
   const art = api.img(ART.url);
   if (art.complete && art.naturalWidth && vy1 > STAGE_H && vy0 < OY + 80) g.drawImage(art, 0, AY(0), ART.w, ART.h);
-  if (vy1 > EXT_Y && vy0 < OY) {
-    glow(g, LANTERN.x, LANTERN.y, 210, "rgba(255,190,110,.2)", now, 0.1, 6, 1);
-    glow(g, 900, OY - 40, 260, "rgba(255,90,200,.07)", now, 0.12, 8, 2); // neon from the street below
-    glow(g, 1340, OY - 20, 200, "rgba(90,230,255,.06)", now, 0.12, 6, 3);
-  }
 
   // Rooms, each clipped to its own frame so the belts can hand over at the frame edges.
   if (vy0 < STAGE_H) {
@@ -184,10 +178,7 @@ function world(g: CanvasRenderingContext2D, t: number, now: number, api: Api, cy
   // Crawl space: the tanuki, the hangers, the floor sleeve.
   drawTanuki(g, TAN.x, TAN.y, now, sackAt());
   for (const y of HANGERS) drawHanger(g, LANE, y);
-  // Outside, the belt stands off the wall like the street's drainpipe lane: same shadow, same clamps.
-  g.fillStyle = "rgba(0,0,0,.32)";
-  g.fillRect(LANE - 24, EXT_Y, 64, OY - EXT_Y);
-  for (const y of CLAMPS) drawClamp(g, LANE, y);
+  // Outside, the belt rides the street's steel column (painted in band.png, same plates and phase).
 
   // Belt, storage side (storage items) down to the swap line; street side (street items) below.
   const aPlates = platesOn(A, now, "storage");

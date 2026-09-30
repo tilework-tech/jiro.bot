@@ -1,4 +1,5 @@
-/* street: night delivery / pricing. A lit menu board bolted to the dark left wall, right of the belt's drainpipe lane (x 118-182). */
+/* street: night delivery / pricing. The menu board floats over the calm, darkened left side of the street (street.ts shades
+   around it), right of the belt's steel column (x 100-200). */
 
 .scene-ui[data-id="street"] .st-board {
   position: absolute;

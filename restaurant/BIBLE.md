@@ -156,7 +156,7 @@ plate, then we return to the neutral eye-level observer view for the kitchen sce
 | 3 | `dining` | REDESIGNED. No Jiro. Happy people seated at restaurant TABLES (not a bar counter, not sad), eye-level observer view (no bird's-eye). The two comparison videos are 50% bigger and cover almost the whole scene. |
 | 4 | `kitchen` | Unchanged ("How Jiro compares" table). |
 | 5 | `storage` | Whack-a-Bug removed. FAQ sushi sit on an aesthetically pleasing counter against a nice, compelling but subdued background. Jiro stands off to the side and answers the questions in a speech bubble. The sushi are gently animated (a slow stretch, a sway, a small turn) - never fast. |
-| 6 | `street` | Night delivery bike + pricing. (Awaiting Martin's reference video; keep as is.) The yard scene and Hose Snake are CUT. |
+| 6 | `street` | Side view after Martin's recording: Jiro pedals a delivery bicycle to the right while the rainy night street scrolls past in parallax (seamless 24 s loop). Pricing card on the left. The yard scene and Hose Snake are CUT. |
 | 7 | `pond` | Jiro removed from the bridge. Polished to be more aesthetically pleasing and relaxing: occasional soft ripples on the water, a fish jumping now and then, the big koi finale kept. |
 
 ## Transitions

@@ -16,14 +16,14 @@ import { pond } from "../scenes/pond";
 // into the koi garden. Neon dims, the rain turns into drips, then moonlight and
 // fireflies.
 //
-// World space: street frame at (0,0), painted drain band (drain.jpg) at (0, BAND_Y),
+// World space: street frame at (0,0), painted drain band (drain.png) at (0, BAND_Y),
 // pond frame at (0, PY). Every belt x is the right lane, 1770.
 
 declareEggs(["tr-drain-kappa"]);
 
 const W = STAGE_W, H = STAGE_H;
 const PY = 1812;
-const BAND = { url: "art/tr/street-pond/drain.jpg", y: 960, h: 1000 };
+const BAND = { url: "art/tr/street-pond/drain.png", y: 960, h: 1000 };
 const LANE = 1770;
 /** Shaft interior (world), shaft floor (belt vanishes into the dark), culvert mouth (belt re-appears). */
 const SHAFT = { x0: 1592, x1: 1876, y0: 1098, y1: 1486 };
@@ -145,7 +145,7 @@ function marker(g: CanvasRenderingContext2D) {
   for (let i = 0; i < 5; i++) r("#9fc0ee", 3 + i * 3, 11 - (i % 2), 2, 1);
 }
 
-/** Warm breathing light around the copper lamp painted in drain.jpg. */
+/** Warm breathing light around the copper lamp painted in drain.png. */
 function lamp(g: CanvasRenderingContext2D, now: number) {
   glow(g, LAMP.x, LAMP.y, 150, "rgba(255,190,110,.16)", now, 0.12, 4);
 }
