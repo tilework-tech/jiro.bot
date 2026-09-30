@@ -8,11 +8,12 @@ import { FAQ, initCompare, initDemo, initFaq, initPricing, initTable } from "./c
 import { buildDoors, animateDoors } from "./doors";
 import { Koi } from "./ending";
 import { buildParallax } from "./parallax";
+import { PixelPass } from "./pixelpass";
 
 // ------------------------------------------------------------------ renderer
 const canvas = document.getElementById("gl") as HTMLCanvasElement;
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance" });
+const pixel = new PixelPass(renderer, canvas);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 { // for the preview diagnostics beacon (index.html)
   const gl = renderer.getContext(); const dbg = gl.getExtension("WEBGL_debug_renderer_info");
@@ -39,10 +40,10 @@ function makeVideo(src: string, eager = false) {
   v.preload = eager ? "auto" : "none"; v.dataset.src = src; if (eager) v.src = src;
   v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
   const tex = new THREE.VideoTexture(v);
-  tex.colorSpace = THREE.SRGBColorSpace; tex.minFilter = THREE.LinearFilter; tex.magFilter = THREE.LinearFilter; tex.generateMipmaps = false;
+  tex.colorSpace = THREE.SRGBColorSpace; tex.minFilter = THREE.NearestFilter; tex.magFilter = THREE.NearestFilter; tex.generateMipmaps = false;
   // poster (first frame of the loop) until the video has data, so a card is never black
   const poster = new THREE.TextureLoader().load(src.replace(/^v\//, "p/").replace(/\.mp4$/, ".jpg"));
-  poster.colorSpace = THREE.SRGBColorSpace;
+  poster.colorSpace = THREE.SRGBColorSpace; poster.minFilter = poster.magFilter = THREE.NearestFilter; poster.generateMipmaps = false;
   return { v, tex, poster };
 }
 
@@ -226,7 +227,7 @@ const CLOSING_STOP = STOPS.findIndex((x) => x.card === 3);
 
 function coverDist() {
   const a = camera.aspect;
-  return Math.min(CARD_H / 2 / tanH, CARD_W / 2 / (tanH * a)) * 0.985;
+  return Math.min(CARD_H / 2 / tanH, CARD_W / 2 / (tanH * a));  // exact cover: art pixels map 1:1 onto the pixel grid
 }
 interface Pose { pos: THREE.Vector3; target: THREE.Vector3; up: THREE.Vector3 }
 function stopPose(st: Stop): Pose {
@@ -535,9 +536,9 @@ function updateOverlays(time: number) {
 
 // ------------------------------------------------------------------ resize
 function resize() {
-  renderer.setSize(innerWidth, innerHeight, false);
+  pixel.resize();
   camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
-  (fx.points.material as THREE.ShaderMaterial).uniforms.scale.value = innerHeight * renderer.getPixelRatio() / (2 * tanH);
+  (fx.points.material as THREE.ShaderMaterial).uniforms.scale.value = pixel.h / (2 * tanH);
   curveCache = new Map(); sizeClosePlanes();
 }
 window.addEventListener("resize", resize);
@@ -572,8 +573,8 @@ function frame() {
   const right = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
   const up = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
   const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
-  const breathe = Math.sin(time * 0.5) * 0.06 * settle;
-  camera.position.addScaledVector(right, -smoothMouse.x * 0.18 * settle).addScaledVector(up, smoothMouse.y * 0.12 * settle).addScaledVector(fwd, 0.05 * settle + breathe);
+  // no landed-camera drift or mouse parallax: on a 4x pixel grid any sub-pixel camera motion makes the art crawl
+  void right; void up; void fwd; void settle;
   if (roll) camera.quaternion.multiply(tmpQ.setFromAxisAngle(new THREE.Vector3(0, 0, 1), roll));
   if (shakeAmt > 0.001) {
     camera.position.addScaledVector(right, (Math.random() - 0.5) * shakeAmt * 0.3).addScaledVector(up, (Math.random() - 0.5) * shakeAmt * 0.3);
@@ -621,7 +622,7 @@ function frame() {
     if (now > b.until) { b.el.classList.add("out"); if (now > b.until + 350) { b.el.remove(); bubbles.splice(i, 1); } }
   }
   updateOverlays(time);
-  renderer.render(scene, camera);
+  pixel.render(scene, camera);
   requestAnimationFrame(frame);
 }
 void BASE_SPEED;

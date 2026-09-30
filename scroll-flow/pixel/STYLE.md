@@ -1,0 +1,7 @@
+- True pixel art, not "pixel-art-looking" painting: every scene is authored at 480x270 native pixels and shown at exactly 4x (1920x1080) with nearest-neighbour scaling. Every 4x4 block is one solid colour.
+- Limited palette: 32–64 colours per scene, shared across scenes. Deep indigo/blue-green night shadows, warm lantern amber as the main light accent, cream highlights, copper and dark wood. Never pure black; darkest tone is a very dark indigo-brown.
+- Flat shading in 2–3 value steps per material, hard edges, sparse ordered dithering only for soft light (glows, moonlight on water). No blur, no gradients, no anti-aliasing, no noise/grain, no JPEG artefacts, no bloom.
+- Clean readable shapes: large calm areas of flat colour (water, walls, sky), detail concentrated on the focal subject. Dark outlines one step darker than the fill, not black.
+- Composition: one clear focal point, generous quiet dark space (for text overlays), soft light pools from lanterns/moon, nothing cluttered at the frame edges.
+- Characters: small, chunky, expressive 16-bit sprites (SNES/Eastward/Octopath-sprite level). Jiro the robot chef exactly per the canon reference (copper dome, cream faceplate, two glowing blue eyes, speaker-grille mouth, white hachimaki, indigo striped happi, no shoulder pads, no apron).
+- No text, logos, UI or watermarks inside the art.

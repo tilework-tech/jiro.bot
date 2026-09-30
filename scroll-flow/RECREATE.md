@@ -237,6 +237,9 @@ Tools: Python 3.11 venv (pillow, numpy, imageio-ffmpeg, requests), plus `GEMINI_
 | Bike | `r5/delivery` (edit: stopped, left foot down) | Veo, "relaxed waiting at a traffic light" | Crisp composite, loop |
 | Pond | `art/endings/pond.png` → edit (trestle extended left) → edit (bridge empty) | Veo, water only | Crisp composite with `STATIC` on the trestle and bridge, loop (K=24) |
 
+## 8.2 Pixel-art pass (after Demo1)
+All scenes were redrawn as true pixel art: 480×270 native, exact 4×, one shared 52-colour palette. The 3D scene now renders through a palette-snapping pixel pass, so the belt, plates, doors and parallax share the same grid. See `pixel/README.md` and `pixel/STYLE.md`.
+
 ## 9. Running and testing
 ```bash
 cd site && npm install && npm run dev          # :3000

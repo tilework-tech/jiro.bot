@@ -29,7 +29,8 @@ def main():
     parts = []
     for r in refs:
         parts.append({"inlineData": {"mimeType": mime(r), "data": base64.b64encode(open(r, "rb").read()).decode()}})
-    parts.append({"text": prompt + "\n\n" + STYLE})
+    style = os.environ.get("STYLE_OVERRIDE", STYLE)
+    parts.append({"text": prompt + ("\n\n" + style if style else "")})
     body = {
         "contents": [{"role": "user", "parts": parts}],
         "generationConfig": {"responseModalities": ["IMAGE"], "imageConfig": {"aspectRatio": os.environ.get("AR", "16:9"), "imageSize": os.environ.get("SIZE", "2K")}},
