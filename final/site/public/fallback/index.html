@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#140d09">
+  <title>Jiro.bot: seven-scene still review</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #140d09; color: #f6ecdc; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    header { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px max(18px, 5vw); background: #140d09; border-bottom: 1px solid #695143; }
+    main { max-width: 1280px; margin: auto; padding: 24px max(18px, 5vw) 64px; }
+    h1 { font-size: clamp(32px, 4vw, 58px); margin: 0 0 10px; }
+    h2 { margin: 0 0 5px; font-size: clamp(22px, 2.5vw, 34px); }
+    p { color: #d9c9b0; line-height: 1.5; }
+    a { color: #f0aa74; }
+    nav { display: flex; gap: 16px; flex-wrap: wrap; }
+    .intro { max-width: 760px; margin: 24px 0 40px; }
+    figure { margin: 0 0 34px; background: #241510; border: 1px solid #695143; }
+    img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; image-rendering: pixelated; background: #1e1814; }
+    figcaption { padding: 16px 20px 20px; }
+    figcaption p { margin: 5px 0 0; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+    .actions a { display: inline-block; padding: 8px 12px; color: #140d09; background: #e7c394; text-decoration: none; font-weight: 700; }
+    .actions a:hover, .actions a:focus-visible { background: #f6ecdc; outline: 2px solid #e0894c; }
+    footer { border-top: 1px solid #695143; padding-top: 16px; color: #d9c9b0; }
+  </style>
+</head>
+<body>
+  <header><strong>jiro.bot</strong><nav><a href="/">Interactive journey</a><a href="https://noriagentic.com/">Nori product facts</a></nav></header>
+  <main>
+    <div class="intro"><h1>Seven stops at Jiro's counter</h1><p>A still-image route through the final Jiro.bot concept. This path uses no video, Canvas, or WebGL. The interactive journey adds the moving conveyor, small discoveries, and the koi event.</p></div>
+    <figure><img src="/p/s0-hero.jpg" alt="Warm sushi bar with Jiro at the counter" fetchpriority="high"><figcaption><h2>1. Hero</h2><p>Jiro, your AI staff engineer. The conveyor starts behind the kitchen window.</p></figcaption></figure>
+    <figure><img src="/p/s1-code-small.jpg" alt="Jiro at a glowing workstation" loading="lazy"><figcaption><h2>2. Product demo</h2><p>An illustrative request-to-review workflow. Explore the clickable version in the <a href="/?s=demo">interactive journey</a>.</p></figcaption></figure>
+    <figure><img src="/p/s2-serve.jpg" alt="Jiro serving at the restaurant counter" loading="lazy"><figcaption><h2>3. Good taste versus bad taste</h2><p>Two scripted coding-agent examples for one request. The replay is illustrative.</p></figcaption></figure>
+    <figure><img src="/p/s7-closing-small.jpg" alt="Quiet restaurant interior for the comparison table" loading="lazy"><figcaption><h2>4. How it compares</h2><p>Compare published Nori product details in the interactive table, then visit the optional arcade.</p><div class="actions"><a href="/?s=compare">Open comparison table</a><a href="/games/arcade/?game=rush">Play Sushi Rush</a></div></figcaption></figure>
+    <figure><img src="/p/s4-omakase.jpg" alt="Sushi counter scene for common questions" loading="lazy"><figcaption><h2>5. FAQ</h2><p>Questions about agents, tools, environments, billing, and outputs.</p><div class="actions"><a href="/?s=faq">Open clickable FAQ</a></div></figcaption></figure>
+    <figure><img src="/p/s6-delivery.jpg" alt="Rainy street with Jiro on a delivery cycle" loading="lazy"><figcaption><h2>6. Price</h2><p>Free trial: $0 for 30 days. Developer: $99 per month. Team: $250 per month. Enterprise: contact Nori.</p><div class="actions"><a href="https://noriagentic.com/">Check current pricing</a></div></figcaption></figure>
+    <figure><img src="/p/e1-pond.jpg" alt="Moonlit koi pond at the end of the conveyor" loading="lazy"><figcaption><h2>7. Pond</h2><p>The koi waits at the end of the belt. Daily Roll is the second optional game.</p><div class="actions"><a href="/?s=pond">See the koi ending</a><a href="/games/arcade/?game=daily">Play Daily Roll</a></div></figcaption></figure>
+    <footer>Static visual review. Product information should be checked against <a href="https://noriagentic.com/">noriagentic.com</a> before publication.</footer>
+  </main>
+</body>
+</html>

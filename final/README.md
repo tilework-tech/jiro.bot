@@ -6,7 +6,7 @@ This folder assembles the seven-stop restaurant experience from the archived dem
 
 1. Read `DESIGN-BRIEF.md`, `MASTER-PROMPT.md` and `research/SOURCES.md`.
 2. Read the matching `research/video-NN.md` beside any reference `reference/videos/video-NN.mp4` or contact sheet `reference/contact/video-NN.jpg`. The first contact tile is 0.0 seconds, and subsequent tiles step by 0.5 seconds in row-major order.
-3. Read `research/GAMES-SOURCE.md` for the canonical Sushi Rush and Daily Roll rules. The game source is bundled under `site/public/games/`.
+3. Read `research/GAMES-SOURCE.md` for the canonical Sushi Rush and Daily Roll rules. The game source is bundled under `site/public/games/`, copied from `games/sushi-rush-daily-roll` at `26dcd572470eed8e235926a2efeef7ff370a290a`.
 4. Read `research/PRODUCT-FACTS.md` and `site/docs/CONTENT-SOURCES.md` before editing product copy.
 5. In `site/`, run `npm ci`, `npm run build`, then `PORT=3201 node serve.mjs`. The static server provides byte ranges for Safari video playback. Use `/games/arcade/` to inspect the standalone game source.
 
@@ -26,4 +26,4 @@ Video 06 demonstrates the straight street-to-pond scroll. Video 09 demonstrates 
 
 ## Review status
 
-The implementation and browser evidence will be summarized here after verification. This review package is a development branch, not a production release.
+The build, desktop and mobile browser evidence, interaction checks, full-scroll clip and limitations are documented in `review/README.md`. This review package is a development branch, not a production release.
