@@ -2,13 +2,13 @@
 
 **Route:** the belt leaves the storage room through its floor trapdoor at x = 150 and keeps going straight down the left lane. The storage is an upstairs loft that bridges the alley. Below the frame we see the cut edge of its floor, then the crawl space: timber joists, cobwebs, a copper pipe and a tanuki sheltering from the rain with a leaf on its head. The belt rides on iron hangers, runs into a timber box in the loft's underside and pushes out through a copper-framed cat flap (with a paw print on it; the flap swings open as each plate comes through). Outside, under the loft's soffit, it rides the street's steel belt column (bolted to the soffit) down through open night sky into the street, where the same column carries it to the kerb. It never turns and never rotates.
 
-**Camera:** one vertical pan at eye level. There is no zoom, no roll and no pitch. `camY(t) = 540 + OY · (0.44·smooth(0,.5,t) + 0.44·smooth(.5,1,t) + 0.12·smooth(0,1,t))` starts and ends at zero velocity. It slows (but does not stop) around t = 0.5, where the whole cutaway is in view: storage floor, crawl space and tanuki, flap, and the night sky over the street.
+**Camera:** one vertical pan at eye level. There is no zoom, no roll and no pitch. `camY(t) = 540 + OY · smooth(0,1,t)` starts and ends at zero velocity, without lingering in the sky.
 
-**Length:** 1.4 viewport heights.
+**Length:** 1.15 viewport heights.
 
 ## How it works
 - World space is storage stage space extended downward. The storage frame sits at y 0. `public/art/tr/storage-street/band.png` (1920×873) is drawn with its row 796 at world OY. The street frame sits at y OY. Each room is clipped to its own 1920×1080 rectangle.
-- **OY** is computed at load. It is the first value ≥ 1800 where the storage belt continued straight down and the street belt continued straight up put plates at the same positions (mod `PLATE_GAP`). Today that is about 1808. If either scene's belt path or phase changes, OY follows automatically.
+- **OY** is computed at load. It is the first value ≥ 1440 where the storage belt continued straight down and the street belt continued straight up put plates at the same positions (mod `PLATE_GAP`). Today that is about 1448. If either scene's belt path or phase changes, OY follows automatically.
 - **Belt:** path A is `storage.belt.pts` plus a straight run down into the flap box. It uses the storage phase and key `"storage"`, so its plates and slat seams are the storage belt's own, and it is clipped to [1080, YSW). Path B is a straight run up from inside the box plus `street.belt.pts` shifted by OY. It uses the street phase + L, where L is a multiple of `PLATE_GAP`, so plate ids and items match the street exactly, and it is clipped to [YSW, OY). The item swap happens at YSW, inside the flap box (it covers YSW−58 … YSW+22, and the flap hangs below it). Everything moves through `platesOn` / `drawTread` (i.e. `beltTime`), downward at the constant belt speed.
 - **Ends:** t ≤ 0 and t ≥ 1 call `drawScene(from/to)` directly (pixel-identical). In between, the street frame is rendered to a buffer and its top edge feathered into the band by `64·k` px (the belt lane is left crisp). The storage bottom gets a floor-edge beam and a soft seam. Both use `k = smooth(0,.1,t)·smooth(0,.1,1−t)`, so they vanish at the ends. Measured: tt 0.9999 vs `?seg=street` has a mean diff of 0; tt 0.01 vs storage is ~1 px of camera travel.
 - **Ambient (loop-safe):** drizzle (periods 2/3/4 s), one drip off the soffit edge every 3 s, and a warm glow from the trapdoor. The tanuki blinks on 6 s, sways its tail on 6 s and tips its leaf on 8 s.
@@ -19,3 +19,13 @@
 ## What the scene art must keep
 - **storage:** the belt leaves the bottom edge at x 150, heading straight down. The pixels are not relied on: the band starts with its own floor-edge beam and is shaded at the join, so a repainted storage still meets it.
 - **street:** the belt enters the top edge at x 150 on the steel column (x 100–200). The street's top rows must stay static: sky (`sky.png`) and the column (`front.png`). Its parallax layers start at y ≥ 111 (far skyline, transparent above ~y 140), so nothing that scrolls touches the 64 px feather at the join. If the street's sky or column changes, re-run `src/transitions/storage-street/build_art.py`.
+
+
+## Moving street update (2026-09-30)
+
+Rows 380–739 of the band are now skipped, removing 360 px of blank sky.
+`AY()` maps band coordinates around that cut. The crawl space, flap, and belt
+phases are preserved. The street top is now a scrolling panorama, so the old
+static-sky registration assumptions above are historical; the transition feathers
+its top edge into the remaining short sky band. Do not rerun the old street art
+builder to regenerate the active panorama or pedal sheet.

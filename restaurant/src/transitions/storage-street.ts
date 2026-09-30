@@ -28,17 +28,18 @@ const T0 = tb.pts[0][1];
 /**
  * Street frame offset. Plates on the storage belt continued straight down sit at
  * u = U_S + (y - yEnd); on the street belt continued up at y - OY - T0 (+ phases). OY is the
- * first value >= 1800 where both agree mod PLATE_GAP, so spacing runs straight through the flap.
+ * first value >= 1440 where both agree mod PLATE_GAP, so spacing runs straight through the flap.
  */
 const yEnd = sb.pts[sb.pts.length - 1][1];
 const OY = (() => {
   const want = yEnd - U_S - T0 + (sb.phase ?? 0) - (tb.phase ?? 0);
-  const m = (((want - 1800) % PLATE_GAP) + PLATE_GAP) % PLATE_GAP;
-  return Math.round(1800 + m);
+  const m = (((want - 1440) % PLATE_GAP) + PLATE_GAP) % PLATE_GAP;
+  return Math.round(1440 + m);
 })();
 const ART = { url: "art/tr/storage-street/band.png", w: 1920, h: 873, join: 796 };
 /** Band art y -> world y. Art row 796 is where the outpaint registered the street frame's top row. */
-const AY = (a: number) => OY - ART.join + a;
+// Remove 360 px of empty sky, preserving the crawl space and both room joins.
+const AY = (a: number) => OY - ART.join + 360 + a - Math.min(360, Math.max(0, a - 380));
 
 /** Swap line: centre of the flap box's hidden run through the soffit. Items change here. */
 const YSW = AY(300);
@@ -63,7 +64,7 @@ const EAVE_DRIP = { x: 1385, y: AY(330) };
 
 /** Camera: straight down. Eases out of the storage, lingers on the cutaway, eases into the street. */
 function camY(t: number) {
-  const f = 0.44 * smooth(0, 0.5, t) + 0.44 * smooth(0.5, 1, t) + 0.12 * smooth(0, 1, t);
+  const f = smooth(0, 1, t);
   return H / 2 + OY * f;
 }
 
@@ -161,7 +162,10 @@ function world(g: CanvasRenderingContext2D, t: number, now: number, api: Api, cy
   g.fillRect(0, Math.max(0, vy0), W, vy1 - Math.max(0, vy0));
 
   const art = api.img(ART.url);
-  if (art.complete && art.naturalWidth && vy1 > STAGE_H && vy0 < OY + 80) g.drawImage(art, 0, AY(0), ART.w, ART.h);
+  if (art.complete && art.naturalWidth && vy1 > STAGE_H && vy0 < OY + 80) {
+    g.drawImage(art, 0, 0, ART.w, 380, 0, AY(0), ART.w, 380);
+    g.drawImage(art, 0, 740, ART.w, ART.h - 740, 0, AY(740), ART.w, ART.h - 740);
+  }
 
   // Rooms, each clipped to its own frame so the belts can hand over at the frame edges.
   if (vy0 < STAGE_H) {
@@ -216,7 +220,7 @@ let tanBtn: HTMLButtonElement | null = null;
 export const storageStreet: TransitionDef = {
   from: "storage",
   to: "street",
-  length: 1.4,
+  length: 1.15,
   route: "Straight down the left lane: through the storage floor trapdoor, past a tanuki in the crawl space, out through a cat flap under the loft and down the outside wall into the rainy street.",
   render(g, t, now, api) {
     if (t <= 0) { api.drawScene("storage", g, now); return; }

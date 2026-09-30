@@ -165,3 +165,23 @@
 }
 
 .scene-ui[data-id="street"] .st-title { font-size: 35px; }
+
+/* Let the amber street lighting lead; keep the menu quiet enough to see the ride. */
+.scene-ui[data-id="street"] .st-open {
+  color: #e4cba0; border-color: #9c7348; background: rgba(16, 23, 30, .88);
+  box-shadow: none; text-shadow: none; animation: none;
+}
+.scene-ui[data-id="street"] .st-title em,
+.scene-ui[data-id="street"] .st-line h3,
+.scene-ui[data-id="street"] .st-row.hot h3 {
+  color: #edc88d; text-shadow: none; animation: none;
+}
+.scene-ui[data-id="street"] .st-menu {
+  background: rgba(12, 20, 28, .88); outline-color: rgba(194, 149, 85, .5);
+  box-shadow: 0 0 0 2px #0b1018, 0 9px 0 rgba(0, 0, 0, .3);
+}
+.scene-ui[data-id="street"] .st-row.hot {
+  border-color: #9c7348; background: rgba(92, 62, 31, .28); box-shadow: none; animation: none;
+}
+.scene-ui[data-id="street"] .st-pick { background: #d9ad73; box-shadow: none; transform: none; }
+.scene-ui[data-id="street"] .st-drip:nth-of-type(3) { left: 410px; }

@@ -198,3 +198,23 @@ trough bands from `scenes/bar/art.json` and the same plate renderer.
 - Four soot spirits remain across office and crawlspaces (previously eight),
   including the office wanderer. The kitchen crawlspace has two dust bunnies
   instead of four, plus the hanging bunny.
+
+
+# v5 — Moving street from the recording (2026-09-30)
+
+Overrides the fixed street in v4. Martin reattached the original recording
+(F0C5WQVV75J). The rider stays lower-left while close storefronts and a deep
+lantern alley pass to the left. Preserve that movement when changing street art.
+
+- `panorama.png`: 1080×360 repeating rainy shop/alley background, displayed at 3×.
+- `pedal-sheet.png`: four 192×256 transparent bicycle poses; old `rider.png`
+  is retained for the historical build script but no longer rendered.
+- The panorama completes a pass in 12 seconds. Pedals/spokes repeat in 1.2 seconds.
+  Rain, wheel spray, reflection and headlamp are separate canvas layers; the whole
+  ambient scene repeats in 24 seconds. Scroll only moves the page camera.
+- The menu stays on the right with subdued amber framing. Section order stays
+  bar → office → dining → kitchen → storage → street → pond.
+- Storage-to-street removes 360 px of blank sky and uses one uninterrupted eased
+  vertical pan over 1.15 viewport heights, retaining belt/plate phase continuity.
+- This is a layered reconstruction from reference frames, not the original video
+  with a motorcycle replacement. Shop details and perspective motion are approximate.

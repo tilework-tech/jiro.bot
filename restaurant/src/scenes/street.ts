@@ -4,9 +4,9 @@ import { declareEggs } from "../engine/eggs";
 import { PRICING } from "../content/copy";
 import "./street.css";
 
-// Composition traced from Martin's recording: a deep lantern street and the rider
-// in the lower left. Only the bicycle/pedal poses are replaced. All motion repeats
-// at 24 seconds, with no scrolling panorama or changed camera angle.
+// Reference recording: fixed rider, passing close shopfronts and a deep lantern alley.
+// A repeating panorama and four bicycle poses keep motion independent of scroll.
+// All ambient periods divide 24 seconds; the conveyor retains its own steady clock.
 const TAU=Math.PI*2, PX=3;
 const mod=(a:number,b:number)=>((a%b)+b)%b;
 const snap=(x:number)=>Math.round(x/PX)*PX;
@@ -19,33 +19,47 @@ pts.push([1770,1140,1]);
 declareEggs(["street-bell","street-lamp","street-jiro","street-cargo","street-drain","street-puddle"]);
 
 export const street:SceneDef={
- id:"street",room:"Delivery",art:"art/street/reference.png",mood:"bustling",hold:1.6,
+ id:"street",room:"Delivery",art:"art/street/panorama.png",mood:"bustling",hold:1.6,
  belt:{pts,width:64,plate:48,fadeIn:0,fadeOut:0},
  under(g,now,api){
   const t=mod(now,24);g.save();g.imageSmoothingEnabled=false;
-  // Alternate only the leg/pedal patch; the street and upper rider remain fixed.
-  const im=api.img("art/street/pedal.png");
-  if(im.complete && im.naturalWidth && Math.floor(t/.75)%2===1){
-   g.save();g.beginPath();g.moveTo(548,624);g.lineTo(740,624);g.lineTo(777,720);g.lineTo(777,930);g.lineTo(606,930);g.lineTo(594,804);g.lineTo(548,777);g.closePath();g.clip();g.drawImage(im,0,0,1920,1080);g.restore();
+  const bg=api.img("art/street/panorama.png"), rider=api.img("art/street/pedal-sheet.png");
+  // 1080 native pixels at exactly 3x. A foreground drainpipe hides the tile join.
+  const width=3240, shift=snap(mod(t/12*width,width));
+  g.fillStyle="#101b28";g.fillRect(0,0,1920,1080);
+  if(bg.complete && bg.naturalWidth)for(let x=-shift;x<1920;x+=width){
+   g.drawImage(bg,x,0,width,1080);
+   g.fillStyle="#101c29";g.fillRect(x-18,0,36,816);
+   g.fillStyle="#2d3e49";g.fillRect(x-9,0,9,816);
+   g.fillStyle="#43525a";g.fillRect(x,0,3,816);
+   for(let y=96;y<810;y+=240){g.fillStyle="#101923";g.fillRect(x-24,y,48,12);}
+   g.fillStyle="#14232e";g.fillRect(x-27,816,54,9);
   }
-  // Tiny highlights travel around the spokes on a two-second revolution.
-  for(const [x,y] of [[489,852],[858,852]]) for(let i=0;i<8;i++){
-   const a=t*TAU/2+i*TAU/8;g.fillStyle="rgba(225,211,171,.42)";
-   for(let r=22;r<87;r+=6)g.fillRect(snap(x+Math.cos(a)*r),snap(y+Math.sin(a)*r),3,3);
+  // Warm light projects ahead of the fixed rider; hard bands retain the pixel grid.
+  for(let i=0;i<5;i++){
+   g.fillStyle=`rgba(246,190,99,${.026+i*.004})`;
+   g.beginPath();g.moveTo(825,600);g.lineTo(1920,420+i*27);g.lineTo(1920,984-i*24);g.closePath();g.fill();
   }
-  // Lanterns gently brighten, and reflected light shifts on wet paving.
-  for(const [x,y,r] of [[159,60,53],[996,86,48],[1188,86,48],[1374,89,47]]){
-   g.globalAlpha=.035+.02*Math.sin(t*TAU/6+x);g.fillStyle="#ffd294";
-   for(let dy=-r;dy<r;dy+=3){const w=Math.sqrt(Math.max(0,r*r-dy*dy));g.fillRect(snap(x-w),snap(y+dy),snap(w*2),3);}
+  // A wet silhouette travels with the bike, broken into horizontal water bands.
+  if(rider.complete && rider.naturalWidth){
+   const pose=Math.floor(t/.3)%4;
+   g.save();g.translate(360,1836);g.scale(1,-1);g.globalAlpha=.13;
+   for(let y=750;y<918;y+=12){g.save();g.beginPath();g.rect(0,y,576,6);g.clip();g.drawImage(rider,pose*192,0,192,256,0,228,576,768);g.restore();}
+   g.restore();
+   g.drawImage(rider,pose*192,0,192,256,360,228,576,768);
   }
-  for(let i=0;i<32;i++){
-   const x=210+hash(i)*1550,y=966+hash(i+44)*108;
-   g.globalAlpha=.1+.12*Math.sin(t*TAU/6+i)**2;g.fillStyle=i%3?'#e4a955':'#a6a7c6';
-   g.fillRect(snap(x+Math.sin(t*TAU/8+i)*9),snap(y),12+(i%5)*9,3);
+  // Small bright spoke pixels rotate without redrawing the rim or bicycle geometry.
+  for(const [x,y] of [[495,807],[831,807]])for(let i=0;i<6;i++){
+   const a=t*TAU/1.2+i*TAU/6;g.fillStyle="rgba(214,220,204,.35)";
+   for(let r=24;r<87;r+=9)g.fillRect(snap(x+Math.cos(a)*r),snap(y+Math.sin(a)*r),3,3);
+  }
+  // Shallow tire spray and ripples stay in the foreground while the shops pass.
+  for(let i=0;i<18;i++){
+   const f=mod(t/.6+hash(i),1),x=(i%2?495:831)-f*90;
+   g.globalAlpha=(1-f)*.4;g.fillStyle="#b8c7cd";
+   g.fillRect(snap(x),snap(903-Math.sin(f*Math.PI)*18),6,3);
   }
   g.globalAlpha=1;
-  // One gentle blink every eight seconds.
-  if(t%8>5.8 && t%8<5.98){g.fillStyle="#c3b99b";g.fillRect(704,431,12,18);g.fillStyle="#625b4b";g.fillRect(704,443,12,3);}
   g.restore();
  },
  over(g,now){
@@ -86,9 +100,9 @@ export const street:SceneDef={
         </div>
       </section>`);
 
-    hotspot(el,742,590,62,58,"Bike bell",()=>{api.sfx("chime");bubble(el,650,510,"Ring ring. Delivery for main.");api.egg("street-bell","The bell is the CI notification.");});
-    hotspot(el,790,595,80,82,"Headlamp",()=>{api.sfx("blip");api.egg("street-lamp","Jiro lights the way home.");});
-    hotspot(el,605,355,150,146,"Jiro",()=>{api.sfx("blip");api.egg("street-jiro","Zero emissions. Carefully reviewed deliveries.");});
-    hotspot(el,383,477,167,247,"Delivery boxes",()=>{api.sfx("pop");api.egg("street-cargo","The boxes are stacked in dependency order.");});
+    hotspot(el,752,600,62,58,"Bike bell",()=>{api.sfx("chime");bubble(el,650,510,"Ring ring. Delivery for main.");api.egg("street-bell","The bell is the CI notification.");});
+    hotspot(el,804,600,80,82,"Headlamp",()=>{api.sfx("blip");api.egg("street-lamp","Jiro lights the way home.");});
+    hotspot(el,572,303,165,165,"Jiro",()=>{api.sfx("blip");api.egg("street-jiro","Zero emissions. Carefully reviewed deliveries.");});
+    hotspot(el,383,432,190,247,"Delivery boxes",()=>{api.sfx("pop");api.egg("street-cargo","The boxes are stacked in dependency order.");});
   },
 };
