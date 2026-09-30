@@ -8,22 +8,20 @@ import { office } from "./scenes/office";
 import { dining } from "./scenes/dining";
 import { kitchen } from "./scenes/kitchen";
 import { storage } from "./scenes/storage";
-import { yard } from "./scenes/yard";
 import { street } from "./scenes/street";
 import { pond } from "./scenes/pond";
 import { barOffice } from "./transitions/bar-office";
 import { officeDining } from "./transitions/office-dining";
 import { diningKitchen } from "./transitions/dining-kitchen";
 import { kitchenStorage } from "./transitions/kitchen-storage";
-import { storageYard } from "./transitions/storage-yard";
-import { yardStreet } from "./transitions/yard-street";
+import { storageStreet } from "./transitions/storage-street";
 import { streetPond } from "./transitions/street-pond";
 
 declareEggs(["konami", "omakase", "logo-5", "sudo", "tab-away", "console"]);
 
 const api = start(
-  [bar, office, dining, kitchen, storage, yard, street, pond],
-  [barOffice, officeDining, diningKitchen, kitchenStorage, storageYard, yardStreet, streetPond],
+  [bar, office, dining, kitchen, storage, street, pond],
+  [barOffice, officeDining, diningKitchen, kitchenStorage, storageStreet, streetPond],
 );
 
 setupChrome(api);
