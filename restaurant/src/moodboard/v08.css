@@ -1,0 +1,84 @@
+.mv08 { position: absolute; inset: 0; --ink8: #2b1a12; --paper8: #f1e4c6; }
+.live .mv08 { pointer-events: auto; }
+.mv08 img { image-rendering: pixelated; user-select: none; }
+
+/* Parchment chart */
+.mv08 .chart { position: absolute; left: 0; top: 0; width: 1100px; height: 700px; background-size: 1100px 700px; image-rendering: pixelated; }
+.mv08 .rule { position: absolute; inset: 14px; border: 4px solid var(--ink8); box-shadow: inset 0 0 0 4px transparent, inset 0 0 0 6px rgba(43,26,18,.55); pointer-events: none; }
+.mv08 .rule::before, .mv08 .rule::after { content: ""; position: absolute; width: 18px; height: 18px; background: var(--ink8); }
+.mv08 .rule::before { left: -11px; top: -11px; box-shadow: 1066px 0 0 var(--ink8), 0 658px 0 var(--ink8), 1066px 658px 0 var(--ink8); }
+.mv08 .rule::after { display: none; }
+.mv08 .ttl { position: absolute; left: 44px; top: 34px; margin: 0; font: 400 34px/1 var(--px); color: var(--ink8); text-transform: uppercase; letter-spacing: .02em; }
+.mv08 .ttl span { color: #a4522a; }
+.mv08 .sub { position: absolute; left: 46px; top: 80px; margin: 0; font: italic 19px/1.3 var(--sans); color: #5a3f2c; }
+.mv08 .stamp { position: absolute; right: 40px; top: 34px; margin: 0; padding: 8px 12px; font: 400 14px/1.3 var(--px); color: #a4522a; border: 3px solid #a4522a; text-align: center; transform: rotate(-4deg); opacity: .85; text-transform: uppercase; }
+.mv08 .ghost { position: absolute; pointer-events: none; }
+.mv08 .readout { position: absolute; left: 44px; right: 44px; bottom: 30px; margin: 0; min-height: 54px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font: 19px/1.3 var(--sans); color: #3c281b; border-top: 3px dotted rgba(43,26,18,.5); padding-top: 12px; }
+.mv08 .readout b { font: 400 18px/1 var(--px); color: #a4522a; }
+.mv08 .readout .dash { color: #8a6a50; }
+.mv08 .readout strong { font-weight: 700; color: var(--ink8); }
+.mv08 .readout .uses { flex-basis: 100%; font: 16px/1.2 var(--mono); color: #6a4c36; padding-left: 40px; }
+
+/* Pixel badge */
+.mv08 .bdg { display: inline-grid; place-items: center; width: 30px; height: 24px; background: var(--c); font: 400 12px/1 var(--px); font-style: normal; box-shadow: 0 -2px 0 var(--ink8), 0 2px 0 var(--ink8), -2px 0 0 var(--ink8), 2px 0 0 var(--ink8), 0 4px 0 rgba(0,0,0,.35); flex: none; }
+
+/* Cuts */
+.mv08 .pieces { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+.mv08 .cut { position: absolute; transform-origin: 0 0; transition: transform .9s cubic-bezier(.5,0,.25,1), filter .25s; }
+.mv08 .cut > img { display: block; width: 100%; height: 100%; }
+.mv08 .cut.hov, .mv08 .cut.pick.out { filter: drop-shadow(3px 0 0 var(--c)) drop-shadow(-3px 0 0 var(--c)) drop-shadow(0 3px 0 var(--c)) drop-shadow(0 -3px 0 var(--c)); }
+.mv08 .cut.hov { z-index: 3; }
+.mv08 .cut.hov:not(.out) { transform: translate(0, -6px); transition-duration: .2s; }
+.mv08 .cut.board { transition-duration: 1.05s; z-index: 2; filter: drop-shadow(0 6px 0 rgba(40,20,10,.35)); }
+.mv08 .cut.board.hov { filter: drop-shadow(3px 0 0 var(--c)) drop-shadow(-3px 0 0 var(--c)) drop-shadow(0 3px 0 var(--c)) drop-shadow(0 -3px 0 var(--c)); }
+.mv08 .cut.sliced > img { animation: mv08-slice .5s steps(3) both; filter: sepia(1) saturate(4.5) hue-rotate(-42deg) brightness(.78) contrast(1.2); }
+@keyframes mv08-slice { 40% { transform: translateY(-6px); } 100% { transform: none; } }
+
+.mv08 .lbl { position: absolute; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 8px; padding: 5px 9px 4px 6px; gap: 7px; background: var(--paper8); white-space: nowrap; box-shadow: 0 -2px 0 var(--ink8), 0 2px 0 var(--ink8), -2px 0 0 var(--ink8), 2px 0 0 var(--ink8); transition: opacity .3s; }
+.mv08 .lbl span { display: grid; gap: 3px; }
+.mv08 .lbl b { font: 700 18px/1 var(--sans); color: var(--ink8); }
+.mv08 .lbl em { font: 400 12px/1 var(--px); font-style: normal; color: #a4522a; text-transform: uppercase; }
+.mv08 .cut.pick .lbl { background: #fff4da; box-shadow: 0 -2px 0 var(--c), 0 2px 0 var(--c), -2px 0 0 var(--c), 2px 0 0 var(--c); }
+.mv08 .cut.board .lbl { opacity: 0; }
+
+/* Leader lines */
+.mv08 .leaders { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 1; }
+.mv08 .leaders path { fill: none; stroke: #a4522a; stroke-width: 3; stroke-dasharray: 3 6; animation: mv08-crawl 2.4s linear infinite; opacity: .9; }
+.mv08 .leaders rect { fill: #a4522a; }
+@keyframes mv08-crawl { to { stroke-dashoffset: -18; } }
+
+/* Side: orders, board, tag */
+.mv08 .side { position: absolute; left: 1120px; top: 0; width: 520px; height: 700px; }
+.mv08 .k { margin: 0 0 8px; font: 400 15px/1 var(--px); color: var(--muted, #bfae95); text-transform: uppercase; letter-spacing: .08em; }
+.mv08 .menu { display: grid; gap: 5px; }
+.mv08 .menu button { display: flex; align-items: center; gap: 10px; height: 40px; padding: 0 12px 0 6px; background: #1a1612; color: var(--cream); border: 2px solid rgba(243,230,207,.18); cursor: pointer; text-align: left; }
+.mv08 .menu button img { width: 40px; height: 32px; object-fit: contain; }
+.mv08 .menu button span { flex: 1; font: 400 17px/1 var(--px); }
+.mv08 .menu button em { font: 13px/1 var(--mono); font-style: normal; color: #bfae95; }
+.mv08 .menu button:hover { border-color: var(--copper); }
+.mv08 .menu button.on { background: var(--copper); border-color: var(--copper); color: #1a0f07; }
+.mv08 .menu button.on em { color: #3b2010; }
+.mv08 .ask { position: absolute; left: 0; top: 264px; width: 520px; margin: 0; display: flex; gap: 12px; align-items: center; font: 19px/1.25 var(--sans); color: var(--cream); }
+.mv08 .ask i { width: 6px; height: 34px; background: #e01e5a; flex: none; }
+.mv08 .board { position: absolute; left: 0; top: 322px; width: 520px; height: 232px; background-size: 520px 232px; image-rendering: pixelated; }
+.mv08 .plate { position: absolute; left: 348px; top: 34px; width: 160px; height: 160px; display: grid; place-items: center; }
+.mv08 .plate::before { content: ""; position: absolute; left: 4px; right: 4px; bottom: 30px; height: 20px; background: #6b4128; box-shadow: 0 -4px 0 #9a6238, 0 0 0 0 transparent; }
+.mv08 .plate::after { content: ""; position: absolute; left: 18px; width: 18px; bottom: 14px; height: 16px; background: #4a2c1a; box-shadow: 106px 0 0 #4a2c1a, 0 6px 0 rgba(0,0,0,.25), 106px 6px 0 rgba(0,0,0,.25); }
+.mv08 .sushi { position: relative; width: 160px; height: 128px; opacity: 0; transform: translateY(-24px) scale(.6); transition: opacity .3s, transform .45s cubic-bezier(.3,1.6,.5,1); }
+.mv08 .sushi.on { opacity: 1; transform: none; }
+.mv08 .knife { position: absolute; left: -40px; top: 60px; width: 248px; height: 32px; opacity: 0; z-index: 3; }
+.mv08 .board.cutting .knife { animation: mv08-knife 1.1s steps(11) both; }
+@keyframes mv08-knife { 0% { opacity: 0; transform: translate(-60px, 0); } 10% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 0; transform: translate(200px, 60px); } }
+.mv08 .slash { position: absolute; width: 68px; height: 6px; background: #fff8e6; transform: rotate(-24deg); box-shadow: 0 2px 0 rgba(43,26,18,.4); animation: mv08-slash 1.2s steps(4) both; z-index: 4; }
+@keyframes mv08-slash { 0% { opacity: 0; transform: rotate(-24deg) scaleX(0); } 30% { opacity: 1; transform: rotate(-24deg) scaleX(1); } 100% { opacity: 0; transform: rotate(-24deg) scaleX(1); } }
+
+.mv08 .tag { position: absolute; left: 70px; top: 566px; width: 440px; min-height: 112px; box-sizing: border-box; padding: 12px 18px 12px 52px; background: var(--paper8); color: var(--ink8); clip-path: polygon(24px 0, 100% 0, 100% 100%, 24px 100%, 0 50%); opacity: 0; transform: rotate(-1.5deg) translateY(-10px); transition: opacity .4s, transform .5s; }
+.mv08 .tag.on { opacity: 1; transform: rotate(-1.5deg); }
+.mv08 .tag .hole { position: absolute; left: 20px; top: 50%; width: 8px; height: 8px; margin-top: -7px; background: #120d0a; box-shadow: 0 0 0 3px #d98a4a; }
+.mv08 .tag .tn { margin: 0 0 6px; font: 400 18px/1 var(--px); color: #a4522a; text-transform: uppercase; }
+.mv08 .tag .ts { margin: 0; font: 19px/1.3 var(--sans); }
+.mv08 .twine { position: absolute; left: 96px; top: 548px; width: 3px; height: 82px; background: repeating-linear-gradient(#c9a878 0 4px, #8a6a48 4px 8px); opacity: 0; transition: opacity .4s; }
+.mv08 .twine.on { opacity: 1; }
+
+.mv08.rm .cut, .mv08.rm .sushi, .mv08.rm .tag { transition: none; }
+.mv08.rm .leaders path, .mv08.rm .board.cutting .knife, .mv08.rm .slash, .mv08.rm .cut.sliced > img { animation: none; }

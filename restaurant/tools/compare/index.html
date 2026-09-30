@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>agent window</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+Symbols+2&display=block" rel="stylesheet">
+<style>
+  :root { --bg:#0e0c0b; --bar:#1a1714; --fg:#f3e6cf; --dim:#8f8372; --green:#6fdc8c; --red:#ff6b6b; --copper:#d98a4a; --warn:#e8c46a; }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--fg); overflow:hidden; }
+  body { font: 400 22px/1.42 "JetBrains Mono", "Noto Sans Symbols 2", "Noto Color Emoji", monospace; font-variant-ligatures: none; }
+  .win { position:absolute; inset:0; display:flex; flex-direction:column; }
+  .bar { height:52px; flex:none; display:flex; align-items:center; gap:14px; padding:0 22px; background:var(--bar); border-bottom:1px solid #2a2520; font-size:19px; }
+  .dots { display:flex; gap:9px; } .dots i { width:14px; height:14px; border-radius:50%; background:#3a332c; display:block; }
+  .bar .title { color:var(--dim); } .bar .title b { color:var(--fg); font-weight:600; }
+  .bar .status { margin-left:auto; color:var(--copper); } .bar .status.done { color:var(--dim); }
+  .log { flex:1; overflow:hidden; padding:18px 30px 40px; }
+  .blk { margin: 0 0 14px; white-space:pre-wrap; word-break:break-word; }
+  .ticket { border-left:4px solid var(--copper); padding:6px 0 6px 16px; }
+  .ticket .k { color:var(--copper); font-weight:700; }
+  .say { color:var(--fg); }
+  .say::before { content:"● "; color:var(--copper); }
+  .tool .h { color:var(--copper); font-weight:600; } .tool .h span { color:var(--fg); font-weight:400; }
+  .tool .r, .dim { color:var(--dim); }
+  .diff { background:#15120f; border:1px solid #2a2520; padding:8px 0; }
+  .diff .f { color:var(--copper); padding:0 16px 4px; font-weight:600; }
+  .diff div { padding:0 16px; }
+  .diff .a { color:var(--green); background:rgba(111,220,140,.08); }
+  .diff .d { color:var(--red); background:rgba(255,107,107,.08); }
+  .diff .c { color:#b9ad9a; }
+  .diff .m { color:var(--dim); font-style:italic; }
+  .run .cmd { color:var(--fg); } .run .cmd::before { content:"$ "; color:var(--copper); }
+  .run .o { color:#b9ad9a; }
+  .pass { color:var(--green)!important; } .fail { color:var(--red)!important; } .skip { color:var(--warn)!important; }
+  .final { border:2px solid #3a332c; padding:12px 18px; }
+  .final .t { font-weight:700; }
+  .caret { display:inline-block; width:.6em; height:1.05em; background:var(--copper); vertical-align:-3px; margin-left:2px; animation:bl 1s steps(1) infinite; }
+  @keyframes bl { 50% { opacity:0; } }
+  .spin { color:var(--copper); }
+</style>
+</head>
+<body>
+<div class="win">
+  <div class="bar"><div class="dots"><i></i><i></i><i></i></div>
+    <div class="title"><b id="agent"></b> · checkout-svc</div>
+    <div class="status" id="status">working</div></div>
+  <div class="log" id="log"></div>
+</div>
+<script src="scripts.js"></script>
+<script>
+const who = new URLSearchParams(location.search).get("agent") || "jiro";
+const S = SCRIPTS[who];
+document.getElementById("agent").textContent = S.label;
+const log = document.getElementById("log");
+const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+const el = (cls, html = "") => { const d = document.createElement("div"); d.className = cls; d.innerHTML = html; log.appendChild(d); return d; };
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+let target = 0;
+function follow() { target = Math.max(0, log.scrollHeight - log.clientHeight); }
+(function tick() { log.scrollTop += (target - log.scrollTop) * 0.16; requestAnimationFrame(tick); })();
+
+async function type(node, text, ms) {
+  const caret = document.createElement("span"); caret.className = "caret";
+  const step = Math.max(1, Math.ceil(text.length / (ms / 30)));
+  for (let i = 0; i <= text.length; i += step) { node.textContent = text.slice(0, i); node.appendChild(caret); follow(); await sleep(30); }
+  node.textContent = text; follow();
+}
+const lineCls = (l) => ({ "+": "a", "-": "d", "…": "m" }[l[0]] || "c");
+
+const H = {
+  async ticket(b) { el("blk ticket", `<span class="k">Ticket #482</span>\n${esc(b.text)}`); follow(); },
+  async say(b, ms) { const d = el("blk say"); await type(d, b.text, ms); },
+  async tool(b, ms) {
+    const d = el("blk tool", `<div class="h">▸ ${b.name} <span>${esc(b.arg)}</span></div>`); follow();
+    await sleep(ms * 0.55);
+    if (b.out) { const r = document.createElement("div"); r.className = "r"; r.textContent = "  " + b.out; d.appendChild(r); follow(); }
+    await sleep(ms * 0.45);
+  },
+  async diff(b, ms) {
+    const d = el("blk diff", `<div class="f">✎ ${esc(b.file)}${b.tag ? ` <span class="dim">${b.tag}</span>` : ""}</div>`); follow();
+    const per = ms / Math.max(1, b.lines.length);
+    for (const l of b.lines) { const x = document.createElement("div"); x.className = lineCls(l); x.textContent = l[0] === "…" ? l : l[0] + " " + l.slice(1); d.appendChild(x); follow(); await sleep(per); }
+  },
+  async run(b, ms) {
+    const d = el("blk run"); const c = document.createElement("div"); c.className = "cmd"; d.appendChild(c);
+    await type(c, b.cmd, ms * 0.2);
+    const sp = document.createElement("div"); sp.className = "spin"; d.appendChild(sp);
+    const fr = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"; const t0 = performance.now();
+    while (performance.now() - t0 < ms * 0.4) { sp.textContent = fr[Math.floor((performance.now() - t0) / 80) % 10] + " running"; await sleep(80); }
+    sp.remove();
+    const per = (ms * 0.4) / Math.max(1, b.out.length);
+    for (const [cls, t] of b.out) { const o = document.createElement("div"); o.className = "o " + (cls || ""); o.textContent = t; d.appendChild(o); follow(); await sleep(per); }
+  },
+  async final(b, ms) {
+    const d = el("blk final", `<div class="t ${b.cls || ""}">${esc(b.title)}</div>`); follow();
+    const per = ms / Math.max(1, b.lines.length);
+    for (const [cls, t] of b.lines) { const o = document.createElement("div"); o.className = cls || ""; o.textContent = t; d.appendChild(o); follow(); await sleep(per); }
+  },
+  async pause(b, ms) { await sleep(ms); },
+};
+
+async function main() {
+  await document.fonts.load('22px "Noto Sans Symbols 2"', "✓✗✎▸⠋"); await document.fonts.load('700 22px "JetBrains Mono"'); await document.fonts.ready;
+  await sleep(300);
+  const total = S.steps.reduce((a, s) => a + s.ms, 0);
+  const k = (window.ANIM_MS || 32000) / total;
+  window.__startedAt = Date.now();
+  for (const s of S.steps) await H[s.t](s, s.ms * k);
+  const st = document.getElementById("status"); st.textContent = "idle"; st.className = "status done";
+  window.__doneAt = Date.now();
+}
+main();
+</script>
+</body>
+</html>

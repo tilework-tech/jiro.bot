@@ -1,0 +1,11 @@
+import { chromium } from "playwright";
+const [out, seg, tt, t] = process.argv.slice(2);
+const b = await chromium.launch();
+const pg = await b.newPage({ viewport: { width: 1920, height: 1080 } });
+pg.on("pageerror", (e) => console.log("ERR", String(e)));
+await pg.goto(`http://localhost:3000/?seg=${encodeURIComponent(seg)}&tt=${tt}&t=${t ?? 5}`, { waitUntil: "networkidle" });
+await pg.waitForTimeout(1500);
+const r = await pg.evaluate(() => { const e = document.querySelector('.scene-ui[data-id="street"] .st-menu'); const b = e?.getBoundingClientRect(); const s = document.querySelector('.scene-ui[data-id="street"] .st-board')?.getBoundingClientRect(); return JSON.stringify({ menu: b, board: s }); });
+console.log(r);
+await pg.screenshot({ path: out });
+await b.close();
