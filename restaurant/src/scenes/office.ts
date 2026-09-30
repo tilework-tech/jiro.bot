@@ -606,7 +606,7 @@ export const office: SceneDef = {
     hotspot(el, 0, 897, 66, 111, "Hatch", () => {
       api.sfx("bonk");
       bubble(el, 30, 830, "Knock knock. It's a plate. It's on a deadline.", 2400, "office-bubble");
-      api.egg("office-hatch", "The hatch from the bar: every plate passes the mouse family's code review first.");
+      api.egg("office-hatch", "The hatch from the bar: every plate passes the cat's code review first. It approves nothing and naps.");
     });
   },
 };

@@ -50,7 +50,7 @@ How the brief was interpreted:
 - **Screenshot/debug URL params** (engine, not moodboard):
   - `?seg=pantry&tt=0.5` renders the pantry segment at local progress 0.5.
   - `?t=5` freezes *scene canvas* time at 5 s.
-  - The moodboard versions use `performance.now()`, so they keep animating under `?t=`.
+  - The moodboard versions use `performance.now()`, so they keep animating under `?freeze=` (`?t=` before V3).
   - Screenshot/debug modes skip the loader and the scroll hint.
 - **Stage click guard:** the stage's canvas `click` and `pointerdown` handlers ignore any target inside `#ui .mood`, so clicks inside the moodboard never reach plates or the scene. Every version also calls `e.stopPropagation()` on its own click handlers.
 

@@ -12,16 +12,16 @@ Files covered (all paths relative to `restaurant/`):
 | `vite.config.ts` | 2 | base `./`, allowed hosts |
 | `tsconfig.json` | 7 | strict TS, bundler resolution |
 | `index.html` | 84 | meta/OG, fonts, inline loader, `#app` |
-| `src/main.ts` | 96 | scene/transition list, global secrets, console egg |
-| `src/chrome.ts` | 102 | scroll hint, egg ledger, rail progress, rotate card |
-| `src/style.css` | 247 | chrome CSS + shared stage-space component CSS |
-| `src/engine/types.ts` | 116 | constants + contracts |
-| `src/engine/stage.ts` | 378 | `start()`: DOM skeleton, fit, API, input, render loop |
-| `src/engine/belt.ts` | 266 | path baking, tread, plate positions, plate sprite, hit test |
-| `src/engine/drag.ts` | 192 | drag/drop, rested plates, return/vanish/explode anims |
-| `src/engine/items.ts` | 104 | item catalogue, deterministic item/rim hashing |
-| `src/engine/eggs.ts` | 52 | egg registry + localStorage |
-| `src/engine/sfx.ts` | 59 | WebAudio synth |
+| `src/main.ts` | 158 | scene/transition list, global secrets, console egg |
+| `src/chrome.ts` | 232 | scroll hint, egg ledger, rail progress, rotate card, idle drifters |
+| `src/style.css` | 285 | chrome CSS + shared stage-space component CSS |
+| `src/engine/types.ts` | 147 | constants + contracts |
+| `src/engine/stage.ts` | 387 | `start()`: DOM skeleton, fit, API, input, render loop |
+| `src/engine/belt.ts` | 1044 | phase chain, occupancy, plate life (chats, falls), fillets, pixel tread, plate sprite, bubbles, shards, legs, hit test |
+| `src/engine/drag.ts` | 320 | drag/drop, `taken` plates, rested/walking plates, return/vanish/explode anims |
+| `src/engine/items.ts` | 136 | item catalogue, deterministic item/rim hashing |
+| `src/engine/eggs.ts` | 111 | egg registry + localStorage |
+| `src/engine/sfx.ts` | 64 | WebAudio synth |
 | `src/engine/fx.ts` | 105 | loop-safe ambient helpers for scenes |
 | `src/engine/dom.ts` | 43 | DOM helpers for scene layers |
 
@@ -190,7 +190,7 @@ export interface Api {
   /** Called once per egg id; shows a toast and bumps the counter. */
   egg(id: string, text: string): void;
   toast(text: string, ms?: number): void;
-  sfx(name: "pop" | "blip" | "quack" | "boom" | "coin" | "meow" | "splash" | "whoosh" | "bonk" | "chime"): void;
+  sfx(name: "pop" | "blip" | "quack" | "boom" | "coin" | "meow" | "splash" | "whoosh" | "bonk" | "chime" | "sneeze" | "patter"): void;
   /** Image cache (url -> HTMLImageElement, loaded or not). */
   img(url: string): HTMLImageElement;
   /** Draw a scene's full frame (art + ambient + belt + plates) into g with an optional camera. Used by transitions. */
@@ -282,7 +282,7 @@ Notes on the contract:
 - `Plate.angle` is computed as the path tangent angle. Plate drawing never uses it.
 - Scene `mood` is declared data. The engine itself never reads it.
 - `SceneDef.click`'s return value is ignored by the engine.
-- `pool` is supported, but **no scene currently sets it**, so every belt draws from the global catalogue. Transitions copy `pool: x.belt.pool`, which is `undefined`.
+- `pool` is deprecated and ignored: the item depends only on the global plate id (§7).
 
 ---
 
@@ -292,10 +292,11 @@ Notes on the contract:
 index.html ─ inline loader (removes itself)
            └ main.ts
                ├ import style.css
-               ├ declareEggs([...9 global ids])        (scene modules also declareEggs at import time)
+               ├ declareEggs([...27 ids])            (scene modules also declareEggs at import time)
                ├ api = start(scenes[8], transitions[7])  (engine/stage.ts)
                │    ├ preloadItems()                     → new Image() for every ITEMS key
                │    ├ build segment list                 → throws "missing transition a>b" if absent
+               │    ├ setChain(scenes, gaps)             → chained belt phases (§7.2); window.__chain/__belt/__scenes
                │    ├ #app.innerHTML = skeleton           (scroll spacer, #frame{canvas#stage, #ui}, header, rail, eggbox, hint, toast)
                │    ├ fit() + resize listener
                │    ├ Api object, Drag instance
@@ -552,7 +553,7 @@ function renderScene(s: SceneDef, gg: CanvasRenderingContext2D, now: number, cam
   if (art.complete && art.naturalWidth) gg.drawImage(art, 0, 0, STAGE_W, STAGE_H);
   else { gg.fillStyle = "#0b0a09"; gg.fillRect(0, 0, STAGE_W, STAGE_H); }
   s.under?.(gg, now, api);
-  const plates = drawBeltFull(gg, s.belt, now, s.id, drag.hidden).filter((p) => !drag.hidden.has(p.key));
+  const plates = drawBeltFull(gg, s.belt, now, undefined, drag.hidden).filter((p) => !drag.hidden.has(p.key));
   drag.drawScene(gg, s, now);
   if (live) { scenePlates = plates; sceneBeltSize = s.belt.plate ?? 52; }
   s.over?.(gg, now, api);
@@ -618,9 +619,9 @@ phase[i+1] = phase[i] − pathLength(scene i) − gap(i)
 | `beltPhase(sceneId, u = 0)` | Phase for a path whose `u = 0` sits at local `u` on that scene's belt. `beltPhase("kitchen", pathLength(kitchen.belt))` starts a path where the kitchen belt ends; negative `u` feeds a scene from before its start. |
 | `globalU(id, now)` | Global belt distance `J` of plate `id`. |
 | `plateIdAt(path, u, now, phase?)` | Nearest slot id at local `u` on a path. |
-| `slotOccupied(id)` | Does the slot carry a plate (~47 % do; clustered runs). |
+| `slotOccupied(id)` | Does the slot carry a plate (≈ 38 % do; irregular runs, §7.4). `plateOnBelt(id, now)` = occupied and not `gone`. `taken` = ids pulled off by the visitor. |
 | `itemOf(id)` / `itemFor(id)` | Item on plate `id` (legacy `key`/`pool` args ignored). `rimFor(id)` = glaze. |
-| `plateBehaviour(id, now)` | `{du, off, drop, rot, bubble, shatter, falling, gone}`: chat slide, fall stage, bubble glyph. |
+| `plateBehaviour(id, now)` | `{du, off, drop, rot, bubble, shatter, falling, gone, hop}`: chat slide, fall stage, bubble glyph. `lifeSalt` holds its hash salts. `debugPlates` = `?debugplates` present. |
 | `fallAt(id)` | Global `J` where the plate starts to wobble off, or `null`. |
 | `chainInfo()` | The chain links. |
 | `platesOn(path, now, phase?)` | Plates on a path with life applied (skips empty and fallen slots). Returns `Plate` with `id`, `rot`, `bubble`, `shatter`, `falling`. |
@@ -631,28 +632,47 @@ Pond-style scenes that animate plates past the end of a path must use `slotOccup
 
 ### 7.4 Occupancy (irregular belt)
 
-Deterministic per 32-slot block (`hash(block, "occ")`): alternating runs, plate runs from `[1,2,2,3,3,3,4,4]`, empty runs from `[1,1,2,3,3,4,5,6]` (~53 % empty, big gaps common). The bar (≈11.6 slots) typically shows 4–9 plates. Absurd items stay ≈ 1 in 5 of occupied plates (catalogue weights, §9).
+Deterministic per 64-slot block (`occBlock`, seeded by `hash(block, "occ2")`, mulberry-style PRNG): the block starts full with p 0.4, then alternates runs. Plate runs are drawn from `[1,1,1,2,2,2,2,3,3,4,5]` (mostly lone plates and pairs, now and then a train), empty runs from `[1,1,1,2,2,2,3,3,4,5,7,9,12]` (heavy-tailed: a gap can be a whole room). Measured: ≈ 38 % of slots carry a plate. Absurd items stay ≈ 1 in 5 of occupied plates (catalogue weights, §9).
 
 ### 7.5 Plate life (pure functions of id + time)
 
-- **Chat.** Pair `(a, a+1)` (both occupied, neither falls, `hash < 0.45`, never overlapping another pair) chats once every 2800 world units of travel at a hashed offset. One plate (hashed) slides 70 world units toward the other at 8 u/s (≈ 8.8 s), both show a 5×5 pixel bubble (`dots`, `bang`, `heart`, `fish`, `q`, `note`) for ≈ 4.5 s, then it drifts back.
-- **Fall.** ≈ 1 in 30 plates. The start `J` is hashed into the usable span of a non-final scene belt (≥ 160–220 world units clear of both ends, so never inside a wall opening; pond excluded). Timeline: wobble 1.8 s → slide over the rail 1.1 s (toward the viewer, `ny > 0` side) → stops travelling, tips and drops 110 px·s (gravity 900) → 6 pixel shards for 1 s → `gone` for the rest of the journey (every later room skips it).
-- **Hop.** Animal items still hop 1 px tied to position.
-- `?debugplates=1`: all eligible pairs chat every 1100 u, 1 in 3 plates falls, every rested plate grows legs after 0.6 s.
+`plateBehaviour(id, now)` returns `{du, off, drop, rot, bubble, shatter, falling, gone, hop}`. Hash salts live in `lifeSalt = {chat: "c83", fall: "f258"}` (tuned so the bar's first minute shows both a chat and a fall).
+
+- **Chat.** Leader `a` pairs with the next occupied plate behind it (`behind(a)`: `a+1` or `a+2`, so up to one empty slot between them) when `hash01(a, "c83") < 0.6` and neither plate falls; a plate is never in two pairs. Each pair chats once per `CHAT_PERIOD = 2000` world units of travel at a hashed offset. One of the two (hash `"mover"`) glides to `CHAT_NEAR = 66` world units from the other (slide capped at `CHAT_MAX = 170`), ease in-out over `2.2 + d/26` s, talks for `CHAT_TALK = 5.2` s, and glides back. Script: leader speaks (0.15–1.9 s), follower answers (1.8–3.6 s), leader reacts (3.5–5.1 s), from 10 three-glyph `SCRIPTS`. Glyphs (5×5, in a 9×7-unit pixel bubble drawn after all plates): `dots, bang, heart, fish, q, note, sweat, rice, zzz, star`. A speaking plate bobs 1 px at 2 Hz.
+- **Fall.** Only inside hand-checked `FALL_ZONES` (fractions of the scene path; never in a wall opening, behind page text, or where there is no floor under the belt):
+
+  | Scene | Span | Share | Drop (px) |
+  |---|---|---|---|
+  | bar | 0.26–0.46 | 0.08 | 190 |
+  | office | 0.06–0.94 | 0.05 | 88 |
+  | dining | 0.08–0.92 | 0.05 | 150 |
+  | kitchen | 0.56–0.90 | 0.05 | 140 |
+  | storage | 0.12–0.62 | 0.05 | 70 |
+
+  `hash01(id, "f258")` walks the zones in chain order; the start `J` is interpolated inside the zone. Never two fallers within 3 slots (`fallInfo` drops a faller if `id−1` or `id−2` falls). Measured: ≈ 21 % of occupied plates fall somewhere; the rest reach the koi. Side = `hash(id,"side")`. Timeline: rattle `WOB = 1.3` s (shivers, 1 px hops) → creep to the rail `SLIDE = 0.9` s → tip over the rail `TIP = 0.32` s → free fall with `GRAV = 1500` px/s² to `drop` px below the belt (keeps drifting outward, spins; stops travelling on landing) → `SHARDS = 3.2` s on the floor: dust puff, the sushi knocked onto its side, 7 pixel shards bouncing 3 times (40 % restitution), fade in the last 0.6 s → `gone` for the rest of the journey. Falling plates draw a floor shadow that grows as they come down and are drawn after the others (in front of the belt). Outward is the screen-down side of the belt (right on a vertical belt).
+- **Taken.** `taken: Set<number>` (owned by drag.ts): a plate the visitor picked up is `gone` from the belt in every room and transition until it flies back onto its slot.
+- **Hop.** Animal items hop 1 px tied to screen position (`((x + y/2)/18) & 3 == 0`).
+- `?debugplates=1`: every eligible pair chats (`CHAT_P = 1`) every 1300 u, zone shares ×3 (capped 0.3), walking legs after 0.6 s on every parked plate.
+
+QA: `tools/qa/life-scan.mjs` lists upcoming chats/falls via `window.__belt`; `plates.mjs` dumps the plates in a frame; `legs.mjs` checks walkers.
 
 ### 7.6 Baking and corners
 
-`bake(path)` (cached per path object in a `WeakMap`, including rail edge polylines) first **fillets** every interior polyline corner with a circular arc: radius `1.2 × width × scale` at the vertex, clamped so the tangent length is ≤ half the shorter adjacent segment. Then it resamples every ≤ 6 px with cumulative `u`. `pointAt` interpolates position, scale and heading. Transition paths that build their own arcs (e.g. street>pond `corner()`) are kept as drawn; they should use a centre-line radius ≥ 1.2 × width.
+`bake(path)` (cached per path object in a `WeakMap`, including rail edge polylines and a bbox) first **fillets** every interior polyline corner with a circular arc: tangent length `1.2 × width × scale × tan(θ/2)`, clamped to half the shorter adjacent segment (so neighbouring fillets never overlap); near-straight (< 0.02 rad) and hairpin (> π − 0.05) vertices are kept as is. Then it resamples every ≤ 6 px with cumulative `u`. `pointAt` interpolates position, scale **and heading**, so plates and slats turn smoothly through fillets. Closed loops wrap normals across the join. Transition paths that build their own arcs (e.g. street>pond `corner()`) are kept as drawn; they should use a centre-line radius ≥ 1.2 × width. `withPhase(path, phase)` makes phase-overridden views that share the original bake.
 
-### 7.7 Tread (`drawTread`)
+### 7.7 Tread (`drawTread`): pixel art
 
-- `full`: shadow (+8·s), body `#2b2723`, **slats**, rails (`#6d3f22` 7 px under `#c9814a` 4 px, round joins).
-- **Slats** every `SLAT = 26` world units (divides 130, so seams stay continuous when phases shift by whole slots). Each seam is a crescent bowing forward (edges trail by `0.32·half-width`), perpendicular to the path. The seam is a dark gap wedge (`#0e0c0b`) 2 px wide plus the extra spacing on the **outside** of a curve (`−κ·offset·SLAT·s·0.9`), so slats fan open outside and stay tight inside; a `#4a433b` lip line marks the overlapping slat.
+The tread is rasterised as **pixel art**: shapes are drawn into one shared offscreen buffer at 1 cell = `TPX = 3` stage px, on a grid anchored at stage (0, 0) (so paths meeting at a join share one grid), clipped to the visible rect (guard: ≤ 2 M cells). `quantize()` snaps every cell to the nearest palette colour (alpha < 50 % → empty; weighted RGB distance, memoised) and the buffer is blitted back with `imageSmoothingEnabled = false`. Under a transition camera the cells scale like the art.
+
+Palette: body `#2b2723`, lit lip `#4a433b`, inner shade `#1f1c19`, rails `#c9814a` / `#e8a766` / `#6d3f22`, seam gap `#0e0c0b`; translucent parts are drawn with marker colours and output as black at alpha 92 (shadow) and 128 (`seams`-style seams).
+
+- `full`: shadow (offset +9·s), body, **slats**, a 1-cell inner shade line under each rail, rails (dark 3 cells under a copper 1.3-cell core).
+- **Slats** every `SLAT = 26` world units (divides 130). Each seam is a crescent bowing forward (edges trail by `0.3·half-width`), sampled at 9 lateral offsets, perpendicular to the path. The seam is a dark wedge 1 cell wide plus `0.85 × spread` where `spread = max(0, −κ·offset)·SLAT·s` (κ from the heading change over ±5 world units), so slats fan open on the **outside** of a curve and stay tight inside; a one-cell `#4a433b` lip marks the overlapping slat.
 - `seams`: only the crescent seams (for belts painted into the art). `none`: plates only.
 
 ### 7.8 Plates
 
-One ceramic style: cream glaze (three near-identical glazes, `rimFor(id)`), a thin warm-brown rim band, shaded well, foot ring, glint, dark 1 px outline, contact shadow; pixel sprites cached per (glaze, diameter). `drawPlates` handles `rot` (wobble/tip), `bubble`, `shatter` (shards), `legs`/`dir` (walking rested plates, item mirrored when walking left). `hitPlate` ignores falling/shattered plates.
+One ceramic style: three near-identical cream glazes (`#efe6d3`, `#ece2cd`, `#f1e9d8`, `rimFor(id)`), a thin warm-brown rim band, shaded well, foot ring, glint, dark 1 px outline, contact shadow; pixel sprites cached per (glaze, diameter). `drawPlates` handles `rot` (wobble/tip/lean), `hop`, `bubble` (drawn last), `shatter` (shards), `legs`/`dir`/`legGrow`/`stand` (walking rested plates; two outlined 2-frame legs with little shoes, item mirrored when walking left), and a floor shadow for falling plates. `hitPlate` ignores falling/shattered plates. `slotPoint(path, id, now)` gives a slot's position ignoring chat slides (drag returns use it).
 
 ## 8. Drag and drop (`src/engine/drag.ts`)
 
@@ -661,18 +681,20 @@ Constants:
 | Name | Value |
 |---|---|
 | `MAX_RESTED` | `14` per scene |
-| `DUR.return` | `0.55` s |
-| `DUR.vanish` | `0.35` s |
-| `DUR.explode` | `0.5` s |
+| `DUR.return` / `vanish` / `explode` | `0.6` / `0.4` / `0.55` s |
+| `SETTLE` (drop bounce onto a surface) | `0.28` s |
+| `LIFT` / `HELD_SCALE` (held plate) | `14` px / `1.12` |
+| Walkers | p `1/3` (1 with `?debugplates`), legs after `LEGS_AFTER = 2.2` s (0.6 debug), legs grow `0.35` s, `WALK_SPEED = 7` px/s × max(0.5, s), `STEP_FPS = 5` |
 | Drag start threshold | `> 6` stage px |
 | Click suppression after a drop | `80` ms |
 | "Near belt" test | belt sampled every 20 world units. Near if any sample is within `(belt.width ?? 64)·s·0.8` px |
 
 State:
 
-- `hidden: Set<key>`: belt plates that are currently held, rested, or animating.
-- `rested: Map<sceneId, Plate[]>`
-- `held`
+- `hidden: Set<key>`: belt plate keys (`p:<id>`) that are held, rested, or animating.
+- `taken` (belt.ts, by global id): picking a belt plate up removes it from the belt **everywhere** (§7.5) until a return animation lands.
+- `rested: Map<sceneId, Rested[]>` (`Rested` adds `t0, walker, x0, xl, xr, seed`).
+- `held` (+ a smoothed pointer x-velocity: the held plate leans into the motion, ±0.35 rad).
 - `anims[]`
 - `down`: the pending press.
 
@@ -693,14 +715,14 @@ Otherwise:
 
 **pointermove.** Once the pointer moves more than 6 px from `down`, the plate is lifted:
 
-- a belt plate's key is added to `hidden`
-- a rested plate is spliced out of its list
-- `held = {...plate, alpha: 1, scene, from}`
+- a belt plate's key is added to `hidden` and its id to `taken`
+- a rested plate is spliced out of its list (at its current walking pose)
+- `held = {...plate, alpha: 1, scene, from}` with `rot`, `bubble`, `legs`, `dir`, `falling` cleared
 - `sfx("pop")`
 
 While held, `held.x = x` and `held.y = y + 18·s`. `#frame` gets the class `dragging`.
 
-**pointerup / pointercancel:** remove `dragging` and release capture. If a scene is active, call `drag.pointerUp(scene, performance.now()/1000)`. If not, just set `held = null`. In that case a belt plate's key stays in `hidden` forever, so that plate slot is simply gone. This edge case is only reachable by scrolling mid-drag.
+**pointerup / pointercancel:** remove `dragging` and release capture. If a scene is active, call `drag.pointerUp(scene, performance.now()/1000)`. If not, just set `held = null`. In that case the plate stays in `hidden`/`taken` forever, so that plate is gone from the whole belt. This edge case is only reachable by scrolling mid-drag.
 
 ### 8.2 Drop outcomes (`pointerUp`)
 
@@ -708,7 +730,7 @@ Set `suppressUntil = now + 80 ms`, then test the drop point `(held.x, held.y)` a
 
 **On a surface:**
 
-1. Push `{...held, s: surface.scale ?? held.s, t0, walker, xl, xr}` into `rested[scene]`. `walker` (≈ 1 in 3, all with `?debugplates=1`; only if the row is wider than the plate): after 1.5 s the plate grows two outlined pixel legs (2-frame cycle, 4 fps) and toddles back and forth at 5 px/s along its drop row, turning at the polygon edges (`rowSpan`, inset by the plate radius). `pose(r, t)` gives the current position; hit tests and pick-ups use it.
+1. Push `{...held, s: surface.scale ?? held.s, t0, x0, seed, walker, xl, xr}` into `rested[scene]`. `xl..xr` is the polygon's row span through the drop point (`rowSpan`), inset by the plate radius + 2. The plate settles with a one-bounce ease from the held height over 0.28 s. `walker` (p 1/3, all with `?debugplates=1`; only if the row leaves > 8 px to walk): after 2.2 s two outlined pixel legs pop out in 3 steps, it stands 0.5 s, then potters: seeded alternating rests (0.4 s first, then 1.2–4.5 s, 18 % chance of +5 s) and short strolls (10–44 px, 30 % chance to turn, turns at the row ends), 5 fps 2-frame step. `pose(r, t)` gives the current position; hit tests and pick-ups use it.
 2. Sort the list by `y` ascending, which is also the draw order.
 3. While the list is longer than 14, `shift()` the plate with the **smallest y** (the farthest back, not necessarily the oldest) into a `vanish` animation.
 4. `sfx("blip")` and `api.egg("plate-parked", surface.say ?? "Plate parked. Jiro approves of tidy surfaces.")`. The first park anywhere is the egg. Later parks just toast the surface's line.
@@ -741,10 +763,10 @@ function hash(s: string): number { let h = 2166136261; for (…) h = Math.imul(h
 Rested plates are drawn first with `drawPlates`. Then each animation for this scene runs, with `f = min(1, (performance.now()/1000 − t0) / DUR[kind])`:
 
 - **return.**
-  1. Find the plate's live target `platesOn(scene.belt, now, scene.id)` with the same key. If the slot is no longer on the belt, convert the animation to `vanish` starting now.
+  1. Target = `slotPoint(scene.belt, id, now)` (the plate's own slot). If the slot is no longer on this scene's path, convert the animation to `vanish` starting now.
   2. Ease out cubic: `e = 1 − (1−f)³`.
-  3. Position: `x = x0 + (tx−x0)e`, `y = y0 + (ty−y0)e − sin(fπ)·80` (an arc lift of 80 px), `s = s0 + (ts−s0)e`.
-  4. At `f = 1`, remove the key from `hidden` so the belt draws it again.
+  3. Position: `x = x0 + (tx−x0)e`, `y = y0 + (ty−y0)e − sin(fπ)·80` (an arc lift of 80 px), `s = s0 + (ts−s0)e`, `rot = sin(2πf)·0.25·(1−f)`.
+  4. At `f = 1`, remove the key from `hidden` and the id from `taken` so the belt draws it again.
 - **vanish.**
   - The plate itself: `alpha = 1−f`, `s = s0(1 − 0.6f)`, `y = y0 − 30f`.
   - Plus 6 puff squares, 8x8, colour `#e9e2d4`, `globalAlpha 1−f`, at angles `k/6·2π` and radius `20 + 50f`.
@@ -758,9 +780,11 @@ Rested plates are drawn first with `drawPlates`. Then each animation for this sc
 **Held plate** (`drawHeld`):
 
 - Shadow: an ellipse at `(x, y + 26s)` with radii `size·s·0.45` and `size·s·0.14`, filled `rgba(0,0,0,.35)`.
-- Plate: drawn at `y − 14s` with scale `s·1.12`, so it looks lifted.
+- Plate: drawn at `y − 14s` with scale `s·1.12`, so it looks lifted, rotated by the lean (`vx·0.00022`, ±0.35; relaxes ×0.85 per frame when the pointer stops).
 
-Rested plates keep their belt key, and the key stays in `hidden`. Plate ids never repeat, so this is harmless. A rested plate can be picked up again (`from: "rest"`).
+Off-surface drops start their animation from the lifted pose.
+
+Rested plates keep their belt key and stay in `hidden`/`taken`: a parked plate is not on the belt in any room. A rested plate can be picked up again (`from: "rest"`).
 
 ### 8.4 Clicks versus drags
 
@@ -801,57 +825,77 @@ export interface ItemDef {
 }
 ```
 
-There are 41 items with a total weight of **84.9**. **Absurd items weigh 16.9 in total, or 19.9% ≈ 1 plate in 5.** Every key needs `public/items/<key>.png`.
+There are 61 items with a total weight of **91.3**. **Absurd items weigh 17.7 in total, or 19.4% ≈ 1 plate in 5.** V3 trimmed the old absurd weights (0.6 → 0.4, menagerie 0.5 → 0.35) and appended 20 items (#42–61) so the share stayed put. Every key needs `public/items/<key>.png`.
 
-For the full `say` lines, copy `src/engine/items.ts` verbatim. The declaration order below is the order of `ALL` and affects which item is picked.
+For the full `say` lines, copy `src/engine/items.ts` verbatim. The declaration order below is the order of `ALL` and affects which item is picked: `itemFor(id)` = walk `ALL` subtracting weights from `(hash(id, "item") % 100000)/100000 · TOTAL` (the `override.item` secret wins). `hash(n, salt)` is FNV-1a over the salt seeded with `2166136261 ^ n`, then a murmur-style finaliser.
 
 | # | Key | Weight | Share | Absurd | Animal | Egg id | sfx (default `pop`) |
 |---|---|---|---|---|---|---|---|
-| 1 | tuna | 10 | 11.78% | | | | |
-| 2 | salmon | 10 | 11.78% | | | | |
-| 3 | tamago | 7 | 8.24% | | | | |
-| 4 | ikura | 6 | 7.07% | | | | |
-| 5 | ebi | 6 | 7.07% | | | | |
-| 6 | maki | 8 | 9.42% | | | | |
-| 7 | onigiri-happy | 4 | 4.71% | | | happy-onigiri | |
-| 8 | onigiri-angry | 3 | 3.53% | | | angry-onigiri | |
-| 9 | onigiri-sleepy | 3 | 3.53% | | | sleepy-onigiri | |
-| 10 | bowl-miso | 3 | 3.53% | | | | |
-| 11 | cup-tea | 3 | 3.53% | | | | |
-| 12 | cup-matcha | 2 | 2.36% | | | | |
-| 13 | wasabi | 1.2 | 1.41% | ✓ | | wasabi | bonk |
-| 14 | duck | 1.5 | 1.77% | ✓ | | duck | quack |
-| 15 | bug | 1.2 | 1.41% | ✓ | | bug | |
-| 16 | bomb | 0.6 | 0.71% | ✓ | | bomb | boom |
-| 17 | puffer | 0.6 | 0.71% | ✓ | ✓ | puffer | pop |
-| 18 | rock | 0.6 | 0.71% | ✓ | | rock | bonk |
-| 19 | gold | 0.6 | 0.71% | ✓ | | gold | coin |
-| 20 | cat | 0.6 | 0.71% | ✓ | ✓ | cat | meow |
-| 21 | lucky-cat | 0.6 | 0.71% | ✓ | | lucky-cat | chime |
-| 22 | floppy | 0.6 | 0.71% | ✓ | | floppy | |
-| 23 | laptop-fire | 0.6 | 0.71% | ✓ | | laptop-fire | boom |
-| 24 | fortune | 2 | 2.36% | | | fortune | chime |
-| 25 | mini-jiro | 0.6 | 0.71% | ✓ | | mini-jiro | blip |
-| 26 | lobster | 0.6 | 0.71% | ✓ | ✓ | lobster | bonk |
-| 27 | ramen | 1 | 1.18% | | | ramen | |
-| 28 | hamster | 0.5 | 0.59% | ✓ | ✓ | hamster | blip |
-| 29 | octopus | 0.5 | 0.59% | ✓ | ✓ | octopus | splash |
-| 30 | crab | 0.5 | 0.59% | ✓ | ✓ | crab | bonk |
-| 31 | frog | 0.5 | 0.59% | ✓ | ✓ | frog | blip |
-| 32 | sloth | 0.5 | 0.59% | ✓ | ✓ | sloth | pop |
-| 33 | sumo | 0.5 | 0.59% | ✓ | ✓ | sumo | bonk |
-| 34 | googly | 0.5 | 0.59% | ✓ | | googly | pop |
-| 35 | ufo | 0.5 | 0.59% | ✓ | | ufo | whoosh |
-| 36 | raccoon | 0.5 | 0.59% | ✓ | ✓ | raccoon | bonk |
-| 37 | seal | 0.5 | 0.59% | ✓ | ✓ | seal | splash |
-| 38 | cat-maki | 0.5 | 0.59% | ✓ | ✓ | cat-maki | meow |
-| 39 | snail | 0.5 | 0.59% | ✓ | ✓ | snail | pop |
-| 40 | corgi | 0.5 | 0.59% | ✓ | ✓ | corgi | chime |
-| 41 | goose | 0.5 | 0.59% | ✓ | ✓ | goose | quack |
+| 1 | tuna | 10 | 10.95% |  |  |  |  |
+| 2 | salmon | 10 | 10.95% |  |  |  |  |
+| 3 | tamago | 7 | 7.67% |  |  |  |  |
+| 4 | ikura | 6 | 6.57% |  |  |  |  |
+| 5 | ebi | 6 | 6.57% |  |  |  |  |
+| 6 | maki | 8 | 8.76% |  |  |  |  |
+| 7 | onigiri-happy | 4 | 4.38% |  |  | happy-onigiri |  |
+| 8 | onigiri-angry | 3 | 3.29% |  |  | angry-onigiri |  |
+| 9 | onigiri-sleepy | 3 | 3.29% |  |  | sleepy-onigiri |  |
+| 10 | bowl-miso | 3 | 3.29% |  |  |  |  |
+| 11 | cup-tea | 3 | 3.29% |  |  |  |  |
+| 12 | cup-matcha | 2 | 2.19% |  |  |  |  |
+| 13 | wasabi | 1 | 1.10% | ✓ |  | wasabi | bonk |
+| 14 | duck | 1.2 | 1.31% | ✓ |  | duck | quack |
+| 15 | bug | 1 | 1.10% | ✓ |  | bug |  |
+| 16 | bomb | 0.4 | 0.44% | ✓ |  | bomb | boom |
+| 17 | puffer | 0.4 | 0.44% | ✓ | ✓ | puffer | pop |
+| 18 | rock | 0.4 | 0.44% | ✓ |  | rock | bonk |
+| 19 | gold | 0.4 | 0.44% | ✓ |  | gold | coin |
+| 20 | cat | 0.4 | 0.44% | ✓ | ✓ | cat | meow |
+| 21 | lucky-cat | 0.4 | 0.44% | ✓ |  | lucky-cat | chime |
+| 22 | floppy | 0.4 | 0.44% | ✓ |  | floppy |  |
+| 23 | laptop-fire | 0.4 | 0.44% | ✓ |  | laptop-fire | boom |
+| 24 | fortune | 2 | 2.19% |  |  | fortune | chime |
+| 25 | mini-jiro | 0.4 | 0.44% | ✓ |  | mini-jiro | blip |
+| 26 | lobster | 0.4 | 0.44% | ✓ | ✓ | lobster | bonk |
+| 27 | ramen | 1 | 1.10% |  |  | ramen |  |
+| 28 | hamster | 0.35 | 0.38% | ✓ | ✓ | hamster | blip |
+| 29 | octopus | 0.35 | 0.38% | ✓ | ✓ | octopus | splash |
+| 30 | crab | 0.35 | 0.38% | ✓ | ✓ | crab | bonk |
+| 31 | frog | 0.35 | 0.38% | ✓ | ✓ | frog | blip |
+| 32 | sloth | 0.35 | 0.38% | ✓ | ✓ | sloth | pop |
+| 33 | sumo | 0.35 | 0.38% | ✓ | ✓ | sumo | bonk |
+| 34 | googly | 0.35 | 0.38% | ✓ |  | googly | pop |
+| 35 | ufo | 0.35 | 0.38% | ✓ |  | ufo | whoosh |
+| 36 | raccoon | 0.35 | 0.38% | ✓ | ✓ | raccoon | bonk |
+| 37 | seal | 0.35 | 0.38% | ✓ | ✓ | seal | splash |
+| 38 | cat-maki | 0.35 | 0.38% | ✓ | ✓ | cat-maki | meow |
+| 39 | snail | 0.35 | 0.38% | ✓ | ✓ | snail | pop |
+| 40 | corgi | 0.35 | 0.38% | ✓ | ✓ | corgi | chime |
+| 41 | goose | 0.35 | 0.38% | ✓ | ✓ | goose | quack |
+| 42 | hardhat | 1 | 1.10% |  |  | hardhat | bonk |
+| 43 | plank | 1 | 1.10% |  |  | plank | blip |
+| 44 | ginger-boat | 1 | 1.10% |  |  | ginger-boat | whoosh |
+| 45 | lgtm | 1 | 1.10% |  |  | lgtm | chime |
+| 46 | not-found | 0.8 | 0.88% |  |  | not-found | blip |
+| 47 | treasure-bento | 0.8 | 0.88% |  |  | treasure-bento | coin |
+| 48 | sumo-penguin | 0.4 | 0.44% | ✓ | ✓ | sumo-penguin | bonk |
+| 49 | hermit | 0.4 | 0.44% | ✓ | ✓ | hermit | splash |
+| 50 | cat-nap | 0.4 | 0.44% | ✓ |  | cat-nap | meow |
+| 51 | lifeguard | 0.4 | 0.44% | ✓ |  | lifeguard | quack |
+| 52 | cactus | 0.4 | 0.44% | ✓ |  | cactus | pop |
+| 53 | puffer-inflate | 0.4 | 0.44% | ✓ | ✓ | puffer-inflate | pop |
+| 54 | otter | 0.4 | 0.44% | ✓ | ✓ | otter | splash |
+| 55 | ant-bridge | 0.4 | 0.44% | ✓ |  | ant-bridge | blip |
+| 56 | wasabi-dragon | 0.4 | 0.44% | ✓ | ✓ | wasabi-dragon | whoosh |
+| 57 | mochi-ghost | 0.4 | 0.44% | ✓ | ✓ | mochi-ghost | whoosh |
+| 58 | octo-dj | 0.4 | 0.44% | ✓ | ✓ | octo-dj | chime |
+| 59 | uni-hog | 0.4 | 0.44% | ✓ | ✓ | uni-hog | pop |
+| 60 | tempura-bag | 0.4 | 0.44% | ✓ |  | tempura-bag | pop |
+| 61 | narwhal | 0.4 | 0.44% | ✓ | ✓ | narwhal | splash |
 
 Catalogue notes:
 
-- 32 items carry an egg id.
+- 52 items carry an egg id.
 - `public/items/` also contains `bowl-ramen.png`, `bowl-soup.png`, and `cup-soy.png`, which are **not** in `ITEMS`. They are unused by the belt.
 - `mini-jiro.png` doubles as the logo, toast avatar, loader, and rotate-card image.
 - `bomb` and `laptop-fire` are "volatile" for drag drops (§8.2).
@@ -871,41 +915,35 @@ Catalogue notes:
 
 ### 10.2 Declaring eggs
 
-`declared` starts as the set of all `ITEMS[*].egg` values (32). Modules add to it with `declareEggs(ids)` **at import time**, so the total is known before the first frame:
+`declared` starts as the set of all `ITEMS[*].egg` values (52). Modules add to it with `declareEggs(ids)` **at import time**, so the total is fixed before the first frame. Every id awarded anywhere must be declared; an undeclared id still counts when found (it is added to `declared`, so the total grows) and logs a `console.warn` in dev.
 
 | Module | Declared ids |
 |---|---|
-| `main.ts` (9) | konami, omakase, logo-5, sudo, tab-away, console, plate-parked, plate-exploded, plate-vanished |
-| `scenes/bar.ts` (8) | bar-jiro, bar-sake, bar-lantern, bar-customer, bar-plates, bar-soy, bar-opening, bar-noren |
-| `scenes/office.ts` (7) | office-jiro, office-crt, product-tour, office-tea, office-lamp, office-hatch, office-sticky |
-| `scenes/dining.ts` (3) | slop, dining-jiro, dining-lantern |
-| `scenes/kitchen.ts` (6) | faq-all, kitchen-pot, kitchen-knife, kitchen-jiro, kitchen-cat, kitchen-doors |
-| `scenes/storage.ts` (5) | storage-bulb, storage-jars, storage-mouse, storage-jiro, storage-all-jars |
+| `main.ts` (27) | global: konami, omakase, sudo, type-wasabi, type-jiro, logo-5, tab-away, console, idle-cloud, idle-soot · drag: plate-parked, plate-exploded, plate-vanished · moodboard: mv01-omakase, mood-v02-all, mood-v02-rocks, v03-all, v03-press, v04-flask, v04-undiscovered, mv05-river, v06-orphan, v07-bell, v08-eye, mood-v09-checked, v10-hanko · street>pond garden: soot-rice |
+| `scenes/bar.ts` (15) | bar-jiro, bar-sake, bar-lantern, bar-customer, bar-plates, bar-soy, bar-opening, bar-noren, bar-sip, bar-nap, bar-laugh, bar-fish, bar-door, bar-stool, bar-tea |
+| `scenes/office.ts` (12) | office-jiro, office-crt, product-tour, office-tea, office-lamp, office-hatch, office-sticky, office-drawer, office-moth, office-vent, office-cat, office-books |
+| `scenes/dining.ts` (7) | slop, dining-jiro, dining-lantern, dining-spider, dining-cat, dining-mouse, dining-lights |
+| `scenes/kitchen.ts` (10) | faq-all, kitchen-pot, kitchen-knife, kitchen-jiro, kitchen-cat, kitchen-doors, kitchen-rice, kitchen-ladle, kitchen-soot, kitchen-tap |
+| `scenes/storage.ts` (8) | storage-bulb, storage-jars, storage-mouse, storage-jiro, storage-all-jars, storage-hose, storage-soot, storage-trap |
 | `scenes/pantry.ts` (1) | mood-all |
-| `scenes/street.ts` (6) | street-bell, street-neon, street-jiro, street-pm, street-drain, street-special |
+| `scenes/street.ts` (11) | street-bell, street-lamp, street-box, street-light, street-cat, street-neon, street-jiro, street-pm, street-drain, street-special, street-puddle |
 | `scenes/pond.ts` (6) | pond-koi, pond-duck, pond-lantern, pond-moon, flappy-played, flappy-5 |
-| `games/flappy.ts` (2) | flappy-sushi, flappy-20 |
+| `games/flappy.ts` (3) | flappy-sushi, flappy-10, flappy-20 |
+| transitions (4) | bo-cat (bar-office), od-fugu (office-dining), ks-soot (kitchen-storage-f), pantry-soot (storage-street) |
 
-`games/flappy.ts` is imported via pond (Hose Snake was removed in v3; Flappy Koi is the only mini game). The total at load was 85 right after the snake removal; scenes keep adding eggs (89 at the time of writing), so read the badge.
-
-**Known quirk:** the moodboard versions (`src/moodboard/v*.ts`) call `api.egg` with 13 ids that are never declared:
-
-- mood-v02-all, mood-v02-rocks, mood-v09-checked
-- mv01-omakase, mv05-river
-- v03-all, v03-press
-- v04-flask, v04-undiscovered
-- v06-orphan, v07-bell, v08-eye, v10-hanko
-
-`eggFound` adds an unknown id to `declared` when it is found, so finding one raises **both** n and the total. The total can therefore grow up to 101.
+Total: **156** (the badge reads `0/156` in a fresh profile). Hose Snake's eggs went with it in v3.
 
 ### 10.3 Functions
 
+localStorage access is wrapped in `try` (`load`/`save`/`drop`), so Safari private mode keeps eggs for the visit only.
+
 | Function | Behaviour |
 |---|---|
-| `eggFound(id)` | Returns false if already found. Otherwise adds the id to `found` and `declared`, persists `jiro-eggs`, notifies listeners, and returns true |
+| `eggFound(id)` | Returns false if already found. Otherwise adds the id to `found` and `declared` (warns in dev if undeclared), persists `jiro-eggs`, notifies listeners, and returns true |
 | `eggCount()` | Returns `[found ∩ declared count, declared.size]` |
 | `noteEgg(id, text)` | Stores the first text only |
-| `foundEggs()` | Found ids in discovery order, as `{id, text: notes[id] ?? id with -/_ → space}` |
+| `eggName(id)` | Short ledger title from the `NAMES` map (e.g. `gold` → "Golden tamago", `bar-plates` → "Call stack"); missing ids fall back to the id with `-`/`_` → space, first letter capitalised. Not every declared id has a `NAMES` entry |
+| `foundEggs()` | Found ids in discovery order, as `{id, name: eggName(id), text: notes[id] ?? ""}` |
 | `resetEggs()` | Clears both keys and notifies listeners |
 | `onEggs(fn)` | Registers a listener |
 
@@ -921,9 +959,9 @@ Eggs never throttle. Every call toasts.
 
 ## 11. Sound (`src/engine/sfx.ts`)
 
-- **Default state:** sound is ON unless `localStorage["jiro-sound"] === "off"`.
+- **Default state:** sound is ON unless `localStorage["jiro-sound"] === "off"` (storage errors are ignored: Safari private mode).
 - **Toggling:** `setSound(on)` stores `"on"` or `"off"`.
-- **AudioContext:** created lazily on the first `sfx()` call while sound is on. All sounds come from user gestures. If the context is suspended, it is resumed on every call. If construction fails, the sound is silent.
+- **AudioContext:** created lazily on the first `sfx()` call while sound is on (falls back to `webkitAudioContext` for Safari < 14.1; `resume()` rejections are swallowed). All sounds come from user gestures. If the context is suspended, it is resumed on every call. If construction fails, the sound is silent.
 - **Header sound button:** toggles the state and the `.off` class, sets `aria-pressed`, and plays `chime` when turning sound on.
 
 Building blocks:
@@ -951,6 +989,8 @@ Recipes:
 | splash | noise(0.5, 0.18, lp 2200) |
 | whoosh | noise(0.35, 0.08, lp 900) |
 | bonk | tone(220→110, 0.12, square, 0.07) |
+| sneeze | tone(900→1400, 0.18, triangle, 0.05) + noise(0.3, 0.2, lp 3000) (typed "wasabi") |
+| patter | 5 × tone(1200+90i → 1500+90i, 0.03, square, 0.025, delay 0.06i) (soot sprites) |
 | chime | tone(1568, 0.3, sine, 0.05) + tone(2093, 0.4, sine, 0.04, delay 0.1) |
 
 ---
@@ -1088,9 +1128,9 @@ It also sets `aria-label="n of t easter eggs found"`.
 - Styling: 340px wide, max-height `min(60vh, 440px)`, `#15110e`, copper pixel frame plus `0 7px 0 0 rgba(0,0,0,.6)`. It opens 16px above the button.
 - Content, rendered on open and on egg changes while open:
   - `<header>`: "Egg ledger" in copper Silkscreen 14px, and `n/t` in muted 12px.
-  - Found eggs as an `<ol>` of their texts in discovery order: Instrument Sans 14px `#e7d8bf`, green mono markers. If there are none: "Nothing yet. Try clicking the plates on the belt. Or the chef. Or the cat."
+  - Found eggs as an `<ol>` in discovery order: each `<li>` is `<b>name</b>` (Silkscreen 12px cream, `eggName`) plus `<span>text</span>` (the remembered toast, Instrument Sans 13px muted), green mono markers. If there are none: "Nothing yet. Try clicking the plates on the belt. Or the chef. Or the cat."
   - `<footer>` in mono 11px:
-    - "All found. Jiro bows deeply." when none are left, otherwise "`k` still hiding. Some only come out if you type."
+    - "All found. Jiro bows deeply." when none are left, otherwise "`k` still hiding. " + a hint rotating with `n`: "Some only come out if you type.", "Plates are for dragging, too.", "Some only come out if you do nothing.", "The logo is ticklish.", "Devs: check the console."
     - a `reset` link-button when `n > 0`. It calls `resetEggs()`, toasts "Easter eggs reset. Happy hunting.", and re-renders.
   - Header and footer use `2px dashed rgba(243,230,207,.14)` separators.
 - The text is HTML-escaped for `& < > "`.
@@ -1121,7 +1161,7 @@ It also sets `aria-label="n of t easter eggs found"`.
 
 ### 13.7 Rotate card (`narrowHint`)
 
-The card is always appended to `body`:
+The card is appended to `body` unless pinned (`?seg`/`?p`) or `sessionStorage["jiro-rotate"] === "no"`:
 
 ```html
 <div class="rotate"><div class="rot-card">
@@ -1132,7 +1172,7 @@ The card is always appended to `body`:
 </div></div>
 ```
 
-The button removes the card permanently for the page view. It is not persisted.
+The button removes the card and sets `sessionStorage["jiro-rotate"] = "no"` (for the browser session).
 
 **Visibility:** `display: none`, except under `@media (max-width: 700px) and (orientation: portrait)`. There it is a fixed full-screen overlay: z-index 40, background `rgba(11,10,9,.92)`, padding 24px.
 
@@ -1144,7 +1184,9 @@ The button removes the card permanently for the page view. It is not persisted.
 - Body text: Instrument Sans 16px/1.5 `#e7d8bf`.
 - Button: Silkscreen 13px on green, text `#07130b`, padding 12px 14px, `0 4px 0 #2d7a45` drop.
 
-### 13.8 Narrow screens (`@media (max-width: 700px)`)
+### 13.8 Narrow or short screens (`@media (max-width: 700px), (max-height: 500px)`)
+
+The compact rules also apply to landscape phones (height ≤ 500). There the scroll hint moves to `bottom: 8px`; it is hidden only at width ≤ 700 (separate media query). The soot drifter moves to `top: 36px`.
 
 | Element | Change |
 |---|---|
@@ -1160,7 +1202,18 @@ The button removes the card permanently for the page view. It is not persisted.
 | `.eggs` | 10px, padding 6px 7px 5px, "easter eggs" label hidden |
 | `.eggpop` | width `min(300px, 100vw − 24px)` |
 | toast | bottom 50px, left 12px, text 13px, avatar 24x23 |
-| scroll hint | hidden |
+| scroll hint | `bottom: 8px`; hidden at width ≤ 700 |
+
+### 13.8b Idle drifters and CSS secrets
+
+`idleDrifters(api)` (chrome.ts) runs unless the page is pinned, `?freeze` is set, or reduced motion is on. Any `pointermove/pointerdown/keydown/wheel/touchstart/scroll` resets an idle clock; a 1 s interval launches a drifter after `IDLE_MS` (60 s, or `?idle=<s>`) while the tab is visible and none is on screen. Drifters alternate (starting with the soot if `idle-cloud` is already found):
+
+- **Cloud** shaped like Jiro (26×14 pixel map `CLOUD`: dome, hachimaki with knot tail, eye holes, grille), cell 3 px, `top: 4px`, opacity .88, crosses in 42 s linear, bobs 3 px (`6s steps(2)`). Click: `chime`, egg `idle-cloud`.
+- **Soot sprite** carrying a rice grain (two 11×12 frames `SOOT`, scurry `.24s steps(2)`), `top: 52px`, crosses in 11 s with a hop and pause at 44vw; hover doubles the scurry speed. Click: `patter`, egg `idle-soot`.
+
+Both are `<button class="drifter">` holding a canvas drawn at device-pixel resolution (crisp without `image-rendering`), z-index 6. Caught: animation paused, pops up and shrinks away in 0.7 s. Palette in `PAL` (cream `#f3e6cf`, shade `#cdbfa6`, soot `#15110f`, rice `#fffaf0`).
+
+CSS secrets in `style.css`: `.logo img.spin` (360° in `.6s steps(8)`, 5 logo taps) and `#frame.wasabi` (a `.5s steps(6)` wince shake plus a green `rgba(111,220,140,.18)` flash, typed "wasabi").
 
 ### 13.9 Shared CSS tokens (`src/style.css`)
 
@@ -1207,7 +1260,7 @@ Copy them verbatim from the file. Their use is documented with each scene.
 |---|---|
 | `#frame` (canvas + `#ui`) | auto, fixed |
 | header, rail, scroll hint | 5 |
-| toast | 6 |
+| toast, idle drifter | 6 |
 | eggbox | 7 |
 | rotate card | 40 |
 | loader | 50 |
@@ -1240,31 +1293,26 @@ The digit mapping is in §5.1.
 
 | Trigger | Effect | Egg id / text |
 |---|---|---|
-| **Konami**: last 10 `e.key` values = ↑↑↓↓←→←→ `b` `a` (case-sensitive `b`/`a`) | `override.item = "duck"` for **30 s**, `sfx("quack")` | `konami`: "Konami code: every plate is a rubber duck for 30 seconds." |
-| Typing **"omakase"**: rolling buffer of the last 12 lowercase single-char keys | `override.item = "gold"` for **20 s**, `sfx("coin")` | `omakase`: "Omakase: chef's choice. The chef chose gold." |
-| Typing **"sudo"** | `override.item = "maki"` for **15 s**, `sfx("blip")` | `sudo`: "sudo make me a sandwich? This is a sushi bar. Rolling you maki instead." |
-| **Logo taps**: 5 clicks on `.logo`, each within 1.5 s of the previous (timer resets the count) | exactly on the 5th tap | `logo-5`: "jiro.bot was almost called sushi.exe." |
-| **Tab away**: `visibilitychange` hidden | `document.title = "🍣 come back, the rice is getting cold"` | none |
-| **Return to the tab** after more than 3000 ms away | restore the title | `tab-away`: "You came back! Jiro kept your seat warm. The rice, less so." |
-| **Console**: `jiro.hire()` | returns `"🍣 Seat reserved. Real reservations: https://noriagentic.com/"` | `console`: "Found in the console: Jiro reviews stack traces the way others read menus." |
+| **Konami**: last 10 lowercased `e.key` values = ↑↑↓↓←→←→ `b` `a` | `override.item = "duck"` for **30 s**, `sfx("quack")` | `konami`: "Konami code! Every plate is a rubber duck for 30 seconds." |
+| Typing **"omakase"**: rolling buffer of the last 12 lowercase single-char keys | `gold` for **20 s**, `sfx("coin")` | `omakase`: "Omakase. The chef chose gold." |
+| Typing **"wasabi"** | `wasabi` for **12 s**, `sfx("sneeze")`, `#frame.wasabi` wince + green flash | `type-wasabi`: "Too much wasabi. The whole restaurant is crying." |
+| Typing **"jiro"** | `mini-jiro` for **15 s**, `sfx("blip")` | `type-jiro`: "You called? Jiro sent a tiny inspector to every plate." |
+| Typing **"sudo"** | `maki` for **15 s**, `sfx("blip")` | `sudo`: "sudo make me a sandwich? This is a sushi bar. Maki." |
+| **Logo taps**: 5 clicks on `.logo`, each within 1.5 s of the previous | logo image `.spin`, `sfx("chime")` | `logo-5`: "Five taps. jiro.bot was almost called sushi.exe." |
+| **Tab away**: `visibilitychange` hidden | `document.title = "🍣 Your sushi is getting cold"` | none |
+| **Return to the tab** after more than 3000 ms away | restore the title | `tab-away`: "You're back! Jiro kept your seat warm. The rice, less so." |
+| **Idle 60 s** | a drifter crosses the header (§13.8b) | `idle-cloud`, `idle-soot` |
+| **Console**: `jiro.hire()` | returns `"🍣 Seat reserved. Real reservations: https://noriagentic.com/"` | `console`: "Console diver. Jiro reads stack traces like menus." |
+| `jiro.eggs()` / `jiro.menu()` | `"n/t found. Hints: …"` / lists the three commands | none |
 
 How the secrets behave:
 
-- The secrets handler ignores events whose target is inside `input` or `textarea`.
-- **Overrides:** `override.item` swaps the item on **every** plate everywhere, including rested-plate draws that re-read items, because `itemFor` returns the override. Each override clears itself to `null` after its timeout. Overlapping triggers share one variable, so the earliest-ending timer can clear a later override early.
+- The secrets handler ignores events whose target is inside `input`, `textarea` or `[contenteditable]`, and any key with Meta/Ctrl/Alt held.
+- **Overrides:** `takeover(item, ms)` sets `override.item`, which swaps the item on **every** belt plate everywhere (`itemFor` returns the override). One shared timer: a new secret replaces the previous one and restarts the timer.
 - **Konami quirk:** the arrow keys also drive room navigation (§14.1), so entering the code scrolls around.
 - **Logo quirk:** each logo click also runs `goto("bar")`.
 
-**Console banner** on load (three `%c` styles):
-
-```js
-console.log(
-  "%c jiro.bot %c your AI staff engineer, by Nori\n%cPsst, reading the console? Type jiro.hire() for an easter egg.",
-  "font:700 14px monospace;background:#d98a4a;color:#1a0f07;padding:2px 6px",
-  "font:14px monospace;color:#6fdc8c",
-  "font:12px monospace;color:#bfae95",
-);
-```
+**Console banner** on load: a pixel Jiro head drawn with block characters (copper dome, white hachimaki, blue `◉` eyes, grille), then "jiro.bot · your AI staff engineer, by Nori" and "Reading the console at a sushi bar? Respect. Try jiro.menu().", styled with `%c` (copper `#d98a4a`, cream, blue `#5aa9ff`, green `#6fdc8c`, muted). Copy the `console.log` block in `main.ts` verbatim.
 
 ---
 
@@ -1274,9 +1322,10 @@ console.log(
 |---|---|---|
 | `?freeze=<seconds>` | stage.ts | Freezes `now` for all scene, belt, and transition drawing (deterministic frames). Pops and drag animations still use real time. `?t=` is **ignored** since v3 (old shared links carried `?t=<unix time>` and froze the belt). `tools/qa/seg.mjs --t=N` passes `freeze=N` |
 | `?debugplates=1` | belt.ts, drag.ts | Boosts chats, falls and walking legs (§7.5) |
+| `?idle=<seconds>` | chrome.ts | Idle time before a header drifter appears (default 60) |
 | `?p=<vh>` | stage.ts | Fixes the scroll position in viewport heights (e.g. `?p=8.5`). Smoothing is off, and real scrolling is ignored |
 | `?seg=<id>&tt=<0..1>` | stage.ts | Renders segment `id` at local progress `tt`: `p = start + min(0.9999, tt ?? 0.5)·len`. Encode `>` as `%3E` for transitions, e.g. `?seg=bar%3Eoffice&tt=0.5`. An unknown `seg` falls back to `?p`. If `?p` is also missing, the page scrolls normally |
-| `?seg` or `?p` present | index.html, chrome.ts | The loader is removed instantly, and the scroll hint never shows |
+| `?seg` or `?p` present | index.html, chrome.ts | The loader is removed instantly; no scroll hint, rotate card or idle drifters (`?freeze` also disables drifters) |
 | `?mood=<1..10>` | `src/moodboard/viewer.ts` | Initial moodboard version in the pantry (clamped to 1–10). Defaults to 1 |
 | `#<sceneId>` | stage.ts | Deep link: `goto` after 50 ms. The hash is kept in sync while scrolling |
 
@@ -1309,7 +1358,9 @@ For completeness, the engine and chrome own `jiro-eggs`, `jiro-egg-notes`, and `
 |---|---|
 | `jiro-bar-poked` | `scenes/bar.ts` |
 | `jiro-dragged` | `scenes/bar.ts`, the drag-hint once flag |
-| `jiro-best-flappy` | `games/flappy.ts` |
+| `jiro-best-flappy` | `games/flappy.ts` (via `arcade.ts` `bestKey`) |
+
+`sessionStorage["jiro-rotate"]` (chrome.ts) remembers a dismissed rotate card.
 
 ---
 
@@ -1319,12 +1370,12 @@ For completeness, the engine and chrome own `jiro-eggs`, `jiro-egg-notes`, and `
 2. Copy `public/` as-is.
 3. Write `index.html` exactly as described (§2, §13.1).
 4. Write `types.ts` verbatim (§3), then `items.ts` (catalogue verbatim, hashing §7.5), `eggs.ts` (§10), `sfx.ts` (§11), `fx.ts` and `dom.ts` (§12).
-5. Write `belt.ts` with the verbatim `bake`, `platesOn`, and `plateSprite` (§7). Constants: 46, 150, 26, 64, 52, 40/40.
-6. Write `drag.ts` (§8). Constants: 14, 0.55/0.35/0.5, 6 px, 80 ms, 0.8·width, 20-unit sampling, 50/25/25 split.
+5. Write `belt.ts` (§7): copy it verbatim (chain, occupancy, plate life, fillets, pixel tread and plate/bubble/shard/leg sprites are all hash- and pixel-sensitive). Constants: 46, 130, 26, 64, 52, 40/40, `TPX = 3`.
+6. Write `drag.ts` (§8). Constants: 14, 0.6/0.4/0.55, 6 px, 80 ms, 0.8·width, 20-unit sampling, 50/25/25 split, walkers 1/3.
 7. Write `stage.ts` `start()` (§4–§6, §8.1, §8.4, §14.1), with `fit()` verbatim and smoothing 0.18.
 8. Write `chrome.ts` (§13), `style.css` (copy verbatim), and `main.ts` (§4.1, §14.2).
 9. Sanity checks:
    - `window.__segs` matches the table in §5.1 (total 17.85)
-   - the egg counter reads `0/88` in a fresh profile
-   - `?seg=bar&t=0` renders deterministically
-   - plates keep identical spacing and speed across every room boundary
+   - the egg counter reads `0/156` in a fresh profile
+   - `?seg=bar&freeze=0` renders deterministically
+   - `node tools/qa/chain.mjs` prints the gaps in 04-transitions.md and `node tools/qa/align.mjs` shows delta 0 at every join (the same plate continues through every room)
