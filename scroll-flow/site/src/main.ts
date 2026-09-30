@@ -528,6 +528,7 @@ const smoothMouse = new THREE.Vector2();
 const tmpQ = new THREE.Quaternion();
 
 function frame() {
+  (window as any).__jiroFrames = ((window as any).__jiroFrames || 0) + 1;
   const dt = Math.min(clock.getDelta(), 0.05), time = clock.elapsedTime;
   snap();
   s += (target - s) * (1 - Math.exp(-dt * (lastInput ? 6 : 2.6)));

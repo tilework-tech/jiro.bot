@@ -13,6 +13,18 @@
       let supported = false;
       try { supported = !!document.createElement("canvas").getContext("webgl2"); } catch (_) {}
       if (!supported) fallback();
+      // never fail silently: show what broke and offer the plain scene reel
+      const report = (msg) => {
+        if (document.getElementById("boot-error")) return;
+        const d = document.createElement("div"); d.id = "boot-error";
+        d.style.cssText = "position:fixed;inset:auto 24px 24px 24px;z-index:99;background:#2a1a12;color:#f2e7d7;border:1px solid #e0894c;padding:14px 18px;font:14px system-ui,sans-serif";
+        d.innerHTML = "<b>The 3D scene failed to start.</b> <a style='color:#ffc174' href='fallback/'>Open the scene reel instead</a><br><small></small>";
+        d.querySelector("small").textContent = String(msg) + " | " + navigator.userAgent;
+        (document.body || document.documentElement).appendChild(d);
+      };
+      addEventListener("error", (e) => report(e.message || (e.target && e.target.src ? "failed to load " + e.target.src : "error")), true);
+      addEventListener("unhandledrejection", (e) => report(e.reason));
+      setTimeout(() => { if (!window.__jiroFrames) report("no frame rendered after 8s"); }, 8000);
       addEventListener("DOMContentLoaded", () => {
         document.getElementById("gl")?.addEventListener("webglcontextlost", fallback);
       });
