@@ -1,4 +1,4 @@
-/* bar (hero) scene: quiet dark copy column on the left of the video. */
+/* bar (hero) scene: quiet dark copy column on the left of the pixel-art bar. */
 .scene-ui[data-id="bar"] .hero-copy { left: 170px; top: 214px; width: 640px; }
 .scene-ui[data-id="bar"] .hero-copy .kicker { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; font-size: 19px; letter-spacing: .08em; }
 /* The "open" light: a tiny green pixel lamp that breathes (4 s, loops cleanly). */

@@ -12,7 +12,7 @@
 import { BELT_SPEED, PLATE_GAP, type Api, type BeltPath, type BeltPt } from "../../engine/types";
 import { pointAt, pathLength, platesOn, beltTime } from "../../engine/belt";
 import { glow, wave } from "../../engine/fx";
-import { BED_END, BELT_TAIL, EXIT_S, REF_K, SHADOW, TROUGH_BANDS, bar } from "../../scenes/bar";
+import { BELT_TAIL, EXIT_S, FRONT, REF_K, SEAM_DARK, SEAM_HI, SEAM_STEP, SHADOW, TROUGH_BANDS, bar, cellsOf, fillCells } from "../../scenes/bar";
 import { office } from "../../scenes/office";
 
 export const CRAWL_ART = "art/tr/bar-office/crawl.png";
@@ -39,7 +39,7 @@ const Y_INT = yAtX(LANE);
 const T1: [number, number] = [LANE - DIAG[0] * TAN, Y_INT - DIAG[1] * TAN];
 const T2Y = Y_INT + TAN;
 
-/** The hero scale is held down to here (the bar paints its trough to y 1130), then eased to 1. */
+/** The hero scale is held down to here (the bar's belt runs to BED_END = 1140), then eased to 1. */
 const Y_HOLD = 1150;
 const smooth = (t: number) => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); };
 function diag(): BeltPt[] {
@@ -106,7 +106,7 @@ function bend(a: number) {
   return Math.max(0, Math.min(1, (DIAG_A - a) / (DIAG_A - Math.PI / 2)));
 }
 function perp(h: number, k: number, b: number) {
-  return h <= 97 ? h * k : 97 * k + (h - 97) * k * (1 - 0.7 * b);
+  return h <= FRONT ? h * k : FRONT * k + (h - FRONT) * k * (1 - 0.7 * b);
 }
 
 interface S { x: number; y: number; nx: number; ny: number; b: number; k: number; u: number }
@@ -130,7 +130,7 @@ function troughSamples(): S[] {
 const at = (s: S, off: number): [number, number] => [s.x + s.nx * off, s.y + s.ny * off];
 
 let troughCache: HTMLCanvasElement | null = null;
-const TC = { x: -40, y: 1100, w: 1400 };
+const TC = { x: -40, y: 1040, w: 1400 }; // starts over the bottom rows of the bar picture: no seam at its edge
 /** The trough never changes: render shadow + bands once into a world-aligned canvas. */
 function troughCanvas(): HTMLCanvasElement {
   if (troughCache) return troughCache;
@@ -141,9 +141,9 @@ function troughCanvas(): HTMLCanvasElement {
   g.translate(-TC.x, -TC.y);
   // Contact shadow down-right of the trough: the bar's, continued from where the bar cuts it.
   g.save();
-  g.beginPath(); g.rect(TC.x, BED_END, TC.w, Y_SPLIT - BED_END); g.clip();
+  g.beginPath(); g.rect(TC.x, 1080, TC.w, Y_SPLIT - 1080); g.clip(); // the bar paints its own shadow above
   g.fillStyle = SHADOW.color;
-  g.filter = `blur(${SHADOW.blur}px)`;
+  if (SHADOW.blur) g.filter = `blur(${SHADOW.blur}px)`;
   g.beginPath();
   const sh = (s: S, r: number) => { const [x, y] = at(s, perp(r, s.k, s.b)); return [x + SHADOW.dx, y + SHADOW.dy]; };
   ss.forEach((s, i) => { const [x, y] = sh(s, SHADOW.r0); i ? g.lineTo(x, y) : g.moveTo(x, y); });
@@ -160,34 +160,26 @@ function troughCanvas(): HTMLCanvasElement {
   return (troughCache = c);
 }
 
-/** Bar belt ends (and stops painting its streaks) at this world y. */
-const BAR_END_Y = BED_END;
+/** The world trough is drawn from here down (over the bottom rows of the bar picture). */
+const TROUGH_Y0 = TC.y - 40;
 
 export function drawTrough(g: CanvasRenderingContext2D, now: number) {
   const ss = troughSamples();
-  g.save();
   g.drawImage(troughCanvas(), TC.x, TC.y);
-  // Marble streaks: same hash, spacing and offsets as the bar's, keyed by distance along the bar belt.
+  // Slat seams: same spacing, phase and 3 px cells as the bar's, keyed by distance along the bar belt.
   const head = beltTime(now) * BELT_SPEED;
-  const STEP = 23;
   const U = pathLength(beltA);
   const D0 = BELT_TAIL.u;
-  for (let u = ((head - D0) % STEP + STEP) % STEP; u < U; u += STEP) {
+  const cells = new Set<number>();
+  for (let u = ((head - D0) % SEAM_STEP + SEAM_STEP) % SEAM_STEP; u < U; u += SEAM_STEP) {
     const p = pointAt(beltA, u);
-    if (p.y < BAR_END_Y) continue;
-    const k = Math.round((u + D0 - head) / STEP);
-    const h = ((k * 2654435761) >>> 0) / 4294967296;
+    if (p.y < TROUGH_Y0 + 6) continue;
     const s = ss[Math.min(ss.length - 1, Math.round(u / 3))];
-    const off = perp((h - 0.5) * 100, s.k, s.b);
-    const len = Math.round((5 + ((h * 7919) % 1) * 12) * p.s);
-    g.save();
-    g.translate(Math.round(p.x + s.nx * off), Math.round(p.y + s.ny * off));
-    g.rotate(p.a);
-    g.fillStyle = h > 0.45 ? "rgba(214,200,188,.20)" : "rgba(52,42,38,.30)";
-    g.fillRect(-len / 2, -1, len, Math.max(2, Math.round(p.s)));
-    g.restore();
+    const e = perp(78, s.k, s.b);
+    cellsOf(p.x - s.nx * e, p.y - s.ny * e, p.x + s.nx * e, p.y + s.ny * e, cells);
   }
-  g.restore();
+  fillCells(g, cells, SEAM_HI, 1);
+  fillCells(g, cells, SEAM_DARK);
 }
 
 // ---- Crawlspace ----

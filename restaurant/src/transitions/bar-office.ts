@@ -59,6 +59,8 @@ export const barOffice: TransitionDef = {
     if (t <= 0) { api.drawScene("bar", g, now); return; }
     if (t >= T_END) { api.drawScene("office", g, now); return; }
     const c = camAt(t);
+    // Every layer here is pixel art on a 3 px grid: keep it hard-edged under the camera zoom.
+    g.imageSmoothingEnabled = false;
     g.fillStyle = "#090806";
     g.fillRect(0, 0, STAGE_W, STAGE_H);
     g.save();
