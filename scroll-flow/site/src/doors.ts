@@ -12,6 +12,8 @@ const STYLES: DoorStyle[] = ["noren", "shoji", "moon", "hatch", "arch"];
 
 // wall-local units: x across the belt, y up from the belt surface
 interface Opening { l: number; r: number; b: number; t: number }
+// minimum distance from any camera position on a ride to a wall, so a wall never fills the frame
+const WALL_CLEAR = 3.6;
 const PX = 14; // canvas pixels per world unit (chunky pixel art)
 
 interface WallRect { w: number; top: number; bottom: number }
@@ -76,44 +78,58 @@ export interface Door { group: THREE.Group; noren: THREE.Mesh[]; style: DoorStyl
 
 export function buildDoors(scene: THREE.Scene, path: BeltPath, spans: [number, number][], lanternTex: THREE.Texture,
   views: { from: THREE.Vector3; to: THREE.Vector3[] }[],
-  cameraCrossing: (cardIndex: number, p: THREE.Vector3, n: THREE.Vector3) => THREE.Vector3 | null): Door[] {
+  cameraCrossing: (cardIndex: number, p: THREE.Vector3, n: THREE.Vector3) => THREE.Vector3 | null,
+  cameraSamples: (cardIndex: number) => THREE.Vector3[] = () => []): Door[] {
   const doors: Door[] = [];
   for (let i = 0; i < spans.length - 1; i++) {
     const s0 = spans[i][1], s1 = spans[i + 1][0];
     if (s1 - s0 < 10) continue;
-    const sm = (s0 + s1) / 2;
-    const f = path.frameAt(sm);
-    const basis = new THREE.Matrix4().makeBasis(f.b, f.u, f.t).setPosition(f.p);
-    const inv = basis.clone().invert();
     const style = STYLES[doors.length % STYLES.length];
+    const cams = cameraSamples(i);
     // a small doorway just around the belt; the camera glides past the wall's side
     const o: Opening = style === "moon" ? { l: -1.45, r: 1.45, b: -1.25, t: 1.65 } : { l: -1.25, r: 1.25, b: -0.45, t: 2.0 };
     const OPEN_W = o.r - o.l, OPEN_T = o.t, OPEN_B = o.b, OX = 0;
     const cl = new THREE.Vector3(0, 0.3, 0);
-    const size: WallRect[] = [{ w: 8, top: 4.6, bottom: -1.8 }, { w: 6, top: 3.6, bottom: -1.2 }];
-    const cross = cameraCrossing(i, f.p, f.t);
-    let rect: WallRect | null = null;
-    for (const r of size) {
-      const blocked = (a: THREE.Vector3, b: THREE.Vector3) => {
-        const la = a.clone().applyMatrix4(inv), lb = b.clone().applyMatrix4(inv);
-        if (la.z * lb.z > 0) return false;
-        const k = la.z / (la.z - lb.z), x = la.x + (lb.x - la.x) * k, y = la.y + (lb.y - la.y) * k;
-        const inWall = Math.abs(x - OX) < r.w / 2 + 0.6 && y < r.top + 0.6 && y > r.bottom - 0.6;
-        const inHole = Math.abs(x - OX) < OPEN_W / 2 && y > OPEN_B && y < OPEN_T;
-        return inWall && !inHole;
-      };
-      let ok = views.every((v) => v.to.every((t) => !blocked(v.from, t)));
-      if (ok && cross) {
-        const c = cross.clone().applyMatrix4(inv);
-        if (Math.abs(c.x) < r.w / 2 + 3.5 && c.y < r.top + 3 && c.y > r.bottom - 3) ok = false;
+    const size: WallRect[] = [{ w: 8, top: 4.6, bottom: -1.8 }, { w: 6, top: 3.6, bottom: -1.2 }, { w: 5, top: 3.0, bottom: -1.0 }];
+    let placed: { rect: WallRect; basis: THREE.Matrix4; clear: number } | null = null;
+    // slide the wall along the connector and keep the placement the rides clear by the widest margin
+    for (let along = 0.25; along <= 0.751; along += 0.025) {
+      const sm = s0 + (s1 - s0) * along;
+      const f = path.frameAt(sm);
+      const basis = new THREE.Matrix4().makeBasis(f.b, f.u, f.t).setPosition(f.p);
+      const inv = basis.clone().invert();
+      const cross = cameraCrossing(i, f.p, f.t);
+        for (const r of size) {
+        const blocked = (a: THREE.Vector3, b: THREE.Vector3) => {
+          const la = a.clone().applyMatrix4(inv), lb = b.clone().applyMatrix4(inv);
+          if (la.z * lb.z > 0) return false;
+          const k = la.z / (la.z - lb.z), x = la.x + (lb.x - la.x) * k, y = la.y + (lb.y - la.y) * k;
+          const inWall = Math.abs(x - OX) < r.w / 2 + 0.6 && y < r.top + 0.6 && y > r.bottom - 0.6;
+          const inHole = Math.abs(x - OX) < OPEN_W / 2 && y > OPEN_B && y < OPEN_T;
+          return inWall && !inHole;
+        };
+        let ok = views.every((v) => v.to.every((t) => !blocked(v.from, t)));
+        if (ok && cross) {
+          const c = cross.clone().applyMatrix4(inv);
+          if (Math.abs(c.x) < r.w / 2 + 3.5 && c.y < r.top + 3 && c.y > r.bottom - 3) ok = false;
+        }
+        // nothing may fill the frame: every camera position on the ride stays WALL_CLEAR from the wall
+        let clear = Infinity;
+        for (let j = 0; ok && j < cams.length; j++) {
+          const c = cams[j].clone().applyMatrix4(inv);
+          const dx = Math.max(0, Math.abs(c.x - OX) - r.w / 2), dy = Math.max(0, r.bottom - c.y, c.y - r.top);
+          clear = Math.min(clear, Math.hypot(dx, dy, c.z));
+        }
+        if (clear < WALL_CLEAR) ok = false;
+        for (let s = 0; ok && s < path.length - 0.5; s += 0.5) {
+          if (Math.abs(s - sm) < 1) continue;
+          if (blocked(path.frameAt(s).p, path.frameAt(s + 0.5).p)) ok = false;
+        }
+        if (ok && (!placed || clear > placed.clear + 0.25)) placed = { rect: r, basis, clear };
       }
-      for (let s = 0; ok && s < path.length - 0.5; s += 0.5) {
-        if (Math.abs(s - sm) < 1) continue;
-        if (blocked(path.frameAt(s).p, path.frameAt(s + 0.5).p)) ok = false;
-      }
-      if (ok) { rect = r; break; }
     }
-    if (!rect) continue;
+    if (!placed) continue;
+    const { rect, basis } = placed;
     const group = new THREE.Group();
     group.matrixAutoUpdate = false; group.matrix.copy(basis);
     const tex = new THREE.CanvasTexture(paintWall(style, rect, { l: o.l - OX, r: o.r - OX, b: o.b, t: o.t }));

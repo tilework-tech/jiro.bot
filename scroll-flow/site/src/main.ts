@@ -32,12 +32,27 @@ const cards = makeCards();
 interface CardView { card: Card; video: HTMLVideoElement; mat: THREE.MeshBasicMaterial; mesh: THREE.Mesh;
   close?: { video: HTMLVideoElement; mat: THREE.MeshBasicMaterial; mesh: THREE.Mesh; focus: THREE.Vector3; dir: THREE.Vector3; quat: THREE.Quaternion } }
 
+const videoRack = document.createElement("div");
+videoRack.style.cssText = "position:fixed;left:0;top:0;width:2px;height:2px;overflow:hidden;opacity:0.01;pointer-events:none;z-index:-1";
+document.body.appendChild(videoRack);
+// Show the poster until the video has really presented a moving frame. Swapping on `loadeddata`
+// alone left cards black in browsers that report data but never paint a frame (blocked autoplay,
+// Low Power Mode, a stalled decoder).
+function whenPlaying(v: HTMLVideoElement, swap: () => void) {
+  let done = false;
+  const fire = () => { if (!done && v.currentTime > 0 && v.readyState >= 2) { done = true; swap(); } };
+  const rvfc = (v as any).requestVideoFrameCallback?.bind(v);
+  if (rvfc) rvfc(function tick() { fire(); if (!done) rvfc(tick); });
+  v.addEventListener("timeupdate", fire);
+}
 function makeVideo(src: string, eager = false) {
   const v = document.createElement("video");
   // only the hero loads up front; the rest load as the camera approaches (see ensureLoaded)
   v.muted = true; v.loop = true; v.playsInline = true; v.crossOrigin = "anonymous";
   v.preload = eager ? "auto" : "none"; v.dataset.src = src; if (eager) v.src = src;
   v.setAttribute("muted", ""); v.setAttribute("playsinline", "");
+  // Safari only presents frames for videos that are in the document, so park them in a hidden rack
+  videoRack.appendChild(v);
   const tex = new THREE.VideoTexture(v);
   tex.colorSpace = THREE.SRGBColorSpace; tex.minFilter = THREE.LinearFilter; tex.magFilter = THREE.LinearFilter; tex.generateMipmaps = false;
   // poster (first frame of the loop) until the video has data, so a card is never black
@@ -49,7 +64,7 @@ function makeVideo(src: string, eager = false) {
 const views: CardView[] = cards.map((card) => {
   const { v, tex, poster } = makeVideo(card.video, card.id === "s0-hero");
   const mat = new THREE.MeshBasicMaterial({ map: poster, fog: false, toneMapped: false });
-  v.addEventListener("loadeddata", () => { mat.map = tex; mat.needsUpdate = true; }, { once: true });
+  whenPlaying(v, () => { mat.map = tex; mat.needsUpdate = true; });
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(CARD_W, CARD_H), mat);
   mesh.quaternion.copy(card.quat); mesh.position.copy(card.center);
   scene.add(mesh);
@@ -61,7 +76,7 @@ const views: CardView[] = cards.map((card) => {
   if (card.close) {
     const c = makeVideo(card.close.video);
     const cm = new THREE.MeshBasicMaterial({ map: c.poster, fog: false, toneMapped: false, transparent: true, opacity: 0, depthWrite: false });
-    c.v.addEventListener("loadeddata", () => { cm.map = c.tex; cm.needsUpdate = true; }, { once: true });
+    whenPlaying(c.v, () => { cm.map = c.tex; cm.needsUpdate = true; });
     const cmesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), cm);
     const yawQ = new THREE.Quaternion().setFromAxisAngle(card.up, THREE.MathUtils.degToRad(card.close.yaw));
     const quat = yawQ.clone().multiply(card.quat);
@@ -78,6 +93,15 @@ const views: CardView[] = cards.map((card) => {
 
 (window as any).__jiroVideos = views.map((v) => v.video);
 
+// Low Power Mode / autoplay settings can refuse muted autoplay: keep the posters and retry on the first gesture
+let playBlocked = false;
+function onPlayBlocked(e: unknown) {
+  if ((e as DOMException)?.name !== "NotAllowedError" || playBlocked) return;
+  playBlocked = true; (window as any).__diag?.("autoplay-blocked", {});
+  // play() inside the gesture unlocks each element; the frame loop pauses the ones not on screen
+  const retry = () => { playBlocked = false; (window as any).__jiroVideos?.forEach((v: HTMLVideoElement) => v.src && v.play().catch(() => {})); };
+  for (const ev of ["pointerdown", "keydown", "touchstart", "wheel"]) addEventListener(ev, retry, { once: true, passive: true });
+}
 function ensureLoaded(v: HTMLVideoElement) {
   if (v.src) return;
   v.src = v.dataset.src!; v.preload = "auto"; v.load();
@@ -317,7 +341,13 @@ function cameraCrossing(ci: number, planePoint: THREE.Vector3, normal: THREE.Vec
   }
   return null;
 }
-const doors = buildDoors(scene, path, path.cardSpan, lanternTex, doorViews, cameraCrossing);
+// every camera position on every ride, so no wall ends up close enough to fill the frame
+const rideSamples: THREE.Vector3[] = [];
+for (let k = 0; k < N - 1; k++) if (STOPS[k].card !== STOPS[k + 1].card) {
+  const c = transitionCurves(k);
+  for (let j = 0; j <= 120; j++) rideSamples.push(c.pos.getPoint(j / 120));
+}
+const doors = buildDoors(scene, path, path.cardSpan, lanternTex, doorViews, cameraCrossing, () => rideSamples);
 
 // parallax props along every scene-to-scene ride (never inside a landed view)
 buildParallax(scene,
@@ -569,14 +599,14 @@ function frame() {
     if (dmin < 2.2) ensureLoaded(v.video);
     if (v.close && dmin < 1.6) ensureLoaded(v.close.video);
     const want = dmin < 1.05;
-    if (want && v.video.paused) v.video.play().catch(() => {});
+    if (want && v.video.paused && !playBlocked) v.video.play().catch(onPlayBlocked);
     if (!want && !v.video.paused) v.video.pause();
     if (v.close) {
       const kc = STOPS.findIndex((st) => st.card === i && st.close);
       const dc = Math.abs(s - kc);
       v.close.mat.opacity = THREE.MathUtils.smoothstep(1 - dc, 0.35, 0.9);
       v.close.mesh.visible = v.close.mat.opacity > 0.001;
-      if (dc < 1 && v.close.video.paused) v.close.video.play().catch(() => {});
+      if (dc < 1 && v.close.video.paused && !playBlocked) v.close.video.play().catch(onPlayBlocked);
       if (dc >= 1 && !v.close.video.paused) v.close.video.pause();
     }
   });
@@ -621,6 +651,7 @@ if (qs.has("s")) { const v = +qs.get("s")!; s = target = v; landed = Math.round(
     return null;
   },
   eggs: () => [...foundSet],
+  doors: () => doors.map((d) => d.style),
   koi: () => ({ t: koi.t, next: koi.next, vis: koi.mesh.visible, eaten: koi.eaten }),
   jump: () => koi.start(),
 };

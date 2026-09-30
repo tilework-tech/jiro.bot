@@ -141,7 +141,7 @@ e1-pond     pos [12.7,-110,29.2] rot [-6,155,0]   belt [[8.4,0.08],[-8.8,0.08]] 
 - Each connector longer than 10 units gets one free-standing wall at its midpoint, facing along the belt.
 - Styles rotate through noren (3 swaying curtain strips), open shoji, moon window, kitchen hatch with awning, and arch.
 - The opening is about 2.5 × 2.45 units, and 2.9 × 2.9 for the moon window.
-- The wall is 8 × 6.4 units, dropping to 6 × 4.8 if that's too big, and is skipped entirely if it would block a landed view, another stretch of belt, or come within 3.5 units of the camera's path.
+- The wall is 8 × 6.4, 6 × 4.8 or 5 × 4 units. Every size is tried at positions from 25% to 75% along the connector, and the placement that keeps the widest clearance from every camera position on every ride wins. A placement is rejected if it would block a landed view or another stretch of belt, or come within `WALL_CLEAR = 3.6` units of any ride camera (so no wall fills the frame). All six doorways are placed.
 - The texture is canvas pixel art at 14 px per unit: plaster, dark wainscot, posts, and a frame around the opening. The wall has two faces 0.36 apart, dark edge boxes, and a beam, with 4 lanterns beside the opening.
 
 ### 6.5 Parallax (`site/src/parallax.ts`), added in the final round
@@ -154,7 +154,9 @@ e1-pond     pos [12.7,-110,29.2] rot [-6,155,0]   belt [[8.4,0.08],[-8.8,0.08]] 
 ### 6.6 One scene at a time
 - Card brightness = 0.1 + 0.9 × smoothstep(1 − 1.7 × distance to the card's stop).
 - A card's video plays only within ±1.05 stops of it.
-- Videos load lazily within 2.2 stops. Until they load, a poster (`p/<id>.jpg`) is shown.
+- Videos load lazily within 2.2 stops. A card shows its poster (`p/<id>.jpg`) until the video has presented a moving frame (`requestVideoFrameCallback`, or `timeupdate` with `currentTime > 0`), never on `loadeddata` alone. Swapping on `loadeddata` turned cards black in WebKit when the decoder reported data but painted nothing.
+- Video elements sit in a hidden 2 px rack in the document, because Safari only presents frames for videos that are in the DOM.
+- If muted autoplay is refused (Low Power Mode, autoplay settings), the page beacons `autoplay-blocked`, keeps the posters, and calls `play()` on the next pointer, key, touch or wheel gesture.
 
 ## 7. Overlays (`index.html`, `site/src/content.ts`, `site/src/style.css`)
 - Each overlay's opacity is 1 − 3.2 × |s − stop|, and it translates vertically by −70 px × the offset.
@@ -207,7 +209,10 @@ Tools: Python 3.11 venv (pillow, numpy, imageio-ffmpeg, requests), plus `GEMINI_
    - `STATIC="x0,y0,x1,y1;…"` forces regions to stay still. It's used on Jiro wherever Veo morphed his face.
 6. **Seamless loop:** `loop.py` (in memory) or `loop_big.py` (streaming, for 1440p).
    - It drops the duplicated end frame and crossfades the last K frames into the first K. K is usually 20; 24 for the pond.
-   - It prints the seam difference against a typical frame step, and a ratio of 1.2 or less is invisible. Every shipped loop measured 0.3–0.9.
+   - It prints the seam difference against a typical frame step.
+   - `seam_check.py` re-measures shipped files at 160 × 90, so H.264 noise averages out. Most of a loop's raw "seam" is keyframe drift from the encoder, not content. The honest test is: the join is no bigger than the clip's own largest normal frame step.
+   - `reloop_stream.py SRC DST K` (with `CRF` set in the environment) re-cuts an already-encoded clip: it crossfades the last K frames into the first K, uses a fixed 48-frame GOP (`scenecut=0`, closed), and streams frames so 1440p fits in memory. It was used with K=12 and CRF=16 on `s2-serve`, `s4-omakase` and `s7-closing-small`.
+   - Measured at 160 × 90 (join / largest normal step): pond 0.38/1.12, bike 0.25/0.88, FAQ 0.12/0.18, comparison 0.11/0.12, demo 0.13/0.15, hero 0.12/0.27, restaurant 0.28/0.21. The restaurant join is still slightly above its largest step, with the difference spread over the diners.
 7. **Hand-animated parts** (used where Veo couldn't be controlled):
    - `jaw.py`: the hero's copper jaw plate only, dropping up to 7 px in chatty bursts. It moves copper pixels only, below `JAW_TOP`.
    - `faq_anim.py`: the 5 sushi warped in place, anchored at their bases, all on periodic motions (tuna sway, salmon stretch, tamago wiggle, ikura lean, ebi breathe). It adds a blink and lantern flicker, and loops perfectly by construction.
@@ -234,10 +239,17 @@ npm run build && npx vite preview --port 3000  # production build
 ```
 - Headless screenshots need WebGL. The session browser has no GPU, so use Playwright-launched Chrome with `--use-angle=swiftshader --enable-unsafe-swiftshader --no-sandbox --disable-dev-shm-usage`.
 - Then call `window.__jiro.set(stop)` and screenshot.
-- Verified so far: wheel snapping, drag and throw, poke, the demo click-through, koi eating, and FAQ answers. Everything was tested only in software WebGL, never on a real GPU.
+- Verified so far: wheel snapping, drag and throw, poke, the demo click-through, koi eating, and FAQ answers.
+- Martin's Safari 26.5 on an Apple GPU loaded the site on 2026-09-30 at about 57 fps with all videos playing (from the `/__diag` beacon).
+- **Safari's engine on Linux:** Playwright's WebKit build runs without root if its libraries are extracted from `.deb` files:
+  - Download them with `apt-get -o Dir::State::Lists=… -o Dir::Cache=… download <pkg>` and unpack each with `dpkg-deb -x`.
+  - Point `LD_LIBRARY_PATH`, `GST_PLUGIN_SYSTEM_PATH` and `GST_REGISTRY` at the unpacked tree, and set `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=1`.
+  - Append `:${LD_LIBRARY_PATH}` to the `LD_LIBRARY_PATH` line in `minibrowser-wpe/MiniBrowser`.
+  - Use `libopenh264-7` plus `gstreamer1.0-plugins-bad` for H.264; gst-libav needs too many libraries.
+  - In that engine, openh264 reaches `readyState 4` but never advances a frame. That is how the black-card bug above was reproduced; the cards now keep their posters there.
+- The `/__diag` beacon lines land in `/tmp/jiro-access.log` when the site is served with `serve.mjs`.
 
 ## 10. Known issues / next steps
-- On the hero→demo ride, the camera passes close to the noren doorway wall for about 0.1 stop, so the wall briefly fills the frame.
 - Only the FAQ and demo corner scenes hold Jiro fully still. Veo tends to morph his face, so keep using `STATIC` or the hand-animated approach.
 - The comparison table and pricing are draft copy.
 - Page weight is about 70 MB of video. Before launch, re-encode to about 1080p for the side scenes and add AV1/WebM.
