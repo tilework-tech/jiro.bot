@@ -41,4 +41,4 @@ EVT.on('gameover', ({ engine: m }) => {
   EVT.emit('dailyResult', { result });
 });
 
-Shell.init({ canvas: document.getElementById('game'), id: 'daily-' + DAILY.date, make: () => new Maze(DAILY_W, DAILY_H, dailyMode()) });
+Shell.init({ canvas: document.getElementById('game'), id: 'daily-' + DAILY.date, pixelScale: 2, make: () => new Maze(DAILY_W, DAILY_H, dailyMode()) });
