@@ -27,6 +27,8 @@ export interface BeltPath {
   phase?: number;
   /** Items allowed in this scene; default is the global pool. */
   pool?: string[];
+  /** A scene may consume a passenger at a deterministic point on its route. */
+  consumed?: (id: number, now: number) => boolean;
   /** Draw a darkness mask this many px at either end so plates vanish into wall openings. */
   fadeIn?: number;
   fadeOut?: number;

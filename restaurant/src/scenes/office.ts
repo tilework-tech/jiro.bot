@@ -173,10 +173,10 @@ const SOOT = [
 ];
 function soot(g: CanvasRenderingContext2D, now: number, t: number) {
   const { x, y, w, h } = HOLE;
-  if (t < mouseUntil) {
+  if (t < mouseUntil || m(now, 24) < 14) {
     // Out of the opening, bobbing with a grain of rice.
     const bob = m(t * 4, 1) < 0.5 ? 0 : 1;
-    const ox = x - 6, oy = y + h - SOOT.length * PX + 3 - bob;
+    const ox = x - 6 - Math.round((1-Math.cos(Math.min(m(now,24),14)/14*Math.PI*2))*24/3)*3, oy = y + h - SOOT.length * PX + 3 - bob;
     const pal: Record<string, string> = { s: "#171319", w: "#f6f1e6", b: "#120d12" };
     SOOT.forEach((row, j) => [...row].forEach((c, i) => {
       if (c === ".") return;
@@ -335,7 +335,7 @@ export const office: SceneDef = {
     dust(g, now);
   },
   over(g, now) {
-    trays(g, office.belt, now);
+
     glass(g, now);
     shade(g, 0, 0, 1920, 150, 0.45, 150, "top");
   },

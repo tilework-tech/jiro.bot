@@ -3,9 +3,9 @@
 
 .scene-ui[data-id="street"] .st-board {
   position: absolute;
-  left: 250px;
-  top: 84px;
-  width: 610px;
+  left: 1230px;
+  top: 170px;
+  width: 490px;
 }
 
 .scene-ui[data-id="street"] .st-open {
@@ -163,3 +163,5 @@
 @media (prefers-reduced-motion: reduce) {
   .scene-ui[data-id="street"] * { animation: none !important; }
 }
+
+.scene-ui[data-id="street"] .st-title { font-size: 35px; }

@@ -225,7 +225,10 @@ function mice(g: CanvasRenderingContext2D, now: number, api: Api) {
   if (!im.complete || !im.naturalWidth) return;
   const prev = g.imageSmoothingEnabled;
   g.imageSmoothingEnabled = false;
-  g.drawImage(im, MICE.x, MICE.base - MICE_H, MICE.w, MICE_H);
+  // One soot spirit and the candle remain; the other two have gone to bed.
+  const k = MICE.w / 360;
+  g.drawImage(im, 0, 90, 128, 183, MICE.x, MICE.base - MICE_H + 90*k, 128*k, 183*k);
+  g.drawImage(im, 128, 106, 99, 167, MICE.x+128*k, MICE.base-MICE_H+106*k, 99*k, 167*k);
   g.imageSmoothingEnabled = prev;
   // Candle flame flicker.
   const f = 0.5 + 0.5 * wave(now, 1.5) * wave(now, 0.6, 1);
@@ -282,7 +285,7 @@ export function drawBetween(g: CanvasRenderingContext2D, now: number, api: Api, 
   g.save();
   g.beginPath(); g.rect(0, Y_B + JOIST_BOT - 40, 1920, Y_OFF - (Y_B + JOIST_BOT - 40)); g.clip();
   api.drawBelt(g, beltB, now, "office");
-  trays(g, now, Y_B + FLOOR_TOP);
+
   g.restore();
   drawTrough(g, now);
   api.drawBelt(g, beltA, now, "bar");

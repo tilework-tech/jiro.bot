@@ -7,22 +7,21 @@ import { html, place } from "../engine/dom";
 //   "right": { "label": "Jiro", … } }
 //
 // In the dining room (eye level) the two windows hang side by side over the dark
-// back wall, filling everything between the two belt lanes (x 182 .. 1738) and
-// stopping just above the diners' heads at their tables. Click one to enlarge it
+// back wall and seated diners, filling most of the usable stage. Click one to enlarge it
 // (with its stats); click again, the backdrop, or Esc to put it back.
 
 interface Side { label: string; video: string; poster?: string; stats: string[]; verdict?: string }
 interface Spec { task: string; title?: string; left: Side; right: Side }
 
 /** [x, y, width] of each hung window in stage px. */
-export const COMPARE_BOX = { left: [192, 118, 762], right: [976, 118, 762] } as const;
+export const COMPARE_BOX = { left: [120, 210, 828], right: [972, 210, 828] } as const;
 /** [x, y, width] of the enlarged window. */
 export const COMPARE_BIG = [300, 64, 1320] as const;
 
 export function mountCompare(el: HTMLElement, api: Api) {
   const base = import.meta.env.BASE_URL;
   const head = html(el, `
-    <section class="copy compare-head" style="left:${COMPARE_BOX.left[0]}px;top:64px;width:${COMPARE_BOX.right[0] + COMPARE_BOX.right[2] - COMPARE_BOX.left[0]}px">
+    <section class="copy compare-head" style="left:192px;top:112px;width:1548px">
       <h2 class="px">Generic agent vs. Jiro</h2>
       <p class="ticket"></p>
     </section>`);

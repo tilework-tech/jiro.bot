@@ -46,7 +46,7 @@ const BELT: BeltPt[] = [
 ];
 
 /** Height of a hung compare window in stage px (matches the DOM frame; used for the canvas stand-in). */
-export const WIN_H = 532;
+export const WIN_H = 573;
 
 /** A rectangle of the art redrawn shifted by (dx, dy) art pixels while `on`. */
 interface Move { r: [number, number, number, number]; dx: number; dy: number }

@@ -53,3 +53,5 @@
 
 /* Soft dark pool behind the headline so it reads over the lanterns. */
 .scene-ui[data-id="dining"] .compare-head::before { content: ""; position: absolute; inset: -26px -24px -20px -24px; z-index: -1; background: radial-gradient(closest-side, rgba(8,6,5,.72), rgba(8,6,5,.5) 70%, rgba(8,6,5,0)); pointer-events: none; }
+
+.scene-ui[data-id="dining"] .compare-head { flex-wrap: wrap; white-space: normal; gap: 10px 24px; }

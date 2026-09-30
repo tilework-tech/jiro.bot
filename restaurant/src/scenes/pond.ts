@@ -36,6 +36,8 @@ function corner(): BeltPt[] {
 }
 const belt = {
   pts: [[LANE_X, -40, 1], ...corner(), [END_X, BELT_Y, 1]] as BeltPt[],
+  pool: ["tuna", "salmon", "tamago", "maki", "ebi"],
+  consumed: (id: number, now: number) => stolen(id) && catchAge(id, now) >= 0,
   width: 64,
   plate: PLATE,
   fadeIn: 1,
@@ -285,7 +287,7 @@ function leap(g: CanvasRenderingContext2D, api: Api, tc: number) {
 function lob(g: CanvasRenderingContext2D, id: number, ts: number) {
   for (let back = 0; back < 2; back++) {
     const pid = id - back, t = ts + back * P;
-    if (mod(pid, SET) === 0 && t < T_TOP) { const p = toss(LOB, t); drawPlateAt(g, pid, p.x, p.y, -1.1 * t); }
+    if (!stolen(pid) && mod(pid, SET) === 0 && t < T_TOP) { const p = toss(LOB, t); drawPlateAt(g, pid, p.x, p.y, -1.1 * t); }
   }
 }
 
@@ -295,6 +297,7 @@ function tossed(g: CanvasRenderingContext2D, api: Api, id: number, ts: number) {
     const pid = id - back;
     const t = ts + back * P;
     const k = mod(pid, SET);
+    if (stolen(pid)) continue;
     if (k === 0) continue; // the lob is drawn over the koi, see lob()
     const gulp = k >= 2 && k <= 4;
     if (gulp) {
@@ -421,7 +424,7 @@ function drawFin(g: CanvasRenderingContext2D, api: Api, now: number) {
   const dt = Math.min(0.1, (t - lastFrame) / 1000);
   lastFrame = t;
   const idle = (t - lastInput) / 1000;
-  const target = idle > IDLE_AFTER && !api.reducedMotion ? 1 : 0;
+  const target = idle > IDLE_AFTER && mod(idle - IDLE_AFTER, 43) < 12 && !api.reducedMotion ? 1 : 0;
   form += (target - form) * Math.min(1, dt * (target ? 0.7 : 2.5));
   if (form < 0.005) { form = 0; formedFor = 0; finBubble?.classList.remove("on"); return; }
   formedFor = form > 0.92 ? formedFor + dt : 0;
@@ -493,15 +496,6 @@ const DROPS: [number, number, number, number][] = [
   [228, 728, 13.9, 52], [1478, 640, 17.3, 40], [822, 706, 20.6, 50],
 ];
 
-// Small koi that jump now and then: out of the water in a slow arc, and a plop.
-// [x at take-off, water y, direction, t0 in the loop, arc length, arc height, scale]
-const JUMPS: [number, number, number, number, number, number, number][] = [
-  [1262, 712, -1, 5.6, 84, 58, 1],
-  [505, 770, 1, 13.1, 72, 50, 1],
-  [1290, 452, 1, 21.2, 50, 34, 0.8],
-];
-const AIR = 0.95; // seconds in the air
-
 // Pixel fish, built from a formula and sampled at a few angles on a cell grid, so the
 // rotated poses stay crisp (3 px cells). Faces right; flipped for leftward jumps.
 const FISH_POSES = [-0.75, -0.4, 0, 0.4, 0.75];
@@ -541,48 +535,6 @@ function fishPose(ang: number): HTMLCanvasElement {
   }
   fishCache.set(ang, c);
   return c;
-}
-
-function jumps(g: CanvasRenderingContext2D, now: number) {
-  for (const [x0, wy, dir, t0, dist, h, sc] of JUMPS) {
-    const a = since(now, t0);
-    // A faint shiver on the surface just before the take-off.
-    ring(g, x0 - dir * 6, wy + 2, a + 1.3, 1.6, 12 * sc, 1, 0.22);
-    if (a >= 0 && a <= AIR) {
-      const u = a / AIR;
-      const fx = x0 + dir * dist * u, fy = wy - 4 * h * u * (1 - u);
-      const slope = (-4 * h * (1 - 2 * u)) / dist; // dy/dx of the arc (screen, per unit x)
-      const ang = Math.atan(slope);
-      const pose = FISH_POSES.reduce((b, p) => (Math.abs(p - ang) < Math.abs(b - ang) ? p : b), 0);
-      const im = fishPose(pose);
-      const cell = 3 * sc >= 3 ? 3 : 2;
-      const w = im.width * cell;
-      g.save();
-      g.imageSmoothingEnabled = false;
-      g.beginPath(); g.rect(0, 0, 1920, wy + 1); g.clip();
-      g.translate(px3(fx), px3(fy));
-      if (dir < 0) g.scale(-1, 1);
-      g.drawImage(im, -w / 2, -w / 2, w, w);
-      g.restore();
-      // A few drips trail off the tail.
-      g.save();
-      g.fillStyle = "#dceaff";
-      for (let d = 0; d < 3; d++) {
-        const ta = a - 0.12 - d * 0.1;
-        if (ta < 0) continue;
-        const du = ta / AIR;
-        const dx = x0 + dir * dist * du - dir * 14, dy = wy - 4 * h * du * (1 - du) + 260 * (a - ta) * (a - ta) + 6;
-        if (dy > wy) continue;
-        g.globalAlpha = 0.7;
-        g.fillRect(px3(dx), px3(dy), 3, 3);
-      }
-      g.restore();
-    }
-    splash(g, x0, wy, a - 0.02, 0.32 * sc, 2);
-    splash(g, x0 + dir * dist, wy, a - AIR, 0.42 * sc, 5);
-    ring(g, x0, wy + 3, a - 0.05, 3.2, 26 * sc, 1, 0.4);
-    ring(g, x0 + dir * dist, wy + 3, a - AIR - 0.05, 6, 70 * sc, 3, 0.6);
-  }
 }
 
 // Lily pads floating in the dark pond, rocking slowly. [x, y, radius in cells, notch angle, flower, loop phase]
@@ -720,6 +672,50 @@ function petals(g: CanvasRenderingContext2D, now: number) {
   g.restore();
 }
 
+
+// Occasional smaller koi intercepts a real passenger halfway along the pier.
+const MID_X = 1080;
+const stolen = (id: number) => mod(id, 7) === 3;
+function catchAge(id: number, now: number) {
+  const at = pathLength(belt) - (MID_X - END_X);
+  return (beltTime(now)*BELT_SPEED + (pond.belt.phase ?? 0) - id*PLATE_GAP - at)/BELT_SPEED;
+}
+function midCatch(g: CanvasRenderingContext2D, api: Api, now: number) {
+  const at = pathLength(belt) - (MID_X - END_X);
+  const near = Math.floor((beltTime(now)*BELT_SPEED + (pond.belt.phase ?? 0) - at)/PLATE_GAP);
+  for (let id=near-1;id<=near+1;id++) {
+    if (!stolen(id)) continue;
+    const age=catchAge(id,now);
+    if (age < -1.3 || age > 3.5) continue;
+    if (age < 1.3) {
+      const y=BELT_Y-15+90*age*age;
+      const angle=FISH_POSES.reduce((best,a)=>Math.abs(a-age*.7)<Math.abs(best-age*.7)?a:best,0);
+      const pose=fishPose(angle);
+      g.save();g.imageSmoothingEnabled=false;
+      g.drawImage(pose,px3(MID_X-80-age*12),px3(y-51),105,105);
+      g.restore();
+    }
+    ripple(g,MID_X,1008,age+1.1,2.4,10,52,2);
+    splash(g,MID_X-16,1008,age-1.05,.65,3);
+    ripple(g,MID_X-16,1008,age-1.1,3.2,12,65,2);
+  }
+}
+function shadowAt(i: number, now: number): [number,number] {
+  const [x,y]=SHADOWS[i]; const a=now*TAU/48+i*1.8;
+  return [x+Math.sin(a)*100,y+Math.sin(a*2)*18];
+}
+function swimmingShadows(g: CanvasRenderingContext2D, now: number) {
+  g.save();g.fillStyle="#081627";g.globalAlpha=.34;
+  SHADOWS.forEach((_,i)=>{
+    const [x,y]=shadowAt(i,now); const dir=Math.cos(now*TAU/48+i*1.8)>0?1:-1;
+    for(let j=-4;j<=4;j++) {
+      const w=Math.round(Math.sqrt(1-(j/5)**2)*12)*3;
+      g.fillRect(px3(x)-w,px3(y)+j*3,w*2,3);
+    }
+    for(let j=-4;j<=4;j++) g.fillRect(px3(x-dir*42+Math.sin(now*2+i)*3),px3(y)+j*3,(5-Math.abs(j))*3,3);
+  });g.restore();
+}
+
 export const pond: SceneDef = {
   id: "pond",
   room: "Koi pond",
@@ -758,11 +754,11 @@ export const pond: SceneDef = {
     for (const [x, y, t0, r] of DROPS) ring(g, x, y, since(now, t0), 6, r * 1.2, 2, 0.6);
     petals(g, now);
     pads(g, now);
-    jumps(g, now);
+    swimmingShadows(g, now);
 
     // A poked koi shadow blows a few bubbles and wobbles a ripple.
     if (shadowPoke.i >= 0) {
-      const [sx, sy] = SHADOWS[shadowPoke.i];
+      const [sx, sy] = shadowAt(shadowPoke.i, now);
       const a = now - shadowPoke.t0;
       bubbles(g, sx, sy - 6, a, 2.2, 6, 26);
       ripple(g, sx, sy - 2, a - 0.2, 2.6, 8, 40, 2);
@@ -780,7 +776,10 @@ export const pond: SceneDef = {
     // the previous, current and next set so ripples and shadows always finish naturally.
     const lobId = id - mod(id, SET);
     const tauL = ts + mod(id, SET) * P;
-    for (const j of [1, 0, -1]) leap(g, api, tauL - T_TOP + j * CYCLE);
+    for (const j of [1, 0, -1]) {
+      if (!stolen(lobId - j * SET)) leap(g, api, tauL - T_TOP + j * CYCLE);
+    }
+    midCatch(g, api, now);
     lob(g, id, ts);
     updateLog(lobId, tauL);
     // Rubber ducks from the egg: bob, drift, get gulped.
@@ -814,21 +813,20 @@ export const pond: SceneDef = {
       }
     }
 
-    // Fireflies drifting over the garden, one slow loop each.
+    // A loose swarm gathers at irregular intervals, then disperses again.
     g.save();
-    g.fillStyle = "#e9ff9a";
-    const FF: [number, number][] = [[1000, 120], [1160, 60], [1520, 260], [930, 330], [1880, 420], [1600, 700], [1880, 1000], [1290, 600], [560, 470], [980, 520], [240, 620], [700, 560]];
-    FF.forEach(([x0, y0], i) => {
-      const per = LOOP / (1 + (i % 2));
-      const ph = (now / per) * TAU + i * 1.7;
-      const x = x0 + Math.sin(ph) * 26 + Math.sin(ph * 2 + i) * 8;
-      const y = y0 + Math.cos(ph) * 14;
-      const b = 0.5 + 0.5 * wave(now, [4, 6, 8][i % 3], i * 2.3);
-      g.globalAlpha = 0.15 + 0.75 * b * b;
-      g.fillRect(Math.round(x), Math.round(y), 3, 3);
-      g.globalAlpha *= 0.25;
-      g.fillRect(Math.round(x) - 3, Math.round(y) - 3, 9, 9);
-    });
+    for (let i=0;i<42;i++) {
+      const cycle=Math.floor(now/31), local=mod(now,31);
+      const meet=8+hash(cycle,7)*9;
+      const gather=ss(meet,meet+4,local)*(1-ss(meet+8,meet+13,local));
+      const homeX=260+hash(i,2)*1430, homeY=390+hash(i,3)*400;
+      const cx=980+Math.sin(cycle*2.3)*240, cy=580+Math.cos(cycle*1.7)*75;
+      const a=now*.35+i*2.39996;
+      const x=homeX+(cx-homeX)*gather+Math.cos(a)*(16+gather*32);
+      const y=homeY+(cy-homeY)*gather+Math.sin(a*1.3)*(10+gather*15);
+      g.fillStyle="#e9ff9a"; g.globalAlpha=.15+.65*(.5+.5*Math.sin(now*1.7+i))**2;
+      g.fillRect(px3(x),px3(y),3,3);g.globalAlpha*=.13;g.fillRect(px3(x)-3,px3(y)-3,9,9);
+    }
     g.restore();
 
     drawFin(g, api, now);
@@ -842,7 +840,7 @@ export const pond: SceneDef = {
       return true;
     }
     // The painted koi shadows: interns.
-    const si = SHADOWS.findIndex(([sx, sy]) => Math.abs(x - sx) < 50 && Math.abs(y - sy) < 28);
+    const si = SHADOWS.findIndex((_, i) => { const [sx,sy]=shadowAt(i,lastNow); return Math.abs(x-sx)<50 && Math.abs(y-sy)<28; });
     if (si >= 0) {
       shadowPoke = { i: si, t0: lastNow };
       api.sfx("blip");

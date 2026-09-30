@@ -175,3 +175,26 @@ plate, then we return to the neutral eye-level observer view for the kitchen sce
 - Animation minimal, slow, relaxing, seamlessly looped (periods divide `LOOP` = 24 s, or aperiodic).
 - Only touch the files you own. Shared engine files (`engine/*`, `main.ts`, `style.css`, `types.ts`) belong to the lead.
 - Art: `pipeline/gen_still.py` (Gemini image; run with `/tmp/venv/bin/python`, `GEMINI_API_KEY` is set) and `pipeline/gen_veo.py` + `pipeline/loop.py` (Veo loops). ffmpeg: `restaurant/bin/ffmpeg`. Pixel-snap and palette-match generated art to the existing scenes; keep file sizes web-friendly (jpg/webp for backgrounds).
+
+
+# v4 — Recording fidelity and calm belt (2026-09-30)
+
+Overrides v3: scrolling moves only the camera. `beltTime(now)` is wall time;
+there is no scroll boost anywhere. Every room uses the hero charcoal/copper
+trough bands from `scenes/bar/art.json` and the same plate renderer.
+
+- Dining comparison windows extend over diners; readable at the stage's cropped viewport.
+- Street uses `art/street/reference.png`, recreated from Martin's `bike in rain.mov`
+  (Slack F0C5L270FRR), with a black pedal bicycle replacing the motorcycle. Keep
+  the deep central street perspective, lower-left rider, stacked wooden boxes,
+  lanterns, signs, awning, crossing and headlamp. `pedal.png` supplies only the
+  alternate legs patch. Rain, pedal poses, spoke highlights, lanterns and wet-road
+  glints repeat every 24 seconds. Pricing is on the right to leave Jiro visible.
+  This is a reference-based reconstruction, not an exact copy of every source pixel.
+- Pond serves sushi only. Every seventh passenger is caught midway; deterministic
+  consumption also suppresses its later end toss/catch. Other catches remain tied
+  to arrivals. No independent background fish jumps. Shadows swim; fireflies
+  gather and disperse at irregular intervals; FIN also disperses again.
+- Four soot spirits remain across office and crawlspaces (previously eight),
+  including the office wanderer. The kitchen crawlspace has two dust bunnies
+  instead of four, plus the hanging bunny.

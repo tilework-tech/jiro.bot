@@ -1,3 +1,4 @@
+import HERO_ART from "../scenes/bar/art.json";
 import { BELT_SPEED, PLATE_GAP, type BeltPath, type Plate } from "./types";
 import { itemFor, rimFor, itemImg, ITEMS } from "./items";
 
@@ -5,17 +6,8 @@ import { itemFor, rimFor, itemImg, ITEMS } from "./items";
 // Screen distance = u * scale, so plates slow down and shrink with perspective
 // while moving at the same world speed everywhere.
 
-// Belt clock. The belt runs at BELT_SPEED on its own, and scrolling (either way) pushes it further
-// forward, so it never stops or reverses. Everything that moves with the belt reads beltTime().
-let boost = 0;
-/** Belt time in seconds: wall time plus the extra travel added by scrolling. */
-export function beltTime(now: number): number {
-  return now + boost;
-}
-/** Advance the belt by `s` extra seconds of travel (called by the stage while scrolling). */
-export function pushBelt(s: number) {
-  boost += s;
-}
+// One wall-time clock: scrolling moves the camera, never the sushi.
+export function beltTime(now: number): number { return now; }
 
 interface Sample { x: number; y: number; s: number; u: number; nx: number; ny: number; a: number }
 interface Baked { samples: Sample[]; U: number }
@@ -83,110 +75,36 @@ export function pathLength(path: BeltPath): number {
   return bake(path).U;
 }
 
-// Palette: warm charcoal tread with bevelled crescent slats (the classic kaiten
-// chain plates), copper rails with a lit top edge and rivets. Everything is drawn
-// with hard edges and whole-pixel widths so it sits in every room's pixel art.
-const TREAD = "#2a2521";
-const TREAD_LO = "#1f1b18";
-const SLAT_HI = "#443c35";
-const SEAM = "#110e0c";
-const RAIL_OUT = "#24150c";
-const RAIL = "#b8733f";
-const RAIL_HI = "#e9a765";
-const RAIL_LO = "#7a4524";
-const RIVET = "#4a2a16";
-const SEAM_STEP = 26;
-const RIVET_STEP = 78;
-
-function edge(samples: Sample[], side: number, w: number) {
-  return samples.map((p) => [p.x + p.nx * side * (w * p.s) / 2, p.y + p.ny * side * (w * p.s) / 2]);
-}
-
-function strokePts(g: CanvasRenderingContext2D, pts: number[][], dy = 0) {
-  g.beginPath();
-  pts.forEach(([x, y], i) => (i ? g.lineTo(x, y + dy) : g.moveTo(x, y + dy)));
-  g.stroke();
-}
-
+/** The hero's exact charcoal bed, copper rails and dark front fascia, along any path. */
 export function drawTread(g: CanvasRenderingContext2D, path: BeltPath, now: number) {
-  const style = path.style ?? "full";
-  if (style === "none") return;
+  if (path.style === "none") return;
   const { samples, U } = bake(path);
   const w = path.width ?? 64;
-  const L = edge(samples, -1, w), R = edge(samples, 1, w);
-  const Li = edge(samples, -1, w - 14), Ri = edge(samples, 1, w - 14);
-  const prevJoin = g.lineJoin, prevCap = g.lineCap;
-  g.lineJoin = "round"; g.lineCap = "butt";
-  if (style === "full") {
-    // Hard drop shadow under the whole module (one flat tone, offset down).
-    g.fillStyle = "rgba(0,0,0,.38)";
-    g.beginPath();
-    L.forEach(([x, y], i) => (i ? g.lineTo(x, y + 9 * samples[i].s) : g.moveTo(x, y + 9 * samples[i].s)));
-    for (let i = R.length - 1; i >= 0; i--) g.lineTo(R[i][0] + 2 * samples[i].s, R[i][1] + 9 * samples[i].s);
-    g.closePath(); g.fill();
-    // Tread body, darker gutters along both rails.
-    g.fillStyle = TREAD_LO;
-    g.beginPath();
-    L.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y)));
-    for (let i = R.length - 1; i >= 0; i--) g.lineTo(R[i][0], R[i][1]);
-    g.closePath(); g.fill();
-    g.fillStyle = TREAD;
-    g.beginPath();
-    Li.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y)));
-    for (let i = Ri.length - 1; i >= 0; i--) g.lineTo(Ri[i][0], Ri[i][1]);
-    g.closePath(); g.fill();
-  }
-  // Moving crescent slats: identical world spacing and speed everywhere. Each slat is a
-  // dark seam with a 1-step lit bevel just ahead of it, bowed forward in the middle.
-  const off = (beltTime(now) * BELT_SPEED + (path.phase ?? 0)) % SEAM_STEP;
-  const bow = 5;
-  const seams: [number, number, number, number, number, number][] = [];
-  for (let u = off; u < U; u += SEAM_STEP) {
-    const p = pointAt(path, u);
-    const hw = (w * p.s) / 2 - 3;
-    const tx = p.ny, ty = -p.nx; // tangent (direction of travel)
-    const b = bow * p.s;
-    seams.push([p.x - p.nx * hw, p.y - p.ny * hw, p.x + tx * b, p.y + ty * b, p.x + p.nx * hw, p.y + p.ny * hw]);
-  }
-  const seamPass = (col: string, lw: number, shift: number) => {
-    g.strokeStyle = col; g.lineWidth = lw;
-    g.beginPath();
-    for (const [x0, y0, xm, ym, x1, y1] of seams) {
-      // shift along +tangent: approximate with the chord's normal
-      const dx = xm - (x0 + x1) / 2, dy = ym - (y0 + y1) / 2, l = Math.hypot(dx, dy) || 1;
-      const sx = (dx / l) * shift, sy = (dy / l) * shift;
-      g.moveTo(Math.round(x0 + sx), Math.round(y0 + sy));
-      g.lineTo(Math.round(xm + sx), Math.round(ym + sy));
-      g.lineTo(Math.round(x1 + sx), Math.round(y1 + sy));
-    }
-    g.stroke();
+  const snap = (n: number) => Math.round(n / 3) * 3;
+  const side = (p: Sample, r: number) => {
+    // Keep the lit rail on the same physical side while the belt bends.
+    const k = w * p.s / 168;
+    return [snap(p.x + p.nx * r * k), snap(p.y + p.ny * r * k)];
   };
-  seamPass(SLAT_HI, 2, 2);
-  seamPass(SEAM, 2, 0);
-  if (style === "full") {
-    // Rails: dark outline, copper body, darker underside, lit top edge.
-    for (const [pts, col, lw, dy] of [
-      [L, RAIL_OUT, 10, 1], [R, RAIL_OUT, 10, 1],
-      [L, RAIL_LO, 6, 1], [R, RAIL_LO, 6, 1],
-      [L, RAIL, 5, -0.5], [R, RAIL, 5, -0.5],
-      [L, RAIL_HI, 2, -2], [R, RAIL_HI, 2, -2],
-    ] as const) {
-      g.strokeStyle = col; g.lineWidth = lw;
-      strokePts(g, pts as number[][], dy);
-    }
-    // Static rivets along both rails (they belong to the frame, so they don't move).
-    g.fillStyle = RIVET;
-    for (let u = RIVET_STEP / 2; u < U; u += RIVET_STEP) {
-      const p = pointAt(path, u);
-      const hw = (w * p.s) / 2;
-      const r = Math.max(1, Math.round(2 * p.s));
-      for (const side of [-1, 1]) {
-        const x = Math.round(p.x + p.nx * side * hw) - (r >> 1), y = Math.round(p.y + p.ny * side * hw) - (r >> 1);
-        g.fillRect(x, y, r, r);
-      }
+  g.save();
+  for (const [lo, hi, color] of HERO_ART.bands as [number, number, string][]) {
+    g.fillStyle = color;
+    g.beginPath();
+    samples.forEach((p, i) => { const [x,y] = side(p,lo); i ? g.lineTo(x,y) : g.moveTo(x,y); });
+    for (let i=samples.length-1;i>=0;i--) { const [x,y]=side(samples[i],hi); g.lineTo(x,y); }
+    g.closePath(); g.fill();
+  }
+  const head = beltTime(now) * BELT_SPEED + (path.phase ?? 0);
+  for (let u=((head%24)+24)%24;u<U;u+=24) {
+    const p=pointAt(path,u), a=side(p,-72), b=side(p,84);
+    const steps=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/2));
+    for (let i=0;i<=steps;i++) {
+      const x=snap(a[0]+(b[0]-a[0])*i/steps), y=snap(a[1]+(b[1]-a[1])*i/steps);
+      g.fillStyle="#51473f";g.fillRect(x+3,y,3,3);
+      g.fillStyle="#211b19";g.fillRect(x,y,3,3);
     }
   }
-  g.lineJoin = prevJoin; g.lineCap = prevCap;
+  g.restore();
 }
 
 /** Positions of every plate currently on the path. */
@@ -200,6 +118,7 @@ export function platesOn(path: BeltPath, now: number, key: string): Plate[] {
   for (let k = 0, u = first; u <= U; k++, u += PLATE_GAP) {
     const p = pointAt(path, u);
     const id = cycle - k;
+    if (path.consumed?.(id, now)) continue;
     let alpha = 1;
     if (!path.closed) {
       if (u < fi) alpha = u / fi;

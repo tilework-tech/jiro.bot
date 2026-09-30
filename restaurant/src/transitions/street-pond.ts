@@ -44,7 +44,7 @@ const DOWN: BeltPath = {
 const pb = pond.belt;
 const OUT_PTS: BeltPt[] = [[LANE, MOUTH_Y, 1], ...pb.pts.map(([x, y, s]) => [x, y + PY, s ?? 1] as BeltPt)];
 const OUT: BeltPath = {
-  pts: OUT_PTS, width: pb.width, plate: pb.plate, fadeIn: 40, fadeOut: 0,
+  pts: OUT_PTS, width: pb.width, plate: pb.plate, pool: pb.pool, consumed: pb.consumed, fadeIn: 40, fadeOut: 0,
   phase: pathLength({ pts: OUT_PTS.slice(0, 2) }) + (pb.phase ?? 0),
 };
 
