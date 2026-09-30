@@ -2,7 +2,7 @@
 
 These directories freeze distinct website experiences for review and exact reconstruction. They are source snapshots, not production deployments. Keep each demo's code, final media, documentation, and reference captures together.
 
-Open the [four-tab review gallery](showcase/README.md) to click through the saved experiences on one page. Demo3 displays Demo1 with a duplicate notice.
+Open the [three-tab review gallery](showcase/README.md) to click through the distinct saved experiences on one page. Demo3 is omitted because it duplicates Demo1.
 
 | Demo | September 30 review item | Experience | Run from this repository root | Status |
 |---|---:|---|---|---|

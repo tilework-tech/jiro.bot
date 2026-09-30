@@ -50,10 +50,6 @@ createServer((req, res) => {
     req.on("end", () => res.writeHead(204).end());
     return;
   }
-  if (url.pathname === "/demo3" || url.pathname === "/demo3/") {
-    res.writeHead(302, { Location: "/#demo3" }).end();
-    return;
-  }
   if (["/demo1", "/demo2", "/demo4"].includes(url.pathname)) {
     res.writeHead(301, { Location: url.pathname + "/" + url.search }).end();
     return;
