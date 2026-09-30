@@ -70,6 +70,14 @@ function world(g: CanvasRenderingContext2D, t: number, now: number, api: Api) {
     const prev = g.imageSmoothingEnabled;
     g.imageSmoothingEnabled = false;
     g.drawImage(art, 0, BAND_Y, ART.w, ART.h);
+    // Keep the original crisp cutaway. Apply the generated removals only where
+    // the two seated spirits and reduced bunny group differ from that artwork.
+    const cleared = api.img("art/tr/kitchen-storage/cleared.png");
+    if (cleared.complete && cleared.naturalWidth) {
+      for (const [x,y,w,h] of [[264,324,108,156],[436,324,132,164],[716,336,272,176]]) {
+        g.drawImage(cleared,x,y,w,h,x,BAND_Y+y,w,h);
+      }
+    }
     g.imageSmoothingEnabled = prev;
   }
   glow(g, 425, BAND_Y + 280, 150, "rgba(255,190,110,.22)", now, 0.12, 3, 1); // candle

@@ -218,3 +218,18 @@ lantern alley pass to the left. Preserve that movement when changing street art.
   vertical pan over 1.15 viewport heights, retaining belt/plate phase continuity.
 - This is a layered reconstruction from reference frames, not the original video
   with a motorcycle replacement. Shop details and perspective motion are approximate.
+
+# v6 — Restore details from the saved flow (2026-09-30)
+
+Compared every room with `cef2e81`, the last saved revision before the provider
+switch. Keep the same seven rooms, clickable ten-screen product tour, comparison
+recordings, five sushi FAQs, pond finale and Flappy Koi.
+
+- Restore the street's supervising cat, blink, animated bell/high beams, speech
+  bubbles and clickable puddles/shop lights from the earlier implementation.
+  Add back two rain depths and separate wet-road reflection shimmer.
+- Restore the original `kitchen-storage/between.png` pixels. `cleared.png` is used
+  only in the three small areas containing the requested spirit/bunny removals;
+  it must not replace the entire crisp cutaway again.
+- Preserve the later requests: larger comparison windows, hero belt styling,
+  constant wall-time belt speed, fewer spirits and arrival-timed pond catches.
