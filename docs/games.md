@@ -28,3 +28,18 @@ A demo page with both games side by side, played with the mouse only (`public/ga
 - Keyboard is not used, so Space and the arrow keys keep scrolling the page.
 
 `sushi-rush/game.js` and `daily-roll/game.js` only start their own full-page shell when a `#game` canvas exists, so the arcade page can reuse their rules.
+
+### Sushi-counter visual theme
+
+The arcade keeps the simple game shapes, cursor activation and click/point controls.
+Its page uses paper tones, indigo noren panels, bilingual menu labels and a small
+sushi seal. The runner adds static paper lanterns and a wooden counter; the maze
+uses indigo walls with a seigaiha-style wave pattern beside the score area.
+English instructions remain visible.
+
+`arcade/arcade.css` styles the page. `arcade/theme.js` overrides only drawing hooks
+and loads before `arcade.js`. The standalone game pages keep their original art.
+No physics, collision boxes, maze layouts, seeded randomness, scores, input or
+stage timing are changed. The decorations require no images or extra libraries. A small Noto Serif JP
+font subset is bundled for the Japanese labels, with its SIL Open Font License
+in `arcade/FONT-LICENSE.txt`.
