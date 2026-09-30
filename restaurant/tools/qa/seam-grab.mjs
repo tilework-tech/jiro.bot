@@ -3,7 +3,7 @@ import fs from "fs";
 const b = await chromium.launch();
 const pg = await b.newPage({ viewport: { width: 1920, height: 1080 } });
 const grab = async (seg, tt, f) => {
-  await pg.goto(`http://localhost:3000/?seg=${encodeURIComponent(seg)}&tt=${tt}&t=5`, { waitUntil: "networkidle" });
+  await pg.goto(`http://localhost:3000/?seg=${encodeURIComponent(seg)}&tt=${tt}&freeze=5`, { waitUntil: "networkidle" });
   await pg.waitForTimeout(1200);
   const d = await pg.evaluate(() => document.querySelector("#stage").toDataURL("image/png"));
   fs.writeFileSync(f, Buffer.from(d.split(",")[1], "base64"));

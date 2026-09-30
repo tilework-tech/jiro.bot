@@ -4,10 +4,10 @@
 // The cutaway belt ends exactly where the office belt starts, so plates and
 // seams run straight on into the office.
 
-import { BELT_SPEED, PLATE_GAP, type Api, type BeltPath, type BeltPt, type Plate } from "../../engine/types";
-import { drawTread, platesOn, drawPlates, pathLength, pointAt } from "../../engine/belt";
-import { itemFor, rimFor } from "../../engine/items";
+import type { Api, BeltPath, BeltPt, Plate } from "../../engine/types";
+import { drawTread, platesOn, drawPlates, pathLength, pointAt, beltPhase } from "../../engine/belt";
 import { motes } from "../../engine/fx";
+import { sootsBack, sootOnCat, sootKnot, sootsFront, lightFlicker } from "./soot";
 import { bar } from "../../scenes/bar";
 import { office } from "../../scenes/office";
 
@@ -28,7 +28,7 @@ const BRACE_X0 = -1860, BRACE_Y0 = 205, BRACE_K = 0.614, BRACE_END = -770;
 const RIDE = 46;
 const braceY = (x: number) => BRACE_Y0 + (x - BRACE_X0) * BRACE_K;
 const rideY = (x: number) => braceY(x) - RIDE;
-/** Foreground stud: plates swap identity (bar key -> office key) while hidden behind it. */
+/** Foreground stud (decor, closest to the camera; plates pass behind it). */
 export const STUD = { x: -1180, w: 104 };
 /** Plaster section of the office's left wall with the floor-level hatch. */
 const PLASTER = { x: -150, w: 150 };
@@ -64,50 +64,27 @@ function buildPts(): BeltPt[] {
 }
 
 const pts = buildPts();
-const probe: BeltPath = { pts };
-export const U_C = pathLength(probe);
-const officePhase = office.belt.phase ?? 0;
+export const U_C = pathLength({ pts });
 
-/** Cutaway belt; phase makes plate ids and seams identical to the office belt's. */
+// Bar identity: cutaway u = 0 continues the bar belt BAR_TAIL world units before its end
+// (inside the bar's opening, where the bar belt has already faded to half alpha).
+export const BAR_TAIL = 35;
+const U_BAR = pathLength(bar.belt);
+/** World length of belt between the bar belt's end and the office belt's start (TransitionDef.gap). */
+export const GAP = U_C - BAR_TAIL;
+
+/**
+ * Cutaway belt. Its phase is read lazily from the engine's chain (scene phases are written at
+ * start()), so every plate here is the same global plate as in the bar and in the office.
+ */
 export const wallBelt: BeltPath = {
   pts,
   width: office.belt.width ?? 56,
   plate: office.belt.plate ?? 52,
-  phase: officePhase + U_C,
-  pool: office.belt.pool,
+  get phase() { return beltPhase("bar", U_BAR - BAR_TAIL); },
   fadeIn: 60,
   fadeOut: 60,
 };
-
-/** World distance along the cutaway belt where the foreground stud hides plates. */
-function uAtX(x: number): number {
-  let lo = 0, hi = U_C;
-  for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (pointAt(wallBelt, m).x < x) lo = m; else hi = m; }
-  return lo;
-}
-const U_SWAP = uAtX(STUD.x);
-
-// Bar identity: cutaway u = 0 continues the bar belt at (U_bar - BAR_TAIL).
-const BAR_TAIL = 35;
-const U_BAR = pathLength(bar.belt);
-
-function platesInWall(now: number): Plate[] {
-  const plates = platesOn(wallBelt, now, "office");
-  const headB = now * BELT_SPEED + (bar.belt.phase ?? 0);
-  // u per plate from its office id (key "office:<m>"); before the stud it still carries its bar identity.
-  const headC = now * BELT_SPEED + (wallBelt.phase ?? 0);
-  for (const p of plates) {
-    const m = Number(p.key.slice(p.key.lastIndexOf(":") + 1));
-    const uc = headC - m * PLATE_GAP;
-    if (uc < U_SWAP) {
-      const n = Math.round((headB - (U_BAR - BAR_TAIL) - uc) / PLATE_GAP);
-      p.item = itemFor(n, "bar", bar.belt.pool);
-      p.rim = rimFor(n);
-      p.key = `bar:${n}`;
-    }
-  }
-  return plates;
-}
 
 function drip(g: CanvasRenderingContext2D, now: number) {
   // Valve drip: falls every 3 s from the brass valve, splashes on the brace.
@@ -136,18 +113,29 @@ function catFrame(now: number): number {
   return 0;
 }
 
-function cat(g: CanvasRenderingContext2D, now: number, api: Api) {
+/** Cat breath: 0..1 on a slow 4 s cycle (6 breaths per 24 s loop). */
+export const catBreath = (now: number) => 0.5 - 0.5 * Math.cos((now / 4) * Math.PI * 2);
+/** Cat anchor on its beam (world coords) and draw scale. */
+export const CAT = { x: -1752, base: 524, s: 1.6 };
+
+function cat(g: CanvasRenderingContext2D, now: number, api: Api): number {
   const im = api.img(CAT_ART);
-  const base = 524, cx = -1752;
+  const br = catBreath(now);
+  const lift = Math.round(br * 3);
   if (im.complete && im.naturalWidth) {
     const fw = im.naturalWidth / 4, fh = im.naturalHeight;
-    const s = 1.6, w = fw * s, h = fh * s;
+    const { s, x: cx, base } = CAT;
+    const w = Math.round(fw * s), h0 = fh * s;
     const BELLY = 72; // sprite row where the loaf rests on the beam
+    // Breathing: the loaf swells up to 3 px taller above the beam; the belly row stays put.
+    const h = Math.round(h0 + lift * (fh / BELLY));
+    const dy = Math.round(base - BELLY * (h / fh));
     const prev = g.imageSmoothingEnabled;
     g.imageSmoothingEnabled = false;
-    g.drawImage(im, catFrame(now) * fw, 0, fw, fh, Math.round(cx - w / 2), Math.round(base - BELLY * s), Math.round(w), Math.round(h));
+    g.drawImage(im, catFrame(now) * fw, 0, fw, fh, Math.round(cx - w / 2), dy, w, h);
     g.imageSmoothingEnabled = prev;
   }
+  return lift;
 }
 
 /** Little copper brackets bolting the belt onto the brace, and posts where the brace ends. */
@@ -239,18 +227,25 @@ export function drawWall(g: CanvasRenderingContext2D, now: number, api: Api) {
     g.fillStyle = grd;
     g.fillRect(WALL_LEFT, 0, WALL_PAD + 60, 1080);
   } else { g.fillStyle = "#120c09"; g.fillRect(WALL_LEFT, 0, -WALL_LEFT, 1080); }
+  lightFlicker(g, now);
   motes(g, now, -2440, 250, 420, 560, 14);
-  cat(g, now, api);
+  motes(g, now, -560, 300, 420, 520, 8, "rgba(170,190,255,.5)");
+  sootsBack(g, now);
+  const lift = cat(g, now, api);
+  sootOnCat(g, now, lift);
   // Slot darkness behind the belt start.
   g.fillStyle = "#060404";
   g.fillRect(SLOT.x + 22, SLOT.y + 22, SLOT.w - 44, SLOT.h - 36);
   supports(g);
   drawTread(g, wallBelt, now);
-  drawPlates(g, platesInWall(now), wallBelt.plate ?? 52);
+  const plates: Plate[] = platesOn(wallBelt, now);
+  drawPlates(g, plates, wallBelt.plate ?? 52);
   // Slot lip in front of emerging plates.
   g.fillStyle = "#060404";
   g.fillRect(SLOT.x + 22, SLOT.y + 22, 40, SLOT.h - 36);
   drip(g, now);
   foregroundStud(g);
+  sootKnot(g, now);
   plaster(g);
+  sootsFront(g, now, plates);
 }

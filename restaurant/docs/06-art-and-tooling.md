@@ -4,6 +4,9 @@ This document covers how every pixel in `public/` was made and which tools made 
 from scratch. It also covers the Playwright tooling used to capture, record and QA the site. The build ran on
 2026-09-29 on a Nori session machine. Everything that lived outside the git repo on that machine (`/tmp`,
 `.local/pw`, `.local/compare`, `~/.venv-sushi`) was copied into `tools/` before the machine was released.
+V3 (branch `restaurant-belt-v3`, 2026-09-30) added the scripts and assets marked **V3** below; its agents wrote
+their tools straight into `tools/art/*` and `tools/qa/*`, so nothing had to be rescued from `/tmp` this time
+(except the V3 item prompts, recorded verbatim in §8.6).
 
 Paths are relative to `restaurant/` unless stated otherwise. Coordinates are stage pixels on the fixed
 1920×1080 canvas.
@@ -79,8 +82,8 @@ removed (kept because the method is reusable; see the note).
 
 | File | Status | What it does |
 |---|---|---|
-| `seg.mjs` | live | **The key tool.** `node tools/qa/seg.mjs OUT_DIR [--t=5] [--w=1600] [--wait=600] [--url=http://localhost:3000/] seg:tt [seg:tt …]`. Opens `?seg=<seg>&tt=<tt>&t=<t>` at a 16:9 viewport `w` wide, waits `networkidle` + `wait` ms, and writes `OUT_DIR/<seg with > → ->@<tt>.png`. Prints page errors and console errors, or `no errors`. |
-| `shot.mjs` | live | `node shot.mjs BASE OUT p1 p2 …`: screenshots at `?p=<scroll position in viewport heights>&t=5`, 1600×900. |
+| `seg.mjs` | live | **The key tool.** `node tools/qa/seg.mjs OUT_DIR [--t=5] [--debugplates] [--w=1600] [--wait=600] [--url=http://localhost:3000/] seg:tt [seg:tt …]`. Opens `?seg=<seg>&tt=<tt>&freeze=<t>` (plus `&debugplates=1`) at a 16:9 viewport `w` wide, waits `networkidle` + `wait` ms, and writes `OUT_DIR/<seg with > → ->@<tt>.png`. Prints page errors and console errors, or `no errors`. |
+| `shot.mjs` | live | `node shot.mjs BASE OUT p1 p2 …`: screenshots at `?p=<scroll position in viewport heights>&freeze=5`, 1600×900. |
 | `bar-frames.mjs` | live | `node bar-frames.mjs OUT seg tt t1 t2 …`: 1920×1080 frames at several frozen times, with up to 4 retries while the loader (`#loader`) is still up. Useful when a shared dev server keeps hot-reloading. |
 | `pond-seq.mjs` | live | `node pond-seq.mjs OUT t0 t1 step cx cy cw ch`: clipped frame sequence of `pond` over time (used for the koi jump timing). |
 | `st2shot.mjs` | live | `node st2shot.mjs OUT.png seg tt [t]`: 1920 screenshot, and prints the street menu board's bounding boxes. |
@@ -92,6 +95,16 @@ removed (kept because the method is reusable; see the note).
 | `chrome-probe.mjs` | live | `node chrome-probe.mjs WIDTH`: prints scroll/header/frame offsets (used to chase the "page shifted 32 px" screenshot artefact). |
 | `chrome-flow.mjs` | live | Loader → scroll hint → typing `sudo` toast → egg ledger → rail hover → 390×844 portrait card. Writes to `/tmp/polish-chrome/flow/`. |
 | `yardzoom.mjs` | historic | Clipped zooms of the yard scene (the yard was removed in round 2). |
+| `chain.mjs` | live, V3 | Prints the engine's belt chain (`window.__chain`): per scene phase, path length `U`, global offset `off`, `gap` to the next scene. |
+| `align.mjs` | live, V3 | `node align.mjs [seg …]` (default: every transition). Hooks `window.__beltProbe`, lists every path a transition draws with its offset, and checks each join: delta 0 = the same plate continues; delta/130 = slot shift. Run after touching any belt path or `gap`. |
+| `life-scan.mjs` | live, V3 | `node life-scan.mjs SCENE T0 T1 [--debugplates]`: steps time by 0.25 s and prints when plates chat, fall or shatter; use it to pick `--t` values. |
+| `plates.mjs` | live, V3 | `node plates.mjs SCENE T0 T1 STEP [--debugplates]`: per frozen time, the plates on the scene belt (id, item, x, y, bubble, falling). |
+| `legs.mjs` | live, V3 | `node legs.mjs OUT_DIR`: parks two bar plates on the counter with `?debugplates=1` and screenshots them walking. |
+| `_occ_tmp.mjs` | scratch, V3 | Prints `slotOccupied` for ids −150…250 as an `o`/`.` strip (occupancy tuning). |
+| `flappy-test.mjs` | live, V3 | `node flappy-test.mjs OUT W H [seconds]`: opens Flappy Koi (touch context under 900 px), plays with a bot, screenshots, logs errors; blocks HMR. |
+| `pond-t.mjs` | live, V3 | `node pond-t.mjs OUT t1 t2 … [--clip=x,y,w,h]`: pond frames at frozen times. |
+| `pond-list.mjs`, `pond-fate.mjs`, `pond-dbg.mjs`, `pond-verify.mjs` | live, V3 | Read the pond's `window.__pond` hook: list upcoming koi fates (`leap`/`wait`/`miss` with arrival times), shoot frames around the first plate with a given fate (`pond-fate.mjs OUT kind dt…`), dump events, and sweep 10 time windows checking every plate gets exactly one consistent fate. |
+| `pond-click.mjs` | live, V3 | Clicks the pond eggs (koi, lantern, moon, duck in the water) and opens Flappy Koi, printing the egg counter after each. |
 
 ### 2.2 `tools/interact/` — click, drag and game tests
 
@@ -105,20 +118,20 @@ They read toasts from `#toast p` and egg state from `localStorage["jiro-eggs"]`.
 | `dining-drag.mjs` | live | Drags plates onto a table, the counter and the wall in the dining room and logs the toasts. Writes to `/tmp/dindrag/`. |
 | `dining-click.mjs` | historic | Clicks a comparison window and the "diner" egg (the click-to-enlarge was later replaced by click-to-replay). |
 | `kitchen-click.mjs` | live | `node kitchen-click.mjs OUT`: clicks the FAQ sushi, closes with × and Esc, then the kitchen eggs (Plate stack, Swinging doors, Jiro, Knives, Pot). |
-| `st-drag.mjs` | live | Storage: drags onto the crate, barrel and tub; clicks the Stripe tape label; clicks the hose to open Snake. Uses `toClient()` to map stage coords through the canvas rect. |
+| `st-drag.mjs` | partly historic | Storage: drags onto the crate, barrel and tub; clicks the Stripe tape label; the hose click no longer opens Snake (removed in V3; the hose is an egg now). Uses `toClient()` to map stage coords through the canvas rect. |
 | `st-play.mjs` | historic | Whack-a-Bug alignment (forces all moles up). Whack-a-Bug was removed. |
-| `st2drag.mjs` | live | Street: finds a plate on the vertical belt at x=1740 and drops it on the cargo box. |
+| `st2drag.mjs` | partly historic | Street: finds a plate on the vertical belt at x=1740 and drops it where the trike's cargo box was (V3 bicycle scene: re-aim at its surfaces, see 03). |
 | `pond-drag.mjs` | live | Pond: drags a pier plate to the water. |
 | `pond-egg.mjs`, `pond-duck.mjs` | live | Pond eggs (drop a duck in the water and wait for the gulp; moon, lantern, koi). The `jiro` click in `pond-egg.mjs` is historic, since Jiro left the bridge. |
-| `games.mjs` | partly historic | `node games.mjs all|whack|snake|flappy`. Snake and Flappy bots read the game state from `canvas.dataset.s` ("hx,hy,fx,fy,dx,dy" / "state,y,gapY,vy") and steer greedily. **Snake now lives in `storage`, not `yard`** (change `open("yard")` to `open("storage")`). The whack part is historic. |
+| `games.mjs` | partly historic | `node games.mjs all|whack|snake|flappy`. Only `flappy` still applies (Snake removed in V3; the Flappy state format may have changed with the V3 rewrite, prefer `qa/flappy-test.mjs`). Snake and Flappy bots read the game state from `canvas.dataset.s` ("hx,hy,fx,fy,dx,dy" / "state,y,gapY,vy") and steer greedily. **Snake now lives in `storage`, not `yard`** (change `open("yard")` to `open("storage")`). The whack part is historic. |
 | `flappy-bot.mjs` | live | In-page `requestAnimationFrame` Flappy bot (reached 30 posts in 40 s). |
-| `touch.mjs` | live (fix Snake scene) | `hasTouch`/`isMobile` context: taps to flap and swipes Snake. Same `yard`→`storage` caveat. |
+| `touch.mjs` | partly historic | `hasTouch`/`isMobile` context: taps to flap and swipes Snake (Snake removed in V3). |
 | `yardclick.mjs` | historic | Yard eggs and towels. |
 | `aqdrag.mjs`, `fishtest.mjs` | historic | Aquarium stop and the "Fish Frenzy" game (reverted in commit 96a7cc3; code and art are in git history). |
 
 ### 2.3 `tools/moodboard/` — MCP pantry moodboard previews
 
-`mood-all.mjs` shoots all 10 versions (`?seg=pantry&tt=0.5&t=5&mood=N`, waiting 7 s each) to `/tmp/moodqa/`.
+`mood-all.mjs` shoots all 10 versions (`?seg=pantry&tt=0.5&t=5&mood=N`, waiting 7 s each) to `/tmp/moodqa/`. Since V3 `&t=5` is ignored (the clock runs); use `&freeze=5` for identical frames.
 `mood-docs.mjs` writes the same shots as `docs/img/mood-vNN.jpg` (q80). `mood-v01.mjs` … `mood-v10.mjs` are the
 per-version interaction scripts (click recipes, drag tiles, hover rows):
 - `mood-v03.mjs` uses the preview hooks `?v03r=<recipe>&v03t=<ms>`.
@@ -153,6 +166,23 @@ Each is described with its asset in [§8](#8-asset-inventory). Common helpers:
 | `common/export_first_pass.py` | **Reconstructed:** the lead agent's first export of every scene to 1920×1080 q90 (cover-crop to 16:9). It overwrites the final art, so use it only for a from-scratch rebuild. |
 | `common/belt-overlay.py` | `python belt-overlay.py '[[x,y,s],…]' WIDTH`: draws a belt polyline plus its width ticks over `yard_new.png` to trace belt points onto painted belts. Change the input filename for other scenes. |
 | `chrome/og_and_favicons.py` | **Reconstructed:** favicons and `og.jpg` (needs `Silkscreen.ttf`). |
+
+V3 art scripts (all committed, all run with `/tmp/venv/bin/python`; several hard-code the session path
+`/home/sprite/org/workspace/.local/jiro.bot/restaurant`, adjust `ROOT` elsewhere):
+
+| File | Output | What it does |
+|---|---|---|
+| `bar/parts.py` | `public/art/bar/parts.png` + the `PARTS` table in `bar.ts` | Polygon-cuts the bar's moving parts (noren cloth, customers' heads and hands, Jiro's hand and jaw, a toe) from `bar.jpg`, plus clean background patches (`*-bg`) for parts that move off their spot; packs an atlas and prints `name → [sx, sy, w, h, x, y]`. |
+| `kitchen/face.py` | `art/kitchen/jiro-look.png`, `jiro-blink.png`, `jiro-look-blink.png` (88×100 at 1536,330) | Finds the blue eye pixels on kitchen Jiro's faceplate, fills them with faceplate colour and re-stamps them shifted (look) or as closed lids (blink). |
+| `street/eyes.py` | `art/street/blink.png`, `glance.png`, `lookup.png` (74×42 at 1206,404) | Same method on the new `street.jpg`: eyes offset (+4, 0) / (0, −4) or closed; keeps changed pixels only. |
+| `pond/masks.py` | `art/pond/water.png`, `grass.png` (1920×1080 alpha masks) | Art-grid-aligned masks (from `cells.py`) of open water and grass/reeds, so the pond's ripples and wind stay inside them. |
+| `office-dining/extract.py` | `art/tr/office-dining/wall-empty.jpg` + `gold1/2`, `koi1/2`, `minnow1/2`, `puffer`, `weed0–3.png` | Cuts the fish, bubbles and weeds out of the aquarium wall art as RGBA sprites and harmonic-inpaints the holes, so the aquarium can be animated in code; prints sprite metadata JSON. |
+| `items/extract_v3.py` | 20 `public/items/*.png` | Cuts the five V3 2×2 magenta sheets (§8.6): `comps.fg_mask` key, keep components ≥ 0.2 % of the largest (keeps zzz, sweat, smoke, flags), `fix_fringe`, crop, NEAREST to max side 160, hard alpha. |
+| `transitions/ks-f-build.py` (rewritten) + `ks-f-base.jpg` | `art/tr/office-dining/wall-empty.jpg` | 1436×1248 | 298,424 | **V3.** `wall.jpg` with the fish, bubbles and weeds inpainted out; the aquarium life is drawn from sprites. | **P** `tools/art/office-dining/extract.py` |
+| `art/tr/office-dining/{gold1,gold2,koi1,koi2,minnow1,minnow2,puffer,weed0..3}.png` | 84×41 … 233×256 | 7.7–89 KB | **V3.** Aquarium sprites cut from `wall.jpg`. | **P** same script |
+| `art/tr/kitchen-storage-f/world.jpg` | Rebuilds the kitchen→storage world from the committed corridor painting `ks-f-base.jpg` (a copy of the shipped world) when `/tmp/ks-f/gen2.png` is gone, pasting the current kitchen and storage art; `--check` only reports drift. |
+
+`tools/art/items/__pycache__/*.pyc` was committed by accident in V3; it can be deleted.
 
 "Reconstructed" means the code was run inline (`python -c` / heredoc) on the original machine. It is copied
 verbatim from the build transcript, with only path handling added.
@@ -346,7 +376,7 @@ to 1920×1080. `bar` and `pond` were not generated here; they came from `scroll-
 
 ## 8. Asset inventory
 
-All 139 files under `public/`, as of commit `a6cda8c`. The "Made" column uses these tags:
+All files under `public/` as of commit `a6cda8c` (139), with the V3 changes (`f2abe2f`, `a5da57a`, `ca3138c`) folded in and marked **V3**. The "Made" column uses these tags:
 **G** = Gemini-generated; **E** = Gemini edit of existing art plus paste-back; **P** = PIL/numpy (cut, key,
 compose, paint); **C** = Playwright capture; **S** = copied from the `scroll-flow` take (branch
 `origin/scroll-flow-3d`, restore with `git checkout origin/scroll-flow-3d -- scroll-flow`); **code** = hand-written.
@@ -364,7 +394,8 @@ kitchen→storage candidates, sushi-cam POV art, whack-a-bug sprites, mice and t
 | `art/dining.jpg` | 277,953 | Dining room at night: dark calm plaster wall upper-left, ~26 small diners at low tables, kitchen swinging doors with brass portholes on the right (≈1335–1620 × 205–550), honey-wood post at the left edge, one empty counter slot at y≈770–880 for the code belt. | **G**: the polish pass **regenerated** it from the old art as sole reference with `tools/art/dining/prompt1.txt`, 2 variants, `v2.png` picked, downscaled and saved. The round-2 "darker room" is **code**, not art: `dining.ts` `under()` applies a 0.55 saturation pass and a dim gradient (0.66→0.42 above the ledge at y 768, 0.34 below). `tools/art/dining/din_patch*.py` are the code-patch scripts that installed it (they edit `src/scenes/dining.ts`, not pixels). |
 | `art/kitchen.jpg` | 354,674 | Kitchen: Jiro on the right behind the counter, rice tub centre-left, knives, pot, pass shelf. Both swinging half-doors at the counter's left end stand open with dining glow behind (door box x 480–800, y 180–640). Front ledge cleared for the FAQ sushi. Dark tiled left wall for the title. | **G→E→E**: first pass `kitchen`. Polish **E** (`edit1/2.png`, "Same image … only change: …") added the swinging half-doors the belt emerges from and cleared the condiments off the front ledge. Round-2 **E** (commit a6cda8c): doors opened via a crop edit at `AR=3:4` (`gen3`) and a paste-back with `quality="keep"` (§4). |
 | `art/storage.jpg` | 380,894 | Cellar storage room: shelves, sake barrels, jars, bulb and light cone, doorway top-left (belt starts at 262,357), belt diagonal to the bottom edge x≈1776. Floor: stack of tied rice sacks, two crates, coiled green hose (the Snake trigger). Jiro stands arms crossed. Right side and top shaded. | **G→E→P→E**: first pass `storage`. Polish: `e1_nosacks` (**E**, remove the 8 sacks), `e2b` (**E**, Jiro arms crossed), then `tools/art/storage/compose.py` shaded the right side and top and composited a 3×3 grid of open sacks from the magenta sprite `e3_sack` (`sack.py`). Round 2 (ed80e55): the floor below the belt's front face (x < 1180) was regenerated (**E** "Same image … only change: …" → `gen1/2`) and blended with `belt-strip-comp.py`, replacing the open sacks with tied sacks, crates and a hose. The belt, doorway, exit and top/left strips keep their pixels. The polish agent overwrote the original without a backup; the fb79069 and 32eac88 versions are in git. |
-| `art/street.jpg` | 492,619 | Rainy neon Tokyo side street: pink/cyan neon, RAMEN sign, lit shop, pedestrians with umbrellas. Jiro on a delivery trike (lower right, closed wooden cargo box with copper trim). A steel belt backing strip x 1700–1780 full height with 8 brackets. Dark wet left wall for the pricing board. | **G→E→P→E→P**: first pass `street`. Polish: **E** `tray1.png` (the sushi tub became an empty oval tray, ellipse-masked paste). `tools/art/street/compose.py` painted a wooden well and copper hub inside the code loop, saved as `street.v1.png` → q88. Round 2 (ed80e55): **E** `street-e1` (loop removed, closed cargo box) pasted at (1368,548,1722,868), plus the painted steel backing and brackets for the vertical belt at `BELT_X`=1740, q93 (`round2_cargo_and_belt.py`). |
+| `art/street.jpg` | 467,806 | **V3.** Rainy neon night street at a red light: Jiro on an upright city delivery bicycle (front basket, okamochi box on the rear rack, right foot down), RAMEN/SUSHI neon, traffic light on the pole arm, a cat under a wagasa on a doorstep, steel belt backing on the utility pole at x≈1700–1790, dark shuttered wall on the left for the pricing board. Coordinates in 03. | **G** (V3 wave 1). The generation prompt was not recorded; regenerate from Martin's night-street motorcycle reference mood with `bar.jpg`/`street-trike.jpg` as style refs and repaint the pole backing at `BELT_X`=1740. |
+| `art/street-trike.jpg` | 492,619 | The PR #6 street (Jiro on the delivery trike). **Unused**, kept for reference. | as the PR #6 `street.jpg`: **G→E→P→E→P**: first pass `street`. Polish: **E** `tray1.png` (the sushi tub became an empty oval tray, ellipse-masked paste). `tools/art/street/compose.py` painted a wooden well and copper hub inside the code loop, saved as `street.v1.png` → q88. Round 2 (ed80e55): **E** `street-e1` (loop removed, closed cargo box) pasted at (1368,548,1722,868), plus the painted steel backing and brackets for the vertical belt at `BELT_X`=1740, q93 (`round2_cargo_and_belt.py`). |
 | `art/pond.jpg` | 391,921 | Moonlit koi pond garden, pier from the right edge at y≈530 (deck 495–600), lanterns, lily pads, arched bridge top right (now empty), moon reflection. | **S→E→E**: `art/src/pond.png` from scroll-flow `art/endings/` (commit 282b72a "koi + train endings"), cover-cropped. Polish **E**: "Jiro without apron" (only the bridge-Jiro area pasted back). Round 2 **E**: Jiro removed from the bridge, `(1560,0,1730,285)` pasted, q93 (`remove_bridge_jiro.py`). |
 | `art/yard.jpg` | 334,133 | Night back yard: wash tub, plate stacks, laundry line with pegs (towels drawn in code), sleeping ginger cat, Jiro wiping a plate, belt curving up the fence. | **G→E→P**, **orphaned**: first pass `yard`, two polish **E** edits (`edit1..4`, see prompts) plus hand darkening. The yard scene was cut in round 2 (commit 762b735, "drop yard and cat transitions"), so no code references this file. Kept for reuse. |
 
@@ -377,7 +408,8 @@ reuses `storage` (`...storage`) with the same canvas frame, so it has no art of 
 |---|---|---|---|---|
 | `art/bar/jiro-blink.png` | 66×37 | 2,925 | Jiro's closed eyes (lids plus a cyan under-glow line), drawn over the bar art at (936,244). | **P**: `tools/art/bar/blink.py` (per-row faceplate colour from a ring around each eye, lid line (22,30,44)/(80,160,185)). Then `chop.py` flattened the lids to one face colour sampled at (968,264). |
 | `art/bar/chop.png` | 74×86 | 14,089 | The far-right regular's chopstick hand, cut out, which bobs 3 px. | **P**: polygon cut from the bar art at (1540,612) (`chop.py`). |
-| `art/bar/chop-mid.png` | 74×54 | 9,189 | The middle regular's chopsticks, bob 3 px. | **P**: polygon cut at (806,622) (`chop2.py`). |
+| `art/bar/chop-mid.png` | 74×54 | 9,189 | The middle regular's chopsticks. **Unused since V3** (replaced by `parts.png`). | **P**: polygon cut at (806,622) (`chop2.py`). |
+| `art/bar/parts.png` | 1024×466 | 480,975 | **V3.** Atlas of the bar's moving parts plus clean background patches (see `PARTS` in `bar.ts`). | **P** `tools/art/bar/parts.py` |
 | `art/office/hand-l.png` | 31×24 | 2,171 | Jiro's left typing hand (RGB, no alpha). | **P**: plain crop `(1625,811,1656,835)` of the composed office (`tools/art/office/hands.py`). |
 | `art/office/hand-r.png` | 34×26 | 2,448 | Right typing hand. | **P**: crop `(1656,795,1690,821)`. |
 | `art/kitchen/faq-tuna.png` | 320×128 | 28,258 | 2-frame sheet (open / blinking) of the tuna nigiri with a baked face (curious). One of 8 FAQ question sushi. | **P**: `tools/art/kitchen/faces.py` draws pixel faces (eyes, mouth, blush, sweat drop) on `public/items/<name>.png` and writes a `[normal \| closed-eyes]` sheet. |
@@ -388,10 +420,14 @@ reuses `storage` (`...storage`) with the same canvas frame, so it has no art of 
 | `art/kitchen/faq-maki.png` | 320×133 | 31,570 | Maki, curious (white ink). | **P** `faces.py` |
 | `art/kitchen/faq-onigiri-happy.png` | 320×160 | 32,746 | Happy onigiri (already has a face; both frames identical). | **P** `faces.py` |
 | `art/kitchen/faq-onigiri-sleepy.png` | 320×160 | 32,089 | Sleepy onigiri (both frames identical). | **P** `faces.py` |
-| `art/kitchen/jiro-blink.png` | 88×100 | 989 | Kitchen Jiro's closed eyes, drawn at (1536,330). | **P**: `tools/art/kitchen/jiro_blink_talk.py`, lids interpolated from the faceplate left and right of each eye, plus a 2 px line (40,26,24). |
+| `art/kitchen/jiro-blink.png` | 88×100 | 14,943 | **V3 rebuilt.** Kitchen Jiro's closed eyes, drawn at (1536,330). | **P** `tools/art/kitchen/face.py` (the PR #6 version came from `jiro_blink_talk.py`). |
+| `art/kitchen/jiro-look.png`, `jiro-look-blink.png` | 88×100 | 16,728 / 14,937 | **V3.** Eyes glancing aside, open / closed. | **P** `face.py` |
 | `art/kitchen/jiro-talk.png` | 88×100 | 238 | Lit speaker-grille pixels (140,235,255), flickered while Jiro answers. | **P**: same script, dark grille pixels in (1572–1602, 405–421). |
-| `art/street/blink.png` | 70×36 | 326 | Street Jiro's closed eyes, drawn at (1196,408). | **P**: `tools/art/street/sprites.py`, cyan eye pixels → lid (44,52,62) with a (90,210,225) centre line and a 1 px (34,40,48) outline. |
-| `art/street/r-off.png` | 54×88 | 434 | The "R" of the RAMEN neon switched off (plum (112,52,96)), sputters twice per loop. | **P**: pink pixels of box (893,78,947,166) in `street.v1.png`. |
+| `art/street/blink.png` | 74×42 | 3,650 | **V3.** Bicycle Jiro's closed eyes, drawn at (1206,404) + head offset. | **P** `tools/art/street/eyes.py` |
+| `art/street/glance.png`, `lookup.png` | 74×42 | 6,263 / 6,151 | **V3.** Eyes 4 px right (glance at the box) / 4 px up (look into the rain). | **P** `eyes.py` |
+| `art/street/cat.png`, `cat-blink.png` | 64×80 | 7,697 / 7,571 | **V3.** Small cat under a wagasa umbrella on the doorstep, eyes open / shut, at (800,664). | cut from the V3 street art (method not recorded) |
+| `art/street/r-off.png` | 54×88 | 434 | The "R" of the RAMEN neon switched off (plum (112,52,96)), sputters twice per loop. | **P**: pink pixels of box (893,78,947,166) in `street.v1.png` (still lines up with the V3 art). |
+| `art/pond/water.png`, `grass.png` | 1920×1080 | 13,066 / 12,887 | **V3.** Alpha masks for the pond's ripples and wind. | **P** `tools/art/pond/masks.py` |
 
 ### 8.3 Transition art `public/art/tr/**`
 
@@ -401,14 +437,14 @@ reuses `storage` (`...storage`) with the same canvas frame, so it has no art of 
 | `art/tr/bar-office/cat.png` | 480×118 | 19,545 | A fat bored ginger tabby, loaf pose on the beam; 4 frames of 120×118 (open, blink, tail flick, ear twitch). Drawn at 1.6× near world (−1752,524). Timing: blink every 8 s, tail at 4 s (×2) and 13 s, ear at 19.5 s. | **G+P**: `AR=1:1 SIZE=1K` ×3 on magenta with `wall.jpg` as reference; blink via a second **E** pass ("Edit this exact image … ONLY change: both eyes are fully closed"). Keyed with `tools/art/cat/key.py`; frames built with `cat/frames.py` (grade 0.82 colour / 0.78 brightness, tail shear, ear shift). Replaced `mice.png` in a6cda8c. |
 | `art/tr/office-dining/wall.jpg` | 1436×1248 | 268,827 | The wall between office and dining in cutaway, with a built-in staff aquarium the belt crosses in a glass tube (koi, goldfish, pufferfish, plaque "STAFF AQUARIUM, not on the menu"). | **G**: `AR=3:2` "Side-view dollhouse CUTAWAY cross-section of the thick interior …" (`/tmp/office-dining/gen/strip1.png`), cropped. Unchanged since bdab3d1 (blob `1f1eb17`); removed and restored by the aquarium revert. |
 | `art/tr/kitchen-storage-f/world.jpg` | 4460×1966 | 1,180,604 | One continuous back-of-house painting: kitchen at (0,0), corridor with crates, sacks and a mop bucket, then the storage room at (2470,846) scaled 1.035. The camera pans across it (transition F). | **G+P**: guide `tools/art/transitions/ks-f-comp.py` (kitchen plus storage on grey at half scale, belt drawn), then `AR=21:9 SIZE=4K` ×2 (`gen1/2`, 6336 px wide, "$P" in prompts). `ks-f-match2.py` found the exact kitchen and storage offset and scale by normalised cross-correlation (storage: 2470, 846, ×1.035). **E** `void-out.png` repainted the flat dark void below the corridor ("Repaint ONLY the large flat, featureless dark purple-black area …"). `ks-f-build.py` resizes gen2 to 4458 wide, pixelates it (1/4 BOX → 96-colour MEDIANCUT, no dither → NEAREST ×4), pastes the void repaint under a lum<34 mask, mirrors a 50-px band to extend the bottom, then pastes the **real** `kitchen.jpg` (feathered 40 px right and bottom) and `storage.jpg` (feathered left and top), q90. **Re-run `ks-f-build.py` whenever kitchen or storage art changes.** |
-| `art/tr/storage-street/shaft.jpg` | 2048×760 | 293,081 | Cutaway band between the storage floor and the street: floor joists, stone foundation, wet wall, wires, the steel chute on the pole. It sits at world (0,900). | **G**: outpaint, `AR=4:5`, "Outpaint this image: keep the top picture (a warm lamplit wooden storage room seen from above) and the bottom picture (a rainy neon night street) exactly as they are, …" (`ss-bg1/2`), cropped to the band. |
-| `art/tr/street-pond/garden.jpg` | 2395×1673 | 764,189 | Backdrop between street and pond: dark tiled roof cap, cracked moonlit plaster wall with ivy and one wall lantern, the round moon gate (rainy street visible through it), gravel lane down past bamboo and the bridge to the pier, pond with lanterns and lily pads (it continues into the pond frame). No cat. Painted for pond offset PX = −351; the pond frame sits at (PX, 1665). | **G→E→P**: outpaint `AR=1:1 SIZE=2K` from both scenes ("OUTPAINTING TASK. The first image is a layout canvas …"). Round-1 fix **E** (`AR=21:9`, variants a/b on a crop, **b** used) textured the blank wall (it also added a black cat on the cap); `tools/art/garden/comp.py` blended it over rows 380–425, darkened the plaster, darkened the top pavement strip and restored the gate interior. Round 2 (ed80e55) re-fit the backdrop for the vertical street belt and removed the cat ("cut both cat scenes"). |
+| `art/tr/storage-street/shaft.jpg` | 2112×760 | 313,227 | Cutaway band between the storage floor and the street: floor joists, stone foundation, wet wall, wires, the steel chute on the pole. It sits at world (0,900). **V3:** repainted and widened (was 2048×760; see 04). | **G**: outpaint, `AR=4:5`, "Outpaint this image: keep the top picture (a warm lamplit wooden storage room seen from above) and the bottom picture (a rainy neon night street) exactly as they are, …" (`ss-bg1/2`), cropped to the band. |
+| `art/tr/street-pond/garden.jpg` | 2395×1673 | 741,507 | **V3:** repainted for the bicycle street (see 04). Backdrop between street and pond: dark tiled roof cap, cracked moonlit plaster wall with ivy and one wall lantern, the round moon gate (rainy street visible through it), gravel lane down past bamboo and the bridge to the pier, pond with lanterns and lily pads (it continues into the pond frame). No cat. Painted for pond offset PX = −351; the pond frame sits at (PX, 1665). | **G→E→P**: outpaint `AR=1:1 SIZE=2K` from both scenes ("OUTPAINTING TASK. The first image is a layout canvas …"). Round-1 fix **E** (`AR=21:9`, variants a/b on a crop, **b** used) textured the blank wall (it also added a black cat on the cap); `tools/art/garden/comp.py` blended it over rows 380–425, darkened the plaster, darkened the top pavement strip and restored the gate interior. Round 2 (ed80e55) re-fit the backdrop for the vertical street belt and removed the cat ("cut both cat scenes"). |
 
 ### 8.4 Pond ending koi `public/end/`
 
 | File | Size | Bytes | Depicts | How it was made |
 |---|---|---|---|---|
-| `end/koi.png` | 330×456 | 200,797 | Giant kohaku koi leaping, mouth open (scroll-flow ending sprite). Now only the Flappy Koi fallback. | **S**: copied from `scroll-flow/site/public/end/koi.png` (cut from `art/endings/koi-sprite.png`). |
+| `end/koi.png` | 330×456 | 200,797 | Giant kohaku koi leaping, mouth open (scroll-flow ending sprite). **Unused since V3** (Flappy Koi draws its koi in code). | **S**: copied from `scroll-flow/site/public/end/koi.png` (cut from `art/endings/koi-sprite.png`). |
 | `end/koi-rise.png` | 169×264 | 63,988 | Koi breaching, mouth open. Anchor (mx 155, my 86) in `pond.ts`. | **G+P**: one `AR=16:9 SIZE=2K` sheet "Sprite sheet of ONE big orange-and-white kohaku koi carp, the exact …" on magenta, split by `tools/art/pond/key_koi_sheet.py` (×0.27) into `koi_f0..3`, renamed. |
 | `end/koi-rise2.png` | 173×264 | 61,182 | Rising, second frame. | same |
 | `end/koi-gulp.png` | 178×264 | 59,808 | Cheeks full, eyes shut. | same |
@@ -418,14 +454,9 @@ reuses `storage` (`...storage`) with the same canvas frame, so it has no art of 
 
 | File | Size | Bytes | Depicts | How it was made |
 |---|---|---|---|---|
-| `games/koi-a.png` | 160×123 | 29,671 | Flappy Koi: small chubby koi facing right, fins up (flap A). | **G+P**: 2×2 sheet "A 2x2 sprite sheet of a small chubby cute koi fish in side view facing RIGHT …" `AR=1:1`; `tools/art/games/key_quads.py` quadrants → 160 px. |
-| `games/koi-b.png` | 160×123 | 29,327 | Flap B. | same |
-| `games/koi-gulp.png` | 160×124 | 35,088 | Gulp (ate sushi). | same |
-| `games/koi-dizzy.png` | 132×160 | 37,366 | Dizzy (game over). | same |
 | `games/pond-bg.png` | 480×267 | 124,749 | Flappy background: indigo night sky, moon upper right, pines, stone lantern, water. | **G+P**: `AR=16:9` "Side-view game background for a Flappy Bird style game at a Japanese koi pond at night …", LANCZOS to 480 wide. |
 
-The whack-a-bug sprites (`bug-a/b/gold/dizzy`, `mallet`, `bonk-star`, `dizzy`) and the Snake `lawn.png` were made
-the same way and deleted in ed80e55. Snake draws a wooden-floor board in code now.
+`games/koi-{a,b,gulp,dizzy}.png` (Flappy koi frames, **G+P** 2×2 sheet "A 2x2 sprite sheet of a small chubby cute koi fish in side view facing RIGHT …", `tools/art/games/key_quads.py`) were deleted in V3 (`ca3138c`): the rewritten Flappy Koi draws its koi, sushi and digits as pixel maps in `flappy.ts`, and only crops `pond-bg.png`. The whack-a-bug sprites (`bug-a/b/gold/dizzy`, `mallet`, `bonk-star`, `dizzy`) and the Snake `lawn.png` were made the same way and deleted in ed80e55. Hose Snake itself (`src/games/snake.ts`) was deleted in V3 (`f2abe2f`).
 
 ### 8.6 Belt items `public/items/` (transparent PNG, max side 160)
 
@@ -473,7 +504,7 @@ the pink fringe to (27,18,16) and hard-thresholded alpha, and the gold nigiri's 
 scroll-flow `items-sheet.png` as style reference (prompts `$BASE$S1`, `$BASE$S2` and `sheetC`, verbatim in
 `tools/prompts/gemini-calls.md`). `tools/art/items/extract.py` cut them with fixed boxes → largest connected
 component → fringe fix → NEAREST to 160. Some sheet slots (penguin, whale, hedgehog, shiba) were not used; the
-corgi, snail and goose came from sheet C. All have `absurd: true, animal: true, weight 0.5`.
+corgi, snail and goose came from sheet C. All have `absurd: true, animal: true`; weight 0.5, trimmed to 0.35 in V3.
 
 | File | Size | Bytes | Depicts |
 |---|---|---|---|
@@ -491,6 +522,46 @@ corgi, snail and goose came from sheet C. All have `absurd: true, animal: true, 
 | `items/snail.png` | 160×118 | 26,426 | snail with a salmon-nigiri shell |
 | `items/corgi.png` | 160×157 | 31,880 | corgi onigiri |
 | `items/goose.png` | 160×154 | 28,462 | goose stealing a salmon nigiri |
+
+**V3 set (20), made as G+P in `ca3138c`.** Five `AR=1:1 SIZE=2K` 2×2 magenta sheets, generated in parallel with
+`pipeline/gen_still.py sheetN.png "$BASE$SN" styleref.png` (`styleref.png` = a strip of existing item sprites:
+tuna, duck, hamster, crab), cut by `tools/art/items/extract_v3.py SHEETDIR`. Prompts, verbatim:
+
+```bash
+BASE='A sprite sheet of exactly 4 separate game item sprites in a clean 2x2 grid on a perfectly flat solid pure magenta #FF00FF background, very large empty magenta gaps between sprites, each sprite fully separated, no shadows on the background, no ground, no glow, nothing else on the sheet. Match EXACTLY the pixel-art style of the reference sprites: chunky 16-bit pixel art, thick near-black 2px outline around each whole sprite, warm saturated colours, soft 2-tone shading, same scale and chunkiness as the reference nigiri. The reference shows style only: do NOT draw a tuna, duck, hamster or crab unless listed. Each sprite is a compact single object that would sit on a small sushi plate, readable at tiny size, funny and cute. Do not use any magenta or hot pink inside the sprites. IMPORTANT: this sheet contains NO robot and NO Jiro character at all, ignore any character description below. The 4 sprites: '
+S1='top-left) a tiny chubby penguin wearing a sumo mawashi belt in a wide sumo stance, fiercely guarding a tamago egg nigiri behind him; top-right) a salmon nigiri sushi wearing a tiny yellow construction hard hat with big bold black letters WIP on it, holding a tiny shovel; bottom-left) a hermit crab living inside a small round white soy sauce dish as its shell instead of a seashell, peeking out with eye stalks; bottom-right) a salmon nigiri doing a plank exercise on tiny arms and legs, sweat drops, determined face.'
+S2='top-left) a ginger cat curled up asleep in a tight spiral wrapped in a dark green nori seaweed band like a maki roll, seen from the side, little zzz; top-right) a yellow rubber duck lifeguard with a red lifeguard ring around its waist, a whistle and white sun cream on its beak; bottom-left) a green cactus in a tiny terracotta pot, the cactus shaped like a stack of three maki sushi rolls with little spines and one pink-free white flower; bottom-right) a round yellow-brown pufferfish mid-inflation, cheeks puffed enormously, spikes popping out, eyes bulging, holding its breath.'
+S3='top-left) a brown sea otter floating on its back holding hands with a tamago egg nigiri that has tiny arms and a happy face; top-right) two wooden chopsticks laid as a bridge across a small soy sauce dish, a tiny black ant walking across carrying one grain of rice over its head; bottom-left) a small coiled green wasabi dragon with little horns, tiny wings and a curly tail, puffing a wisp of green smoke; bottom-right) a round white mochi ghost with a cute face and wavy ghost bottom, floating, slightly translucent-looking pale blue shading.'
+S4='top-left) an orange octopus DJ wearing big headphones, scratching a round sushi plate like a turntable with two tentacles; top-right) an open black lacquer bento box whose compartments contain a small parchment treasure map with a red X, a gold coin and a salmon piece; bottom-left) a golden fortune cookie cracked open with a white paper slip sticking out printed with bold black letters LGTM; bottom-right) an empty round cream sushi plate with only rice crumbs and a small folded white paper note on it printed with bold black numbers 404.'
+S5='top-left) a tiny sailboat whose hull is a salmon nigiri and whose sail is a thin pale pickled-ginger slice on a toothpick mast, a tiny flag; top-right) a round hedgehog whose spines are dark spiky sea urchin uni spines, sitting in a gunkan seaweed wrap, smug face; bottom-left) a fried ebi tempura shrimp asleep zipped inside a tiny blue sleeping bag with only its tail and sleepy face out; bottom-right) a tiny blue narwhal using its long tusk as a skewer with three orange ikura roe pearls on it like a kebab.'
+for i in 1 2 3 4 5; do eval "S=\$S$i"; (AR=1:1 SIZE=2K /tmp/venv/bin/python pipeline/gen_still.py sheet$i.png "$BASE$S" styleref.png > gen$i.log 2>&1 &); done
+```
+
+Weights, eggs and click lines are in `items.ts` (table in 01-engine §9). The first six are sushi with a twist
+(not absurd); the other fourteen are absurd.
+
+| File | Size | Bytes | Sheet (slot) | Depicts |
+|---|---|---|---|---|
+| `items/sumo-penguin.png` | 160×110 | 29,280 | 1 (TL) | sumo penguin guarding a tamago |
+| `items/hardhat.png` | 160×154 | 40,536 | 1 (TR) | salmon nigiri in a "WIP" hard hat with a shovel |
+| `items/hermit.png` | 160×127 | 34,398 | 1 (BL) | hermit crab living in a soy dish |
+| `items/plank.png` | 160×108 | 28,538 | 1 (BR) | salmon nigiri doing a plank |
+| `items/cat-nap.png` | 160×128 | 30,759 | 2 (TL) | ginger cat asleep in a nori band |
+| `items/lifeguard.png` | 160×145 | 32,658 | 2 (TR) | rubber-duck lifeguard |
+| `items/cactus.png` | 109×160 | 25,583 | 2 (BL) | maki-stack cactus in a pot |
+| `items/puffer-inflate.png` | 160×139 | 32,486 | 2 (BR) | pufferfish mid-inflation |
+| `items/otter.png` | 160×137 | 31,038 | 3 (TL) | otter holding hands with a tamago |
+| `items/ant-bridge.png` | 160×102 | 24,013 | 3 (TR) | ant carrying a rice grain over a chopstick bridge |
+| `items/wasabi-dragon.png` | 160×155 | 34,568 | 3 (BL) | little wasabi dragon puffing smoke |
+| `items/mochi-ghost.png` | 160×149 | 29,430 | 3 (BR) | mochi ghost |
+| `items/octo-dj.png` | 153×160 | 40,096 | 4 (TL) | octopus DJ scratching a plate |
+| `items/treasure-bento.png` | 160×148 | 38,443 | 4 (TR) | bento with a treasure map, coin and salmon |
+| `items/lgtm.png` | 160×104 | 24,681 | 4 (BL) | fortune cookie reading "LGTM" |
+| `items/not-found.png` | 160×108 | 24,685 | 4 (BR) | empty plate with a "404" note |
+| `items/ginger-boat.png` | 109×160 | 27,975 | 5 (TL) | salmon-nigiri sailboat with a ginger sail |
+| `items/uni-hog.png` | 139×160 | 37,723 | 5 (TR) | hedgehog with uni spines in a gunkan |
+| `items/tempura-bag.png` | 145×160 | 34,111 | 5 (BL) | ebi tempura in a sleeping bag |
+| `items/narwhal.png` | 160×127 | 32,722 | 5 (BR) | narwhal with an ikura kebab |
 
 ### 8.7 MCP pantry moodboard `public/mood/` (10 versions; only v06, v07, v08 and v10 use art)
 
@@ -542,6 +613,8 @@ map, blueprint). They reuse `public/items/*`.
 | `art/tr/storage-yard/door.jpg`, `art/tr/yard-street/cross.jpg` | ed80e55 | Cat-flap and fence transitions (yard removed) |
 | `art/tr/bar-office/mice.png` | 0b16f6e | Mouse family inside the wall (replaced by the cat) |
 | `art/storage/rims.png`, `games/{bug-*,mallet,bonk-star,dizzy,lawn}.png` | 762b735 | Whack-a-Bug sack rims and sprites, Snake lawn |
+| `games/koi-{a,b,gulp,dizzy}.png` | a5da57a (deleted in ca3138c) | Flappy Koi sprite frames (V3 draws the koi in code) |
+| `src/games/snake.ts` (code) | a54bd26 | Hose Snake (removed in V3) |
 
 ---
 
@@ -653,13 +726,14 @@ Notes:
 ## 12. QA workflow
 
 **Deterministic frames.** The engine reads these URL params (`src/engine/stage.ts`):
-- `?t=<seconds>` freezes animation time.
+- `?freeze=<seconds>` freezes animation time (V3; `?t=` is ignored so old shared links animate).
+- `?debugplates=1` makes chats, falls and walking legs frequent; `?idle=<s>` shortens the header-drifter idle time.
 - `?seg=<id>&tt=<0..1>` renders one segment at local progress tt (tt is clamped to 0.9999).
 - `?p=<viewport heights>` sets a raw scroll position.
 - `#<scene>` deep-links to a scene.
 - `?mood=<1..10>` picks the moodboard version.
 - Loader and scroll nudge are skipped when `seg` or `p` is present. `window.__segs` lists
-  `{id,start,len}` for every segment.
+  `{id,start,len}` for every segment; `window.__chain`, `__belt`, `__scenes` and `__pond` are QA hooks (V3).
 
 Segment ids, in order: `bar`, `bar>office`, `office`, `office>dining`, `dining`, `dining>kitchen`, `kitchen`,
 `kitchen>storage`, `storage`, `storage>pantry`, `pantry`, `pantry>street`, `street`, `street>pond`, `pond`.
@@ -679,6 +753,9 @@ node tools/qa/contact-sheet.mjs /tmp/qa /tmp/qa/sheet.png kitchen-storage     # 
   `#stage.toDataURL`, so no DOM overlays), then run `ImageChops.difference(...).getbbox()` / `getextrema()` or
   mean abs diff (the `ks-*-sheet.py` scripts). Accepted: mean < 0.3/255, with differences only in DOM overlays
   or the egg counter.
+- **One belt (V3).** After touching any belt path or `gap`, run `node tools/qa/chain.mjs` and `node tools/qa/align.mjs`:
+  every join must show delta 0 (the same plate continues). Plates must keep one speed and spacing across every boundary.
+- **Plate life (V3).** `life-scan.mjs` / `plates.mjs` to find chats and falls, `seg.mjs --debugplates` to see them often, `legs.mjs` for walkers.
 - **Loops.** Every ambient period must divide 24 s. Check with `seg.mjs … scene:0.5 --t=0` and `--t=24`, which
   must be identical. Use `pond-seq.mjs` or `bar-frames.mjs` to step through time.
 - **Motion stills.** Vary `--t` (for example 3.07 for a blink, 17.8 for the R sputter) to catch sprite swaps.
@@ -707,8 +784,10 @@ node tools/qa/contact-sheet.mjs /tmp/qa /tmp/qa/sheet.png kitchen-storage     # 
 ## 13. Known loose ends
 
 - Scripts that hard-code `/tmp/<job>/` inputs need those intermediate Gemini outputs, which are gone. The prompts
-  that made them are in `tools/prompts/gemini-calls.md`. The final results are in `public/`, so they only matter
-  for re-deriving an asset.
-- `public/art/yard.jpg`, `items/bowl-ramen.png`, `items/bowl-soup.png`, `items/cup-soy.png` and `favicon.svg`
-  are shipped but unreferenced.
-- `games.mjs` and `touch.mjs` still open Snake in `yard`; change it to `storage`.
+  that made them are in `tools/prompts/gemini-calls.md` (PR #6) and §8.6 (V3 items). The final results are in `public/`, so they only matter
+  for re-deriving an asset. The V3 `street.jpg` prompt was not recorded.
+- Several V3 scripts hard-code `ROOT=/home/sprite/org/workspace/.local/jiro.bot/restaurant`.
+- Shipped but unreferenced: `public/art/yard.jpg`, `art/street-trike.jpg`, `art/bar/chop-mid.png`, `end/koi.png`,
+  `items/bowl-ramen.png`, `items/bowl-soup.png`, `items/cup-soy.png`, `favicon.svg`.
+- `tools/art/items/__pycache__/` is committed; `tools/qa/_occ_tmp.mjs` is scratch.
+- `interact/games.mjs`, `touch.mjs`, `st-drag.mjs` and `st2drag.mjs` still target Hose Snake or the trike's cargo box.

@@ -5,8 +5,10 @@ export const STAGE_W = 1920;
 export const STAGE_H = 1080;
 /** Belt speed in stage px per second at scale 1. Identical in every scene and transition. */
 export const BELT_SPEED = 46;
-/** Distance between plate centres along the belt at scale 1. */
-export const PLATE_GAP = 150;
+/** Distance between plate slots along the belt at scale 1 (world units). Many slots are empty. */
+export const PLATE_GAP = 130;
+/** Tread slat pitch in world units. Divides PLATE_GAP so seams stay continuous when phases shift by whole slots. */
+export const SLAT = 26;
 /** Master ambient loop length in seconds; periodic ambient motion should divide this. */
 export const LOOP = 24;
 
@@ -23,9 +25,14 @@ export interface BeltPath {
   width?: number;
   /** Plate size in px at scale 1 (default 52). */
   plate?: number;
-  /** Offset so plate positions line up with the previous room's exit (set by transitions). */
+  /**
+   * Belt phase: plate slot `id` sits at local u = now * BELT_SPEED + phase - id * PLATE_GAP.
+   * Scene belts: the engine OVERWRITES this at start() by chaining scenes in scroll order
+   * (see engine/belt.ts setChain), so read it lazily (per frame), never at module load.
+   * Transition paths: derive it with beltPhase(sceneId, u).
+   */
   phase?: number;
-  /** Items allowed in this scene; default is the global pool. */
+  /** Deprecated and ignored: items depend only on the global plate id. */
   pool?: string[];
   /** Draw a darkness mask this many px at either end so plates vanish into wall openings. */
   fadeIn?: number;
@@ -35,19 +42,36 @@ export interface BeltPath {
 export interface Plate {
   x: number; y: number; s: number; angle: number;
   item: string; rim: string; key: string; alpha: number;
+  /** Global plate id (same in every room and transition). */
+  id?: number;
+  /** Rotation in radians around the plate centre (wobble / tipping over). */
+  rot?: number;
+  /** Tiny speech-bubble glyph shown above the plate ("dots", "bang", "heart", "fish", "q", "note"). */
+  bubble?: string;
+  /** 0..1 while the plate lies shattered on the floor (drawn as shards, not hittable). */
+  shatter?: number;
+  /** True while falling / shattering: drawn but not clickable or draggable. */
+  falling?: boolean;
+  /** Walking legs: frame 0/1 of the 2-frame cycle; `dir` = facing (+1 right, -1 left). */
+  legs?: 0 | 1;
+  dir?: number;
 }
 
 export interface Api {
   /** Called once per egg id; shows a toast and bumps the counter. */
   egg(id: string, text: string): void;
   toast(text: string, ms?: number): void;
-  sfx(name: "pop" | "blip" | "quack" | "boom" | "coin" | "meow" | "splash" | "whoosh" | "bonk" | "chime"): void;
+  sfx(name: "pop" | "blip" | "quack" | "boom" | "coin" | "meow" | "splash" | "whoosh" | "bonk" | "chime" | "sneeze" | "patter"): void;
   /** Image cache (url -> HTMLImageElement, loaded or not). */
   img(url: string): HTMLImageElement;
   /** Draw a scene's full frame (art + ambient + belt + plates) into g with an optional camera. Used by transitions. */
   drawScene(id: string, g: CanvasRenderingContext2D, now: number, cam?: Camera): void;
-  /** Draw the belt tread + plates for an arbitrary path at the global belt speed. Returns the plates drawn. */
-  drawBelt(g: CanvasRenderingContext2D, path: BeltPath, now: number, key?: string): Plate[];
+  /**
+   * Draw the belt tread + plates for an arbitrary path at the global belt speed. Returns the plates drawn.
+   * `phase` (number) overrides path.phase; get it from beltPhase(sceneId, u) so plate ids are global.
+   * A string is accepted for legacy call sites and ignored (ids never depend on a key any more).
+   */
+  drawBelt(g: CanvasRenderingContext2D, path: BeltPath, now: number, phase?: number | string): Plate[];
   /** Current scene plates hit test in stage coords. */
   plateAt(x: number, y: number): Plate | null;
   /** Scroll smoothly to a segment id (scene id or "from>to"). */
@@ -108,6 +132,13 @@ export interface TransitionDef {
   length: number;
   /** One-line description of the belt's route through the wall. */
   route: string;
+  /**
+   * World length of belt between the end of the `from` scene path and the start of the `to`
+   * scene path (hidden in walls or drawn by this transition). The engine chains scene phases
+   * with it: phase[to] = phase[from] - pathLength(from) - gap. Undeclared: the engine picks the
+   * smallest gap >= 0 that keeps the `to` belt's declared phase residue mod PLATE_GAP.
+   */
+  gap?: number;
   /** t in [0,1]. At t=0 must equal the `from` scene frame, at t=1 the `to` scene frame. */
   render(g: CanvasRenderingContext2D, t: number, now: number, api: Api): void;
   mount?(el: HTMLElement, api: Api): void;

@@ -1,5 +1,9 @@
 import { STAGE_W, STAGE_H, type Api, type Camera, type TransitionDef } from "../engine/types";
+import { PLATE_GAP } from "../engine/types";
+import { pathLength } from "../engine/belt";
+import { dining } from "../scenes/dining";
 import { layerCtx, dissolve } from "./dining-kitchen/dissolve";
+import { diningSoot, kitchenLife, steamWaft } from "./dining-kitchen/life";
 
 // dining -> kitchen: through the swinging doors. See dining-kitchen.md.
 //   0.00-0.56  push: the dining camera glides right and up into the kitchen doors
@@ -52,7 +56,7 @@ function baseCtx(): CanvasRenderingContext2D {
   const g = base.getContext("2d")!;
   g.setTransform(1, 0, 0, 1, 0, 0);
   g.globalAlpha = 1;
-  g.imageSmoothingEnabled = true;
+  g.imageSmoothingEnabled = false;
   return g;
 }
 
@@ -93,6 +97,10 @@ export const diningKitchen: TransitionDef = {
   from: "dining",
   to: "kitchen",
   length: 0.7,
+  // Hidden belt behind the dining room's right wall to the kitchen doorway: exactly
+  // what makes dining + gap a whole number of slots (10), i.e. the pre-v3 default,
+  // declared so the chain never drifts. Both belts are never on screen together.
+  gap: 10 * PLATE_GAP - pathLength(dining.belt),
   route: "Through the swinging kitchen doors: the camera pushes into the dining doors, they swing open, and we pull back over the pass where the belt comes in through the open half-doors",
   render(g: CanvasRenderingContext2D, t: number, now: number, api: Api) {
     if (t <= 0) { api.drawScene("dining", g, now); return; }
@@ -105,12 +113,14 @@ export const diningKitchen: TransitionDef = {
     if (dk >= 1) {
       g.imageSmoothingEnabled = false;
       api.drawScene("kitchen", g, now, kcam);
+      kitchenLife(g, t, now, kcam, api);
       return;
     }
 
     // Dining frame rendered once at identity, then pushed with crisp pixels.
     const bg = baseCtx();
     api.drawScene("dining", bg, now);
+    diningSoot(bg, t, now);
     g.save();
     g.setTransform(1, 0, 0, 1, 0, 0);
     g.imageSmoothingEnabled = z < 1.02;
@@ -124,6 +134,7 @@ export const diningKitchen: TransitionDef = {
     if (lg) {
       lg.imageSmoothingEnabled = false;
       api.drawScene("kitchen", lg, now, kcam);
+      kitchenLife(lg, t, now, kcam, api);
     }
     if (sw > 0 && lg) {
       // Doorway: the kitchen through the opening, a little darker at the jambs.
@@ -137,7 +148,8 @@ export const diningKitchen: TransitionDef = {
       g.restore();
       g.fillStyle = `rgba(6,4,3,${(0.35 * (1 - sw)).toFixed(3)})`;
       g.fillRect(DOOR.x0, DOOR.y0, DOOR.x1 - DOOR.x0, DOOR.y1 - DOOR.y0);
-      const theta = THETA * sw;
+      // Heavy leaves: a gentle ease with a small flutter as they give way.
+      const theta = THETA * sw * (1 - 0.05 * Math.sin(sw * Math.PI * 3) * sw);
       drawLeaf(g, base!, DOOR.x0, DOOR.mid, theta);
       drawLeaf(g, base!, DOOR.x1, DOOR.mid, theta);
       g.restore();
@@ -146,5 +158,8 @@ export const diningKitchen: TransitionDef = {
 
     // Centre-first pixel dissolve takes away the door frame.
     if (dk > 0) dissolve(g, dk, (u, v) => Math.min(1, Math.hypot((u - 0.5) * 1.2, v - 0.5) * 1.4));
+
+    // Kitchen steam rolls out through the opening as the leaves give way.
+    steamWaft(g, (DOOR.mid - cx) * z + STAGE_W / 2, ((DOOR.y0 + DOOR.y1) / 2 - cy) * z + STAGE_H / 2, sw * (1 - dk), t, now);
   },
 };

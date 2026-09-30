@@ -1,19 +1,22 @@
 // Tiny WebAudio synth. Off until the first user gesture; toggled by the sound pill.
 
 let ac: AudioContext | null = null;
-export let soundOn = localStorage.getItem("jiro-sound") !== "off";
+export let soundOn = (() => { try { return localStorage.getItem("jiro-sound") !== "off"; } catch { return true; } })();
 
 export function setSound(on: boolean) {
   soundOn = on;
-  localStorage.setItem("jiro-sound", on ? "on" : "off");
+  try { localStorage.setItem("jiro-sound", on ? "on" : "off"); } catch { /* Safari private mode */ }
 }
 
 function ctx(): AudioContext | null {
   if (!soundOn) return null;
   if (!ac) {
-    try { ac = new AudioContext(); } catch { return null; }
+    // Safari < 14.1 only has the prefixed constructor.
+    const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AC) return null;
+    try { ac = new AC(); } catch { return null; }
   }
-  if (ac.state === "suspended") ac.resume();
+  if (ac.state === "suspended") ac.resume().catch(() => {});
   return ac;
 }
 
@@ -54,6 +57,8 @@ export function sfx(name: string) {
     case "splash": noise(0.5, 0.18, 2200); break;
     case "whoosh": noise(0.35, 0.08, 900); break;
     case "bonk": tone(220, 110, 0.12, "square", 0.07); break;
+    case "sneeze": tone(900, 1400, 0.18, "triangle", 0.05); noise(0.3, 0.2, 3000); break;
+    case "patter": for (let i = 0; i < 5; i++) tone(1200 + i * 90, 1500 + i * 90, 0.03, "square", 0.025, i * 0.06); break;
     case "chime": tone(1568, 1568, 0.3, "sine", 0.05); tone(2093, 2093, 0.4, "sine", 0.04, 0.1); break;
   }
 }

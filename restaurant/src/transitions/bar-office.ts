@@ -2,7 +2,10 @@ import type { Api, TransitionDef } from "../engine/types";
 import { STAGE_W, STAGE_H } from "../engine/types";
 import { ease, smooth } from "../engine/stage";
 import { bar } from "../scenes/bar";
-import { drawWall, SLOT_C, WALL_LEFT } from "./bar-office/wall";
+import { declareEggs } from "../engine/eggs";
+import { drawWall, SLOT_C, WALL_LEFT, GAP, CAT } from "./bar-office/wall";
+
+declareEggs(["bo-cat"]);
 
 // bar -> office: push into the dark opening under the bottle shelf, dither-dissolve
 // into a side-view cutaway of the wall (the same belt rides a diagonal brace down past
@@ -105,7 +108,40 @@ export const barOffice: TransitionDef = {
   from: "bar",
   to: "office",
   length: 0.9,
-  route: "Into the dark opening under the bar's bottle shelf, down a diagonal brace inside the wall past a fat, bored cat, out a floor-level hatch in the office's left wall",
+  route: "Into the dark opening under the bar's bottle shelf, down a diagonal brace inside the wall past a fat, bored cat and a few soot sprites, out a floor-level hatch in the office's left wall",
+  // Cutaway u = 0 continues the bar belt 35 u before its end; its end is the office belt's start.
+  gap: GAP,
+  mount(el, api) {
+    // Egg: poke the fat cat (a hit box that follows the cutaway camera).
+    const b = document.createElement("button");
+    b.className = "hot";
+    b.setAttribute("aria-label", "Poke the cat");
+    b.style.cssText = "position:absolute;left:0;top:0;width:1px;height:1px;background:none;border:0;padding:0;cursor:pointer;display:none;";
+    let pokes = 0;
+    const lines = [
+      "The cat opens one eye. The cat closes one eye.",
+      "The cat has seen ten thousand plates. None were for the cat.",
+      "The cat is not bored. The cat is supervising.",
+    ];
+    b.addEventListener("click", (e) => {
+      e.stopPropagation();
+      api.sfx("meow");
+      api.egg("bo-cat", lines[pokes++ % lines.length]);
+    });
+    el.appendChild(b);
+  },
+  update(el, t) {
+    const b = el.querySelector<HTMLElement>("button.hot");
+    if (!b) return;
+    if (t < D1 || t >= T_END) { b.style.display = "none"; return; }
+    const { cx, cy, z } = wallCam(t);
+    const w = 190 * z, h = 120 * z;
+    const sx = (CAT.x - cx) * z + STAGE_W / 2, sy = (CAT.base - 110 - cy) * z + STAGE_H / 2;
+    b.style.display = "block";
+    b.style.transform = `translate(${Math.round(sx - w / 2)}px, ${Math.round(sy)}px)`;
+    b.style.width = `${Math.round(w)}px`;
+    b.style.height = `${Math.round(h)}px`;
+  },
   render(g, t, now, api) {
     if (t >= T_END) { api.drawScene("office", g, now); return; }
     const k = smooth(D0, D1, t);

@@ -1,4 +1,4 @@
-// usage: node seg.mjs OUT_DIR [--t=5] [--w=1600] seg:tt [seg:tt ...]
+// usage: node seg.mjs OUT_DIR [--t=5 (frozen clock, passed as ?freeze=)] [--debugplates] [--w=1600] seg:tt [seg:tt ...]
 //   seg is a scene id ("bar") or transition id ("bar>office"); tt is progress 0..1 inside it.
 //   Writes OUT_DIR/<seg>@<tt>.png (">" replaced by "-"). Prints console errors.
 import { chromium } from "playwright";
@@ -16,7 +16,7 @@ pg.on("console", (m) => m.type() === "error" && errs.push(m.text()));
 for (const it of list) {
   const i = it.lastIndexOf(":");
   const seg = it.slice(0, i), tt = it.slice(i + 1);
-  await pg.goto(`${base}?seg=${encodeURIComponent(seg)}&tt=${tt}&t=${opt.t ?? 5}`, { waitUntil: "networkidle" });
+  await pg.goto(`${base}?seg=${encodeURIComponent(seg)}&tt=${tt}&freeze=${opt.t ?? 5}${"debugplates" in opt ? "&debugplates=1" : ""}`, { waitUntil: "networkidle" });
   await pg.waitForTimeout(+(opt.wait ?? 600));
   const f = `${out}/${seg.replace(">", "-")}@${tt}.png`;
   await pg.screenshot({ path: f });

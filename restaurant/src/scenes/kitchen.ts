@@ -1,11 +1,14 @@
+import { itemImg } from "../engine/items";
 import type { SceneDef } from "../engine/types";
 import { glow, shade, steam } from "../engine/fx";
 import { bubble, html, hotspot, place } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
+import { drawSoot } from "../transitions/bar-office/soot";
 import { FAQ } from "../content/copy";
 import "./kitchen.css";
 
-declareEggs(["faq-all", "kitchen-pot", "kitchen-knife", "kitchen-jiro", "kitchen-cat", "kitchen-doors"]);
+declareEggs(["faq-all", "kitchen-pot", "kitchen-knife", "kitchen-jiro", "kitchen-cat", "kitchen-doors",
+  "kitchen-rice", "kitchen-ladle", "kitchen-soot", "kitchen-tap"]);
 
 // FAQ kitchen. The question sushi sit on the customer ledge in front of the
 // pass; click one and Jiro answers in a big comic bubble whose tail comes from
@@ -42,11 +45,149 @@ const LEAVES: [number, [number, number][]][] = [
 ];
 let talkUntil = 0;
 let kickAt = -9;
+/** Jiro glances toward the ledge (answering, or idly) until this wall-clock time. */
+let lookUntil = 0;
+let ladleAt = -9;
+let sootAt = -9;
 const clock = () => performance.now() / 1000;
+const TAU = Math.PI * 2;
+const mod = (a: number, n: number) => ((a % n) + n) % n;
+const sm = (a: number, b: number, t: number) => { const x = Math.max(0, Math.min(1, (t - a) / (b - a))); return x * x * (3 - 2 * x); };
 
 function blinking(now: number) {
-  const a = now % 6, b = now % 24;
+  const a = mod(now, 6), b = mod(now, 24);
   return (a > 5.2 && a < 5.34) || (b > 17.52 && b < 17.64);
+}
+/** Idle glance down at the question sushi, once per loop (and after an answer). */
+function looking(now: number) {
+  const b = mod(now, 24);
+  return (b > 8 && b < 10.6) || clock() < lookUntil;
+}
+
+// Ladle hanging off the end of the knife rack (sprite px = 4 stage px, the art's grid).
+// k outline, s steel, l light steel, d dark steel. Pivot = top of column 4.
+const LADLE = [
+  "...kkk...",
+  "..k...k..",
+  "..k......",
+  "...kk....",
+  "...klk...",
+  "...klk...",
+  "...klk...",
+  "...klk...",
+  "...klk...",
+  "...klk...",
+  "...klk...",
+  "...klk...",
+  "...klk...",
+  "...klk...",
+  "...klk...",
+  "...klk...",
+  "...klk...",
+  "...kdk...",
+  ".kkkdkkk.",
+  "klllllldk",
+  "klsssssdk",
+  "klsssssdk",
+  ".klsssdk.",
+  "..kkkkk..",
+];
+const LADLE_C: Record<string, string> = { k: "#1b1216", l: "#c6babc", s: "#8a7f84", d: "#5b464b" };
+const LADLE_PIVOT: [number, number] = [1506, 234];
+function ladle(g: CanvasRenderingContext2D, now: number) {
+  const age = clock() - ladleAt;
+  // Draught sway (6 s, about one sprite pixel at the bowl) plus a damped swing after a click.
+  let a = 0.045 * Math.sin((mod(now, 24) / 6) * TAU) + 0.02 * Math.sin((mod(now, 24) / 4) * TAU + 1);
+  if (age < 3) a += 0.32 * Math.sin(age * 7) * Math.exp(-1.6 * age);
+  const c = Math.cos(a), si = Math.sin(a);
+  const [px, py] = LADLE_PIVOT;
+  LADLE.forEach((row, y) => {
+    for (let x = 0; x < row.length; x++) {
+      const ch = row[x];
+      if (ch === ".") continue;
+      const lx = (x - 4) * 4, ly = y * 4;
+      g.fillStyle = LADLE_C[ch];
+      g.fillRect(Math.round((px + lx * c - ly * si) / 4) * 4 - 2, Math.round((py + lx * si + ly * c) / 4) * 4, 4, 4);
+    }
+  });
+}
+
+// Soot sprite living in the dark gap under the stove. Peeks out once per loop.
+const VOID: [number, number][] = [[1768, 652], [1900, 692], [1920, 696], [1920, 744], [1792, 744], [1768, 716]];
+function sootUnderStove(g: CanvasRenderingContext2D, now: number) {
+  const age = clock() - sootAt;
+  let x: number, look = -1, step = -1, blink = false, wide = false;
+  if (age < 2.4) {
+    // Clicked: pops out startled, stares, then scurries back under.
+    const out = sm(0, 0.25, age), back = sm(1.4, 2.4, age);
+    x = 1916 - 76 * out + 76 * back; wide = age < 1.4; look = 0;
+    if ((age < 0.25 || age > 1.4)) step = Math.floor(age * 8) & 1;
+  } else {
+    const c = mod(now, 24);
+    if (c < 9 || c > 14.2) return;
+    const inn = sm(9, 9.8, c), out = sm(13.2, 14.2, c);
+    x = 1916 - 68 * inn + 68 * out;
+    if ((c < 9.8) || c > 13.2) step = Math.floor(c * 8) & 1;
+    look = c < 11.2 ? -1 : c < 12.6 ? 0 : 1;
+    blink = (c > 12 && c < 12.14) || (c > 10.3 && c < 10.44);
+  }
+  g.save();
+  g.beginPath();
+  VOID.forEach(([vx, vy], j) => (j ? g.lineTo(vx, vy) : g.moveTo(vx, vy)));
+  g.closePath();
+  g.clip();
+  drawSoot(g, now, { x: Math.round(x / 4) * 4, y: 740, look, step, blink, wide, seed: 7 });
+  g.restore();
+}
+
+// Leaky tap over the sink: one drop every 4 s.
+function drip(g: CanvasRenderingContext2D, now: number) {
+  const f = mod(now, 4) / 4;
+  g.save();
+  g.fillStyle = "#d8ecf2";
+  if (f < 0.62) {
+    g.globalAlpha = 0.25 + 0.6 * (f / 0.62);
+    g.fillRect(1380, 472, 4, f > 0.3 ? 4 : 2);
+  } else if (f < 0.74) {
+    const y = 472 + Math.pow((f - 0.62) / 0.12, 2) * 28;
+    g.globalAlpha = 0.85;
+    g.fillRect(1380, Math.round(y / 4) * 4, 4, 4);
+  } else if (f < 0.8) {
+    g.globalAlpha = 0.6;
+    g.fillRect(1376, 500, 4, 4);
+    g.fillRect(1384, 500, 4, 4);
+  }
+  g.restore();
+}
+
+// Question sushi: each has its own small, slow habit (pure functions of `now`).
+let sushi: HTMLElement[] = [];
+function sushiLife(now: number) {
+  const c = mod(now, 24);
+  sushi.forEach((b, i) => {
+    const sp = b.querySelector<HTMLElement>(".sprite")!, qb = b.querySelector<HTMLElement>(".qb")!;
+    // Breathing stretch (periods 6/8/12 s, all divide the loop).
+    const per = [6, 8, 12, 6, 8, 12, 6, 8][i];
+    const br = 0.5 - 0.5 * Math.cos((mod(now + i * 1.9, 24) / per) * TAU);
+    let sy = 1 + 0.035 * br, sx = 1 - 0.02 * br, r = 0;
+    // Habit window: 1.6 s once per 12 s, staggered.
+    const w = mod(c + i * 1.5, 12);
+    const on = w < 1.6 ? Math.sin((w / 1.6) * Math.PI) : 0;
+    const kind = i % 4;
+    if (kind === 0) r = 3 * Math.sin(w * 7) * on;            // wiggle
+    else if (kind === 1) sx *= 1 - 0.12 * on;                // turns a little to look around
+    else if (kind === 2) { sy *= 1 + 0.06 * on; sx *= 1 - 0.05 * on; } // big stretch (yawn)
+    else r = -4 * on;                                        // leans over to its neighbour
+    if (b.classList.contains("on")) { sx *= 0.9; r += 2; }   // faces Jiro while he answers
+    sp.style.setProperty("--sx", sx.toFixed(3));
+    sp.style.setProperty("--sy", sy.toFixed(3));
+    sp.style.setProperty("--r", `${r.toFixed(2)}deg`);
+    // Face blink (frame 1) for 0.3 s every 6 s.
+    sp.style.backgroundPosition = mod(now + i * 2.3, 6) > 5.7 ? "100% 0" : "0 0";
+    // "?" bubble bob, whole pixels.
+    const bob = Math.round(7 * (0.5 - 0.5 * Math.cos((mod(now + i * 1.37, 24) / 6) * TAU)));
+    qb.style.transform = `translate(-50%, ${-bob}px)`;
+  });
 }
 
 export const kitchen: SceneDef = {
@@ -73,14 +214,22 @@ export const kitchen: SceneDef = {
     // Jiro: blink, and a lit grille while talking (2-frame flicker).
     const prev = g.imageSmoothingEnabled;
     g.imageSmoothingEnabled = false;
-    if (blinking(now)) {
-      const b = api.img("art/kitchen/jiro-blink.png");
+    // Face: glance toward the ledge (eyes shift one art pixel, cut from the art) and blink.
+    const look = looking(now), bl = blinking(now);
+    const face = look ? (bl ? "jiro-look-blink" : "jiro-look") : bl ? "jiro-blink" : "";
+    if (face) {
+      const b = api.img(`art/kitchen/${face}.png`);
       if (b.complete && b.naturalWidth) g.drawImage(b, FACE_X, FACE_Y);
     }
+    // Talking: the grille flickers like a level meter (full bars, low bars, dark).
     const t = clock();
-    if (t < talkUntil && Math.floor(t / 0.16) % 2 === 0) {
+    const fr = Math.floor(t / 0.13) % 3;
+    if (t < talkUntil && fr < 2) {
       const m = api.img("art/kitchen/jiro-talk.png");
-      if (m.complete && m.naturalWidth) g.drawImage(m, FACE_X, FACE_Y);
+      if (m.complete && m.naturalWidth) {
+        if (fr === 0) g.drawImage(m, FACE_X, FACE_Y);
+        else g.drawImage(m, 0, 84, 88, 16, FACE_X, FACE_Y + 84, 88, 16);
+      }
       jiroTalking = true;
     }
     g.imageSmoothingEnabled = prev;
@@ -104,6 +253,12 @@ export const kitchen: SceneDef = {
       g.fillRect(Math.round(x - 5), Math.round(y - 1), 11, 3);
       g.restore();
     });
+    g.imageSmoothingEnabled = false;
+    ladle(g, now);
+    drip(g, now);
+    sootUnderStove(g, now);
+    g.imageSmoothingEnabled = prev;
+    sushiLife(now);
   },
   over(g, now, api) {
     // Open door leaves in front of the belt start, with the same shadow as under().
@@ -114,6 +269,8 @@ export const kitchen: SceneDef = {
     const age = clock() - kickAt;
     // Clicked: the leaves flap back toward closed on their hinges and settle open again.
     const kick = age < 2 ? Math.abs(Math.sin(age * 6)) * Math.exp(-2.2 * age) : 0;
+    const prevS = g.imageSmoothingEnabled;
+    g.imageSmoothingEnabled = false;
     LEAVES.forEach(([hx, poly], i) => {
       const xs = poly.map((p) => p[0]), ys = poly.map((p) => p[1]);
       const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
@@ -137,6 +294,7 @@ export const kitchen: SceneDef = {
       shade(g, 0, 0, 900, 1080, 0.5, 500, "left");
       g.restore();
     });
+    g.imageSmoothingEnabled = prevS;
   },
   click(_x, _y) {
     document.querySelector<HTMLElement>('.scene-ui[data-id="kitchen"] .k-ask.on .x')?.click();
@@ -146,6 +304,9 @@ export const kitchen: SceneDef = {
     // Preload overlay frames.
     api.img("art/kitchen/jiro-blink.png");
     api.img("art/kitchen/jiro-talk.png");
+    api.img("art/kitchen/jiro-look.png");
+    api.img("art/kitchen/jiro-look-blink.png");
+    sushi = [];
     html(el, `
       <section class="copy k-head">
         <p class="kicker">Kitchen · questions from the pass</p>
@@ -182,6 +343,7 @@ export const kitchen: SceneDef = {
       ask.classList.remove("on");
       el.classList.remove("k-open");
       talkUntil = 0;
+      lookUntil = 0;
       el.querySelectorAll(".faq-sushi.on").forEach((b) => b.classList.remove("on"));
     };
     card.querySelector(".x")!.addEventListener("click", (e) => { e.stopPropagation(); close(); });
@@ -191,13 +353,14 @@ export const kitchen: SceneDef = {
     FAQ.forEach((f, i) => {
       const [x, y, s] = spot(i);
       const w = Math.round(76 * s), h = Math.round(w * (ASPECT[f.item] ?? 1));
-      const b = html(el, `<button class="faq-sushi" style="--d:${(-i * 1.37).toFixed(2)}s;--bd:${(-i * 2.3).toFixed(2)}s;z-index:${10 + i % 2}" aria-label="${f.q}">
+      const b = html(el, `<button class="faq-sushi" style="z-index:${10 + i % 2}" aria-label="${f.q}">
         <span class="shadow"></span>
-        <span class="sprite" style="background-image:url(${BASE}art/kitchen/faq-${f.item}.png)"></span>
+        <span class="sprite" style="background-image:url(${itemImg(f.item).src});background-size:100% 100%"></span>
         <span class="qb">?</span>
         <span class="tip">${f.q}</span>
       </button>`);
       place(b, x - w / 2, y - h, w, h);
+      sushi.push(b);
       b.addEventListener("click", (e) => {
         e.stopPropagation();
         api.sfx("blip");
@@ -211,6 +374,7 @@ export const kitchen: SceneDef = {
         ask.classList.add("on");
         el.classList.add("k-open");
         talkUntil = clock() + Math.min(5, 1.2 + f.a.length / 45);
+        lookUntil = talkUntil + 1.5;
         asked.add(i);
         if (asked.size === FAQ.length) api.egg("faq-all", "You asked every question. Jiro is impressed. And a little tired.");
       });
@@ -246,8 +410,41 @@ export const kitchen: SceneDef = {
       kickAt = clock();
       api.egg("kitchen-doors", "Staff and plates only. The duck has a special exemption.");
     });
+    hotspot(el, 1484, 226, 50, 104, "Ladle", () => {
+      api.sfx("bonk");
+      ladleAt = clock();
+      api.egg("kitchen-ladle", "The ladle swings whenever a deploy goes out. It is swinging now.");
+    });
+    hotspot(el, 1360, 440, 44, 64, "Tap", () => {
+      api.sfx("splash");
+      api.egg("kitchen-tap", "The tap has dripped since 2019. There is a ticket. It is in the backlog.");
+    });
+    hotspot(el, 1772, 664, 118, 80, "Under the stove", () => {
+      api.sfx("pop");
+      sootAt = clock();
+      api.egg("kitchen-soot", "A soot sprite lives under the stove. It eats crumbs. Mostly crumbs.");
+    });
+    // Rice tub: one grain gets a name tag.
+    const NAMES = ["STEVE", "GRAIN #4812", "LINDA (QA)", "BARTHOLOMEW", "KEVIN, INTERN", "THE CHOSEN ONE"];
+    const GRAINS: [number, number][] = [[1112, 524], [1188, 516], [1148, 540], [1216, 532], [1092, 540], [1164, 512]];
+    const tag = html(el, `<div class="k-grain" aria-hidden="true"><i class="grain"></i><i class="str"></i><span class="tag"><b>HELLO</b> my name is <em></em></span></div>`);
+    let gi = 0, tagT = 0;
+    hotspot(el, 1070, 500, 170, 56, "Rice tub", () => {
+      api.sfx("chime");
+      const [gx, gy] = GRAINS[gi % GRAINS.length];
+      tag.querySelector("em")!.textContent = NAMES[gi % NAMES.length];
+      gi++;
+      place(tag, gx, gy);
+      tag.classList.remove("on");
+      void tag.offsetWidth;
+      tag.classList.add("on");
+      clearTimeout(tagT);
+      tagT = window.setTimeout(() => tag.classList.remove("on"), 3800);
+      api.egg("kitchen-rice", "One grain of rice got a name tag. His name is Steve. He has seniority.");
+    });
   },
   leave() {
+    lookUntil = 0;
     document.querySelector('.scene-ui[data-id="kitchen"] .k-ask.on')?.classList.remove("on");
     document.querySelector('.scene-ui[data-id="kitchen"]')?.classList.remove("k-open");
     talkUntil = 0;

@@ -1,7 +1,9 @@
+import { transitionArt, smallWorldArt } from "../art/rooms";
 import { STAGE_W, STAGE_H, type Api, type Camera, type Plate, type SceneDef, type TransitionDef, type BeltPath } from "./types";
-import { drawBeltFull, hitPlate } from "./belt";
+import { drawBeltFull, hitPlate, setChain, chainInfo } from "./belt";
+import * as beltMod from "./belt";
 import { Drag } from "./drag";
-import { ITEMS, preloadItems } from "./items";
+import { ITEMS, preloadItems, itemImg } from "./items";
 import { eggCount, eggFound, noteEgg, onEggs } from "./eggs";
 import { sfx, setSound, soundOn } from "./sfx";
 
@@ -14,7 +16,7 @@ export function img(url: string): HTMLImageElement {
   let im = imgCache.get(url);
   if (!im) {
     im = new Image();
-    im.src = url.startsWith("http") || url.startsWith("data:") ? url : `${import.meta.env.BASE_URL}${url.replace(/^\//, "")}`;
+    im.src = smallWorldArt(url) ?? transitionArt(url) ?? (url.startsWith("http") || url.startsWith("data:") ? url : `${import.meta.env.BASE_URL}${url.replace(/^\//, "")}`);
     imgCache.set(url, im);
   }
   return im;
@@ -42,6 +44,12 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
     }
   });
   const total = acc;
+
+  // One belt: chain scene phases in scroll order so plate ids carry across every room.
+  setChain(scenes, scenes.map((s, i) => (scenes[i + 1] ? trs.get(`${s.id}>${scenes[i + 1].id}`)?.gap : undefined)));
+  (window as any).__chain = chainInfo().map(({ id, phase, U, off, gap }) => ({ id, phase, U, off, gap }));
+  // QA hooks (tools/qa/life-scan.mjs, plates.mjs): the live belt module instance and scenes.
+  Object.assign(window as any, { __belt: beltMod, __scenes: byId });
 
   const root = document.getElementById("app")!;
   const BASE = import.meta.env.BASE_URL;
@@ -127,8 +135,8 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
       const s = byId.get(id)!;
       renderScene(s, gg, now, cam, false);
     },
-    drawBelt(gg, path: BeltPath, now, key = "tr") {
-      return drawBeltFull(gg, path, now, key);
+    drawBelt(gg, path: BeltPath, now, phase) {
+      return drawBeltFull(gg, path, now, typeof phase === "number" ? phase : undefined);
     },
     plateAt(x, y) {
       const sc = active.kind === "scene" ? active.id : "";
@@ -158,7 +166,7 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
     if (art.complete && art.naturalWidth) gg.drawImage(art, 0, 0, STAGE_W, STAGE_H);
     else { gg.fillStyle = "#0b0a09"; gg.fillRect(0, 0, STAGE_W, STAGE_H); }
     s.under?.(gg, now, api);
-    const plates = drawBeltFull(gg, s.belt, now, s.id, drag.hidden).filter((p) => !drag.hidden.has(p.key));
+    const plates = drawBeltFull(gg, s.belt, now, undefined, drag.hidden).filter((p) => !drag.hidden.has(p.key));
     drag.drawScene(gg, s, now);
     if (live) { scenePlates = plates; sceneBeltSize = s.belt.plate ?? 52; }
     s.over?.(gg, now, api);
@@ -178,6 +186,12 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
     if (seg.kind === "scene") seg.def.mount?.(el, api);
     else seg.def.mount?.(el, api);
   }
+
+  // Scene DOM props and chrome share the new sprite vocabulary too.
+  root.querySelectorAll<HTMLImageElement>('img').forEach(im => {
+    const name = /\/items\/([^/]+)\.png$/.exec(im.src)?.[1];
+    if (name && ITEMS[name]) im.src = itemImg(name).src;
+  });
 
   // Side rail.
   scenes.forEach((s) => {
@@ -289,7 +303,9 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
   let shown = scrollY / innerHeight;
   let lastScene = "";
   const q = new URLSearchParams(location.search);
-  const fixedT = q.get("t"); // ?t=seconds freezes time (for screenshots)
+  // ?freeze=<seconds> freezes the clock (screenshots). ?t= is deliberately ignored: old shared
+  // links carried ?t=<unix time> and froze the belt for real visitors.
+  const fixedT = q.get("freeze");
   const segQ = q.get("seg"); // ?seg=bar>office&tt=0.5 renders a segment at local progress tt (for screenshots)
   const segHit = segQ ? segs.find((s) => s.id === segQ) : undefined;
   const fixedP = segHit ? String(segHit.start + Math.min(0.9999, parseFloat(q.get("tt") ?? "0.5")) * segHit.len) : q.get("p"); // ?p=scroll position in viewport heights
@@ -306,7 +322,7 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
 
     g.setTransform(1, 0, 0, 1, 0, 0);
     g.globalAlpha = 1;
-    g.imageSmoothingEnabled = true;
+    g.imageSmoothingEnabled = false;
     if (seg.kind === "scene") {
       renderScene(seg.def, g, now, undefined, true);
       drag.drawHeld(g, seg.def.belt.plate ?? 52);
