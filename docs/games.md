@@ -17,3 +17,14 @@ In `npm run dev`, open `/games/<game>/index.html` explicitly; Vite's dev server 
 - `public/games/<game>/game.js`: each game's rules. Sushi Rush switches between a runner and a boss maze; Daily Roll seeds the maze and records the official score.
 
 Browser storage: `sushi-best-<id>` holds best scores, and `jiro-daily-YYYY-MM-DD` holds the official Daily Roll score. Nothing is sent to a server.
+
+## Mouse-only arcade (`/games/arcade/`)
+
+A demo page with both games side by side, played with the mouse only (`public/games/arcade/`):
+
+- The game under the cursor is live. Moving the cursor off it pauses it, and moving back resumes it.
+- Click to start. In Sushi Rush, a click jumps; ducking isn't needed, because jumping also clears the flying fish.
+- In the mazes (Daily Roll and the Rush boss), the maki steers toward the cursor. `Slot.steer()` sets the direction from the tile the maki is about to enter, so it turns at the next junction. It prefers the axis with the larger distance and falls back to the other if that way is blocked.
+- Keyboard is not used, so Space and the arrow keys keep scrolling the page.
+
+`sushi-rush/game.js` and `daily-roll/game.js` only start their own full-page shell when a `#game` canvas exists, so the arcade page can reuse their rules.
