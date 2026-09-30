@@ -17,3 +17,5 @@ Open `http://localhost:3200/`. The server keeps all four sites on one origin, su
 Demo 1 requires WebGL2. If a browser does not support it, its saved seven-scene reel loads automatically in the same tab.
 
 Use `PORT=<number> node showcase/serve.mjs` to choose another port. The demo apps and their saved content are unchanged by the gallery.
+
+For playback without npm or external font requests, use the ready-built archives and restoration commands in [the preservation runbook](../preservation/README.md). Set `JIRO_PRESERVED_ROOT=preservation/.playback` when starting this server.

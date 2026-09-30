@@ -5,11 +5,13 @@ import { resolve, sep, extname } from "node:path";
 
 const repo = resolve(import.meta.dirname, "..");
 const port = Number(process.env.PORT || 3200);
+const preserved = process.env.JIRO_PRESERVED_ROOT;
+const demoRoot = (name, source) => preserved ? resolve(preserved, name) : resolve(repo, source);
 const roots = {
-  "/demo1/": resolve(repo, "demo1/site/dist"),
-  "/demo2/": resolve(repo, "demo2/restaurant/dist"),
-  "/demo4/": resolve(repo, "demo4/restaurant/dist"),
-  "/demo5/": resolve(repo, "demo5/site/dist"),
+  "/demo1/": demoRoot("demo1", "demo1/site/dist"),
+  "/demo2/": demoRoot("demo2", "demo2/restaurant/dist"),
+  "/demo4/": demoRoot("demo4", "demo4/restaurant/dist"),
+  "/demo5/": demoRoot("demo5", "demo5/site/dist"),
   "/reference/demo1/": resolve(repo, "demo1/reference/stops"),
   "/showcase/": resolve(repo, "showcase"),
 };

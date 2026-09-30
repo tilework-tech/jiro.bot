@@ -46,3 +46,5 @@ This snapshot is saved on a review branch. It is not a production deployment.
 - Headed Chromium: Demo5 hash selection, five-tab keyboard wrapping and End key, and layouts at 1440×900 and 390×844 pass with no page errors. Seven scene sections are present and the hero video reaches readyState 4.
 - Session-host HTTP routing passes at `/demo5/`; hero MP4 byte-range requests return HTTP 206 and the requested 100 bytes.
 - This archival check does not repeat the original full interaction suite or establish Safari/real-phone compatibility.
+
+Detailed scene, transition, geometry, timing and interaction preservation: [RECREATE.md](RECREATE.md). Registry-independent playback and additional visual evidence: [preservation runbook](../preservation/README.md).

@@ -20,3 +20,7 @@ Demo2 and Demo4 each contain a `restaurant/docs/RECREATE.md` guide, an `ASSETS.m
 The source branch and exact commit are recorded in each demo's README. Continue work on a copy of a selected demo, and preserve the original snapshot for comparison.
 
 Demo5 includes the original brief, feedback, content sources, QA scripts, full-scroll recording, scene stills, and exact runtime media in `demo5/site/`. Its provenance and checksum verification are documented in `demo5/README.md`.
+
+## Restore after the session ends
+
+See [the preservation runbook](preservation/README.md) for verified ready-built copies with local fonts, complete source/media checksums, scene and transition references, and walkthroughs for all four demos. The archive runs without npm or external font requests.

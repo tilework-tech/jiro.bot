@@ -108,3 +108,7 @@ The snapshot passed `npm ci` and `npm run build`. Every scene and transition mid
 The delivery bike scene was not reanimated from Martin's requested motorcycle reference because that recording was not found in the thread or repository. The two comparison windows were enlarged by about 45 percent in area, short of 50 percent in width because both would not fit between the belt lanes. The crisp hero is a newer replacement for the earlier video hero. Keep these as explicit constraints when continuing the work.
 
 For future changes, start from this branch. Preserve the checked-in binaries, record any deliberate visual change as a new reference frame, rerun the build and manifest check, then verify the full scroll in the intended browser. Do not overwrite Demo1 or Demo2.
+
+## Preservation audit addendum (2026-09-30)
+
+A new continuous walkthrough and five-position samples of every transition are now saved in `preservation/evidence/demo4/` at repository root. The [preservation runbook](../../../../preservation/README.md) describes ready-built archives with local fonts, integrity checks and the network-blocked capture method. The original references and app source are unchanged. This addendum supersedes any earlier statement that no full-scroll recording is available.

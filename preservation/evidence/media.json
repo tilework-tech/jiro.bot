@@ -1,0 +1,200 @@
+[
+  {
+    "path": "demo1/reference/walkthrough.mp4",
+    "bytes": 6475583,
+    "sha256": "0b83bb669bab05fffcacf63ca575499b40ac45c13c84f468d06456ab3815ac75",
+    "media": [
+      "Duration: 00:00:17.40, start: 0.000000, bitrate: 2977 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1280x720, 2976 kb/s, 10 fps, 10 tbr, 10240 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo1/site/public/v/e1-pond.mp4",
+    "bytes": 6196410,
+    "sha256": "33da0f3e5024b0fddbdf65515455186ab2a261a682da3d81c7dc962c8f27502b",
+    "media": [
+      "Duration: 00:00:06.96, start: 0.000000, bitrate: 7124 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 2560x1440, 7120 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo1/site/public/v/s0-hero.mp4",
+    "bytes": 2965376,
+    "sha256": "969461a008408f44c7786b56e29ee65a4e01dde0131e5d23a8c5ddc852d78a07",
+    "media": [
+      "Duration: 00:00:07.13, start: 0.000000, bitrate: 3329 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 2560x1440, 3326 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo1/site/public/v/s1-code-small.mp4",
+    "bytes": 1250581,
+    "sha256": "635fa1adb909e9667363e6005ae5ff5e75399c7e3a1157daf812a06110ae4d0d",
+    "media": [
+      "Duration: 00:00:07.63, start: 0.000000, bitrate: 1312 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1920x1080, 1308 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo1/site/public/v/s2-serve.mp4",
+    "bytes": 2767896,
+    "sha256": "24431580f2e5e71e3967a8649f4906f6f24c31f11f185276e46c5cc4ae6b723c",
+    "media": [
+      "Duration: 00:00:07.13, start: 0.000000, bitrate: 3107 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1920x1080, 3104 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo1/site/public/v/s4-omakase.mp4",
+    "bytes": 1496744,
+    "sha256": "1e1a9c48198432b2fb47cff3113b0a73faa4540ce36765f7107548000bbe4a09",
+    "media": [
+      "Duration: 00:00:08.00, start: 0.000000, bitrate: 1496 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 2560x1440, 1493 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo1/site/public/v/s6-delivery.mp4",
+    "bytes": 5778426,
+    "sha256": "9c7ae968708b701dd0b3c221f1719832974e4c718ca295677531831bab7cd8fb",
+    "media": [
+      "Duration: 00:00:07.13, start: 0.000000, bitrate: 6488 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 2560x1440, 6484 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo1/site/public/v/s7-closing-small.mp4",
+    "bytes": 1237289,
+    "sha256": "964c08478ab2e521ad1be206966a1c6aef1af89a1028ada5d0a68c12a1d53c6b",
+    "media": [
+      "Duration: 00:00:07.67, start: 0.000000, bitrate: 1291 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1920x1080, 1287 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo2/restaurant/public/ui/compare/generic.mp4",
+    "bytes": 2678573,
+    "sha256": "4ccf853f1c2732121fa70f99875b9c0dbed30ba3158298ee07c745e8ebbec0c9",
+    "media": [
+      "Duration: 00:00:33.96, start: 0.040000, bitrate: 630 kb/s",
+      "Stream #0:0[0x1](eng): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt470bg/unknown/unknown, progressive), 1280x800 [SAR 1:1 DAR 8:5], 628 kb/s, 25 fps, 25 tbr, 12800 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo2/restaurant/public/ui/compare/jiro.mp4",
+    "bytes": 2559639,
+    "sha256": "84d60d1bb8ff7d704605833d9d2d08872e8a21073b1a4ac455a07d4d279bedf3",
+    "media": [
+      "Duration: 00:00:33.96, start: 0.040000, bitrate: 602 kb/s",
+      "Stream #0:0[0x1](eng): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt470bg/unknown/unknown, progressive), 1280x800 [SAR 1:1 DAR 8:5], 600 kb/s, 25 fps, 25 tbr, 12800 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo4/restaurant/public/ui/compare/generic.mp4",
+    "bytes": 2412163,
+    "sha256": "c283ef42aaed42fbaacf6f0714f78daf538da4bfde656ef246f3e4c437f746cc",
+    "media": [
+      "Duration: 00:00:34.00, start: 0.000000, bitrate: 567 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1280x800, 565 kb/s, 25 fps, 25 tbr, 12800 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo4/restaurant/public/ui/compare/jiro.mp4",
+    "bytes": 2602383,
+    "sha256": "d350efc10543e2d85d1dc36760f89d4f1e8f0a9c19b15c66861dfba717cd9ea5",
+    "media": [
+      "Duration: 00:00:34.00, start: 0.000000, bitrate: 612 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1280x800, 609 kb/s, 25 fps, 25 tbr, 12800 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo5/site/public/v/e1-pond.mp4",
+    "bytes": 6196410,
+    "sha256": "33da0f3e5024b0fddbdf65515455186ab2a261a682da3d81c7dc962c8f27502b",
+    "media": [
+      "Duration: 00:00:06.96, start: 0.000000, bitrate: 7124 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 2560x1440, 7120 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo5/site/public/v/s0-hero.mp4",
+    "bytes": 2965376,
+    "sha256": "969461a008408f44c7786b56e29ee65a4e01dde0131e5d23a8c5ddc852d78a07",
+    "media": [
+      "Duration: 00:00:07.13, start: 0.000000, bitrate: 3329 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 2560x1440, 3326 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo5/site/public/v/s1-code-small.mp4",
+    "bytes": 1250581,
+    "sha256": "635fa1adb909e9667363e6005ae5ff5e75399c7e3a1157daf812a06110ae4d0d",
+    "media": [
+      "Duration: 00:00:07.63, start: 0.000000, bitrate: 1312 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1920x1080, 1308 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo5/site/public/v/s2-serve.mp4",
+    "bytes": 2767896,
+    "sha256": "24431580f2e5e71e3967a8649f4906f6f24c31f11f185276e46c5cc4ae6b723c",
+    "media": [
+      "Duration: 00:00:07.13, start: 0.000000, bitrate: 3107 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1920x1080, 3104 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo5/site/public/v/s4-omakase.mp4",
+    "bytes": 1496744,
+    "sha256": "1e1a9c48198432b2fb47cff3113b0a73faa4540ce36765f7107548000bbe4a09",
+    "media": [
+      "Duration: 00:00:08.00, start: 0.000000, bitrate: 1496 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 2560x1440, 1493 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo5/site/public/v/s6-delivery.mp4",
+    "bytes": 5778426,
+    "sha256": "9c7ae968708b701dd0b3c221f1719832974e4c718ca295677531831bab7cd8fb",
+    "media": [
+      "Duration: 00:00:07.13, start: 0.000000, bitrate: 6488 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 2560x1440, 6484 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo5/site/public/v/s7-closing-small.mp4",
+    "bytes": 1237289,
+    "sha256": "964c08478ab2e521ad1be206966a1c6aef1af89a1028ada5d0a68c12a1d53c6b",
+    "media": [
+      "Duration: 00:00:07.67, start: 0.000000, bitrate: 1291 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1920x1080, 1287 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "demo5/site/reference/full-scroll.mp4",
+    "bytes": 7258712,
+    "sha256": "896f14de809b501c0be39ef7aff11939272ff56cb93247a905ba0251e4cb7a3b",
+    "media": [
+      "Duration: 00:00:33.44, start: 0.000000, bitrate: 1736 kb/s",
+      "Stream #0:0[0x1](eng): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt470bg/unknown/unknown, progressive), 1280x720 [SAR 1:1 DAR 16:9], 1733 kb/s, 25 fps, 25 tbr, 12800 tbn (default)"
+    ]
+  },
+  {
+    "path": "preservation/evidence/demo2/walkthrough.mp4",
+    "bytes": 8975068,
+    "sha256": "b7379aa28f383418e76610fc2a809abaa85556298131d687796b71e6b64e7a48",
+    "media": [
+      "Duration: 00:00:57.38, start: 0.000000, bitrate: 1251 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1600x900 [SAR 1:1 DAR 16:9], 1249 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  },
+  {
+    "path": "preservation/evidence/demo4/walkthrough.mp4",
+    "bytes": 11106791,
+    "sha256": "1fe7bf006fbb8b38b467a49eb7414895f7479811eaae69b6cad5a76f545f3eaf",
+    "media": [
+      "Duration: 00:00:50.17, start: 0.000000, bitrate: 1771 kb/s",
+      "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1600x900 [SAR 1:1 DAR 16:9], 1768 kb/s, 24 fps, 24 tbr, 12288 tbn (default)"
+    ]
+  }
+]
