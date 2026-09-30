@@ -142,3 +142,36 @@ plate, then we return to the neutral eye-level observer view for the kitchen sce
 - Silly and entertaining: lots of clickable easter eggs, absurd comic/animal items on the
   belt, 3 immediately recognisable mini games (Whack-a-mole, Snake, Flappy).
 - Keep noriagentic.com's real content (copy.ts) for context.
+
+---
+
+# v3 — Martin's round-3 changes (2026-09-30) — THIS SECTION OVERRIDES v1 AND v2
+
+## Page order
+
+| # | scene | Change |
+|---|-------|--------|
+| 1 | `bar` | Full-bleed hero: the WHOLE bar scene across the full 1920x1080 stage (not a framed blip on the right). Keep it simple (drop the page noren / moth / surround clutter), and darken it progressively toward the LEFT so the headline is fully legible. The engine keeps painting the belt over the video's belt (bar.ts `drawUpperBelt`) so plates flow smoothly DOWN out of the scene. |
+| 2 | `office` | Tiny Jiro at the computer becomes BIG: visible from the waist up (bottom-right, cropped by the stage's bottom edge). Remove all text above the product demo: just the demo. |
+| 3 | `dining` | REDESIGNED. No Jiro. Happy people seated at restaurant TABLES (not a bar counter, not sad), eye-level observer view (no bird's-eye). The two comparison videos are 50% bigger and cover almost the whole scene. |
+| 4 | `kitchen` | Unchanged ("How Jiro compares" table). |
+| 5 | `storage` | Whack-a-Bug removed. FAQ sushi sit on an aesthetically pleasing counter against a nice, compelling but subdued background. Jiro stands off to the side and answers the questions in a speech bubble. The sushi are gently animated (a slow stretch, a sway, a small turn) - never fast. |
+| 6 | `street` | Night delivery bike + pricing. (Awaiting Martin's reference video; keep as is.) The yard scene and Hose Snake are CUT. |
+| 7 | `pond` | Jiro removed from the bridge. Polished to be more aesthetically pleasing and relaxing: occasional soft ripples on the water, a fish jumping now and then, the big koi finale kept. |
+
+## Transitions
+
+- `bar>office`: keep the route; adapt to the full-bleed hero geometry.
+- `office>dining`: NO 90-degree rotation and no bird's-eye flip. The camera follows a FLAT-LYING belt straight down from the office into the restaurant (eye level throughout).
+- `dining>kitchen`: CUT the sushi-cam, the turning and the rubber-duck business. Just go straight down the conveyor belt to the kitchen ("How Jiro compares").
+- `kitchen>storage`: unchanged.
+- `storage>street` (new, replaces storage>yard and yard>street): straight down, no unrealistic 90-degree turns.
+- `street>pond`: unchanged.
+
+## Rules that still hold
+
+- ONE belt, always moving DOWN the page, at one constant speed. All belt motion reads `beltTime(now)` from `engine/belt.ts` (scrolling pushes the belt forward). Never write `now * BELT_SPEED` directly.
+- Ports stay as in v2 (office in/out x=150; dining in x=150, out x=1770; kitchen x=1770; storage in x=1770, out x=150; street in x=150, out x=1770; pond in x=1770).
+- Animation minimal, slow, relaxing, seamlessly looped (periods divide `LOOP` = 24 s, or aperiodic).
+- Only touch the files you own. Shared engine files (`engine/*`, `main.ts`, `style.css`, `types.ts`) belong to the lead.
+- Art: `pipeline/gen_still.py` (Gemini image; run with `/tmp/venv/bin/python`, `GEMINI_API_KEY` is set) and `pipeline/gen_veo.py` + `pipeline/loop.py` (Veo loops). ffmpeg: `restaurant/bin/ffmpeg`. Pixel-snap and palette-match generated art to the existing scenes; keep file sizes web-friendly (jpg/webp for backgrounds).
