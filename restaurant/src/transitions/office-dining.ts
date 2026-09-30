@@ -1,286 +1,131 @@
 import type { Api, BeltPath, BeltPt, TransitionDef } from "../engine/types";
 import { STAGE_W, STAGE_H, PLATE_GAP } from "../engine/types";
-import { smooth } from "../engine/stage";
 import { pathLength } from "../engine/belt";
-import { glow, wave } from "../engine/fx";
+import { glow } from "../engine/fx";
 import { hotspot, bubble } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
 import { office } from "../scenes/office";
 import { dining } from "../scenes/dining";
-import { paintWall, lantern, cat, BEAM_T, BEAM_B, LANTERN, CAT } from "./office-dining/wall";
+import { cat, CAT_W, CAT_H } from "./office-dining/cat";
 
-// office → dining: the big 3D camera move. One real (tiny) 3D world, rendered with a
-// pinhole camera that only pitches about the x axis, so every texture row maps to one
-// screen row and a plane can be drawn as horizontal strips:
-//   WALL  (plane Z = 0, y down): the office frame, the office floor cut open (crawl space,
-//         ceiling cat), the dining ceiling beam, and the dining back wall with the giant
-//         paper lantern the lift drops through.
-//   FLOOR (plane Y = YF): the dining frame, top-down; image y runs toward the viewer (Z = -y).
-// The lift runs down the wall at x = 150, bends at the wall/floor corner and continues as
-// the dining belt. The camera slides down the lift, dollies toward it and pitches from eye
-// level (t = 0, exactly the office frame) to straight down (t = 1, exactly the dining frame).
+// office → dining: eye level all the way, no rotation. The camera glides straight down one
+// tall world column, following the flat belt down the left lane (x = 150):
+//   y 0 .. 1080          the office frame (drawn live by the office scene)
+//   y 1080 .. Y_OFF      cutaway (public/art/tr/office-dining/band.webp): the cut edge of the
+//                        office floor, the crawl space (joists, a copper pipe, the ceiling cat),
+//                        the dining room's ceiling boards + beam, then the dining ceiling
+//   y Y_OFF .. +1080     the dining frame (drawn live by the dining scene)
+// The belt drops through the office floor, through the crawl space, through a copper collar in
+// the dining ceiling beam and down the dining room's corner post. See office-dining.md.
 
 declareEggs(["tr-ceiling-cat"]);
 
-const F = 1300; // focal length (stage px); also the camera's distance to its target
-const M = 480; // side margins of both textures (edge-stretched, darkened)
-const NEAR = 60;
+const BAND = "art/tr/office-dining/band.webp";
 const G = PLATE_GAP;
+const LANE = 150;
+/** Dining frame offset in the world. Y_OFF - 40 ≡ 0 (mod PLATE_GAP) with both phases 0, so the
+ *  office plate lattice continues straight into the dining one (checked below). */
+const Y_OFF = 1552;
+/** Band rows (world y - 1080) of the cutaway art. */
+const BOARDS_T = 222, BEAM_B = 330;
+/** Item swap point: the middle of the ceiling slab (plates span ~[-46, +22] around the centre). */
+const Y_SPLIT = 1080 + 272;
+/** Camera is on the dining frame from here (the dining DOM fades in over 0.8 .. 0.98). */
+const T_END = 0.8;
 
-// ---- Belt continuity. Office path A (ids keyed "office"), dining path B (keyed "dining").
-const oPts = office.belt.pts;
-const oEnd = oPts[oPts.length - 1];
-const OX = oEnd[0], OEY = oEnd[1];
+// ---- Belt continuity. A = office belt extended down to the split (office identity);
+// B = dining belt extended back up to the split (dining identity). For a plate on a path,
+// u = head - G * id, so matching heads at the joins keeps positions AND ids identical.
 const LO = pathLength(office.belt);
 const PHI_O = office.belt.phase ?? 0;
 const PHI_D = dining.belt.phase ?? 0;
 const d0 = dining.belt.pts[0];
-const E = Math.max(0, -d0[1] / (d0[2] ?? 1)); // dining path length above the floor's top edge
-/** Item swap point: behind the ceiling beam. */
-const YMID = BEAM_T + 52; // plate sprites span ~[-50, +20] around the centre: hidden by the beam
-/** Dining floor Y, snapped so a plate leaving A at YMID is a plate entering B there. */
-const YF = (() => {
-  const want = 1768;
-  const r = ((PHI_O - PHI_D - LO + OEY + E - want) % G + G) % G;
-  return want + r;
-})();
-const A_EXT: BeltPath = { ...office.belt, pts: [[OX, OEY, 1], [OX, YMID, 1]] as BeltPt[], phase: PHI_O - LO, fadeIn: 0, fadeOut: 0 };
-const B_WALL: BeltPath = { ...dining.belt, pts: [[OX, YMID, 1], [OX, YF, 1]] as BeltPt[], phase: PHI_D + (YF - YMID) - E, fadeIn: 0, fadeOut: 0 };
-
-// ---- Textures.
-const TW = STAGE_W + 2 * M;
-const WALL_H = YF + 6;
-const FLOOR_H = STAGE_H + M;
-let wallBase: HTMLCanvasElement | null = null;
-let wallTex: HTMLCanvasElement | null = null;
-let floorTex: HTMLCanvasElement | null = null;
-let frameTex: HTMLCanvasElement | null = null;
-function canvas(w: number, h: number) {
-  const c = document.createElement("canvas");
-  c.width = w; c.height = h;
-  // CPU-backed on purpose: ~1000 strip blits per frame between these canvases are far
-  // cheaper in raster memory than bouncing freshly painted textures to the GPU.
-  c.getContext("2d", { willReadFrequently: true });
-  return c;
-}
-function ensure() {
-  if (wallBase) return;
-  wallBase = canvas(TW, WALL_H);
-  paintWall(wallBase.getContext("2d")!, M, YF, TW);
-  wallTex = canvas(TW, WALL_H);
-  floorTex = canvas(TW, FLOOR_H);
+const DY0 = Y_OFF + d0[1]; // world y of the dining path's first point (u = 0)
+const LB = DY0 - Y_SPLIT;
+const A: BeltPath = { ...office.belt, pts: [[LANE, 1080, 1], [LANE, Y_SPLIT, 1]] as BeltPt[], phase: PHI_O - LO, fadeIn: 0, fadeOut: 0 };
+const B: BeltPath = { ...dining.belt, pts: [[LANE, Y_SPLIT, 1], [LANE, Y_OFF + 90, 1]] as BeltPt[], phase: PHI_D + LB, fadeIn: 0, fadeOut: 0 };
+if (import.meta.env.DEV) {
+  // Lattice check: an office plate at world y = head_o - G*id and a dining plate at DY0 + head_d - G*id'.
+  const r = (((DY0 + PHI_D - PHI_O) % G) + G) % G;
+  if (r !== 0) console.warn(`office>dining: plate lattice off by ${r}px`);
 }
 
-/** Stretch the art's edge columns into the side margins, darkened toward the outside. */
-function margins(g: CanvasRenderingContext2D, art: HTMLImageElement) {
-  const h = STAGE_H;
-  if (art.complete && art.naturalWidth) {
-    const k = art.naturalWidth / STAGE_W;
-    g.drawImage(art, 0, 0, 2 * k, art.naturalHeight, 0, 0, M, h);
-    g.drawImage(art, art.naturalWidth - 2 * k, 0, 2 * k, art.naturalHeight, M + STAGE_W, 0, M, h);
-  }
-  for (const [x, dir] of [[0, 1], [M + STAGE_W, -1]] as const) {
-    const grd = g.createLinearGradient(x, 0, x + M, 0);
-    grd.addColorStop(dir > 0 ? 0 : 1, "rgba(8,6,5,.9)");
-    grd.addColorStop(dir > 0 ? 1 : 0, "rgba(8,6,5,.35)");
-    g.fillStyle = grd;
-    g.fillRect(x, 0, M, h);
-  }
+// ---- Camera: pure vertical glide, a gentle dolly-in toward the lane mid-way.
+interface Cam { cx: number; cy: number; z: number }
+function camAt(t: number): Cam {
+  const f = Math.max(0, Math.min(1, t / T_END));
+  const p = 0.5 - 0.5 * Math.cos(Math.PI * f);
+  const bump = Math.sin(Math.PI * f) ** 2;
+  const z = 1 + 0.08 * bump;
+  const hw = STAGE_W / 2 / z;
+  const cx = Math.max(hw, Math.min(STAGE_W - hw, STAGE_W / 2 - 200 * bump));
+  return { cx, cy: STAGE_H / 2 + Y_OFF * p, z };
+}
+function apply(g: CanvasRenderingContext2D, c: Cam) {
+  g.translate(STAGE_W / 2, STAGE_H / 2);
+  g.scale(c.z, c.z);
+  g.translate(-c.cx, -c.cy);
+}
+function toScreen(c: Cam, x: number, y: number): [number, number] {
+  return [STAGE_W / 2 + (x - c.cx) * c.z, STAGE_H / 2 + (y - c.cy) * c.z];
 }
 
 let catAwakeUntil = 0;
+const CAT_X = 384, CAT_FLOOR = 1080 + BOARDS_T;
 
-/** Repaint the wall texture, rasterising only `clip` (the part the camera samples this frame). */
-function paintWallTex(now: number, api: Api, clip: [number, number, number, number]) {
-  const g = wallTex!.getContext("2d")!;
-  g.setTransform(1, 0, 0, 1, 0, 0);
-  g.globalAlpha = 1;
-  g.save();
-  g.beginPath(); g.rect(...clip); g.clip();
-  g.drawImage(wallBase!, 0, 0);
-  g.save();
-  g.translate(M, 0);
-  g.beginPath(); g.rect(0, 0, STAGE_W, STAGE_H); g.clip();
-  api.drawScene(office.id, g, now);
-  g.restore();
-  margins(g, api.img(office.art));
-  // The lift continues: office plates down to the beam, dining plates from the beam to the floor.
-  g.save();
-  g.translate(M, 0);
-  g.beginPath(); g.rect(-M, STAGE_H, TW, YF - STAGE_H); g.clip();
-  // Warm light spilling out of the lantern onto the wall.
-  const lk = 0.9 + 0.1 * wave(now, 6);
-  glow(g, LANTERN.x, (LANTERN.top + LANTERN.bot) / 2, 330, "rgba(255,120,60,.16)", now, 0.06, 6);
-  api.drawBelt(g, A_EXT, now, office.id);
-  api.drawBelt(g, B_WALL, now, dining.id);
-  g.restore();
-  // Occluders in front of the lift.
-  const beam = (y0: number, y1: number) => {
-    g.fillStyle = "#140c08"; g.fillRect(0, y0, TW, y1 - y0);
-    g.fillStyle = "#3d2517"; g.fillRect(0, y0 + 3, TW, y1 - y0 - 9);
-    g.fillStyle = "#56341f"; g.fillRect(0, y0 + 3, TW, 6);
-    g.fillStyle = "#2a1810"; g.fillRect(0, y1 - 18, TW, 12);
-    // Wood grain.
-    g.fillStyle = "rgba(20,10,6,.35)";
-    for (let k = 0; k < 40; k++) g.fillRect(((k * 331) % TW), y0 + 15 + ((k * 7) % 4) * 12, 60 + (k % 5) * 30, 3);
-  };
-  beam(BEAM_T, BEAM_B);
-  // Copper collar where the lift pierces the beam.
-  g.fillStyle = "#3a2014"; g.fillRect(M + OX - 54, BEAM_T - 6, 108, BEAM_B - BEAM_T + 12);
-  g.fillStyle = "#b8703f"; g.fillRect(M + OX - 51, BEAM_T - 3, 102, BEAM_B - BEAM_T + 6);
-  g.fillStyle = "#e3a26a"; g.fillRect(M + OX - 51, BEAM_T - 3, 102, 3);
-  g.fillStyle = "#6d3f22";
-  for (const rx of [-42, 36]) for (const ry of [12, 60]) g.fillRect(M + OX + rx, BEAM_T + ry, 6, 6);
-  lantern(g, M, lk);
-  glow(g, M + LANTERN.x, (LANTERN.top + LANTERN.bot) / 2, 170, "rgba(255,170,90,.10)", now, 0.08, 6);
-  cat(g, M, now, performance.now() / 1000 < catAwakeUntil);
-  // Contact shadow where the lift bends onto the floor.
-  const grd = g.createLinearGradient(0, YF - 60, 0, YF);
-  grd.addColorStop(0, "rgba(0,0,0,0)"); grd.addColorStop(1, "rgba(0,0,0,.55)");
-  g.fillStyle = grd; g.fillRect(0, YF - 60, TW, 60);
-  g.restore();
+/** Copper collar where the belt pierces a slab (drawn over the belt at rows y0..y1). */
+function collar(g: CanvasRenderingContext2D, y0: number, y1: number) {
+  const x = LANE - 54, w = 108;
+  g.fillStyle = "#24150c"; g.fillRect(x, y0 - 6, w, y1 - y0 + 12);
+  g.fillStyle = "#7a4524"; g.fillRect(x + 3, y0 - 3, w - 6, y1 - y0 + 6);
+  g.fillStyle = "#b8733f"; g.fillRect(x + 3, y0 - 3, w - 6, y1 - y0);
+  g.fillStyle = "#e9a765"; g.fillRect(x + 3, y0 - 3, w - 6, 3);
+  g.fillStyle = "#4a2a16";
+  for (const rx of [9, w - 15]) for (let ry = 9; ry < y1 - y0 - 6; ry += 24) g.fillRect(x + rx, y0 + ry, 6, 6);
+  // The opening's dark mouth along the bottom edge.
+  g.fillStyle = "#110e0c"; g.fillRect(LANE - 36, y1 - 3, 72, 6);
 }
 
-function paintFloorTex(now: number, api: Api, clip: [number, number, number, number]) {
-  const g = floorTex!.getContext("2d")!;
-  g.setTransform(1, 0, 0, 1, 0, 0);
-  g.globalAlpha = 1;
-  g.save();
-  g.beginPath(); g.rect(...clip); g.clip();
-  g.fillStyle = "#0b0908";
-  g.fillRect(0, 0, TW, FLOOR_H);
-  g.save();
-  g.translate(M, 0);
-  g.beginPath(); g.rect(0, 0, STAGE_W, STAGE_H); g.clip();
-  api.drawScene(dining.id, g, now);
-  g.restore();
-  const da = api.img(dining.art);
-  margins(g, da);
-  // Toward the viewer: stretch the art's last rows.
-  if (da.complete && da.naturalWidth) {
-    const k = da.naturalWidth / STAGE_W;
-    g.drawImage(da, 0, da.naturalHeight - 2 * k, da.naturalWidth, 2 * k, M, STAGE_H, STAGE_W, M);
+function drawWorld(g: CanvasRenderingContext2D, c: Cam, now: number, api: Api) {
+  const vh = STAGE_H / 2 / c.z + 60;
+  const top = c.cy - vh, bot = c.cy + vh;
+  // Office frame.
+  if (top < 1080) api.drawScene(office.id, g, now);
+  // Cutaway band.
+  if (bot > 1080 && top < Y_OFF) {
+    const band = api.img(BAND);
+    const sm = g.imageSmoothingEnabled;
+    g.imageSmoothingEnabled = false;
+    if (band.complete && band.naturalWidth) g.drawImage(band, 0, 1080, STAGE_W, Y_OFF - 1080);
+    else { g.fillStyle = "#120d0b"; g.fillRect(0, 1080, STAGE_W, Y_OFF - 1080); }
+    g.imageSmoothingEnabled = sm;
+    // A work lamp in the crawl space (warm, breathing).
+    glow(g, 900, 1080 + 110, 260, "rgba(255,160,80,.10)", now, 0.1, 8);
+    cat(g, CAT_X, CAT_FLOOR, now, performance.now() / 1000 < catAwakeUntil);
   }
-  const grd = g.createLinearGradient(0, STAGE_H, 0, FLOOR_H);
-  grd.addColorStop(0, "rgba(8,6,5,.2)"); grd.addColorStop(1, "rgba(8,6,5,.9)");
-  g.fillStyle = grd; g.fillRect(0, STAGE_H, TW, M);
-  g.restore();
-}
-
-// ---- Camera. Target C (at screen centre, distance F along the view axis), pitch th.
-interface Cam { px: number; py: number; pz: number; s: number; c: number; roll: number }
-const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
-
-function camAt(t: number): Cam {
-  const kd = smooth(0.06, 0.78, t); // slide down the lift
-  const kp = smooth(0.22, 0.9, t); // pitch
-  const kz = smooth(0.4, 0.9, t); // travel out over the floor
-  const kx = Math.sin(Math.PI * smooth(0.04, 0.9, t)); // dolly toward the lane
-  const th = (Math.PI / 2) * kp;
-  const s = Math.sin(th), c = Math.cos(th);
-  const cx = 960 - 330 * kx;
-  const cy = lerp(540, YF, kd);
-  const cz = lerp(0, -540, kz);
-  // Slight bank while turning over the corner.
-  const roll = -0.035 * Math.sin(Math.PI * smooth(0.28, 0.9, t));
-  return { px: cx, py: cy - F * s, pz: cz - F * c, s, c, roll };
-}
-
-/** Project a world point; returns [sx, sy] (before roll) or null behind the camera. */
-function project(cam: Cam, X: number, Y: number, Z: number): [number, number] | null {
-  const dy = Y - cam.py, dz = Z - cam.pz;
-  const depth = dy * cam.s + dz * cam.c;
-  if (depth < NEAR) return null;
-  const v = dy * cam.c - dz * cam.s;
-  return [STAGE_W / 2 + (F * (X - cam.px)) / depth, STAGE_H / 2 + (F * v) / depth];
-}
-
-/**
- * Draw a plane as horizontal strips. rowWorld(r) gives [Y, Z] of texture row r.
- * Texture x → world X = x - M.
- */
-type Strip = [number, number, number, number, number, number, number, number];
-function planeStrips(rows: number, cam: Cam, rowWorld: (r: number) => [number, number]): Strip[] {
-  const out: Strip[] = [];
-  const at = (r: number) => {
-    const [Y, Z] = rowWorld(r);
-    const dy = Y - cam.py, dz = Z - cam.pz;
-    const depth = dy * cam.s + dz * cam.c;
-    const v = dy * cam.c - dz * cam.s;
-    return { depth, sy: STAGE_H / 2 + (F * v) / depth };
-  };
-  const pad = 2;
-  let r = 0;
-  while (r < rows) {
-    const a = at(r);
-    if (a.depth < NEAR) { r += 4; continue; }
-    const b1 = at(Math.min(rows, r + 1));
-    const per = Math.abs(b1.sy - a.sy) || 0.001; // screen px per texture row
-    const h = Math.max(1, Math.min(48, Math.floor(3 / per)));
-    const r1 = Math.min(rows, r + h);
-    const b = at(r1);
-    if (b.depth < NEAR) { r = r1; continue; }
-    const y0 = Math.min(a.sy, b.sy), y1 = Math.max(a.sy, b.sy);
-    if (y1 >= -pad && y0 <= STAGE_H + pad) {
-      const dm = (a.depth + b.depth) / 2;
-      const k = F / dm;
-      const x0 = STAGE_W / 2 + k * (-M - cam.px);
-      // Only the texture columns that land on screen.
-      const c0 = Math.max(0, Math.floor((-pad - x0) / k)), c1 = Math.min(TW, Math.ceil((STAGE_W + pad - x0) / k));
-      // Snap to whole pixels; overlap by a fraction to hide seams (none when the mapping is 1:1).
-      const top = Math.floor(y0 + 1e-3), bot = Math.ceil(y1 - 1e-3);
-      const ext = Math.abs(bot - top - (r1 - r)) < 1e-3 && Math.abs(k - 1) < 1e-6 ? 0 : 0.6;
-      if (c1 > c0) out.push([c0, r, c1 - c0, r1 - r, x0 + c0 * k, top, (c1 - c0) * k, Math.max(1, bot - top) + ext]);
-    }
-    r = r1;
+  // Dining frame (clipped to its own rectangle).
+  if (bot > Y_OFF) {
+    g.save();
+    g.beginPath(); g.rect(-10, Y_OFF, STAGE_W + 20, STAGE_H + 10); g.clip();
+    g.translate(0, Y_OFF);
+    api.drawScene(dining.id, g, now);
+    g.restore();
   }
-  return out;
-}
-
-/** Texture rect [x, y, w, h] the strips sample (+2 px), or null when the plane is off screen. */
-function stripsRect(strips: Strip[]): [number, number, number, number] | null {
-  if (!strips.length) return null;
-  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-  for (const s of strips) {
-    x0 = Math.min(x0, s[0]); y0 = Math.min(y0, s[1]);
-    x1 = Math.max(x1, s[0] + s[2]); y1 = Math.max(y1, s[1] + s[3]);
+  // The belt through the cutaway: A (office plates) above the split, B (dining plates) below.
+  if (bot > 1040 && top < Y_OFF + 120) {
+    g.save();
+    g.beginPath(); g.rect(0, 1080, STAGE_W, Y_SPLIT - 1080); g.clip();
+    api.drawBelt(g, A, now, office.id);
+    g.restore();
+    g.save();
+    g.beginPath(); g.rect(0, Y_SPLIT, STAGE_W, Y_OFF + 60 - Y_SPLIT); g.clip();
+    api.drawBelt(g, B, now, dining.id);
+    g.restore();
+    // Occluders: flange under the office floor, collar through the dining ceiling slab
+    // (the plates' items swap out of sight inside it).
+    collar(g, 1080 - 6, 1080 + 27);
+    collar(g, 1080 + BOARDS_T, 1080 + BEAM_B);
   }
-  return [Math.floor(x0) - 2, Math.floor(y0) - 2, Math.ceil(x1 - x0) + 4, Math.ceil(y1 - y0) + 4];
-}
-
-function drawPlane(g: CanvasRenderingContext2D, tex: HTMLCanvasElement, strips: Strip[]) {
-  for (const s of strips) g.drawImage(tex, ...s);
-}
-
-function render3d(g: CanvasRenderingContext2D, t: number, now: number, api: Api) {
-  ensure();
-  const cam = camAt(t);
-  // Work out which texture rows/columns the camera samples, then paint only those (a plane
-  // that is entirely off screen is not painted at all).
-  const wallStrips = planeStrips(YF, cam, (r) => [r, 0]);
-  const floorStrips = planeStrips(FLOOR_H, cam, (r) => [YF, -r]);
-  const wr = stripsRect(wallStrips), fr = stripsRect(floorStrips);
-  if (wr) paintWallTex(now, api, wr);
-  if (fr) paintFloorTex(now, api, fr);
-  // Project both planes into an axis-aligned frame (fast strips), then bank it in one blit.
-  if (!frameTex) frameTex = canvas(STAGE_W, STAGE_H);
-  const f = frameTex.getContext("2d")!;
-  f.setTransform(1, 0, 0, 1, 0, 0);
-  f.fillStyle = "#0b0908";
-  f.fillRect(0, 0, STAGE_W, STAGE_H);
-  f.imageSmoothingEnabled = false;
-  if (wr) drawPlane(f, wallTex!, wallStrips);
-  if (fr) drawPlane(f, floorTex!, floorStrips);
-  g.fillStyle = "#0b0908";
-  g.fillRect(0, 0, STAGE_W, STAGE_H);
-  g.save();
-  g.translate(STAGE_W / 2, STAGE_H / 2);
-  g.rotate(cam.roll);
-  const sc = 1 + Math.abs(cam.roll) * 1.2;
-  g.scale(sc, sc);
-  g.imageSmoothingEnabled = true;
-  g.drawImage(frameTex, -STAGE_W / 2, -STAGE_H / 2);
-  g.restore();
 }
 
 let catBtn: HTMLButtonElement | null = null;
@@ -289,7 +134,18 @@ export const officeDining: TransitionDef = {
   from: "office",
   to: "dining",
   length: 1.6,
-  route: "Down the sushi lift: through the office floor (past the sleeping ceiling cat), behind the dining ceiling beam, straight through a giant paper lantern, and onto the dining floor while the camera pitches to a bird's-eye view.",
+  route: "Straight down the left lane at eye level: through a copper collar in the office floor, down the crawl space past the sleeping ceiling cat, through the dining ceiling beam and down the dining room's corner post.",
+  render(g, t, now, api) {
+    if (t <= 0) { api.drawScene(office.id, g, now); return; }
+    if (t >= T_END) { api.drawScene(dining.id, g, now); return; }
+    const c = camAt(t);
+    g.fillStyle = "#0b0908";
+    g.fillRect(0, 0, STAGE_W, STAGE_H);
+    g.save();
+    apply(g, c);
+    drawWorld(g, c, now, api);
+    g.restore();
+  },
   mount(el, api) {
     catBtn = hotspot(el, -200, -200, 10, 10, "Ceiling cat", () => {
       catAwakeUntil = performance.now() / 1000 + 2.5;
@@ -302,24 +158,11 @@ export const officeDining: TransitionDef = {
   },
   update(_el, t) {
     if (!catBtn) return;
-    const cam = camAt(t);
-    const p0 = project(cam, CAT.x - 6, CAT.y - 12, 0), p1 = project(cam, CAT.x + CAT.w + 12, CAT.y + CAT.h + 6, 0);
-    if (!p0 || !p1 || t < 0.03 || t > 0.97) { catBtn.style.left = "-200px"; return; }
-    // Apply the roll + overscan the renderer uses.
-    const sc = 1 + Math.abs(cam.roll) * 1.2, cs = Math.cos(cam.roll), sn = Math.sin(cam.roll);
-    const tr = ([x, y]: [number, number]) => {
-      const dx = (x - STAGE_W / 2) * sc, dy = (y - STAGE_H / 2) * sc;
-      return [STAGE_W / 2 + dx * cs - dy * sn, STAGE_H / 2 + dx * sn + dy * cs];
-    };
-    const [ax, ay] = tr(p0), [bx, by] = tr(p1);
-    const w = Math.max(24, Math.abs(bx - ax)), h = Math.max(24, Math.abs(by - ay));
-    catBtn.style.left = `${Math.min(ax, bx)}px`; catBtn.style.top = `${Math.min(ay, by)}px`;
-    catBtn.style.width = `${w}px`; catBtn.style.height = `${h}px`;
-  },
-  render(g, t, now, api) {
-    // Exact end frames (the camera is at rest there).
-    if (t <= 0.03) { api.drawScene(office.id, g, now); return; }
-    if (t >= 0.97) { api.drawScene(dining.id, g, now); return; }
-    render3d(g, t, now, api);
+    const c = camAt(t);
+    const [x0, y0] = toScreen(c, CAT_X - 6, CAT_FLOOR - CAT_H - 12);
+    const [x1, y1] = toScreen(c, CAT_X + CAT_W + 12, CAT_FLOOR + 6);
+    if (t <= 0 || t >= T_END || y1 < 0 || y0 > STAGE_H) { catBtn.style.left = "-200px"; return; }
+    catBtn.style.left = `${Math.round(x0)}px`; catBtn.style.top = `${Math.round(y0)}px`;
+    catBtn.style.width = `${Math.round(x1 - x0)}px`; catBtn.style.height = `${Math.round(y1 - y0)}px`;
   },
 };

@@ -1,175 +1,189 @@
-import type { Api, Camera, TransitionDef } from "../engine/types";
-import { STAGE_W, STAGE_H } from "../engine/types";
-import { declareEggs } from "../engine/eggs";
+import type { Api, BeltPath, TransitionDef } from "../engine/types";
+import { STAGE_W, STAGE_H, PLATE_GAP } from "../engine/types";
+import { drawPlates, drawTread, pathLength, platesOn } from "../engine/belt";
+import { smooth } from "../engine/stage";
+import { glow } from "../engine/fx";
 import { hotspot } from "../engine/dom";
-import { F, BX, YW, K_EYES, backdropXf, drawWorld, paintGround, floorRect, type Cam, type Rect } from "./dining-kitchen/world";
-import { vignette } from "../engine/fx";
-import { layerCtx, dissolve } from "./dining-kitchen/dissolve";
+import { declareEggs } from "../engine/eggs";
+import { dining } from "../scenes/dining";
+import { kitchen } from "../scenes/kitchen";
 
-// dining -> kitchen: the SUSHI CAM. See dining-kitchen.md.
-//   A 0.00-0.20  bird's-eye swoop: zoom onto the belt's exit corner, turning heading-up
-//                (the view spins 180 degrees so "forward" = south = toward the kitchen)
-//   B 0.20-0.37  crane down + pitch up to belt height (true 3D: the dining frame is the
-//                floor); the plate under us locks on (dithered, 0.29-0.36): our plate rim
-//                and our salmon's nose appear, the plates ahead now ride with us
-//   C 0.37-0.80  ride: the plates ahead nose the saloon hatch doors open under the noren,
-//                we push through, Jiro looms over the kitchen counter like a kaiju
-//   D 0.78-1.00  un-bolt: the camera rises off the plate, the kitchen is dithered in at
-//                the matching zoom (0.84-0.95) and pulls back to the observer frame
+declareEggs(["dk-mouse-bar"]);
 
-declareEggs(["tr-sushi-cam"]);
+// Dining -> kitchen: a calm, level camera glide straight down the right lane.
+// World space = dining stage space extended downward: the dining frame at y 0,
+// the floor cutaway band (between.png) at y 1080, the kitchen frame at y OY.
+// The belt drops out of the dining floor, through the floor hatch, down the
+// wooden shaft and into the kitchen's ceiling hatch. See dining-kitchen.md.
 
-const smooth = (a: number, b: number, t: number) => {
-  const x = Math.max(0, Math.min(1, (t - a) / (b - a)));
-  return x * x * (3 - 2 * x);
+const d = dining.belt.pts[dining.belt.pts.length - 1];
+/** Lane x (the dining OUT port = the kitchen IN port). */
+const LANE = d[0];
+const BAND_Y = STAGE_H;
+const ART = { url: "art/tr/dining-kitchen/between.png", w: 1920, h: 801 };
+
+// Plate spacing runs straight through: a dining plate at path distance u sits at
+// y = d[1] - (U_d - u) on the last straight, the kitchen plates at y = OY + u.
+// So OY ≡ d[1] - U_d (mod PLATE_GAP). Pick the value nearest the art height.
+const mod = (a: number, m: number) => ((a % m) + m) % m;
+const OY = (() => {
+  const want = BAND_Y + ART.h;
+  const r = mod(d[1] - pathLength(dining.belt) - want, PLATE_GAP);
+  // Whole pixels, so the kitchen art is never resampled (the < 0.5 px spacing error is invisible).
+  return Math.round(want + (r >= PLATE_GAP / 2 ? r - PLATE_GAP : r));
+})();
+
+/** The belt appears out of the floor hatch's dark opening (band-local y 50). */
+const Y0 = BAND_Y + 50;
+const K0 = kitchen.belt.pts[0][1];
+const BAND_BELT: BeltPath = {
+  pts: [[LANE, Y0, 1], [LANE, OY + 40, 1]],
+  width: kitchen.belt.width ?? 64, plate: kitchen.belt.plate ?? 52, fadeIn: 0, fadeOut: 0,
+  // The kitchen belt's own world phase: plates, ids and slat seams continue into it exactly.
+  // (The dining -> kitchen item handover happens hidden inside the dining floor.)
+  phase: OY + K0 - Y0,
 };
-const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
+/** Steel cross brackets holding the belt in the shaft (band-local y). */
+const BRACKETS = [230, 470];
+const BULB = { x: 1407, y: 378 };
+const DOOR = { x: 1246, y: 486, w: 170, h: 160 };
 
-const A1 = 0.22;
-/** End of the swoop: straight down over the corner, zoom Z1 (= F / h1). */
-const P1 = { x: BX, y: 965 };
-const Z1 = 2.4;
-const H1 = F / Z1;
-const EYE = 22;
-const SH = 205; // lens shift at eye level: horizon at y 745, the backdrop's vanishing point
-const LOCK0 = 0.31, LOCK1 = 0.38;
-const OUT0 = 0.84, OUT1 = 0.95;
-const CY_END = YW + 350;
-
-/** Camera y along the belt: eases in, then steady (scroll-driven). */
-const cyAt = (t: number) => P1.y + (CY_END - P1.y) * Math.pow(Math.max(0, (t - A1) / (1 - A1)), 1.6);
-
-export function camAt(t: number): Cam {
-  const kp = smooth(A1, 0.39, t);
-  const kh = smooth(A1, 0.37, t);
-  const rise = smooth(0.78, 0.95, t);
-  // Look up at Jiro once we are through the doors, level again as we rise.
-  const up = 0.1 * smooth(0.55, 0.68, t) * (1 - rise);
-  return {
-    cx: BX,
-    cy: cyAt(t),
-    h: lerp(H1, EYE, kh) + 190 * rise,
-    phi: (Math.PI / 2) * (1 - kp) - up,
-    sh: SH * kp,
-  };
+/** Camera centre y: an eased glide, never fully stalled mid-way. Whole pixels keep the art crisp. */
+function camY(t: number) {
+  const f = 0.82 * smooth(0, 1, t) + 0.18 * t;
+  return Math.round(STAGE_H / 2 + OY * f);
 }
 
-/** Kitchen camera that puts kitchen.jpg's Jiro eyes on the backdrop's eyes. */
-function kitchenMatch(c: Cam): Camera {
-  const { S, ox, oy } = backdropXf(c);
-  const sx = ox + K_EYES.x * S, sy = oy + K_EYES.y * S;
-  const zoom = (K_EYES.gap * S) / 34.5; // kitchen.jpg eye gap
-  const ex = 1229, ey = 444.5; // kitchen.jpg eye centre
-  return { zoom, cx: ex - (sx - STAGE_W / 2) / zoom, cy: ey - (sy - STAGE_H / 2) / zoom };
-}
-function mixCam(a: Camera, b: Camera, k: number): Camera {
-  // Interpolate zoom geometrically so the pull-back reads as a steady dolly.
-  const za = a.zoom ?? 1, zb = b.zoom ?? 1;
-  const z = za * Math.pow(zb / za, k);
-  const w = za === zb ? k : (1 / za - 1 / z) / (1 / za - 1 / zb);
-  return { zoom: z, cx: lerp(a.cx ?? 960, b.cx ?? 960, w), cy: lerp(a.cy ?? 540, b.cy ?? 540, w) };
-}
-const ID: Camera = { zoom: 1, cx: 960, cy: 540 };
-
-function swoopCam(t: number) {
-  const kA = smooth(0, A1, t);
-  const z = Math.pow(Z1, kA);
-  const w = (1 - 1 / z) / (1 - 1 / Z1);
-  return { z, cx: lerp(960, P1.x, w), cy: lerp(540, P1.y, w), rot: -Math.PI * smooth(0.06, A1, t) };
-}
-
-/** Ground texels visible during the swoop (the screen corners mapped back, +4 px). */
-function swoopRect(t: number): Rect {
-  const { z, cx, cy, rot } = swoopCam(t);
-  const cs = Math.cos(rot), sn = Math.sin(rot);
-  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
-  for (const [sx, sy] of [[0, 0], [STAGE_W, 0], [0, STAGE_H], [STAGE_W, STAGE_H]]) {
-    const dx = sx - STAGE_W / 2, dy = sy - STAGE_H / 2;
-    const wx = cx + (dx * cs + dy * sn) / z, wy = cy + (-dx * sn + dy * cs) / z;
-    x0 = Math.min(x0, wx); x1 = Math.max(x1, wx); y0 = Math.min(y0, wy); y1 = Math.max(y1, wy);
-  }
-  const X0 = Math.max(0, Math.floor(x0) - 4), Y0 = Math.max(0, Math.floor(y0) - 4);
-  return [X0, Y0, Math.max(1, Math.min(4000, Math.ceil(x1) + 4) - X0), Math.max(1, Math.min(4000, Math.ceil(y1) + 4) - Y0)];
-}
-
-/** Swoop (phase A): the dining floor texture under a 2D camera (zoom + heading rotation). */
-function swoop(g: CanvasRenderingContext2D, t: number, tex: HTMLCanvasElement) {
-  const { z, cx, cy, rot } = swoopCam(t);
-  g.save();
+function world(g: CanvasRenderingContext2D, t: number, now: number, api: Api, cy: number) {
+  const vy0 = cy - STAGE_H / 2, vy1 = cy + STAGE_H / 2;
   g.fillStyle = "#0b0908";
-  g.fillRect(0, 0, STAGE_W, STAGE_H);
-  g.translate(STAGE_W / 2, STAGE_H / 2);
-  g.rotate(rot);
-  g.scale(z, z);
-  g.translate(-cx, -cy);
-  g.imageSmoothingEnabled = false;
-  g.drawImage(tex, 0, 0);
-  g.restore();
+  g.fillRect(0, Math.max(BAND_Y, vy0), STAGE_W, Math.min(OY, vy1) - Math.max(BAND_Y, vy0) + 2);
+
+  // 1. The cutaway band and its little life.
+  if (vy1 > BAND_Y && vy0 < OY) {
+    const art = api.img(ART.url);
+    if (art.complete && art.naturalWidth) {
+      const prev = g.imageSmoothingEnabled;
+      g.imageSmoothingEnabled = false;
+      g.drawImage(art, 0, BAND_Y, ART.w, ART.h);
+      g.imageSmoothingEnabled = prev;
+    }
+    glow(g, BULB.x, BAND_Y + BULB.y, 210, "rgba(255,180,100,.13)", now, 0.1, 6, 1);
+    glow(g, BULB.x, BAND_Y + BULB.y, 40, "rgba(255,220,150,.25)", now, 0.06, 4, 2);
+    // The mouse bar's lantern and the warm light behind its noren.
+    glow(g, 1404, BAND_Y + 574, 46, "rgba(255,200,120,.22)", now, 0.14, 3, 3);
+    glow(g, 1330, BAND_Y + 600, 70, "rgba(255,170,90,.10)", now, 0.1, 8, 4);
+    for (const y of BRACKETS) bracket(g, BAND_Y + y);
+    // Belt tread through the shaft (plates come later, over the kitchen's top edge).
+    g.save();
+    g.beginPath();
+    g.rect(0, Y0, STAGE_W, OY - Y0);
+    g.clip();
+    drawTread(g, BAND_BELT, now);
+    g.restore();
+    hatchShadow(g);
+  }
+
+  // 2. Rooms. The kitchen, then the plates that have not reached its top yet
+  //    (their lower halves overlap the kitchen's own belt), then the dining room.
+  if (vy1 > OY - 80) {
+    g.save();
+    g.translate(0, OY);
+    api.drawScene("kitchen", g, now);
+    g.restore();
+  }
+  if (vy1 > Y0 && vy0 < OY + 60) {
+    g.save();
+    g.beginPath();
+    g.rect(0, Y0, STAGE_W, OY + 60 - Y0);
+    g.clip();
+    drawPlates(g, platesOn(BAND_BELT, now, "kitchen").filter((p) => p.y < OY), BAND_BELT.plate ?? 52);
+    g.restore();
+  }
+  if (vy0 < BAND_Y) {
+    g.save();
+    g.beginPath();
+    g.rect(0, vy0 - 10, STAGE_W, BAND_Y - vy0 + 10);
+    g.clip();
+    api.drawScene("dining", g, now);
+    g.restore();
+  }
+
+  // 3. Seam shading where each room meets the cutaway (0 at the ends, so frames stay exact).
+  const k = smooth(0, 0.1, t) * smooth(0, 0.1, 1 - t);
+  if (k > 0) {
+    seam(g, BAND_Y, 36, k * 0.55, 1);
+    seam(g, OY, 36, k * 0.5, -1);
+  }
 }
 
-let recBtn: HTMLButtonElement | null = null;
-let recSeen = 0;
+/** A dark steel bracket bolted across the shaft, behind the belt. */
+function bracket(g: CanvasRenderingContext2D, y: number) {
+  const x0 = LANE - 84, x1 = LANE + 84;
+  g.fillStyle = "#120d0a";
+  g.fillRect(x0, y - 9, x1 - x0, 21);
+  g.fillStyle = "#3c332d";
+  g.fillRect(x0, y - 9, x1 - x0, 15);
+  g.fillStyle = "#5e5048";
+  g.fillRect(x0, y - 9, x1 - x0, 3);
+  g.fillStyle = "#1c1612";
+  for (const x of [x0 + 6, x1 - 12]) g.fillRect(x, y - 3, 6, 6);
+}
+
+/** Shadow under the floor hatch lip: plates slide out of the dark. */
+function hatchShadow(g: CanvasRenderingContext2D) {
+  const gr = g.createLinearGradient(0, Y0, 0, Y0 + 60);
+  gr.addColorStop(0, "rgba(6,4,3,.9)");
+  gr.addColorStop(1, "rgba(6,4,3,0)");
+  g.fillStyle = gr;
+  g.fillRect(LANE - 45, Y0, 90, 60);
+}
+
+/** Same shadow, drawn again over the plates as they emerge. */
+function lipShadow(g: CanvasRenderingContext2D) {
+  const gr = g.createLinearGradient(0, Y0, 0, Y0 + 42);
+  gr.addColorStop(0, "rgba(6,4,3,.85)");
+  gr.addColorStop(1, "rgba(6,4,3,0)");
+  g.fillStyle = gr;
+  g.fillRect(LANE - 45, Y0, 90, 42);
+}
+
+function seam(g: CanvasRenderingContext2D, y: number, h: number, a: number, dir: 1 | -1) {
+  const gr = g.createLinearGradient(0, y, 0, y + dir * h);
+  gr.addColorStop(0, `rgba(6,4,3,${a.toFixed(3)})`);
+  gr.addColorStop(1, "rgba(6,4,3,0)");
+  g.fillStyle = gr;
+  g.fillRect(0, dir > 0 ? y : y - h, STAGE_W, h);
+}
+
+let hotBar: HTMLElement | null = null;
 
 export const diningKitchen: TransitionDef = {
   from: "dining",
   to: "kitchen",
-  length: 1.6,
-  route: "Sushi cam: bolted to a plate, we swoop off the dining belt, push through the saloon hatch doors under the noren and look up at Jiro from belt height, then the camera lifts off into the kitchen",
-  mount(el, api) {
-    recBtn = hotspot(el, 60, 96, 250, 50, "Sushi cam", () => {
-      api.sfx("blip");
-      api.egg("tr-sushi-cam", "Sushi cam footage, reviewed by Jiro: 0 bugs, 1 duck, excellent rice.");
-    });
-    recBtn.classList.add("dk-rec");
-    recBtn.innerHTML = `<span style="display:inline-block;width:14px;height:14px;border-radius:50%;background:#ff4a3d;box-shadow:0 0 10px #ff4a3d;margin-right:12px;vertical-align:middle"></span>REC · SUSHI CAM`;
-    Object.assign(recBtn.style, {
-      font: "20px/50px 'Press Start 2P', ui-monospace, monospace",
-      color: "#fff3e0", letterSpacing: "1px", textAlign: "left", paddingLeft: "14px",
-      background: "rgba(10,8,6,.45)", border: "2px solid rgba(255,243,224,.35)", opacity: "0",
-      whiteSpace: "nowrap", textShadow: "0 2px 0 #000",
-    });
-  },
-  update(_el, t, now) {
-    if (!recBtn) return;
-    const k = smooth(LOCK0, LOCK1, t) * (1 - smooth(0.76, 0.84, t));
-    const dot = recBtn.firstElementChild as HTMLElement | null;
-    if (dot) dot.style.opacity = ((now % 1.2) < 0.7) ? "1" : "0.15";
-    recBtn.style.opacity = k.toFixed(3);
-    recBtn.style.pointerEvents = k > 0.5 ? "auto" : "none";
-    recSeen = k;
-  },
-  render(g: CanvasRenderingContext2D, t: number, now: number, api: Api) {
+  length: 1.4,
+  route: "Straight down the right lane: through a hatch in the dining floor, down a wooden shaft past the smallest sushi bar in town, into the kitchen's ceiling hatch.",
+  render(g, t, now, api) {
     if (t <= 0) { api.drawScene("dining", g, now); return; }
     if (t >= 1) { api.drawScene("kitchen", g, now); return; }
-    const kOut = smooth(OUT0, OUT1, t);
-    if (kOut >= 1) {
-      const kb = smooth(0.88, 1, t);
-      api.drawScene("kitchen", g, now, kb > 0.999 ? undefined : mixCam(kitchenMatch(camAt(OUT1)), ID, kb));
-      return;
-    }
-    const c = camAt(Math.max(t, A1));
-    // The dining floor is only needed until we are through the wall.
-    // Only the part of the ground the camera samples is repainted (and none once past the wall).
-    const rect = t < A1 ? swoopRect(t) : c.cy < YW ? floorRect(c, 0, YW) : null;
-    const tex = rect ? paintGround(now, api, rect) : null;
-    if (t < A1) { swoop(g, t, tex!); return; }
-    drawWorld(g, c, now, api, tex, "base", smooth(LOCK0, LOCK1, t));
-    const kL = smooth(LOCK0, LOCK1, t);
-    if (kL >= 1) drawWorld(g, c, now, api, tex, "lock");
-    else if (kL > 0) {
-      drawWorld(layerCtx(), c, now, api, tex, "lock");
-      // Near first: the belt under us locks before the plates far ahead.
-      dissolve(g, kL, (u, v) => 1 - v * 0.8 - 0.2 * Math.abs(u - 0.5));
-    }
-    // Lens vignette: we are a very small camera.
-    const vk = smooth(A1, 0.34, t) * (1 - kOut);
-    if (vk > 0) vignette(g, "0,0,0", +(0.45 * vk).toFixed(3), 960, 540, 480, 1150);
-    if (kOut > 0) {
-      // Top first: the kitchen settles in from the ceiling down while the belt drops away.
-      const cam = mixCam(kitchenMatch(camAt(Math.min(t, OUT1))), ID, smooth(0.88, 1, t));
-      api.drawScene("kitchen", layerCtx(), now, cam);
-      dissolve(g, kOut, (u, v) => v * 0.85 + 0.15 * Math.abs(u - 0.5));
-    }
-    void recSeen;
+    const cy = camY(t);
+    g.save();
+    g.translate(0, STAGE_H / 2 - cy);
+    world(g, t, now, api, cy);
+    if (cy + STAGE_H / 2 > Y0 && cy - STAGE_H / 2 < Y0 + 60) lipShadow(g);
+    g.restore();
+  },
+  mount(el, api) {
+    hotBar = hotspot(el, 0, 0, 10, 10, "A very small sushi bar", () => {
+      api.sfx("chime");
+      api.egg("dk-mouse-bar", "The smallest sushi bar in town. Nine seats, one grain of rice each. Booked out until 2031.");
+    });
+  },
+  update(_el, t) {
+    if (!hotBar) return;
+    const top = DOOR.y + BAND_Y - (camY(t) - STAGE_H / 2);
+    const on = t > 0.15 && t < 0.85;
+    hotBar.style.display = on ? "" : "none";
+    Object.assign(hotBar.style, { left: `${DOOR.x}px`, top: `${top}px`, width: `${DOOR.w}px`, height: `${DOOR.h}px` });
   },
 };

@@ -1,48 +1,62 @@
 import type { SceneDef, BeltPt, BeltPath } from "../engine/types";
-import { BELT_SPEED, LOOP } from "../engine/types";
+import { BELT_SPEED, LOOP, STAGE_W, STAGE_H } from "../engine/types";
 import { glow } from "../engine/fx";
-import { pointAt, pathLength, platesOn, drawPlates, beltTime } from "../engine/belt";
+import { pointAt, pathLength, beltTime } from "../engine/belt";
 import { html, hotspot, bubble } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
 import { HERO } from "../content/copy";
 import "./bar.css";
 
-declareEggs(["bar-jiro", "bar-sake", "bar-lantern", "bar-customer", "bar-plates", "bar-soy", "bar-opening", "bar-noren", "bar-page-noren", "bar-moth", "bar-byo"]);
+declareEggs(["bar-jiro", "bar-sake", "bar-lantern", "bar-customer", "bar-plates", "bar-soy", "bar-opening", "bar-noren", "bar-byo"]);
 
-// HERO: the approved v6 bar loop (public/video/hero.mp4, 1920x1080, 8 s, 24 fps) framed on
-// the right of a dark page. Its belt flows out of the wall opening, past Jiro, and leaves
-// the picture at its bottom edge; the engine belt continues it down-left to the OUT port.
+// HERO: the approved v6 bar loop, full-bleed over the whole stage and darkened toward the left
+// so the headline reads. public/video/hero.mp4 is the 1920x1080 source played backwards (so its
+// plates flow out of the wall opening), cropped to 1896x1066 (black rows and 12 px per side)
+// and scaled to exactly 1920x1080. Its belt pixels are replaced by a static belt; the engine
+// paints the belt over it: the trough bands below, the plates (bar.belt) and marble streaks.
 
-const PAGE = "art/bar/page.jpg";   // dark quiet page behind everything
-const STILL = "art/bar/hero-downward-still.jpg"; // first frame of the downward loop, shown until playback
+const STILL = "art/bar/still.jpg"; // first frame of hero.mp4, shown until playback (and for reduced motion)
 const VIDEO = "video/hero.mp4";
 
-/** Source crop: the video has 5-6 black rows at top and bottom. */
-const SRC = { y: 6, h: 1066 };
-/** Where the picture sits on the stage (16:9 of the cropped source). */
-export const VB = { x: 800, y: 140, w: 1080, h: 600 };
-const K = VB.w / 1920;
+/** Source crop in video px, scaled to the full stage. */
+const CROP = { x: 12, y: 6, w: 1896, h: 1066 };
+const KX = STAGE_W / CROP.w, KY = STAGE_H / CROP.h;
 /** Video px -> stage px. */
-const V = (vx: number, vy: number): [number, number] => [VB.x + vx * K, VB.y + (vy - SRC.y) * K];
+const V = (vx: number, vy: number): [number, number] => [(vx - CROP.x) * KX, (vy - CROP.y) * KY];
 
-// The video's belt, measured on the frames (rows 950-1072): the grey belt's centre leaves
-// the bottom edge at video (719.1, 1072) heading down-left with dx/dy = -1.487, 129 video px
-// wide measured horizontally. Its trough cross-section (rails, grey belt, front face) is
-// reproduced below at the same size, so it reads as one belt. Belt scale is 1 everywhere.
-const SLOPE = -1.487;
-const JOIN: [number, number] = [VB.x + 719.1 * K, VB.y + VB.h]; // (1204.5, 740)
-const xAt = (y: number) => JOIN[0] + (y - JOIN[1]) * SLOPE;
-// First point sits 32 px inside the picture (hidden under it), last point below the stage.
-const BELT_PTS: BeltPt[] = [
-  [xAt(708), 708, 1],
-  [xAt(1120), 1120, 1],
+// ---- The video's belt, measured on the median of all frames ----
+// It runs straight from the wall opening (top right) down-left out of the bottom edge,
+// narrowing with perspective toward the top. Each knot gives, at one video row: the centre of
+// the grey belt (video x) and six edges as HORIZONTAL video-px offsets from it: outer outline
+// of the far rail, far rail top, grey start, grey end, near rail end, bottom outline of the
+// trough's front face, plus the plate scale there. The two knots below the picture's bottom
+// edge carry exactly the reference cross-section REF, which the bar>office transition continues.
+const REF = [-115, -105, -63, 63, 89, 152];
+type Knot = [y: number, cx: number, o: number[], s: number];
+const KNOTS: Knot[] = [
+  [290, 1900.7, [-93.5, -83.5, -47.5, 47.5, 71.5, 91.5], 1.32], // past the post: only to cover the top of the old belt
+  [350, 1809.3, [-93.5, -83.5, -47.5, 47.5, 71.5, 91.5], 1.34],
+  [432, 1684.3, [-94.5, -84.5, -47.5, 47.5, 71.5, 94.5], 1.36],
+  [530, 1531.8, [-94.5, -84.5, -50.5, 50.5, 74.5, 103.5], 1.42],
+  [600, 1422.4, [-94.5, -84.5, -50.5, 50.5, 74.5, 114.5], 1.44],
+  [700, 1271.8, [-99.5, -89.5, -51.5, 51.5, 74.5, 138.5], 1.48],
+  [800, 1123.2, [-103.5, -93.5, -54.5, 54.5, 78.5, 143.5], 1.56],
+  [900, 975.2, [-109, -99, -57, 57, 81, 147], 1.63],
+  [1080, 707.1, REF, 1.8],
+  [1136.2, 623.4, REF, 1.8],
+  [1190, 543.3, REF, 1.8], // paint only: carries the contact shadow past the cut at BED_END
 ];
-/** Where the belt crosses the bottom stage edge (OUT port): x = 699. */
-export const OUT_PORT: [number, number] = [Math.round(xAt(1080)), 1080];
+/** Belt scale at the picture's bottom edge (the video's plate spacing at this size is 72 * 1.8 px). */
+export const EXIT_S = 1.8;
+/** Horizontal stage px per REF unit at the bottom (the transition continues the trough with it). */
+export const REF_K = KX;
+/** The video's wall-opening post: the belt disappears behind it (video x). */
+const POST_VX = 1804;
+const POST_X = V(POST_VX, 0)[0];
 
-/** Trough bands, as HORIZONTAL video-px offsets from the belt's centre line (row 1068 of the video). */
-const BANDS: [number, number, string][] = [
-  [-111, -108, "#210909"],  // outline
+/** Trough bands in REF units (horizontal video px from the belt centre at the bottom edge). */
+export const TROUGH_BANDS: [number, number, string][] = [
+  [-115, -108, "#210909"],  // outline
   [-108, -105, "#7b4940"],
   [-105, -87, "#b47c5a"],   // far rail top
   [-89, -86, "#da9b75"],    // its lit edge
@@ -53,11 +67,51 @@ const BANDS: [number, number, string][] = [
   [63, 71, "#0c0000"],      // outline
   [71, 89, "#b27952"],      // near rail top
   [89, 97, "#631400"],
-  [97, 143, "#5c2811"],     // front face of the trough
-  [143, 149, "#0f0000"],    // outline
+  [97, 146, "#5c2811"],     // front face of the trough
+  [146, 152, "#0f0000"],    // outline
 ];
 
-// ---- The video, drawn into the canvas every frame through a soft vignette mask. ----
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+/** Map a REF offset to the knot's actual offset (piecewise linear between the six edges). */
+function mapRef(o: number[], r: number) {
+  if (r <= REF[0]) return o[0] + (r - REF[0]);
+  for (let i = 0; i < REF.length - 1; i++) {
+    if (r <= REF[i + 1]) return lerp(o[i], o[i + 1], (r - REF[i]) / (REF[i + 1] - REF[i]));
+  }
+  return o[REF.length - 1] + (r - REF[REF.length - 1]);
+}
+/** Stage point of the band edge `r` (REF units) at knot k. */
+function knotPt(k: Knot, r: number): [number, number] {
+  return V(k[1] + mapRef(k[2], r), k[0]);
+}
+
+// Belt path in flow order: from the opening post down through every knot and out of the picture.
+const TOP_VY = (() => {
+  const [a, b] = [KNOTS[1], KNOTS[2]];
+  return lerp(b[0], a[0], (POST_VX - b[1]) / (a[1] - b[1]));
+})();
+const TOP_S = lerp(KNOTS[2][3], KNOTS[1][3], (KNOTS[2][0] - TOP_VY) / (KNOTS[2][0] - KNOTS[1][0]));
+const BELT_PTS: BeltPt[] = [
+  [...V(POST_VX, TOP_VY), TOP_S],
+  ...KNOTS.slice(2, -1).map(([y, cx, , s]) => [...V(cx, y), s] as BeltPt),
+];
+/** The painted trough stops here (stage y); bar-office/world.ts continues it with the same cross-section. */
+export const BED_END = BELT_PTS[BELT_PTS.length - 1][1];
+/** Where the transition takes the belt over: the last straight run (knot 900 -> knot 1080). */
+const TAIL_I = KNOTS.findIndex((k) => k[0] === 900) - 1; // index into BELT_PTS (the top point replaces KNOTS[0..1])
+export const BELT_TAIL = {
+  /** Straight run at the bottom, [x, y, s] in stage px. */
+  a: BELT_PTS[TAIL_I] as [number, number, number],
+  b: BELT_PTS[TAIL_I + 1] as [number, number, number],
+  /** Belt world distance from the top of the bar belt to `a`. */
+  u: pathLength({ pts: BELT_PTS.slice(0, TAIL_I + 1) }),
+};
+
+const BELT: BeltPath = { pts: BELT_PTS, style: "none", width: 72, plate: 48, fadeIn: 64, fadeOut: 0 };
+/** The same belt, cut at the tail: the bar>office transition draws the rest of the plates. */
+export const BELT_TOP: BeltPath = { ...BELT, pts: BELT_PTS.slice(0, TAIL_I + 1), fadeOut: 0 };
+
+// ---- The video, darkened toward the left, recomposited only when the video shows a new frame. ----
 
 let video: HTMLVideoElement | null = null;
 function getVideo(reduced: boolean): HTMLVideoElement | null {
@@ -90,38 +144,38 @@ function getVideo(reduced: boolean): HTMLVideoElement | null {
 let lastDraw = 0;
 let idlePaused = false;
 
-const smooth = (t: number) => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); };
-
-let mask: HTMLCanvasElement | null = null;
-let buf: HTMLCanvasElement | null = null;
-/** Alpha mask in picture-local stage px: soft top/left/right/bottom, opaque along the belt. */
-function getMask() {
-  if (mask) return mask;
-  const c = document.createElement("canvas");
-  c.width = VB.w; c.height = VB.h;
-  const g = c.getContext("2d")!;
-  const im = g.createImageData(VB.w, VB.h);
-  const [jx, jy] = [JOIN[0] - VB.x, JOIN[1] - VB.y];
-  for (let y = 0; y < VB.h; y++) {
-    for (let x = 0; x < VB.w; x++) {
-      let a = smooth(x / 300) * smooth((VB.w - x) / 90) * smooth(y / 120) * smooth((VB.h - y) / 150);
-      // Lift the left fade a little so the corners are round rather than boxy.
-      const cx = (x - VB.w * 0.62) / (VB.w * 0.62), cy = (y - VB.h * 0.45) / (VB.h * 0.62);
-      a *= smooth((1.25 - Math.hypot(cx, cy)) / 0.45);
-      // Belt corridor: keeps the belt fully opaque down to the bottom edge.
-      const across = (x - (jx + (y - jy) * SLOPE)) / K; // horizontal video px from the belt centre
-      const band = smooth((across + 122) / 12) * smooth((160 - across) / 12);
-      const low = smooth((y - (VB.h - 330)) / 120);
-      a = Math.max(a, band * low);
-      im.data[(y * VB.w + x) * 4 + 3] = Math.round(a * 255);
-    }
+const INK = "9,8,6";
+/** Darkness (0..1) of the left-to-right shade at stage x: near-black under the copy, clear on the right half. */
+const SHADE_X: [number, number][] = [[0, 0.93], [300, 0.91], [600, 0.86], [760, 0.74], [880, 0.54], [1000, 0.3], [1120, 0.12], [1260, 0.03], [1380, 0]];
+function shadeAt(x: number) {
+  for (let i = 0; i < SHADE_X.length - 1; i++) {
+    const [x0, a0] = SHADE_X[i], [x1, a1] = SHADE_X[i + 1];
+    if (x <= x1) return lerp(a0, a1, Math.max(0, (x - x0) / (x1 - x0)));
   }
-  g.putImageData(im, 0, 0);
-  return (mask = c);
+  return 0;
 }
 
-// The masked picture is re-composited only when the video presents a new frame (24 fps) or the
-// source switches (still -> video); every other draw in the same or later ticks reuses `buf`.
+let shade: HTMLCanvasElement | null = null;
+/** The static darkness layer: horizontal shade, plus a soft top (header) and bottom vignette. */
+function getShade() {
+  if (shade) return shade;
+  const c = document.createElement("canvas");
+  c.width = STAGE_W; c.height = STAGE_H;
+  const g = c.getContext("2d")!;
+  const h = g.createLinearGradient(0, 0, STAGE_W, 0);
+  for (const [x, a] of SHADE_X) h.addColorStop(x / STAGE_W, `rgba(${INK},${a})`);
+  h.addColorStop(1, `rgba(${INK},0)`);
+  g.fillStyle = h; g.fillRect(0, 0, STAGE_W, STAGE_H);
+  const top = g.createLinearGradient(0, 0, 0, 190);
+  top.addColorStop(0, `rgba(${INK},.62)`); top.addColorStop(0.5, `rgba(${INK},.22)`); top.addColorStop(1, `rgba(${INK},0)`);
+  g.fillStyle = top; g.fillRect(0, 0, STAGE_W, 190);
+  const bot = g.createLinearGradient(0, STAGE_H - 240, 0, STAGE_H);
+  bot.addColorStop(0, `rgba(${INK},0)`); bot.addColorStop(0.6, `rgba(${INK},.28)`); bot.addColorStop(1, `rgba(${INK},.62)`);
+  g.fillStyle = bot; g.fillRect(0, STAGE_H - 240, STAGE_W, 240);
+  return (shade = c);
+}
+
+let buf: HTMLCanvasElement | null = null;
 let bufKey = "";
 let frameSeq = 0;
 let rvfc = false;
@@ -134,144 +188,109 @@ function watchFrames(v: HTMLVideoElement) {
   r.call(v, onFrame);
 }
 
-/** Draw the masked picture (live video, or the still until it can play) into g. */
+/** Draw the shaded picture (live video, or the still until it can play) into g. */
 function drawPicture(g: CanvasRenderingContext2D, api: Parameters<NonNullable<SceneDef["under"]>>[2]) {
   const v = getVideo(api.reducedMotion);
   lastDraw = performance.now();
   if (v && idlePaused) { idlePaused = false; v.play().catch(() => {}); }
   const still = api.img(STILL);
-  let src: CanvasImageSource | null = null, sy = 0, sh = 0, sw = 1920, key = "";
+  let src: CanvasImageSource | null = null, key = "";
   if (v && v.readyState >= 2 && !api.reducedMotion) {
-    // hero.mp4 is pre-cropped and pre-scaled to the drawn size (1080x600), so decode stays cheap.
-    src = v; sy = 0; sh = VB.h; sw = VB.w;
+    src = v;
     watchFrames(v);
     // Without (recent) requestVideoFrameCallback ticks, e.g. if a browser stops presenting the
     // invisible <video>, fall back to the 24 fps frame index of currentTime.
     const live = rvfc && (v.paused || performance.now() - lastFrameAt < 150);
     key = live ? `v${frameSeq}` : `t${Math.floor(v.currentTime * 24)}`;
-  } else if (still.complete && still.naturalWidth) { src = still; sy = 0; sh = still.naturalHeight; sw = still.naturalWidth; key = "still"; }
+  } else if (still.complete && still.naturalWidth) { src = still; key = "still"; }
   if (!src) return;
-  if (!buf) { buf = document.createElement("canvas"); buf.width = VB.w; buf.height = VB.h; }
+  if (!buf) { buf = document.createElement("canvas"); buf.width = STAGE_W; buf.height = STAGE_H; }
   if (key !== bufKey) {
     bufKey = key;
     const b = buf.getContext("2d")!;
     b.globalCompositeOperation = "copy";
-    b.imageSmoothingEnabled = true;
-    b.imageSmoothingQuality = "high";
-    b.drawImage(src, 0, sy, sw, sh, 0, 0, VB.w, VB.h);
-    b.globalCompositeOperation = "destination-in";
-    b.drawImage(getMask(), 0, 0);
+    b.drawImage(src, 0, 0, STAGE_W, STAGE_H); // hero.mp4 and the still are already 1920x1080
     b.globalCompositeOperation = "source-over";
+    b.drawImage(getShade(), 0, 0);
   }
-  g.drawImage(buf, VB.x, VB.y);
+  g.drawImage(buf, 0, 0);
 }
 
-/** Trough outline point `off` horizontal video px from the centre line, at stage height y. */
-function side(y: number, off: number): [number, number] {
-  return [xAt(y) + off * K, y];
-}
+// ---- The belt, painted over the video's (static) belt ----
 
-/** The trough's soft page shadow, baked once: a per-frame blur filter is slow. (The bands stay
- *  vector so they remain crisp under the transitions' camera zoom.) */
-const TR_BOX = { x: 480, y: 700, w: 940, h: 460 };
+const TR_BOX = { x: 560, y: 330, w: 1270, h: 830 };
+/** Contact shadow of the trough (REF band range, offset, blur); world.ts draws the same one. */
+export const SHADOW = { r0: 120, r1: 158, dx: 4, dy: 7, blur: 6, color: "rgba(0,0,0,.45)" };
 let troughLayer: HTMLCanvasElement | null = null;
+/** Trough bands + a soft contact shadow, baked once (clipped at the opening's post). */
 function getTroughLayer() {
   if (troughLayer) return troughLayer;
-  const y0 = JOIN[1], y1 = 1130;
   const c = document.createElement("canvas");
   c.width = TR_BOX.w; c.height = TR_BOX.h;
   const g = c.getContext("2d")!;
   g.translate(-TR_BOX.x, -TR_BOX.y);
-  g.beginPath(); g.rect(0, y0, 1920, 1080 - y0 + 60); g.clip();
-  // Soft shadow on the page below/right of the trough.
-  g.fillStyle = "rgba(0,0,0,.5)";
-  g.filter = "blur(10px)";
-  g.beginPath();
-  const s0 = side(y0, -100), s1 = side(y1, -100), s2 = side(y1, 150), s3 = side(y0, 150);
-  g.moveTo(s0[0] + 14, s0[1] + 30); g.lineTo(s1[0] + 14, s1[1] + 30); g.lineTo(s2[0] + 14, s2[1] + 30); g.lineTo(s3[0] + 14, s3[1] + 30);
-  g.closePath(); g.fill();
-  g.filter = "none";
+  g.beginPath(); g.rect(0, 0, POST_X, BED_END); g.clip();
+  const edge = (r: number) => KNOTS.map((k) => knotPt(k, r));
+  const poly = (r0: number, r1: number) => {
+    const a = edge(r0), b = edge(r1).reverse();
+    g.beginPath();
+    [...a, ...b].forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y)));
+    g.closePath();
+  };
+  // Contact shadow under the front face (hides the last seam pixels between the paint and the floor).
+  g.save();
+  g.filter = `blur(${SHADOW.blur}px)`;
+  g.fillStyle = SHADOW.color;
+  g.translate(SHADOW.dx, SHADOW.dy);
+  poly(SHADOW.r0, SHADOW.r1);
+  g.fill();
+  g.restore();
+  for (const [a, b, col] of TROUGH_BANDS) {
+    g.fillStyle = col;
+    poly(a, b);
+    g.fill();
+  }
+  // The far end runs into the wall opening: shade it toward the dark inside (deepest at the far rail).
+  const [cx, cy] = V(POST_VX - 4, 318), r = 150 * KX;
+  const sh = g.createRadialGradient(cx, cy, 0, cx, cy, r);
+  sh.addColorStop(0, "rgba(6,4,6,.72)"); sh.addColorStop(0.55, "rgba(6,4,6,.38)"); sh.addColorStop(1, "rgba(6,4,6,0)");
+  g.fillStyle = sh;
+  g.globalCompositeOperation = "source-atop"; // only on the belt itself
+  g.fillRect(cx - r, cy - r, r * 2, r * 2);
+  g.globalCompositeOperation = "source-over";
   return (troughLayer = c);
 }
 
-/** The belt's trough continuing below the picture, over the dark page. */
-function drawTrough(g: CanvasRenderingContext2D, now: number) {
-  const y0 = JOIN[1];
-  g.save();
-  g.beginPath(); g.rect(0, y0, 1920, 1080 - y0 + 60); g.clip();
-  g.drawImage(getTroughLayer(), TR_BOX.x, TR_BOX.y);
-  bands(g, y0 - 2, 1130);
-  // Moving marble streaks on the grey belt, carried at the belt speed (world px/s).
-  streaks(g, BELT, now, 0, y0 - 6);
-  g.restore();
-}
-
-// ---- The belt inside the picture ----
-// The video's own plates stutter (it is a generated loop), so the engine paints the belt over
-// the video's belt from the picture's right edge down to the join: the same trough bands, in
-// perspective, carrying the same plates at the same speed as everywhere else. It is composited
-// through the picture mask, so plates fade in out of the dark at the right edge.
-
-/** Top of the in-picture belt (just past the picture's right edge) and its perspective scale there. */
-const UP_Y = 262;
-const UP_S = 0.62;
-/** Perspective scale of the trough at stage height y (1 from the bar belt's first point down). */
-const upS = (y: number) => y >= BELT_PTS[0][1] ? 1 : UP_S + (1 - UP_S) * (y - UP_Y) / (BELT_PTS[0][1] - UP_Y);
-const UPPER: BeltPath = {
-  pts: [[xAt(UP_Y), UP_Y, UP_S], [BELT_PTS[0][0], BELT_PTS[0][1], 1]],
-  style: "none", width: 72, plate: 50, fadeIn: 0, fadeOut: 0,
-};
-/** World length of the in-picture belt; as the phase it puts every plate exactly on the bar belt's. */
-const UP_U = pathLength(UPPER);
-UPPER.phase = UP_U;
-
-/** Trough bands from y0 to y1, narrowed by the perspective scale. */
-function bands(g: CanvasRenderingContext2D, y0: number, y1: number) {
-  for (const [a, b, col] of BANDS) {
-    const p0 = side(y0, a * upS(y0)), p1 = side(y1, a * upS(y1)), p2 = side(y1, b * upS(y1)), p3 = side(y0, b * upS(y0));
-    g.fillStyle = col;
-    g.beginPath(); g.moveTo(...p0); g.lineTo(...p1); g.lineTo(...p2); g.lineTo(...p3); g.closePath(); g.fill();
-  }
-}
-
-/** Marble streaks on the grey belt; `du` maps path distance to distance along the bar belt. */
-function streaks(g: CanvasRenderingContext2D, path: BeltPath, now: number, du: number, yMin: number) {
-  const U = pathLength(path);
+/** Marble streaks on the grey belt, keyed by distance along the belt. They sit within +-50 REF
+ *  units of the centre, offset along the belt's normal exactly as bar-office/world.ts does. */
+function streaks(g: CanvasRenderingContext2D, now: number) {
+  const U = pathLength(BELT);
   const head = beltTime(now) * BELT_SPEED;
   const STEP = 23;
-  for (let u = (((head - du) % STEP) + STEP) % STEP; u < U; u += STEP) {
-    const p = pointAt(path, u);
-    if (p.y < yMin) continue;
-    const k = Math.round((u + du - head) / STEP);
+  for (let u = ((head % STEP) + STEP) % STEP; u < U; u += STEP) {
+    const p = pointAt(BELT, u);
+    const k = Math.round((u - head) / STEP);
     const h = ((k * 2654435761) >>> 0) / 4294967296;
-    const off = (h - 0.5) * 100 * K * p.s; // stays inside the grey band
+    const off = (h - 0.5) * 100 * KX * Math.abs(p.nx) * (p.s / EXIT_S);
     const len = Math.round((5 + ((h * 7919) % 1) * 12) * p.s);
     g.save();
-    g.translate(Math.round(p.x + off), Math.round(p.y));
+    g.translate(Math.round(p.x - p.nx * off), Math.round(p.y - p.ny * off));
     g.rotate(p.a);
+    g.globalAlpha = Math.min(1, u / 60);
     g.fillStyle = h > 0.45 ? "rgba(214,200,188,.20)" : "rgba(52,42,38,.30)";
-    g.fillRect(-len / 2, -1, len, 2);
+    g.fillRect(-len / 2, -1, len, Math.max(2, Math.round(p.s)));
     g.restore();
   }
 }
 
-let upBuf: HTMLCanvasElement | null = null;
-/** The in-picture belt (trough, streaks, plates), masked like the picture. */
-function drawUpperBelt(g: CanvasRenderingContext2D, now: number) {
-  if (!upBuf) { upBuf = document.createElement("canvas"); upBuf.width = VB.w; upBuf.height = VB.h; }
-  const b = upBuf.getContext("2d")!;
-  b.setTransform(1, 0, 0, 1, 0, 0);
-  b.clearRect(0, 0, VB.w, VB.h);
-  b.translate(-VB.x, -VB.y);
-  bands(b, UP_Y, JOIN[1] + 2);
-  streaks(b, UPPER, now, -UP_U, UP_Y);
-  drawPlates(b, platesOn(UPPER, now, "bar"), BELT.plate);
-  b.setTransform(1, 0, 0, 1, 0, 0);
-  b.globalCompositeOperation = "destination-in";
-  b.drawImage(getMask(), 0, 0);
-  b.globalCompositeOperation = "source-over";
-  g.drawImage(upBuf, VB.x, VB.y);
+/** Trough + moving streaks (the plates are the engine's bar.belt, drawn right after). */
+function drawBeltBed(g: CanvasRenderingContext2D, now: number) {
+  g.drawImage(getTroughLayer(), TR_BOX.x, TR_BOX.y);
+  streaks(g, now);
 }
+
+/** Set by the bar>office transition: 0..1 fade of the picture's bottom into the dark page below. */
+export const heroFx = { exit: 0 };
 
 /** 0..1 smooth pulse that is 1 for `len` seconds starting at `at`, repeating every `period`. */
 function pulse(now: number, period: number, at: number, len: number, ease = 0.08) {
@@ -280,178 +299,42 @@ function pulse(now: number, period: number, at: number, len: number, ease = 0.08
   return Math.min(1, t / ease, (len - t) / ease);
 }
 
-// ---- The quiet surround on the dark page (drawn under the picture, all dim). ----
-
-const TAU = Math.PI * 2;
-const wv = (now: number, period: number, ph = 0) => Math.sin(((now % LOOP) / period) * TAU + ph);
-
-/** Page noren: a dim indigo shop curtain hung in the foreground at the picture's top-left
- *  corner, so the page reads as standing in the doorway looking in (the shop is open). */
-const NOREN = { x: 792, y: 64, panels: 2, pw: 96, gap: 6, h: 156, P: 4 };
-const NOREN_W = NOREN.panels * NOREN.pw + (NOREN.panels - 1) * NOREN.gap;
-let norenSprites: HTMLCanvasElement[] | null = null;
-let norenPartAt = -99;
-
-/** Nigiri emblem, 4-px pixels: o = rice, s = salmon, d = salmon shade, k = outline. */
-const NIGIRI = [
-  "...kkkkkkk...",
-  ".kksssssssdk.",
-  "kssssssssssdk",
-  "kdsssssssdddk",
-  ".kkkkkkkkkkk.",
-  "koooooooooook",
-  "koooooooooook",
-  ".kkkkkkkkkkk.",
-];
-
-const hex = (c: string) => [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16));
-const mix = (a: number[], b: number[], t: number) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
-/** Snap to 4 light levels so the lantern light falls on the cloth in clean pixel bands. */
-const band = (t: number) => Math.round(Math.max(0, Math.min(1, t)) * 4) / 4;
-
-function buildNoren(): HTMLCanvasElement[] {
-  const { pw, gap, h, P, panels } = NOREN;
-  const cx = NOREN_W / 2, cy = 78, R = 34; // emblem centre, noren-local
-  const WARM = hex("#5a3a2a");
-  const [LX, LY] = [MOTH_C[0] - NOREN.x, MOTH_C[1] - NOREN.y]; // the lantern, noren-local
-  const out: HTMLCanvasElement[] = [];
-  for (let i = 0; i < panels; i++) {
-    const c = document.createElement("canvas");
-    c.width = pw; c.height = h;
-    const g = c.getContext("2d")!;
-    const ox = i * (pw + gap);
-    for (let y = 0; y < h; y += P) {
-      for (let x = 0; x < pw; x += P) {
-        const lx = ox + x + P / 2, ly = y + P / 2;
-        // Two soft vertical folds per panel.
-        const f = Math.cos(((x + P / 2) / pw) * Math.PI * 2 - 0.9);
-        let col = f > 0.55 ? "#171d30" : f > -0.35 ? "#131828" : "#0e1220";
-        if (y < 12) col = "#0b0e18";                                      // sleeve for the rod
-        else if (y >= h - 8) col = "#1b2236";                             // bottom hem
-        else if (x >= pw - P) col = "#0a0d16";                            // shaded edge
-        // Emblem: a faded cream ring with a nigiri inside, split across the panels.
-        const d = Math.hypot(lx - cx, ly - cy);
-        if (d <= R && d > R - 6) col = "#5f5647";
-        const ex = Math.floor((lx - (cx - 26)) / P), ey = Math.floor((ly - (cy - 16)) / P);
-        const ch = NIGIRI[ey]?.[ex];
-        if (ch === "o") col = "#6f675a";
-        else if (ch === "s") col = "#7d4630";
-        else if (ch === "d") col = "#5c3323";
-        else if (ch === "k") col = "#0a0d17";
-        // Warm lantern light on the lower right of the cloth (the lantern is just right of it).
-        const L = band(1 - Math.hypot(lx - LX, (ly - LY) * 1.3) / 190) * 0.55 + (x >= pw - P && y >= 12 ? 0.25 * band(1 - Math.hypot(lx - LX, ly - LY) / 260) : 0);
-        const rgb = mix(hex(col), WARM, Math.min(0.8, L));
-        g.fillStyle = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
-        g.fillRect(x, y, P, P);
-      }
-    }
-    out.push(c);
-  }
-  return out;
-}
-
-function drawNoren(g: CanvasRenderingContext2D, now: number) {
-  if (!norenSprites) norenSprites = buildNoren();
-  const { x, y, pw, gap, h, P } = NOREN;
-  // Two cords up into the dark ceiling, then the rod with little brass ends.
-  g.fillStyle = "#1a120c"; g.fillRect(x + 6, 0, 2, y - 6); g.fillRect(x + NOREN_W - 8, 0, 2, y - 6);
-  g.fillStyle = "#1e130c"; g.fillRect(x - 14, y - 6, NOREN_W + 28, 8);
-  g.fillStyle = "#3a2615"; g.fillRect(x - 14, y - 6, NOREN_W + 28, 2);
-  g.fillStyle = "#6b4a25"; g.fillRect(x - 18, y - 8, 6, 12); g.fillRect(x + NOREN_W + 12, y - 8, 6, 12);
-  // One-shot part on click (panels swing aside and settle), otherwise a slow looped sway.
-  const since = performance.now() / 1000 - norenPartAt;
-  // 0.5 s open, held 1.5 s, then an eased 2 s settle.
-  const part = since < 0 || since > 4 ? 0 : since < 0.5 ? Math.sin((since / 0.5) * Math.PI / 2) : since < 2 ? 1 : smooth(1 - (since - 2) / 2);
-  g.save();
-  g.globalAlpha = 0.8;
-  norenSprites.forEach((spr, i) => {
-    const px = x + i * (pw + gap);
-    const sway = 2.2 * wv(now, 12, i * 0.9) + 1.1 * wv(now, 8, i * 1.7 + 1);
-    const side = i < NOREN.panels / 2 ? -1 : 1;
-    for (let r = 0; r < h; r += P) {
-      const k = (r / h) ** 1.6;
-      const dx = Math.round(sway * k + side * 46 * part * k);
-      g.drawImage(spr, 0, r, pw, P, px + dx, y + r, pw, P);
-    }
-  });
-  g.restore();
-}
-
-/** Warm light leaking out of the bar: a wide spill onto the wall on the left and a pool on
- *  the floor under the picture, breathing with the lanterns. */
-function drawSpill(g: CanvasRenderingContext2D, now: number) {
-  glow(g, MOTH_C[0], MOTH_C[1] + 20, 520, "rgba(255,160,80,.045)", now, 0.06, 6, 0);
-  g.save();
-  g.translate(1330, 748); g.scale(1, 0.13);
-  glow(g, 0, 0, 560, "rgba(255,150,70,.09)", now, 0.05, 6, 1);
-  g.restore();
-}
-
-/** Moth circling the far-left lantern of the video. Stage centre of its orbit. */
-const MOTH_C: [number, number] = [1050, 198];
-function mothAt(now: number): [number, number, number] {
-  const a = ((now % LOOP) / 6) * TAU;
-  const x = MOTH_C[0] + Math.cos(a) * 46 + 4 * wv(now, 4, 1);
-  const y = MOTH_C[1] + Math.sin(a) * 15 + 7 * wv(now, 3, 0.5) - 4;
-  return [x, y, Math.sin(a)];
-}
-function drawMoth(g: CanvasRenderingContext2D, now: number) {
-  const [x, y, z] = mothAt(now);
-  if (z < 0 && Math.abs(x - MOTH_C[0]) < 28) return; // behind the lantern
-  const X = Math.round(x), Y = Math.round(y);
-  const up = wv(now, 0.25) > 0;
-  g.save();
-  g.fillStyle = "#d8c7a4";
-  if (up) { g.fillRect(X - 8, Y - 6, 6, 4); g.fillRect(X + 2, Y - 6, 6, 4); }
-  else { g.fillRect(X - 8, Y - 1, 6, 3); g.fillRect(X + 2, Y - 1, 6, 3); }
-  g.fillStyle = "#f3e6cf";
-  g.fillRect(X - 1, Y - 3, 2, 6);
-  g.restore();
-}
-
-function mothHit(x: number, y: number) {
-  const [mx, my] = mothAt(performance.now() / 1000);
-  return Math.hypot(x - mx, y - my) < 24;
-}
-function mothClick(api: Parameters<NonNullable<SceneDef["click"]>>[2]) {
-  api.sfx("blip");
-  api.egg("bar-moth", "The moth has circled this lantern since launch. Nobody dares refactor it.");
-  return true;
-}
-
 /** Scroll cue: how far down the belt (stage y of the centre line) and how far off it, in px. */
-const CUE = { y: 1000, off: 100 };
+const CUE = { y: 985, off: 118 };
 
-// Hotspots and lights, in video px (they follow the picture box).
+// Hotspots and lights, in video px.
 const LANTERNS_V: [number, number][] = [[445, 105], [730, 140], [1222, 165], [1617, 120]];
 const OPENING_V = { x: 1700, y: 250, w: 115, h: 180 };
 
 /** Stage rect for a video-px rect. */
 function R(x: number, y: number, w: number, h: number): [number, number, number, number] {
   const [sx, sy] = V(x, y);
-  return [Math.round(sx), Math.round(sy), Math.round(w * K), Math.round(h * K)];
+  return [Math.round(sx), Math.round(sy), Math.round(w * KX), Math.round(h * KY)];
 }
-
-const BELT = { pts: BELT_PTS, style: "none" as const, width: 72, plate: 50, fadeIn: 0, fadeOut: 1 };
 
 export const bar: SceneDef = {
   id: "bar",
   room: "Bar",
-  art: PAGE,
+  art: STILL,
   mood: "bustling",
   hold: 1.2,
   belt: BELT,
   under(g, now, api) {
-    drawSpill(g, now);
     drawPicture(g, api);
-    // A faint warm pool from the lanterns spilling onto the dark page.
-    LANTERNS_V.forEach(([x, y], i) => { const [sx, sy] = V(x, y); glow(g, sx, sy, 150, "rgba(255,190,110,.07)", now, 0.1, 6, i); });
-    drawTrough(g, now);
-    drawUpperBelt(g, now);
+    // Lanterns breathe a little; the shade dims their glow on the dark side too.
+    LANTERNS_V.forEach(([x, y], i) => {
+      const [sx, sy] = V(x, y);
+      const a = 0.08 * (1 - shadeAt(sx)) ** 2;
+      if (a > 0.004) glow(g, sx, sy, 230, `rgba(255,190,110,${a.toFixed(3)})`, now, 0.1, 6, i);
+    });
+    if (heroFx.exit > 0) {
+      const e = g.createLinearGradient(0, STAGE_H - 420, 0, STAGE_H);
+      e.addColorStop(0, `rgba(${INK},0)`); e.addColorStop(1, `rgba(${INK},${Math.min(1, heroFx.exit)})`);
+      g.fillStyle = e; g.fillRect(-60, STAGE_H - 420, STAGE_W + 120, 424); // +4: also covers the edge row under camera zoom
+    }
+    drawBeltBed(g, now);
   },
-  over(g, now, api) {
-    drawNoren(g, now);
-    drawMoth(g, now);
+  over(g, now) {
     // Something lives in the wall opening. Once per loop it opens its eyes for a moment.
     const eyes = pulse(now, LOOP, 14, 2.4, 0.4) * (1 - pulse(now, LOOP, 15.1, 0.14, 0.01));
     if (eyes > 0) {
@@ -459,9 +342,9 @@ export const bar: SceneDef = {
       g.save();
       g.globalAlpha = eyes;
       g.fillStyle = "#f5c451";
-      g.fillRect(Math.round(ex), Math.round(ey), 3, 2); g.fillRect(Math.round(ex) + 10, Math.round(ey) + 1, 3, 2);
+      g.fillRect(Math.round(ex), Math.round(ey), 4, 3); g.fillRect(Math.round(ex) + 14, Math.round(ey) + 1, 4, 3);
       g.globalAlpha = eyes * 0.3;
-      g.fillRect(Math.round(ex) - 1, Math.round(ey) - 1, 5, 4); g.fillRect(Math.round(ex) + 9, Math.round(ey), 5, 4);
+      g.fillRect(Math.round(ex) - 1, Math.round(ey) - 1, 6, 5); g.fillRect(Math.round(ex) + 13, Math.round(ey), 6, 5);
       g.restore();
     }
   },
@@ -489,29 +372,30 @@ export const bar: SceneDef = {
       <button type="button" class="belt-cue" aria-label="Scroll to follow the belt">
         <span class="chev" aria-hidden="true"><i></i><i></i><i></i></span><span class="t">scroll · follow the belt</span>
       </button>`);
-    const ang = Math.atan2(1, SLOPE);           // belt direction, down-left
+    const { a: ta, b: tb } = BELT_TAIL;
+    const slope = (tb[0] - ta[0]) / (tb[1] - ta[1]);
+    const ang = Math.atan2(1, slope);              // belt direction, down-left
     const nx = -Math.sin(ang), ny = Math.cos(ang); // unit normal pointing up-left
-    const cy0 = CUE.y, cx0 = xAt(cy0);
+    const cy0 = CUE.y, cx0 = ta[0] + (cy0 - ta[1]) * slope;
     cue.style.left = `${Math.round(cx0 + nx * CUE.off)}px`;
     cue.style.top = `${Math.round(cy0 + ny * CUE.off)}px`;
     cue.style.transform = `translateY(-50%) rotate(${ang - Math.PI}rad)`;
     cue.addEventListener("click", (e) => { e.stopPropagation(); api.goto("office"); });
     let n = 0;
     const lines = ["Irasshaimase!", "Your PR is ready. So is the tuna.", "I reviewed it twice. Once for you, once for me.", "No slop leaves this counter.", "Please stop poking the chef."];
-    const [jx, jy, jw, jh] = R(860, 160, 290, 360);
+    const [jx, jy, jw, jh] = R(880, 160, 250, 360);
     hotspot(el, jx, jy, jw, jh, "Jiro", () => {
       api.sfx("blip");
       bubble(el, jx + jw - 20, jy - 20, lines[n++ % lines.length]);
       if (n === 5) api.egg("bar-jiro", "You poked Jiro five times. He noted it in the retro.");
     });
-    hotspot(el, ...R(1150, 215, 110, 130), "Sake bottles", () => { api.sfx("chime"); api.egg("bar-sake", "Sake is for after the deploy."); });
-    LANTERNS_V.forEach(([x, y]) => hotspot(el, ...R(x - 55, y - 80, 110, 160), "Lantern", (e) => {
-      if (mothHit(...api.toStage(e.clientX, e.clientY))) return mothClick(api);
+    hotspot(el, ...R(1130, 215, 110, 130), "Sake bottles", () => { api.sfx("chime"); api.egg("bar-sake", "Sake is for after the deploy."); });
+    LANTERNS_V.forEach(([x, y]) => hotspot(el, ...R(x - 55, y - 80, 110, 160), "Lantern", () => {
       api.sfx("pop");
       api.egg("bar-lantern", "The lantern flickers. Somewhere, a flaky test passes.");
     }));
     const [cx, cy] = V(1560, 520);
-    hotspot(el, ...R(1520, 510, 250, 480), "Customer", () => {
+    hotspot(el, ...R(1600, 540, 170, 450), "Customer", () => {
       api.sfx("pop");
       bubble(el, cx - 240, cy - 60, "I asked for one fix. I got a fix, tests, and a changelog.");
       api.egg("bar-customer", "The regulars are very happy.");
@@ -525,25 +409,15 @@ export const bar: SceneDef = {
       api.egg("bar-soy", "Low-sodium soy. Like the logs: just enough salt to be useful.");
     });
     const [ox, oy] = V(OPENING_V.x, OPENING_V.y);
-    hotspot(el, ...R(OPENING_V.x, OPENING_V.y, OPENING_V.w, OPENING_V.h), "Wall opening", () => {
+    hotspot(el, ...R(OPENING_V.x, OPENING_V.y, OPENING_V.w, 110), "Wall opening", () => {
       api.sfx("meow");
       bubble(el, ox - 260, oy - 50, "mrrp? (the wall cat approves this PR)");
       api.egg("bar-opening", "There's a cat in the wall. It has read access to every plate.");
     });
-    hotspot(el, ...R(830, 45, 125, 200), "Noren curtain", () => {
+    hotspot(el, ...R(828, 45, 100, 120), "Noren curtain", () => {
       api.sfx("whoosh");
       api.egg("bar-noren", "Staff only. Behind this curtain: the on-call rotation, and a very tired rice cooker.");
     });
     getVideo(api.reducedMotion);
-  },
-  click(x, y, api) {
-    if (mothHit(x, y)) { mothClick(api); return true; }
-    if (x > NOREN.x - 20 && x < NOREN.x + NOREN_W + 20 && y > NOREN.y - 12 && y < NOREN.y + NOREN.h + 10) {
-      norenPartAt = performance.now() / 1000;
-      api.sfx("whoosh");
-      api.egg("bar-page-noren", "The noren is out, so the shop is open. Jiro has not taken it in since the first commit.");
-      return true;
-    }
-    return false;
   },
 };

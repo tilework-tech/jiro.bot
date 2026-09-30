@@ -15,7 +15,7 @@ import "./pond.css";
 // tosses every plate off the end; once per six plates the big koi leaps for it.
 // Everything is a pure function of `now`, phase-locked to the belt, so it loops forever.
 
-declareEggs(["pond-koi", "pond-jiro", "pond-duck", "pond-lantern", "pond-moon", "pond-fin", "pond-roller", "pond-encore", "pond-joke", "pond-intern"]);
+declareEggs(["pond-koi", "pond-bridge", "pond-duck", "pond-lantern", "pond-moon", "pond-fin", "pond-roller", "pond-encore", "pond-joke", "pond-intern"]);
 
 const TAU = Math.PI * 2;
 const PLATE = 54;
@@ -455,6 +455,271 @@ function drawFin(g: CanvasRenderingContext2D, api: Api, now: number) {
   }
 }
 
+// ---- Ambient water life (v3 polish) -----------------------------------------------
+// Everything below is a pure function of the loop clock (now mod LOOP): each event
+// repeats every 24 s at its own offset, so the pond never shows where the loop starts.
+const lt = (now: number) => mod(now, LOOP);
+/** Seconds since event time t0 in the 24 s loop, in (-LOOP/2, LOOP/2]. */
+const since = (now: number, t0: number) => { const a = mod(lt(now) - t0, LOOP); return a > LOOP / 2 ? a - LOOP : a; };
+const hash = (i: number, k = 1) => { const s = Math.sin(i * 127.1 * k + k * 311.7) * 43758.5453; return s - Math.floor(s); };
+
+/** A soft, continuous pixel ring on the water that opens slowly and fades out. */
+function ring(g: CanvasRenderingContext2D, x: number, y: number, age: number, life = 5.5, rMax = 60, rings = 2, alpha = 0.34) {
+  if (age < 0 || age > life + rings) return;
+  g.save();
+  for (let k = 0; k < rings; k++) {
+    const a = age - k * 0.9;
+    if (a < 0 || a > life) continue;
+    const f = a / life;
+    const rx = 4 + rMax * (1 - (1 - f) * (1 - f)) * (1 - k * 0.22), ry = rx * 0.32;
+    const al = alpha * ss(0, 0.06, f) * (1 - f) * (1 - f) * (1 - k * 0.3);
+    const n = Math.max(10, Math.ceil((TAU * Math.sqrt((rx * rx + ry * ry) / 2)) / 3));
+    for (let i = 0; i < n; i++) {
+      const an = (i / n) * TAU, s = Math.sin(an);
+      // Two-tone so it reads on dark water and on the moonlit patches alike: the near
+      // (lower) rim is a lit crest, the far rim a dark trough.
+      g.fillStyle = s > 0.1 ? "#c4d6ff" : s < -0.1 ? "#1c2350" : "#8ea6dc";
+      g.globalAlpha = al * (s > 0.1 ? 1 : 0.8);
+      g.fillRect(px3(x + Math.cos(an) * rx) - 1, px3(y + s * ry) - 1, 3, 3);
+    }
+  }
+  g.restore();
+}
+
+// Raindrop-soft rings now and then, at spots of open water away from the copy.
+// [x, y, t0 in the loop, max radius]
+const DROPS: [number, number, number, number][] = [
+  [1175, 755, 0.5, 64], [612, 748, 4.2, 56], [1318, 425, 7.6, 34], [955, 792, 10.8, 44],
+  [228, 728, 13.9, 52], [1478, 640, 17.3, 40], [822, 706, 20.6, 50],
+];
+
+// Small koi that jump now and then: out of the water in a slow arc, and a plop.
+// [x at take-off, water y, direction, t0 in the loop, arc length, arc height, scale]
+const JUMPS: [number, number, number, number, number, number, number][] = [
+  [1262, 712, -1, 5.6, 84, 58, 1],
+  [505, 770, 1, 13.1, 72, 50, 1],
+  [1290, 452, 1, 21.2, 50, 34, 0.8],
+];
+const AIR = 0.95; // seconds in the air
+
+// Pixel fish, built from a formula and sampled at a few angles on a cell grid, so the
+// rotated poses stay crisp (3 px cells). Faces right; flipped for leftward jumps.
+const FISH_POSES = [-0.75, -0.4, 0, 0.4, 0.75];
+const fishCache = new Map<number, HTMLCanvasElement>();
+function fishPose(ang: number): HTMLCanvasElement {
+  let c = fishCache.get(ang);
+  if (c) return c;
+  const N = 21, mid = 10;
+  c = document.createElement("canvas");
+  c.width = N; c.height = N;
+  const x = c.getContext("2d")!;
+  const col = (u: number, v: number): string | null => {
+    const body = (u / 5.4) ** 2 + (v / 1.6) ** 2 <= 1;
+    const tail = u < -4.3 && u > -8.2 && Math.abs(v) <= 0.3 + 0.62 * (-4.3 - u) && !(u < -7 && Math.abs(v) < 0.6);
+    const fin = u > -1.8 && u < 1.2 && v < -1.2 && v > -1.2 - 0.9 * ((u + 1.8) / 3);
+    if (!body && !tail && !fin) return null;
+    if (tail || fin) return "#e79c62";
+    if (u > 3.4 && u < 4.4 && v < -0.1 && v > -1.1) return "#141224";
+    if (u > 2.2) return "#efe2c8";
+    if (u > -1.6 && u < 0.6 && v < 0.5) return "#efe2c8";
+    return v > 0.9 ? "#b8552c" : "#e07a3e";
+  };
+  const cells: (string | null)[][] = [];
+  const cs = Math.cos(-ang), sn = Math.sin(-ang);
+  for (let j = 0; j < N; j++) {
+    cells.push([]);
+    for (let i = 0; i < N; i++) {
+      const dx = i - mid, dy = j - mid;
+      cells[j].push(col(dx * cs - dy * sn + 1.3, dx * sn + dy * cs));
+    }
+  }
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+    const v = cells[j][i];
+    if (v) { x.fillStyle = v; x.fillRect(i, j, 1, 1); continue; }
+    const nb = [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => cells[j + b]?.[i + a]);
+    if (nb) { x.fillStyle = "#120f22"; x.fillRect(i, j, 1, 1); }
+  }
+  fishCache.set(ang, c);
+  return c;
+}
+
+function jumps(g: CanvasRenderingContext2D, now: number) {
+  for (const [x0, wy, dir, t0, dist, h, sc] of JUMPS) {
+    const a = since(now, t0);
+    // A faint shiver on the surface just before the take-off.
+    ring(g, x0 - dir * 6, wy + 2, a + 1.3, 1.6, 12 * sc, 1, 0.22);
+    if (a >= 0 && a <= AIR) {
+      const u = a / AIR;
+      const fx = x0 + dir * dist * u, fy = wy - 4 * h * u * (1 - u);
+      const slope = (-4 * h * (1 - 2 * u)) / dist; // dy/dx of the arc (screen, per unit x)
+      const ang = Math.atan(slope);
+      const pose = FISH_POSES.reduce((b, p) => (Math.abs(p - ang) < Math.abs(b - ang) ? p : b), 0);
+      const im = fishPose(pose);
+      const cell = 3 * sc >= 3 ? 3 : 2;
+      const w = im.width * cell;
+      g.save();
+      g.imageSmoothingEnabled = false;
+      g.beginPath(); g.rect(0, 0, 1920, wy + 1); g.clip();
+      g.translate(px3(fx), px3(fy));
+      if (dir < 0) g.scale(-1, 1);
+      g.drawImage(im, -w / 2, -w / 2, w, w);
+      g.restore();
+      // A few drips trail off the tail.
+      g.save();
+      g.fillStyle = "#dceaff";
+      for (let d = 0; d < 3; d++) {
+        const ta = a - 0.12 - d * 0.1;
+        if (ta < 0) continue;
+        const du = ta / AIR;
+        const dx = x0 + dir * dist * du - dir * 14, dy = wy - 4 * h * du * (1 - du) + 260 * (a - ta) * (a - ta) + 6;
+        if (dy > wy) continue;
+        g.globalAlpha = 0.7;
+        g.fillRect(px3(dx), px3(dy), 3, 3);
+      }
+      g.restore();
+    }
+    splash(g, x0, wy, a - 0.02, 0.32 * sc, 2);
+    splash(g, x0 + dir * dist, wy, a - AIR, 0.42 * sc, 5);
+    ring(g, x0, wy + 3, a - 0.05, 3.2, 26 * sc, 1, 0.4);
+    ring(g, x0 + dir * dist, wy + 3, a - AIR - 0.05, 6, 70 * sc, 3, 0.6);
+  }
+}
+
+// Lily pads floating in the dark pond, rocking slowly. [x, y, radius in cells, notch angle, flower, loop phase]
+const PADS: [number, number, number, number, boolean, number][] = [
+  [372, 704, 11, 0.7, true, 0],
+  [452, 733, 7, 2.6, false, 1.7],
+  [696, 688, 9, 4.1, false, 3.1],
+  [1586, 606, 8, 5.2, true, 4.4],
+  [1536, 624, 6, 1.9, false, 2.2],
+];
+const padCache = new Map<string, HTMLCanvasElement>();
+function padSprite(r: number, notch: number, flower: boolean): HTMLCanvasElement {
+  const key = `${r}:${notch}:${flower}`;
+  let c = padCache.get(key);
+  if (c) return c;
+  const W = r * 2 + 4, H = Math.ceil(r * 1.3) + 6;
+  c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const x = c.getContext("2d")!;
+  const cx = W / 2 - 0.5, cy = H / 2 - 0.5 + 1, ry = r * 0.62;
+  const inside = (i: number, j: number) => {
+    const dx = i - cx, dy = (j - cy) / (ry / r);
+    if (dx * dx + dy * dy > r * r) return false;
+    let an = Math.atan2(dy, dx) - notch;
+    an = Math.atan2(Math.sin(an), Math.cos(an));
+    return !(Math.abs(an) < 0.28 && Math.hypot(dx, dy) > 1.2);
+  };
+  for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) {
+    if (inside(i, j)) {
+      const dx = i - cx, dy = (j - cy) / (ry / r), d = Math.hypot(dx, dy) / r;
+      const an = Math.atan2(dy, dx);
+      const vein = d > 0.2 && d < 0.85 && Math.abs(Math.sin((an - notch) * 3)) < 0.12;
+      const lit = dx + dy < -r * 0.35;
+      const rim = dy > 0 && d > 0.78;
+      x.fillStyle = vein ? "#3f4c3a" : rim ? "#3a4636" : lit ? "#6c7a58" : "#525f46";
+      x.fillRect(i, j, 1, 1);
+    } else if (inside(i + 1, j) || inside(i - 1, j) || inside(i, j + 1) || inside(i, j - 1)) {
+      x.fillStyle = "#15182e";
+      x.fillRect(i, j, 1, 1);
+    }
+  }
+  if (flower) {
+    // A small lotus bud: pink petals, a cream heart.
+    const fx = Math.round(cx - r * 0.25), fy = Math.round(cy - ry * 0.45);
+    const P: [number, number, string][] = [
+      [0, -2, "#f2c3cf"], [-1, -1, "#d98aa0"], [0, -1, "#f7d7df"], [1, -1, "#d98aa0"],
+      [-2, 0, "#c9728c"], [-1, 0, "#e9a7b8"], [0, 0, "#f3e6cf"], [1, 0, "#e9a7b8"], [2, 0, "#c9728c"],
+      [-1, 1, "#a85a72"], [0, 1, "#c9728c"], [1, 1, "#a85a72"],
+    ];
+    x.fillStyle = "#15182e";
+    for (const [a, b] of P) for (const [p, q] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      if (!P.some(([m, n]) => m === a + p && n === b + q)) x.fillRect(fx + a + p, fy + b + q, 1, 1);
+    }
+    for (const [a, b, cl] of P) { x.fillStyle = cl; x.fillRect(fx + a, fy + b, 1, 1); }
+  }
+  padCache.set(key, c);
+  return c;
+}
+
+function pads(g: CanvasRenderingContext2D, now: number) {
+  g.save();
+  g.imageSmoothingEnabled = false;
+  for (const [x, y, r, notch, flower, ph] of PADS) {
+    const im = padSprite(r, notch, flower);
+    // Rock: one cell up and back, slowly (12 s), plus a faint lap of light at the waterline.
+    const w = wave(now, 12, ph);
+    const dy = w > 0.35 ? -3 : 0;
+    const W = im.width * 3, H = im.height * 3;
+    const x0 = px3(x - W / 2), y0 = px3(y - H / 2);
+    g.globalAlpha = 0.22;
+    g.fillStyle = "#05081a";
+    g.fillRect(x0 + 6, y0 + H - 6, W - 9, 6);
+    g.globalAlpha = 0.18 + 0.14 * (0.5 + 0.5 * wave(now, 6, ph * 2));
+    g.fillStyle = "#9fb6ee";
+    g.fillRect(x0 + 9, y0 + H - 3 - dy, W - 18, 3);
+    g.globalAlpha = 1;
+    g.drawImage(im, x0, y0 + dy, W, H);
+  }
+  g.restore();
+}
+
+// Moonlight on the water: glints that drift a few pixels, brighten and go out.
+const GLINTS = Array.from({ length: 26 }, (_, i) => ({
+  x: 1010 + hash(i, 1) * 520,
+  y: 522 + hash(i, 2) * 280,
+  len: 6 + 3 * Math.floor(hash(i, 3) * 6),
+  per: [6, 8, 12, 24][i % 4],
+  ph: hash(i, 4),
+}));
+// Faint wave lines on the dark open water, drifting slowly.
+const SWELLS = Array.from({ length: 14 }, (_, i) => ({
+  x: 40 + hash(i, 5) * 820 + (i > 10 ? 700 : 0),
+  y: i > 10 ? 920 + hash(i, 6) * 40 : 672 + hash(i, 6) * 150,
+  len: 18 + 6 * Math.floor(hash(i, 7) * 6),
+  per: [8, 12, 24][i % 3],
+  ph: hash(i, 8),
+}));
+
+function moonlight(g: CanvasRenderingContext2D, now: number, flare: number) {
+  const t = lt(now);
+  g.save();
+  g.fillStyle = "#f4efdc";
+  for (const s of GLINTS) {
+    const f = mod(t / s.per + s.ph, 1);
+    const env = Math.sin(Math.PI * f) ** 2;
+    g.globalAlpha = Math.min(1, 0.42 * env + 0.55 * flare * (0.5 + 0.5 * Math.sin(now * 9 + s.ph * 40)));
+    g.fillRect(px3(s.x + (f - 0.5) * 12), px3(s.y), s.len, 3);
+  }
+  g.fillStyle = "#7f97d6";
+  for (const s of SWELLS) {
+    const f = mod(t / s.per + s.ph, 1);
+    g.globalAlpha = 0.3 * Math.sin(Math.PI * f) ** 2;
+    g.fillRect(px3(s.x + (f - 0.5) * 18), px3(s.y), s.len, 3);
+  }
+  g.restore();
+  // The moon's reflection breathes, very softly.
+  glow(g, 1228, 560, 110, "rgba(255,244,214,.10)", now, 0.12, 8, 0.4);
+}
+
+// Cherry petals afloat on the pond, riding the slow current toward the pier.
+const PETALS: [number, number, number][] = [[70, 690, 0], [540, 690, 6], [760, 812, 12], [250, 790, 18], [960, 734, 9]];
+function petals(g: CanvasRenderingContext2D, now: number) {
+  g.save();
+  for (const [x, y, t0] of PETALS) {
+    const a = mod(lt(now) - t0, LOOP);
+    const f = a / LOOP;
+    const al = ss(0, 0.12, f) * (1 - ss(0.85, 1, f));
+    const px = px3(x + a * 5), py = px3(y + 3 * wave(now, 8, t0));
+    g.globalAlpha = 0.85 * al;
+    g.fillStyle = "#e6a1b4"; g.fillRect(px, py, 6, 3);
+    g.fillStyle = "#f6d3dc"; g.fillRect(px + 3, py - 3, 3, 3);
+    g.globalAlpha = 0.25 * al;
+    g.fillStyle = "#05081a"; g.fillRect(px, py + 3, 6, 3);
+  }
+  g.restore();
+}
+
 export const pond: SceneDef = {
   id: "pond",
   room: "Koi pond",
@@ -488,22 +753,12 @@ export const pond: SceneDef = {
       glow(g, x, y, 170 + flare * 120, `rgba(255,190,100,${0.18 + flare * 0.25})`, now, 0.08, 6, i * 2.1);
     });
 
-    // Moon reflection shimmer.
-    g.save();
-    g.fillStyle = "#f4efdc";
-    const mf = Math.max(0, 1 - (now - moonT0) / 2);
-    for (let i = 0; i < 18; i++) {
-      const x = 1000 + ((i * 97) % 380), y = 540 + ((i * 53) % 190);
-      const a = 0.5 + 0.5 * wave(now, [4, 6, 8, 12][i % 4], i * 1.3);
-      g.globalAlpha = Math.min(1, 0.26 * a * a + 0.6 * mf * (0.5 + 0.5 * Math.sin(now * 9 + i)));
-      g.fillRect(x, y, 10 + (i % 3) * 6, 2);
-    }
-    g.restore();
-
-    // Slow ripples on the open water, away from the copy.
-    ripple(g, 1180, 780, mod(now, 8), 6, 8, 60, 2);
-    ripple(g, 820, 760, mod(now + 5, 12), 7, 6, 44, 2);
-    ripple(g, 110, 760, mod(now + 3, 12), 7, 8, 50, 2);
+    // Moonlight glints, wave lines, lily pads, petals, soft rings and the odd jumping fish.
+    moonlight(g, now, Math.max(0, 1 - (now - moonT0) / 2));
+    for (const [x, y, t0, r] of DROPS) ring(g, x, y, since(now, t0), 6, r * 1.2, 2, 0.6);
+    petals(g, now);
+    pads(g, now);
+    jumps(g, now);
 
     // A poked koi shadow blows a few bubbles and wobbles a ripple.
     if (shadowPoke.i >= 0) {
@@ -650,7 +905,7 @@ export const pond: SceneDef = {
       const n = 4096 + Math.max(0, clock(lastNow).id);
       api.egg("pond-koi", `Plates eaten: ${n.toLocaleString("en-US")}. The koi is not full. The koi is never full.`);
     });
-    hotspot(el, 1300, 20, 130, 250, "Jiro on the bridge", () => { api.sfx("blip"); api.egg("pond-jiro", `Jiro is logging koi throughput. one big leap every ${CYCLE.toFixed(1)} s, p99 gulp latency ${P.toFixed(2)} s.`); });
+    hotspot(el, 1130, 140, 450, 230, "Garden bridge", () => { api.sfx("blip"); api.egg("pond-bridge", `An empty bridge. The koi logs its own throughput now: one big leap every ${CYCLE.toFixed(1)} s, p99 gulp latency ${P.toFixed(2)} s.`); });
     const LANT: [number, number, number, number][] = [[905, 310, 130, 200], [1850, 510, 70, 180]];
     const lines = ["This lantern is serverless. There is definitely a server in it.", "The lantern has been promoted to staff lantern."];
     LANT.forEach(([x, y, w, h], i) => hotspot(el, x, y, w, h, "Stone lantern", () => {

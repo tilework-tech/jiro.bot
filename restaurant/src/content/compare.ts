@@ -6,23 +6,23 @@ import { html, place } from "../engine/dom";
 // { "task": "…", "left": { "label": "Generic agent", "video": "ui/compare/generic.mp4", "poster": "…", "stats": ["…"] },
 //   "right": { "label": "Jiro", … } }
 //
-// In the (bird's-eye) dining room the two windows float over the dark, calm
-// tatami area, above the counter row where Jiro serves. They are sized so the
-// terminal text reads at 1440x900 (~12px). Click one to enlarge it (with its
-// stats); click again, the backdrop, or Esc to put it back.
+// In the dining room (eye level) the two windows hang side by side over the dark
+// back wall, filling everything between the two belt lanes (x 182 .. 1738) and
+// stopping just above the diners' heads at their tables. Click one to enlarge it
+// (with its stats); click again, the backdrop, or Esc to put it back.
 
 interface Side { label: string; video: string; poster?: string; stats: string[]; verdict?: string }
 interface Spec { task: string; title?: string; left: Side; right: Side }
 
 /** [x, y, width] of each hung window in stage px. */
-export const COMPARE_BOX = { left: [444, 136, 636], right: [1122, 136, 636] } as const;
+export const COMPARE_BOX = { left: [192, 118, 762], right: [976, 118, 762] } as const;
 /** [x, y, width] of the enlarged window. */
-export const COMPARE_BIG = [400, 80, 1120] as const;
+export const COMPARE_BIG = [300, 64, 1320] as const;
 
 export function mountCompare(el: HTMLElement, api: Api) {
   const base = import.meta.env.BASE_URL;
   const head = html(el, `
-    <section class="copy compare-head" style="left:${COMPARE_BOX.left[0]}px;top:56px;width:1314px">
+    <section class="copy compare-head" style="left:${COMPARE_BOX.left[0]}px;top:64px;width:${COMPARE_BOX.right[0] + COMPARE_BOX.right[2] - COMPARE_BOX.left[0]}px">
       <h2 class="px">Generic agent vs. Jiro</h2>
       <p class="ticket"></p>
     </section>`);

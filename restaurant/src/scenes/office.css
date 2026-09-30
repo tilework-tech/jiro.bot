@@ -1,9 +1,6 @@
-/* Back office: the product window is the hero; tiny Jiro and the sushi lift frame it. */
+/* Back office: the product window is the hero; big Jiro and the sushi lift frame it. */
 .scene-ui[data-id="office"] .bubble.office-bubble { font-size: 18px; max-width: 300px; padding: 10px 14px; }
 .scene-ui[data-id="office"] .hit:hover { background: radial-gradient(closest-side, rgba(243, 230, 207, .08), transparent); }
-
-.scene-ui[data-id="office"] .office-head .kicker { margin: 0 0 12px; font-size: 16px; }
-.scene-ui[data-id="office"] .office-head h2.px { font-size: 44px; white-space: nowrap; }
 
 /* Window: the screen of the big monitor painted into the art (bezel, chin and feet are pixels;
    its light on the wall and floor is drawn on the canvas). Only a hairline glass edge here. */
@@ -65,8 +62,5 @@
 @keyframes officeTagSide { 50% { transform: translateX(3px); } }
 @keyframes officeTag { 50% { transform: translateY(3px); } }
 
-.scene-ui[data-id="office"] .product-cap .hint { font-size: 18px; line-height: 1.4; margin: 6px 0 20px; }
-.scene-ui[data-id="office"] .product-cap .caption { font-size: 21px; min-height: 6.6em; }
-.scene-ui[data-id="office"] .product-cap .caption.in { animation: officeCap .35s ease-out; }
-@keyframes officeCap { from { opacity: 0; transform: translateY(6px); } }
-.scene-ui[data-id="office"] .product-cap .steps { font-size: 14px; margin-top: 10px; }
+/* v3: just the demo. The caption column is hidden (Jiro owns the right side now). */
+.scene-ui[data-id="office"] .product-cap { display: none; }

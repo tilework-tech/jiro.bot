@@ -3,10 +3,11 @@ import { STAGE_W, STAGE_H } from "../engine/types";
 import { hotspot, bubble } from "../engine/dom";
 import { declareEggs } from "../engine/eggs";
 import { Y_B, Y_OFF, MICE, MICE_H, drawBetween, drawNear } from "./bar-office/world";
+import { bar, BELT_TOP, heroFx } from "../scenes/bar";
 
 // bar -> office: the camera glides straight down a tall world column (bar frame on top,
-// office frame at Y_OFF) following the plates: the hero trough runs on down-left across the
-// dark page, banks into the left lane, drops through a copper hatch in the bar floor, rides
+// office frame at Y_OFF) following the plates: the hero trough runs on down-left out of the
+// full-bleed bar picture across the dark page, narrowing to the lane's width, banks into the left lane, drops through a copper hatch in the bar floor, rides
 // a lift shaft through the crawlspace where the soot sprites live, and enters the office
 // ceiling as the office's sushi lift. See bar-office.md.
 
@@ -53,7 +54,7 @@ export const barOffice: TransitionDef = {
   from: "bar",
   to: "office",
   length: 1.5,
-  route: "Down-left off the hero picture across the dark page, banking into the left lane, through a copper hatch in the bar floor, down the crawlspace where the soot sprites live, into the office's sushi lift",
+  route: "Down-left out of the full-bleed hero across the dark page, banking into the left lane, through a copper hatch in the bar floor, down the crawlspace where the soot sprites live, into the office's sushi lift",
   render(g, t, now, api) {
     if (t <= 0) { api.drawScene("bar", g, now); return; }
     if (t >= T_END) { api.drawScene("office", g, now); return; }
@@ -71,7 +72,16 @@ export const barOffice: TransitionDef = {
       api.drawScene("office", g, now);
       g.restore();
     }
-    if (top < STAGE_H + 60) api.drawScene("bar", g, now);
+    if (top < STAGE_H + 60) {
+      // The picture's bottom sinks into the dark page as it scrolls up, and the bar draws its
+      // plates only down to its belt tail: path A (world.ts) carries every plate below it.
+      const belt = bar.belt;
+      heroFx.exit = Math.min(1, Math.max(0, (c.cy - STAGE_H / 2) / 100));
+      bar.belt = BELT_TOP;
+      api.drawScene("bar", g, now);
+      bar.belt = belt;
+      heroFx.exit = 0;
+    }
     if (bot > STAGE_H - 100 && top < Y_OFF) drawBetween(g, now, api, c.cy);
     drawNear(g, now, c.cy);
     g.restore();

@@ -1,7 +1,8 @@
-/* Dining room (bird's-eye): the two comparison windows float over the dark tatami area,
-   above the counter row where Jiro serves. Sized so the terminal text reads at 1440x900. */
+/* Dining room (eye level): the two comparison windows hang side by side over the dark back
+   wall between the belt lanes, stopping just above the diners' heads. WIN_H in dining.ts
+   mirrors the hung frame's height (canvas stand-in used by the transitions). */
 .scene-ui[data-id="dining"] .compare-head { display: flex; align-items: baseline; gap: 26px; flex-wrap: nowrap; white-space: nowrap; }
-.scene-ui[data-id="dining"] .compare-head h2.px { font-size: 40px; margin: 0; }
+.scene-ui[data-id="dining"] .compare-head h2.px { font-size: 36px; margin: 0; }
 .scene-ui[data-id="dining"] .compare-head .ticket { font: 17px var(--mono); color: var(--muted); margin: 0; text-shadow: 0 2px 0 rgba(0,0,0,.7); }
 
 /* Pixel frame: a lacquered wooden tray-frame on the 3 px grid (hard edges, hard drop
@@ -20,7 +21,7 @@
 .scene-ui[data-id="dining"] .cmp.right { --acc: rgba(111,220,140,.6); }
 .scene-ui[data-id="dining"] .cmp:hover { --acc: var(--copper); }
 .scene-ui[data-id="dining"] .cmp.right:hover { --acc: var(--green); }
-.scene-ui[data-id="dining"] .cmp figcaption { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 10px 15px 8px; background: #1a1714; border-bottom: 3px solid #2b1f17; }
+.scene-ui[data-id="dining"] .cmp figcaption { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 8px 15px 6px; background: #1a1714; border-bottom: 3px solid #2b1f17; }
 .scene-ui[data-id="dining"] .cmp figcaption b { font: 400 18px var(--px); white-space: nowrap; color: #f0c08a; }
 .scene-ui[data-id="dining"] .cmp.right figcaption b { color: var(--green); }
 .scene-ui[data-id="dining"] .cmp .verdict { margin: 0; font: 15px/1.25 var(--mono); color: #e9b8a8; text-align: right; }

@@ -1,15 +1,18 @@
 // bar -> office world: one tall column in stage-x / world-y.
-//   y 0 .. 1080          the bar frame (hero page + video), drawn by the bar scene
+//   y 0 .. 1080          the bar frame (full-bleed hero), drawn by the bar scene
 //   y 1080 .. Y_B        dark page: the hero trough keeps running down-left, bends into the left lane
 //   y Y_B .. Y_OFF       cutaway of the crawlspace under the bar floor (soot sprites live here)
 //   y Y_OFF .. +1080     the office frame, drawn by the office scene
-// The belt is one path W from the bar belt's first point to the office belt's first point.
-// Its length is a whole number of PLATE_GAPs, so plates line up with the bar AND the office.
+// The belt is one path W from the bar belt's straight tail (BELT_TAIL.a, bar world distance
+// BELT_TAIL.u) to the office belt's first point. The bar's total length to the office top is a
+// whole number of PLATE_GAPs, so plates line up with the bar AND the office. The hero belt is
+// drawn at perspective scale EXIT_S (1.8); W holds it until it is off the picture, then eases
+// it down to the lane's scale 1 by the end of the bend.
 
 import { BELT_SPEED, PLATE_GAP, type Api, type BeltPath, type BeltPt } from "../../engine/types";
 import { pointAt, pathLength, platesOn, beltTime } from "../../engine/belt";
 import { glow, wave } from "../../engine/fx";
-import { bar } from "../../scenes/bar";
+import { BED_END, BELT_TAIL, EXIT_S, REF_K, SHADOW, TROUGH_BANDS, bar } from "../../scenes/bar";
 import { office } from "../../scenes/office";
 
 export const CRAWL_ART = "art/tr/bar-office/crawl.png";
@@ -21,9 +24,9 @@ const JOIST_BOT = 226, SHELF = 600, FLOOR_TOP = 664;
 const VOID_W = 413;
 
 const LANE = office.belt.pts[0][0]; // 150
-// Bar belt geometry (bar.ts): straight line through its two points.
-const [B0, B1] = bar.belt.pts;
-const SLOPE = (B1[0] - B0[0]) / (B1[1] - B0[1]); // dx/dy, about -1.487
+// Bar belt tail (bar.ts): straight line through its two points.
+const B0 = BELT_TAIL.a, B1 = BELT_TAIL.b;
+const SLOPE = (B1[0] - B0[0]) / (B1[1] - B0[1]); // dx/dy, about -1.489
 const xAt = (y: number) => B0[0] + (y - B0[1]) * SLOPE;
 const yAtX = (x: number) => B0[1] + (x - B0[0]) / SLOPE;
 
@@ -36,6 +39,19 @@ const Y_INT = yAtX(LANE);
 const T1: [number, number] = [LANE - DIAG[0] * TAN, Y_INT - DIAG[1] * TAN];
 const T2Y = Y_INT + TAN;
 
+/** The hero scale is held down to here (the bar paints its trough to y 1130), then eased to 1. */
+const Y_HOLD = 1150;
+const smooth = (t: number) => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); };
+function diag(): BeltPt[] {
+  // Diagonal from Y_HOLD to T1, easing the scale from EXIT_S to 1 (engine interpolates linearly).
+  const out: BeltPt[] = [];
+  const n = 8;
+  for (let i = 0; i <= n; i++) {
+    const y = Y_HOLD + (T1[1] - Y_HOLD) * (i / n);
+    out.push([xAt(y), y, 1 + (EXIT_S - 1) * (1 - smooth(i / n))]);
+  }
+  return out;
+}
 function arc(): BeltPt[] {
   // Centre of the fillet sits to the right of the lane (the belt turns left->down, curving counter-clockwise).
   const c: [number, number] = [LANE + R, T2Y];
@@ -49,44 +65,39 @@ function arc(): BeltPt[] {
   }
   return out;
 }
-const ARC = arc();
+const HEAD: BeltPt[] = [B0, B1, ...diag(), ...arc(), [LANE, T2Y, 1]];
 
 const Y_B0 = 1540;
 function buildW(yB: number): BeltPt[] {
-  return [[B0[0], B0[1], 1], [T1[0], T1[1], 1], ...ARC, [LANE, T2Y, 1], [LANE, yB + CRAWL_H, 1]];
+  return [...HEAD, [LANE, yB + CRAWL_H, 1]];
 }
-const U0 = pathLength({ pts: buildW(Y_B0) });
+/** Bar world distance from the top of the bar belt to the office top. */
+const U0 = BELT_TAIL.u + pathLength({ pts: buildW(Y_B0) });
 /** Top of the crawlspace, nudged so the whole belt is a whole number of plate gaps. */
 export const Y_B = Y_B0 + ((PLATE_GAP - (U0 % PLATE_GAP)) % PLATE_GAP);
 export const Y_OFF = Y_B + CRAWL_H;
-const U_W = pathLength({ pts: buildW(Y_B) });
+const U_W = BELT_TAIL.u + pathLength({ pts: buildW(Y_B) });
 
 /** Where the hero trough is replaced by the office lift: inside the bar floor. */
 const Y_SPLIT = Y_B + JOIST_BOT / 2;
-const Y_A0 = 1000; // path A starts here (bar already draws everything above)
-const D_A0 = Math.hypot(xAt(Y_A0) - B0[0], Y_A0 - B0[1]);
 
-/** Hero-trough section (bar identity, plates exactly on the bar's). */
+/** Hero-trough section (bar identity, plates exactly on the bar's). It starts at the bar belt's
+ *  tail: during the transition the bar draws only its plates above it (BELT_TOP). */
 export const beltA: BeltPath = {
-  pts: [[xAt(Y_A0), Y_A0, 1], [T1[0], T1[1], 1], ...ARC, [LANE, T2Y, 1], [LANE, Y_SPLIT, 1]],
-  style: "none", width: bar.belt.width, plate: bar.belt.plate, phase: -D_A0, fadeIn: 0, fadeOut: 0,
+  pts: [...HEAD, [LANE, Y_SPLIT, 1]],
+  style: "none", width: bar.belt.width, plate: bar.belt.plate, phase: -BELT_TAIL.u, fadeIn: 0, fadeOut: 0,
 };
-const U_SPLIT = D_A0 + pathLength(beltA);
+const U_SPLIT = BELT_TAIL.u + pathLength(beltA);
 /** Lift section inside the crawlspace (office identity, lines up with the office belt). */
 export const beltB: BeltPath = {
   pts: [[LANE, Y_SPLIT, 1], [LANE, Y_OFF + 4, 1]],
   style: "full", width: office.belt.width, plate: office.belt.plate, phase: U_W - U_SPLIT, fadeIn: 0, fadeOut: 0,
 };
 
-// ---- Hero trough (same cross-section as bar.ts), blended toward the lane width. ----
+// ---- Hero trough (same cross-section as bar.ts), shrinking with the belt scale into the lane. ----
 
-const K = 1080 / 1920; // video px -> stage px (bar VB.w / 1920)
-const BANDS: [number, number, string][] = [
-  [-111, -108, "#210909"], [-108, -105, "#7b4940"], [-105, -87, "#b47c5a"], [-89, -86, "#da9b75"],
-  [-86, -76, "#6c2f12"], [-76, -67, "#501e05"], [-67, -63, "#200500"], [-63, 63, "#8f8179"],
-  [63, 71, "#0c0000"], [71, 89, "#b27952"], [89, 97, "#631400"], [97, 143, "#5c2811"], [143, 149, "#0f0000"],
-];
-const K_DIAG = K * DIAG[1]; // perpendicular px per horizontal video px on the diagonal
+/** Perpendicular px per REF unit: the hero's at scale EXIT_S, the lane's at scale 1. */
+const K_HERO = REF_K * DIAG[1];
 const K_LANE = 0.42;
 const DIAG_A = Math.atan2(DIAG[1], DIAG[0]);
 
@@ -94,12 +105,11 @@ const DIAG_A = Math.atan2(DIAG[1], DIAG[0]);
 function bend(a: number) {
   return Math.max(0, Math.min(1, (DIAG_A - a) / (DIAG_A - Math.PI / 2)));
 }
-function perp(h: number, b: number) {
-  const k = K_DIAG + (K_LANE - K_DIAG) * b;
+function perp(h: number, k: number, b: number) {
   return h <= 97 ? h * k : 97 * k + (h - 97) * k * (1 - 0.7 * b);
 }
 
-interface S { x: number; y: number; nx: number; ny: number; b: number; u: number }
+interface S { x: number; y: number; nx: number; ny: number; b: number; k: number; u: number }
 let samples: S[] | null = null;
 function troughSamples(): S[] {
   if (samples) return samples;
@@ -110,7 +120,8 @@ function troughSamples(): S[] {
     // Normal from a centred difference (smoother than the segment normal on the fillet).
     const q0 = pointAt(beltA, Math.max(0, u - 4)), q1 = pointAt(beltA, Math.min(U, u + 4));
     const dx = q1.x - q0.x, dy = q1.y - q0.y, l = Math.hypot(dx, dy) || 1;
-    out.push({ x: p.x, y: p.y, nx: dy / l, ny: -dx / l, b: bend(Math.atan2(dy, dx)), u });
+    const k = K_LANE + (K_HERO - K_LANE) * (p.s - 1) / (EXIT_S - 1);
+    out.push({ x: p.x, y: p.y, nx: dy / l, ny: -dx / l, b: bend(Math.atan2(dy, dx)), k, u });
   }
   return (samples = out);
 }
@@ -123,51 +134,57 @@ const TC = { x: -40, y: 1100, w: 1400 };
 /** The trough never changes: render shadow + bands once into a world-aligned canvas. */
 function troughCanvas(): HTMLCanvasElement {
   if (troughCache) return troughCache;
-  const ss = troughSamples();
+  const ss = troughSamples().filter((s) => s.y >= TC.y - 40);
   const c = document.createElement("canvas");
   c.width = TC.w; c.height = Math.ceil(Y_SPLIT - TC.y);
   const g = c.getContext("2d")!;
   g.translate(-TC.x, -TC.y);
-  // Soft shadow on the page (as in bar.ts).
-  g.fillStyle = "rgba(0,0,0,.5)";
-  g.filter = "blur(10px)";
+  // Contact shadow down-right of the trough: the bar's, continued from where the bar cuts it.
+  g.save();
+  g.beginPath(); g.rect(TC.x, BED_END, TC.w, Y_SPLIT - BED_END); g.clip();
+  g.fillStyle = SHADOW.color;
+  g.filter = `blur(${SHADOW.blur}px)`;
   g.beginPath();
-  ss.forEach((s, i) => { const [x, y] = at(s, perp(-100, s.b)); i ? g.lineTo(x + 14, y + 30) : g.moveTo(x + 14, y + 30); });
-  for (let i = ss.length - 1; i >= 0; i--) { const [x, y] = at(ss[i], perp(150, ss[i].b)); g.lineTo(x + 14, y + 30); }
+  const sh = (s: S, r: number) => { const [x, y] = at(s, perp(r, s.k, s.b)); return [x + SHADOW.dx, y + SHADOW.dy]; };
+  ss.forEach((s, i) => { const [x, y] = sh(s, SHADOW.r0); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+  for (let i = ss.length - 1; i >= 0; i--) { const [x, y] = sh(ss[i], SHADOW.r1); g.lineTo(x, y); }
   g.closePath(); g.fill();
-  g.filter = "none";
-  for (const [a, b, col] of BANDS) {
+  g.restore();
+  for (const [a, b, col] of TROUGH_BANDS) {
     g.fillStyle = col;
     g.beginPath();
-    ss.forEach((s, i) => { const [x, y] = at(s, perp(a, s.b)); i ? g.lineTo(x, y) : g.moveTo(x, y); });
-    for (let i = ss.length - 1; i >= 0; i--) { const [x, y] = at(ss[i], perp(b, ss[i].b)); g.lineTo(x, y); }
+    ss.forEach((s, i) => { const [x, y] = at(s, perp(a, s.k, s.b)); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+    for (let i = ss.length - 1; i >= 0; i--) { const [x, y] = at(ss[i], perp(b, ss[i].k, ss[i].b)); g.lineTo(x, y); }
     g.closePath(); g.fill();
   }
   return (troughCache = c);
 }
 
+/** Bar belt ends (and stops painting its streaks) at this world y. */
+const BAR_END_Y = BED_END;
+
 export function drawTrough(g: CanvasRenderingContext2D, now: number) {
   const ss = troughSamples();
   g.save();
   g.drawImage(troughCanvas(), TC.x, TC.y);
-  // Marble streaks: same hash and spacing as the bar's, keyed by distance along the bar belt.
+  // Marble streaks: same hash, spacing and offsets as the bar's, keyed by distance along the bar belt.
   const head = beltTime(now) * BELT_SPEED;
   const STEP = 23;
   const U = pathLength(beltA);
-  for (let u = ((head - D_A0) % STEP + STEP) % STEP; u < U; u += STEP) {
+  const D0 = BELT_TAIL.u;
+  for (let u = ((head - D0) % STEP + STEP) % STEP; u < U; u += STEP) {
     const p = pointAt(beltA, u);
-    if (p.y < 1104) continue;
-    const ub = u + D_A0;
-    const k = Math.round((ub - head) / STEP);
+    if (p.y < BAR_END_Y) continue;
+    const k = Math.round((u + D0 - head) / STEP);
     const h = ((k * 2654435761) >>> 0) / 4294967296;
     const s = ss[Math.min(ss.length - 1, Math.round(u / 3))];
-    const off = perp((h - 0.5) * 100, s.b);
-    const len = Math.round(5 + ((h * 7919) % 1) * 12);
+    const off = perp((h - 0.5) * 100, s.k, s.b);
+    const len = Math.round((5 + ((h * 7919) % 1) * 12) * p.s);
     g.save();
     g.translate(Math.round(p.x + s.nx * off), Math.round(p.y + s.ny * off));
     g.rotate(p.a);
     g.fillStyle = h > 0.45 ? "rgba(214,200,188,.20)" : "rgba(52,42,38,.30)";
-    g.fillRect(-len / 2, -1, len, 2);
+    g.fillRect(-len / 2, -1, len, Math.max(2, Math.round(p.s)));
     g.restore();
   }
   g.restore();
