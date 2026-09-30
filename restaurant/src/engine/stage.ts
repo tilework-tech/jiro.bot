@@ -337,7 +337,8 @@ export function start(scenes: SceneDef[], transitions: TransitionDef[]) {
         const d = seg.def as TransitionDef;
         // Most rooms have settled by ~80% of their transition; waiting until 88% left them sitting empty
         // for a beat and then popping the copy in. Fade over 80-98% so it lands just before the hold.
-        if (s.id === d.from) o = 1 - smooth(0, 0.12, t);
+        // The outgoing copy leaves quickly: the camera starts moving at t = 0 and the DOM doesn't follow it.
+        if (s.id === d.from) o = 1 - smooth(0, 0.04, t);
         if (s.id === d.to) o = smooth(0.8, 0.98, t);
       }
       o = Math.round(o * 100) / 100;

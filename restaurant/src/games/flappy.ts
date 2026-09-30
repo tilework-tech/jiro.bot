@@ -13,7 +13,7 @@ const GRAV = 560, FLAP = -168, TERM = 280, SPEED = 62;
 const KX = 62, POST_W = 20, GAP = 54, SPACING = 96, WATER = 146;
 
 export function mountFlappy(el: HTMLElement, api: Api) {
-  const btn = html(el, `<button class="btn ghost game-start">▶ Mini game 3 of 3: Flappy Koi</button>`);
+  const btn = html(el, `<button class="btn ghost game-start">▶ Mini game: Flappy Koi</button>`);
   place(btn, 110, 640);
   let game: Arcade | null = null;
   btn.addEventListener("click", (e) => {
