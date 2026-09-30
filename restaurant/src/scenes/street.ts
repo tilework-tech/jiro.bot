@@ -8,7 +8,7 @@ import "./street.css";
 
 declareEggs([
   "street-bell", "street-lamp", "street-box", "street-light", "street-cat",
-  "street-neon", "street-jiro", "street-pm", "street-drain", "street-special",
+  "street-neon", "street-jiro", "street-pm", "street-drain", "street-special", "street-puddle",
 ]);
 
 // Night street, red light. Jiro waits on an upright city delivery bicycle (okamochi box on the rear rack),
@@ -31,7 +31,7 @@ const h = (i: number, k = 1) => {
 const ok = (im: HTMLImageElement) => im.complete && im.naturalWidth > 0;
 
 // Egg-triggered one-shots (wall-clock seconds; the scene's `now` uses the same clock unless frozen).
-const fxAt = { lamp: -99, rOut: -99, blink: -99, bell: -99, box: -99, light: -99, cat: -99 };
+const fxAt = { lamp: -99, rOut: -99, blink: -99, bell: -99, box: -99, light: -99, cat: -99, look: -99 };
 const clock = () => performance.now() / 1000;
 const since = (k: keyof typeof fxAt, now: number) => now - fxAt[k];
 let boxPeeks = 0;
@@ -114,36 +114,67 @@ function shifted(g: CanvasRenderingContext2D, art: HTMLImageElement, poly: [numb
 const breath = (now: number) => (wave(now, 4, 0.3) > 0.35 ? -1 : 0);
 /** Once per loop Jiro glances back at the sushi box (eyes + 1 px head nudge), 9.0-11.4 s. */
 const glancing = (now: number) => { const t = lt(now); return t >= 9 && t < 11.4; };
+/** Once per loop he looks up into the rain (eyes up + head back 1 px), 18.8-20.9 s; a drop lands on his faceplate at 20.1. */
+const lookingUp = (now: number) => {
+  const s = since("look", now);
+  if (s >= 0 && s < 2.2) return true;
+  const t = lt(now);
+  return t >= 18.8 && t < 20.9;
+};
+/** A tiny weight shift onto the planted foot: upper body leans 1 px right, 3.6-7.6 s. */
+const leaning = (now: number) => { const t = lt(now); return t >= 3.6 && t < 7.6 ? 1 : 0; };
 
 function blinking(now: number): boolean {
   const s = since("blink", now);
   if (s >= 0 && s < 0.9) return Math.floor(s / 0.15) % 3 === 0;
   const t = lt(now);
   const b6 = t % 6;
-  return (b6 > 2.2 && b6 < 2.34) || (t > 14.56 && t < 14.68);
+  // Every 6 s, a double blink at 14.6, and a startled blink when the rain drop hits his face (20.15).
+  return (b6 > 2.2 && b6 < 2.34) || (t > 14.56 && t < 14.68) || (t > 14.8 && t < 14.9) || (t > 20.15 && t < 20.32);
 }
 
 function drawJiro(g: CanvasRenderingContext2D, now: number, api: Api) {
   const art = api.img(ART);
   const dy = breath(now);
   const gl = glancing(now);
-  const hx = gl ? 1 : 0, hy = dy + (gl ? 1 : 0);
-  shifted(g, art, TORSO, 0, dy);
+  const up = lookingUp(now);
+  const lx = leaning(now);
+  const hx = lx + (gl ? 1 : 0), hy = dy + (gl ? 1 : 0) + (up ? -1 : 0);
+  shifted(g, art, TORSO, lx, dy);
   shifted(g, art, HEAD, hx, hy);
   if (blinking(now)) {
     const lid = api.img("art/street/blink.png");
     if (ok(lid)) g.drawImage(lid, 1206 + hx, 404 + hy);
   } else {
-    if (gl) {
-      const e = api.img("art/street/glance.png");
+    const eyes = gl ? "glance" : up ? "lookup" : "";
+    if (eyes) {
+      const e = api.img(`art/street/${eyes}.png`);
       if (ok(e)) g.drawImage(e, 1206 + hx, 404 + hy);
     }
-    const ex = gl ? 4 : 0;
-    glow(g, 1223 + hx + ex, 427 + hy, 22, "rgba(110,240,255,.2)", now, 0.1, 4);
-    glow(g, 1262 + hx + ex, 423 + hy, 22, "rgba(110,240,255,.2)", now, 0.1, 4, 1);
+    const ex = gl ? 4 : 0, ey = up ? -4 : 0;
+    glow(g, 1223 + hx + ex, 427 + hy + ey, 22, "rgba(110,240,255,.2)", now, 0.1, 4);
+    glow(g, 1262 + hx + ex, 423 + hy + ey, 22, "rgba(110,240,255,.2)", now, 0.1, 4, 1);
+  }
+  // The drop he was looking for: falls onto the faceplate between the eyes and splits.
+  const t = lt(now);
+  if (t >= 19.7 && t < 20.5) {
+    g.save();
+    g.fillStyle = "rgba(205,228,255,.9)";
+    const x = 1242 + hx;
+    if (t < 20.1) {
+      const q = (t - 19.7) / 0.4;
+      g.fillRect(x, Math.round(300 + q * q * (412 + hy - 300)), 2, 5);
+    } else {
+      const q = (t - 20.1) / 0.4;
+      g.globalAlpha = 1 - q;
+      g.fillRect(x - 2 - Math.round(q * 5), 410 + hy - Math.round(q * 3), 2, 2);
+      g.fillRect(x + 2 + Math.round(q * 5), 410 + hy - Math.round(q * 2), 2, 2);
+      g.fillRect(x, 414 + hy + Math.round(q * 8), 2, 3);
+    }
+    g.restore();
   }
   // Raindrop gathering on the hachimaki tail, dropping onto the shoulder every 6 s.
-  const f = lt(now) % 6;
+  const f = t % 6;
   const tx = 1316 + hx, ty = 371 + hy;
   g.save();
   g.fillStyle = "rgba(200,225,255,.85)";
@@ -253,22 +284,33 @@ function rIsOut(now: number): boolean {
   return offs.some(([a, b]) => t >= a && t < b);
 }
 
-/** Fine, calm rain: 1 px streaks; every drop's period divides LOOP so the field loops invisibly. */
+/** Fine, calm rain: crisp 1 px streaks slanted in 3 steps; every drop's period divides LOOP so the field loops invisibly. */
 function drizzle(g: CanvasRenderingContext2D, now: number, n: number, alpha: number, len: number, periods: number[]) {
   g.save();
-  g.strokeStyle = `rgba(185,205,255,${alpha})`;
-  g.lineWidth = 1;
-  g.beginPath();
+  g.fillStyle = `rgba(185,205,255,${alpha})`;
+  const seg = Math.round(len / 3);
   for (let i = 0; i < n; i++) {
     const P = periods[i % periods.length];
     const f = ((now / P + h(i, 3)) % 1 + 1) % 1;
     const x = Math.round(h(i, 7) * 2000 - f * 70);
     const y = Math.round(-40 + f * 1160);
-    g.moveTo(x + 0.5, y);
-    g.lineTo(x - 3 + 0.5, y + len);
+    for (let k = 0; k < 3; k++) g.fillRect(x - k, y + k * seg, 1, seg);
   }
-  g.stroke();
   g.restore();
+}
+
+/** Pixel-crisp ellipse ring (2x1 px dabs on the whole-pixel grid). */
+function pxRing(g: CanvasRenderingContext2D, cx: number, cy: number, rx: number, ry: number) {
+  const n = Math.max(10, Math.round((rx + ry) * 1.6));
+  const seen = new Set<number>();
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * TAU;
+    const x = Math.round(cx + Math.cos(a) * rx) & ~1, y = Math.round(cy + Math.sin(a) * ry);
+    const key = x * 4096 + y;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    g.fillRect(x, y, 2, 1);
+  }
 }
 
 /** A car turning somewhere off-frame: its headlights sweep across the wet road once per loop (light only). */
@@ -363,16 +405,18 @@ export const street: SceneDef = {
 
     // Rain ripples: little rings that open and fade (period 3 or 4 s).
     g.save();
-    g.lineWidth = 1;
     RIPPLES.forEach(([x, y], i) => {
       const P = i % 2 ? 3 : 4;
       const f = ((now / P + h(i, 5)) % 1 + 1) % 1;
       if (f > 0.6) return;
       const q = f / 0.6;
-      g.strokeStyle = `rgba(190,215,255,${(0.32 * (1 - q)).toFixed(3)})`;
-      g.beginPath();
-      g.ellipse(x, y, 3 + q * 16, 1 + q * 5, 0, 0, TAU);
-      g.stroke();
+      g.fillStyle = `rgba(190,215,255,${(0.4 * (1 - q)).toFixed(3)})`;
+      pxRing(g, x, y, Math.round(3 + q * 16), Math.round(1 + q * 5));
+      // A faint second ring trails the first.
+      if (q > 0.35) {
+        g.fillStyle = `rgba(190,215,255,${(0.22 * (1 - q)).toFixed(3)})`;
+        pxRing(g, x, y, Math.round(3 + (q - 0.35) * 16), Math.round(1 + (q - 0.35) * 5));
+      }
     });
     g.restore();
 
@@ -391,6 +435,9 @@ export const street: SceneDef = {
     g.setTransform(g.getTransform().translate(950, 960).scale(1, 0.35).translate(-950, -960));
     g.fillRect(740, 700, 420, 520);
     g.restore();
+
+    // Art fix: a stray axle stub poked out past the rear tyre; cover it with the clean patch just above.
+    if (ok(art)) g.drawImage(art, 1486, 827, 56, 25, 1486, 851, 56, 25);
 
     drawJiro(g, now, api);
     drawBox(g, now, api);
@@ -497,6 +544,12 @@ export const street: SceneDef = {
       api.sfx("splash");
       bubble(el, 470, 700, "(from the drain) …works on my machine…");
       api.egg("street-drain", "Something down there is still running the legacy cron job.");
+    });
+    hotspot(el, 880, 800, 150, 110, "Puddle", () => {
+      fxAt.look = clock();
+      api.sfx("splash");
+      bubble(el, 820, 740, "Forecast: light rain, 90% chance of sashimi.");
+      api.egg("street-puddle", "Jiro checks the sky. The sky checks back. Still raining.");
     });
     hotspot(el, 905, 495, 95, 150, "Sidewalk menu sign", () => {
       api.sfx("coin");

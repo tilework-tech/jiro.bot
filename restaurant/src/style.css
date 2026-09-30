@@ -78,7 +78,9 @@ a { color: inherit; }
 .eggpop header { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 14px 8px; font: 400 14px/1 var(--px); color: var(--copper); border-bottom: 2px dashed rgba(243,230,207,.14); }
 .eggpop header span { color: var(--muted); font-size: 12px; }
 .eggpop ol { margin: 0; padding: 8px 14px 8px 36px; overflow: auto; font: 14px/1.4 var(--sans); color: #e7d8bf; }
-.eggpop li { padding: 4px 0; }
+.eggpop li { padding: 5px 0; }
+.eggpop li b { display: block; font: 400 12px/1.3 var(--px); letter-spacing: .03em; color: var(--cream); }
+.eggpop li span { display: block; font: 13px/1.4 var(--sans); color: var(--muted); }
 .eggpop li::marker { font: 11px var(--mono); color: var(--green); }
 .eggpop .none { margin: 0; padding: 12px 14px; font: 14px/1.45 var(--sans); color: var(--muted); }
 .eggpop footer { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 14px 11px; font: 11px/1.4 var(--mono); color: var(--muted); border-top: 2px dashed rgba(243,230,207,.14); }
@@ -92,6 +94,40 @@ a { color: inherit; }
 .toast p { margin: 0; font: 500 15px/1.4 var(--sans); }
 .toast.egg::before { content: attr(data-egg) " found!"; position: absolute; left: 10px; top: -13px; font: 400 11px/1 var(--px); letter-spacing: .04em; color: #07130b; background: var(--green); padding: 5px 7px 4px; box-shadow: 0 2px 0 #2d7a45; font-family: var(--px), "Segoe UI Symbol", "Noto Sans Symbols 2", sans-serif; }
 .toast.on { opacity: 1; transform: none; }
+
+/* Logo: five taps and it does a barrel roll. */
+.logo img.spin { animation: logospin .6s steps(8); }
+@keyframes logospin { to { transform: rotate(360deg); } }
+
+/* Typed "wasabi": the restaurant winces. */
+#frame.wasabi { animation: wince .5s steps(6); }
+#frame.wasabi::after { content: ""; position: absolute; inset: 0; background: rgba(111,220,140,.18); pointer-events: none; animation: wasabiflash .9s steps(4) forwards; }
+@keyframes wince { 20% { transform: translate(3px, -2px); } 40% { transform: translate(-3px, 2px); } 60% { transform: translate(2px, 1px); } 80% { transform: translate(-2px, -1px); } }
+@keyframes wasabiflash { to { opacity: 0; } }
+
+/* Idle drifters: after a minute of stillness, something crosses the header. */
+.drifter { position: fixed; left: 0; z-index: 6; padding: 0; border: 0; background: none; cursor: pointer; line-height: 0; will-change: transform; }
+.drifter canvas { display: block; }
+.drifter.cloud { top: 4px; opacity: .88; animation: drift-cloud 42s linear forwards; filter: drop-shadow(0 3px 0 rgba(0,0,0,.25)); }
+.drifter.cloud canvas { animation: cloudbob 6s steps(2) infinite; }
+@keyframes drift-cloud { from { transform: translateX(-90px); } to { transform: translateX(calc(100vw + 20px)); } }
+@keyframes cloudbob { 50% { transform: translateY(3px); } }
+.drifter.soot { top: 52px; animation: drift-soot 11s linear forwards; }
+.drifter.soot .legs { display: block; width: 33px; height: 36px; overflow: hidden; }
+.drifter.soot canvas { animation: scurry .24s steps(2) infinite; }
+@keyframes scurry { to { transform: translateX(-66px); } }
+@keyframes drift-soot {
+  0% { transform: translate(-40px, 0); }
+  42% { transform: translate(44vw, 0); }
+  44% { transform: translate(calc(44vw + 6px), -6px); }
+  46%, 62% { transform: translate(calc(44vw + 12px), 0); }
+  100% { transform: translate(calc(100vw + 10px), 0); }
+}
+.drifter.soot:not(.caught):hover canvas { animation-duration: .12s; }
+.drifter.caught { animation-play-state: paused; }
+.drifter.caught canvas { animation: none; }
+.drifter.caught .legs, .drifter.cloud.caught canvas { animation: caught .7s steps(5) forwards; }
+@keyframes caught { 30% { transform: translateY(-8px) scale(1.15); } 100% { transform: translateY(-14px) scale(.2); opacity: 0; } }
 
 /* First-visit scroll nudge */
 .scroll-hint { position: fixed; left: 50%; bottom: 18px; transform: translate(-50%, 8px); z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 6px; font: 400 11px/1 var(--px); letter-spacing: .06em; color: var(--cream); text-shadow: 0 2px 0 #000; opacity: 0; transition: opacity .5s, transform .5s; pointer-events: none; }
@@ -112,8 +148,8 @@ a { color: inherit; }
   .rot-card button { font: 400 13px/1 var(--px); background: var(--green); color: #07130b; border: 0; padding: 12px 14px; box-shadow: 0 4px 0 #2d7a45; cursor: pointer; margin-top: 6px; }
   @keyframes tilt { 0%, 30% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }
 }
-/* Narrow screens: compact chrome so it doesn't eat the (small) stage. */
-@media (max-width: 700px) {
+/* Narrow or short screens (phones either way round): compact chrome so it doesn't eat the (small) stage. */
+@media (max-width: 700px), (max-height: 500px) {
   .top { padding: 8px 10px 12px; gap: 8px; }
   .logo img { width: 24px; height: 23px; }
   .logo b { font-size: 15px; }
@@ -130,8 +166,10 @@ a { color: inherit; }
   .toast { bottom: 50px; left: 12px; }
   .toast p { font-size: 13px; }
   .toast img { width: 24px; height: 23px; }
-  .scroll-hint { display: none; }
+  .scroll-hint { bottom: 8px; }
+  .drifter.soot { top: 36px; }
 }
+@media (max-width: 700px) { .scroll-hint { display: none; } }
 
 /* Copy blocks (stage px) */
 .copy { position: absolute; }

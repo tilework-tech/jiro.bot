@@ -19,6 +19,9 @@ export interface ArcadeOpts {
   bestKey: string;
   /** Keys the game uses (e.key values). They are swallowed so the page never sees them. */
   keys?: string[];
+  /** Return focus to the opener on close (keyboard opens). Mouse/touch opens blur instead, so a
+   *  focused launch button can't swallow the next Space and reopen the game. */
+  returnFocus?: boolean;
 }
 
 export interface Arcade {
@@ -62,12 +65,13 @@ export function openArcade(parent: HTMLElement, api: Api, o: ArcadeOpts): Arcade
         <span class="hi"></span>
         <button class="ab pz" aria-label="Pause" title="Pause (Esc)"><svg viewBox="0 0 8 8" width="16" height="16" shape-rendering="crispEdges"><path fill="currentColor" d="M1 1h2v6H1zM5 1h2v6H5z"/></svg></button>
         <button class="ab rs" aria-label="Restart" title="Restart (R)"><svg viewBox="0 0 8 8" width="16" height="16" shape-rendering="crispEdges"><path fill="currentColor" d="M2 1h4v1H2zM1 2h1v4H1zM2 6h4v1H2zM6 5h1v1H6zM5 0h1v4H5zM6 2h1v1H6zM4 2h1v1H4z"/></svg></button>
-        <button class="x" aria-label="Close" title="Close">×</button>
+        <button class="x" aria-label="Close game" title="Close (Esc)"><svg viewBox="0 0 7 7" width="14" height="14" shape-rendering="crispEdges"><path fill="currentColor" d="M0 0h2v1H0zM1 1h2v1H1zM2 2h3v1H2zM3 3h1v1H3zM2 4h3v1H2zM1 5h2v1H1zM0 6h2v1H0zM5 0h2v1H5zM4 1h2v1H4zM4 5h2v1H4zM5 6h2v1H5z"/></svg></button>
       </header>
       <div class="scr"><canvas width="${W}" height="${H}" style="width:${o.w}px;height:${o.h}px"></canvas><i class="crt"></i>
       <div class="msg"><p class="m1"></p><p class="m2"></p><p class="m3"></p></div></div>
     </div>`);
   place(root, o.x ?? (1920 - o.w) / 2 - 16, o.y ?? (1080 - o.h) / 2 - 40);
+  root.style.transformOrigin = "0 0";
   const canvas = root.querySelector("canvas")!;
   const g = canvas.getContext("2d")!;
   g.imageSmoothingEnabled = false;
@@ -109,9 +113,11 @@ export function openArcade(parent: HTMLElement, api: Api, o: ArcadeOpts): Arcade
       cancelAnimationFrame(raf);
       removeEventListener("keydown", key, true);
       removeEventListener("pointerup", up);
+      removeEventListener("resize", fit);
       mo?.disconnect();
       root.remove();
-      back?.focus?.({ preventScroll: true });
+      if (o.returnFocus) back?.focus?.({ preventScroll: true });
+      else (document.activeElement as HTMLElement | null)?.blur?.();
     },
   };
   const showBest = () => { hi.textContent = a.best ? `HI ${a.best}` : ""; };
@@ -167,6 +173,30 @@ export function openArcade(parent: HTMLElement, api: Api, o: ArcadeOpts): Arcade
   $(".x").addEventListener("click", () => { api.sfx("pop"); a.close(); });
   $(".rs").addEventListener("click", () => { api.sfx("pop"); restart(); });
   $(".pz").addEventListener("click", () => { a.paused ? a.pause(false) : a.pause(true); focus(); });
+
+  // Fit: the cabinet lives in stage space (scaled with the scene), but it should stay a
+  // comfortable size on any screen: at least ~600 css px wide when that fits, never
+  // larger than the viewport, centred on screen. Narrow phones get a big cabinet.
+  function fit() {
+    if (a.closed) return;
+    root.style.transform = "";
+    const r0 = root.getBoundingClientRect();
+    const cw = root.offsetWidth, ch = root.offsetHeight;
+    if (!cw || !r0.width) return;
+    const s = r0.width / cw; // stage -> css scale
+    const vw = innerWidth, vh = innerHeight;
+    // Narrow screens: keep clear of the scene rail on the right edge.
+    const maxW = Math.min(vw < 700 ? vw - 64 : vw * 0.96, (vh * 0.9 - 24) * (cw / ch));
+    const want = Math.min(maxW, Math.max(r0.width, Math.min(620, maxW)));
+    const k = want / r0.width;
+    root.style.transform = k !== 1 ? `scale(${k})` : "";
+    const r = root.getBoundingClientRect();
+    const dx = (vw - r.width) / 2 - r.left, dy = (vh - r.height) / 2 + 12 - r.top;
+    root.style.left = `${parseFloat(root.style.left) + dx / s}px`;
+    root.style.top = `${parseFloat(root.style.top) + dy / s}px`;
+  }
+  addEventListener("resize", fit);
+  fit();
 
   // Frame loop: runs only while open and while the scene layer is live.
   const frame = (t: number) => {

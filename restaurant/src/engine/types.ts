@@ -61,7 +61,7 @@ export interface Api {
   /** Called once per egg id; shows a toast and bumps the counter. */
   egg(id: string, text: string): void;
   toast(text: string, ms?: number): void;
-  sfx(name: "pop" | "blip" | "quack" | "boom" | "coin" | "meow" | "splash" | "whoosh" | "bonk" | "chime"): void;
+  sfx(name: "pop" | "blip" | "quack" | "boom" | "coin" | "meow" | "splash" | "whoosh" | "bonk" | "chime" | "sneeze" | "patter"): void;
   /** Image cache (url -> HTMLImageElement, loaded or not). */
   img(url: string): HTMLImageElement;
   /** Draw a scene's full frame (art + ambient + belt + plates) into g with an optional camera. Used by transitions. */
