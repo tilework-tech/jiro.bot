@@ -18,7 +18,7 @@ Only the final animation loop is committed here. Loops v1 to v5 and the pixel-sn
 | Bar loop | `animation/v6-FINAL-reversed-flow.mp4` | Approved ("great") |
 | Hero banners | `scenes/03-hero-banners/*A-interior-mock.png` | Liked, header copy not yet set |
 | Slack icon | `character/03-icons-handdrawn/`, `character/04-icons-aseprite/` | Candidates only, none chosen |
-| Sushi mini sprites | `character/06-sushi-mini-sprites/` | Delivered 2026-10-01, awaiting feedback |
+| Sushi characters | `character/06-sushi-mini-sprites/` | Martin likes the traced-onigiri style (`onigiri-copy-*.png`); eight-character set in that style delivered 2026-10-01 |
 
 ## Layout
 

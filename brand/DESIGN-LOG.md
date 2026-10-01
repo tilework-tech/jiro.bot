@@ -116,6 +116,7 @@ All loops: Veo 3.1 image-to-video from the current still, locked camera, ~8 s, c
 - Files: `character/06-sushi-mini-sprites/`.
 - Follow-up: Martin liked the salmon nigiri and asked for an onigiri identical in shape to his reference. Made at 64x64 (hero) and 32x32 (matches the set): wide rounded triangle built as the hull of three disks, flat-topped nori cap flush with the apex, rice showing either side of the cap, shade rim along the bottom-left. Same six moods. Script `pipeline/draw_onigiri.py`.
 - Martin: "take a good look at his onigiri and copy it in pixel art in great detail, copy the second." Made `onigiri-copy-1x.png` (62x60 native) by tracing the second gallery tile's silhouette from the reference pixels and repainting it: 2px ink outline, nori cap with the lifted dark corner, round eyes, open D-smile with tongue, three blush strokes per cheek. Script `pipeline/draw_onigiri_copy.py`.
+- Martin: "cool, i really like the last draft, can we use the same style for some more different sushi art?" Made eight 64x64 characters in that style (tuna, salmon, tamago, ebi nigiri, maki roll, inari, temari, wasabi), `sushi-set-sheet.png` and `set-*-1x.png`/`-8x.png`. Script `pipeline/draw_sushi_set.py`. The traced-onigiri style is now the preferred direction for sushi characters.
 
 ## Open items
 
