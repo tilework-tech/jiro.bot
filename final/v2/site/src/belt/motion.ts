@@ -5,8 +5,8 @@
  */
 export function createJourney(opts: { restSpeed?: number } = {}) {
   const restSpeed = opts.restSpeed ?? 4;
-  const MAX = restSpeed * 4;
-  const HOLD = 0.16;
+  const MAX = restSpeed * 6;
+  const HOLD = 0.3;
   const IDLE = 0.6;
   let speed = restSpeed;
   let boost = 0;

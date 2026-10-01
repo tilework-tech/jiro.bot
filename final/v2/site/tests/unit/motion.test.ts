@@ -30,8 +30,8 @@ describe("belt and scroll journey", () => {
       if (firstSceneMove === null && st.sceneDelta !== 0) { firstSceneMove = t; speedAtFirstMove = st.speed; }
     });
     expect(firstSceneMove).not.toBeNull();
-    expect(firstSceneMove!).toBeGreaterThan(0.1);
-    expect(speedAtFirstMove).toBeGreaterThan(j.restSpeed * 2);
+    expect(firstSceneMove!).toBeGreaterThan(0.25);
+    expect(speedAtFirstMove).toBeGreaterThan(j.restSpeed * 4);
   });
 
   it("delivers the whole scroll the visitor asked for", () => {
@@ -53,13 +53,13 @@ describe("belt and scroll journey", () => {
     expect(j.state().sceneDelta).toBeGreaterThan(0);
   });
 
-  it("never surges past four times rest speed, however hard the visitor scrolls", () => {
+  it("never surges past six times rest speed, however hard the visitor scrolls", () => {
     const j = createJourney();
     let peak = 0;
     for (let k = 0; k < 5; k++) { j.wheel(2000); run(j, 0.3, () => { peak = Math.max(peak, j.state().speed); }); }
     run(j, 3, () => { peak = Math.max(peak, j.state().speed); });
-    expect(peak).toBeGreaterThan(j.restSpeed * 2);
-    expect(peak).toBeLessThanOrEqual(j.restSpeed * 4 + 1e-6);
+    expect(peak).toBeGreaterThan(j.restSpeed * 5);
+    expect(peak).toBeLessThanOrEqual(j.restSpeed * 6 + 1e-6);
   });
 
   it("settles back to rest speed within about a second of the surge", () => {

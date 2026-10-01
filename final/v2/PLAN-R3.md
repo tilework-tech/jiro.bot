@@ -63,3 +63,15 @@ Martin (Slack): "make the second scene pixel art about half the size, so that th
 - `site/src/style.css`: `#product .demo-wrap` is now 36/12/240/184 world units (was 40/14/168/178), about 1.5× the area, ending just left of the CRT; tab type 19 px, body `clamp(15px, 1.35vw, 21px)`.
 - New e2e `site/tests/e2e/product.spec.ts`: on desktop the panel is ≥60% of viewport width and ≥75% of height, and the product Jiro egg is ≤12% of the width and right of the panel.
 - Gemini: 13 calls (1 outpaint, 11 frame edits, 1 mask), per `art/log/gemini-calls.jsonl`.
+
+---
+
+## Round 5 addendum: panels to the belt, horizontal belt ends, stronger surge
+
+Martin (Slack): "for scene 3, extend the interface windows all the way down until the belt. Make sure the beginning and the end of each belt is visualized correctly… have them always finish horizontally, no matter what the angle of the belt. Make the belt go a bit faster when I scroll, and then after that the scrolling kicks in."
+
+- **Surge.** `site/src/belt/motion.ts`: the surge cap is 6× rest speed (was 4×) and the page holds 0.3 s (was 0.16 s) before the scroll is delivered. Unit tests: the scene starts moving after more than 0.25 s with the belt above 4× rest, and the peak lies in (5×, 6×]. The hero e2e surge test expects a peak above 4× and at most 6×. `DESIGN-BRIEF.md` §5 updated.
+- **Belt ends.** `site/src/belt/route.ts`: a built route exposes its covering rects (`hidden`) and `isBuried(p, r)` (a square of half-size r is fully covered). `site/src/beltView.ts` skips slat rows and plates only when buried, then erases the belt canvas along every hidden rect with `destination-out`, so the belt and any plate on it end in a straight horizontal (or rect-edge) cut at the kitchen hatch, the floor and beam at the hero bottom, the dining-room walls and floor, and below the last built stop. Falling and held plates and particles are drawn after the erase. New e2e: the belt canvas has pixels 10 px above and none 3 px below the cut at the dining-room exit (176/202) and at the hero bottom.
+- **Stop 3 panels.** `site/src/style.css`: `#compare .cmp-wrap` is 133 world units tall (was 99), bottom at 148 of 202, just above the channel. The middle-row diners are now covered, so the kid and table-eyes sprites and the kid, table-eyes and seat eggs were removed (`art/specs/compare.json`, re-exported `scene.json`). New say-only eggs in the bottom sliver: `tea-mid` ("Refill, please"), `last-sushi` ("The last piece") and `bowl` ("Miso at the end of the row"). Remaining sprite eggs: cat and tea; seven eggs in total. New e2e: on desktop each panel's bottom is at ≥68% of the art height and above the belt plates.
+- Gemini: no calls.
+- Tests: Vitest 42/42; Playwright full run passes (76 passed, 20 skipped by design, the rest skipped by design across Chromium and WebKit, desktop and mobile).

@@ -94,7 +94,9 @@ test("the belt surges first when scrolling starts, then the scene moves", async 
   const firstSurge = samples.findIndex((s) => s.speed > rest * 1.5);
   expect(firstSurge).toBeGreaterThanOrEqual(0);
   expect(firstSurge).toBeLessThan(firstMove);
-  expect(Math.max(...samples.map((s) => s.speed))).toBeLessThanOrEqual(rest * 4.05);
+  const peak = Math.max(...samples.map((s) => s.speed));
+  expect(peak).toBeGreaterThan(rest * 4);
+  expect(peak).toBeLessThanOrEqual(rest * 6.05);
   await page.waitForTimeout(2500);
   expect(await beltSpeed(page)).toBeCloseTo(rest, 0);
 });

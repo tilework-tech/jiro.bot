@@ -2,7 +2,7 @@
 
 v2 rebuilds the Jiro scroll site from Martin Stübler's brief of 2026-10-01: a 16-bit pixel-art sushi restaurant seen from one fixed ¾ camera. The page slides straight down through seven stops: **hero → product → good/bad comparison → comparison table → FAQ → price → koi pond**. One continuous conveyor belt runs through all of them. v2 supersedes PR #13's `../site/` as the active build. That build stays in the tree because v2 reuses its copy and games.
 
-## Status: review gate B, round 3 (plus round 4 product resize)
+## Status: review gate B, round 3 (plus round 4 product resize and round 5 belt and stop-3 fixes)
 
 Round 2 (`PLAN-R2.md`) applied Martin's 2026-10-01 17:44 feedback: much higher resolution for everything (above all Jiro, people, dust spirits and belt items), a smooth belt, fewer plates, then one more stop and a stop for review. Round 3 (`PLAN-R3.md`) applies his gate-B review: "crank it up a bit more and use even higher resolution moving forward", and in stop 3 move everything down so the belt runs along the bottom with only table space, condiments and the cat beneath it. This tree is at review gate B with round 3 applied:
 
@@ -11,6 +11,7 @@ Round 2 (`PLAN-R2.md`) applied Martin's 2026-10-01 17:44 feedback: much higher r
 - the belt, plates and belt items at grain 8, gliding sub-pixel, with plates on about half the slots
 - the Easter-egg tracker
 - round 4 (`PLAN-R3.md`, "Round 4 addendum"): the product stop's pixel art is redrawn at about half size in the bottom-right corner, so the scripted demo panel is about 1.5× larger and nearly fills the screen
+- round 5 (`PLAN-R3.md`, "Round 5 addendum"): stop 3's replay panels run down to the belt, every belt end is cut horizontally where architecture covers it, and a scroll surges the belt harder (up to 6×) and longer (0.3 s) before the page moves
 
 The remaining four stops (table, FAQ, price, pond) come after Martin's review. `site/src/main.ts` only mounts the stops listed in `BUILT`. The belt route already runs on to the pond, but it is hidden below the last built stop.
 

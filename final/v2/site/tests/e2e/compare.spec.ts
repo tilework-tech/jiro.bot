@@ -157,3 +157,48 @@ test("the dining room hides easter eggs a visitor can reach", async ({ page }) =
   await eggs.first().click();
   await expect.poll(async () => (await tracker(page)).found).toBe(before + 1);
 });
+
+test("the replay panels reach all the way down to the belt", async ({ page, isMobile }) => {
+  test.skip(isMobile, "phones stack the panels above the art");
+  await open(page);
+  await goToCompare(page);
+  const art = (await page.locator('canvas.scene[data-scene="compare"]').boundingBox())!;
+  const panels = await compare(page).getByTestId("replay").evaluateAll((els) => els.map((e) => e.getBoundingClientRect().bottom));
+  const p = await waitForPlate(page, (q) => q.x > art.x + art.width * 0.25 && q.x < art.x + art.width * 0.75);
+  for (const bottom of panels) {
+    expect(bottom).toBeLessThanOrEqual(p.y - p.r * 0.5);
+    expect(bottom).toBeGreaterThanOrEqual(art.y + art.height * 0.68);
+  }
+});
+
+/** Where the belt leaves a section, its last drawn row is a straight horizontal edge, whatever the belt's angle. */
+async function beltRows(page: Page, x0: number, x1: number, y: number) {
+  return page.evaluate(({ x0, x1, y }) => {
+    const c = document.getElementById("belt") as HTMLCanvasElement;
+    const k = c.width / innerWidth;
+    const d = c.getContext("2d")!.getImageData(Math.round(x0 * k), Math.round(y * k), Math.round((x1 - x0) * k), 1).data;
+    let n = 0;
+    for (let i = 3; i < d.length; i += 4) if (d[i] > 0) n++;
+    return n / (d.length / 4);
+  }, { x0, x1, y });
+}
+
+for (const where of [
+  { name: "the dining-room exit into the floor", stop: "compare", x: [0.82, 1], y: 176 / 202 },
+  { name: "the hero belt dropping under the floor", stop: "hero", x: [0.3, 0.5], y: 1 },
+]) {
+  test(`the belt ends horizontally at ${where.name}`, async ({ page, isMobile }) => {
+    test.skip(isMobile, "checked at desktop size");
+    await open(page);
+    const art = page.locator(`canvas.scene[data-scene="${where.stop}"]`);
+    await art.evaluate((el) => scrollTo(0, el.getBoundingClientRect().top + scrollY + el.getBoundingClientRect().height - innerHeight / 2));
+    await page.waitForTimeout(600);
+    const b = (await art.boundingBox())!;
+    const cut = b.y + b.height * where.y;
+    const x0 = b.x + b.width * where.x[0], x1 = b.x + b.width * where.x[1];
+    const above = await beltRows(page, x0, x1, cut - 10);
+    const below = await beltRows(page, x0, x1, cut + 3);
+    expect(above).toBeGreaterThan(0.03);
+    expect(below).toBe(0);
+  });
+}

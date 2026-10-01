@@ -89,7 +89,7 @@ body.dragging, body.dragging * { cursor: grabbing !important; }
 }
 
 /* ---------------------------------------------------------------- 3 · same prompt, different chef */
-#compare .cmp-wrap { left: calc(var(--s) * 12); top: calc(var(--s) * 15); width: calc(var(--s) * 336); height: calc(var(--s) * 99); display: flex; flex-direction: column; gap: calc(var(--s) * 3); text-shadow: none;
+#compare .cmp-wrap { left: calc(var(--s) * 12); top: calc(var(--s) * 15); width: calc(var(--s) * 336); height: calc(var(--s) * 133); display: flex; flex-direction: column; gap: calc(var(--s) * 3); text-shadow: none;
   background: rgba(11, 3, 2, 0.82); border: 2px solid #351e1a; box-shadow: 0 6px 0 #000, 0 24px 60px rgba(0, 0, 0, 0.5); padding: calc(var(--s) * 4) calc(var(--s) * 5); box-sizing: border-box; }
 .cmp-head { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
 .cmp-head h2 { margin: 0; font-family: var(--pixel); font-size: clamp(22px, 2.1vw, 34px); color: var(--cream); }

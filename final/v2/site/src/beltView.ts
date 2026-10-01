@@ -139,7 +139,8 @@ export async function mountBelt(d: BeltDeps) {
     if (!table || table.route !== d.route || table.step !== step) {
       const poses: ReturnType<Route["sample"]>[] = [];
       for (let s = 0; s <= d.route.length; s += step) poses.push(d.route.sample(s));
-      table = { route: d.route, step, poses, hidden: poses.map((p) => d.route.isHidden(p)) };
+      const reach = d.route.width / 2 + step;
+      table = { route: d.route, step, poses, hidden: poses.map((p) => d.route.isBuried(p, reach)) };
     }
     return table;
   };
@@ -441,7 +442,7 @@ export async function mountBelt(d: BeltDeps) {
     }
     for (let k = effects.length - 1; k >= 0; k--) if (now - effects[k].start > effects[k].dur) effects.splice(k, 1);
     for (const v of vis) {
-      if (d.route.isHidden(v.pos)) continue;
+      if (d.route.isBuried(v.pos, 40 * U * hp)) continue;
       const sl = stream.slot(v.i);
       if (!sl.plate) continue;
       const o = overrides.get(v.i);
@@ -467,6 +468,11 @@ export async function mountBelt(d: BeltDeps) {
       ctx.drawImage(img, k * fw, 0, fw, img.height, c.x - fw / 2, c.y - img.height * 0.9, fw, img.height);
       if (t >= 1) { overrides.set(walk.from, { kind: "guest", host: walk.to }); burst(b, "salmon-nigiri", 8, "sparkle"); walk = null; }
     }
+    // Architecture covers the belt here: erase along the covering rects so every belt end is a straight horizontal cut.
+    ctx.save();
+    ctx.globalCompositeOperation = "destination-out";
+    for (const r of d.route.hidden) ctx.fillRect(r.x / hp, (r.y - scrollY) / hp, r.w / hp, r.h / hp);
+    ctx.restore();
     if (fall) {
       fall.v.y += 520 * U * hp * dt;
       fall.p.x += fall.v.x * dt; fall.p.y += fall.v.y * dt;

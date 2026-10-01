@@ -13,6 +13,10 @@ export type Route = {
   width: number;
   sample(s: number): Pose;
   isHidden(p: Pt): boolean;
+  /** True when a square of half-size r around p is entirely covered, so nothing drawn there can show. */
+  isBuried(p: Pt, r: number): boolean;
+  /** The covering rects themselves: the renderer erases the belt along their edges so it ends in straight lines. */
+  hidden: Rect[];
   regionAt(p: Pt): Region;
 };
 
@@ -67,6 +71,8 @@ export function buildRoute(points: Pt[], radius: number, width: number, hidden: 
     width,
     sample,
     isHidden: (p) => hidden.some((r) => inside(p, r)),
+    isBuried: (p, r) => [[-r, -r], [r, -r], [-r, r], [r, r]].every(([dx, dy]) => hidden.some((h) => inside({ x: p.x + dx, y: p.y + dy }, h))),
+    hidden,
     regionAt: (p) => regionAtY(p.y),
   };
 }

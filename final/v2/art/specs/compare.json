@@ -44,82 +44,6 @@
    },
    "egg": "cat"
   },
-  "kid": {
-   "grain": 8,
-   "model": "gemini-3-pro-image",
-   "crop": [
-    30,
-    120,
-    38,
-    32
-   ],
-   "roi": [
-    36,
-    126,
-    26,
-    23
-   ],
-   "frames": [
-    "the small child peeking over the table edge raises one hand and waves, grinning."
-   ],
-   "keep": [
-    0
-   ],
-   "durations": [
-    8000
-   ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     0,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     400,
-     300,
-     400,
-     300
-    ]
-   },
-   "egg": "kid"
-  },
-  "table-eyes": {
-   "grain": 8,
-   "model": "gemini-3-pro-image",
-   "crop": [
-    174,
-    126,
-    30,
-    16
-   ],
-   "roi": [
-    180,
-    130,
-    18,
-    8
-   ],
-   "compare": "base",
-   "min_blob": 1,
-   "frames": [
-    "the two tiny glowing yellow eyes under the table close: only darkness."
-   ],
-   "keep": [
-    0,
-    1,
-    0,
-    1
-   ],
-   "durations": [
-    3800,
-    200,
-    3800,
-    200
-   ],
-   "egg": "table-eyes"
-  },
   "tea-l": {
    "grain": 8,
    "crop": [
@@ -229,30 +153,6 @@
     ]
    },
    {
-    "id": "kid",
-    "name": "A small fan",
-    "x": 38,
-    "y": 128,
-    "w": 22,
-    "h": 20,
-    "sprite": "kid",
-    "says": [
-     "Is the robot real?"
-    ]
-   },
-   {
-    "id": "table-eyes",
-    "name": "Something under the table",
-    "x": 179,
-    "y": 129,
-    "w": 20,
-    "h": 10,
-    "sprite": "table-eyes",
-    "says": [
-     "\u2026"
-    ]
-   },
-   {
     "id": "soy",
     "name": "Soy for one",
     "x": 169,
@@ -275,17 +175,6 @@
     ]
    },
    {
-    "id": "seat",
-    "name": "Reserved seat",
-    "x": 260,
-    "y": 114,
-    "w": 24,
-    "h": 22,
-    "says": [
-     "Reserved for your next PR."
-    ]
-   },
-   {
     "id": "tea",
     "name": "Fresh tea",
     "x": 344,
@@ -295,6 +184,39 @@
     "sprite": "tea-r",
     "says": [
      "H\u014djicha. Always."
+    ]
+   },
+   {
+    "id": "tea-mid",
+    "name": "Refill, please",
+    "x": 211,
+    "y": 190,
+    "w": 10,
+    "h": 10,
+    "says": [
+     "Another h\u014djicha?"
+    ]
+   },
+   {
+    "id": "last-sushi",
+    "name": "The last piece",
+    "x": 14,
+    "y": 195,
+    "w": 15,
+    "h": 7,
+    "says": [
+     "Nobody takes the last piece."
+    ]
+   },
+   {
+    "id": "bowl",
+    "name": "Miso at the end of the row",
+    "x": 329,
+    "y": 194,
+    "w": 17,
+    "h": 8,
+    "says": [
+     "Still warm."
     ]
    }
   ]

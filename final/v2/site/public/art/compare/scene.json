@@ -45,56 +45,6 @@
    "egg": "cat"
   },
   {
-   "id": "kid",
-   "src": "kid.png",
-   "x": 36,
-   "y": 126,
-   "w": 26,
-   "h": 23,
-   "grain": 8,
-   "frames": 1,
-   "durations": [
-    8000
-   ],
-   "egg": "kid"
-  },
-  {
-   "id": "kid-react",
-   "src": "kid-react.png",
-   "x": 36,
-   "y": 126,
-   "w": 26,
-   "h": 23,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    400,
-    300,
-    400,
-    300
-   ],
-   "trigger": true,
-   "egg": "kid"
-  },
-  {
-   "id": "table-eyes",
-   "src": "table-eyes.png",
-   "x": 180,
-   "y": 130,
-   "w": 18,
-   "h": 8,
-   "grain": 8,
-   "frames": 4,
-   "durations": [
-    3800,
-    200,
-    3800,
-    200
-   ],
-   "egg": "table-eyes"
-  },
-  {
    "id": "tea-l",
    "src": "tea-l.png",
    "x": 74,
@@ -160,30 +110,6 @@
    ]
   },
   {
-   "id": "kid",
-   "name": "A small fan",
-   "x": 38,
-   "y": 128,
-   "w": 22,
-   "h": 20,
-   "sprite": "kid",
-   "says": [
-    "Is the robot real?"
-   ]
-  },
-  {
-   "id": "table-eyes",
-   "name": "Something under the table",
-   "x": 179,
-   "y": 129,
-   "w": 20,
-   "h": 10,
-   "sprite": "table-eyes",
-   "says": [
-    "\u2026"
-   ]
-  },
-  {
    "id": "soy",
    "name": "Soy for one",
    "x": 169,
@@ -206,17 +132,6 @@
    ]
   },
   {
-   "id": "seat",
-   "name": "Reserved seat",
-   "x": 260,
-   "y": 114,
-   "w": 24,
-   "h": 22,
-   "says": [
-    "Reserved for your next PR."
-   ]
-  },
-  {
    "id": "tea",
    "name": "Fresh tea",
    "x": 344,
@@ -226,6 +141,39 @@
    "sprite": "tea-r",
    "says": [
     "H\u014djicha. Always."
+   ]
+  },
+  {
+   "id": "tea-mid",
+   "name": "Refill, please",
+   "x": 211,
+   "y": 190,
+   "w": 10,
+   "h": 10,
+   "says": [
+    "Another h\u014djicha?"
+   ]
+  },
+  {
+   "id": "last-sushi",
+   "name": "The last piece",
+   "x": 14,
+   "y": 195,
+   "w": 15,
+   "h": 7,
+   "says": [
+    "Nobody takes the last piece."
+   ]
+  },
+  {
+   "id": "bowl",
+   "name": "Miso at the end of the row",
+   "x": 329,
+   "y": 194,
+   "w": 17,
+   "h": 8,
+   "says": [
+    "Still warm."
    ]
   }
  ]
