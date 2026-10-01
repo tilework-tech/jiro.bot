@@ -1,5 +1,5 @@
 {
- "master": "art/gen/hd/product-ill-a.jpg",
+ "master": "art/gen/hd/product-half-fill.jpg",
  "base": "art/work/product/base.png",
  "groups": "warm,cool,accents,plates,neutrals",
  "sprites": {
@@ -7,35 +7,35 @@
    "grain": 8,
    "model": "gemini-3-pro-image",
    "crop": [
-    244,
-    44,
-    86,
-    112
+    302,
+    123,
+    43,
+    56
    ],
    "roi": [
-    250,
-    50,
-    74,
-    100
+    305,
+    126,
+    37,
+    50
    ],
    "frame_rois": [
     [
-     272,
-     77,
-     24,
-     11
+     316,
+     140,
+     12,
+     6
     ],
     [
-     250,
-     110,
-     44,
-     24
+     305,
+     156,
+     22,
+     12
     ],
     [
-     273,
-     89,
-     23,
-     15
+     316,
+     146,
+     12,
+     8
     ]
    ],
    "mask_prompt": "Isolate the robot: keep only the robot (head, headband, body, arms and hands).",
@@ -84,16 +84,16 @@
   },
   "lantern": {
    "crop": [
-    216,
-    0,
-    44,
-    62
+    288,
+    101,
+    22,
+    31
    ],
    "roi": [
-    224,
-    4,
-    28,
-    52
+    292,
+    103,
+    14,
+    26
    ],
    "frames": [
     "the paper lantern glows a little brighter and warmer."
@@ -109,25 +109,25 @@
    "grain": 4,
    "frame_rois": [
     [
-     230,
-     12,
-     19,
-     37
+     295,
+     107,
+     10,
+     18
     ]
    ]
   },
   "shelf-soot": {
    "crop": [
-    327,
-    25,
-    33,
-    34
+    344,
+    114,
+    16,
+    17
    ],
    "roi": [
-    333,
-    31,
-    24,
-    24
+    346,
+    116,
+    12,
+    12
    ],
    "model": "gemini-3-pro-image",
    "frames": [
@@ -159,16 +159,16 @@
   },
   "lucky-cat": {
    "crop": [
-    312,
-    16,
-    28,
-    30
+    336,
+    109,
+    14,
+    15
    ],
    "roi": [
-    318,
-    22,
-    16,
-    22
+    339,
+    112,
+    8,
+    11
    ],
    "frames": [
     "the white lucky cat raises its beckoning paw higher.",
@@ -201,16 +201,16 @@
   },
   "plant": {
    "crop": [
-    294,
-    0,
-    34,
-    34
+    327,
+    101,
+    17,
+    17
    ],
    "roi": [
-    300,
-    3,
-    22,
-    26
+    330,
+    102,
+    11,
+    13
    ],
    "frames": [
     "the potted plant's leaves sway to the left.",
@@ -243,16 +243,16 @@
   },
   "notes": {
    "crop": [
-    225,
-    56,
-    40,
-    40
+    292,
+    129,
+    20,
+    20
    ],
    "roi": [
-    231,
-    62,
-    28,
-    28
+    296,
+    132,
+    14,
+    14
    ],
    "frames": [
     "one of the yellow sticky notes on the wall flutters and curls up at its corner."
@@ -283,27 +283,27 @@
   "surfaces": [
    {
     "id": "desk",
-    "x": 290,
-    "y": 152,
-    "w": 30,
-    "h": 14
+    "x": 325,
+    "y": 177,
+    "w": 15,
+    "h": 7
    },
    {
     "id": "floor",
-    "x": 40,
-    "y": 186,
-    "w": 160,
-    "h": 14
+    "x": 200,
+    "y": 194,
+    "w": 80,
+    "h": 7
    }
   ],
   "eggs": [
    {
     "id": "jiro",
     "name": "Interrupted Jiro mid-commit",
-    "x": 258,
-    "y": 52,
-    "w": 56,
-    "h": 60,
+    "x": 309,
+    "y": 127,
+    "w": 28,
+    "h": 30,
     "sprite": "jiro",
     "says": [
      "One sec, I'm reading the failing test.",
@@ -314,28 +314,28 @@
    {
     "id": "lucky-cat",
     "name": "Desk lucky cat",
-    "x": 318,
-    "y": 22,
-    "w": 16,
-    "h": 22,
+    "x": 339,
+    "y": 112,
+    "w": 8,
+    "h": 11,
     "sprite": "lucky-cat"
    },
    {
     "id": "plant",
     "name": "Watered the desk plant",
-    "x": 300,
-    "y": 3,
-    "w": 22,
-    "h": 26,
+    "x": 330,
+    "y": 102,
+    "w": 11,
+    "h": 13,
     "sprite": "plant"
    },
    {
     "id": "notes",
     "name": "Read the sticky notes",
-    "x": 231,
-    "y": 62,
-    "w": 28,
-    "h": 28,
+    "x": 296,
+    "y": 132,
+    "w": 14,
+    "h": 14,
     "sprite": "notes",
     "says": [
      "TODO: fewer TODOs",
@@ -345,19 +345,19 @@
    {
     "id": "shelf-soot",
     "name": "Woke the shelf sprite",
-    "x": 333,
-    "y": 31,
-    "w": 24,
-    "h": 24,
+    "x": 346,
+    "y": 116,
+    "w": 12,
+    "h": 12,
     "sprite": "shelf-soot"
    },
    {
     "id": "tea",
     "name": "Jiro's tea",
-    "x": 262,
-    "y": 142,
-    "w": 16,
-    "h": 22,
+    "x": 311,
+    "y": 172,
+    "w": 8,
+    "h": 11,
     "says": [
      "Genmaicha. Correct choice."
     ]

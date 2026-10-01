@@ -108,16 +108,16 @@ body.dragging, body.dragging * { cursor: grabbing !important; }
 .replay .c { color: #9ad7e8; } .replay .ok { color: #9be37a; } .replay .bad { color: #ff7a66; } .replay .dim { color: #8a8074; } .replay .j { color: var(--copper); }
 
 /* ---------------------------------------------------------------- 2 · product demo */
-#product .demo-wrap { left: calc(var(--s) * 40); top: calc(var(--s) * 14); width: calc(var(--s) * 168); height: calc(var(--s) * 178); display: flex; flex-direction: column; text-shadow: none; }
+#product .demo-wrap { left: calc(var(--s) * 36); top: calc(var(--s) * 12); width: calc(var(--s) * 240); height: calc(var(--s) * 184); display: flex; flex-direction: column; text-shadow: none; }
 #product .kicker { margin-bottom: 10px; }
 .panel { background: rgba(19, 10, 12, 0.9); border: 2px solid #351e1a; box-shadow: 0 6px 0 #000, 0 24px 60px rgba(0, 0, 0, 0.5); }
 .demo { flex: 1; min-height: 0; display: grid; grid-template-rows: auto 1fr; overflow: hidden; }
 .caption { margin: 10px 0 0; font-size: 12px; color: var(--paper); opacity: 0.7; }
 .demo .tabs { display: flex; gap: 2px; border-bottom: 2px solid #351e1a; background: rgba(0, 0, 0, 0.25); overflow-x: auto; }
-.demo .tab { background: none; border: 0; color: var(--paper); padding: 12px 18px; font-family: var(--pixel); font-size: 16px; cursor: pointer; white-space: nowrap; }
+.demo .tab { background: none; border: 0; color: var(--paper); padding: 14px 22px; font-family: var(--pixel); font-size: 19px; cursor: pointer; white-space: nowrap; }
 .demo .tab.on { color: var(--ink); background: var(--copper); }
 .demo .tab .n { opacity: 0.6; margin-right: 6px; }
-.demo .body { padding: 22px 26px; overflow: auto; font-size: clamp(14px, 1.1vw, 17px); line-height: 1.55; }
+.demo .body { padding: 26px 32px; overflow: auto; font-size: clamp(15px, 1.35vw, 21px); line-height: 1.55; }
 .msg { display: grid; grid-template-columns: 38px 1fr; gap: 12px; margin-bottom: 18px; }
 .msg.fresh { animation: rise 0.35s ease-out both; }
 @keyframes rise { from { opacity: 0; transform: translateY(6px); } }

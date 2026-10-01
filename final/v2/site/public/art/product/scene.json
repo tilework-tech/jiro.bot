@@ -15,10 +15,10 @@
   {
    "id": "jiro",
    "src": "jiro.png",
-   "x": 250,
-   "y": 50,
-   "w": 74,
-   "h": 100,
+   "x": 305,
+   "y": 126,
+   "w": 37,
+   "h": 50,
    "grain": 8,
    "frames": 8,
    "durations": [
@@ -36,10 +36,10 @@
   {
    "id": "jiro-react",
    "src": "jiro-react.png",
-   "x": 250,
-   "y": 50,
-   "w": 74,
-   "h": 100,
+   "x": 305,
+   "y": 126,
+   "w": 37,
+   "h": 50,
    "grain": 8,
    "frames": 5,
    "durations": [
@@ -55,10 +55,10 @@
   {
    "id": "lantern",
    "src": "lantern.png",
-   "x": 224,
-   "y": 4,
-   "w": 28,
-   "h": 52,
+   "x": 292,
+   "y": 103,
+   "w": 14,
+   "h": 26,
    "grain": 4,
    "frames": 2,
    "durations": [
@@ -69,10 +69,10 @@
   {
    "id": "shelf-soot",
    "src": "shelf-soot.png",
-   "x": 333,
-   "y": 31,
-   "w": 24,
-   "h": 24,
+   "x": 346,
+   "y": 116,
+   "w": 12,
+   "h": 12,
    "grain": 8,
    "frames": 2,
    "durations": [
@@ -84,10 +84,10 @@
   {
    "id": "shelf-soot-react",
    "src": "shelf-soot-react.png",
-   "x": 333,
-   "y": 31,
-   "w": 24,
-   "h": 24,
+   "x": 346,
+   "y": 116,
+   "w": 12,
+   "h": 12,
    "grain": 8,
    "frames": 3,
    "durations": [
@@ -101,10 +101,10 @@
   {
    "id": "lucky-cat",
    "src": "lucky-cat.png",
-   "x": 318,
-   "y": 22,
-   "w": 16,
-   "h": 22,
+   "x": 339,
+   "y": 112,
+   "w": 8,
+   "h": 11,
    "grain": 8,
    "frames": 1,
    "durations": [
@@ -115,10 +115,10 @@
   {
    "id": "lucky-cat-react",
    "src": "lucky-cat-react.png",
-   "x": 318,
-   "y": 22,
-   "w": 16,
-   "h": 22,
+   "x": 339,
+   "y": 112,
+   "w": 8,
+   "h": 11,
    "grain": 8,
    "frames": 5,
    "durations": [
@@ -134,10 +134,10 @@
   {
    "id": "plant",
    "src": "plant.png",
-   "x": 300,
-   "y": 3,
-   "w": 22,
-   "h": 26,
+   "x": 330,
+   "y": 102,
+   "w": 11,
+   "h": 13,
    "grain": 8,
    "frames": 1,
    "durations": [
@@ -148,10 +148,10 @@
   {
    "id": "plant-react",
    "src": "plant-react.png",
-   "x": 300,
-   "y": 3,
-   "w": 22,
-   "h": 26,
+   "x": 330,
+   "y": 102,
+   "w": 11,
+   "h": 13,
    "grain": 8,
    "frames": 5,
    "durations": [
@@ -167,10 +167,10 @@
   {
    "id": "notes",
    "src": "notes.png",
-   "x": 231,
-   "y": 62,
-   "w": 28,
-   "h": 28,
+   "x": 296,
+   "y": 132,
+   "w": 14,
+   "h": 14,
    "grain": 8,
    "frames": 1,
    "durations": [
@@ -181,10 +181,10 @@
   {
    "id": "notes-react",
    "src": "notes-react.png",
-   "x": 231,
-   "y": 62,
-   "w": 28,
-   "h": 28,
+   "x": 296,
+   "y": 132,
+   "w": 14,
+   "h": 14,
    "grain": 8,
    "frames": 3,
    "durations": [
@@ -199,27 +199,27 @@
  "surfaces": [
   {
    "id": "desk",
-   "x": 290,
-   "y": 152,
-   "w": 30,
-   "h": 14
+   "x": 325,
+   "y": 177,
+   "w": 15,
+   "h": 7
   },
   {
    "id": "floor",
-   "x": 40,
-   "y": 186,
-   "w": 160,
-   "h": 14
+   "x": 200,
+   "y": 194,
+   "w": 80,
+   "h": 7
   }
  ],
  "eggs": [
   {
    "id": "jiro",
    "name": "Interrupted Jiro mid-commit",
-   "x": 258,
-   "y": 52,
-   "w": 56,
-   "h": 60,
+   "x": 309,
+   "y": 127,
+   "w": 28,
+   "h": 30,
    "sprite": "jiro",
    "says": [
     "One sec, I'm reading the failing test.",
@@ -230,28 +230,28 @@
   {
    "id": "lucky-cat",
    "name": "Desk lucky cat",
-   "x": 318,
-   "y": 22,
-   "w": 16,
-   "h": 22,
+   "x": 339,
+   "y": 112,
+   "w": 8,
+   "h": 11,
    "sprite": "lucky-cat"
   },
   {
    "id": "plant",
    "name": "Watered the desk plant",
-   "x": 300,
-   "y": 3,
-   "w": 22,
-   "h": 26,
+   "x": 330,
+   "y": 102,
+   "w": 11,
+   "h": 13,
    "sprite": "plant"
   },
   {
    "id": "notes",
    "name": "Read the sticky notes",
-   "x": 231,
-   "y": 62,
-   "w": 28,
-   "h": 28,
+   "x": 296,
+   "y": 132,
+   "w": 14,
+   "h": 14,
    "sprite": "notes",
    "says": [
     "TODO: fewer TODOs",
@@ -261,19 +261,19 @@
   {
    "id": "shelf-soot",
    "name": "Woke the shelf sprite",
-   "x": 333,
-   "y": 31,
-   "w": 24,
-   "h": 24,
+   "x": 346,
+   "y": 116,
+   "w": 12,
+   "h": 12,
    "sprite": "shelf-soot"
   },
   {
    "id": "tea",
    "name": "Jiro's tea",
-   "x": 262,
-   "y": 142,
-   "w": 16,
-   "h": 22,
+   "x": 311,
+   "y": 172,
+   "w": 8,
+   "h": 11,
    "says": [
     "Genmaicha. Correct choice."
    ]

@@ -30,7 +30,7 @@ site/public/art/<scene>/{base.png, <sprite>.png, scene.json}
 | `src/refs/` | Reference images passed to Gemini: video frames and the Jiro canon |
 | `src/ase/` | LibreSprite `.ase` sources, plus the indexed PNG written next to each one |
 | `specs/` | One JSON spec per scene: master, base, palette groups, sprites, surfaces and eggs |
-| `gen/` | Raw Gemini output. `gen/hd/` holds the round-2 illustration masters and the failed high-density pixel-art probes; `gen/hd8/` holds the rejected round-3 close-up repaint of Jiro. |
+| `gen/` | Raw Gemini output. `gen/hd/` holds the illustration masters (round 2, plus the round-4 half-size product master and its shrunk input) and the failed high-density pixel-art probes; `gen/hd8/` holds the rejected round-3 close-up repaint of Jiro. |
 | `work/` | Intermediate output: fitted bases, frame edits, strips and belt cut-outs |
 | `log/gemini-calls.jsonl` | One line per Gemini call, recording time, output path, model, aspect, size, full prompt and ref file names |
 | `probe/` | The first API probe |
@@ -63,13 +63,15 @@ What works:
 3. Lost props are re-added with one edit, and `tools/compose.py` merges the edit's right side over the original so the calm copy field survives. The hero master is such a composite: the copy field from `hero-ill-a`, the right side from `hero-ill-a-edit1`, which restored the sleeping cat and the doorway eyes.
 4. `tools/fit.py` pixelates the illustration onto the true grid at whatever grain we choose.
 
-To reframe a master, `tools/shift-down.py IN OUT --d D` moves it down by D px on the same canvas, dropping the bottom rows and leaving a black strip on top for Gemini to outpaint.
+To reframe a master, `tools/shift-down.py IN OUT --d D` moves it down by D px on the same canvas, dropping the bottom rows and leaving a black strip on top for Gemini to outpaint. `tools/shrink-place.py IN OUT --f F --x X --y Y` shrinks it by F and pastes it at fractional position (X, Y) on a black canvas of the original size, leaving everything else for Gemini to outpaint.
 
 Our scripts make the pixel grid, not Gemini. The item sheets went the same way (`gen/hd/items-*-ill*.jpg`). Sheets 1 and 3 were regenerated with an explicit item list, because the first repaint turned suspicious wasabi into a poop emoji and sheet 3's background was not clean green.
 
 Stop 3 and band 1 were generated new in round 2; band 1's master is a crop (`band1-a-strip.png`) of a taller render.
 
 **Stop 3 shift (round 3).** Martin asked for everything in stop 3 to move down so the belt runs along the bottom, with only table space, condiments and the cat visible below it. `compare-c-edit1` was shifted down 466 px (about 30.5 world units) with `shift-down.py`, and Gemini outpainted the strip as ceiling beams and lanterns (`gen/compare/compare-shift-fill.jpg`, used whole, so there is no seam). The new counter channel sits at 149–176 of 202 units, re-measured into `COMPARE_CHANNEL` in `../site/src/belt/route.ts`. The old diner, kanpai and gap-eyes sprites fell out of frame or out of the new composition. The spec now has the cat, a kid who waves on click, eyes under the middle table, and two tea cups whose frames only change the steam (`frame_rois`, `align: false`). Surfaces are the three middle-row tables, and the eggs are the cat, kid, table eyes, two condiment sets, a reserved seat and the tea.
+
+**Product master at half size (round 4).** Martin asked for the product stop's pixel art at about half size so the demo panel could grow to nearly fill the screen. `shrink-place.py` shrank `gen/hd/product-ill-a.jpg` by 0.5 into the bottom-right quarter (`gen/hd/product-half.png`), and Gemini Pro outpainted the rest as a dark upper wall, a ceiling beam with the lantern cord, and a long, calm, empty wall and floor on the left, where the panel sits (`gen/hd/product-half-fill.jpg`, used whole, so there is no seam). That is now the spec's `master`. Gemini kept the office in place closely enough that every world-unit box in `specs/product.json` (crop, roi, `frame_rois`, eggs, surfaces) was mapped by the placement itself, x' = 180 + x/2 and y' = 101 + y/2 with w and h halved, and checked with an ROI overlay. Every sprite was regenerated with `--regen`, so Jiro in the product stop is about half his former on-screen size but still grain 8. The base is fitted with `--warm-left 0.6` because the empty left field is wider than before.
 
 ## Tools
 
@@ -91,7 +93,7 @@ Stop 3 and band 1 were generated new in round 2; band 1's master is a crop (`ban
 6. Orphan-pixel cleanup.
 7. Optional `--smooth-dark`, a 3×3 majority filter over dark pixels that keeps copy fields calm.
 
-Bases use `--groups warm,cool,accents,plates,neutrals --cool-gate 22 --smooth-dark 80 --warm-left 0.4` for hero and product. Compare uses `--smooth-dark 60` without `--warm-left`; band 0 adds `--gain 1.25`. Specs carry `cool_gate` so `frames.py` snaps frames the same way.
+Bases use `--groups warm,cool,accents,plates,neutrals --cool-gate 22 --smooth-dark 80 --warm-left 0.4` for the hero; product uses the same flags with `--warm-left 0.6` (its copy field is the wider empty left side of the half-size master). Compare uses `--smooth-dark 60` without `--warm-left`; band 0 adds `--gain 1.25`. Specs carry `cool_gate` so `frames.py` snaps frames the same way.
 
 **`tools/ls-index.sh in.png out-base [w h]`** opens the image in LibreSprite and runs these steps:
 
@@ -115,7 +117,7 @@ For the SIGTERM quirk, see `../README.md`.
 
 Frame 0 is the untouched base: cut from the fitted base when the sprite's grain equals the base grain, otherwise a fresh fit of the master crop at the sprite's grain.
 
-- `mask_prompt` asks Gemini for a green-keyed silhouette, which becomes the sprite's alpha, so a grain-8 character does not paint its rectangle over the grain-4 room. Jiro and the cats use it.
+- `mask_prompt` asks Gemini for a green-keyed silhouette, which becomes the sprite's alpha, so a grain-8 character does not paint its rectangle over the grain-4 room. Jiro and the cats use it. Gemini sometimes inverts the mask, painting the subject green on black instead of green around it; `frames.py` checks the crop's border and flips the key when most of the border is not green. The round-4 product Jiro mask came back inverted.
 - `keep` and `durations` define the ambient loop. A single-frame `keep` (`[0]`) is still exported, so a detail sprite shows at grain 8 at rest instead of the coarser base.
 - `reaction.keep` and `reaction.durations` define a one-shot strip (`-react`) that plays when the sprite is clicked.
 

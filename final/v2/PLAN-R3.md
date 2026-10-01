@@ -52,3 +52,14 @@ NOTE: I will write *all* tests before I add any implementation behavior.
 1. Beyond 8× the masters themselves are the limit; going further means per-sprite repaints with framing drift. Flag to Martin.
 
 ---
+
+## Round 4 addendum: product stop at half size
+
+Martin (Slack): "make the second scene pixel art about half the size, so that the product comparison be about 50% bigger and almost screen filling".
+
+- `tools/shrink-place.py` (new) shrank `art/gen/hd/product-ill-a.jpg` by 0.5 into the bottom-right quarter; one Gemini Pro outpaint filled the rest (dark upper wall, ceiling beam and lantern cord, an empty wall and floor on the left). `art/gen/hd/product-half-fill.jpg` is used whole as the new product master; the base is refitted at 1440 × 808 with `--warm-left 0.6`.
+- `art/specs/product.json`: every box mapped x' = 180 + x/2, y' = 101 + y/2, w/2, h/2 (verified by ROI overlay); all sprites regenerated with `--regen`. Product Jiro is about half his former size, still grain 8.
+- `tools/frames.py` detects an inverted Gemini mask from the crop border and flips it (the product Jiro mask came back inverted).
+- `site/src/style.css`: `#product .demo-wrap` is now 36/12/240/184 world units (was 40/14/168/178), about 1.5× the area, ending just left of the CRT; tab type 19 px, body `clamp(15px, 1.35vw, 21px)`.
+- New e2e `site/tests/e2e/product.spec.ts`: on desktop the panel is ≥60% of viewport width and ≥75% of height, and the product Jiro egg is ≤12% of the width and right of the panel.
+- Gemini: 13 calls (1 outpaint, 11 frame edits, 1 mask), per `art/log/gemini-calls.jsonl`.

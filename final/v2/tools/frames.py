@@ -142,6 +142,10 @@ def main():
         m = Image.open(got).convert("RGB").resize(src.size, Image.LANCZOS)
         rgbm = np.asarray(m).astype(np.int32)
         key = fit.key_mask(rgbm)
+        # Gemini sometimes paints the subject green on black instead of green around it: the border tells which.
+        border = np.concatenate([key[0], key[-1], key[:, 0], key[:, -1]])
+        if border.mean() < 0.5:
+            key = ~key
         small = np.asarray(Image.fromarray((~key * 255).astype(np.uint8)).resize((cw * g, ch * g), Image.BOX)) > 127
         pad = np.pad(small, 1)
         alpha = small | (sum(np.roll(np.roll(pad, a, 0), b, 1) for a in (-1, 0, 1) for b in (-1, 0, 1))[1:-1, 1:-1] >= 5)
