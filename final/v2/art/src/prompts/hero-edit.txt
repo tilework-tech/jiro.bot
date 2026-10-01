@@ -1,0 +1,6 @@
+Edit image 1. Keep the exact same composition, camera, pixel grid, palette, lighting and every object position. Keep it 16-bit SNES pixel art with crisp square pixels and no anti-aliasing. Make only these changes:
+1. The robot chef's lower face: replace the jaw grille with a plain, smooth copper jaw plate with no slits, no mouth and no teeth, like a helmet chin guard. Keep his two glowing square cyan eyes and the white headband.
+2. The conveyor belt at the upper right must clearly come out of the square dark kitchen hatch in the back wall. Extend the belt straight up-right until it passes under the hatch's wooden sill and disappears into the dark opening. The belt stays perfectly straight and empty, with no food on it.
+3. Add small, discoverable details that keep the scene calm: a white beckoning lucky cat on the upper shelf beside the bottles; a small potted bonsai on the counter end near the chef; a tiny fish-shaped wooden wind chime hanging from the ceiling near the left lantern; a sleeping orange tabby cat curled on the floor under the empty stool at the lower right; a tea kettle on the back counter. In the dark doorway behind the indigo curtain, show two tiny glowing eyes peeking out.
+4. Keep the left 40% of the image a calm, dark, almost empty plum-black wall for text.
+No text, letters, UI or watermark.

@@ -1,0 +1,428 @@
+{
+ "width": 1600,
+ "height": 1000,
+ "start": "chat",
+ "url": "acme.norisessions.com",
+ "states": {
+  "chat": {
+   "img": "ui/product/chat.png",
+   "caption": "Mention @nori in Slack and a session spins up on its own machine. Watch it work and steer it from here.",
+   "hotspots": [
+    {
+     "x": 0.3544,
+     "y": 0.0705,
+     "w": 0.1013,
+     "h": 0.022,
+     "to": "work",
+     "label": "Expand the work: every tool call"
+    },
+    {
+     "x": 0.7931,
+     "y": 0.0035,
+     "w": 0.0706,
+     "h": 0.036,
+     "to": "code",
+     "label": "Artifacts"
+    },
+    {
+     "x": 0.3544,
+     "y": 0.5219,
+     "w": 0.1053,
+     "h": 0.036,
+     "to": "code",
+     "label": "Open checkout.spec.ts"
+    },
+    {
+     "x": 0.9106,
+     "y": 0.0035,
+     "w": 0.0638,
+     "h": 0.036,
+     "to": "new",
+     "label": "New chat"
+    },
+    {
+     "x": 0.1375,
+     "y": 0.3691,
+     "w": 0.0188,
+     "h": 0.03,
+     "to": "menu",
+     "label": "Conversation actions"
+    },
+    {
+     "x": 0.0031,
+     "y": 0.3996,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "done",
+     "label": "Open \"jiro: refactor tuna-inventory service\""
+    },
+    {
+     "x": 0.0031,
+     "y": 0.045,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "new",
+     "label": "Chat: start a new session"
+    },
+    {
+     "x": 0.0031,
+     "y": 0.957,
+     "w": 0.1356,
+     "h": 0.038,
+     "to": "settings",
+     "label": "Account and settings"
+    }
+   ]
+  },
+  "work": {
+   "img": "ui/product/work.png",
+   "caption": "Every turn folds its work: thoughts, file reads, edits and commands, one click away.",
+   "hotspots": [
+    {
+     "x": 0.3544,
+     "y": 0.1935,
+     "w": 0.1013,
+     "h": 0.022,
+     "to": "chat",
+     "label": "Fold the work away"
+    },
+    {
+     "x": 0.0031,
+     "y": 0.3656,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "chat",
+     "label": "Open \"Fix flaky checkout test\""
+    },
+    {
+     "x": 0.0031,
+     "y": 0.3996,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "done",
+     "label": "Open \"jiro: refactor tuna-inventory service\""
+    },
+    {
+     "x": 0.0031,
+     "y": 0.045,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "new",
+     "label": "Chat: start a new session"
+    },
+    {
+     "x": 0.0031,
+     "y": 0.957,
+     "w": 0.1356,
+     "h": 0.038,
+     "to": "settings",
+     "label": "Account and settings"
+    },
+    {
+     "x": 0.7931,
+     "y": 0.0035,
+     "w": 0.0706,
+     "h": 0.036,
+     "to": "code",
+     "label": "Artifacts"
+    },
+    {
+     "x": 0.9106,
+     "y": 0.0035,
+     "w": 0.0638,
+     "h": 0.036,
+     "to": "new",
+     "label": "New chat"
+    }
+   ]
+  },
+  "code": {
+   "img": "ui/product/code.png",
+   "caption": "Code, tables and pull requests the agent produces collect in the artifacts pane.",
+   "hotspots": [
+    {
+     "x": 0.9758,
+     "y": 0.011,
+     "w": 0.0161,
+     "h": 0.026,
+     "to": "chat",
+     "label": "Close artifacts"
+    },
+    {
+     "x": 0.0031,
+     "y": 0.3656,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "chat",
+     "label": "Open \"Fix flaky checkout test\""
+    },
+    {
+     "x": 0.0031,
+     "y": 0.3996,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "done",
+     "label": "Open \"jiro: refactor tuna-inventory service\""
+    },
+    {
+     "x": 0.0031,
+     "y": 0.045,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "new",
+     "label": "Chat: start a new session"
+    },
+    {
+     "x": 0.0031,
+     "y": 0.957,
+     "w": 0.1356,
+     "h": 0.038,
+     "to": "settings",
+     "label": "Account and settings"
+    }
+   ]
+  },
+  "done": {
+   "img": "ui/product/done.png",
+   "caption": "Finished work lands as a pull request with CI green. The session stays live for follow-ups.",
+   "hotspots": [
+    {
+     "x": 0.3544,
+     "y": 0.5251,
+     "w": 0.232,
+     "h": 0.036,
+     "to": "pr",
+     "label": "Open the pull request"
+    },
+    {
+     "x": 0.9106,
+     "y": 0.0035,
+     "w": 0.0638,
+     "h": 0.036,
+     "to": "new",
+     "label": "New chat"
+    },
+    {
+     "x": 0.0031,
+     "y": 0.3656,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "chat",
+     "label": "Open \"Fix flaky checkout test\""
+    },
+    {
+     "x": 0.0031,
+     "y": 0.045,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "new",
+     "label": "Chat: start a new session"
+    },
+    {
+     "x": 0.0031,
+     "y": 0.957,
+     "w": 0.1356,
+     "h": 0.038,
+     "to": "settings",
+     "label": "Account and settings"
+    }
+   ]
+  },
+  "pr": {
+   "img": "ui/product/pr.png",
+   "caption": "Pull requests open straight from the conversation.",
+   "hotspots": [
+    {
+     "x": 0.9758,
+     "y": 0.011,
+     "w": 0.0161,
+     "h": 0.026,
+     "to": "done",
+     "label": "Close"
+    },
+    {
+     "x": 0.0031,
+     "y": 0.3656,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "chat",
+     "label": "Open \"Fix flaky checkout test\""
+    },
+    {
+     "x": 0.0031,
+     "y": 0.3996,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "done",
+     "label": "Open \"jiro: refactor tuna-inventory service\""
+    },
+    {
+     "x": 0.0031,
+     "y": 0.045,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "new",
+     "label": "Chat: start a new session"
+    },
+    {
+     "x": 0.0031,
+     "y": 0.957,
+     "w": 0.1356,
+     "h": 0.038,
+     "to": "settings",
+     "label": "Account and settings"
+    }
+   ]
+  },
+  "new": {
+   "img": "ui/product/new.png",
+   "caption": "Start a session from the web: pick a model and skillset, and a fresh machine picks it up.",
+   "hotspots": [
+    {
+     "x": 0.3685,
+     "y": 0.6148,
+     "w": 0.0676,
+     "h": 0.034,
+     "to": "model",
+     "label": "Switch model"
+    },
+    {
+     "x": 0.0031,
+     "y": 0.3656,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "chat",
+     "label": "Open \"Fix flaky checkout test\""
+    },
+    {
+     "x": 0.0031,
+     "y": 0.3996,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "done",
+     "label": "Open \"jiro: refactor tuna-inventory service\""
+    },
+    {
+     "x": 0.0031,
+     "y": 0.957,
+     "w": 0.1356,
+     "h": 0.038,
+     "to": "settings",
+     "label": "Account and settings"
+    }
+   ]
+  },
+  "model": {
+   "img": "ui/product/model.png",
+   "caption": "Switch models per session: Claude, Codex and more from one picker.",
+   "hotspots": [
+    {
+     "x": 0.3692,
+     "y": 0.461,
+     "w": 0.1729,
+     "h": 0.038,
+     "to": "new",
+     "label": "Use Claude Opus 5.5"
+    },
+    {
+     "x": 0.3685,
+     "y": 0.6148,
+     "w": 0.0676,
+     "h": 0.034,
+     "to": "new",
+     "label": "Close the picker"
+    },
+    {
+     "x": 0.0031,
+     "y": 0.3656,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "chat",
+     "label": "Open \"Fix flaky checkout test\""
+    },
+    {
+     "x": 0.0031,
+     "y": 0.3996,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "done",
+     "label": "Open \"jiro: refactor tuna-inventory service\""
+    }
+   ]
+  },
+  "menu": {
+   "img": "ui/product/menu.png",
+   "caption": "Every session is a real machine: rename it, archive it, or release it back to the pool.",
+   "hotspots": [
+    {
+     "x": 0.0656,
+     "y": 0.4894,
+     "w": 0.0875,
+     "h": 0.0348,
+     "to": "release",
+     "label": "Release"
+    },
+    {
+     "x": 0.1375,
+     "y": 0.3691,
+     "w": 0.0188,
+     "h": 0.03,
+     "to": "chat",
+     "label": "Close the menu"
+    },
+    {
+     "x": 0.0031,
+     "y": 0.3996,
+     "w": 0.1556,
+     "h": 0.038,
+     "to": "chat",
+     "label": "Close the menu"
+    }
+   ]
+  },
+  "release": {
+   "img": "ui/product/release.png",
+   "caption": "Releasing stops the agent and returns its machine to the pool.",
+   "hotspots": [
+    {
+     "x": 0.5156,
+     "y": 0.527,
+     "w": 0.0522,
+     "h": 0.04,
+     "to": "chat",
+     "label": "Cancel"
+    },
+    {
+     "x": 0.5715,
+     "y": 0.527,
+     "w": 0.052,
+     "h": 0.04,
+     "to": "new",
+     "label": "Release: the machine goes back to the pool"
+    }
+   ]
+  },
+  "settings": {
+   "img": "ui/product/settings.png",
+   "caption": "Completion alerts, connected integrations and org settings live one click away.",
+   "hotspots": [
+    {
+     "x": 0.2377,
+     "y": 0.0123,
+     "w": 0.0161,
+     "h": 0.026,
+     "to": "chat",
+     "label": "Close settings"
+    },
+    {
+     "x": 0.26,
+     "y": 0.1,
+     "w": 0.72,
+     "h": 0.85,
+     "to": "chat",
+     "label": "Back to the conversation"
+    }
+   ]
+  }
+ }
+}

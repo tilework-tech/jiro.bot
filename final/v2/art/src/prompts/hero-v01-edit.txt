@@ -1,0 +1,6 @@
+Edit image 1. Keep the exact same composition, camera, pixel grid, palette, lighting and every object position. Keep it 16-bit SNES pixel art with crisp square pixels and no anti-aliasing. Make only these changes:
+1. The conveyor belt at the upper right must clearly come out of the dark square kitchen hatch in the back wall: extend the belt straight up-right so it passes under the hatch's wooden sill and disappears into the dark opening. The belt stays perfectly straight and empty, with no plates and no food on it.
+2. The robot chef's lower face is a plain, smooth copper jaw plate with no slits, no mouth line and no teeth, like a helmet chin guard. Keep his two glowing square cyan eyes and the white headband.
+3. In the dark doorway at the left of the back wall, show two tiny glowing yellow eyes peeking out of the darkness.
+4. Keep the left third of the image dark and calm for text; do not add detail there.
+No text, letters, UI or watermark.

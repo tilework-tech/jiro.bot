@@ -1,0 +1,92 @@
+/* Kitchen (FAQ). Scoped to the kitchen scene layer. */
+.scene-ui[data-id="kitchen"] {
+  --k-ink: #1b130d;
+  --k-paper: #f6ead2;
+}
+.scene-ui[data-id="kitchen"] .k-head { left: 96px; top: 96px; width: 390px; }
+.scene-ui[data-id="kitchen"] .k-head .kicker { font-size: 15px; white-space: nowrap; }
+.scene-ui[data-id="kitchen"] .k-head .lede { font-size: 25px; max-width: 16em; }
+
+/* ── Question sushi on the ledge ── */
+.scene-ui[data-id="kitchen"] .faq-sushi { position: absolute; background: none; border: 0; padding: 0; cursor: pointer; }
+.scene-ui[data-id="kitchen"] .faq-sushi .shadow {
+  position: absolute; left: 6%; right: 2%; bottom: -5px; height: 12px;
+  background: radial-gradient(closest-side, rgba(0,0,0,.55), rgba(0,0,0,0));
+}
+.scene-ui[data-id="kitchen"] .faq-sushi .sprite {
+  position: absolute; inset: 0; background-size: 200% 100%; background-position: 0 0; background-repeat: no-repeat;
+  image-rendering: pixelated; transform-origin: 50% 100%;
+  animation: k-blink 6s steps(1) infinite; animation-delay: var(--bd);
+  transition: transform .18s;
+}
+.scene-ui[data-id="kitchen"] .faq-sushi:hover .sprite,
+.scene-ui[data-id="kitchen"] .faq-sushi:focus-visible .sprite { transform: translateY(-3px); }
+.scene-ui[data-id="kitchen"] .faq-sushi.on .sprite { transform: translateY(-4px); }
+@keyframes k-blink { 0%, 95% { background-position: 0 0; } 96%, 100% { background-position: 100% 0; } }
+
+/* "?" pixel speech bubble that bobs gently. */
+.scene-ui[data-id="kitchen"] .faq-sushi .qb {
+  position: absolute; left: 50%; bottom: calc(100% + 16px); transform: translate(-50%, 0);
+  width: 40px; height: 38px; display: grid; place-items: center;
+  background: var(--k-paper); color: var(--k-ink); font: 400 24px/1 var(--px); border: 0;
+  box-shadow: 0 -3px 0 0 var(--k-ink), 0 3px 0 0 var(--k-ink), -3px 0 0 0 var(--k-ink), 3px 0 0 0 var(--k-ink), 0 7px 0 0 rgba(0,0,0,.35);
+  animation: k-bob 6s ease-in-out infinite; animation-delay: var(--d);
+}
+.scene-ui[data-id="kitchen"] .faq-sushi .qb::after {
+  content: ""; position: absolute; left: 50%; top: calc(100% + 3px); bottom: auto; width: 6px; height: 6px; margin-left: -5px;
+  border: 0; transform: none; background: var(--k-ink); box-shadow: 3px 3px 0 0 var(--k-ink);
+}
+.scene-ui[data-id="kitchen"] .faq-sushi.asked .qb { background: var(--green); }
+.scene-ui[data-id="kitchen"] .faq-sushi.on .qb { background: var(--copper); color: var(--k-paper); }
+.scene-ui[data-id="kitchen"] .faq-sushi.on .qb::before { content: "!"; position: absolute; inset: 0; display: grid; place-items: center; background: var(--copper); }
+.scene-ui[data-id="kitchen"] .faq-sushi:hover .qb { background: #fff6e4; }
+@keyframes k-bob { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -7px); } }
+
+.scene-ui[data-id="kitchen"] .faq-sushi .tip {
+  position: absolute; left: 50%; bottom: calc(100% + 70px); transform: translateX(-50%); white-space: nowrap;
+  background: #15110e; color: var(--cream); font: 19px var(--sans); padding: 7px 12px;
+  box-shadow: 0 0 0 2px rgba(243,230,207,.35); opacity: 0; transition: opacity .15s; pointer-events: none;
+}
+.scene-ui[data-id="kitchen"] .faq-sushi:hover .tip,
+.scene-ui[data-id="kitchen"] .faq-sushi:focus-visible .tip { opacity: 1; }
+.scene-ui[data-id="kitchen"] .faq-sushi:focus-visible { outline: 2px dashed var(--copper); outline-offset: 6px; }
+
+/* ── Jiro's answer: big comic bubble with a tail from his grille ── */
+.scene-ui[data-id="kitchen"] .k-ask { position: absolute; inset: 0; pointer-events: none; z-index: 30; }
+.scene-ui[data-id="kitchen"] .k-tail { position: absolute; left: 0; top: 0; overflow: visible; opacity: 0; transition: opacity .15s; }
+.scene-ui[data-id="kitchen"] .k-tail path { fill: var(--k-paper); stroke: var(--k-ink); stroke-width: 6; stroke-linejoin: miter; }
+.scene-ui[data-id="kitchen"] .k-plug { position: absolute; background: var(--k-paper); opacity: 0; transition: opacity .15s; }
+.scene-ui[data-id="kitchen"] .k-answer {
+  position: absolute; box-sizing: border-box; padding: 30px 44px 36px;
+  background: var(--k-paper); color: var(--k-ink);
+  box-shadow: 0 -6px 0 0 var(--k-ink), 0 6px 0 0 var(--k-ink), -6px 0 0 0 var(--k-ink), 6px 0 0 0 var(--k-ink), 0 16px 0 0 rgba(0,0,0,.45);
+  transform: scale(.55) translate(30%, 10%); transform-origin: 100% 20%; opacity: 0;
+  transition: transform .3s cubic-bezier(.2,1.35,.4,1), opacity .18s;
+}
+.scene-ui[data-id="kitchen"] .k-ask.on .k-answer { transform: none; opacity: 1; }
+.scene-ui[data-id="kitchen"] .k-ask.on .k-tail,
+.scene-ui[data-id="kitchen"] .k-ask.on .k-plug { opacity: 1; transition-delay: .08s; }
+#ui .layer.live[data-id="kitchen"] .k-ask.on .k-answer { pointer-events: auto; }
+#ui .layer.live[data-id="kitchen"] .k-ask:not(.on) .k-answer,
+#ui .layer.live[data-id="kitchen"] .k-ask:not(.on) .k-answer button { pointer-events: none; }
+.scene-ui[data-id="kitchen"] .k-answer .who { font: 400 16px/1 var(--px); color: #7c5a3c; letter-spacing: .08em; margin: 0 0 14px; text-transform: uppercase; }
+.scene-ui[data-id="kitchen"] .k-answer .q { font: 400 30px/1.2 var(--px); color: #8a4a1e; margin: 0 0 18px; padding-right: 40px; }
+.scene-ui[data-id="kitchen"] .k-answer .a { font: 500 31px/1.42 var(--sans); margin: 0; }
+.scene-ui[data-id="kitchen"] .k-answer .x {
+  position: absolute; right: 14px; top: 12px; width: 48px; height: 48px; display: grid; place-items: center;
+  background: none; border: 0; font: 40px/1 var(--sans); color: var(--k-ink); cursor: pointer;
+}
+.scene-ui[data-id="kitchen"] .k-answer .x:hover { background: rgba(27,19,13,.08); }
+.scene-ui[data-id="kitchen"] .k-answer .x:focus-visible { outline: 2px dashed var(--copper); }
+
+/* Small bubble when you poke Jiro. */
+.scene-ui[data-id="kitchen"] .bubble.k-small { font-size: 24px; white-space: nowrap; max-width: none; }
+
+/* Kitchen cat peeking over the plate stack. */
+.scene-ui[data-id="kitchen"] .k-cat { position: absolute; overflow: hidden; pointer-events: none; }
+.scene-ui[data-id="kitchen"] .k-cat img {
+  position: absolute; left: 0; bottom: 0; width: 100%; image-rendering: pixelated;
+  transform: translateY(105%); transition: transform .45s cubic-bezier(.3,1.4,.5,1);
+}
+.scene-ui[data-id="kitchen"] .k-cat.on img { transform: translateY(18%); }
+.scene-ui[data-id="kitchen"].k-open .faq-sushi .tip { opacity: 0; }

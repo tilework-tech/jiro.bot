@@ -1,0 +1,5 @@
+Edit image 1. Keep the same 16-bit pixel-art style, palette, lighting and all the small details (the three black soot sprites sitting on the joist, the cobwebs, the copper pipe, the rice sacks, the candle on its ledge at the right, the pair of glowing eyes in the far right corner). Make only these changes:
+1. The floorboard cross-section at the top becomes much thinner: only the top 8% of the image height.
+2. The front vertical support beam with iron brackets becomes much wider: it now spans from 28% to 50% of the image width, top to bottom, in the foreground.
+3. Remove the dark diagonal channel at the left: the area left of the beam becomes an empty, dark, plain crawlspace wall and floor with almost no detail.
+No text.

@@ -1,0 +1,65 @@
+GIMP Palette
+Name: jiro56
+Columns: 8
+#
+# warm interior
+ 11   3   2	ink
+ 19  10  12	plum-black
+ 36  21  16	walnut
+ 53  30  26	walnut-2
+ 72  35  27	cherry
+ 97  49  36	cherry-2
+128  69  46	wood
+158  82  49	rail-copper
+205 128  84	copper-hi
+246 186 100	lamp-core
+239 218 189	cream
+217 201 176	paper
+211 184 154	face-plate
+224 168 130	skin-light
+184 122  88	skin-mid
+122  74  52	skin-dark
+200  96  47	glow-orange
+232 130  62	glow-orange-hi
+253 208 129	lantern-bright
+175 151 130	tan
+127  40  28	rust
+ 93  70  70	dusty
+ 59  49  49	ash
+# cool night
+ 14  20  36	night-ink
+ 26  44  77	navy
+ 39  50  92	indigo
+ 52  70 122	indigo-2
+249 239 206	moon
+ 87 106  88	reed-sage
+ 61  74  58	moss
+ 79 122  74	lily
+127 166  90	lily-hi
+214 244 190	lantern-glass
+ 93 127 168	water-hi
+159 188 214	water-hi-2
+# accents
+ 95 212 255	jiro-cyan
+170 255 255	jiro-cyan-hi
+220 121  92	koi-coral
+240 138  93	salmon
+184  50  58	tuna
+242 201  76	tamago
+139 191  74	wasabi
+ 31  42  31	nori
+ 94 110  48	olive
+# plates
+244 244 242	plate-white
+223 227 230	plate-shade
+207 208 208	rim-grey
+196 212 228	rim-blue
+174 184 194	rim-shadow
+# neutrals
+ 60  59  78	coat-stripe
+ 34  33  50	noren-indigo
+107 104 112	steel-mid
+185 182 188	steel-hi
+255 255 255	white
+ 90  42  24	copper-dark
+142 122 106	warm-grey

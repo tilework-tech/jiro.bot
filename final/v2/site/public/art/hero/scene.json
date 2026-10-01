@@ -1,0 +1,447 @@
+{
+ "id": "hero",
+ "size": [
+  360,
+  202
+ ],
+ "loop": 12000,
+ "layers": [
+  {
+   "src": "base.png"
+  }
+ ],
+ "sprites": [
+  {
+   "id": "lantern-l",
+   "src": "lantern-l.png",
+   "x": 122,
+   "y": 6,
+   "w": 28,
+   "h": 36,
+   "grain": 1,
+   "frames": 2,
+   "durations": [
+    3000,
+    3000
+   ]
+  },
+  {
+   "id": "lantern-m",
+   "src": "lantern-m.png",
+   "x": 166,
+   "y": 14,
+   "w": 28,
+   "h": 36,
+   "grain": 1,
+   "frames": 2,
+   "durations": [
+    4000,
+    2000
+   ]
+  },
+  {
+   "id": "lantern-r",
+   "src": "lantern-r.png",
+   "x": 296,
+   "y": 0,
+   "w": 28,
+   "h": 32,
+   "grain": 1,
+   "frames": 2,
+   "durations": [
+    2000,
+    4000
+   ]
+  },
+  {
+   "id": "chime-react",
+   "src": "chime-react.png",
+   "x": 225,
+   "y": 2,
+   "w": 14,
+   "h": 20,
+   "grain": 1,
+   "frames": 7,
+   "durations": [
+    100,
+    250,
+    200,
+    250,
+    200,
+    250,
+    750
+   ],
+   "trigger": true,
+   "egg": "chime"
+  },
+  {
+   "id": "woman",
+   "src": "woman.png",
+   "x": 102,
+   "y": 80,
+   "w": 38,
+   "h": 66,
+   "grain": 1,
+   "frames": 4,
+   "durations": [
+    5000,
+    1000,
+    4000,
+    2000
+   ]
+  },
+  {
+   "id": "man",
+   "src": "man.png",
+   "x": 163,
+   "y": 94,
+   "w": 46,
+   "h": 66,
+   "grain": 1,
+   "frames": 4,
+   "durations": [
+    3000,
+    800,
+    3200,
+    5000
+   ]
+  },
+  {
+   "id": "diner-r",
+   "src": "diner-r.png",
+   "x": 252,
+   "y": 134,
+   "w": 48,
+   "h": 66,
+   "grain": 1,
+   "frames": 4,
+   "durations": [
+    3000,
+    900,
+    2100,
+    6000
+   ]
+  },
+  {
+   "id": "cat",
+   "src": "cat.png",
+   "x": 310,
+   "y": 168,
+   "w": 44,
+   "h": 28,
+   "grain": 1,
+   "frames": 2,
+   "durations": [
+    2000,
+    2000
+   ],
+   "egg": "cat"
+  },
+  {
+   "id": "cat-react",
+   "src": "cat-react.png",
+   "x": 310,
+   "y": 168,
+   "w": 44,
+   "h": 28,
+   "grain": 1,
+   "frames": 5,
+   "durations": [
+    100,
+    600,
+    700,
+    600,
+    1000
+   ],
+   "trigger": true,
+   "egg": "cat"
+  },
+  {
+   "id": "door-eyes",
+   "src": "door-eyes.png",
+   "x": 176,
+   "y": 53,
+   "w": 16,
+   "h": 10,
+   "grain": 1,
+   "frames": 4,
+   "durations": [
+    4000,
+    200,
+    7600,
+    200
+   ],
+   "egg": "door-eyes"
+  },
+  {
+   "id": "door-eyes-react",
+   "src": "door-eyes-react.png",
+   "x": 176,
+   "y": 53,
+   "w": 16,
+   "h": 10,
+   "grain": 1,
+   "frames": 2,
+   "durations": [
+    1500,
+    500
+   ],
+   "trigger": true,
+   "egg": "door-eyes"
+  },
+  {
+   "id": "jiro",
+   "src": "jiro.png",
+   "x": 194,
+   "y": 46,
+   "w": 58,
+   "h": 58,
+   "grain": 2,
+   "frames": 5,
+   "durations": [
+    2600,
+    150,
+    2250,
+    1000,
+    6000
+   ],
+   "egg": "jiro"
+  },
+  {
+   "id": "jiro-react",
+   "src": "jiro-react.png",
+   "x": 194,
+   "y": 46,
+   "w": 58,
+   "h": 58,
+   "grain": 2,
+   "frames": 7,
+   "durations": [
+    100,
+    250,
+    200,
+    250,
+    200,
+    250,
+    750
+   ],
+   "trigger": true,
+   "egg": "jiro"
+  },
+  {
+   "id": "lucky-cat-react",
+   "src": "lucky-cat-react.png",
+   "x": 260,
+   "y": 24,
+   "w": 22,
+   "h": 22,
+   "grain": 1,
+   "frames": 7,
+   "durations": [
+    100,
+    300,
+    200,
+    300,
+    200,
+    300,
+    600
+   ],
+   "trigger": true,
+   "egg": "lucky-cat"
+  },
+  {
+   "id": "daruma-react",
+   "src": "daruma-react.png",
+   "x": 238,
+   "y": 2,
+   "w": 22,
+   "h": 22,
+   "grain": 1,
+   "frames": 7,
+   "durations": [
+    100,
+    220,
+    160,
+    220,
+    160,
+    220,
+    920
+   ],
+   "trigger": true,
+   "egg": "daruma"
+  },
+  {
+   "id": "cooker-react",
+   "src": "cooker-react.png",
+   "x": 246,
+   "y": 58,
+   "w": 28,
+   "h": 34,
+   "grain": 1,
+   "frames": 3,
+   "durations": [
+    100,
+    900,
+    1000
+   ],
+   "trigger": true,
+   "egg": "cooker"
+  },
+  {
+   "id": "sake-react",
+   "src": "sake-react.png",
+   "x": 225,
+   "y": 46,
+   "w": 28,
+   "h": 24,
+   "grain": 1,
+   "frames": 5,
+   "durations": [
+    100,
+    250,
+    200,
+    250,
+    700
+   ],
+   "trigger": true,
+   "egg": "sake"
+  },
+  {
+   "id": "noren-react",
+   "src": "noren-react.png",
+   "x": 196,
+   "y": 16,
+   "w": 44,
+   "h": 46,
+   "grain": 1,
+   "frames": 5,
+   "durations": [
+    100,
+    350,
+    300,
+    350,
+    900
+   ],
+   "trigger": true,
+   "egg": "noren"
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "counter",
+   "x": 150,
+   "y": 86,
+   "w": 85,
+   "h": 16
+  },
+  {
+   "id": "back-counter",
+   "x": 300,
+   "y": 96,
+   "w": 40,
+   "h": 30
+  },
+  {
+   "id": "floor",
+   "x": 140,
+   "y": 176,
+   "w": 170,
+   "h": 26
+  }
+ ],
+ "eggs": [
+  {
+   "id": "jiro",
+   "name": "Jiro has opinions",
+   "x": 196,
+   "y": 46,
+   "w": 52,
+   "h": 56,
+   "sprite": "jiro",
+   "says": [
+    "Hai. Small diffs only.",
+    "I read the whole file before I cut.",
+    "Tests first, then taste.",
+    "Your PR is ready for review."
+   ]
+  },
+  {
+   "id": "lucky-cat",
+   "name": "Beckoned by the lucky cat",
+   "x": 260,
+   "y": 24,
+   "w": 22,
+   "h": 22,
+   "sprite": "lucky-cat"
+  },
+  {
+   "id": "daruma",
+   "name": "Wobbled the daruma",
+   "x": 238,
+   "y": 2,
+   "w": 22,
+   "h": 22,
+   "sprite": "daruma"
+  },
+  {
+   "id": "chime",
+   "name": "Rang the fish chime",
+   "x": 225,
+   "y": 2,
+   "w": 14,
+   "h": 20,
+   "sprite": "chime"
+  },
+  {
+   "id": "cooker",
+   "name": "Rice is done",
+   "x": 246,
+   "y": 58,
+   "w": 28,
+   "h": 34,
+   "sprite": "cooker"
+  },
+  {
+   "id": "sake",
+   "name": "Steadied the sake",
+   "x": 225,
+   "y": 46,
+   "w": 28,
+   "h": 24,
+   "sprite": "sake"
+  },
+  {
+   "id": "noren",
+   "name": "Peeked behind the noren",
+   "x": 196,
+   "y": 16,
+   "w": 44,
+   "h": 30,
+   "sprite": "noren"
+  },
+  {
+   "id": "cat",
+   "name": "Woke the shop cat",
+   "x": 310,
+   "y": 168,
+   "w": 44,
+   "h": 28,
+   "sprite": "cat",
+   "says": [
+    "mrrp."
+   ]
+  },
+  {
+   "id": "door-eyes",
+   "name": "Something is watching from the doorway",
+   "x": 176,
+   "y": 53,
+   "w": 16,
+   "h": 10,
+   "sprite": "door-eyes",
+   "says": [
+    "eep!"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,140 @@
+/* v02 · Crafting table. Everything scoped under .mv02 (local 1640x700 box). */
+.mv02 { position: absolute; inset: 0; color: var(--cream); user-select: none; -webkit-user-select: none;
+  background:
+    radial-gradient(ellipse 60% 70% at 60% 40%, rgba(217,138,74,.10), transparent 70%),
+    #0e0b09; }
+.mv02 img { image-rendering: pixelated; }
+.mv02 button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+
+/* Wood + copper frame shared by the panels */
+.mv02 .book, .mv02 .table, .mv02 .inv { position: absolute;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 38px, rgba(0,0,0,.38) 38px 40px),
+    repeating-linear-gradient(90deg, rgba(255,210,160,.035) 0 3px, transparent 3px 11px, rgba(0,0,0,.05) 11px 13px, transparent 13px 29px),
+    linear-gradient(#4a2f1c, #3b2415);
+  box-shadow:
+    0 0 0 4px #1a0f08, 0 0 0 8px #b86f36, 0 0 0 10px #6e3c1a,
+    inset 0 4px 0 rgba(255,200,140,.12), inset 0 -6px 0 rgba(0,0,0,.35), 0 18px 40px rgba(0,0,0,.6); }
+.mv02 .book::before, .mv02 .table::before, .mv02 .inv::before {
+  content: ""; position: absolute; inset: -8px; pointer-events: none;
+  background:
+    linear-gradient(#f0b27a,#f0b27a) 0 0/8px 8px no-repeat,
+    linear-gradient(#f0b27a,#f0b27a) 100% 0/8px 8px no-repeat,
+    linear-gradient(#f0b27a,#f0b27a) 0 100%/8px 8px no-repeat,
+    linear-gradient(#f0b27a,#f0b27a) 100% 100%/8px 8px no-repeat; }
+
+/* ---------- Recipe book ---------- */
+.mv02 .book { left: 24px; top: 24px; width: 392px; height: 652px; padding: 0; }
+.mv02 .book::after { content: ""; position: absolute; left: 14px; right: 14px; top: 60px; bottom: 58px; pointer-events: none;
+  box-shadow: inset 0 0 0 3px #7a5230; }
+.mv02 .book-head { position: absolute; left: 14px; right: 14px; top: 12px; height: 40px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+  background: #1c120b; box-shadow: inset 0 0 0 2px #b86f36; }
+.mv02 .book-head .px { font: 400 20px var(--px); color: var(--cream); letter-spacing: .03em; }
+.mv02 .book-head em { font: 13px var(--mono); font-style: normal; color: var(--copper); }
+.mv02 .recipes { list-style: none; margin: 0; padding: 0; position: absolute; left: 14px; right: 14px; top: 60px; bottom: 58px;
+  background: repeating-linear-gradient(0deg, #ead8b3 0 34px, #dfca9f 34px 36px); display: flex; flex-direction: column; justify-content: space-evenly; padding: 6px 10px; }
+.mv02 .recipes button { position: relative; display: grid; grid-template-columns: 88px 1fr; grid-template-rows: auto auto; align-items: center; column-gap: 12px; row-gap: 6px;
+  width: 100%; height: 98px; padding: 6px 10px; text-align: left; color: #2a1a0e; }
+.mv02 .recipes button img { grid-row: 1 / 3; width: 80px; height: 64px; justify-self: center; filter: drop-shadow(0 3px 0 rgba(60,30,10,.35)); }
+.mv02 .recipes .rn { font: 400 17px/1.1 var(--px); align-self: end; }
+.mv02 .recipes .pips { display: flex; gap: 6px; align-self: start; }
+.mv02 .recipes .pips b { width: 18px; height: 18px; background: var(--c); box-shadow: inset -3px -3px 0 rgba(0,0,0,.28), 0 0 0 2px #2a1a0e; }
+.mv02 .recipes button:hover { background: rgba(217,138,74,.22); }
+.mv02 .recipes button.on { background: #2a1a0e; color: var(--cream); box-shadow: 0 0 0 3px var(--copper); }
+.mv02 .recipes button.on .pips b { box-shadow: inset -3px -3px 0 rgba(0,0,0,.28), 0 0 0 2px #f3e6cf; }
+.mv02 .recipes button.on::after { content: ""; position: absolute; right: 12px; top: 50%; margin-top: -10px; width: 12px; height: 20px; background: var(--copper);
+  clip-path: polygon(0 0, 50% 0, 50% 20%, 75% 20%, 75% 40%, 100% 40%, 100% 60%, 75% 60%, 75% 80%, 50% 80%, 50% 100%, 0 100%); }
+.mv02.busy .recipes button { cursor: progress; }
+.mv02 .book-foot { position: absolute; left: 14px; right: 14px; bottom: 14px; margin: 0; font: 16px/1.3 var(--sans); color: #e7d3b5; text-align: center; }
+
+/* ---------- Crafting table ---------- */
+.mv02 .table { left: 444px; top: 24px; width: 1172px; height: 504px; }
+.mv02 .table header { position: absolute; left: 44px; top: 18px; font: 400 22px var(--px); color: var(--cream); letter-spacing: .04em; text-shadow: 0 3px 0 rgba(0,0,0,.5); }
+.mv02 .table header span { color: var(--copper); }
+
+.mv02 .slot, .mv02 .out { position: absolute; width: 112px; height: 112px; background: #1b120c;
+  box-shadow: inset 4px 4px 0 #0b0705, inset -4px -4px 0 #5c3a22, 0 0 0 3px #26170d; display: grid; place-items: center; transition: background .15s; }
+.mv02 .slot.hover { background: #3a2716; box-shadow: inset 4px 4px 0 #0b0705, inset -4px -4px 0 #5c3a22, 0 0 0 3px var(--green); }
+.mv02 .slot.full { cursor: grab; }
+.mv02 .slot .sn { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font: 400 11px var(--px); color: var(--cream); white-space: nowrap; text-shadow: 0 2px 0 #000; }
+.mv02 .slot .bdg { margin-top: -14px; }
+
+.mv02 .arrow { position: absolute; left: 866px; top: 226px; width: 112px; height: 72px; }
+.mv02 .arrow, .mv02 .arrow .fill { clip-path: polygon(0 34%, 56% 34%, 56% 8%, 64% 8%, 64% 17%, 72% 17%, 72% 26%, 80% 26%, 80% 35%, 88% 35%, 88% 44%, 100% 44%, 100% 56%, 88% 56%, 88% 65%, 80% 65%, 80% 74%, 72% 74%, 72% 83%, 64% 83%, 64% 92%, 56% 92%, 56% 66%, 0 66%); }
+.mv02 .arrow { background: #20150d; }
+.mv02 .arrow .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; clip-path: none; background: var(--cream); }
+.mv02 .arrow.part .fill { width: 45%; background: #8a6a4a; }
+.mv02 .arrow.ready .fill { width: 100%; background: var(--green); }
+.mv02 .arrow.ready { animation: mv02-glow 3.2s steps(8) infinite; }
+.mv02 .arrow.bad .fill { width: 100%; background: #6b6259; }
+@keyframes mv02-glow { 0%,100% { filter: drop-shadow(0 0 0 rgba(111,220,140,0)); } 50% { filter: drop-shadow(0 0 10px rgba(111,220,140,.8)); } }
+
+.mv02 .out { left: 1006px; top: 176px; width: 184px; height: 184px; box-shadow: inset 5px 5px 0 #0b0705, inset -5px -5px 0 #5c3a22, 0 0 0 4px #b86f36, 0 0 0 7px #26170d; }
+.mv02 .out::before { content: "OUT"; position: absolute; top: -34px; left: 0; right: 0; text-align: center; font: 400 14px var(--px); color: var(--muted); letter-spacing: .1em; }
+.mv02 .out.has { cursor: pointer; background: radial-gradient(circle at 50% 55%, rgba(111,220,140,.18), transparent 70%), #1b120c; }
+.mv02 .out.rock { background: #1b120c; }
+.mv02 .out.has:hover { box-shadow: inset 5px 5px 0 #0b0705, inset -5px -5px 0 #5c3a22, 0 0 0 4px var(--green), 0 0 0 7px #26170d; }
+.mv02 .out-in { display: grid; place-items: center; width: 160px; height: 128px; }
+.mv02 .out-in img { width: 160px; height: 128px; filter: drop-shadow(0 6px 0 rgba(0,0,0,.45)); }
+.mv02 .out.rock img { filter: grayscale(.2) drop-shadow(0 6px 0 rgba(0,0,0,.45)); }
+
+/* Item tooltip (game-style) */
+.mv02 .tip { position: absolute; left: 1216px; top: 70px; width: 372px; padding: 18px 20px 16px; background: rgba(18,8,22,.94);
+  box-shadow: 0 0 0 3px #0a040c, inset 0 0 0 3px #3b1f5e, inset 0 0 0 5px rgba(18,8,22,.94), 0 12px 30px rgba(0,0,0,.6); }
+.mv02 .tip.dish { box-shadow: 0 0 0 3px #0a040c, inset 0 0 0 3px #b86f36, inset 0 0 0 5px rgba(18,8,22,.94), 0 12px 30px rgba(0,0,0,.6); }
+.mv02 .tip p { margin: 0; }
+.mv02 .tip .t-name { font: 400 22px/1.2 var(--px); color: var(--cream); margin-bottom: 12px; }
+.mv02 .tip.dish .t-name { color: #ffd88a; }
+.mv02 .tip .rockname { color: #b9b1a6; }
+.mv02 .tip .t-order { font: 15px/1.4 var(--mono); color: #9ec3ff; margin-bottom: 14px; }
+.mv02 .tip .t-order::before { content: "ordered  "; color: var(--muted); }
+.mv02 .tip .t-serves { font: 500 20px/1.35 var(--sans); color: var(--green); margin-bottom: 14px; }
+.mv02 .tip .t-serves span { display: block; font: 400 12px var(--px); color: var(--muted); letter-spacing: .1em; margin-bottom: 4px; }
+.mv02 .tip .t-body { font: 19px/1.4 var(--sans); color: #e7d8bf; margin-bottom: 10px; }
+.mv02 .tip .t-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.mv02 .tip .chip { font: 13px var(--mono); padding: 3px 7px 3px 18px; background: #2a1830; color: var(--cream); position: relative; }
+.mv02 .tip .chip::before { content: ""; position: absolute; left: 6px; top: 50%; margin-top: -4px; width: 8px; height: 8px; background: var(--c); }
+.mv02 .tip .t-hint { font: 14px var(--mono); color: #a58fb8; }
+
+.mv02 .count { position: absolute; left: 488px; top: 470px; display: flex; gap: 20px; font: 400 15px var(--px); color: var(--muted); }
+.mv02 .count b { font-weight: 400; color: var(--green); margin-left: 6px; }
+.mv02 .clear { position: absolute; left: 760px; top: 462px; font: 400 14px var(--px) !important; padding: 7px 12px !important; background: #1c120b !important; color: var(--muted) !important; box-shadow: inset 0 0 0 2px #6e4a2c; }
+.mv02 .clear:hover { color: var(--cream) !important; box-shadow: inset 0 0 0 2px var(--copper); }
+
+/* ---------- Inventory ---------- */
+.mv02 .inv { left: 444px; top: 552px; width: 1172px; height: 124px; }
+.mv02 .inv header { position: absolute; left: 0; right: 0; top: -2px; height: 30px; display: flex; align-items: center; gap: 18px; padding: 0 12px; }
+.mv02 .inv header .px { font: 400 14px var(--px); color: var(--copper); letter-spacing: .08em; }
+.mv02 .inv-say { font: 15px var(--mono); color: #e7d8bf; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mv02 .tile { position: absolute; width: 96px; height: 86px; background: #1b120c; cursor: grab; touch-action: none;
+  box-shadow: inset 3px 3px 0 #0b0705, inset -3px -3px 0 #5c3a22; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 7px; }
+.mv02 .tile:hover { background: #33210f; box-shadow: inset 3px 3px 0 #0b0705, inset -3px -3px 0 #5c3a22, 0 0 0 3px var(--copper); }
+.mv02 .tile.pick { background: #2d3a24; box-shadow: inset 3px 3px 0 #0b0705, inset -3px -3px 0 #5c3a22, 0 0 0 3px var(--green); }
+.mv02 .tile .tn { font: 400 11px var(--px); margin-top: 6px; color: var(--cream); white-space: nowrap; }
+.mv02 .tile .role { position: absolute; right: 4px; top: 3px; font: 9px var(--mono); color: var(--muted); text-transform: uppercase; opacity: 0; }
+.mv02 .tile:hover .role { opacity: 1; }
+
+/* Pixel connector badge: brand colour, stepped corners, initials. */
+.mv02 .bdg { --s: 48px; width: var(--s); height: var(--s); display: grid; place-items: center; background: var(--c); color: var(--k); position: relative;
+  clip-path: polygon(0 12%, 6% 12%, 6% 6%, 12% 6%, 12% 0, 88% 0, 88% 6%, 94% 6%, 94% 12%, 100% 12%, 100% 88%, 94% 88%, 94% 94%, 88% 94%, 88% 100%, 12% 100%, 12% 94%, 6% 94%, 6% 88%, 0 88%);
+  box-shadow: inset 0 -6px 0 rgba(0,0,0,.25), inset 0 5px 0 rgba(255,255,255,.22); }
+.mv02 .bdg i { font: 400 20px/1 var(--px); font-style: normal; letter-spacing: -.02em; text-shadow: 0 2px 0 rgba(0,0,0,.18); }
+.mv02 .bdg.big { --s: 76px; box-shadow: inset 0 -8px 0 rgba(0,0,0,.25), inset 0 6px 0 rgba(255,255,255,.22); }
+.mv02 .bdg.big i { font-size: 30px; }
+
+/* Flying / held items and sparks */
+.mv02 .fx { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+.mv02 .flyer { position: absolute; width: 76px; height: 76px; filter: drop-shadow(0 8px 0 rgba(0,0,0,.45)); }
+.mv02 .flyer.held { transform: rotate(-6deg) scale(1.08); }
+.mv02 .spark { position: absolute; width: 8px; height: 8px; margin: -4px 0 0 -4px; background: #ffd88a; }
+.mv02 .spark.g { background: var(--green); }
+
+#ui .layer.live .mv02 { pointer-events: auto; }
+.mv02 .fx, .mv02 .fx * { pointer-events: none !important; }
+.mv02 .chef { position: absolute; left: 1508px; top: 426px; width: 80px; height: 76px; pointer-events: none; }
+.mv02 .chef img { width: 80px; height: 76px; filter: drop-shadow(0 4px 0 rgba(0,0,0,.5)); animation: mv02-bob 4s steps(2) infinite; }
+@keyframes mv02-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+.mv02 .chef .say { position: absolute; right: 92px; top: 14px; margin: 0; white-space: nowrap; background: var(--cream); color: #1b130d; font: 18px/1 var(--sans); padding: 10px 14px;
+  box-shadow: 0 0 0 3px #1b130d, 0 6px 0 rgba(0,0,0,.5); opacity: 0; transform: translateY(6px); transition: opacity .2s, transform .2s steps(3); }
+.mv02 .chef .say::after { content: ""; position: absolute; right: -12px; top: 12px; width: 12px; height: 12px; background: var(--cream); clip-path: polygon(0 0, 100% 50%, 0 100%); }
+.mv02 .chef .say.on { opacity: 1; transform: none; }

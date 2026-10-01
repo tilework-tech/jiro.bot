@@ -1,0 +1,78 @@
+{
+  "checkedAt": "2026-09-30T23:42:09.958Z",
+  "base": "http://127.0.0.1:3201/",
+  "scenes": [
+    {
+      "id": "hero",
+      "top": 0,
+      "visible": true
+    },
+    {
+      "id": "demo",
+      "top": 1350,
+      "visible": true
+    },
+    {
+      "id": "restaurant",
+      "top": 2700,
+      "visible": true
+    },
+    {
+      "id": "compare",
+      "top": 4050,
+      "visible": true
+    },
+    {
+      "id": "faq",
+      "top": 5400,
+      "visible": true
+    },
+    {
+      "id": "pricing",
+      "top": 6750,
+      "visible": true
+    },
+    {
+      "id": "pond",
+      "top": 8100,
+      "visible": true
+    }
+  ],
+  "maxY": 6480,
+  "frames": 144,
+  "canvas2d": true,
+  "videoState": [
+    {
+      "source": "http://127.0.0.1:3201/v/s0-hero.mp4",
+      "readyState": 4,
+      "error": null
+    },
+    {
+      "source": "http://127.0.0.1:3201/v/s2-serve.mp4",
+      "readyState": 4,
+      "error": null
+    },
+    {
+      "source": "http://127.0.0.1:3201/v/s7-closing-small.mp4",
+      "readyState": 4,
+      "error": null
+    },
+    {
+      "source": "http://127.0.0.1:3201/v/s4-omakase.mp4",
+      "readyState": 4,
+      "error": null
+    },
+    {
+      "source": "http://127.0.0.1:3201/v/s6-delivery.mp4",
+      "readyState": 4,
+      "error": null
+    },
+    {
+      "source": "http://127.0.0.1:3201/v/e1-pond.mp4",
+      "readyState": 4,
+      "error": null
+    }
+  ],
+  "errors": [],
+  "badResponses": []
+}

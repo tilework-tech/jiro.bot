@@ -1,0 +1,18 @@
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const pg = await b.newPage({ viewport: { width: 1600, height: 900 } });
+const errs = [];
+pg.on("pageerror", (e) => errs.push(String(e)));
+pg.on("console", (m) => m.type() === "error" && errs.push(m.text()));
+await pg.goto("http://localhost:3000/?seg=pantry&tt=0.5&t=5&mood=7", { waitUntil: "networkidle" });
+await pg.waitForTimeout(2500);
+await pg.screenshot({ path: "/tmp/v07/s1.png" });
+await pg.waitForTimeout(5500);
+await pg.screenshot({ path: "/tmp/v07/s2.png" });
+await pg.locator(".mv07 .rt").nth(1).click({ force: true });
+await pg.waitForTimeout(3000);
+await pg.screenshot({ path: "/tmp/v07/s3.png" });
+await pg.waitForTimeout(7500);
+await pg.screenshot({ path: "/tmp/v07/s4.png" });
+console.log(errs.join("\n") || "no errors");
+await b.close();

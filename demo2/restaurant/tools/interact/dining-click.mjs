@@ -1,0 +1,16 @@
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const pg = await b.newPage({ viewport: { width: 1600, height: 900 } });
+const errs = []; pg.on("pageerror", (e) => errs.push(String(e)));
+await pg.goto("http://localhost:3000/?seg=dining&tt=0.5&t=5", { waitUntil: "networkidle" });
+await pg.waitForTimeout(9000);
+await pg.click('.scene-ui[data-id="dining"] figure.cmp.left');
+await pg.waitForTimeout(800);
+await pg.screenshot({ path: "/tmp/polish-dining/after/big-left.png" });
+await pg.click('.scene-ui[data-id="dining"] .cmp-back', { position: { x: 30, y: 800 } });
+await pg.waitForTimeout(600);
+await pg.click(".scene-ui[data-id=\"dining\"] button[title=\"Diner with chopsticks\"]");
+await pg.waitForTimeout(700);
+await pg.screenshot({ path: "/tmp/polish-dining/after/peek.png" });
+console.log(errs.join("\n") || "ok");
+await b.close();

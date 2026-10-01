@@ -1,0 +1,164 @@
+/* street: night delivery / pricing. A lit menu board bolted to the dark left wall, right of the belt's drainpipe lane (x 118-182). */
+
+.scene-ui[data-id="street"] .st-board {
+  position: absolute;
+  left: 250px;
+  top: 84px;
+  width: 610px;
+}
+
+.scene-ui[data-id="street"] .st-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font: 400 15px/1 var(--px);
+  letter-spacing: .08em;
+  color: #ffd7f2;
+  padding: 9px 14px 8px;
+  border: 2px solid rgba(255, 95, 200, .85);
+  box-shadow: 0 0 12px rgba(255, 95, 200, .45), inset 0 0 10px rgba(255, 95, 200, .25);
+  text-shadow: 0 0 6px rgba(255, 95, 200, .9);
+  background: rgba(14, 6, 16, .7);
+  margin: 0 0 22px;
+  animation: st-buzz 12s ease-in-out infinite;
+}
+.scene-ui[data-id="street"] .st-open i {
+  width: 8px; height: 8px; background: var(--green); box-shadow: 0 0 8px var(--green);
+  animation: st-dot 4s ease-in-out infinite;
+}
+
+.scene-ui[data-id="street"] .st-title {
+  font-size: 44px;
+  line-height: 1.12;
+  color: #fff3de;
+  text-shadow: 0 0 10px rgba(95, 240, 255, .35), 0 4px 0 rgba(0, 0, 0, .7);
+  margin: 0 0 26px;
+}
+.scene-ui[data-id="street"] .st-title em {
+  font-style: normal;
+  color: var(--cyan);
+  text-shadow: 0 0 12px rgba(95, 240, 255, .7), 0 4px 0 rgba(0, 0, 0, .7);
+  animation: st-buzz 8s ease-in-out -3s infinite;
+}
+
+/* The board: dark wood frame + a thin cyan neon tube inside. */
+.scene-ui[data-id="street"] .st-menu {
+  position: relative;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, .012) 0 2px, transparent 2px 4px),
+    rgba(9, 8, 16, .88);
+  border: 4px solid #2a1c16;
+  outline: 2px solid rgba(95, 240, 255, .5);
+  outline-offset: -10px;
+  box-shadow: 0 0 0 2px #0b0706, 0 0 26px rgba(95, 240, 255, .18), 0 12px 0 rgba(0, 0, 0, .45);
+  padding: 30px 26px 18px;
+}
+.scene-ui[data-id="street"] .st-menu::before,
+.scene-ui[data-id="street"] .st-menu::after {
+  /* Bolts. */
+  content: ""; position: absolute; top: -10px; width: 10px; height: 10px;
+  background: #8a5a3a; box-shadow: 0 0 0 2px #1a100c, inset -3px -3px 0 #5a3622;
+}
+.scene-ui[data-id="street"] .st-menu::before { left: 18px; }
+.scene-ui[data-id="street"] .st-menu::after { right: 18px; }
+.scene-ui[data-id="street"] .st-tag {
+  position: absolute; left: 50%; top: -17px; transform: translateX(-50%);
+  font: 400 14px/1 var(--px); letter-spacing: .18em; color: #1a0f07;
+  background: var(--copper); padding: 7px 12px 6px; box-shadow: 0 3px 0 #7a4220;
+  white-space: nowrap;
+}
+
+.scene-ui[data-id="street"] .st-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 18px;
+  row-gap: 6px;
+  align-items: end;
+  padding: 14px 14px 14px;
+  border-bottom: 2px dashed rgba(243, 230, 207, .12);
+}
+.scene-ui[data-id="street"] .st-row:last-of-type { border-bottom: 0; }
+.scene-ui[data-id="street"] .st-line {
+  grid-column: 1 / -1;
+  display: flex; align-items: baseline; gap: 10px;
+}
+.scene-ui[data-id="street"] .st-line h3 {
+  font: 400 19px/1 var(--px); margin: 0; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--cyan); text-shadow: 0 0 8px rgba(95, 240, 255, .55); white-space: nowrap;
+}
+.scene-ui[data-id="street"] .st-dots {
+  flex: 1; min-width: 20px; height: 2px; align-self: center; margin-top: 8px;
+  background: repeating-linear-gradient(90deg, rgba(243, 230, 207, .35) 0 4px, transparent 4px 10px);
+}
+.scene-ui[data-id="street"] .st-price {
+  font: 400 30px/1 var(--px); color: #fff3de; margin: 0; white-space: nowrap;
+}
+.scene-ui[data-id="street"] .st-price small {
+  font: 15px var(--sans); color: var(--muted); margin-left: 6px;
+}
+.scene-ui[data-id="street"] .st-inc {
+  font: 16px/1.4 var(--sans); color: #e4dcef; margin: 0;
+}
+.scene-ui[data-id="street"] .st-row .btn {
+  font-size: 14px; padding: 10px 12px 9px; text-align: center; white-space: nowrap; min-width: 138px;
+}
+.scene-ui[data-id="street"] .st-row .btn.ghost { background: rgba(10, 8, 7, .5); border-color: rgba(95, 240, 255, .4); }
+
+/* Free trial: the lit special. */
+.scene-ui[data-id="street"] .st-row.hot {
+  margin: 0 -8px 6px;
+  padding: 16px 22px 16px;
+  border: 2px solid rgba(255, 95, 200, .9);
+  background: rgba(40, 8, 34, .55);
+  box-shadow: 0 0 16px rgba(255, 95, 200, .4), inset 0 0 14px rgba(255, 95, 200, .16);
+  animation: st-glow 6s ease-in-out infinite;
+}
+.scene-ui[data-id="street"] .st-row.hot h3 { color: var(--pink); text-shadow: 0 0 10px rgba(255, 95, 200, .8); }
+.scene-ui[data-id="street"] .st-row.hot .st-price { font-size: 36px; color: #fff; }
+.scene-ui[data-id="street"] .st-pick {
+  font: 400 11px/1 var(--px); color: #1b0716; background: var(--pink); padding: 4px 6px 3px;
+  letter-spacing: .06em; transform: rotate(-4deg); white-space: nowrap; box-shadow: 0 0 10px rgba(255, 95, 200, .6);
+}
+
+.scene-ui[data-id="street"] .st-foot {
+  font: 12px var(--mono); color: rgba(191, 174, 149, .7); margin: 10px 0 0; text-align: right;
+}
+
+/* Tired neon: steady, with one soft sag per cycle (eased, never a strobe). */
+@keyframes st-buzz {
+  0%, 56%, 70%, 100% { opacity: 1; }
+  61% { opacity: .78; }
+  64% { opacity: .9; }
+  66% { opacity: .8; }
+}
+
+/* Rain collecting on the board's bottom edge: a drop swells, lets go, falls, fades. */
+.scene-ui[data-id="street"] .st-drip {
+  position: absolute; bottom: -8px; width: 4px; height: 6px; pointer-events: none;
+  background: rgba(170, 215, 255, .75); box-shadow: inset -1px -2px 0 rgba(70, 110, 170, .6);
+  transform-origin: 50% 0; opacity: 0;
+  animation: st-drip 8s cubic-bezier(.5, 0, .7, .4) infinite;
+}
+.scene-ui[data-id="street"] .st-drip::before {
+  content: ""; position: absolute; left: 1px; top: 1px; width: 1px; height: 2px; background: #fff;
+}
+.scene-ui[data-id="street"] .st-drip:nth-of-type(1) { left: 74px; }
+.scene-ui[data-id="street"] .st-drip:nth-of-type(2) { left: 318px; animation-duration: 12s; animation-delay: -5s; }
+.scene-ui[data-id="street"] .st-drip:nth-of-type(3) { left: 530px; animation-duration: 6s; animation-delay: -2.5s; }
+@keyframes st-drip {
+  0% { opacity: 0; transform: translateY(0) scaleY(.3); }
+  10% { opacity: .9; transform: translateY(0) scaleY(.4); }
+  72% { opacity: .9; transform: translateY(0) scaleY(1.25); }
+  90% { opacity: 0; transform: translateY(46px) scaleY(1.6); }
+  100% { opacity: 0; transform: translateY(46px) scaleY(1.6); }
+}
+@keyframes st-glow {
+  0%, 100% { box-shadow: 0 0 14px rgba(255, 95, 200, .36), inset 0 0 12px rgba(255, 95, 200, .14); }
+  50% { box-shadow: 0 0 22px rgba(255, 95, 200, .5), inset 0 0 18px rgba(255, 95, 200, .2); }
+}
+@keyframes st-dot { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-ui[data-id="street"] * { animation: none !important; }
+}

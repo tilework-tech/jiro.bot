@@ -1,0 +1,148 @@
+{
+ "id": "band0",
+ "size": [
+  360,
+  153
+ ],
+ "loop": 4000,
+ "layers": [
+  {
+   "src": "base.png"
+  }
+ ],
+ "sprites": [
+  {
+   "id": "soot",
+   "src": "soot.png",
+   "x": 218,
+   "y": 38,
+   "w": 52,
+   "h": 20,
+   "grain": 2,
+   "frames": 4,
+   "durations": [
+    2600,
+    200,
+    1000,
+    200
+   ],
+   "egg": "soot"
+  },
+  {
+   "id": "soot-react",
+   "src": "soot-react.png",
+   "x": 218,
+   "y": 38,
+   "w": 52,
+   "h": 20,
+   "grain": 2,
+   "frames": 3,
+   "durations": [
+    100,
+    1100,
+    800
+   ],
+   "trigger": true,
+   "egg": "soot"
+  },
+  {
+   "id": "candle",
+   "src": "candle.png",
+   "x": 305,
+   "y": 97,
+   "w": 20,
+   "h": 22,
+   "grain": 1,
+   "frames": 2,
+   "durations": [
+    700,
+    300
+   ],
+   "egg": "candle"
+  },
+  {
+   "id": "candle-react",
+   "src": "candle-react.png",
+   "x": 305,
+   "y": 97,
+   "w": 20,
+   "h": 22,
+   "grain": 1,
+   "frames": 5,
+   "durations": [
+    100,
+    500,
+    300,
+    500,
+    600
+   ],
+   "trigger": true,
+   "egg": "candle"
+  },
+  {
+   "id": "eyes",
+   "src": "eyes.png",
+   "x": 344,
+   "y": 114,
+   "w": 14,
+   "h": 10,
+   "grain": 1,
+   "frames": 4,
+   "durations": [
+    3000,
+    200,
+    600,
+    200
+   ],
+   "egg": "eyes"
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "joist",
+   "x": 180,
+   "y": 56,
+   "w": 110,
+   "h": 6
+  },
+  {
+   "id": "floor",
+   "x": 40,
+   "y": 134,
+   "w": 70,
+   "h": 16
+  }
+ ],
+ "eggs": [
+  {
+   "id": "soot",
+   "name": "Startled the soot sprites",
+   "x": 218,
+   "y": 38,
+   "w": 52,
+   "h": 20,
+   "sprite": "soot"
+  },
+  {
+   "id": "candle",
+   "name": "Candle in the crawlspace",
+   "x": 305,
+   "y": 97,
+   "w": 20,
+   "h": 22,
+   "sprite": "candle"
+  },
+  {
+   "id": "eyes",
+   "name": "Eyes under the floor",
+   "x": 344,
+   "y": 112,
+   "w": 14,
+   "h": 12,
+   "says": [
+    "\u2026",
+    "(blink)"
+   ]
+  }
+ ]
+}

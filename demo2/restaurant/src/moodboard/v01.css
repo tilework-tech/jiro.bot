@@ -1,0 +1,55 @@
+.mv01 { position: absolute; inset: 0; color: var(--cream);
+  background:
+    linear-gradient(rgba(217,138,74,.05) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, rgba(217,138,74,.05) 1px, transparent 1px) 0 0 / 24px 24px,
+    radial-gradient(ellipse 520px 380px at 692px 380px, rgba(217,138,74,.10), transparent 70%),
+    #0c0a09; }
+.mv01 button, .mv01 canvas, .mv01 .parts li { pointer-events: auto; }
+.mv01 .k { font: 400 15px var(--px); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; margin: 0 0 10px; }
+.mv01 .k span { font: 13px var(--mono); color: #8f8069; text-transform: none; margin-left: 8px; }
+.mv01 .k.g { color: var(--green); margin-top: 18px; }
+
+/* recipe picker */
+.mv01 .menu { position: absolute; left: 22px; top: 22px; width: 340px; }
+.mv01 .picks { display: flex; flex-direction: column; gap: 6px; }
+.mv01 .picks button { display: flex; align-items: center; gap: 12px; height: 54px; padding: 0 12px 0 6px; background: #17130f; color: #d9c8ab; border: 0; cursor: pointer; text-align: left;
+  font: 400 17px var(--px); box-shadow: 0 -2px 0 0 rgba(243,230,207,.14), 0 2px 0 0 rgba(243,230,207,.14), -2px 0 0 0 rgba(243,230,207,.14), 2px 0 0 0 rgba(243,230,207,.14); }
+.mv01 .picks button img { width: 46px; height: 46px; image-rendering: pixelated; }
+.mv01 .picks button:hover { color: var(--cream); background: #221a13; }
+.mv01 .picks button.on { background: #2a1a0e; color: #ffd9b3; box-shadow: 0 -3px 0 0 var(--copper), 0 3px 0 0 var(--copper), -3px 0 0 0 var(--copper), 3px 0 0 0 var(--copper); }
+.mv01 .picks button.on::after { content: "▸"; margin-left: auto; color: var(--copper); }
+
+.mv01 .ticket { margin-top: 26px; padding: 16px 16px 14px; background: #120f0c; border-left: 4px solid #e01e5a; }
+.mv01 .ord { font: italic 19px/1.35 var(--sans); color: #efe0c6; margin: 0; }
+.mv01 .srv { display: flex; gap: 12px; align-items: center; margin: 0; font: 18px/1.3 var(--sans); color: #e7d8bf; }
+.mv01 .srv img { width: 64px; height: 64px; image-rendering: pixelated; flex: none; }
+.mv01 .srv b { display: block; font: 400 16px var(--px); color: var(--cream); margin-bottom: 4px; }
+
+/* drawing */
+.mv01 .axis { position: absolute; left: 691px; top: 30px; width: 3px; height: 600px;
+  background: repeating-linear-gradient(rgba(217,138,74,.35) 0 12px, transparent 12px 20px, rgba(217,138,74,.35) 20px 23px, transparent 23px 31px); }
+.mv01 .fig { position: absolute; left: 404px; top: 18px; margin: 0; display: flex; gap: 12px; align-items: baseline; }
+.mv01 .fig span { font: 13px var(--mono); color: var(--copper); border: 1px solid rgba(217,138,74,.5); padding: 2px 6px; }
+.mv01 .fig b { font: 400 18px var(--px); color: var(--cream); font-weight: 400; }
+.mv01 .fig em { font: 13px var(--mono); color: #7d705f; font-style: normal; }
+.mv01 canvas.dish { position: absolute; left: 392px; top: 0; width: 600px; height: 696px; image-rendering: pixelated; }
+.mv01 svg.leads { position: absolute; left: 0; top: 0; pointer-events: none; overflow: visible; }
+.mv01 svg.leads polyline { fill: none; stroke: rgba(217,138,74,.55); stroke-width: 2; shape-rendering: crispEdges; stroke-dasharray: 6 4; }
+.mv01 svg.leads polyline.on { stroke: var(--cream); stroke-dasharray: none; stroke-width: 3; }
+.mv01 svg.leads rect { fill: var(--copper); stroke: #140c07; stroke-width: 2; }
+.mv01 svg.leads rect.on { fill: var(--green); }
+
+.mv01 .hold { position: absolute; left: 404px; bottom: 16px; font: 400 14px var(--px); color: var(--muted); background: #17130f; border: 2px solid rgba(243,230,207,.18); padding: 7px 12px; cursor: pointer; }
+.mv01 .hold:hover { color: var(--cream); border-color: var(--copper); }
+
+/* parts list */
+.mv01 .parts { list-style: none; margin: 0; padding: 0; position: absolute; left: 1086px; top: 0; width: 540px; height: 700px; }
+.mv01 .parts li { position: absolute; left: 0; right: 0; transform: translateY(-50%); display: flex; gap: 16px; align-items: center; padding: 8px 10px 8px 12px; cursor: pointer; transition: opacity .25s steps(3); }
+.mv01 .parts li:hover, .mv01 .parts li.on { background: rgba(243,230,207,.06); }
+.mv01 .parts li.dim { opacity: .42; }
+.mv01 .bdg { flex: none; width: 54px; height: 54px; display: grid; place-items: center; background: var(--c); color: var(--t); font: 400 20px var(--px);
+  clip-path: polygon(0 6px, 6px 6px, 6px 0, calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px));
+  box-shadow: inset 0 -6px 0 rgba(0,0,0,.28), inset 0 6px 0 rgba(255,255,255,.22); }
+.mv01 .nm { margin: 0 0 4px; font: 400 21px var(--px); color: var(--cream); display: flex; align-items: baseline; gap: 12px; }
+.mv01 .nm i { font: 13px var(--mono); font-style: normal; color: var(--copper); text-transform: uppercase; letter-spacing: .04em; }
+.mv01 .does { margin: 0; font: 19px/1.3 var(--sans); color: #d9c8ab; }

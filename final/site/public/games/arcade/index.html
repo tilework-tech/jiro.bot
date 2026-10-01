@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arcade corner · jiro.bot</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..800&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./arcade.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header><a class="logo" href="/">jiro<span>.</span>bot</a><nav><a href="/#menu">Menu</a><a href="/#reserve">Reserve</a></nav></header>
+      <section class="intro">
+        <div class="eyebrow"><span lang="ja">いらっしゃいませ</span> · Welcome to Jiro’s counter</div>
+        <h1>A little play.<br /><em>Before the next plate.</em></h1>
+        <p>Two games, mouse only. Point at a game to play it. Move away and it pauses.</p>
+      </section>
+      <div class="counter-label"><span lang="ja">お品書き</span><span>THE ARCADE MENU · TWO SMALL SERVINGS</span><span class="seal" lang="ja" aria-label="Sushi">寿司</span></div>
+      <section class="games" aria-label="Mouse-controlled games">
+        <article class="game" id="rush" data-hint="Then click anywhere in the game to jump">
+          <div class="noren" aria-hidden="true"><span>一</span><span>寿司</span><span>走</span></div>
+          <div class="game-head"><div><span class="menu-note"><span lang="ja">にぎり</span> / NIGIRI</span><h2>Sushi Rush</h2></div><span class="badge">click to jump</span></div>
+          <canvas aria-label="Sushi Rush. Click to start, then click to jump."></canvas>
+          <p>Run the counter in 12-second stages. Every 3rd stage is a boss maze: the maki follows your cursor. Eat 40 rice to win.</p>
+        </article>
+        <article class="game" id="daily" data-hint="Then point where the maki should go">
+          <div class="noren" aria-hidden="true"><span>二</span><span>巻物</span><span>遊</span></div>
+          <div class="game-head"><div><span class="menu-note"><span lang="ja">本日の巻物</span> / TODAY’S ROLL</span><h2>Daily Roll</h2></div><span class="badge">point to steer</span></div>
+          <canvas aria-label="Daily Roll. Click to start, then point to steer."></canvas>
+          <p>One maze a day, the same for everyone. The maki turns toward your cursor at the next junction. Salmon roe makes the ghosts edible.</p>
+        </article>
+      </section>
+      <footer><span><span lang="ja">ごゆっくり</span> · Take your time. The next plate can wait.</span><span>Made at Jiro’s counter · Scores stay in your browser</span></footer>
+    </div>
+    <script src="../shared/maps.js"></script>
+    <script src="../shared/engine.js"></script>
+    <script src="../sushi-rush/game.js"></script>
+    <script src="../daily-roll/game.js"></script>
+    <script src="./theme.js"></script>
+    <script src="./arcade.js"></script>
+  </body>
+</html>

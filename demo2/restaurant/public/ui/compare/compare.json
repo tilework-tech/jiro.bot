@@ -1,0 +1,18 @@
+{
+  "title": "Same ticket. Two kitchens.",
+  "task": "Ticket #482 · Checkout total is wrong when a coupon and a gift card are combined",
+  "left": {
+    "label": "Generic agent",
+    "video": "ui/compare/generic.mp4",
+    "poster": "ui/compare/generic.jpg",
+    "stats": ["7 files · +149 −29", "16× as any", "1 test skipped", "0 new tests"],
+    "verdict": "Says “All tests pass”. The combo total is still wrong."
+  },
+  "right": {
+    "label": "Jiro",
+    "video": "ui/compare/jiro.mp4",
+    "poster": "ui/compare/jiro.jpg",
+    "stats": ["2 files · +32 −8", "114 tests passing", "2 regression tests", "PR #483 opened"],
+    "verdict": "Failing test first, root cause named, one-function fix."
+  }
+}

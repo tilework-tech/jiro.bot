@@ -1,0 +1,28 @@
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const pg = await b.newPage({ viewport: { width: 1600, height: 900 } });
+const errs = [];
+await pg.addInitScript(() => { const st = document.createElement("style"); st.textContent = "vite-error-overlay{display:none!important}"; document.addEventListener("DOMContentLoaded", () => document.head.appendChild(st)); });
+await pg.route(/\/src\/moodboard\/v(0[1-35-9]|10)\.ts/, async (r) => {
+  const n = r.request().url().match(/v(\d\d)\.ts/)[1];
+  const res = await r.fetch().catch(() => null);
+  if (res && res.status() === 200) return r.fulfill({ response: res });
+  r.fulfill({ contentType: "application/javascript", body: `export const v${n} = { n: ${+n}, title: "stub", pitch: "", mount(el){ return () => {}; } };` });
+});
+pg.on("pageerror", (e) => errs.push(String(e)));
+pg.on("console", (m) => m.type() === "error" && errs.push(m.text()));
+await pg.goto("http://localhost:3000/?seg=pantry&tt=0.5&t=5&mood=4", { waitUntil: "networkidle" });
+await pg.waitForTimeout(1200);
+await pg.screenshot({ path: "/tmp/v04-a.png" });
+await pg.waitForTimeout(3500);
+await pg.screenshot({ path: "/tmp/v04-b.png" });
+await pg.locator(".mv04 .picker button").nth(3).click({ force: true });
+await pg.waitForTimeout(1300);
+await pg.screenshot({ path: "/tmp/v04-c.png" });
+await pg.waitForTimeout(4500);
+await pg.screenshot({ path: "/tmp/v04-c2.png" });
+await pg.locator(".mv04 .cell").nth(4).hover({ force: true });
+await pg.waitForTimeout(400);
+await pg.screenshot({ path: "/tmp/v04-d.png" });
+console.log(errs.join("\n") || "no errors");
+await b.close();

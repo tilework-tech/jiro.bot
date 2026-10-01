@@ -1,0 +1,23 @@
+// node record-compare.mjs generic|jiro OUT_DIR   (serve tools/compare first: cd tools/compare && python3 -m http.server 3101 --bind 127.0.0.1)
+import { chromium } from "playwright";
+import fs from "fs";
+const [who, out] = process.argv.slice(2);
+const HOLD = 4200;
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 1280, height: 800 }, recordVideo: { dir: out, size: { width: 1280, height: 800 } } });
+const pg = await ctx.newPage();
+const t0 = Date.now();
+await pg.goto(`http://127.0.0.1:3101/?agent=${who}`);
+await pg.waitForFunction(() => window.__startedAt, null, { timeout: 30000 });
+const started = await pg.evaluate(() => window.__startedAt);
+await pg.waitForFunction(() => window.__doneAt, null, { timeout: 90000, polling: 100 });
+const done = await pg.evaluate(() => window.__doneAt);
+const stat = await pg.evaluate(() => SCRIPTS[new URLSearchParams(location.search).get("agent")].stat);
+await pg.waitForTimeout(HOLD);
+await pg.screenshot({ path: `${out}/${who}-final.png` });
+const v = pg.video();
+await ctx.close();
+const p = await v.path();
+fs.renameSync(p, `${out}/${who}.webm`);
+console.log(JSON.stringify({ who, startOffset: (started - t0) / 1000, anim: (done - started) / 1000, stat }));
+await b.close();

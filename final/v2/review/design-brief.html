@@ -1,0 +1,1054 @@
+<!doctype html><meta charset=utf-8><title>Design brief v2.1</title><style>body{max-width:980px;margin:2rem auto;padding:0 1rem;font:16px/1.55 -apple-system,Segoe UI,sans-serif;background:#130a0c;color:#efdabd}
+a{color:#5fd4ff}h1,h2,h3{color:#f6ba64}table{border-collapse:collapse;font-size:14px}td,th{border:1px solid #48231b;padding:4px 8px;vertical-align:top}
+code{background:#241510;padding:1px 4px;border-radius:3px}pre{background:#241510;padding:10px;overflow:auto}img{max-width:100%;image-rendering:pixelated;border:1px solid #48231b}
+nav a{margin-right:14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}</style><nav><a href="index.html">Overview</a><a href="design-brief.html">Design brief v2.1</a><a href="belt-spec.html">Belt spec</a><a href="changes-from-draft.html">Changes + open questions</a><a href="plan.html">Implementation plan</a></nav><h1>Jiro.bot v2.1 design brief</h1>
+<p>Status: proposal for Martin's review (2026-10-01, v2.1). Everything produced for v2 (art, animation, code, copy) is judged against this file. Where the reference videos and this brief disagree, this brief wins; the disagreements are listed in "Deliberate departures from the videos". Martin's Slack message of 2026-10-01 is the acceptance text; <code>../MASTER-PROMPT.md</code> is the older synthesis and yields to it.</p>
+<p>Evidence: ten recordings re-inspected frame by frame at 0.5 s (<code>jiro.bot-media/analysis/v01…v10</code>), plus <code>research_product_facts.md</code> (noriagentic.com, fetched 2026-10-01), <code>research_tooling.md</code> (LibreSprite / Gemini / canvas, tested in-sandbox) and <code>research_repo.md</code> (what the repo already has). Companion files: <code>BELT-SPEC.md</code> (the belt, in full) and <code>CHANGES-FROM-DRAFT.md</code> (what changed since the draft and the open questions).</p>
+<p>Numbers in this file are CSS px at the 1440 × 900 reference viewport unless marked "art px". World grain: 1 art px = 4 CSS px. Hero grain (belt, plates, items, Jiro, creatures, koi): 1 art px = 2 CSS px.</p>
+<h2>1. One world, one camera</h2>
+<ul>
+<li>A single sushi house seen by a fixed game observer: elevated three-quarter view (SNES/Zelda-like), ~30° looking down. Floors read from above, walls read frontally. Every stop and every band uses this angle. No zoom, rotation, tilt or sideways pan, ever. The page slides vertically only.</li>
+<li>Measured reasons: v08 is the model (pure vertical slide, every column shifts by the same amount, no parallax tearing, belt page-fixed). v06 and v09 show what not to do: the pond art jumps 125 px sideways on entry (v06 §7.1) and the hero drifts +33 px while scrolling (v09 §6.3), both of which make the belt "teleport". v01's ±1 px breathing zoom (v01 §5) shimmers the pixel art. All three are banned: every layer scrolls by exactly the same integer amount.</li>
+<li>Seven stops, stacked top to bottom: <strong>1 Hero bar → 2 Product demo → 3 Good taste vs bad taste → 4 How Jiro compares → 5 FAQ counter → 6 Price (rainy street) → 7 Koi pond</strong>. Page map (y in CSS px):</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Section</th>
+<th>y range</th>
+<th>Height</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S1</td>
+<td>Hero bar</td>
+<td>0–900</td>
+<td>900</td>
+</tr>
+<tr>
+<td>B1</td>
+<td>Under-floor cross-section</td>
+<td>900–1350</td>
+<td>450 (50 %)</td>
+</tr>
+<tr>
+<td>S2</td>
+<td>Product demo (workshop)</td>
+<td>1350–2250</td>
+<td>900</td>
+</tr>
+<tr>
+<td>B2</td>
+<td>Beam and shelf cutaway</td>
+<td>2250–2610</td>
+<td>360 (40 %)</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>Two kitchens (taste)</td>
+<td>2610–3510</td>
+<td>900</td>
+</tr>
+<tr>
+<td>B3</td>
+<td>Cellar with the dogleg</td>
+<td>3510–4050</td>
+<td>540 (60 %)</td>
+</tr>
+<tr>
+<td>S4</td>
+<td>Comparison table (kitchen)</td>
+<td>4050–4950</td>
+<td>900</td>
+</tr>
+<tr>
+<td>B4</td>
+<td>Dumbwaiter passage</td>
+<td>4950–5310</td>
+<td>360 (40 %)</td>
+</tr>
+<tr>
+<td>S5</td>
+<td>FAQ (storage counter)</td>
+<td>5310–6210</td>
+<td>900</td>
+</tr>
+<tr>
+<td>B5</td>
+<td>Back door to the alley</td>
+<td>6210–6615</td>
+<td>405 (45 %)</td>
+</tr>
+<tr>
+<td>S6</td>
+<td>Price (rainy street)</td>
+<td>6615–7515</td>
+<td>900</td>
+</tr>
+<tr>
+<td>B6</td>
+<td>Garden wall and moon gate</td>
+<td>7515–7965</td>
+<td>450 (50 %)</td>
+</tr>
+<tr>
+<td>S7</td>
+<td>Koi pond</td>
+<td>7965–8865</td>
+<td>900</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Bands are quiet, dark, inhabited by dust spirits and eyes, and carry the belt's vertical spine. They are drawn in the same art and the same camera; v06's garden strip (49 % of a viewport) and v08's basement (67–82 %) bracket the allowed heights.</li>
+<li>Each stop rests full-screen. Native scroll is never hijacked; a Lenis-style smoothing layer (300 ms lerp, max lag 40 px) gives the "belt first, then the scene" feel (see §5 and <code>BELT-SPEC.md</code> §6). Soft settle onto stops (<code>scroll-snap-type: y proximity</code>, ≤ 40 px, ≤ 350 ms ease-out); never a hard snap. Section UI opacity is bound to scroll progress over 150 px, never to a timer (v08 §9.5–9.6 pop-in is the defect).</li>
+</ul>
+<h2>2. Composition rule: busy edge, calm copy field</h2>
+<ul>
+<li>Left 40–45 % of every stop is a dark, low-contrast field for header + sub-header: blank plaster, shadowed plank wall, dim garden, or a pixel-softened continuation of the room (2× coarser grain, −40 % value). Copy never sits on detail. v03 (header over a purple umbrella and windows), v05 (title overlapping the logo, sub-header on the string lights) and v10 ("a stool." in orange on an amber sign) are the failure cases. v07 and v09 hit the right dark-field proportion (45 %) but let it read as a bug — a black void with a seam at y≈400 (v07 §8.10) and a 5 %-lit floor (v09 §1). v2.1 lifts the field floor to <code>#171112</code>-<code>#241510</code> so props stay faintly legible (v08 §9.2: <code>#050308</code> reads as unloaded).</li>
+<li>The action cluster sits right-of-centre and occupies 35–55 % of the frame. Bustling: hero, two kitchens, street. Quiet: product demo, table, FAQ, pond. No stop is wall-to-wall action ("don't blow up the scene to cover the entire room").</li>
+<li>Product UI (demo panel, code panels, table, FAQ answers, price tags) is real HTML over the art, styled as part of the room (paper, wood boards, hanging tags), never a floating white card. Panels never cover more than 60 % of a stop's height (v05 §7.4 hid the whole backdrop).</li>
+<li>A HUD-safe band of 48 px runs across the top of every stop. Nothing clickable in the art sits in it; the art under it is ≥ 30 % darker. Logo top-left, egg tracker top-centre, CTA top-right. v02/v03/v06/v07/v08/v09 all had the CTA or egg pill sitting on plates, lanterns or diners.</li>
+<li>Scroll rail: 7 hollow 10 px squares at x = 1408 (right margin, ≥ 24 px safe), active one filled <code>#f6ba64</code>; a stop label tag appears for 1.2 s inside the viewport on change (v07's <code>BAR</code> tag was clipped and v05's <code>DINING ROOM</code> label fired with no cause).</li>
+</ul>
+<h2>3. Art system</h2>
+<ul>
+<li><strong>Medium:</strong> polished 16-bit pixel art. All raster art is generated with Gemini (<code>gemini-3-pro-image</code> for scene masters at 16:9 / 2K, <code>gemini-3.1-flash-image</code> for sprites and frames; <code>gemini-2.5-flash-image</code> shuts down 2026-10-02 and must not be referenced) and finished in <strong>LibreSprite 1.2</strong> (<code>.ase</code> sources, sprite-sheet + JSON export with <code>--sheet/--data</code>, nearest-neighbour <code>--scale</code>). No hand-placed pixels. Measured in <code>research_tooling.md</code>: LibreSprite's <code>--palette</code> does not quantize and <code>app.command.*</code> segfaults headless, so palette snapping, mode-downscale and despeckle are a scripted Pillow step (<code>quantize(palette, dither=NONE)</code>, <code>ModeFilter(3)</code>) that runs before the <code>.ase</code> import; every step is logged per asset.</li>
+<li>Gemini outputs are off-grid, anti-aliased and over-coloured (tooling §2). Every generated image goes through: grid detection → per-cell mode downscale to the target grain → palette snap to <code>jiro48.gpl</code> → orphan-pixel removal → chroma-key (<code>#00ff00</code>) to alpha. Prompts always carry the hex palette, "no anti-aliasing, no gradients, no dither", the exact canvas size and a 2–3 px outline buffer. Budget 1–2 regenerations per asset.</li>
+<li><strong>Two grains, integer scaling only</strong> (<code>image-rendering: pixelated</code>, backing store = CSS × DPR, draw scale = floor):</li>
+<li>World (rooms, bands, people, props): 1 art px = 4 CSS px (native 360 × 225 per viewport).</li>
+<li>Hero layer (Jiro in every scene, belt, rails, plates, belt items, koi, dust spirits, eyes, draggable props): 1 art px = 2 CSS px. v07 (≈1.5× bilinear), v01 (≈2.3× non-integer) and v10 (mixed 2 px / 4 px inside one video) are the defects.</li>
+<li><strong>Master palette <code>jiro48.gpl</code> — 48 colours, shared by every asset, snapped without dither:</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Colours</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Warm interior ramp (17)</td>
+<td>ink <code>#0b0302</code>, plum-black <code>#130a0c</code>, void <code>#171112</code>, walnut <code>#241510</code>, <code>#351e1a</code>, cherry <code>#48231b</code>, <code>#613124</code>, <code>#80452e</code>, rail copper <code>#9e5231</code>, copper hi <code>#cd8054</code>, lamp core <code>#f6ba64</code>, cream <code>#efdabd</code>, paper <code>#d9c9b0</code>, face plate <code>#d3b89a</code>, skin light <code>#e8b58a</code>, skin mid <code>#c98a62</code>, skin dark <code>#8a5a3e</code></td>
+</tr>
+<tr>
+<td>Cool night ramp (12)</td>
+<td>night ink <code>#0e1424</code>, navy <code>#1a2c4d</code>, indigo <code>#27325c</code>, slate <code>#34467a</code>, coping hi <code>#4a5370</code>, reed sage <code>#576a58</code>, moss <code>#2d443d</code>, lily light <code>#697533</code>, lily dark <code>#374a2a</code>, lantern glass <code>#d6f4be</code>, water hi <code>#6fc4de</code>, moon <code>#f9efce</code></td>
+</tr>
+<tr>
+<td>Accents (15)</td>
+<td>Jiro cyan <code>#5fd4ff</code>, cyan hi <code>#aaffff</code>, koi coral <code>#dc795c</code>, koi white <code>#f4efe6</code>, salmon <code>#e8782c</code>, tuna <code>#c23a4a</code>, tamago <code>#f2c84a</code>, wasabi <code>#91c235</code>, nori <code>#1f2b1e</code>, roe <code>#ff9a3c</code>, happi indigo <code>#2e2d3b</code>, hachimaki <code>#f2e6cf</code>, happi stripe <code>#c9c6c8</code>, Nori green <code>#42be65</code> (CTA buttons and tracker ticks only), rain/steam <code>#cfd3d6</code></td>
+</tr>
+<tr>
+<td>Plate set (4)</td>
+<td>white <code>#f4f4f2</code>, shade <code>#dfe3e6</code>, rim <code>#c9d3dc</code>, rim shadow <code>#aeb8c2</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Where the videos went off-palette and v2.1 does not follow: v03's neon pink <code>#ee78a0</code> / magenta puddles, v04's <code>#2b6cff</code> splash blue, v06/v07's brand-green CTAs on orange rails, v10's <code>#8a86c8</code> purple signs. Night scenes stay inside the cool ramp; the only saturated cool is Jiro's cyan.</li>
+<li>Light: warm paper lanterns indoors (3-band falloff, plum shadows, never grey); one bare bulb per band (v08's cellar bulb <code>#db834a</code> recipe); moon + stone lanterns outdoors. Light pools are baked; only flicker animates.</li>
+<li>Type: pixel display face for headlines, labels, buttons (Silkscreen-class, caps and true lowercase); <code>IBM Plex Mono</code> for terminal/transcript text (it is what noriagentic.com loads); a humanist sans for body copy. Never a system sans inside a pixel panel (v02 §8.9). Headline cream <code>#efdabd</code> with a 1 px <code>#0b0302</code> shadow; eyebrow <code>#cd8054</code>; body <code>#d9c9b0</code>.</li>
+</ul>
+<h2>4. Jiro</h2>
+<ul>
+<li>Canon #19 (<code>brand/README.md</code>): rolled sleeves, slim copper arms, no shoulder pads, copper/cream riveted dome, white twisted hachimaki with the knot and two tails on one side, indigo happi with pale stripes and a dark V collar, copper three-finger hands, faces left. Rejected and never reintroduced: shoulder pads, rice-tin or visor heads, a mouth drawn as a line, mittens, aprons, the red hinomaru disc.</li>
+<li><strong>No drawn mouth.</strong> The chin is a copper jaw plate carrying the canon's three-slot vent at ≤ 1 tone of contrast (reads as a seam, never as teeth; v01 §8.1's smear line and v07's <code>▮▮▮</code> grille are the failure cases). The whole plate drops 1–2 art px when he "speaks" (a line in a bubble) and returns.</li>
+<li>Eyes: cyan <code>#5fd4ff</code> rounded rectangles with a 1 px <code>#aaffff</code> core; blink = collapse to a 1 px dark line for 120–160 ms (v02's slit blink is right; v03's orange slit is wrong). Hero, FAQ, street, pond: a 1 px darker pupil that looks toward the cursor within ±1 art px. <strong>Product scene: no pupils</strong> — solid glowing panels.</li>
+<li>One Jiro sprite set for all seven stops (v09 §6.6 had two different Jiros; v03's bike Jiro had a visor and v10's had a shoulder emblem — all discarded). Scene-specific poses are new frames of the same sheet: counter (knife), desk (keyboard), kitchen pass, storage stool, scooter saddle, pond bench.</li>
+<li>Motion budget per scene loop: blink every 4–7 s (random), one small hand/knife/finger motion per loop, 1 px head tilt on a 6 s cycle, jaw only on speech. He never walks between scenes; he is simply present in each (the game-observer convention).</li>
+<li>Scale: ~115 hero-art px tall standing (230 CSS px), head 32 art px wide. Always drawn at the hero grain.</li>
+</ul>
+<h2>5. The belt (the visual thread) — summary; the full specification is <code>BELT-SPEC.md</code></h2>
+<ul>
+<li><strong>One belt</strong>, one ordered plate stream from the hero hatch to the pond boathouse. Origin: a lit hatch in the hero's back wall under the sake shelf at x = 700; plates slide out from behind the hatch lip (solid mask, 2 art px overlap — v01 §8.6's one-pixel pop is the defect), never fade in mid-air (v07 §8.6).</li>
+<li>Route: a short run toward the camera, <strong>90° right</strong> onto the counter lane, left→right past Jiro and the diners, <strong>90° down</strong> at x = 1296 into the floor, straight down the right side of the page through S2–S3, a <strong>dogleg</strong> (two 90° corners, 160 px step inward to x = 1136) around the cellar post in B3, straight down through S4–S6 and the garden wall, <strong>90° left</strong> across the pond on a trestle, into the dark boathouse at the pond's left. Five corners, all 90°, all drawn as true quarter circles with the measured v08 geometry scaled to the hero grain: band 26 art px (rail 3 / surface 20 / rail 3), inner radius 22, outer 48, centre-line 35 art px (CSS: 52 / 44 / 96 / 70).</li>
+<li>Construction: copper rails <code>#9e5231</code> with a <code>#cd8054</code> lit edge and a 1 px <code>#241510</code> line where rail meets surface; charcoal surface <code>#241510</code> with <code>#351e1a</code> link bars every 12 CSS px that <strong>move with the plates</strong> and fan radially in corners. v02/v03/v04 had static slats under moving plates.</li>
+<li><strong>Plates:</strong> all white <code>#f4f4f2</code>, shade <code>#dfe3e6</code>, rim <code>#c9d3dc</code>, rim shadow <code>#aeb8c2</code>. No other colour, no dark outline, no coloured rim (every video used gold/red/blue/green rims). 20 × 7 art px ellipse (40 × 14 CSS), a 1 px <code>#0b0302</code> crescent shadow under the near rim. Item sits 1–3 art px off centre, offset seeded per slot. The plate ellipse never rotates (a circle is a circle); <strong>the item turns with the belt tangent</strong> through every corner.</li>
+<li><strong>Fill:</strong> 50 % of slots, seeded, with singles, pairs, runs of 3–4 and gaps of 1–3; never reshuffled in view; no identical item within 6 slots (v08 §9.4's three ikura in a row).</li>
+<li><strong>Mix of occupied plates:</strong> 70 % funny sushi/food, 20 % surprising non-food, 10 % very animated food. Catalogue in §13.</li>
+<li><strong>Speed:</strong> rest 16 px/s (8 art px/s), constant, never stops, never reverses. On scroll input the belt surges to up to 4× within 120 ms, the scene follows ~300 ms later, the surge decays back to 1× within 1 s of the last input. Measured spread in the videos: 6 px/s (v08 storage), 11 (v07), 12 (v01), 16 (v04), 25 (v06), 30–32 (v02, v03), 39 (v05), 80 (v08 kitchen), 94 (v09). 16 is the calm end that still reads as motion with 60 px pitch (one plate per 3.75 s).</li>
+<li><strong>Rare events, at most one each per visit, scheduled not looped:</strong> one item grows legs, walks to a neighbouring plate and cuddles; one plate wobbles off a corner and lands on the floor (stays, clickable, draggable). v04's unexplained mid-belt "whoa~" fall and never-refilled gap are the defects.</li>
+<li><strong>Ending:</strong> the belt crosses the pond on a low trestle; a large koi leaps (2.0 s arc), bites at t = 1.0 s, eats the 2–4 occupied plates under its mouth, splashes, ripples decay over 1.5 s, the empty plates ride on into the boathouse. Timing in <code>BELT-SPEC.md</code> §12.</li>
+</ul>
+<h2>6. Interaction</h2>
+<ul>
+<li>Click a plate → that plate's seeded effect (puff, sparkle, hop, confetti-rice explosion that re-forms in 1.2 s, fortune slip, steam, wasabi sneeze, bubble line…). Each belt item has its own effect listed in §13; ~26 distinct effects.</li>
+<li>Hover a plate → the ring cursor (v07 §5) plus the plate lifts 1 art px and the rim brightens to <code>#dfe3e6</code> → cursor feedback is never silent (v02 §8.4, v07 §8.13).</li>
+<li>Drag any plate off the belt (Pointer Events, <code>touch-action: none</code>). Drop on a flat surface → it stays, rendered in place at the hero grain, persisted for the visit in <code>sessionStorage</code>. Drop elsewhere → slides back to its slot over 400 ms. Drop in the pond → splash, the koi takes it. Flat surfaces per scene are listed in <code>BELT-SPEC.md</code> §10.</li>
+<li>Everything is optional. The page is fully readable and usable without clicking. Essential copy and prices are DOM text.</li>
+</ul>
+<h2>7. Creatures and Easter eggs</h2>
+<ul>
+<li><strong>Dust spirits</strong> (original design: round black fuzz <code>#0b0302</code> with <code>#130a0c</code> fuzz tips, two white dot eyes, tiny stick limbs; inspired by, not copied from, Spirited Away): in groups of <strong>1, 3 or 5</strong>, in bands and dark corners, never more than one group per band. They mostly sit and blink (independent 3–6 s cycles); one in each group shuffles 4–8 art px and back every 20–40 s. Click → the group hops and regroups, one carries a grain of rice away, or they all look at the cursor. Never mice (replaced per Martin; v3 storage room's mouse trap is not reused).</li>
+<li><strong>Eyes in the dark:</strong> 8 pairs in dark corners (hero hatch, under-floor, shelf cutaway, cellar, dumbwaiter slot, alley, garden wall, boathouse) blinking on slow independent cycles (8–14 s), 2 × 2 art px <code>#f6ba64</code> or <code>#5fd4ff</code>. Click → they close and reappear in another corner 30 s later. v07 §5 f_014's yellow doorway eyes are the reference.</li>
+<li><strong>Easter-egg tracker:</strong> small pill fixed top-centre, <code>🍣 7 / 60</code>, always visible but ≤ 110 × 22 px, expands on click to a list of found names (unfound shown as <code>???</code>). Each find: pill flashes <code>#42be65</code> for 300 ms, a 3.5 s toast slides in bottom-left in its own slot (never over a game button — v06 §7.8).</li>
+<li><strong>60 distinct eggs</strong>, each a drawn object or creature with its own reaction, listed in §12. Includes both games.</li>
+</ul>
+<h2>8. Games</h2>
+<ul>
+<li><strong>Sushi Rush</strong> (runner + Giant Puffer boss) lives in stop 4 as a pixel arcade cabinet right of the comparison table; <strong>Daily Roll</strong> (daily maze) lives in stop 7 as a pond-side stall. Both are the documented <code>/games/arcade/</code> builds from <code>origin/games/sushi-rush-daily-roll</code>, reskinned to <code>jiro48.gpl</code>, played in place (the cabinet screen / stall board is the game canvas), activated by a clearly labelled button, paused on scroll-away, never capturing Space or arrows. Score and daily-seed behaviour are preserved as documented. Never whack-a-mole; Flappy Koi (v06) is superseded.</li>
+</ul>
+<h2>9. Animation</h2>
+<ul>
+<li>Belt and koi excepted, ≤ 5 % of a stop's pixels change at once. Lantern flicker, steam, blinks, reeds, rain, ripples, cloth, CRT text. v01's Veo background (6–17 % motion, crossfade seam at f_015) and v10's 7 s video loop with a visible dissolve at 5.5 s are the defects.</li>
+<li>Every ambient loop is a sprite sequence whose length divides the scene loop (scene loop 12 s; layers 0.5 / 1 / 2 / 3 / 4 / 6 / 12 s) and returns to frame 0 pixel-exactly; frame N+1 is never a duplicate of frame 1 (tooling §5). No video, no crossfades, no whole-frame swaps, no mirrored head flips (v03 §8.6).</li>
+<li>Rain (S6) is two 1 px streak layers (near 1400 px/s, far 900 px/s, 6° lean) that never draw over Jiro or the belt (v10 §6.2).</li>
+<li><code>prefers-reduced-motion</code>: belt at 25 % (4 px/s), no surge, ambient loops hold frame 0, koi disabled, dust spirits blink only, rain static.</li>
+</ul>
+<h2>10. Content integrity</h2>
+<ul>
+<li>Copy, numbers and claims come from noriagentic.com only (<code>research_product_facts.md</code>). Pricing is the published four-plan table: <strong>Free trial $0 for 30 days · Developer $99 /month · Team $250 /month · Enterprise Contact us</strong>, descriptions verbatim, footnote "No card required for the trial. Runtimes sleep when idle and wake on demand." The videos' Apprentice/Itamae/Omakase at $0/$49/Ask and "Plans and prices are placeholders." (v03) are placeholders and are not used.</li>
+<li>Comparison table (S4) is the published one, verbatim: columns Nori / Claude Tag / Devin / Cursor Cloud; rows Agent, Model, Context, Cloud, Pricing. H2 "Cloud coding agents, compared."</li>
+<li>FAQ (S5) is the six published questions, verbatim.</li>
+<li>The product demo (S2) and the two-kitchens transcript (S3) are <strong>illustrative interactive examples</strong> and say so in a visible caption. v02's third tab "Proof" becomes "Review" — the site says output is "a pull request, commit, comment, or completed task for you to review, merge, or send back"; "proof" is not a published claim. Never present S3 as a measured bake-off.</li>
+<li>"Bring your own subscription." (v01/v07/v10) is not site copy; the published equivalents are "any model, your keys" and "BYOK". Hero sub-line uses the former.</li>
+<li>CTAs link to the published flow: "Get started for free" → the trial modal flow (<code>https://login.norisessions.com/?signup=1&amp;plan=sessions&amp;quantity=5</code>), "Book a demo" → <code>https://noriagentic.com/book-a-demo.html</code>. Footer links are the site's (Blog, Open source, Privacy, Terms, GitHub, Contact); v04's "Docs" and "Security" links point at pages that do not exist.</li>
+<li>Jiro's own persona lines ("your AI staff engineer", "Counter open · 24/7", "Made by a robot who eats rocks") are character copy, not product claims, and stay.</li>
+</ul>
+<h2>11. Delivery</h2>
+<ul>
+<li>Canvas 2D + DOM, no WebGL (tooling §3: iOS loses WebGL contexts on background; 2D canvas does not). Static-still fallback route (<code>?still</code>) that renders one PNG per stop with the belt frozen, used automatically if <code>getContext('2d')</code> fails. Three canvases per viewport: static room, belt + items + Jiro, ambient overlay at 12 fps.</li>
+<li>Tested in Chromium and WebKit (Playwright) at 1440 × 900 and 390 × 844; one manual Safari pass requested from Martin. Full-scroll recording plus one still per stop. Review URL on the session host; cache-buster <code>?v=&lt;commit&gt;</code>.</li>
+<li>Repository keeps: <code>.ase</code> sources, Gemini prompts + seeds per asset, the Pillow pipeline, the ten reference recordings and their 0.5 s frame analyses, and a <code>RECONSTRUCT.md</code> to rebuild every asset.</li>
+</ul>
+<h2>Deliberate departures from the videos</h2>
+<table>
+<thead>
+<tr>
+<th>Video shows</th>
+<th>v2.1 does</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Coloured plate rims (all ten), 85–100 % full belts, uniform pitch</td>
+<td>White plates, faint grey-blue rim, 50 % seeded fill with gaps and runs</td>
+<td>Martin's text; v05 §7.15 "reads as mechanical"</td>
+</tr>
+<tr>
+<td>Diagonal belts (v01, v07, v09), plates fading in mid-air (v07), ghost belt stub on the counter (v01 §8.3), three disconnected pieces</td>
+<td>One belt, horizontal + vertical runs, five 90° quarter-circle corners, origin behind a hatch lip</td>
+<td>Martin: one belt, only 90° turns, plausible origin</td>
+</tr>
+<tr>
+<td>Items upright through corners (v08, v06)</td>
+<td>Items rotate with the tangent; plates do not</td>
+<td>Martin: "items should turn with the belt"</td>
+</tr>
+<tr>
+<td>Static slats (v02, v03, v04)</td>
+<td>Link bars move with the plates, fan in corners</td>
+<td>v08 moving links read right</td>
+</tr>
+<tr>
+<td>Belt speed 6–94 px/s, 13× between sections (v08)</td>
+<td>16 px/s everywhere, 4× scroll surge, never stops</td>
+<td>One speed, calm</td>
+</tr>
+<tr>
+<td>Sideways pan on entry (v06), horizontal drift (v09), breathing zoom (v01)</td>
+<td>Pure vertical slide, integer px</td>
+<td>"Stay in one angle"</td>
+</tr>
+<tr>
+<td>Veo clips with crossfade seams (v01, v10), head mirror flips (v03)</td>
+<td>Sprite loops, ≤ 5 % motion, pixel-exact seams</td>
+<td>"Loops must return seamlessly"</td>
+</tr>
+<tr>
+<td>Grille that reads as teeth (v07), orange blink slit (v03), pupils in the workshop (v09)</td>
+<td>Low-contrast vent seam, dark 1 px blink, no pupils in S2</td>
+<td>Canon + Martin</td>
+</tr>
+<tr>
+<td>Neon pink/magenta street (v03), blue pond splash (v04), purple signs (v10), pseudo-kanji</td>
+<td>Same scenes inside the 48-colour night ramp; real words (寿司, ラーメン, 営業中, おまかせ)</td>
+<td>One palette; v10 §6.3</td>
+</tr>
+<tr>
+<td>Placeholder prices (v03) and "Proof" tab (v02)</td>
+<td>Published pricing; "Review"</td>
+<td>No invented claims</td>
+</tr>
+<tr>
+<td>Koi fires once and never again, bite is a hard cut, gap never refills (v04)</td>
+<td>Koi every 24–32 s while in view, bite frame with crumbs, empty plates ride on</td>
+<td>v04 §7.1–7.4</td>
+</tr>
+<tr>
+<td>Flappy Koi (v06), 88/124 egg counters</td>
+<td>Sushi Rush + Daily Roll, 60 eggs</td>
+<td>Documented games; counts match what exists</td>
+</tr>
+<tr>
+<td>Toast covers the mini-game button (v06), HUD over diners (v08)</td>
+<td>Own toast slot, 48 px HUD-safe band</td>
+<td>v06 §7.8, v08 §9.7</td>
+</tr>
+</tbody>
+</table>
+<h2>12a. Per-scene prompts</h2>
+<p>Every prompt below is pasted to Gemini with: the <code>jiro48.gpl</code> hex list, "16-bit SNES-era pixel art, crisp 1:1 pixels, no anti-aliasing, no gradients, no dither, no text, no UI, no belt, no plates, no Jiro" (rooms are generated empty; the belt, plates, Jiro and creatures are separate hero-grain sprites composited at run time), the canvas size, and design #19 attached as the character reference whenever Jiro is in the prompt. Rooms: 1440 × 900 masters generated at 2K 16:9 then mode-downscaled to 360 × 225. Bands: 1440 × height. Coordinates are CSS px at 1440 × 900 (scene-relative y). The belt path and corners referenced are defined in <code>BELT-SPEC.md</code> §3.</p>
+<h3>S1 — Hero bar (y 0–900)</h3>
+<p><strong>Layout.</strong> Elevated ¾ view of a small kaiten sushi bar at night. Left 0–620 is the dark copy field: a shadowed plank wall <code>#241510</code>/<code>#130a0c</code> with a shoji door frame (x 430–520, y 180–560, slats <code>#351e1a</code>), a doormat at the foot, a potted plant in the lower-left corner (x 80–200, y 560–820, <code>#2d443d</code> leaves), the whole field lit at ≤ 20 % with a soft seam-free falloff (no horizontal line at the wall/floor boundary). The lit room starts at x 620. Back wall <code>#48231b</code> planks with the sake shelf (x 630–790, y 230–290; three tokkuri <code>#d9c9b0</code>, <code>#576a58</code>, <code>#efdabd</code>) and, directly under it, a dark rectangular hatch (x 676–724, y 300–360; opening <code>#0b0302</code>, frame <code>#613124</code> with a 2 px lip) where the belt will emerge. Two noren panels frame Jiro's station (olive <code>#2d443d</code> at x 820–880, indigo <code>#27325c</code> with white brush strokes at x 900–1000, y 210–330). Right-back wall: two shelves of stacked cups and bowls (x 1050–1300, y 220–340), two produce crates below (<code>#80452e</code>, pink/green vegetables), a niche with paper bags at x 1330–1400. Four cylindrical paper lanterns on cords at x 560, 760, 1010, 1240 (bodies y 150–250, core <code>#f6ba64</code>, rim <code>#cd8054</code>) are the only light sources: counter pools warm, shadows plum, never grey. L-shaped walnut counter <code>#80452e</code> top with a <code>#cd8054</code> lit edge: a belt lane along the back edge at y 474–526 (left empty for the belt), plain wood everywhere else. Jiro's station is x 860–1000 behind the counter (leave a 140 × 230 blank for the sprite). Four stools, three diners with their backs or profiles to the camera: a woman in a burgundy sweater at x 700, a man in a brown jacket at x 980, a diner in olive at x 1180 eating with chopsticks. Floor planks <code>#351e1a</code>/<code>#241510</code>.</p>
+<p><strong>Copy space.</strong> x 80–560, y 250–520: eyebrow, H1 two lines, sub-line, two CTAs.</p>
+<p><strong>Small fun things.</strong> A fat cat asleep on the far-right stool, a tiny daruma on the shelf, a soy bottle with a face printed on its label, a "営業中" sign hanging in the shoji, a lone chopstick on the floor.</p>
+<p><strong>Animation (12 s loop).</strong> Lanterns 3-frame 1 px sway, periods 3/4/6/12 s with phase offsets; glow ±1 tone every 0.4 s. Steam over the miso bowl, 4 frames at 4 fps. Man: 6-frame talk at 3 fps for 2 s then 2 s rest (no turn-away). Woman: 4-frame sip every 6 s. Olive diner: 4-frame chopstick cycle every 5 s. Jiro: knife-press 3 frames every 3 s, blink 4–7 s. Cat ear-flick 2 frames every 8 s. Shoji sign swings 1 px every 4 s. Changed pixels ≤ 4 %.</p>
+<h3>B1 — Under-floor cross-section (y 900–1350)</h3>
+<p><strong>Layout.</strong> A cutaway of the floor between the bar and the workshop below, straight-on, full width. Top 0–60: the bar's floor edge-on — a plank band <code>#241510</code> with square joist ends every 180 px (<code>#351e1a</code> knots, 45° braces). A trapezoid wooden floor hatch at x 1226–1366, y 20–60 (frame <code>#613124</code>, opening <code>#0b0302</code>) through which the belt's vertical spine drops; its front lip is drawn as a separate occluder. Below, a crawl space 60–400: left 0–780 is near-black <code>#171112</code> with faintly legible cast-iron pipes (<code>#241510</code>, highlights <code>#351e1a</code>) and three 1 px cobweb fans; right 780–1440 a cracked plaster wall <code>#48231b</code>/<code>#351e1a</code> with a patch of brick (<code>#80452e</code> on <code>#241510</code> mortar). A single bare bulb on a 100 px cord at x 1000 (glass <code>#f6ba64</code>, filament <code>#efdabd</code>, 60 px radial halo falling to <code>#613124</code>) is the only light. A black shaft 88 px wide centred on x 1296 framed by dark posts, with two grey tie brackets behind the belt at y 180 and 320. Bottom 400–450: the workshop's ceiling joist band. No characters, no eyes drawn in (they are sprites).</p>
+<p><strong>Belt path.</strong> Vertical, x 1296, hidden behind the hatch lip for y 20–60, in front of the shaft and brackets.</p>
+<p><strong>Copy space.</strong> None (bands carry no copy). The left void is where creature sprites sit.</p>
+<p><strong>Small fun things.</strong> A rolled poster, a mouse-free mousetrap holding a single grain of rice, a lost sandal, a stack of old plates.</p>
+<p><strong>Animation (12 s loop).</strong> Bulb halo ±8 % at random 0.3–0.8 s intervals (2 frames). Cobweb 1 px drift every 3 s. Dust spirit group of 3 under the pipes (sprites). One pair of eyes in the shaft's far corner. Changed pixels ≤ 2 %.</p>
+<h3>S2 — Product demo, the workshop (y 1350–2250)</h3>
+<p><strong>Layout.</strong> Jiro's workshop under the bar, elevated ¾ view, quiet. Left 0–600 dark copy field: plaster <code>#241510</code> with a faint pinned noticeboard at ≤ 15 % (sticky notes <code>#d9c9b0</code> at x 120–220, y 250–340). Room from x 600: vertical-plank wall <code>#351e1a</code> lit to <code>#613124</code> around one hanging lantern at x 760, y 120–210. A walnut desk (x 620–1120, y 520–720; top <code>#613124</code>, front <code>#351e1a</code>, a visible front edge and legs — v02's desk faded into the page) with a beige CRT (x 820–960, y 380–520, screen <code>#0e1424</code> showing green <code>#42be65</code> mono code), a cream keyboard, an olive cup of tea with steam, a dark round dish with two nigiri, a soy bottle. Jiro's blank: x 640–800, y 320–560, seated, facing the monitor (left), forearms on the keyboard, eyes without pupils. Right of the desk, x 1140–1250, a wooden filing shelf with binders and a maneki-neko. The belt spine at x 1296 runs full height down the right edge inside a wooden-framed channel (<code>#613124</code> uprights, <code>#241510</code> back) — the room's "dumbwaiter"; leave the channel empty.</p>
+<p><strong>Copy space.</strong> x 80–540, y 200–480 for the header; the demo panel is HTML at x 600–1240, y 180–520 styled as a paper note pinned on the wall above the desk (panel bg <code>#130a0c</code>, 1 px <code>#351e1a</code> border, orange active tab <code>#cd8054</code>, numerals visible). Caption under the panel: "Illustrative example".</p>
+<p><strong>Small fun things.</strong> A rubber duck on the CRT, a cable that forms a heart, a mug reading 寿司, a houseplant that has grown into the lantern cord, a tiny framed photo of the pond.</p>
+<p><strong>Animation (12 s loop).</strong> CRT: one new code line every 0.6 s, 4-frame flicker. Jiro: typing 2-frame hand alternation at 6 fps for 3 s, pause 2 s, loop; blink 2–2.5 s (as measured in v02) with a 140 ms close; no pupils. Tea steam 5 frames at 4 fps. Lantern breathe ≤ 5 % over 4 s. Duck tilts 1 px every 6 s. Changed pixels ≤ 3 %.</p>
+<h3>B2 — Beam and shelf cutaway (y 2250–2610)</h3>
+<p><strong>Layout.</strong> A low band: the workshop floor edge-on at the top (joist band, 50 px), then a dark storage shelf cutaway 50–310 running the full width — three long wooden shelves (<code>#48231b</code>) stacked with sacks of rice (<code>#d9c9b0</code>), jars, a crate of lemons, folded cloth, a lantern unlit — all at ≤ 25 % value except a 220 px pool of light from a small wall lantern at x 1060, y 120. Left 0–700 is the darkest third (<code>#171112</code>), only shelf edges legible. At x 1296 the belt channel continues: wooden uprights, a dark slot; at y 150–200 a riveted steel lift box <code>#34467a</code>/<code>#4a5370</code> with a copper rivet strip and a tiny dial — the belt disappears into its top and re-emerges from a dark slot at its bottom (its front face is a separate occluder). Bottom 310–360: the next room's ceiling band.</p>
+<p><strong>Belt path.</strong> Vertical x 1296; occluded inside the lift box y 150–200.</p>
+<p><strong>Small fun things.</strong> A jar with a tiny octopus that blinks, a sack labelled 米 with a hole and a rice trail, a shelf gnome made of a daikon.</p>
+<p><strong>Animation.</strong> Lantern 3-frame flicker at 0.15 s/frame. Octopus blink every 9 s. Dust spirit single under the lowest shelf. One pair of eyes between the sacks. Changed pixels ≤ 2 %.</p>
+<h3>S3 — Two kitchens, good taste vs bad taste (y 2610–3510)</h3>
+<p><strong>Layout.</strong> A straight-on view of a dim sushi bar's back-bar with two prep stations. Top 0–130: cedar panelling <code>#351e1a</code>, a long back-bar shelf of bottles and jars, two plaster-and-brick pillars at x 240 and x 1000, three catenary swags of amber string lights (bulbs <code>#f6ba64</code>, halos <code>#9e5231</code>) — the only light. Left 0–560 is dark plaster <code>#241510</code> with a hanging apron and a knife rack at ≤ 20 %. Two empty rectangles are reserved for the HTML transcript panels: x 600–900 and x 920–1220, y 180–720, drawn as two wooden order boards (frame <code>#613124</code>) hanging from the shelf — leave their interiors flat <code>#130a0c</code>. Between and around them the room shows: a steel pass counter at y 720–800, a rice cooker, a stack of white plates, hanging ladles. The belt spine at x 1296 runs down the far right in front of a tiled wall (<code>#34467a</code> tiles, <code>#27325c</code> grout) through a 260 px gap in the pass counter.</p>
+<p><strong>Copy space.</strong> x 80–520, y 220–480: "Same ticket. Two kitchens." + the ticket line + "Illustrative example" caption.</p>
+<p><strong>Small fun things.</strong> A knife with a tiny face in the rack, a wall clock stuck at 4:20, a "47 files" post-it on the left board frame, a fish-shaped soy dispenser, a single green <code>#42be65</code> LED on the rice cooker.</p>
+<p><strong>Animation (12 s loop).</strong> String lights: one bulb dims 1 tone every 0.8 s in sequence. Rice-cooker steam 4 frames at 3 fps. Ladle sway 1 px every 5 s. Clock second hand never moves (it is the joke). Panels: transcripts start when the stop is ≥ 60 % in view, typing 65 chars/s prose, 8 lines/s code, orange block cursor blinking at 530 ms in both panels, taglines revealed last as verdicts (v05 §7.3). Changed pixels ≤ 3 % outside the panels.</p>
+<h3>B3 — Cellar with the dogleg (y 3510–4050)</h3>
+<p><strong>Layout.</strong> The tallest band. Top 0–70: joist band. Below, a cellar seen straight-on: left 0–760 near-black <code>#171112</code> void with one long horizontal copper pipe at y 200 (<code>#241510</code>, <code>#9e5231</code> highlights only under the light) with six coupling rings, two vertical pipes, a large 1 px cobweb fan low-left. Right 760–1440: lit plaster <code>#48231b</code> → <code>#351e1a</code> with a round-topped wooden doorway at x 900–980, y 300–500 glowing <code>#f6ba64</code> behind a navy noren <code>#27325c</code> with a small white crest, a paper lantern on a bracket beside it. A thick square structural post <code>#241510</code> at x 1150–1200, y 70–470 stands in front of the wall: the belt arrives at x 1296, turns 90° left at y 120–190, runs 20 px, turns 90° down at y 190–260 and continues at x 1136 — the dogleg passes left of the post, and the post's lower half is drawn in front of the belt's vertical run at y 260–470 (occluder). Bulb on a cord at x 1020, y 160, 60 px halo. Bottom 470–540: the kitchen's ceiling band with a trapezoid hatch at x 1066–1206.</p>
+<p><strong>Belt path.</strong> Down x 1296 → corner C3 → left → corner C4 → down x 1136; hidden behind the post y 260–470 and the hatch lip y 500–540.</p>
+<p><strong>Small fun things.</strong> A barrel with a tap dripping, a cat-shaped shadow that is just a coat on a hook, chalk tally marks on the post, a "no mice" sign with a dust spirit drawn under it.</p>
+<p><strong>Animation.</strong> Tap drip: 4-frame drop every 3 s with a 1 px ring. Bulb ±8 %. Dust spirit group of 5 around a candle stub on a thimble, left of centre (sprites; candle flame 3 frames at 6 fps). Eyes under the stair. Changed pixels ≤ 2 %.</p>
+<h3>S4 — How Jiro compares, the kitchen (y 4050–4950)</h3>
+<p><strong>Layout.</strong> A lit working kitchen, elevated ¾ view: tiled wall <code>#34467a</code>/<code>#27325c</code> with a copper range hood, a hanging lantern at x 820, y 110, steel counters <code>#4a5370</code> with a wooden cutting block <code>#80452e</code>, a rail of hanging pans, a rice cooker, three order tickets on a string. Left 0–600: a dark pantry alcove <code>#241510</code> with sacks and a hanging apron at ≤ 20 % — the copy field. The comparison table is HTML at x 620–1110, y 180–700, styled as a chalkboard menu (bg <code>#130a0c</code>, chalk <code>#d9c9b0</code>, Nori column tinted <code>#42be65</code> at 15 %) hanging on the wall above the pass; leave that rectangle flat. Jiro's blank: x 640–780, y 560–800, standing at the pass wiping a plate. Right of the table at x 1150–1260, y 420–780: a pixel arcade cabinet (<code>#241510</code> body, <code>#cd8054</code> marquee "SUSHI RUSH", a 96 × 72 screen rectangle left flat <code>#0e1424</code> for the game canvas, a joystick and one button) plugged into the wall. The belt spine at x 1136 passes down between the table and the cabinet in front of the tiles, inside steel channel plates with copper rivet strips (v08 kitchen).</p>
+<p><strong>Copy space.</strong> x 80–560, y 220–460: eyebrow "Tonight's orders", H2 "Cloud coding agents, compared.", one line.</p>
+<p><strong>Small fun things.</strong> A pan that is actually a gong, a chalk doodle of a koi in the table's corner, a ticket that reads "#482 — fixed", a copper kettle with a face, a "high score" sticker on the cabinet.</p>
+<p><strong>Animation (12 s loop).</strong> Hood steam 4 frames at 3 fps. Lantern flicker. Order tickets flutter 1 px every 2 s. Jiro: wipe 3 frames every 4 s, blink. Cabinet marquee: 2-frame glow every 1 s; attract-mode screen shows a 3-frame "PRESS PLAY" until clicked. Changed pixels ≤ 4 %.</p>
+<h3>B4 — Dumbwaiter passage (y 4950–5310)</h3>
+<p><strong>Layout.</strong> A short dark passage between kitchen and storage, straight-on. Top 0–50: kitchen floor band. Middle 50–300: a corridor wall of dark plaster <code>#241510</code> with a row of coat hooks (an apron, a conical hat, a lantern unlit), a low bench, a stack of empty crates at x 200–420, and a drooping electrical wire that sags from the ceiling at x 0 to y 180 at x 640 and rises again — all at ≤ 25 %. A small wall lamp at x 900, y 110 (<code>#f6ba64</code>, 50 px halo). At x 1136 the belt spine passes through a wooden dumbwaiter frame: uprights <code>#613124</code>, a cross-brace at y 160 drawn in front of the belt (occluder, 14 px tall), the shaft back <code>#130a0c</code>. Bottom 300–360: storage ceiling band with its own trapezoid hatch at x 1066–1206 (vary the drawing from B1 and B3: this one has a rope pulley beside it — v08 §9.3 flagged the duplicated hatch).</p>
+<p><strong>Belt path.</strong> Vertical x 1136; occluded by the cross-brace y 153–167 and the hatch lip y 320–360.</p>
+<p><strong>Small fun things.</strong> A conical hat that is slightly too big for the hook, a crate stencilled 鮪, a lone sock pegged to the wire, a bokeh-dim firefly that got indoors.</p>
+<p><strong>Animation.</strong> Wire sways 1 px every 6 s. Lamp flicker ±6 %. Dust spirit single on the bench, blinking. One pair of eyes in the top crate. Firefly 4-frame drift. Changed pixels ≤ 2 %.</p>
+<h3>S5 — FAQ, the storage counter (y 5310–6210)</h3>
+<p><strong>Layout.</strong> A storage room turned reading corner, elevated ¾ view, quiet and warm. Left 0–600: dark shelving <code>#241510</code> with barrels, jars and a hanging lantern unlit at ≤ 20 % — the copy field. Room from x 600: plaster <code>#48231b</code> with a wooden rail at y 150 hung with dried fish and tenugui, a long low wooden counter <code>#80452e</code> at y 540–620 running x 620–1100 on which five sushi characters sit in a row (an onigiri, a maki, an ebi, a tamago, an ikura — each with eyes, 40 × 40 CSS blanks, their questions become the HTML FAQ items as small paper tags hanging from the rail above them), a ceramic sake barrel, a paper lantern lit at x 760, y 110. Jiro's blank: x 1140–1280, y 420–660 seated on a stool at the counter's end, facing left toward the sushi, answering in a speech bubble (HTML, paper <code>#d9c9b0</code>, 1 px <code>#241510</code>). The belt spine at x 1136 drops behind Jiro's stool, in front of the wall, through a cut in the counter's end (counter end-cap drawn in front of the rails for y 540–620 as an occluder).</p>
+<p><strong>Copy space.</strong> x 80–540, y 220–460: eyebrow "The sushi have questions.", H2 "Frequently Asked Questions". FAQ items are HTML at x 620–1100, y 180–520 (five visible, sixth scrolls), each opening Jiro's bubble with the published answer.</p>
+<p><strong>Small fun things.</strong> A barrel with a cat sleeping in it, a jar labelled 秘密 (secret), one dried fish that is a sock, a lantern with a moth, a sushi character holding a tiny "?" sign.</p>
+<p><strong>Animation (12 s loop).</strong> Sushi characters: each blinks on its own 4–7 s cycle; the asked one hops 2 px. Jiro: jaw drop 1–2 px while a bubble is open, blink, one finger tap every 5 s. Lantern flicker. Moth 3-frame orbit every 2 s. Cat ear 2 frames every 10 s. Changed pixels ≤ 3 %.</p>
+<h3>B5 — Back door to the alley (y 6210–6615)</h3>
+<p><strong>Layout.</strong> The transition from indoors to the rainy street. Top 0–50: storage floor band. Then a back door hallway seen straight-on 50–300: left 0–720 is the dark end of the hallway <code>#171112</code> with a bucket, a mop and a stack of delivery boxes at ≤ 20 %; right 720–1440 a half-open back door (frame <code>#613124</code>, door <code>#48231b</code>) revealing a sliver of the night street — wet cobbles <code>#27325c</code> with a <code>#6fc4de</code> highlight, one red lantern <code>#cd8054</code> core, rain streaks. A roof-tile coping band at y 300–345 (slate <code>#34467a</code>, highlight <code>#4a5370</code>, shadow <code>#1a2c4d</code>, 24 px tile pitch) with a <strong>cut notch at x 1096–1176</strong> (v06 §7.4: the belt must visibly pass through an opening, not a clipping mask). Below it, 345–405: the top of the street's eave.</p>
+<p><strong>Belt path.</strong> Vertical x 1136 through the notch; the coping's front edge occludes y 300–345 except in the notch, where a dark slot shows the belt continuing.</p>
+<p><strong>Small fun things.</strong> A delivery box addressed to "Jiro, the counter", an umbrella stand with one umbrella and one katana-shaped umbrella, boot prints that stop at the wall, a cat flap.</p>
+<p><strong>Animation.</strong> Rain through the door, far layer only. Door creaks 1 px every 8 s. Dust spirit group of 3 behind the boxes; the shuffling one peeks around the door. Eyes in the bucket. Changed pixels ≤ 2 %.</p>
+<h3>S6 — Price, the rainy street (y 6615–7515)</h3>
+<p><strong>Layout.</strong> The layout and motion of v10 (side view, Jiro on a Super Cub-style scooter fixed on screen while a tileable street scrolls right→left) with the hanging price tags of v03, re-keyed to the night ramp. Strict side view, eye level at Jiro's hip, horizon at y 560. Sky <code>#0e1424</code> band y 0–180 (dark, starless). Left 0–600 is the copy field: a dark shuttered shop front <code>#1a2c4d</code>/<code>#27325c</code> with a closed metal shutter and a dim "準備中" sign at ≤ 20 % — this part of the street does not scroll (it is the shop Jiro is parked in front of; see note). Scrolling layers from x 600: near shop fronts (ridged tile roofs <code>#1a2c4d</code>, wooden eaves <code>#613124</code>, a navy noren <code>#27325c</code> with cream 寿司, a lit shoji panel <code>#f6ba64</code>→<code>#9e5231</code>, a sign board <code>#d9c9b0</code> with <code>#241510</code> ラーメン, an orange-and-cream awning <code>#cd8054</code>/<code>#d9c9b0</code>, red paper lanterns <code>#cd8054</code> with <code>#f6ba64</code> highlight, a cream pavement lightbox), a far layer of taller blue-grey buildings <code>#27325c</code> with lit windows <code>#f2c84a</code> and lantern strings, and a wet road <code>#1a2c4d</code> with vertical smeared reflections and puddle highlights <code>#6fc4de</code>/<code>#f6ba64</code>. Scooter and Jiro: copper <code>#9e5231</code>/<code>#cd8054</code> frame, cream <code>#d9c9b0</code> leg shield, black wheels, round headlamp with an additive wedge to the right edge; Jiro upright, both hands on the bars, canon head (no visor), hachimaki tails fluttering; rear wheel at (820, 720). The belt spine at x 1136 runs down the right third as a covered street conveyor: a wooden-framed channel with a tiled roof, open at the front, lit by one lantern — a plausible "delivery line" from the restaurant above into the garden below.</p>
+<p><strong>Copy space.</strong> x 80–540, y 200–330: H2 "Pay per agent, no hidden fees."; four hanging tags (HTML) from a cable at y 350 across x 80–560 and y 380–700, two rows of two: Free trial, Developer, Team, Enterprise — kraft <code>#d9c9b0</code> with pin and string, Developer hung 10 px lower in <code>#cd8054</code>; footnote below.</p>
+<p><strong>Small fun things.</strong> A vending machine selling only wasabi, a cat under the awning watching the rain, a poster for "Sushi Rush", a manhole cover with a koi, a puddle that reflects a lantern that is not there.</p>
+<p><strong>Animation (loop = tile length ÷ speed).</strong> Near layer 160 px/s (v10's 341 px/s is a video; half that keeps rain readable and the tags still), far layer 70 px/s, road with near; seamless 2880 px tiles, no crossfade. Scooter bob 1 px at 2 Hz, 3-frame spoke cycle at 12 fps, 2-frame rear-wheel spray at 8 fps, headlamp ±5 % at 0.5 Hz, hachimaki tails 2 frames at 4 fps. Rain near 1400 px/s / far 900 px/s, 6° lean, drawn behind Jiro and the belt. Tags swing ±2° at 0.4 Hz, 0.1 s phase offsets. Neon flicker: one sign, 1 frame every ~7 s. Jiro blink, head turn as a 3-frame tween every 6 s (never a mirror flip).</p>
+<h3>B6 — Garden wall and moon gate (y 7515–7965)</h3>
+<p><strong>Layout.</strong> v06's garden strip, re-keyed. Top 0–20: a near-black gutter <code>#0e1424</code> where the street ends. 20–65: roof-tile coping (<code>#34467a</code>, <code>#4a5370</code>, <code>#1a2c4d</code>) with a <strong>notched slot at x 1096–1176</strong> for the belt. 65–205: a tall plaster garden wall <code>#27325c</code> with lighter mottling <code>#34467a</code>, two hairline cracks, a crumbled pile of stone blocks low-left, a small wooden-framed paper wall lantern at x 640, y 110 (<code>#f9efce</code> paper, <code>#cd8054</code> halo, <code>#613124</code> frame), two strands of ivy from the coping, a dense bamboo cluster (<code>#2d443d</code> stalks, <code>#576a58</code> leaves) at x 900–1080 rising over the coping. 205–255: a wooden fence rail of vertical planks <code>#48231b</code>/<code>#241510</code>. 255–450: mossy grass <code>#2d443d</code>, round clipped bushes, raked-gravel arcs <code>#4a5370</code> on <code>#34467a</code>, the dark upper edge of the pond at the left. On the right, a circular moon gate through the wall centred (1250, 330), outer diameter 240, rim <code>#48231b</code>, inner shadow <code>#241510</code>, revealing the alley beyond in <code>#27325c</code>/<code>#34467a</code> with one small lantern; a grey cobbled path <code>#4a5370</code> leads out of the gate toward the viewer. The belt spine at x 1136 runs straight down in front of the wall, left of the gate, through the fence (a cut in the planks), and down the gravel.</p>
+<p><strong>Belt path.</strong> Vertical x 1136; hidden in the coping slot y 20–65 (dark interior visible); in front of everything else.</p>
+<p><strong>Small fun things.</strong> Four fireflies, a stone frog on the gravel, a bamboo stalk with a face knot, a sandal left on the path, one lime "+" sparkle on the grass by the gate.</p>
+<p><strong>Animation.</strong> Fireflies: 4 × 3 px <code>#f6ba64</code>, random walk ≤ 10 px per 0.5 s, 0.6–1.0 alpha sine 2–3 s. Bamboo top 1 px sway, 4 s. Lantern ±4 % over 3 s. Dust spirit group of 5 on the stone pile; eyes in the moon gate's shadow. Changed pixels ≤ 2 %.</p>
+<h3>S7 — Koi pond (y 7965–8865)</h3>
+<p><strong>Layout.</strong> A night garden pond, elevated ¾ view, the page's footer. Left 0–580: near-black indigo copy space <code>#0e1424</code>→<code>#130a0c</code> with faint darker cloud-shaped blotches and, at the bottom-left, a dark wooden boathouse (x 380–600, y 440–560; <code>#241510</code> boards, <code>#130a0c</code> doorway) whose doorway swallows the belt — it is the stream's terminus and the only lit thing in it is one pair of eyes. Pond from x 580: water <code>#1a2c4d</code>/<code>#27325c</code> with hand-placed <code>#34467a</code> wave strokes, a cream moon reflection <code>#f9efce</code>/<code>#d9c9b0</code> at x 760–940, y 230–330, lily pads <code>#697533</code>/<code>#374a2a</code>, reed clumps <code>#576a58</code>/<code>#2d443d</code> with <code>#1f2b1e</code> outlines, a small grass island with a kasuga stone lantern at x 880, y 160–260 (<code>#d3b89a</code> stone, <code>#f6ba64</code> firebox), a dark-timber arched bridge <code>#48231b</code>/<code>#613124</code> top-right x 1080–1400, two more stone lanterns in reed clumps bottom-left (x 640, y 760) and bottom-right (x 1300, y 800). Across y 445–497 a low wooden trestle (posts <code>#48231b</code> every 147 px into the water with waterline rings, deck <code>#80452e</code>, underside <code>#351e1a</code>) carries the belt's final run from the corner at x 1136 leftward into the boathouse; koi lane x 620–1000 below and above the trestle is open water. A pond-side stall at x 1180–1340, y 560–760 (<code>#613124</code> frame, <code>#d9c9b0</code> canvas roof, a 96 × 72 board left flat <code>#0e1424</code> for the Daily Roll canvas, a sign "DAILY ROLL"). Jiro's blank: x 1040–1160, y 580–780 on a bench beside the stall, feeding the koi. Bottom 800–900 fades to <code>#0b0302</code> for the footer.</p>
+<p><strong>Copy space.</strong> x 80–540, y 200–520: eyebrow "The end of the belt", H2 "Every plate gets eaten.", one paragraph, CTAs "Get started for free" / "Book a demo"; footer line at y 820–880.</p>
+<p><strong>Small fun things.</strong> A turtle on a lily pad, a paper boat, a koi that is actually a sock, a stone frog that is a real frog, a lantern with a dust spirit inside, "psst" in the footer corner at legible contrast.</p>
+<p><strong>Animation (12 s ambient loop; koi on its own schedule).</strong> Moon reflection 2-frame dither shimmer 0.6 s. Reeds 2 frames 0.8 s, pads bob 1 px 1.2 s. Lantern flames 3 frames 0.15 s. Fish shadows 2–3 silhouettes <code>#0e1424</code> at 20–30 px/s with 4 px sine, respawn right. Minnow flick 3 frames every 3–5 s. Ripple ring at a random spot every 9 s only when no koi event is active (v04 §7.1 ripple-without-fish). Koi event per <code>BELT-SPEC.md</code> §12. Turtle blink every 10 s. Changed pixels ≤ 4 % outside the koi.</p>
+<h2>12b. Easter-egg catalogue (60)</h2>
+<p>Every egg is a drawn object or creature at the hero grain with its own one-line reaction; finding it ticks the tracker (<code>🍣 n / 60</code>) and shows a toast with the name. Reactions are ≤ 1.5 s, ≤ 5 % of the frame, and return the scene to its loop pose. Hover gives the ring cursor and a 1 px lift. Nothing here is required to read the page.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Scene</th>
+<th>Egg</th>
+<th>Reaction on click</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>S1</td>
+<td>Fat cat asleep on the far stool</td>
+<td>Opens one eye, yawns (3 frames), turns over, sleeps again</td>
+</tr>
+<tr>
+<td>2</td>
+<td>S1</td>
+<td>Soy bottle with a printed face</td>
+<td>Face winks; a drop of soy falls and leaves a 1 px stain that stays</td>
+</tr>
+<tr>
+<td>3</td>
+<td>S1</td>
+<td>Daruma on the sake shelf</td>
+<td>Wobbles 4 times; its blank eye gets painted in and stays painted</td>
+</tr>
+<tr>
+<td>4</td>
+<td>S1</td>
+<td>営業中 sign in the shoji</td>
+<td>Flips to 準備中 for 5 s; the diners freeze mid-bite, then it flips back</td>
+</tr>
+<tr>
+<td>5</td>
+<td>S1</td>
+<td>Lone chopstick on the floor</td>
+<td>Jiro glances at it (1 px pupil shift), it slides under the counter</td>
+</tr>
+<tr>
+<td>6</td>
+<td>S1</td>
+<td>Third lantern</td>
+<td>All four lanterns flicker in sequence left→right, then settle</td>
+</tr>
+<tr>
+<td>7</td>
+<td>S1</td>
+<td>The woman's tokkuri</td>
+<td>She refills her cup; a tiny "kanpai" bubble; the man raises his cup once</td>
+</tr>
+<tr>
+<td>8</td>
+<td>S1</td>
+<td>Hatch eyes (behind the belt origin)</td>
+<td>Blink twice, retreat; a plate with a fortune cookie appears in the stream within 3 slots</td>
+</tr>
+<tr>
+<td>9</td>
+<td>B1</td>
+<td>Mousetrap holding a grain of rice</td>
+<td>Trap snaps shut on nothing; the rice grain hops away toward the dust spirits</td>
+</tr>
+<tr>
+<td>10</td>
+<td>B1</td>
+<td>Dust spirit trio under the pipes</td>
+<td>All three hop, land in a different order, blink in unison once</td>
+</tr>
+<tr>
+<td>11</td>
+<td>S2</td>
+<td>Rubber duck on the CRT</td>
+<td>Squeaks (visual "!"), rotates 90° to face the cursor, stays turned</td>
+</tr>
+<tr>
+<td>12</td>
+<td>S2</td>
+<td>Heart-shaped cable loop</td>
+<td>Pulses 2 px twice like a heartbeat</td>
+</tr>
+<tr>
+<td>13</td>
+<td>S2</td>
+<td>寿司 mug</td>
+<td>Steam puffs the kanji into the air, which drifts up and fades</td>
+</tr>
+<tr>
+<td>14</td>
+<td>S2</td>
+<td>Houseplant grown into the lantern cord</td>
+<td>A leaf drops onto the desk and stays</td>
+</tr>
+<tr>
+<td>15</td>
+<td>S2</td>
+<td>Framed photo of the pond</td>
+<td>The koi in the photo jumps once (3 frames)</td>
+</tr>
+<tr>
+<td>16</td>
+<td>B2</td>
+<td>Octopus in a jar</td>
+<td>Changes colour to <code>#dc795c</code> for 2 s, squirts a 1 px ink dot on the glass that stays</td>
+</tr>
+<tr>
+<td>17</td>
+<td>B2</td>
+<td>Rice-sack trail</td>
+<td>A line of 6 rice grains walks itself back into the sack</td>
+</tr>
+<tr>
+<td>18</td>
+<td>S3</td>
+<td>Knife with a face in the rack</td>
+<td>Looks at the generic panel, narrows its eyes</td>
+</tr>
+<tr>
+<td>19</td>
+<td>S3</td>
+<td>Clock stuck at 4:20</td>
+<td>Second hand ticks exactly once, then stops again</td>
+</tr>
+<tr>
+<td>20</td>
+<td>S3</td>
+<td>"47 files" post-it on the left board</td>
+<td>Peels off, floats down, reads "4 files" on the back, stays on the floor</td>
+</tr>
+<tr>
+<td>21</td>
+<td>S3</td>
+<td>Fish-shaped soy dispenser</td>
+<td>Flaps its tail, a drop lands on the pass</td>
+</tr>
+<tr>
+<td>22</td>
+<td>S3</td>
+<td>Rice-cooker LED</td>
+<td>Turns from green to <code>#cd8054</code>; steam doubles for 3 s</td>
+</tr>
+<tr>
+<td>23</td>
+<td>B3</td>
+<td>Barrel tap</td>
+<td>Drips three times fast; a dust spirit comes to look at the puddle</td>
+</tr>
+<tr>
+<td>24</td>
+<td>B3</td>
+<td>Candle on the thimble</td>
+<td>Flame leans toward the cursor; the five dust spirits lean the same way</td>
+</tr>
+<tr>
+<td>25</td>
+<td>S4</td>
+<td><strong>Sushi Rush cabinet</strong> (game)</td>
+<td>Screen lights up, "INSERT PLATE" → playable in place; counts as found on first play</td>
+</tr>
+<tr>
+<td>26</td>
+<td>S4</td>
+<td>Pan that is a gong</td>
+<td>Rings (2-frame shimmer); every order ticket flutters at once</td>
+</tr>
+<tr>
+<td>27</td>
+<td>S4</td>
+<td>Chalk koi in the table's corner</td>
+<td>Swims one length of the chalkboard edge and returns</td>
+</tr>
+<tr>
+<td>28</td>
+<td>S4</td>
+<td>Ticket "#482 — fixed"</td>
+<td>Flips to show a tiny green check; Jiro nods 1 px</td>
+</tr>
+<tr>
+<td>29</td>
+<td>S4</td>
+<td>Copper kettle with a face</td>
+<td>Whistles: 4-frame steam jet, lid rattles 2 px</td>
+</tr>
+<tr>
+<td>30</td>
+<td>S4</td>
+<td>High-score sticker on the cabinet</td>
+<td>Shows the visitor's best Sushi Rush score as a pixel number for 3 s</td>
+</tr>
+<tr>
+<td>31</td>
+<td>B4</td>
+<td>Conical hat too big for its hook</td>
+<td>Falls, lands on the dust spirit on the bench, which keeps wearing it</td>
+</tr>
+<tr>
+<td>32</td>
+<td>B4</td>
+<td>Sock pegged to the wire</td>
+<td>Drops; the indoor firefly lands on it</td>
+</tr>
+<tr>
+<td>33</td>
+<td>S5</td>
+<td>Cat asleep in a barrel</td>
+<td>Stretches a paw out of the barrel and back</td>
+</tr>
+<tr>
+<td>34</td>
+<td>S5</td>
+<td>Jar labelled 秘密</td>
+<td>Lid lifts 2 px, a pair of eyes looks out, lid drops</td>
+</tr>
+<tr>
+<td>35</td>
+<td>S5</td>
+<td>Dried fish that is a sock</td>
+<td>The ikura character notices and gasps (2 frames)</td>
+</tr>
+<tr>
+<td>36</td>
+<td>S5</td>
+<td>Moth in the lantern</td>
+<td>Flies to the cursor position once, returns to orbit</td>
+</tr>
+<tr>
+<td>37</td>
+<td>S5</td>
+<td>Sushi character holding a "?" sign</td>
+<td>Flips the sign to "!" and all five characters blink together</td>
+</tr>
+<tr>
+<td>38</td>
+<td>B5</td>
+<td>Delivery box "to Jiro, the counter"</td>
+<td>Lid opens: it is full of white plates; one slides out and stays on the floor (draggable)</td>
+</tr>
+<tr>
+<td>39</td>
+<td>B5</td>
+<td>Katana-shaped umbrella</td>
+<td>Unfolds for 1 s, drips, folds</td>
+</tr>
+<tr>
+<td>40</td>
+<td>S6</td>
+<td>Wasabi vending machine</td>
+<td>Dispenses one wasabi blob that rolls to the kerb and stays</td>
+</tr>
+<tr>
+<td>41</td>
+<td>S6</td>
+<td>Cat under the awning</td>
+<td>Shakes rain off (3 frames), moves one awning further left</td>
+</tr>
+<tr>
+<td>42</td>
+<td>S6</td>
+<td>Sushi Rush poster</td>
+<td>Peels at one corner, revealing a Daily Roll poster underneath</td>
+</tr>
+<tr>
+<td>43</td>
+<td>S6</td>
+<td>Koi manhole cover</td>
+<td>Lifts 2 px; a koi tail swishes beneath; lid drops</td>
+</tr>
+<tr>
+<td>44</td>
+<td>S6</td>
+<td>Phantom-lantern puddle</td>
+<td>The reflected lantern appears for 2 s above it, then is gone again</td>
+</tr>
+<tr>
+<td>45</td>
+<td>S6</td>
+<td>Scooter headlamp</td>
+<td>Horn "beep" bubble; cone brightens 1 tone; the awning cat flinches</td>
+</tr>
+<tr>
+<td>46</td>
+<td>B6</td>
+<td>Stone frog on the gravel</td>
+<td>Croaks (throat 2 frames); the real frog in S7 answers 1 s later</td>
+</tr>
+<tr>
+<td>47</td>
+<td>B6</td>
+<td>Bamboo stalk with a face knot</td>
+<td>Sheds one leaf that lands on the belt and rides to the pond</td>
+</tr>
+<tr>
+<td>48</td>
+<td>S7</td>
+<td><strong>Daily Roll stall</strong> (game)</td>
+<td>Board lights, today's maze loads; counts as found on first play</td>
+</tr>
+<tr>
+<td>49</td>
+<td>S7</td>
+<td>Turtle on a lily pad</td>
+<td>Pulls its head in, pad bobs twice</td>
+</tr>
+<tr>
+<td>50</td>
+<td>S7</td>
+<td>Paper boat</td>
+<td>Sails one pond length; a fish shadow follows it</td>
+</tr>
+<tr>
+<td>51</td>
+<td>S7</td>
+<td>Koi that is a sock</td>
+<td>Is lifted by a fish shadow, sinks slowly</td>
+</tr>
+<tr>
+<td>52</td>
+<td>S7</td>
+<td>Stone frog that is a real frog</td>
+<td>Hops into the water with a 3-frame ripple</td>
+</tr>
+<tr>
+<td>53</td>
+<td>S7</td>
+<td>Lantern with a dust spirit inside</td>
+<td>The spirit waves; the flame winks</td>
+</tr>
+<tr>
+<td>54</td>
+<td>S7</td>
+<td>"psst" in the footer</td>
+<td>Opens the egg list expanded and a one-line hint for the nearest unfound egg</td>
+</tr>
+<tr>
+<td>55</td>
+<td>Belt</td>
+<td>The cuddle (see it happen)</td>
+<td>Found when the walker reaches its neighbour; clicking the pair makes them swap plates</td>
+</tr>
+<tr>
+<td>56</td>
+<td>Belt</td>
+<td>The fallen plate</td>
+<td>Clicking the plate on the floor makes Jiro (if in scene) look, sigh (jaw 1 px), look away</td>
+</tr>
+<tr>
+<td>57</td>
+<td>Belt</td>
+<td>Bomb maki</td>
+<td>Fuse flares, "pop", confetti rice reforms into a plain maki</td>
+</tr>
+<tr>
+<td>58</td>
+<td>Belt</td>
+<td>UFO over a nigiri</td>
+<td>Beam lifts the nigiri off the plate for 1 s and drops it back off-centre</td>
+</tr>
+<tr>
+<td>59</td>
+<td>Belt</td>
+<td>Fortune cookie</td>
+<td>Opens; a slip reads one of 12 lines (e.g. "Read the file before you change it.")</td>
+</tr>
+<tr>
+<td>60</td>
+<td>All</td>
+<td>Night watch: all 8 eye pairs closed</td>
+<td>Found when the eighth pair has been clicked; the next pair to open is cyan</td>
+</tr>
+</tbody>
+</table>
+<p>Toasts use the egg name only, never a spoiler for other eggs. Found state persists in <code>localStorage['jiro-eggs-v2']</code>.</p>
+<h2>13. Belt item catalogue (40)</h2>
+<p>28 funny sushi/food (70 %), 8 surprising non-food (20 %), 4 very animated food (10 %). All items are hero-grain sprites ≤ 22 × 20 art px with a <code>#241510</code> outline (never pure black), 3-tone shading from <code>jiro48.gpl</code>, a 1 px specular on glossy food, and a 2-frame idle (blink, wobble, steam) at ≤ 1 fps so the stream reads as alive without exceeding the motion budget. Items sit 1–3 art px off the plate centre (seeded) and rotate with the belt tangent. "Seeded" effects use the slot seed to pick one of several variants so the same plate always does the same thing. Drag: <strong>D</strong> = draggable (stays on flat surfaces), <strong>–</strong> = not draggable (click only).</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Item</th>
+<th>Colours</th>
+<th>Click effect</th>
+<th>Drag</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Food (28)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td>Salmon nigiri</td>
+<td><code>#e8782c</code> with <code>#efdabd</code> fat lines on <code>#f4f4f2</code> rice</td>
+<td>Hops 2 px, lands 1 px further off-centre</td>
+<td>D</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Tuna nigiri</td>
+<td><code>#c23a4a</code> / <code>#dc795c</code> edge on rice</td>
+<td>Blushes <code>#dc795c</code> cheeks for 1 s</td>
+<td>D</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Tamago nigiri</td>
+<td><code>#f2c84a</code> block, <code>#1f2b1e</code> nori belt</td>
+<td>Belt snaps, egg wobbles like jelly (3 frames)</td>
+<td>D</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Ebi nigiri</td>
+<td><code>#e8782c</code>/<code>#efdabd</code> bands, tail <code>#c23a4a</code></td>
+<td>Tail flicks twice</td>
+<td>D</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Ikura gunkan</td>
+<td><code>#1f2b1e</code> wall, <code>#ff9a3c</code> roe, <code>#f6ba64</code> highlights</td>
+<td>Three roe pop like bubbles and regrow</td>
+<td>D</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Uni gunkan</td>
+<td><code>#f6ba64</code>/<code>#cd8054</code> uni</td>
+<td>Shivers, "cold" bubble</td>
+<td>D</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Sleepy onigiri</td>
+<td><code>#f4f4f2</code>, <code>#1f2b1e</code> base, closed eyes</td>
+<td>Snores a "z" that floats up; wakes with "!" if clicked twice</td>
+<td>D</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Grumpy wasabi blob</td>
+<td><code>#91c235</code>, <code>#2d443d</code> brows</td>
+<td>Sneezes: 6 green specks, the neighbour plate's item flinches</td>
+<td>D</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Maki trio</td>
+<td><code>#f4f4f2</code> rice, <code>#1f2b1e</code> nori, <code>#e8782c</code>/<code>#91c235</code> cores</td>
+<td>The three rolls shuffle order</td>
+<td>D</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Miso soup bowl</td>
+<td><code>#241510</code> bowl, <code>#d9c9b0</code> broth, <code>#576a58</code> flecks</td>
+<td>Steam doubles for 2 s; a tofu cube surfaces</td>
+<td>D</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Matcha cup</td>
+<td><code>#d3b89a</code> cup, <code>#91c235</code> tea</td>
+<td>Ripple ring in the tea</td>
+<td>D</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Edamame pod</td>
+<td><code>#91c235</code>/<code>#576a58</code></td>
+<td>One bean shoots out and lands on the next plate</td>
+<td>D</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Rice with a tiny umbrella</td>
+<td><code>#f4f4f2</code>, umbrella <code>#dc795c</code></td>
+<td>Umbrella spins once</td>
+<td>D</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Gyoza in a blanket</td>
+<td><code>#d9c9b0</code> dumpling, <code>#27325c</code> blanket</td>
+<td>Pulls the blanket up over its eyes</td>
+<td>D</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Tempura shrimp with a cape</td>
+<td><code>#f6ba64</code> batter, <code>#c23a4a</code> cape</td>
+<td>Cape flutters; "hero pose" 1 frame</td>
+<td>D</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Ramen bowl</td>
+<td><code>#241510</code> bowl, <code>#f2c84a</code> egg, <code>#dc795c</code> naruto</td>
+<td>Chopsticks lift one noodle and drop it</td>
+<td>D</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Onigiri with corgi ears</td>
+<td><code>#f4f4f2</code>, <code>#e8782c</code> mask and ears</td>
+<td>Ears perk, tiny tail wag (2 frames)</td>
+<td>D</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Suspicious cucumber maki</td>
+<td><code>#91c235</code> core, narrowed eyes</td>
+<td>Looks left, looks right, looks at you</td>
+<td>D</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Pudding cup</td>
+<td><code>#f6ba64</code> pudding, <code>#9e5231</code> caramel</td>
+<td>Wobbles 4 times, 1 px amplitude decreasing</td>
+<td>D</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Dango skewer</td>
+<td><code>#dc795c</code> / <code>#f4f4f2</code> / <code>#91c235</code></td>
+<td>Top dango hops to the bottom and the others shift up</td>
+<td>D</td>
+</tr>
+<tr>
+<td>21</td>
+<td>Fortune cookie</td>
+<td><code>#d9c9b0</code>, slip <code>#f4f4f2</code></td>
+<td>Opens; slip shows one of 12 lines (egg #59)</td>
+<td>D</td>
+</tr>
+<tr>
+<td>22</td>
+<td>Mochi with a face</td>
+<td><code>#f4f4f2</code>, <code>#dc795c</code> cheeks</td>
+<td>Squishes flat, springs back</td>
+<td>D</td>
+</tr>
+<tr>
+<td>23</td>
+<td>Takoyaki with waving flags</td>
+<td><code>#cd8054</code> balls, <code>#d6f4be</code> flakes</td>
+<td>Flakes wave faster for 2 s</td>
+<td>D</td>
+</tr>
+<tr>
+<td>24</td>
+<td>Bomb maki</td>
+<td><code>#0b0302</code> bomb, <code>#f6ba64</code> spark</td>
+<td>Pop: confetti rice, re-forms as a plain maki (egg #57)</td>
+<td>–</td>
+</tr>
+<tr>
+<td>25</td>
+<td>Melon bread with a tiny sweat drop</td>
+<td><code>#f2c84a</code>, <code>#6fc4de</code> drop</td>
+<td>Drop falls; a new one forms</td>
+<td>D</td>
+</tr>
+<tr>
+<td>26</td>
+<td>Inari pouch with ears</td>
+<td><code>#cd8054</code> pouch</td>
+<td>Ears twitch; one grain of rice peeks out</td>
+<td>D</td>
+</tr>
+<tr>
+<td>27</td>
+<td>Sashimi flower</td>
+<td><code>#c23a4a</code> petals, <code>#e8782c</code> centre</td>
+<td>Petals open one step, close again</td>
+<td>D</td>
+</tr>
+<tr>
+<td>28</td>
+<td>Yakitori skewer with a sleeping chicken</td>
+<td><code>#cd8054</code> meat, chicken <code>#f4f4f2</code></td>
+<td>Chicken wakes, looks at the skewer, faints (3 frames)</td>
+<td>D</td>
+</tr>
+<tr>
+<td><strong>Non-food (8)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>29</td>
+<td>Rubber duck</td>
+<td><code>#f2c84a</code>, beak <code>#e8782c</code></td>
+<td>Turns to face the cursor and stays turned</td>
+<td>D</td>
+</tr>
+<tr>
+<td>30</td>
+<td>Floppy disk</td>
+<td><code>#27325c</code>, <code>#aeb8c2</code> shutter</td>
+<td>Shutter slides open: a 1 px koi inside</td>
+<td>D</td>
+</tr>
+<tr>
+<td>31</td>
+<td>Tiny bonsai</td>
+<td><code>#613124</code> pot, <code>#2d443d</code> foliage</td>
+<td>Drops one leaf that rides the belt on its own</td>
+<td>D</td>
+</tr>
+<tr>
+<td>32</td>
+<td>Lost sock</td>
+<td><code>#c23a4a</code> with <code>#f4f4f2</code> toe</td>
+<td>Sits up like a sock puppet, says "…"</td>
+<td>D</td>
+</tr>
+<tr>
+<td>33</td>
+<td>Green scarab beetle</td>
+<td><code>#91c235</code> shell, <code>#0b0302</code> legs</td>
+<td>Opens its shell, buzzes 1 plate ahead, closes</td>
+<td>–</td>
+</tr>
+<tr>
+<td>34</td>
+<td>Lucky cat (maneki-neko)</td>
+<td><code>#f4f4f2</code>, <code>#c23a4a</code> collar</td>
+<td>Paw waves 3 times; the tracker pill flashes once (no count)</td>
+<td>D</td>
+</tr>
+<tr>
+<td>35</td>
+<td>Haunted laptop</td>
+<td><code>#aeb8c2</code> lid, screen <code>#5fd4ff</code> with a face</td>
+<td>Screen shows "as any" scrolling, then a scared face</td>
+<td>D</td>
+</tr>
+<tr>
+<td>36</td>
+<td>UFO over a nigiri</td>
+<td><code>#aeb8c2</code> saucer, beam <code>#d6f4be</code></td>
+<td>Beam lifts the nigiri 1 s and drops it back off-centre (egg #58)</td>
+<td>–</td>
+</tr>
+<tr>
+<td><strong>Very animated food (4)</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>37</td>
+<td><strong>The walker</strong> — onigiri that grows legs</td>
+<td><code>#f4f4f2</code>, legs <code>#241510</code></td>
+<td>Scheduled once per visit: stands, walks (4-frame, 2 fps) to the nearest occupied neighbour, cuddles (heart 2 frames), rides on that plate for the rest of the trip. Click → the pair swap plates (egg #55)</td>
+<td>–</td>
+</tr>
+<tr>
+<td>38</td>
+<td>Breathing manju</td>
+<td><code>#d9c9b0</code>, <code>#dc795c</code> blush</td>
+<td>Idle: inflates/deflates 1 px at 0.5 Hz. Click → holds its breath 2 s, exhales a steam puff</td>
+<td>D</td>
+</tr>
+<tr>
+<td>39</td>
+<td>Shivering ice-cream mochi</td>
+<td><code>#d6f4be</code>, <code>#6fc4de</code> frost</td>
+<td>Idle: 2 px shiver at 4 fps. Click → stops shivering, melts 1 px, re-freezes</td>
+<td>D</td>
+</tr>
+<tr>
+<td>40</td>
+<td>Waving tamago crab (tamago cut into a crab)</td>
+<td><code>#f2c84a</code>, eyes <code>#0b0302</code></td>
+<td>Idle: one claw waves every 2 s. Click → scuttles sideways to the plate edge and back, bubbles "hi"</td>
+<td>D</td>
+</tr>
+</tbody>
+</table>
+<p>Stream rules that use this table: the seeded stream draws from the 28 / 8 / 4 pools in a 70 / 20 / 10 ratio with a shuffled bag per pool and no repeat within 6 slots; the walker (#37) appears exactly once per visit; the bomb (#24) and UFO (#36) are capped at one visible at a time. Items marked – snap back to the belt if dragged.</p>

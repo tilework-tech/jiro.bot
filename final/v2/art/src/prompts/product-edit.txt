@@ -1,0 +1,5 @@
+Edit image 1. Keep the same 16-bit pixel-art style, palette, lighting, camera and layout (dark empty left 62% of the frame, the lit desk corner on the right). Make these changes only:
+1. Remove every piece of text, number and colour code from the image (the percentages along the bottom and the list of hex codes at the bottom right); replace them with the dark wooden floor and wall that would be behind them.
+2. Redraw the robot so he matches the robot in image 2 exactly: adult proportions (not chibi), a slimmer riveted copper-and-cream dome head with the white twisted headband, two glowing square cyan eyes WITHOUT pupils, a plain smooth copper jaw plate with no mouth and no grille, blue-and-white striped happi coat with rolled sleeves and slim copper arms. He is larger: seen from the waist up, filling the lower right corner, sitting at the desk, typing.
+3. The CRT screen shows a few lines of soft green text-like dashes (not readable letters).
+No text anywhere.

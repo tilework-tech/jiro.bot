@@ -1,0 +1,17 @@
+.mood { position: absolute; background: rgba(10, 8, 7, .9); border: 2px solid rgba(217, 138, 74, .55); box-shadow: 0 30px 90px rgba(0,0,0,.75); padding: 22px 30px 0; }
+.mood header { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; }
+.mood .kicker { margin-bottom: 10px; }
+.mood h2.px { font-size: 40px; }
+.mood-tabs { display: flex; gap: 6px; }
+.mood-tabs button { font: 400 16px var(--px); width: 46px; height: 40px; background: #1a1612; color: var(--muted); border: 2px solid rgba(243,230,207,.18); cursor: pointer; }
+.mood-tabs button:hover { color: var(--cream); border-color: var(--copper); }
+.mood-tabs button.on { background: var(--copper); color: #1a0f07; border-color: var(--copper); }
+.mood-pitch { font: 19px/1.35 var(--sans); color: #e7d8bf; margin: 14px 0 12px; min-height: 26px; }
+.mood-pitch b { font: 400 17px var(--px); color: var(--green); margin-right: 14px; }
+.mood-stage { position: relative; width: 1640px; height: 700px; margin: 0 auto; }
+.mood-box { position: relative; width: 1640px; height: 700px; overflow: hidden; }
+.mood-arrow { position: absolute; top: 470px; width: 44px; height: 88px; font: 44px var(--sans); background: rgba(26,22,18,.9); color: var(--cream); border: 2px solid rgba(243,230,207,.2); cursor: pointer; }
+.mood-arrow.prev { left: -2px; }
+.mood-arrow.next { right: -2px; }
+.mood-arrow:hover { border-color: var(--copper); color: var(--copper); }
+#ui .layer.live .mood, #ui .layer.live .mood * { pointer-events: auto; }
