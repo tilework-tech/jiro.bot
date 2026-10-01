@@ -108,6 +108,13 @@ All loops: Veo 3.1 image-to-video from the current still, locked camera, ~8 s, c
 | v5 | belt v5 | Strict motion prompt: slow belt, no dropped plates, Jiro nearly still, curtains steady. Two of three takes swung a curtain open and were rejected | Martin chose smooth |
 | v6 | same take as v5 | Playback reversed so plates flow into the wall | Approved: "great" |
 
+## Round 14: Sushi mini sprites (2026-10-01)
+
+- Asked: three different sushi character mini sprites that follow the onigiri face gallery Martin posted in round 2.
+- Made: salmon nigiri, tamago nigiri with a nori belt, and a maki roll cross-section, each 32x32 native with a 1px ink outline, pink cheeks, and six moods (happy, wink, love, sleepy, angry, shocked). Sheet on the gallery's dotted pink backdrop, individual transparent sprites at 1x and 8x, one mood strip per character.
+- Method: hand-placed pixels via Pillow, script committed this time at `character/06-sushi-mini-sprites/pipeline/draw_sushi_sprites.py` so the set can be extended with more moods or characters.
+- Files: `character/06-sushi-mini-sprites/`.
+
 ## Open items
 
 - Slack icon: candidates exist in rounds 3 and 4 but none was chosen, and all predate the #19 redesign. A #19-based icon has not been made.
