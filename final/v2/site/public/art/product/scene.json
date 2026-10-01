@@ -1,0 +1,239 @@
+{
+ "id": "product",
+ "size": [
+  360,
+  202
+ ],
+ "loop": 8000,
+ "layers": [
+  {
+   "src": "base.png"
+  }
+ ],
+ "sprites": [
+  {
+   "id": "jiro",
+   "src": "jiro.png",
+   "x": 246,
+   "y": 50,
+   "w": 78,
+   "h": 100,
+   "grain": 2,
+   "frames": 8,
+   "durations": [
+    900,
+    300,
+    900,
+    300,
+    2600,
+    150,
+    1550,
+    1300
+   ],
+   "egg": "jiro"
+  },
+  {
+   "id": "jiro-react",
+   "src": "jiro-react.png",
+   "x": 246,
+   "y": 50,
+   "w": 78,
+   "h": 100,
+   "grain": 2,
+   "frames": 5,
+   "durations": [
+    100,
+    300,
+    300,
+    300,
+    1000
+   ],
+   "trigger": true,
+   "egg": "jiro"
+  },
+  {
+   "id": "lantern",
+   "src": "lantern.png",
+   "x": 224,
+   "y": 4,
+   "w": 32,
+   "h": 52,
+   "grain": 1,
+   "frames": 2,
+   "durations": [
+    3600,
+    400
+   ]
+  },
+  {
+   "id": "shelf-soot",
+   "src": "shelf-soot.png",
+   "x": 328,
+   "y": 30,
+   "w": 26,
+   "h": 24,
+   "grain": 1,
+   "frames": 2,
+   "durations": [
+    2000,
+    2000
+   ],
+   "egg": "shelf-soot"
+  },
+  {
+   "id": "shelf-soot-react",
+   "src": "shelf-soot-react.png",
+   "x": 328,
+   "y": 30,
+   "w": 26,
+   "h": 24,
+   "grain": 1,
+   "frames": 3,
+   "durations": [
+    100,
+    1500,
+    400
+   ],
+   "trigger": true,
+   "egg": "shelf-soot"
+  },
+  {
+   "id": "lucky-cat-react",
+   "src": "lucky-cat-react.png",
+   "x": 318,
+   "y": 20,
+   "w": 16,
+   "h": 24,
+   "grain": 1,
+   "frames": 5,
+   "durations": [
+    100,
+    450,
+    450,
+    450,
+    550
+   ],
+   "trigger": true,
+   "egg": "lucky-cat"
+  },
+  {
+   "id": "plant-react",
+   "src": "plant-react.png",
+   "x": 296,
+   "y": 2,
+   "w": 24,
+   "h": 28,
+   "grain": 1,
+   "frames": 5,
+   "durations": [
+    100,
+    400,
+    400,
+    400,
+    700
+   ],
+   "trigger": true,
+   "egg": "plant"
+  },
+  {
+   "id": "notes-react",
+   "src": "notes-react.png",
+   "x": 228,
+   "y": 60,
+   "w": 30,
+   "h": 30,
+   "grain": 1,
+   "frames": 3,
+   "durations": [
+    100,
+    1200,
+    700
+   ],
+   "trigger": true,
+   "egg": "notes"
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "desk",
+   "x": 290,
+   "y": 152,
+   "w": 30,
+   "h": 14
+  },
+  {
+   "id": "floor",
+   "x": 40,
+   "y": 186,
+   "w": 160,
+   "h": 14
+  }
+ ],
+ "eggs": [
+  {
+   "id": "jiro",
+   "name": "Interrupted Jiro mid-commit",
+   "x": 266,
+   "y": 50,
+   "w": 56,
+   "h": 56,
+   "sprite": "jiro",
+   "says": [
+    "One sec, I'm reading the failing test.",
+    "I'll open a draft PR.",
+    "Small, reviewable diffs."
+   ]
+  },
+  {
+   "id": "lucky-cat",
+   "name": "Desk lucky cat",
+   "x": 318,
+   "y": 20,
+   "w": 16,
+   "h": 24,
+   "sprite": "lucky-cat"
+  },
+  {
+   "id": "plant",
+   "name": "Watered the desk plant",
+   "x": 296,
+   "y": 2,
+   "w": 24,
+   "h": 26,
+   "sprite": "plant"
+  },
+  {
+   "id": "notes",
+   "name": "Read the sticky notes",
+   "x": 228,
+   "y": 60,
+   "w": 30,
+   "h": 30,
+   "sprite": "notes",
+   "says": [
+    "TODO: fewer TODOs",
+    "run the tests first"
+   ]
+  },
+  {
+   "id": "shelf-soot",
+   "name": "Woke the shelf sprite",
+   "x": 328,
+   "y": 30,
+   "w": 26,
+   "h": 24,
+   "sprite": "shelf-soot"
+  },
+  {
+   "id": "tea",
+   "name": "Jiro's tea",
+   "x": 262,
+   "y": 140,
+   "w": 18,
+   "h": 24,
+   "says": [
+    "Genmaicha. Correct choice."
+   ]
+  }
+ ]
+}
