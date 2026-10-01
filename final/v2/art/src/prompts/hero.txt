@@ -1,0 +1,14 @@
+Redraw image 1's composition as a polished 16-bit SNES-era pixel-art scene (think Chrono Trigger / Secret of Mana interiors), native resolution exactly 360x203 art pixels, every art pixel a crisp square block, no anti-aliasing, no gradients, no blur, no dithering noise, 2-3 shade steps per material, clean dark outlines on characters and props only.
+
+Camera: fixed elevated three-quarter view looking down at ~30 degrees into a quiet late-night sushi bar. Keep image 1's layout: the LEFT 45% of the frame is a calm, nearly empty dark wall in deep shadow (plain dark plaster and the edge of a doorway with an indigo noren curtain), reserved for headline text, low contrast, almost no detail. The right 55% holds the action.
+
+Sushi master: the robot chef from image 3 (copper and cream riveted dome head, white twisted hachimaki headband, two glowing square cyan eyes, NO mouth and NO grille: the lower face is a plain smooth copper jaw plate; blue-and-white vertical-striped happi coat with navy V collar, rolled sleeves, slim copper arms, no shoulder pads), standing behind the counter at about 55-68% from the left, facing slightly left, holding a knife over a salmon fillet on a cutting board.
+
+Behind him: a back wall of warm wood with two paper lanterns glowing, shelves of sake bottles, stacked plates and bowls, a small beckoning lucky-cat figurine on a shelf, a tiny red daruma doll, a rice cooker with a wisp of steam, and at the upper right a square kitchen hatch (serving window) in the back wall, its inside very dark, from which a conveyor belt emerges.
+
+The conveyor belt: ONE straight belt, EMPTY (no plates, no food on it), with copper-wood rails and dark charcoal slats, running from the kitchen hatch at the upper right straight down-left across the counter in front of the chef to leave the frame at the bottom edge around 36% from the left, as in image 1.
+
+Customers: two seated diners on wooden stools on the near side of the counter at the right (one sipping from a tea cup, one eating with chopsticks) like image 2's patrons, and an empty stool. Warm, inhabited, calm.
+
+Strict limited palette, dark warm interior: ink #0b0302, plum-black #130a0c, walnut #241510 #351e1a, cherry #48231b #613124, wood #80452e, copper rail #9e5231, copper highlight #cd8054, lantern core #f6ba64, cream #efdabd, paper #d9c9b0; accents only: Jiro's eyes cyan #5fd4ff, indigo noren #222132, coat stripes #3c3b4e and cream. Shadows are warm plum, never grey.
+Match the warmth of image 2. No text, no letters, no UI, no watermark.

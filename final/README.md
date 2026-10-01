@@ -1,5 +1,7 @@
 # Jiro.bot final review package
 
+> **Superseded:** the active build is now `v2/`. It is a 16-bit pixel-art rebuild from Martin's 2026-10-01 brief, and it is at review gate A. Start with `v2/README.md`. Everything below describes PR #13's `site/`, which stays in the tree because v2 reuses its copy, games and research.
+
 This folder assembles the seven-stop restaurant experience from the archived demos, the ten Slack video references and Martin's later design direction. `site/` is the implementation. `DESIGN-BRIEF.md` is the visual specification; `MASTER-PROMPT.md` is the detailed end-to-end production prompt. `research/` contains the ten half-second observation logs, source manifest, current product facts and the two game rules. `reference/` contains playable review copies of the videos and 0.5-second contact sheets. The untouched demos remain one level above this folder.
 
 ## Reconstruction

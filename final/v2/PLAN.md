@@ -33,7 +33,7 @@ Behaviour is tested at three boundaries: the belt model (pure functions in, posi
 - `prefers-reduced-motion` pauses ambient loops and disables the koi.
 
 **Art (Vitest over exported files):**
-- Every exported PNG uses only colours in `palette/jiro48.gpl`.
+- Every exported PNG uses only colours in `palette/jiro56.gpl`.
 - Every ambient loop's last frame transitions to frame 0 with a pixel diff no larger than its typical frame-to-frame diff (no visible seam).
 - For each stop, the max fraction of changed pixels between consecutive composed frames (belt and koi masked out) is ≤ 5%.
 - Plate sprites contain only the four plate colours plus the item.
@@ -45,10 +45,10 @@ NOTE: I will write *all* tests before I add any implementation behavior.
 ## Tasks
 
 ### Phase 0 — Tooling (½ day)
-1. `final/v2/tools/libresprite/`: fetch script for the v1.2 AppImage (`--appimage-extract`, no FUSE/root), wrapper `ls.sh` exporting `XDG_RUNTIME_DIR`, `SDL_VIDEODRIVER=offscreen`. Batch helpers: `index.js` (load `jiro48.gpl`, `ChangePixelFormat indexed, dithering none`, nearest `SpriteSize`, save `.ase`+`.png`) and `sheet.sh` (`-b … --sheet --data --format json-array`). Document the SIGTERM workaround the UI-mode script needs.
+1. `final/v2/tools/libresprite/`: fetch script for the v1.2 AppImage (`--appimage-extract`, no FUSE/root), wrapper `ls.sh` exporting `XDG_RUNTIME_DIR`, `SDL_VIDEODRIVER=offscreen`. Batch helpers: `index.js` (load `jiro56.gpl`, `ChangePixelFormat indexed, dithering none`, nearest `SpriteSize`, save `.ase`+`.png`) and `sheet.sh` (`-b … --sheet --data --format json-array`). Document the SIGTERM workaround the UI-mode script needs.
 2. `tools/gen.mjs`: Gemini REST client (model, refs, aspect, size; writes PNG + prompt JSON to `art/log/` for reproducibility). One $0.07 probe call to settle `imageConfig` vs `responseFormat`.
 3. `tools/fit.py` (uv): pseudo-pixel grid detection, per-cell mode downscale, palette snap, orphan cleanup, green-key alpha for sprites.
-4. `palette/jiro48.gpl` from brief §3.
+4. `palette/jiro56.gpl` from brief §3.
 
 ### Phase 1 — Style master + hero (review gate A, ~1.5 days)
 5. Style master sheet (palette swatches, wood/plaster/paper tiles, Jiro canon at both grains, one plate, three items) → Martin approves look before mass generation.

@@ -1,6 +1,6 @@
 # Jiro.bot v2 design brief
 
-Status: proposal for Martin's review (2026-10-01). Everything produced for v2 (art, animation, code, copy) is judged against this file. Where the reference videos and this brief disagree, this brief wins; the disagreements are listed in "Deliberate departures from the videos".
+Status: approved by Martin 2026-10-01 (answers in `QUESTIONS.md`). Everything produced for v2 (art, animation, code, copy) is judged against this file. Where the reference videos and this brief disagree, this brief wins; the disagreements are listed in "Deliberate departures from the videos".
 
 Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re-inspected frame by frame at 0.5 s in `research/video-NN.md`. Martin's written direction of 2026-09-28 → 2026-10-01 (`../site/docs/FEEDBACK-VERBATIM.md` plus the 2026-10-01 thread message).
 
@@ -23,11 +23,11 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 - **Two grains:**
   - World (rooms, bands, people): 1 art px = 4 CSS px at 1440 px width (native 360 × 225 per viewport).
   - Hero layer (Jiro, belt, plates, belt items, koi, creatures you can click): 1 art px = 2 CSS px. Twice the detail, same palette.
-- **Master palette:** one 48-colour `.gpl`, shared by every asset, snapped without dither.
-  - Warm interior ramp (16): ink `#0b0302`, plum-black `#130a0c`, walnut `#241510`, `#351e1a`, cherry `#48231b`, `#613124`, `#80452e`, rail copper `#9e5231`, copper hi `#cd8054`, lamp core `#f6ba64`, cream `#efdabd`, paper `#d9c9b0`, face plate `#d3b89a`, plus 3 skin tones.
-  - Cool night ramp (12): `#0e1424`, navy `#1a2c4d`, `#27325c` indigo, `#34467a`, moon `#f9efce`, reed sage `#576a58`, moss, lily green ×2, lantern-glass `#d6f4be`, water hi ×2. Used for street, garden and pond, so night scenes stay in the same family instead of neon blue/pink.
+- **Master palette:** one 56-colour `.gpl` (`palette/jiro56.gpl`), shared by every asset, snapped without dither. It began at 48; eight lantern-orange, tan, rust, olive and ash tones were added after the hero test fit measured where 48 colours lost the lantern light.
+  - Warm interior ramp (16): ink `#0b0302`, plum-black `#130a0c`, walnut `#241510`, `#351e1a`, cherry `#48231b`, `#613124`, `#80452e`, rail copper `#9e5231`, copper hi `#cd8054`, lamp core `#f6ba64`, cream `#efdabd`, paper `#d9c9b0`, face plate `#d3b89a`, plus 3 skin tones; lantern glow `#c8602f` `#e8823e` `#fdd081`, tan `#af9782`, rust `#7f281c`, dusty `#5d4646`, ash `#3b3131`.
+  - Cool night ramp (12): `#0e1424`, navy `#1a2c4d`, `#27325c` indigo, `#34467a`, moon `#f9efce`, reed sage `#576a58`, moss, lily green ×2, olive `#5e6e30`, lantern-glass `#d6f4be`, water hi ×2. Used for street, garden and pond, so night scenes stay in the same family instead of neon blue/pink.
   - Accents (≤8): Jiro cyan `#5fd4ff` / `#aaffff` (eyes and product highlights only), koi coral `#dc795c`, salmon, tuna red, tamago yellow, wasabi green, nori.
-  - Plate set (4): white `#f4f4f2`, shade `#dfe3e6`, rim faint grey-blue `#c9d3dc`, rim shadow `#aeb8c2`.
+  - Plate set (5): white `#f4f4f2`, shade `#dfe3e6`, faint grey rim `#cfd0d0`, faint blue rim `#c4d4e4`, rim shadow `#aeb8c2`.
 - Light: warm paper lanterns indoors (falloff in 3 bands, plum shadows, never grey); moon + stone lanterns outdoors. Light pools are baked; only flicker is animated.
 
 ## 4. Jiro
@@ -42,7 +42,7 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 - **One belt**, one ordered plate stream, kitchen hatch to pond. Origin: a lit hatch in the hero's back wall; plates emerge from behind its frame (occluded), never pop in.
 - Path: straight runs plus **90° bends only**, each with a centre radius ≥ 1.5 belt widths, drawn as fanned segment plates (airport-carousel style). Hero run is straight in world space (appears diagonal in the ¾ view). Bends are visible where they read well, otherwise hidden behind beams, walls, or bridge rails.
 - Construction: walnut/copper rail, charcoal slats that **move with the plates** (no static slats).
-- **Plates:** all white, faint grey-blue rim, no other colour, no dark outline. Item sits 1–3 art px off centre (seeded per plate). In bends, plate and item rotate with the belt tangent.
+- **Plates:** all white; each plate's rim is either faint grey or faint blue (seeded, roughly even, no other colour), no dark outline. Item sits 1–3 art px off centre (seeded per plate). In bends, plate and item rotate with the belt tangent.
 - **Fill:** ~50% of slots, seeded random with singles, pairs, runs and gaps; never reshuffled in view.
 - **Mix of occupied plates:** 70% funny sushi/food (nigiri with expressions, sleepy onigiri, suspicious wasabi, rice with a tiny umbrella, gyoza in a blanket…), 20% surprising non-food (rubber duck, floppy disk, tiny bonsai, lost sock, beetle, lucky cat, haunted laptop…), 10% very animated food (breathes, blinks, waves, shivers on its plate).
 - **Speed:** rest 16 px/s at 1440 px (constant, never stops). On first scroll input the belt visibly surges (up to ~4×, eased over 300 ms) **before** the scene moves, then eases back within ~1 s. Never reverses.
@@ -57,7 +57,7 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 
 ## 7. Creatures and Easter eggs
 
-- **Dust spirits** (original design: round black fuzz, two white dot eyes, tiny stick limbs; inspired by, not copied from, Spirited Away): in groups of 1, 3 or 5, in joining bands and dark corners. Mostly sit and blink; occasionally one shuffles 4–8 art px and back. Click → hop, scatter and regroup, or carry a grain of rice.
+- **Dust spirits** (our own drawings, as close as practical to Spirited Away's susuwatari: round black soot fuzz with spiky outline, two large white eyes with black dot pupils, thin black stick limbs; never traced from film frames or named after the film): in groups of 1, 3 or 5, in joining bands and dark corners. Mostly sit and blink; occasionally one shuffles 4–8 art px and back. Click → hop, scatter and regroup, or carry a grain of rice.
 - **Eyes in the dark:** 6–8 pairs in dark corners (hatch, under-floor, storage, alley, reeds) that blink on slow independent cycles; click → they close and reappear elsewhere later.
 - **Easter-egg tracker:** small pill fixed top-centre ("🍣 7 / 54"), always visible, expands to a list of found ones (names only, unfound shown as ???).
 - **≥ 54 distinct eggs:** each is a drawn object or creature with its own reaction (not a generic glyph): 8 hero, 6 product, 7 comparison room, 6 table/passage, 6 FAQ, 7 street, 8 pond, 6 belt specials. Includes both games.
@@ -84,7 +84,7 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 
 | Video shows | v2 does | Why |
 | --- | --- | --- |
-| Coloured plate rims, 85–100% full belts | White plates, faint grey-blue rim, ~50% full | Written brief |
+| Coloured plate rims, 85–100% full belts | White plates, alternating faint grey or blue rim, ~50% full | Written brief |
 | Three disconnected belt pieces, a 57° bend, static slats | One belt, 90° bends with broad radius, moving slats | Written brief |
 | Hidden zoom (09), sideways pan (06) | Pure vertical slide | "Stay in one angle" |
 | Veo clips with crossfade seams, 6–17% motion, head pose swaps | Sprite loops, ≤5% motion, pixel-exact seams | "No human eye can identify the loop" |

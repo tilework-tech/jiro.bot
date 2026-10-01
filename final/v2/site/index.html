@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Jiro, your AI staff engineer · jiro.bot</title>
+  <meta name="description" content="Jiro is a sushi-master robot and your AI staff engineer, running on Nori's cloud coding agents. Bring your own subscription." />
+  <link rel="icon" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body>
+  <header class="chrome">
+    <a class="mark" href="#hero">jiro<span>.bot</span></a>
+    <button class="eggs" type="button" data-testid="egg-tracker" aria-expanded="false" aria-controls="egg-list" title="Easter eggs found">
+      <img class="eggs-plate" src="art/belt/plate-grey.png" alt="" /><span class="eggs-count"><b>0</b> / <i>0</i></span>
+    </button>
+    <a class="cta" href="https://noriagentic.com/" rel="noopener">Reserve a seat</a>
+  </header>
+  <div class="egg-list" id="egg-list" data-testid="egg-list" hidden>
+    <p>Things you've found</p>
+    <ol></ol>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <main id="stage">
+    <section class="stop" data-stop="hero" id="hero">
+      <div class="copy hero-copy">
+        <p class="kicker"><span class="dot"></span>Counter open · 24/7</p>
+        <h1>Jiro, your AI staff engineer</h1>
+        <p class="sub">Bring your own subscription.</p>
+        <p class="body">Cloud coding agents from Nori. Ask in Slack, the CLI or a trigger, and get a pull request back.</p>
+        <p class="hint">Scroll to follow the belt ↓ · plates can be picked up</p>
+      </div>
+    </section>
+    <section class="stop" data-stop="product" id="product">
+      <div class="copy demo-wrap">
+        <p class="kicker">From a Slack message to a pull request</p>
+        <div class="panel demo" id="demo-panel"></div>
+        <p class="caption">Scripted example, not a measured Nori result. Click through it.</p>
+      </div>
+    </section>
+  </main>
+
+  <canvas id="belt" data-layer="belt" aria-hidden="true"></canvas>
+  <div id="placed" aria-live="polite"></div>
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>
