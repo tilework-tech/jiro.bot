@@ -1,7 +1,7 @@
 {
- "master": "art/gen/hero/hero-b-edit1.jpg",
+ "master": "art/gen/hd/hero-master.jpg",
  "base": "art/work/hero/base.png",
- "groups": "warm,accents,neutrals,plates",
+ "groups": "warm,cool,accents,plates,neutrals",
  "sprites": {
   "lantern-l": {
    "crop": [
@@ -17,7 +17,7 @@
     28
    ],
    "frames": [
-    "the paper lantern glows a little brighter and warmer."
+    "the paper lantern's paper glows a little brighter and paler yellow inside, as if the candle flared; nothing else changes."
    ],
    "keep": [
     0,
@@ -26,6 +26,15 @@
    "durations": [
     3600,
     400
+   ],
+   "grain": 2,
+   "frame_rois": [
+    [
+     201,
+     5,
+     17,
+     19
+    ]
    ]
   },
   "lantern-r": {
@@ -42,7 +51,7 @@
     29
    ],
    "frames": [
-    "the paper lantern glows a little brighter and warmer."
+    "the paper lantern's paper glows a little brighter and paler yellow inside, as if the candle flared; nothing else changes."
    ],
    "keep": [
     0,
@@ -51,6 +60,15 @@
    "durations": [
     1700,
     300
+   ],
+   "grain": 2,
+   "frame_rois": [
+    [
+     299,
+     4,
+     15,
+     20
+    ]
    ]
   },
   "chime": {
@@ -82,7 +100,7 @@
      0,
      1,
      0,
-     2,
+     1,
      0
     ],
     "durations": [
@@ -93,20 +111,21 @@
      550
     ]
    },
-   "model": "gemini-3-pro-image"
+   "model": "gemini-3-pro-image",
+   "grain": 4
   },
   "diner-a": {
    "crop": [
-    245,
-    125,
+    248,
+    122,
     60,
-    60
+    62
    ],
    "roi": [
-    252,
-    132,
+    255,
+    130,
     46,
-    38
+    48
    ],
    "frames": [
     "the diner closest to the viewer raises his hands halfway toward his mouth.",
@@ -123,7 +142,8 @@
     400,
     800,
     400
-   ]
+   ],
+   "grain": 4
   },
   "diner-b": {
    "crop": [
@@ -153,20 +173,21 @@
     1000,
     3000,
     1000
-   ]
+   ],
+   "grain": 4
   },
   "cat": {
    "crop": [
-    305,
-    160,
-    50,
-    42
+    303,
+    158,
+    57,
+    44
    ],
    "roi": [
-    310,
-    171,
-    38,
-    27
+    312,
+    168,
+    46,
+    31
    ],
    "frames": [
     "the sleeping orange cat's body rises very slightly as it breathes in.",
@@ -197,20 +218,22 @@
      100
     ]
    },
-   "egg": "cat"
+   "egg": "cat",
+   "grain": 4,
+   "mask_prompt": "Isolate the sleeping orange tabby cat: keep only the cat."
   },
   "door-eyes": {
    "crop": [
-    160,
-    40,
-    40,
-    40
+    166,
+    54,
+    38,
+    32
    ],
    "roi": [
-    172,
-    50,
-    26,
-    18
+    176,
+    64,
+    18,
+    12
    ],
    "frames": [
     "in the dark doorway beneath the curtain, add two small, clearly visible glowing yellow eyes side by side, peeking out of the darkness, about one third of the way down the opening."
@@ -230,10 +253,11 @@
    "egg": "door-eyes",
    "model": "gemini-3-pro-image",
    "min_blob": 2,
-   "compare": "base"
+   "compare": "base",
+   "grain": 4
   },
   "jiro": {
-   "grain": 2,
+   "grain": 4,
    "model": "gemini-3-pro-image",
    "crop": [
     190,
@@ -249,7 +273,7 @@
    ],
    "frames": [
     "the robot chef's two glowing cyan eyes are closed: each eye becomes a thin dark horizontal line.",
-    "the robot chef lifts his knife slightly above the salmon fillet.",
+    "the robot chef's right hand (on the left of the image) lifts the long straight kitchen knife a few pixels higher above the salmon fillet; the knife stays one clean straight silver blade, everything else unchanged.",
     "the robot chef's plain copper jaw plate is lowered by a tiny amount, as if he is speaking. No mouth, no teeth."
    ],
    "keep": [
@@ -350,7 +374,8 @@
      500
     ]
    },
-   "egg": "lucky-cat"
+   "egg": "lucky-cat",
+   "grain": 4
   },
   "daruma": {
    "crop": [
@@ -393,7 +418,8 @@
      500
     ]
    },
-   "egg": "daruma"
+   "egg": "daruma",
+   "grain": 4
   },
   "kettle": {
    "crop": [
@@ -434,7 +460,8 @@
      300
     ]
    },
-   "egg": "kettle"
+   "egg": "kettle",
+   "grain": 4
   },
   "bonsai": {
    "crop": [
@@ -473,7 +500,8 @@
      100
     ]
    },
-   "egg": "bonsai"
+   "egg": "bonsai",
+   "grain": 4
   },
   "noren": {
    "crop": [
@@ -509,7 +537,8 @@
      500
     ]
    },
-   "egg": "noren"
+   "egg": "noren",
+   "grain": 4
   },
   "cooker": {
    "crop": [
@@ -545,7 +574,16 @@
      700
     ]
    },
-   "egg": "cooker"
+   "egg": "cooker",
+   "grain": 4,
+   "frame_rois": [
+    [
+     247,
+     58,
+     30,
+     32
+    ]
+   ]
   },
   "sake": {
    "crop": [
@@ -585,7 +623,8 @@
      1000
     ]
    },
-   "egg": "sake"
+   "egg": "sake",
+   "grain": 4
   }
  },
  "scene": {
@@ -703,10 +742,10 @@
    {
     "id": "cat",
     "name": "Woke the shop cat",
-    "x": 312,
-    "y": 172,
-    "w": 34,
-    "h": 24,
+    "x": 314,
+    "y": 170,
+    "w": 40,
+    "h": 27,
     "sprite": "cat",
     "says": [
      "mrrp."
@@ -715,14 +754,15 @@
    {
     "id": "door-eyes",
     "name": "Something is watching from the doorway",
-    "x": 174,
-    "y": 50,
-    "w": 22,
-    "h": 16,
+    "x": 176,
+    "y": 64,
+    "w": 18,
+    "h": 12,
     "says": [
      "eep!"
     ]
    }
   ]
- }
+ },
+ "cool_gate": 22
 }

@@ -33,8 +33,8 @@ for k, prompt in enumerate(a.prompt, 1):
     out = work / f"edit{k}.png"
     if not (out.exists() or out.with_suffix(".jpg").exists()):
         subprocess.run(["node", str(HERE / "gen.mjs"), str(out), "--model", "gemini-3-pro-image", "--aspect", "1:1", "--size", "1K", "--prompt",
-                        "Edit this 16-bit pixel-art sprite on flat #00FF00 green. Keep the same character, size, position, palette and pixel grid; "
-                        "change only this: " + prompt + " Keep the flat pure #00FF00 background. Crisp square pixels, no anti-aliasing.",
+                        "Edit this sprite on flat #00FF00 green. Keep the same character, drawing style, size, position and colours; "
+                        "change only this: " + prompt + " Keep the flat pure #00FF00 background.",
                         str(work / "cell.png")], check=True)
     got = out if out.exists() else out.with_suffix(".jpg")
     cells.append(np.asarray(Image.open(got).convert("RGB").resize(cell.size, Image.LANCZOS)).astype(np.int32))

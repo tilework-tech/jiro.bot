@@ -12,7 +12,11 @@ import { mulberry32 } from "./belt/rng";
 export const SLOT = 22;
 /** The belt is already loaded when the page opens: slot indices start this far (world px) down the line. */
 const PREFILL = 6000;
-const TILE_BED = { x0: 6, x1: 36 };
+const TILE_BED = { x0: 12, x1: 72 };
+/** Belt art px per world unit: plates, items and the slat tile are drawn 1:1 in CSS px at 1440 wide. */
+export const BELT_GRAIN = 4;
+/** Item offsets in the stream are in 2x-grain units (1–3); belt art px per offset unit. */
+const OFFSET_PX = BELT_GRAIN / 2;
 const ALIVE_FRAME_MS = 420;
 
 export type Mapping = {
@@ -81,10 +85,10 @@ export async function mountBelt(d: BeltDeps) {
   let walk: null | { from: number; to: number; start: number; dur: number } = null;
   let fall: null | { slot: number; item: Item; rim: Slot["rim"]; p: Pt; v: Pt; floor: number; start: number } = null;
 
-  let hp = 2; // CSS px per hero px
-  let k = 2; // device px per hero px
+  let hp = 1; // CSS px per belt art px
+  let k = 1; // device px per belt art px
   function resize() {
-    hp = d.map.s / 2;
+    hp = d.map.s / BELT_GRAIN;
     const dpr = devicePixelRatio || 1;
     const w = Math.round(innerWidth * dpr), h = Math.round(innerHeight * dpr);
     if (d.canvas.width !== w) d.canvas.width = w;
@@ -184,22 +188,22 @@ export async function mountBelt(d: BeltDeps) {
       const t = Math.min(1, (now - fx.start) / fx.dur);
       const e = Math.sin(t * Math.PI);
       switch (fx.type % 16) {
-        case 0: oy = -10 * e; break; // hop
+        case 0: oy = -20 * e; break; // hop
         case 1: rot = t * Math.PI * 2; break; // spin
         case 2: rot = Math.sin(t * Math.PI * 6) * 0.3 * (1 - t); break; // wobble
         case 3: sy = 1 - 0.4 * e; sx = 1 + 0.25 * e; break; // squash
         case 4: break; // puff (particles only)
         case 5: alpha = t < 0.15 || t > 0.85 ? 1 : 0; break; // explode and re-form
         case 6: break; // sparkle
-        case 7: oy = -4 * Math.abs(Math.sin(t * Math.PI * 3)); break; // bounce x3
+        case 7: oy = -8 * Math.abs(Math.sin(t * Math.PI * 3)); break; // bounce x3
         case 8: sx = sy = 1 - 0.45 * e; break; // shrink
         case 9: sx = Math.cos(t * Math.PI * 2); break; // flip
-        case 10: plateDy = -2 * Math.abs(Math.sin(t * Math.PI * 4)); oy = plateDy; break; // plate rattles
-        case 11: oy = -14 * e; rot = 0.2 * e; break; // float
-        case 12: ox = (Math.random() - 0.5) * 2 * (1 - t); break; // shiver
-        case 13: ox = 6 * e; break; // slide to the rim and back
+        case 10: plateDy = -4 * Math.abs(Math.sin(t * Math.PI * 4)); oy = plateDy; break; // plate rattles
+        case 11: oy = -28 * e; rot = 0.2 * e; break; // float
+        case 12: ox = (Math.random() - 0.5) * 4 * (1 - t); break; // shiver
+        case 13: ox = 12 * e; break; // slide to the rim and back
         case 14: sx = sy = 1 + 0.35 * e; break; // grow
-        case 15: rot = -0.35 * e; ox = -3 * e; break; // peek
+        case 15: rot = -0.35 * e; ox = -6 * e; break; // peek
       }
     }
     ctx.drawImage(plate, c.x - plate.width / 2, c.y - plate.height / 2 + plateDy);
@@ -208,16 +212,16 @@ export async function mountBelt(d: BeltDeps) {
       const h = f.img.height;
       ctx.save();
       ctx.globalAlpha = alpha;
-      ctx.translate(c.x, c.y - 3);
+      ctx.translate(c.x, c.y - 6);
       ctx.rotate(angle);
-      ctx.translate(it.offset.x + ox + dx, it.offset.y + oy);
+      ctx.translate(it.offset.x * OFFSET_PX + ox + dx, it.offset.y * OFFSET_PX + oy);
       ctx.rotate(rot);
       ctx.scale(sx, sy);
       ctx.drawImage(f.img, f.sx, 0, f.w, h, -Math.round(f.w / 2), -Math.round(h * 0.7), f.w, h);
       ctx.restore();
     };
-    if (item) draw(item, extra ? -5 : 0);
-    if (extra) draw(extra, 5);
+    if (item) draw(item, extra ? -10 : 0);
+    if (extra) draw(extra, 10);
   }
 
   function burst(page: Pt, kind: string, n: number, style: "puff" | "sparkle" | "steam" | "confetti" | "explode") {
@@ -233,12 +237,12 @@ export async function mountBelt(d: BeltDeps) {
     }
     const pal = style === "sparkle" ? ["#fdd081", "#f4f4f2", "#efdabd"] : style === "steam" ? ["#dfe3e6", "#f4f4f2"] : colors.length ? colors : ["#efdabd"];
     for (let k = 0; k < n; k++) {
-      const a = rand() * Math.PI * 2, sp = style === "steam" ? 6 + rand() * 6 : 14 + rand() * 30;
+      const a = rand() * Math.PI * 2, sp = style === "steam" ? 12 + rand() * 12 : 28 + rand() * 60;
       particles.push({
-        x: page.x, y: page.y - 6, vx: style === "steam" ? (rand() - 0.5) * 4 : Math.cos(a) * sp,
-        vy: style === "steam" ? -sp : Math.sin(a) * sp - (style === "explode" ? 10 : 0),
+        x: page.x, y: page.y - 6, vx: style === "steam" ? (rand() - 0.5) * 8 : Math.cos(a) * sp,
+        vy: style === "steam" ? -sp : Math.sin(a) * sp - (style === "explode" ? 20 : 0),
         c: pal[Math.floor(rand() * pal.length)], life: style === "explode" ? 0.9 : 0.7 + rand() * 0.6, age: 0,
-        g: style === "steam" || style === "sparkle" ? 0 : 60,
+        g: style === "steam" || style === "sparkle" ? 0 : 120,
       });
     }
   }
@@ -253,7 +257,7 @@ export async function mountBelt(d: BeltDeps) {
       const c = toCanvas(p);
       ctx.fillStyle = p.c;
       ctx.globalAlpha = 1 - p.age / p.life;
-      ctx.fillRect(Math.round(c.x), Math.round(c.y), 1, 1);
+      ctx.fillRect(Math.round(c.x), Math.round(c.y), 2, 2);
       ctx.globalAlpha = 1;
     }
   }
@@ -264,7 +268,7 @@ export async function mountBelt(d: BeltDeps) {
     for (const v of visibleSlots()) {
       if (!isPickable(v.i) || d.route.isHidden(v.pos)) continue;
       const dist = Math.hypot(page.x - v.pos.x, (page.y - v.pos.y) * 1.3);
-      if (dist < 17 * hp && (!best || dist < best.d)) best = { ...v, d: dist };
+      if (dist < 34 * hp && (!best || dist < best.d)) best = { ...v, d: dist };
     }
     return best;
   }
@@ -294,15 +298,15 @@ export async function mountBelt(d: BeltDeps) {
     const plate = rim === "blue" ? plateBlue : plateGrey;
     const f = items.get(item.kind)!;
     const fw = f.width / framesOf(f);
-    c.width = plate.width; c.height = plate.height + 12;
+    c.width = plate.width; c.height = plate.height + 24;
     const cx = crispContext(c);
-    cx.drawImage(plate, 0, 12);
-    cx.drawImage(f, 0, 0, fw, f.height, Math.round(plate.width / 2 - fw / 2 + item.offset.x), Math.round(12 + plate.height / 2 - 3 - f.height * 0.7 + item.offset.y), fw, f.height);
+    cx.drawImage(plate, 0, 24);
+    cx.drawImage(f, 0, 0, fw, f.height, Math.round(plate.width / 2 - fw / 2 + item.offset.x * OFFSET_PX), Math.round(24 + plate.height / 2 - 6 - f.height * 0.7 + item.offset.y * OFFSET_PX), fw, f.height);
     c.style.width = `${c.width * hp}px`;
     c.style.height = `${c.height * hp}px`;
     el.appendChild(c);
     el.style.left = `${page.x}px`;
-    el.style.top = `${page.y - 6 * hp}px`;
+    el.style.top = `${page.y - 12 * hp}px`;
     (el as any).__plate = { item, rim };
     document.getElementById("placed")!.appendChild(el);
     return el;
@@ -313,7 +317,7 @@ export async function mountBelt(d: BeltDeps) {
     const w = d.map.pageToWorld(page);
     const res = resolveDrop(w, d.surfaces(), d.water());
     if (res.kind === "placed") {
-      if (held.el) { held.el.style.left = `${page.x}px`; held.el.style.top = `${page.y - 6 * hp}px`; held.el.style.visibility = ""; }
+      if (held.el) { held.el.style.left = `${page.x}px`; held.el.style.top = `${page.y - 12 * hp}px`; held.el.style.visibility = ""; }
       else placedElement(held.item, held.rim, page);
       overrides.set(held.slot, { kind: "gone" });
       d.onEgg("table-for-one");
@@ -404,7 +408,7 @@ export async function mountBelt(d: BeltDeps) {
     if (!v) return false;
     const sl = stream.slot(v.i);
     const out = { x: Math.cos(v.pos.heading + Math.PI / 2), y: Math.sin(v.pos.heading + Math.PI / 2) };
-    fall = { slot: v.i, item: sl.item!, rim: sl.rim, p: { x: v.pos.x, y: v.pos.y }, v: { x: out.x * 40 * hp, y: -30 * hp }, floor: v.pos.y + 26 * hp, start: now };
+    fall = { slot: v.i, item: sl.item!, rim: sl.rim, p: { x: v.pos.x, y: v.pos.y }, v: { x: out.x * 80 * hp, y: -60 * hp }, floor: v.pos.y + 52 * hp, start: now };
     overrides.set(v.i, { kind: "gone" });
     return true;
   }
@@ -445,7 +449,7 @@ export async function mountBelt(d: BeltDeps) {
       const t = Math.min(1, (now - walk.start) / walk.dur);
       const a = d.route.sample(slotPos(walk.from)), b = d.route.sample(slotPos(walk.to));
       const it = stream.slot(walk.from).item!;
-      const p = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t - Math.abs(Math.sin(t * Math.PI * 6)) * 3 * hp };
+      const p = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t - Math.abs(Math.sin(t * Math.PI * 6)) * 6 * hp };
       const f = items.get("legged-maki")!;
       const img = it.kind === "legged-maki" ? f : items.get(it.kind)!;
       const n = framesOf(img), fw = img.width / n, k = Math.floor(now / 160) % n;
@@ -454,7 +458,7 @@ export async function mountBelt(d: BeltDeps) {
       if (t >= 1) { overrides.set(walk.from, { kind: "guest", host: walk.to }); burst(b, "salmon-nigiri", 8, "sparkle"); walk = null; }
     }
     if (fall) {
-      fall.v.y += 260 * hp * dt;
+      fall.v.y += 520 * hp * dt;
       fall.p.x += fall.v.x * dt; fall.p.y += fall.v.y * dt;
       const c = toCanvas(fall.p);
       drawPlate(c, fall.rim, fall.item, Math.sin((now - fall.start) / 90) * 0.4, now, fall.slot);
@@ -464,9 +468,9 @@ export async function mountBelt(d: BeltDeps) {
       const c = toCanvas(held.page);
       const plate = held.rim === "blue" ? plateBlue : plateGrey;
       ctx.globalAlpha = 0.35; ctx.fillStyle = "#0b0302";
-      ctx.beginPath(); ctx.ellipse(Math.round(c.x), Math.round(c.y + 10), plate.width / 2, plate.height / 2.4, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(Math.round(c.x), Math.round(c.y + 20), plate.width / 2, plate.height / 2.4, 0, 0, Math.PI * 2); ctx.fill();
       ctx.globalAlpha = 1;
-      drawPlate({ x: c.x, y: c.y - 4 }, held.rim, held.item, 0, now, held.slot);
+      drawPlate({ x: c.x, y: c.y - 8 }, held.rim, held.item, 0, now, held.slot);
     }
     drawParticles(dt);
   }
@@ -482,7 +486,7 @@ export async function mountBelt(d: BeltDeps) {
         .map((v) => {
           const o = overrides.get(v.i);
           const it = stream.slot(v.i).item;
-          return { id: v.i, x: v.pos.x - scrollX, y: v.pos.y - scrollY, r: 13 * hp, kind: it && (!o || o.kind === "walking") ? it.kind : "empty" };
+          return { id: v.i, x: v.pos.x - scrollX, y: v.pos.y - scrollY, r: 26 * hp, kind: it && (!o || o.kind === "walking") ? it.kind : "empty" };
         }),
     slotsInView: () => {
       const v = visibleSlots().filter((x) => overrides.get(x.i)?.kind !== "gone" && x.pos.y >= scrollY && x.pos.y <= scrollY + innerHeight && !d.route.isHidden(x.pos));

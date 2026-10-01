@@ -1,41 +1,41 @@
 {
- "master": "art/gen/product/product-b-edit2.jpg",
+ "master": "art/gen/hd/product-ill-a.jpg",
  "base": "art/work/product/base.png",
- "groups": "warm,accents,neutrals,plates",
+ "groups": "warm,cool,accents,plates,neutrals",
  "sprites": {
   "jiro": {
-   "grain": 2,
+   "grain": 4,
    "model": "gemini-3-pro-image",
    "crop": [
-    240,
-    46,
-    90,
-    110
+    244,
+    44,
+    86,
+    112
    ],
    "roi": [
-    246,
+    250,
     50,
-    78,
+    74,
     100
    ],
    "frame_rois": [
     [
      272,
-     74,
-     28,
-     18
+     77,
+     24,
+     11
     ],
     [
-     246,
-     102,
-     62,
-     32
+     250,
+     110,
+     44,
+     24
     ],
     [
-     272,
-     88,
-     26,
-     14
+     273,
+     89,
+     23,
+     15
     ]
    ],
    "mask_prompt": "Isolate the robot: keep only the robot (head, headband, body, arms and hands).",
@@ -84,15 +84,15 @@
   },
   "lantern": {
    "crop": [
-    218,
+    216,
     0,
     44,
-    60
+    62
    ],
    "roi": [
     224,
     4,
-    32,
+    28,
     52
    ],
    "frames": [
@@ -105,19 +105,28 @@
    "durations": [
     3600,
     400
+   ],
+   "grain": 2,
+   "frame_rois": [
+    [
+     230,
+     12,
+     19,
+     37
+    ]
    ]
   },
   "shelf-soot": {
    "crop": [
-    322,
-    26,
-    36,
-    36
+    327,
+    25,
+    33,
+    34
    ],
    "roi": [
-    328,
-    30,
-    26,
+    333,
+    31,
+    24,
     24
    ],
    "model": "gemini-3-pro-image",
@@ -145,20 +154,21 @@
      400
     ]
    },
-   "egg": "shelf-soot"
+   "egg": "shelf-soot",
+   "grain": 4
   },
   "lucky-cat": {
    "crop": [
     312,
-    15,
-    30,
+    16,
+    28,
     30
    ],
    "roi": [
     318,
-    20,
+    22,
     16,
-    24
+    22
    ],
    "frames": [
     "the white lucky cat raises its beckoning paw higher.",
@@ -186,20 +196,21 @@
      550
     ]
    },
-   "egg": "lucky-cat"
+   "egg": "lucky-cat",
+   "grain": 4
   },
   "plant": {
    "crop": [
-    290,
+    294,
     0,
-    36,
-    36
+    34,
+    34
    ],
    "roi": [
-    296,
-    2,
-    24,
-    28
+    300,
+    3,
+    22,
+    26
    ],
    "frames": [
     "the potted plant's leaves sway to the left.",
@@ -227,20 +238,21 @@
      700
     ]
    },
-   "egg": "plant"
+   "egg": "plant",
+   "grain": 4
   },
   "notes": {
    "crop": [
-    222,
+    225,
     56,
     40,
     40
    ],
    "roi": [
-    228,
-    60,
-    30,
-    30
+    231,
+    62,
+    28,
+    28
    ],
    "frames": [
     "one of the yellow sticky notes on the wall flutters and curls up at its corner."
@@ -263,7 +275,8 @@
      700
     ]
    },
-   "egg": "notes"
+   "egg": "notes",
+   "grain": 4
   }
  },
  "scene": {
@@ -287,10 +300,10 @@
    {
     "id": "jiro",
     "name": "Interrupted Jiro mid-commit",
-    "x": 266,
-    "y": 50,
+    "x": 258,
+    "y": 52,
     "w": 56,
-    "h": 56,
+    "h": 60,
     "sprite": "jiro",
     "says": [
      "One sec, I'm reading the failing test.",
@@ -302,27 +315,27 @@
     "id": "lucky-cat",
     "name": "Desk lucky cat",
     "x": 318,
-    "y": 20,
+    "y": 22,
     "w": 16,
-    "h": 24,
+    "h": 22,
     "sprite": "lucky-cat"
    },
    {
     "id": "plant",
     "name": "Watered the desk plant",
-    "x": 296,
-    "y": 2,
-    "w": 24,
+    "x": 300,
+    "y": 3,
+    "w": 22,
     "h": 26,
     "sprite": "plant"
    },
    {
     "id": "notes",
     "name": "Read the sticky notes",
-    "x": 228,
-    "y": 60,
-    "w": 30,
-    "h": 30,
+    "x": 231,
+    "y": 62,
+    "w": 28,
+    "h": 28,
     "sprite": "notes",
     "says": [
      "TODO: fewer TODOs",
@@ -332,9 +345,9 @@
    {
     "id": "shelf-soot",
     "name": "Woke the shelf sprite",
-    "x": 328,
-    "y": 30,
-    "w": 26,
+    "x": 333,
+    "y": 31,
+    "w": 24,
     "h": 24,
     "sprite": "shelf-soot"
    },
@@ -342,13 +355,14 @@
     "id": "tea",
     "name": "Jiro's tea",
     "x": 262,
-    "y": 140,
-    "w": 18,
-    "h": 24,
+    "y": 142,
+    "w": 16,
+    "h": 22,
     "says": [
      "Genmaicha. Correct choice."
     ]
    }
   ]
- }
+ },
+ "cool_gate": 22
 }

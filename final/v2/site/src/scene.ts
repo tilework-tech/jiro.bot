@@ -5,19 +5,23 @@ export type SpriteDef = {
   frames: number; durations: number[]; trigger?: boolean; egg?: string;
 };
 export type SceneDef = {
-  id: string; size: [number, number]; loop: number; layers: { src: string }[]; sprites: SpriteDef[];
+  id: string; size: [number, number]; loop: number; layers: { src: string; grain?: number }[]; sprites: SpriteDef[];
   surfaces?: { id: string; x: number; y: number; w: number; h: number }[];
   eggs?: { id: string; name: string; x: number; y: number; w: number; h: number; sprite?: string; says?: string[] }[];
 };
 
 type Loaded = { def: SpriteDef; img: HTMLImageElement };
 
+/** Canvas px per world unit: the finest art grain, so detail sprites (grain 4) draw 1:1 and rooms (grain 2) at 2x. */
+export const SCENE_G = 4;
+
 /**
- * A scene drawn at hero grain (2 canvas px per world art px) so 1x world layers and 2x sprites share one canvas.
+ * A scene drawn at the finest grain, so coarse room layers and fine detail sprites share one canvas.
+ * `size` is in world units; layer and sprite images carry `grain` art px per world unit.
  * Ambient sprites play on their own clocks; trigger sprites play once when poked and return to frame 0.
  */
 export async function mountScene(canvas: HTMLCanvasElement, base: string, def: SceneDef, reduced: boolean) {
-  const G = 2;
+  const G = SCENE_G;
   const [W, H] = def.size;
   canvas.width = W * G;
   canvas.height = H * G;

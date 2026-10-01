@@ -1,0 +1,1 @@
+Strict warm palette: ink #0b0302, plum-black #130a0c, walnut #241510 #351e1a, cherry #48231b #613124, wood #80452e, copper #9e5231 #cd8054, lantern #f6ba64 #fdd081, cream #efdabd, paper #d9c9b0; shadows warm plum, never grey. No text, no letters, no UI, no watermark.

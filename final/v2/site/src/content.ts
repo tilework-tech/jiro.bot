@@ -107,18 +107,35 @@ const JIRO: Line[] = [
   [700, `<span class="ok">PASS</span> CI green`],
   [600, `<span class="j">jiro ›</span> PR ready for your review.`],
 ];
-export function initCompare() {
-  const run = (el: HTMLElement, lines: Line[]) => {
-    let i = 0; el.innerHTML = "";
-    const step = () => {
-      if (i >= lines.length) { setTimeout(() => run(el, lines), 4200); return; }
-      const [d, html] = lines[i++];
-      setTimeout(() => { const div = document.createElement("div"); div.innerHTML = html; div.className = "ln"; el.appendChild(div); el.scrollTop = el.scrollHeight; step(); }, d);
-    };
-    step();
+/**
+ * Both replays type out once when the stop first comes into view, then hold their final state so the room stays calm.
+ * The replay button runs them again. With reduced motion the final state shows at once.
+ */
+export function initCompare(reduced: boolean) {
+  const wins: [HTMLElement, Line[]][] = [[$("#win-generic .term"), GENERIC], [$("#win-jiro .term"), JIRO]];
+  const timers: number[] = [];
+  const line = (el: HTMLElement, html: string) => {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+    div.className = "ln";
+    el.appendChild(div);
+    el.scrollTop = el.scrollHeight;
   };
-  run($("#win-generic .term"), GENERIC);
-  run($("#win-jiro .term"), JIRO);
+  const play = () => {
+    timers.splice(0).forEach(clearTimeout);
+    for (const [el, lines] of wins) {
+      el.innerHTML = "";
+      if (reduced) { lines.forEach(([, html]) => line(el, html)); continue; }
+      let t = 0;
+      for (const [d, html] of lines) { t += d; timers.push(window.setTimeout(() => line(el, html), t)); }
+    }
+  };
+  const stop = $("#compare");
+  const io = new IntersectionObserver((entries) => {
+    if (entries.some((e) => e.isIntersecting)) { io.disconnect(); play(); }
+  }, { threshold: 0.25 });
+  io.observe(stop);
+  stop.querySelector<HTMLButtonElement>("[data-replay]")!.onclick = () => { io.disconnect(); play(); };
 }
 
 // ---------------------------------------------------------------- 4 · comparison table (noriagentic.com, "Cloud coding agents, compared.")

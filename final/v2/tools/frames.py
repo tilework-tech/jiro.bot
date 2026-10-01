@@ -14,7 +14,7 @@ SPEC (per scene):
   "sprites": { "<id>": { "crop": [x,y,w,h], "roi": [x,y,w,h], "grain": 1,
                          "frames": ["<edit prompt>", ...], "keep": [0, 1, 0, 2] } }
 }
-crop/roi are world art px. Frame 0 is always the untouched base. Each edit prompt yields one candidate; it is
+crop/roi are world units (360 across); "grain" is art px per world unit (rooms 2, detail 4). Frame 0 is always the untouched base. Each edit prompt yields one candidate; it is
 refitted to the grid, aligned (±2 px) on pixels outside the roi, and only changes inside the roi survive.
 "keep" orders frames into the loop. Output: art/work/<scene>/sprites/<id>.png (horizontal strip of roi frames).
 """
@@ -30,6 +30,7 @@ spec_ = importlib.util.spec_from_file_location("fit", HERE / "fit.py"); fit = im
 ASPECTS = {"1:1": 1, "4:3": 4 / 3, "3:4": 3 / 4, "16:9": 16 / 9, "9:16": 9 / 16, "3:2": 1.5, "2:3": 2 / 3}
 
 GAIN = 1.0
+WORLD_W = 360
 
 def fit_crop(img: Image.Image, w: int, h: int, groups: str | None) -> np.ndarray:
     rgb = np.asarray(img.convert("RGB")).astype(np.int32)
@@ -75,12 +76,14 @@ def main():
     spec = json.loads(spec_path.read_text())
     global GAIN
     GAIN = spec.get("gain", 1.0)
+    fit.COOL_GATE = spec.get("cool_gate")
     s = spec["sprites"][sid]
     master = Image.open(ROOT / spec["master"])
     base = np.asarray(Image.open(ROOT / spec["base"]).convert("RGB")).astype(np.int32)
     H, W, _ = base.shape
-    g = s.get("grain", 1)
-    sx, sy = master.width / W, master.height / H
+    bg = W // WORLD_W  # art px per world unit in the base
+    g = s.get("grain", bg)
+    sx, sy = master.width / WORLD_W, master.height / (H / bg)
     cx, cy, cw, ch = s["crop"]
     rx, ry, rw, rh = s["roi"]
     src = master.crop((round(cx * sx), round(cy * sy), round((cx + cw) * sx), round((cy + ch) * sy)))
@@ -90,9 +93,10 @@ def main():
     ratio = cw / ch
     aspect = min(ASPECTS, key=lambda k: abs(np.log(ASPECTS[k] / ratio)))
     base_crop = fit_crop(src, cw * g, ch * g, spec.get("groups"))
-    if g == 1:
-        base_crop = base[cy:cy + ch, cx:cx + cw]
-    ref_crop = fit_crop(src.resize((1024, round(1024 * src.height / src.width)), Image.LANCZOS).resize(src.size, Image.LANCZOS),
+    if g == bg:
+        base_crop = base[cy * bg:(cy + ch) * bg, cx * bg:(cx + cw) * bg]
+    ref_side = 2048 if g >= 4 else 1024
+    ref_crop = fit_crop(src.resize((ref_side, round(ref_side * src.height / src.width)), Image.LANCZOS).resize(src.size, Image.LANCZOS),
                         cw * g, ch * g, spec.get("groups"))
     frames = [base_crop]
     for k, prompt in enumerate(s["frames"], start=1):
@@ -102,7 +106,7 @@ def main():
                     "every pixel identical except for this one small change: " + prompt +
                     " Crisp square pixels, no anti-aliasing, no new objects, no text.")
             subprocess.run(["node", str(HERE / "gen.mjs"), str(out), "--model", s.get("model", "gemini-3.1-flash-image"),
-                            "--aspect", aspect, "--size", "1K", "--prompt", full, str(src_path)], check=True)
+                            "--aspect", aspect, "--size", "2K" if g >= 4 else "1K", "--prompt", full, str(src_path)], check=True)
         got = out if out.exists() else out.with_suffix(".jpg")
         ed = Image.open(got).convert("RGB").resize(src.size, Image.LANCZOS)
         cand = fit_crop(ed, cw * g, ch * g, spec.get("groups"))
@@ -110,8 +114,9 @@ def main():
         roi = np.zeros((ch * g, cw * g), bool)
         roi[(ry - cy) * g:(ry - cy + rh) * g, (rx - cx) * g:(rx - cx + rw) * g] = True
         best, bo = None, (0, 0)
-        for dy in range(-2 * g, 2 * g + 1):
-            for dx in range(-2 * g, 2 * g + 1):
+        reach = 2 * g if s.get("align", True) else 0
+        for dy in range(-reach, reach + 1):
+            for dx in range(-reach, reach + 1):
                 sh = np.roll(np.roll(cand, dy, 0), dx, 1)
                 d = (np.abs(sh - base_crop).sum(2) > 0)[~roi].mean()
                 if best is None or d < best: best, bo = d, (dy, dx)
@@ -145,7 +150,7 @@ def main():
     outdir.mkdir(parents=True, exist_ok=True)
     np.save(outdir / f"{sid}-frames.npy", np.stack([f[rs] for f in frames]))
     for name, keep in (("", s.get("keep")), ("-react", s.get("reaction", {}).get("keep"))):
-        if not keep or len(keep) < 2:
+        if not keep or (name and len(keep) < 2):
             continue
         strip = np.concatenate([frames[k][rs] for k in keep], axis=1).astype(np.uint8)
         dst = outdir / f"{sid}{name}-fit.png"

@@ -75,10 +75,18 @@ export function buildRoute(points: Pt[], radius: number, width: number, hidden: 
 export const BELT_W = 21;
 export const BEND_R = 32;
 
-/** Where the belt is hidden behind scene architecture: the kitchen hatch sill and the timber beam under the hero. */
+/** The belt channel in the dining-room counter, as a fraction of the stop height (measured from the compare art). */
+const COMPARE_CHANNEL = { top: 117 / 202, mid: 131.5 / 202, bottom: 146 / 202 };
+
+/**
+ * Where the belt is hidden behind scene architecture: the kitchen hatch sill, the timber beam under the hero, and the
+ * dining-room walls the belt runs inside before it drops into the counter channel and after it leaves it.
+ */
 export const HIDDEN: Rect[] = [
   { x: 318, y: -20, w: 80, h: 70 },
   { x: 121, y: 201, w: 55, h: 153 },
+  { x: 0, y: stopTop("compare") - 1, w: 44, h: 202 * COMPARE_CHANNEL.top + 1 },
+  { x: 316, y: stopTop("compare") + 202 * COMPARE_CHANNEL.bottom, w: 60, h: 202 * (1 - COMPARE_CHANNEL.bottom) + 1 },
 ];
 
 /** The one belt: hatch → hero diagonal → down behind the crawlspace beam → along the crawlspace floor → down the left edge →
@@ -95,8 +103,8 @@ export function routePoints(): Pt[] {
     { x: heroX(212), y: 212 },
     { x: heroX(212), y: crawl },
     { x: L, y: crawl },
-    { x: L, y: y("compare", 0.8) },
-    { x: R, y: y("compare", 0.8) },
+    { x: L, y: y("compare", COMPARE_CHANNEL.mid) },
+    { x: R, y: y("compare", COMPARE_CHANNEL.mid) },
     { x: R, y: y("faq", 0.9) },
     { x: L, y: y("faq", 0.9) },
     { x: L, y: y("pond", 0.47) },

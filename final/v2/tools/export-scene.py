@@ -23,11 +23,11 @@ pub.mkdir(parents=True, exist_ok=True); ase.mkdir(parents=True, exist_ok=True)
 jobs = [(ROOT / spec["base"], "base")]
 entries = []
 for sid, s in spec["sprites"].items():
-    g = s.get("grain", 1)
+    g = s.get("grain", 2)
     rx, ry, rw, rh = s["roi"]
     for suffix, keep, durations, trigger in (("", s.get("keep"), s.get("durations"), False),
                                               ("-react", s.get("reaction", {}).get("keep"), s.get("reaction", {}).get("durations"), True)):
-        if not keep or len(keep) < 2:
+        if not keep or (trigger and len(keep) < 2):
             continue
         name = f"{sid}{suffix}"
         jobs.append((work / "sprites" / f"{name}-fit.png", name))
@@ -50,8 +50,9 @@ with ThreadPoolExecutor(4) as ex:
         print("indexed", n)
 
 base = Image.open(pub / "base.png")
+bg = base.width // 360
 loop = max(sum(e["durations"]) for e in entries if not e.get("trigger"))
-out = {"id": scene, "size": [base.width, base.height], "loop": loop, "layers": [{"src": "base.png"}], "sprites": entries}
+out = {"id": scene, "size": [base.width // bg, base.height // bg], "loop": loop, "layers": [{"src": "base.png", "grain": bg}], "sprites": entries}
 extra = spec.get("scene", {})
 out.update(extra)
 (pub / "scene.json").write_text(json.dumps(out, indent=1))

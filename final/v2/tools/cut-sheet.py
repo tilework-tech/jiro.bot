@@ -16,6 +16,31 @@ from PIL import Image
 HERE = Path(__file__).resolve().parent
 spec = importlib.util.spec_from_file_location("fit", HERE / "fit.py"); fit = importlib.util.module_from_spec(spec); spec.loader.exec_module(fit)
 
+def drop_specks(alpha, frac=0.03):
+    """Remove opaque islands smaller than frac of the sprite: leftover grid lines and background flecks."""
+    H, W = alpha.shape
+    seen = np.zeros_like(alpha)
+    comps = []
+    for y in range(H):
+        for x in range(W):
+            if alpha[y, x] and not seen[y, x]:
+                stack, comp = [(y, x)], []
+                seen[y, x] = True
+                while stack:
+                    cy, cx = stack.pop(); comp.append((cy, cx))
+                    for dy in (-1, 0, 1):
+                        for dx in (-1, 0, 1):
+                            ny, nx = cy + dy, cx + dx
+                            if 0 <= ny < H and 0 <= nx < W and alpha[ny, nx] and not seen[ny, nx]:
+                                seen[ny, nx] = True; stack.append((ny, nx))
+                comps.append(comp)
+    total = alpha.sum()
+    out = alpha.copy()
+    for comp in comps:
+        if len(comp) < frac * total:
+            for cy, cx in comp: out[cy, cx] = False
+    return out
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("sheet"); p.add_argument("outdir")
@@ -41,14 +66,19 @@ def main():
         cell = rgb[y0 + ty:y1 - ty, x0 + tx:x1 - tx]
         fg = ~fit.key_mask(cell)
         # ignore near-black grid remnants touching the cell border
-        ys, xs = np.where(fg)
-        y_lo, y_hi, x_lo, x_hi = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
+        # bounding box of the item itself, ignoring specks (found on an 8x coarser mask)
+        q = 8
+        small = fg[: fg.shape[0] // q * q, : fg.shape[1] // q * q].reshape(fg.shape[0] // q, q, fg.shape[1] // q, q).mean((1, 3)) > 0.3
+        ys, xs = np.where(drop_specks(small))
+        y_lo, y_hi = max(0, ys.min() * q - q), min(fg.shape[0], (ys.max() + 2) * q)
+        x_lo, x_hi = max(0, xs.min() * q - q), min(fg.shape[1], (xs.max() + 2) * q)
         crop = cell[y_lo:y_hi, x_lo:x_hi]; m = fg[y_lo:y_hi, x_lo:x_hi]
         k = a.scale
         if a.max and max(crop.shape[:2]) * k > a.max:
             k = a.max / max(crop.shape[:2])
         tw, th = max(4, round(crop.shape[1] * k)), max(4, round(crop.shape[0] * k))
         sprite, alpha = fit.vote(crop, m, tw, th)
+        alpha = drop_specks(alpha)
         sprite = fit.snap(sprite)
         sprite = fit.cleanup(sprite, alpha)
         rgba = np.dstack([sprite, np.where(alpha, 255, 0)]).astype(np.uint8); rgba[~alpha] = 0

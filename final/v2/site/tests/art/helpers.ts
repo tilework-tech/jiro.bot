@@ -25,7 +25,7 @@ export function pngs(dir = ART): string[] {
 
 export function read(path: string) { return PNG.sync.read(readFileSync(path)); }
 
-export type Sprite = { id: string; src: string; x: number; y: number; frames: number; durations: number[] };
+export type Sprite = { id: string; src: string; x: number; y: number; w: number; h: number; grain?: number; frames: number; durations: number[]; trigger?: boolean; egg?: string };
 export type Scene = { id: string; size: [number, number]; layers: { src: string }[]; sprites: Sprite[] };
 
 export function scenes(): { scene: Scene; dir: string }[] {

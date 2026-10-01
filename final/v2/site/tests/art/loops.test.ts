@@ -34,7 +34,7 @@ describe("ambient loops", () => {
     const all = scenes();
     expect(all.length).toBeGreaterThan(0);
     for (const { scene } of all) {
-      const totals = scene.sprites.filter((s) => s.frames > 1).map((s) => s.durations.reduce((a, b) => a + b, 0));
+      const totals = scene.sprites.filter((s) => s.frames > 1 && !s.trigger).map((s) => s.durations.reduce((a, b) => a + b, 0));
       const loop = Math.max(...totals);
       for (const t of totals) expect(loop % t, `${scene.id}: ${t} ms does not divide ${loop} ms`).toBe(0);
     }

@@ -25,6 +25,9 @@ const stops = (p) => p.evaluate(() => [...document.querySelectorAll("[data-stop]
   for (let k = 0; k < 14; k++) { await p.mouse.wheel(0, 120); await p.waitForTimeout(260); }
   await p.waitForTimeout(2500);
   await p.screenshot({ path: join(out, "desktop-product.png") });
+  for (let k = 0; k < 28; k++) { await p.mouse.wheel(0, 120); await p.waitForTimeout(260); }
+  await p.waitForTimeout(6000);
+  await p.screenshot({ path: join(out, "desktop-compare.png") });
   await ctx.close(); await b.close();
   const v = readdirSync(join(out, "tmp")).find((f) => f.endsWith(".webm"));
   renameSync(join(out, "tmp", v), join(out, "scroll-desktop.webm"));
@@ -41,6 +44,12 @@ const stops = (p) => p.evaluate(() => [...document.querySelectorAll("[data-stop]
   const [, prod] = await stops(p);
   await p.evaluate((y) => scrollTo(0, y), prod); await p.waitForTimeout(1500);
   await p.screenshot({ path: join(out, "webkit-product.png") });
+  await p.evaluate(() => { const el = document.querySelector('.band[data-band="1"]'); scrollTo(0, el.offsetTop + el.offsetHeight / 2 - innerHeight / 2); });
+  await p.waitForTimeout(1500);
+  await p.screenshot({ path: join(out, "webkit-band1.png") });
+  const [, , cmp] = await stops(p);
+  await p.evaluate((y) => scrollTo(0, y), cmp); await p.waitForTimeout(7000);
+  await p.screenshot({ path: join(out, "webkit-compare.png") });
   await b.close();
 }
 {
@@ -54,6 +63,9 @@ const stops = (p) => p.evaluate(() => [...document.querySelectorAll("[data-stop]
   const [, prod] = await stops(p);
   await p.evaluate((y) => scrollTo(0, y - 200), prod); await p.waitForTimeout(1200);
   await p.screenshot({ path: join(out, "phone-band.png") });
+  const [, , cmp] = await stops(p);
+  await p.evaluate((y) => scrollTo(0, y), cmp); await p.waitForTimeout(7000);
+  await p.screenshot({ path: join(out, "phone-compare.png") });
   await b.close();
 }
 console.log("captured to", out);

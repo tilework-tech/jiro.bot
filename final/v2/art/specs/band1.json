@@ -1,0 +1,171 @@
+{
+ "master": "art/gen/band1/band1-a-strip.png",
+ "base": "art/work/band1/base.png",
+ "groups": "warm,cool,accents,plates,neutrals",
+ "cool_gate": 22,
+ "sprites": {
+  "spirits": {
+   "grain": 4,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    184,
+    2,
+    106,
+    30
+   ],
+   "roi": [
+    190,
+    8,
+    94,
+    20
+   ],
+   "frame_rois": [
+    [
+     194,
+     14,
+     12,
+     6
+    ],
+    [
+     228,
+     14,
+     12,
+     6
+    ],
+    [
+     265,
+     14,
+     15,
+     6
+    ],
+    [
+     190,
+     6,
+     94,
+     20
+    ]
+   ],
+   "frames": [
+    "the leftmost black soot sprite blinks: its big white eyes are closed.",
+    "the middle black soot sprite blinks: its big white eyes are closed.",
+    "the rightmost black soot sprite blinks: its big white eyes are closed.",
+    "all five black soot sprites hop up a little, startled, eyes wide open, tiny arms raised."
+   ],
+   "keep": [
+    0,
+    1,
+    0,
+    2,
+    0,
+    3,
+    0
+   ],
+   "durations": [
+    1800,
+    200,
+    2200,
+    200,
+    1400,
+    200,
+    2000
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     4,
+     0,
+     4,
+     0
+    ],
+    "durations": [
+     100,
+     400,
+     250,
+     400,
+     350
+    ]
+   },
+   "egg": "spirits",
+   "align": false
+  },
+  "hole-eyes": {
+   "grain": 4,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    278,
+    58,
+    30,
+    28
+   ],
+   "roi": [
+    285,
+    66,
+    15,
+    19
+   ],
+   "compare": "base",
+   "min_blob": 1,
+   "frames": [
+    "the two tiny glowing yellow eyes inside the small dark arched hole close: only darkness."
+   ],
+   "keep": [
+    0,
+    1,
+    0,
+    1
+   ],
+   "durations": [
+    3800,
+    200,
+    3800,
+    200
+   ],
+   "egg": "hole-eyes"
+  }
+ },
+ "scene": {
+  "surfaces": [
+   {
+    "id": "crate",
+    "x": 93,
+    "y": 66,
+    "w": 40,
+    "h": 6
+   }
+  ],
+  "eggs": [
+   {
+    "id": "spirits",
+    "name": "Five dust spirits on a pipe",
+    "x": 190,
+    "y": 8,
+    "w": 94,
+    "h": 20,
+    "sprite": "spirits"
+   },
+   {
+    "id": "hole-eyes",
+    "name": "Not a mouse",
+    "x": 284,
+    "y": 64,
+    "w": 17,
+    "h": 21,
+    "sprite": "hole-eyes",
+    "says": [
+     "\u2026not a mouse."
+    ]
+   },
+   {
+    "id": "crate",
+    "name": "A crate of extra rice",
+    "x": 92,
+    "y": 64,
+    "w": 42,
+    "h": 21,
+    "says": [
+     "Emergency rice. Do not open."
+    ]
+   }
+  ]
+ }
+}

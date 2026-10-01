@@ -1,0 +1,375 @@
+{
+ "master": "art/gen/compare/compare-c-edit1.jpg",
+ "base": "art/work/compare/base.png",
+ "groups": "warm,cool,accents,plates,neutrals",
+ "cool_gate": 22,
+ "sprites": {
+  "cat": {
+   "grain": 4,
+   "crop": [
+    88,
+    145,
+    44,
+    32
+   ],
+   "roi": [
+    94,
+    151,
+    32,
+    22
+   ],
+   "mask_prompt": "Isolate the sleeping tabby cat on its cushion: keep only the cat and the cushion.",
+   "frames": [
+    "the sleeping tabby cat's body rises very slightly as it breathes in.",
+    "the tabby cat lifts its head and opens its eyes."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     2,
+     2,
+     0
+    ],
+    "durations": [
+     100,
+     900,
+     900,
+     400
+    ]
+   },
+   "egg": "cat"
+  },
+  "kanpai": {
+   "grain": 4,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    280,
+    158,
+    78,
+    44
+   ],
+   "roi": [
+    286,
+    166,
+    65,
+    36
+   ],
+   "frames": [
+    "the two friends raise their tea cups higher and clink them together, both laughing."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "durations": [
+     100,
+     500,
+     300,
+     500,
+     400
+    ]
+   },
+   "egg": "kanpai"
+  },
+  "diner-mid": {
+   "grain": 4,
+   "crop": [
+    136,
+    160,
+    46,
+    42
+   ],
+   "roi": [
+    142,
+    168,
+    34,
+    34
+   ],
+   "frames": [
+    "the diner lifts a piece of sushi with chopsticks up towards his mouth."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "durations": [
+     100,
+     400,
+     300,
+     400,
+     300
+    ]
+   },
+   "egg": "diner-mid"
+  },
+  "diner-maki": {
+   "grain": 4,
+   "crop": [
+    183,
+    160,
+    42,
+    42
+   ],
+   "roi": [
+    189,
+    166,
+    30,
+    36
+   ],
+   "frames": [
+    "the diner picks up one maki roll from the plate with chopsticks."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     1,
+     1,
+     0
+    ],
+    "durations": [
+     100,
+     600,
+     600,
+     300
+    ]
+   },
+   "egg": "diner-maki"
+  },
+  "diner-left": {
+   "grain": 4,
+   "crop": [
+    0,
+    158,
+    46,
+    44
+   ],
+   "roi": [
+    5,
+    165,
+    34,
+    37
+   ],
+   "frames": [
+    "the diner raises one hand in a friendly wave."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "durations": [
+     100,
+     400,
+     300,
+     400,
+     300
+    ]
+   },
+   "egg": "diner-left"
+  },
+  "tea-l": {
+   "grain": 4,
+   "crop": [
+    68,
+    143,
+    22,
+    28
+   ],
+   "roi": [
+    74,
+    147,
+    9,
+    21
+   ],
+   "frames": [
+    "the thin wisp of steam above the tea cup curls the other way."
+   ],
+   "keep": [
+    0,
+    1
+   ],
+   "durations": [
+    2000,
+    2000
+   ]
+  },
+  "tea-r": {
+   "grain": 4,
+   "crop": [
+    338,
+    148,
+    22,
+    26
+   ],
+   "roi": [
+    345,
+    153,
+    10,
+    17
+   ],
+   "frames": [
+    "the thin wisp of steam above the tea cup curls the other way."
+   ],
+   "keep": [
+    0,
+    1
+   ],
+   "durations": [
+    2000,
+    2000
+   ]
+  }
+ },
+ "scene": {
+  "surfaces": [
+   {
+    "id": "table",
+    "x": 140,
+    "y": 150,
+    "w": 84,
+    "h": 14
+   },
+   {
+    "id": "table-left",
+    "x": 30,
+    "y": 150,
+    "w": 60,
+    "h": 13
+   },
+   {
+    "id": "table-right",
+    "x": 272,
+    "y": 150,
+    "w": 66,
+    "h": 12
+   }
+  ],
+  "eggs": [
+   {
+    "id": "cat",
+    "name": "Woke the dining-room cat",
+    "x": 96,
+    "y": 152,
+    "w": 28,
+    "h": 18,
+    "sprite": "cat",
+    "says": [
+     "mrrp?"
+    ]
+   },
+   {
+    "id": "kanpai",
+    "name": "Kanpai!",
+    "x": 288,
+    "y": 168,
+    "w": 60,
+    "h": 32,
+    "sprite": "kanpai",
+    "says": [
+     "Kanpai!",
+     "To green builds!"
+    ]
+   },
+   {
+    "id": "diner-mid",
+    "name": "Interrupted dinner",
+    "x": 144,
+    "y": 170,
+    "w": 30,
+    "h": 30,
+    "sprite": "diner-mid",
+    "says": [
+     "Mm. Same prompt, better chef."
+    ]
+   },
+   {
+    "id": "diner-maki",
+    "name": "Last maki",
+    "x": 191,
+    "y": 168,
+    "w": 26,
+    "h": 32,
+    "sprite": "diner-maki",
+    "says": [
+     "Don't even think about it."
+    ]
+   },
+   {
+    "id": "diner-left",
+    "name": "A friendly wave",
+    "x": 7,
+    "y": 167,
+    "w": 30,
+    "h": 33,
+    "sprite": "diner-left",
+    "says": [
+     "Try the uni!"
+    ]
+   },
+   {
+    "id": "gap-eyes",
+    "name": "Something under the tables",
+    "x": 236,
+    "y": 156,
+    "w": 22,
+    "h": 16,
+    "says": [
+     "\u2026",
+     "(two eyes blink, then vanish)"
+    ]
+   },
+   {
+    "id": "soy",
+    "name": "Soy for one",
+    "x": 169,
+    "y": 150,
+    "w": 25,
+    "h": 12,
+    "says": [
+     "Low sodium. Like the diff."
+    ]
+   }
+  ]
+ }
+}

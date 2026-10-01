@@ -32,11 +32,17 @@ def load_palette():
 GROUPS = load_palette()
 PAL = np.array([c for g in GROUPS.values() for c in g], dtype=np.int32)
 
+COOL_GATE = None
+
 def snap(rgb):
     flat = rgb.reshape(-1, 3).astype(np.int32)
     r = (flat[:, None, 0] + PAL[None, :, 0]) / 2
     d = flat[:, None, :] - PAL[None, :, :]
     dist = (2 + r / 256) * d[..., 0] ** 2 + 4 * d[..., 1] ** 2 + (2 + (255 - r) / 256) * d[..., 2] ** 2
+    if COOL_GATE is not None:
+        cool = np.array([any((c == g).all() for g in GROUPS["cool"]) for c in PAL])
+        warmish = (flat[:, 2] - flat[:, 0]) < COOL_GATE
+        dist[np.ix_(warmish, cool)] = np.inf
     return PAL[dist.argmin(1)].reshape(rgb.shape)
 
 def key_mask(rgb):
@@ -47,24 +53,29 @@ def key_mask(rgb):
 
 def vote(img, alpha, W, H):
     h, w, _ = img.shape
-    out = np.zeros((H, W, 3), np.int32)
-    out_a = np.zeros((H, W), bool)
-    ys = np.linspace(0, h, H + 1).astype(int)
-    xs = np.linspace(0, w, W + 1).astype(int)
-    for j in range(H):
-        for i in range(W):
-            cell = img[ys[j]:ys[j + 1], xs[i]:xs[i + 1]].reshape(-1, 3)
-            a = alpha[ys[j]:ys[j + 1], xs[i]:xs[i + 1]].reshape(-1)
-            if a.mean() < 0.5:
-                continue
-            cell = cell[a]
-            b = (cell >> 4)
-            codes = b[:, 0] * 256 + b[:, 1] * 16 + b[:, 2]
-            vals, counts = np.unique(codes, return_counts=True)
-            win = vals[counts.argmax()]
-            out[j, i] = cell[codes == win].mean(0)
-            out_a[j, i] = True
-    return out, out_a
+    ys = np.minimum(np.searchsorted(np.linspace(0, h, H + 1).astype(int), np.arange(h), side="right") - 1, H - 1)
+    xs = np.minimum(np.searchsorted(np.linspace(0, w, W + 1).astype(int), np.arange(w), side="right") - 1, W - 1)
+    cell = (ys[:, None] * W + xs[None, :]).reshape(-1)
+    rgb = img.reshape(-1, 3).astype(np.int64)
+    a = alpha.reshape(-1)
+    n = W * H
+    cover = np.bincount(cell, weights=a, minlength=n) / np.maximum(np.bincount(cell, minlength=n), 1)
+    cell, rgb = cell[a], rgb[a]
+    b = rgb >> 4
+    key = cell * 4096 + b[:, 0] * 256 + b[:, 1] * 16 + b[:, 2]
+    uk, inv, counts = np.unique(key, return_inverse=True, return_counts=True)
+    sums = np.stack([np.bincount(inv, weights=rgb[:, c], minlength=len(uk)) for c in range(3)], 1)
+    kc = uk // 4096
+    order = np.lexsort((-counts, kc))
+    first = np.ones(len(order), bool)
+    first[1:] = kc[order][1:] != kc[order][:-1]
+    win = order[first]
+    out = np.zeros((n, 3), np.int32)
+    out[kc[win]] = (sums[win] / counts[win][:, None]).astype(np.int32)
+    out_a = np.zeros(n, bool)
+    out_a[kc[win]] = True
+    out_a &= cover >= 0.5
+    return out.reshape(H, W, 3), out_a.reshape(H, W)
 
 def smooth_dark(rgb, a, limit, passes=2):
     """3x3 majority filter over dark, low-detail pixels so copy fields stay calm."""
@@ -106,6 +117,8 @@ def main():
     p.add_argument("--no-clean", action="store_true")
     p.add_argument("--groups", help="comma list of palette groups to snap to (warm,cool,accents,plates,neutrals)")
     p.add_argument("--gain", type=float, default=1.0, help="multiply colours before snapping (lifts very dark renders)")
+    p.add_argument("--warm-left", type=float, default=0, help="snap the copy field (this fraction of the width from the left) to the warm ramp only")
+    p.add_argument("--cool-gate", type=int, help="only let a pixel snap to the cool group when its blue exceeds its red by this much")
     p.add_argument("--smooth-dark", type=int, default=0, help="luma limit for the dark-area majority filter")
     a = p.parse_args()
     im = Image.open(a.inp).convert("RGB")
@@ -117,10 +130,18 @@ def main():
     H = a.height or round(a.width * im.height / im.width)
     out, oa = vote(rgb, alpha, a.width, H)
     out = np.clip(out * a.gain, 0, 255).astype(np.int32)
-    global PAL
+    global PAL, COOL_GATE
+    COOL_GATE = a.cool_gate
     if a.groups:
         PAL = np.array([c for g in a.groups.split(",") for c in GROUPS[g]], dtype=np.int32)
-    out = snap(out)
+    full = PAL
+    snapped = snap(out)
+    if a.warm_left:
+        PAL = np.array(GROUPS["warm"], dtype=np.int32)
+        cut = round(a.warm_left * out.shape[1])
+        snapped[:, :cut] = snap(out[:, :cut])
+        PAL = full
+    out = snapped
     if not a.no_clean:
         out = cleanup(out, oa)
     if a.smooth_dark:

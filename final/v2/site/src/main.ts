@@ -4,11 +4,11 @@ import { createJourney } from "./belt/motion";
 import { createEggs, say, type Egg } from "./eggs";
 import { BANDS, STOP_H, STOPS, WORLD_W, stopTop, type StopId } from "./layout";
 import { mountScene, type SceneDef } from "./scene";
-import { initDemo } from "./content";
+import { initCompare, initDemo } from "./content";
 
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const narrow = () => innerWidth <= 760;
-const BUILT: StopId[] = ["hero", "product"];
+const BUILT: StopId[] = ["hero", "product", "compare"];
 const REST = 4;
 
 const BELT_EGGS: Egg[] = [
@@ -47,6 +47,11 @@ async function boot() {
     get s() { return s; },
     worldToPage: (p: Pt) => ({ x: p.x * s, y: Math.round(p.y * s + offsetAt(p.y)) }),
     pageToWorld: (p: Pt) => {
+      // A point on a stacked copy block (narrow screens) is not in the art at all.
+      for (const id of BUILT) {
+        const top = Math.round(stopTop(id) * s + offsetAt(stopTop(id)));
+        if (p.y >= top - (copyH[id] ?? 0) && p.y < top) return { x: p.x / s, y: NaN };
+      }
       let wy = p.y / s;
       for (let k = 0; k < 3; k++) wy = (p.y - offsetAt(wy)) / s;
       return { x: p.x / s, y: wy };
@@ -159,6 +164,7 @@ async function boot() {
 
   eggsReady = true;
   initDemo((n) => { if (n === 3) eggs.find("demo-pr"); });
+  initCompare(reduced);
   layout();
 
   // ---------------------------------------------------------------- belt
@@ -166,7 +172,9 @@ async function boot() {
   const heroBottom = () => map.worldToPage({ x: 0, y: STOP_H - 10 }).y;
   const buildPageRoute = () => {
     const pts = routePoints().map(map.worldToPage);
-    const hidden = HIDDEN.map((r) => {
+    // Below the last built stop the belt runs on toward stops that are not drawn yet.
+    const unbuilt = { x: -100, y: worldEnd, w: WORLD_W + 200, h: 1e6 };
+    const hidden = [...HIDDEN, unbuilt].map((r) => {
       const a = map.worldToPage({ x: r.x, y: r.y }), b = map.worldToPage({ x: r.x + r.w, y: r.y + r.h });
       return { x: a.x, y: a.y, w: b.x - a.x, h: b.y - a.y };
     });
@@ -289,9 +297,10 @@ async function boot() {
     slotsInView: belt.slotsInView,
     effectsActive: belt.effectsActive,
     surface: (id: string) => {
-      const r = surfaces().find((x) => x.id === id)!;
+      const r = surfaces().find((x) => x.id === id);
+      if (!r) throw new Error(`no surface ${id}`);
       const p = map.worldToPage({ x: r.x + r.w / 2, y: r.y + r.h / 2 });
-      return { x: p.x - scrollX, y: p.y - scrollY };
+      return { x: p.x - scrollX, y: p.y - scrollY, w: r.w * s, h: r.h * s };
     },
   };
 }

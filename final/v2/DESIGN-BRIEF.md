@@ -1,6 +1,6 @@
 # Jiro.bot v2 design brief
 
-Status: approved by Martin 2026-10-01 (answers in `QUESTIONS.md`). Everything produced for v2 (art, animation, code, copy) is judged against this file. Where the reference videos and this brief disagree, this brief wins; the disagreements are listed in "Deliberate departures from the videos".
+Status: approved by Martin 2026-10-01 (answers in `QUESTIONS.md`). Grains (§3) and plate/item sizes (§5) were revised in round 2 after his 2026-10-01 17:44 feedback (`PLAN-R2.md`). Everything produced for v2 (art, animation, code, copy) is judged against this file. Where the reference videos and this brief disagree, this brief wins; the disagreements are listed in "Deliberate departures from the videos".
 
 Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re-inspected frame by frame at 0.5 s in `research/video-NN.md`. Martin's written direction of 2026-09-28 → 2026-10-01 (`../site/docs/FEEDBACK-VERBATIM.md` plus the 2026-10-01 thread message).
 
@@ -20,9 +20,10 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 ## 3. Art system
 
 - **Medium:** polished 16-bit pixel art. All raster art is generated with Gemini (`gemini-3-pro-image` for scene masters, `gemini-3.1-flash-image` for sprites/frames) and finished in **LibreSprite 1.2** (indexed palette conversion, nearest-neighbour scaling, `.ase` sources, sprite-sheet + JSON export). No hand-placed pixels; any cleanup is scripted (grid-fit, mode downscale, palette snap, orphan-pixel removal) and logged.
-- **Two grains:**
-  - World (rooms, bands, people): 1 art px = 4 CSS px at 1440 px width (native 360 × 225 per viewport).
-  - Hero layer (Jiro, belt, plates, belt items, koi, creatures you can click): 1 art px = 2 CSS px. Twice the detail, same palette.
+- **Two grains** (revised in round 2, `PLAN-R2.md`). Martin's feedback of 2026-10-01 17:44 asked for much higher resolution for everything, above all Jiro, people, dust spirits and belt items. Layout stays in a 360-unit-wide world; only art px per unit changed:
+  - Rooms and bands: grain 2, 720 art px across, 1 art px = 2 CSS px at 1440 px width (was 360 across, 4 CSS px).
+  - Detail layer (Jiro, people, dust spirits, eyes, every clickable prop, belt tile, plates, belt items, later koi): grain 4, 1 art px = 1 CSS px (was 2 CSS px). Same palette.
+  - Gemini cannot draw pixel art at these densities, so masters are 4K flat illustrations and the pixel grid is made by our fit script (`art/README.md`, "Detail").
 - **Master palette:** one 56-colour `.gpl` (`palette/jiro56.gpl`), shared by every asset, snapped without dither. It began at 48; eight lantern-orange, tan, rust, olive and ash tones were added after the hero test fit measured where 48 colours lost the lantern light.
   - Warm interior ramp (16): ink `#0b0302`, plum-black `#130a0c`, walnut `#241510`, `#351e1a`, cherry `#48231b`, `#613124`, `#80452e`, rail copper `#9e5231`, copper hi `#cd8054`, lamp core `#f6ba64`, cream `#efdabd`, paper `#d9c9b0`, face plate `#d3b89a`, plus 3 skin tones; lantern glow `#c8602f` `#e8823e` `#fdd081`, tan `#af9782`, rust `#7f281c`, dusty `#5d4646`, ash `#3b3131`.
   - Cool night ramp (12): `#0e1424`, navy `#1a2c4d`, `#27325c` indigo, `#34467a`, moon `#f9efce`, reed sage `#576a58`, moss, lily green ×2, olive `#5e6e30`, lantern-glass `#d6f4be`, water hi ×2. Used for street, garden and pond, so night scenes stay in the same family instead of neon blue/pink.
@@ -42,7 +43,7 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 - **One belt**, one ordered plate stream, kitchen hatch to pond. Origin: a lit hatch in the hero's back wall; plates emerge from behind its frame (occluded), never pop in.
 - Path: straight runs plus **90° bends only**, each with a centre radius ≥ 1.5 belt widths, drawn as fanned segment plates (airport-carousel style). Hero run is straight in world space (appears diagonal in the ¾ view). Bends are visible where they read well, otherwise hidden behind beams, walls, or bridge rails.
 - Construction: walnut/copper rail, charcoal slats that **move with the plates** (no static slats).
-- **Plates:** all white; each plate's rim is either faint grey or faint blue (seeded, roughly even, no other colour), no dark outline. Item sits 1–3 art px off centre (seeded per plate). In bends, plate and item rotate with the belt tangent.
+- **Plates:** all white; each plate's rim is either faint grey or faint blue (seeded, roughly even, no other colour), no dark outline. Round 2: plates are 64 × 45 art px at grain 4 and items at most 42 px (at least 28 px, no wider than 70% of a plate). Item sits 1–3 world units off centre (seeded per plate). In bends, plate and item rotate with the belt tangent.
 - **Fill:** ~50% of slots, seeded random with singles, pairs, runs and gaps; never reshuffled in view.
 - **Mix of occupied plates:** 70% funny sushi/food (nigiri with expressions, sleepy onigiri, suspicious wasabi, rice with a tiny umbrella, gyoza in a blanket…), 20% surprising non-food (rubber duck, floppy disk, tiny bonsai, lost sock, beetle, lucky cat, haunted laptop…), 10% very animated food (breathes, blinks, waves, shivers on its plate).
 - **Speed:** rest 16 px/s at 1440 px (constant, never stops). On first scroll input the belt visibly surges (up to ~4×, eased over 300 ms) **before** the scene moves, then eases back within ~1 s. Never reverses.

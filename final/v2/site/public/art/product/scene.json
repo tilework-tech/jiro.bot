@@ -7,18 +7,19 @@
  "loop": 8000,
  "layers": [
   {
-   "src": "base.png"
+   "src": "base.png",
+   "grain": 2
   }
  ],
  "sprites": [
   {
    "id": "jiro",
    "src": "jiro.png",
-   "x": 246,
+   "x": 250,
    "y": 50,
-   "w": 78,
+   "w": 74,
    "h": 100,
-   "grain": 2,
+   "grain": 4,
    "frames": 8,
    "durations": [
     900,
@@ -35,11 +36,11 @@
   {
    "id": "jiro-react",
    "src": "jiro-react.png",
-   "x": 246,
+   "x": 250,
    "y": 50,
-   "w": 78,
+   "w": 74,
    "h": 100,
-   "grain": 2,
+   "grain": 4,
    "frames": 5,
    "durations": [
     100,
@@ -56,9 +57,9 @@
    "src": "lantern.png",
    "x": 224,
    "y": 4,
-   "w": 32,
+   "w": 28,
    "h": 52,
-   "grain": 1,
+   "grain": 2,
    "frames": 2,
    "durations": [
     3600,
@@ -68,11 +69,11 @@
   {
    "id": "shelf-soot",
    "src": "shelf-soot.png",
-   "x": 328,
-   "y": 30,
-   "w": 26,
+   "x": 333,
+   "y": 31,
+   "w": 24,
    "h": 24,
-   "grain": 1,
+   "grain": 4,
    "frames": 2,
    "durations": [
     2000,
@@ -83,11 +84,11 @@
   {
    "id": "shelf-soot-react",
    "src": "shelf-soot-react.png",
-   "x": 328,
-   "y": 30,
-   "w": 26,
+   "x": 333,
+   "y": 31,
+   "w": 24,
    "h": 24,
-   "grain": 1,
+   "grain": 4,
    "frames": 3,
    "durations": [
     100,
@@ -98,13 +99,27 @@
    "egg": "shelf-soot"
   },
   {
+   "id": "lucky-cat",
+   "src": "lucky-cat.png",
+   "x": 318,
+   "y": 22,
+   "w": 16,
+   "h": 22,
+   "grain": 4,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "lucky-cat"
+  },
+  {
    "id": "lucky-cat-react",
    "src": "lucky-cat-react.png",
    "x": 318,
-   "y": 20,
+   "y": 22,
    "w": 16,
-   "h": 24,
-   "grain": 1,
+   "h": 22,
+   "grain": 4,
    "frames": 5,
    "durations": [
     100,
@@ -117,13 +132,27 @@
    "egg": "lucky-cat"
   },
   {
+   "id": "plant",
+   "src": "plant.png",
+   "x": 300,
+   "y": 3,
+   "w": 22,
+   "h": 26,
+   "grain": 4,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "plant"
+  },
+  {
    "id": "plant-react",
    "src": "plant-react.png",
-   "x": 296,
-   "y": 2,
-   "w": 24,
-   "h": 28,
-   "grain": 1,
+   "x": 300,
+   "y": 3,
+   "w": 22,
+   "h": 26,
+   "grain": 4,
    "frames": 5,
    "durations": [
     100,
@@ -136,13 +165,27 @@
    "egg": "plant"
   },
   {
+   "id": "notes",
+   "src": "notes.png",
+   "x": 231,
+   "y": 62,
+   "w": 28,
+   "h": 28,
+   "grain": 4,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "notes"
+  },
+  {
    "id": "notes-react",
    "src": "notes-react.png",
-   "x": 228,
-   "y": 60,
-   "w": 30,
-   "h": 30,
-   "grain": 1,
+   "x": 231,
+   "y": 62,
+   "w": 28,
+   "h": 28,
+   "grain": 4,
    "frames": 3,
    "durations": [
     100,
@@ -173,10 +216,10 @@
   {
    "id": "jiro",
    "name": "Interrupted Jiro mid-commit",
-   "x": 266,
-   "y": 50,
+   "x": 258,
+   "y": 52,
    "w": 56,
-   "h": 56,
+   "h": 60,
    "sprite": "jiro",
    "says": [
     "One sec, I'm reading the failing test.",
@@ -188,27 +231,27 @@
    "id": "lucky-cat",
    "name": "Desk lucky cat",
    "x": 318,
-   "y": 20,
+   "y": 22,
    "w": 16,
-   "h": 24,
+   "h": 22,
    "sprite": "lucky-cat"
   },
   {
    "id": "plant",
    "name": "Watered the desk plant",
-   "x": 296,
-   "y": 2,
-   "w": 24,
+   "x": 300,
+   "y": 3,
+   "w": 22,
    "h": 26,
    "sprite": "plant"
   },
   {
    "id": "notes",
    "name": "Read the sticky notes",
-   "x": 228,
-   "y": 60,
-   "w": 30,
-   "h": 30,
+   "x": 231,
+   "y": 62,
+   "w": 28,
+   "h": 28,
    "sprite": "notes",
    "says": [
     "TODO: fewer TODOs",
@@ -218,9 +261,9 @@
   {
    "id": "shelf-soot",
    "name": "Woke the shelf sprite",
-   "x": 328,
-   "y": 30,
-   "w": 26,
+   "x": 333,
+   "y": 31,
+   "w": 24,
    "h": 24,
    "sprite": "shelf-soot"
   },
@@ -228,9 +271,9 @@
    "id": "tea",
    "name": "Jiro's tea",
    "x": 262,
-   "y": 140,
-   "w": 18,
-   "h": 24,
+   "y": 142,
+   "w": 16,
+   "h": 22,
    "says": [
     "Genmaicha. Correct choice."
    ]
