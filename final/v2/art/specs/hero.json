@@ -1,20 +1,20 @@
 {
- "master": "art/gen/hero/hero-b-edit1.jpg",
+ "master": "art/gen/hero/hero-c-edit1.jpg",
  "base": "art/work/hero/base.png",
  "groups": "warm,accents,neutrals,plates",
  "sprites": {
   "lantern-l": {
    "crop": [
-    190,
+    116,
     0,
     40,
-    40
+    48
    ],
    "roi": [
-    198,
-    1,
-    23,
-    28
+    122,
+    6,
+    28,
+    36
    ],
    "frames": [
     "the paper lantern glows a little brighter and warmer."
@@ -24,13 +24,38 @@
     1
    ],
    "durations": [
-    3600,
-    400
+    3000,
+    3000
+   ]
+  },
+  "lantern-m": {
+   "crop": [
+    160,
+    8,
+    40,
+    46
+   ],
+   "roi": [
+    166,
+    14,
+    28,
+    36
+   ],
+   "frames": [
+    "the paper lantern glows a little brighter and warmer."
+   ],
+   "keep": [
+    0,
+    1
+   ],
+   "durations": [
+    4000,
+    2000
    ]
   },
   "lantern-r": {
    "crop": [
-    287,
+    290,
     0,
     40,
     40
@@ -38,8 +63,8 @@
    "roi": [
     296,
     0,
-    21,
-    29
+    28,
+    32
    ],
    "frames": [
     "the paper lantern glows a little brighter and warmer."
@@ -49,23 +74,24 @@
     1
    ],
    "durations": [
-    1700,
-    300
+    2000,
+    4000
    ]
   },
   "chime": {
    "crop": [
     218,
     0,
-    26,
-    26
+    30,
+    28
    ],
    "roi": [
     225,
-    4,
-    12,
-    22
+    2,
+    14,
+    20
    ],
+   "model": "gemini-3-pro-image",
    "frames": [
     "the small fish-shaped wooden wind chime hanging from the ceiling swings slightly to the left.",
     "the small fish-shaped wooden wind chime hanging from the ceiling swings slightly to the right."
@@ -74,73 +100,76 @@
     0
    ],
    "durations": [
-    8000
+    12000
    ],
-   "egg": "chime",
    "reaction": {
     "keep": [
      0,
      1,
      0,
      2,
+     0,
+     1,
      0
     ],
     "durations": [
      100,
-     450,
-     450,
-     450,
-     550
+     250,
+     200,
+     250,
+     200,
+     250,
+     750
     ]
    },
-   "model": "gemini-3-pro-image"
+   "egg": "chime"
   },
-  "diner-a": {
+  "woman": {
    "crop": [
-    245,
-    125,
-    60,
-    60
+    96,
+    76,
+    48,
+    74
    ],
    "roi": [
-    252,
-    132,
-    46,
-    38
+    102,
+    80,
+    38,
+    66
    ],
    "frames": [
-    "the diner closest to the viewer raises his hands halfway toward his mouth.",
-    "the diner closest to the viewer brings his cup right to his mouth and drinks."
+    "the woman in the burgundy sweater raises her white cup to her lips.",
+    "the woman in the burgundy sweater turns her head slightly toward the robot chef."
    ],
    "keep": [
     0,
     1,
-    2,
-    1
+    0,
+    2
    ],
    "durations": [
-    2400,
-    400,
-    800,
-    400
+    5000,
+    1000,
+    4000,
+    2000
    ]
   },
-  "diner-b": {
+  "man": {
    "crop": [
-    305,
-    85,
-    55,
-    55
+    158,
+    90,
+    54,
+    74
    ],
    "roi": [
-    313,
-    90,
-    44,
-    48
+    163,
+    94,
+    46,
+    66
    ],
    "frames": [
-    "the diner at the right lifts his bowl a little closer to his face.",
-    "the diner at the right tilts his head slightly down toward his bowl."
+    "the man in the brown leather jacket raises his gesturing hand a little higher.",
+    "the man in the brown leather jacket lowers his hand to the counter."
    ],
    "keep": [
     0,
@@ -150,23 +179,53 @@
    ],
    "durations": [
     3000,
-    1000,
+    800,
+    3200,
+    5000
+   ]
+  },
+  "diner-r": {
+   "crop": [
+    246,
+    128,
+    58,
+    74
+   ],
+   "roi": [
+    252,
+    134,
+    48,
+    66
+   ],
+   "frames": [
+    "the customer in the olive jacket lifts his chopsticks closer to his mouth.",
+    "the customer in the olive jacket lowers his chopsticks to the plate."
+   ],
+   "keep": [
+    0,
+    1,
+    0,
+    2
+   ],
+   "durations": [
     3000,
-    1000
+    900,
+    2100,
+    6000
    ]
   },
   "cat": {
    "crop": [
-    305,
+    304,
     160,
-    50,
+    56,
     42
    ],
    "roi": [
     310,
-    171,
-    38,
-    27
+    168,
+    44,
+    28
    ],
    "frames": [
     "the sleeping orange cat's body rises very slightly as it breathes in.",
@@ -191,29 +250,32 @@
     ],
     "durations": [
      100,
-     500,
-     800,
-     500,
-     100
+     600,
+     700,
+     600,
+     1000
     ]
    },
    "egg": "cat"
   },
   "door-eyes": {
    "crop": [
-    160,
+    164,
     40,
-    40,
-    40
+    44,
+    36
    ],
    "roi": [
-    172,
-    50,
-    26,
-    18
+    176,
+    53,
+    16,
+    10
    ],
+   "model": "gemini-3-pro-image",
+   "min_blob": 2,
+   "compare": "base",
    "frames": [
-    "in the dark doorway beneath the curtain, add two small, clearly visible glowing yellow eyes side by side, peeking out of the darkness, about one third of the way down the opening."
+    "in the dark doorway at the centre of this image, add two small, clearly visible glowing yellow dots side by side, a pair of eyes peeking out of the darkness. Change nothing else."
    ],
    "keep": [
     1,
@@ -222,35 +284,37 @@
     0
    ],
    "durations": [
-    3300,
+    4000,
     200,
-    3500,
-    1000
+    7600,
+    200
    ],
-   "egg": "door-eyes",
-   "model": "gemini-3-pro-image",
-   "min_blob": 2,
-   "compare": "base"
+   "reaction": {
+    "keep": [
+     0,
+     1
+    ],
+    "durations": [
+     1500,
+     500
+    ]
+   },
+   "egg": "door-eyes"
   },
   "jiro": {
    "grain": 2,
    "model": "gemini-3-pro-image",
    "crop": [
-    190,
-    20,
-    68,
-    90
+    188,
+    42,
+    70,
+    66
    ],
    "roi": [
-    195,
-    25,
-    60,
-    82
-   ],
-   "frames": [
-    "the robot chef's two glowing cyan eyes are closed: each eye becomes a thin dark horizontal line.",
-    "the robot chef lifts his knife slightly above the salmon fillet.",
-    "the robot chef's plain copper jaw plate is lowered by a tiny amount, as if he is speaking. No mouth, no teeth."
+    194,
+    46,
+    58,
+    58
    ],
    "keep": [
     0,
@@ -264,7 +328,7 @@
     150,
     2250,
     1000,
-    2000
+    6000
    ],
    "reaction": {
     "keep": [
@@ -289,38 +353,43 @@
    "egg": "jiro",
    "frame_rois": [
     [
-     220,
-     46,
-     16,
-     9
-    ],
-    [
      208,
-     82,
-     47,
-     24
+     58,
+     22,
+     10
     ],
     [
-     219,
-     54,
-     19,
+     194,
+     92,
+     56,
+     14
+    ],
+    [
+     210,
+     66,
+     20,
      12
     ]
    ],
-   "mask_prompt": "Isolate the robot sushi chef: keep only the robot (head, headband, body, arms, hands and the knife he holds)."
+   "frames": [
+    "the robot chef's two glowing cyan eyes are closed: each eye becomes a thin dark horizontal line.",
+    "the robot chef lifts his right hand slightly off the counter, fingers spread.",
+    "the robot chef's plain copper jaw plate is lowered by a tiny amount, as if he is speaking. No mouth, no teeth."
+   ],
+   "mask_prompt": "Isolate the robot sushi chef: keep only the robot (head, headband, body, arms and hands)."
   },
   "lucky-cat": {
    "crop": [
-    256,
-    24,
-    30,
-    30
+    254,
+    18,
+    34,
+    34
    ],
    "roi": [
-    261,
-    26,
-    20,
-    23
+    260,
+    24,
+    22,
+    22
    ],
    "frames": [
     "the white lucky cat figurine raises its beckoning paw higher.",
@@ -330,40 +399,42 @@
     0
    ],
    "durations": [
-    8000
+    12000
    ],
    "reaction": {
     "keep": [
      0,
      1,
+     0,
      2,
+     0,
      1,
-     2,
      0
     ],
     "durations": [
      100,
-     350,
-     350,
-     350,
-     350,
-     500
+     300,
+     200,
+     300,
+     200,
+     300,
+     600
     ]
    },
    "egg": "lucky-cat"
   },
   "daruma": {
    "crop": [
-    238,
+    232,
     0,
-    30,
+    34,
     30
    ],
    "roi": [
-    242,
+    238,
     2,
-    23,
-    26
+    22,
+    22
    ],
    "frames": [
     "the red daruma doll tilts to the left.",
@@ -373,156 +444,42 @@
     0
    ],
    "durations": [
-    8000
+    12000
    ],
    "reaction": {
     "keep": [
      0,
      1,
+     0,
      2,
+     0,
      1,
-     2,
      0
     ],
     "durations": [
      100,
-     300,
-     400,
-     300,
-     400,
-     500
+     220,
+     160,
+     220,
+     160,
+     220,
+     920
     ]
    },
    "egg": "daruma"
   },
-  "kettle": {
-   "crop": [
-    232,
-    42,
-    30,
-    30
-   ],
-   "roi": [
-    235,
-    42,
-    24,
-    27
-   ],
-   "frames": [
-    "a small puff of white steam shoots out of the kettle's spout.",
-    "a bigger soft cloud of white steam drifts above the kettle."
-   ],
-   "keep": [
-    0
-   ],
-   "durations": [
-    8000
-   ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     2,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     400,
-     800,
-     400,
-     300
-    ]
-   },
-   "egg": "kettle"
-  },
-  "bonsai": {
-   "crop": [
-    182,
-    90,
-    40,
-    40
-   ],
-   "roi": [
-    186,
-    94,
-    32,
-    34
-   ],
-   "frames": [
-    "the bonsai tree's leaves rustle and one tiny green leaf falls from it.",
-    "one tiny green leaf lies on the counter beside the bonsai pot."
-   ],
-   "keep": [
-    0
-   ],
-   "durations": [
-    8000
-   ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     2,
-     0
-    ],
-    "durations": [
-     100,
-     600,
-     1200,
-     100
-    ]
-   },
-   "egg": "bonsai"
-  },
-  "noren": {
-   "crop": [
-    148,
-    0,
-    50,
-    50
-   ],
-   "roi": [
-    150,
-    3,
-    46,
-    44
-   ],
-   "frames": [
-    "the indigo noren curtain sways gently as if someone brushed past it."
-   ],
-   "keep": [
-    0
-   ],
-   "durations": [
-    8000
-   ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     1400,
-     500
-    ]
-   },
-   "egg": "noren"
-  },
   "cooker": {
    "crop": [
     240,
-    44,
-    40,
-    48
+    52,
+    38,
+    44
    ],
    "roi": [
     246,
-    48,
-    30,
-    42
+    58,
+    28,
+    34
    ],
    "frames": [
     "the rice cooker's lid pops up slightly with a puff of steam."
@@ -531,7 +488,7 @@
     0
    ],
    "durations": [
-    8000
+    12000
    ],
    "reaction": {
     "keep": [
@@ -541,24 +498,24 @@
     ],
     "durations": [
      100,
-     1200,
-     700
+     900,
+     1000
     ]
    },
    "egg": "cooker"
   },
   "sake": {
    "crop": [
-    258,
-    0,
-    40,
-    30
+    220,
+    42,
+    38,
+    32
    ],
    "roi": [
-    261,
-    0,
-    32,
-    25
+    225,
+    46,
+    28,
+    24
    ],
    "frames": [
     "one of the sake bottles on the shelf wobbles and tilts slightly."
@@ -567,7 +524,7 @@
     0
    ],
    "durations": [
-    8000
+    12000
    ],
    "reaction": {
     "keep": [
@@ -579,46 +536,86 @@
     ],
     "durations": [
      100,
-     300,
-     300,
-     300,
-     1000
+     250,
+     200,
+     250,
+     700
     ]
    },
    "egg": "sake"
+  },
+  "noren": {
+   "crop": [
+    192,
+    12,
+    52,
+    52
+   ],
+   "roi": [
+    196,
+    16,
+    44,
+    46
+   ],
+   "frames": [
+    "the two noren curtains sway gently as if someone brushed past them."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    12000
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "durations": [
+     100,
+     350,
+     300,
+     350,
+     900
+    ]
+   },
+   "egg": "noren"
   }
  },
  "scene": {
   "surfaces": [
    {
     "id": "counter",
-    "x": 268,
-    "y": 108,
-    "w": 42,
-    "h": 26
+    "x": 150,
+    "y": 86,
+    "w": 85,
+    "h": 16
    },
    {
     "id": "back-counter",
-    "x": 214,
-    "y": 110,
-    "w": 30,
-    "h": 12
+    "x": 300,
+    "y": 96,
+    "w": 40,
+    "h": 30
    },
    {
     "id": "floor",
-    "x": 196,
-    "y": 184,
-    "w": 110,
-    "h": 18
+    "x": 140,
+    "y": 176,
+    "w": 170,
+    "h": 26
    }
   ],
   "eggs": [
    {
     "id": "jiro",
     "name": "Jiro has opinions",
-    "x": 200,
-    "y": 28,
-    "w": 48,
+    "x": 196,
+    "y": 46,
+    "w": 52,
     "h": 56,
     "sprite": "jiro",
     "says": [
@@ -631,82 +628,64 @@
    {
     "id": "lucky-cat",
     "name": "Beckoned by the lucky cat",
-    "x": 262,
-    "y": 27,
-    "w": 18,
-    "h": 21,
+    "x": 260,
+    "y": 24,
+    "w": 22,
+    "h": 22,
     "sprite": "lucky-cat"
    },
    {
     "id": "daruma",
     "name": "Wobbled the daruma",
-    "x": 243,
-    "y": 3,
-    "w": 21,
-    "h": 24,
+    "x": 238,
+    "y": 2,
+    "w": 22,
+    "h": 22,
     "sprite": "daruma"
    },
    {
     "id": "chime",
     "name": "Rang the fish chime",
-    "x": 224,
-    "y": 4,
-    "w": 12,
-    "h": 22,
+    "x": 225,
+    "y": 2,
+    "w": 14,
+    "h": 20,
     "sprite": "chime"
-   },
-   {
-    "id": "kettle",
-    "name": "Tea's ready",
-    "x": 236,
-    "y": 44,
-    "w": 12,
-    "h": 10,
-    "sprite": "kettle"
-   },
-   {
-    "id": "bonsai",
-    "name": "Shook the bonsai",
-    "x": 188,
-    "y": 96,
-    "w": 26,
-    "h": 30,
-    "sprite": "bonsai"
-   },
-   {
-    "id": "noren",
-    "name": "Peeked behind the noren",
-    "x": 152,
-    "y": 4,
-    "w": 42,
-    "h": 38,
-    "sprite": "noren"
    },
    {
     "id": "cooker",
     "name": "Rice is done",
-    "x": 250,
-    "y": 56,
-    "w": 22,
-    "h": 32,
+    "x": 246,
+    "y": 58,
+    "w": 28,
+    "h": 34,
     "sprite": "cooker"
    },
    {
     "id": "sake",
     "name": "Steadied the sake",
-    "x": 262,
-    "y": 1,
-    "w": 30,
-    "h": 22,
+    "x": 225,
+    "y": 46,
+    "w": 28,
+    "h": 24,
     "sprite": "sake"
+   },
+   {
+    "id": "noren",
+    "name": "Peeked behind the noren",
+    "x": 196,
+    "y": 16,
+    "w": 44,
+    "h": 30,
+    "sprite": "noren"
    },
    {
     "id": "cat",
     "name": "Woke the shop cat",
-    "x": 312,
-    "y": 172,
-    "w": 34,
-    "h": 24,
+    "x": 310,
+    "y": 168,
+    "w": 44,
+    "h": 28,
     "sprite": "cat",
     "says": [
      "mrrp."
@@ -715,10 +694,11 @@
    {
     "id": "door-eyes",
     "name": "Something is watching from the doorway",
-    "x": 174,
-    "y": 50,
-    "w": 22,
-    "h": 16,
+    "x": 176,
+    "y": 53,
+    "w": 16,
+    "h": 10,
+    "sprite": "door-eyes",
     "says": [
      "eep!"
     ]

@@ -75,9 +75,9 @@ export function buildRoute(points: Pt[], radius: number, width: number, hidden: 
 export const BELT_W = 21;
 export const BEND_R = 32;
 
-/** Where the belt is hidden behind scene architecture: the kitchen hatch sill and the timber beam under the hero. */
+/** Where the belt is hidden behind scene architecture: the kitchen hatch sill at the hero's top right and the timber beam under the hero. */
 export const HIDDEN: Rect[] = [
-  { x: 318, y: -20, w: 80, h: 70 },
+  { x: 330, y: -20, w: 80, h: 66 },
   { x: 121, y: 201, w: 55, h: 153 },
 ];
 
@@ -87,11 +87,11 @@ export const HIDDEN: Rect[] = [
 export function routePoints(): Pt[] {
   const L = 22, R = 338;
   const y = (id: Parameters<typeof stopTop>[0], f: number) => stopTop(id) + 202 * f;
-  // hero belt measured from the hero art: x = -1.296 y + 407
-  const heroX = (yy: number) => -1.296 * yy + 407.02;
+  // hero belt centre line measured from the hero art (bed rows 65-196): x = -1.233 y + 392.6
+  const heroX = (yy: number) => -1.233 * yy + 392.6;
   const crawl = stopTop("hero") + 202 + 128;
   return [
-    { x: heroX(28), y: 28 },
+    { x: heroX(12), y: 12 },
     { x: heroX(212), y: 212 },
     { x: heroX(212), y: crawl },
     { x: L, y: crawl },

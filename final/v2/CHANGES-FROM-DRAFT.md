@@ -87,6 +87,7 @@ These override the brief and belt spec wherever they conflict.
 ## Applied in gate A (2026-10-01)
 
 - 1: the hero belt runs diagonally (route measured from the hero art); below the hero every run is horizontal or vertical with rounded corners.
+- Hero composition (Martin, 2026-10-01, "use the other hero scene I video recorded"): the hero follows the v01 recording, not the v07/v08/v09 sketch hero. Wide room, four lanterns, L-shaped counter, woman at the left wing, man at the corner, customer at the belt, cat under the far stool; the belt leaves the top-right hatch and runs down the right-hand counter arm.
 - 2: the CTA reads "Reserve a seat".
 - 3: pending, the price stop is Phase 2.
 - 4: Jiro's jaw plate has no vent; the reaction strip drops it along the mouth outline when he speaks.

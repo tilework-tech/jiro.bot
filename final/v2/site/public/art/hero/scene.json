@@ -4,7 +4,7 @@
   360,
   202
  ],
- "loop": 8000,
+ "loop": 12000,
  "layers": [
   {
    "src": "base.png"
@@ -14,15 +14,29 @@
   {
    "id": "lantern-l",
    "src": "lantern-l.png",
-   "x": 198,
-   "y": 1,
-   "w": 23,
-   "h": 28,
+   "x": 122,
+   "y": 6,
+   "w": 28,
+   "h": 36,
    "grain": 1,
    "frames": 2,
    "durations": [
-    3600,
-    400
+    3000,
+    3000
+   ]
+  },
+  {
+   "id": "lantern-m",
+   "src": "lantern-m.png",
+   "x": 166,
+   "y": 14,
+   "w": 28,
+   "h": 36,
+   "grain": 1,
+   "frames": 2,
+   "durations": [
+    4000,
+    2000
    ]
   },
   {
@@ -30,73 +44,91 @@
    "src": "lantern-r.png",
    "x": 296,
    "y": 0,
-   "w": 21,
-   "h": 29,
+   "w": 28,
+   "h": 32,
    "grain": 1,
    "frames": 2,
    "durations": [
-    1700,
-    300
+    2000,
+    4000
    ]
   },
   {
    "id": "chime-react",
    "src": "chime-react.png",
    "x": 225,
-   "y": 4,
-   "w": 12,
-   "h": 22,
+   "y": 2,
+   "w": 14,
+   "h": 20,
    "grain": 1,
-   "frames": 5,
+   "frames": 7,
    "durations": [
     100,
-    450,
-    450,
-    450,
-    550
+    250,
+    200,
+    250,
+    200,
+    250,
+    750
    ],
    "trigger": true,
    "egg": "chime"
   },
   {
-   "id": "diner-a",
-   "src": "diner-a.png",
-   "x": 252,
-   "y": 132,
-   "w": 46,
-   "h": 38,
+   "id": "woman",
+   "src": "woman.png",
+   "x": 102,
+   "y": 80,
+   "w": 38,
+   "h": 66,
    "grain": 1,
    "frames": 4,
    "durations": [
-    2400,
-    400,
-    800,
-    400
+    5000,
+    1000,
+    4000,
+    2000
    ]
   },
   {
-   "id": "diner-b",
-   "src": "diner-b.png",
-   "x": 313,
-   "y": 90,
-   "w": 44,
-   "h": 48,
+   "id": "man",
+   "src": "man.png",
+   "x": 163,
+   "y": 94,
+   "w": 46,
+   "h": 66,
    "grain": 1,
    "frames": 4,
    "durations": [
     3000,
-    1000,
+    800,
+    3200,
+    5000
+   ]
+  },
+  {
+   "id": "diner-r",
+   "src": "diner-r.png",
+   "x": 252,
+   "y": 134,
+   "w": 48,
+   "h": 66,
+   "grain": 1,
+   "frames": 4,
+   "durations": [
     3000,
-    1000
+    900,
+    2100,
+    6000
    ]
   },
   {
    "id": "cat",
    "src": "cat.png",
    "x": 310,
-   "y": 171,
-   "w": 38,
-   "h": 27,
+   "y": 168,
+   "w": 44,
+   "h": 28,
    "grain": 1,
    "frames": 2,
    "durations": [
@@ -109,17 +141,17 @@
    "id": "cat-react",
    "src": "cat-react.png",
    "x": 310,
-   "y": 171,
-   "w": 38,
-   "h": 27,
+   "y": 168,
+   "w": 44,
+   "h": 28,
    "grain": 1,
    "frames": 5,
    "durations": [
     100,
-    500,
-    800,
-    500,
-    100
+    600,
+    700,
+    600,
+    1000
    ],
    "trigger": true,
    "egg": "cat"
@@ -127,27 +159,43 @@
   {
    "id": "door-eyes",
    "src": "door-eyes.png",
-   "x": 172,
-   "y": 50,
-   "w": 26,
-   "h": 18,
+   "x": 176,
+   "y": 53,
+   "w": 16,
+   "h": 10,
    "grain": 1,
    "frames": 4,
    "durations": [
-    3300,
+    4000,
     200,
-    3500,
-    1000
+    7600,
+    200
    ],
+   "egg": "door-eyes"
+  },
+  {
+   "id": "door-eyes-react",
+   "src": "door-eyes-react.png",
+   "x": 176,
+   "y": 53,
+   "w": 16,
+   "h": 10,
+   "grain": 1,
+   "frames": 2,
+   "durations": [
+    1500,
+    500
+   ],
+   "trigger": true,
    "egg": "door-eyes"
   },
   {
    "id": "jiro",
    "src": "jiro.png",
-   "x": 195,
-   "y": 25,
-   "w": 60,
-   "h": 82,
+   "x": 194,
+   "y": 46,
+   "w": 58,
+   "h": 58,
    "grain": 2,
    "frames": 5,
    "durations": [
@@ -155,17 +203,17 @@
     150,
     2250,
     1000,
-    2000
+    6000
    ],
    "egg": "jiro"
   },
   {
    "id": "jiro-react",
    "src": "jiro-react.png",
-   "x": 195,
-   "y": 25,
-   "w": 60,
-   "h": 82,
+   "x": 194,
+   "y": 46,
+   "w": 58,
+   "h": 58,
    "grain": 2,
    "frames": 7,
    "durations": [
@@ -183,19 +231,20 @@
   {
    "id": "lucky-cat-react",
    "src": "lucky-cat-react.png",
-   "x": 261,
-   "y": 26,
-   "w": 20,
-   "h": 23,
+   "x": 260,
+   "y": 24,
+   "w": 22,
+   "h": 22,
    "grain": 1,
-   "frames": 6,
+   "frames": 7,
    "durations": [
     100,
-    350,
-    350,
-    350,
-    350,
-    500
+    300,
+    200,
+    300,
+    200,
+    300,
+    600
    ],
    "trigger": true,
    "egg": "lucky-cat"
@@ -203,90 +252,37 @@
   {
    "id": "daruma-react",
    "src": "daruma-react.png",
-   "x": 242,
+   "x": 238,
    "y": 2,
-   "w": 23,
-   "h": 26,
+   "w": 22,
+   "h": 22,
    "grain": 1,
-   "frames": 6,
+   "frames": 7,
    "durations": [
     100,
-    300,
-    400,
-    300,
-    400,
-    500
+    220,
+    160,
+    220,
+    160,
+    220,
+    920
    ],
    "trigger": true,
    "egg": "daruma"
   },
   {
-   "id": "kettle-react",
-   "src": "kettle-react.png",
-   "x": 235,
-   "y": 42,
-   "w": 24,
-   "h": 27,
-   "grain": 1,
-   "frames": 5,
-   "durations": [
-    100,
-    400,
-    800,
-    400,
-    300
-   ],
-   "trigger": true,
-   "egg": "kettle"
-  },
-  {
-   "id": "bonsai-react",
-   "src": "bonsai-react.png",
-   "x": 186,
-   "y": 94,
-   "w": 32,
-   "h": 34,
-   "grain": 1,
-   "frames": 4,
-   "durations": [
-    100,
-    600,
-    1200,
-    100
-   ],
-   "trigger": true,
-   "egg": "bonsai"
-  },
-  {
-   "id": "noren-react",
-   "src": "noren-react.png",
-   "x": 150,
-   "y": 3,
-   "w": 46,
-   "h": 44,
-   "grain": 1,
-   "frames": 3,
-   "durations": [
-    100,
-    1400,
-    500
-   ],
-   "trigger": true,
-   "egg": "noren"
-  },
-  {
    "id": "cooker-react",
    "src": "cooker-react.png",
    "x": 246,
-   "y": 48,
-   "w": 30,
-   "h": 42,
+   "y": 58,
+   "w": 28,
+   "h": 34,
    "grain": 1,
    "frames": 3,
    "durations": [
     100,
-    1200,
-    700
+    900,
+    1000
    ],
    "trigger": true,
    "egg": "cooker"
@@ -294,53 +290,72 @@
   {
    "id": "sake-react",
    "src": "sake-react.png",
-   "x": 261,
-   "y": 0,
-   "w": 32,
-   "h": 25,
+   "x": 225,
+   "y": 46,
+   "w": 28,
+   "h": 24,
    "grain": 1,
    "frames": 5,
    "durations": [
     100,
-    300,
-    300,
-    300,
-    1000
+    250,
+    200,
+    250,
+    700
    ],
    "trigger": true,
    "egg": "sake"
+  },
+  {
+   "id": "noren-react",
+   "src": "noren-react.png",
+   "x": 196,
+   "y": 16,
+   "w": 44,
+   "h": 46,
+   "grain": 1,
+   "frames": 5,
+   "durations": [
+    100,
+    350,
+    300,
+    350,
+    900
+   ],
+   "trigger": true,
+   "egg": "noren"
   }
  ],
  "surfaces": [
   {
    "id": "counter",
-   "x": 268,
-   "y": 108,
-   "w": 42,
-   "h": 26
+   "x": 150,
+   "y": 86,
+   "w": 85,
+   "h": 16
   },
   {
    "id": "back-counter",
-   "x": 214,
-   "y": 110,
-   "w": 30,
-   "h": 12
+   "x": 300,
+   "y": 96,
+   "w": 40,
+   "h": 30
   },
   {
    "id": "floor",
-   "x": 196,
-   "y": 184,
-   "w": 110,
-   "h": 18
+   "x": 140,
+   "y": 176,
+   "w": 170,
+   "h": 26
   }
  ],
  "eggs": [
   {
    "id": "jiro",
    "name": "Jiro has opinions",
-   "x": 200,
-   "y": 28,
-   "w": 48,
+   "x": 196,
+   "y": 46,
+   "w": 52,
    "h": 56,
    "sprite": "jiro",
    "says": [
@@ -353,82 +368,64 @@
   {
    "id": "lucky-cat",
    "name": "Beckoned by the lucky cat",
-   "x": 262,
-   "y": 27,
-   "w": 18,
-   "h": 21,
+   "x": 260,
+   "y": 24,
+   "w": 22,
+   "h": 22,
    "sprite": "lucky-cat"
   },
   {
    "id": "daruma",
    "name": "Wobbled the daruma",
-   "x": 243,
-   "y": 3,
-   "w": 21,
-   "h": 24,
+   "x": 238,
+   "y": 2,
+   "w": 22,
+   "h": 22,
    "sprite": "daruma"
   },
   {
    "id": "chime",
    "name": "Rang the fish chime",
-   "x": 224,
-   "y": 4,
-   "w": 12,
-   "h": 22,
+   "x": 225,
+   "y": 2,
+   "w": 14,
+   "h": 20,
    "sprite": "chime"
-  },
-  {
-   "id": "kettle",
-   "name": "Tea's ready",
-   "x": 236,
-   "y": 44,
-   "w": 12,
-   "h": 10,
-   "sprite": "kettle"
-  },
-  {
-   "id": "bonsai",
-   "name": "Shook the bonsai",
-   "x": 188,
-   "y": 96,
-   "w": 26,
-   "h": 30,
-   "sprite": "bonsai"
-  },
-  {
-   "id": "noren",
-   "name": "Peeked behind the noren",
-   "x": 152,
-   "y": 4,
-   "w": 42,
-   "h": 38,
-   "sprite": "noren"
   },
   {
    "id": "cooker",
    "name": "Rice is done",
-   "x": 250,
-   "y": 56,
-   "w": 22,
-   "h": 32,
+   "x": 246,
+   "y": 58,
+   "w": 28,
+   "h": 34,
    "sprite": "cooker"
   },
   {
    "id": "sake",
    "name": "Steadied the sake",
-   "x": 262,
-   "y": 1,
-   "w": 30,
-   "h": 22,
+   "x": 225,
+   "y": 46,
+   "w": 28,
+   "h": 24,
    "sprite": "sake"
+  },
+  {
+   "id": "noren",
+   "name": "Peeked behind the noren",
+   "x": 196,
+   "y": 16,
+   "w": 44,
+   "h": 30,
+   "sprite": "noren"
   },
   {
    "id": "cat",
    "name": "Woke the shop cat",
-   "x": 312,
-   "y": 172,
-   "w": 34,
-   "h": 24,
+   "x": 310,
+   "y": 168,
+   "w": 44,
+   "h": 28,
    "sprite": "cat",
    "says": [
     "mrrp."
@@ -437,10 +434,11 @@
   {
    "id": "door-eyes",
    "name": "Something is watching from the doorway",
-   "x": 174,
-   "y": 50,
-   "w": 22,
-   "h": 16,
+   "x": 176,
+   "y": 53,
+   "w": 16,
+   "h": 10,
+   "sprite": "door-eyes",
    "says": [
     "eep!"
    ]

@@ -13,6 +13,8 @@ Gate A (Martin's decision 8 in `CHANGES-FROM-DRAFT.md`) is built and merged into
 
 The other five stops are Phase 2 (`PLAN.md`). `site/src/main.ts` only mounts the stops listed in `BUILT`. The belt route already runs on to the pond, but nothing draws it past the last built stop.
 
+The hero is built from the v01 recording (the wide lantern-lit room with the L-shaped counter, three diners and the belt along the right-hand counter arm), per Martin's follow-up of 2026-10-01: prompts `art/src/prompts/hero-v01.txt` and `hero-v01-edit.txt`, master `art/gen/hero/hero-c-edit1.jpg`; the earlier sketch-hero master (`hero-b-edit1.jpg`) and its spec (`art/specs/hero-v08.json.bak`) stay in the tree for reference. The belt's hero line is measured from the fitted base and written into `site/src/belt/route.ts`.
+
 Martin's answers of 2026-10-01 (`CHANGES-FROM-DRAFT.md`, last section) are applied: the hero belt is diagonal and every later run is horizontal or vertical with rounded corners; the CTA reads "Reserve a seat"; Jiro has no jaw vent and his jaw plate drops along the mouth outline when he speaks (click him); the soot sprites are Spirited-Away-style susuwatari drawn at hero grain; the product-scene Jiro has no pupils. Web fonts are self-hosted in `site/public/fonts/` (OFL texts alongside), so the page makes no third-party request on load.
 
 ## Where things are
