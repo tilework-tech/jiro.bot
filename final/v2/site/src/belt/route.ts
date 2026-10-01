@@ -92,14 +92,14 @@ export const HIDDEN: Rect[] = [
   { x: 318, y: -20, w: 80, h: 70 },
   { x: 121, y: 201, w: 55, h: 153 },
   { x: 0, y: stopTop("compare") - 1, w: 44, h: 202 * COMPARE_CHANNEL.top + 1 },
-  { x: 316, y: stopTop("compare") + 202 * COMPARE_CHANNEL.bottom, w: 60, h: 202 * (1 - COMPARE_CHANNEL.bottom) + 1 },
+  { x: 300, y: stopTop("compare") + 202 * COMPARE_CHANNEL.bottom, w: 76, h: 202 * (1 - COMPARE_CHANNEL.bottom) + 1 },
 ];
 
 /** The one belt: hatch → hero diagonal → down behind the crawlspace beam → along the crawlspace floor → down the left edge →
  *  along the comparison room →
  *  down the right edge → across the FAQ floor → down the left edge past the street → across the pond trestle. */
 export function routePoints(): Pt[] {
-  const L = 22, R = 338;
+  const L = 22, R = 320;
   const y = (id: Parameters<typeof stopTop>[0], f: number) => stopTop(id) + 202 * f;
   // hero belt measured from the hero art: x = -1.296 y + 407
   const heroX = (yy: number) => -1.296 * yy + 407.02;

@@ -28,7 +28,9 @@ const stops = (p) => p.evaluate(() => [...document.querySelectorAll("[data-stop]
   await p.evaluate((y) => scrollTo(0, y), prod); await p.waitForTimeout(1500);
   await p.screenshot({ path: join(out, "desktop-product.png") });
   for (let k = 0; k < 28; k++) { await p.mouse.wheel(0, 120); await p.waitForTimeout(260); }
-  await p.waitForTimeout(6000);
+  await p.waitForTimeout(1500);
+  const [, , cmpTop] = await stops(p);
+  await p.evaluate((y) => scrollTo(0, y), cmpTop); await p.waitForTimeout(6000);
   await p.screenshot({ path: join(out, "desktop-compare.png") });
   await ctx.close(); await b.close();
   const v = readdirSync(join(out, "tmp")).find((f) => f.endsWith(".webm"));
@@ -52,6 +54,9 @@ const stops = (p) => p.evaluate(() => [...document.querySelectorAll("[data-stop]
   const [, , cmp] = await stops(p);
   await p.evaluate((y) => scrollTo(0, y), cmp); await p.waitForTimeout(7000);
   await p.screenshot({ path: join(out, "webkit-compare.png") });
+  const [, , , tbl] = await stops(p);
+  await p.evaluate((y) => scrollTo(0, y), tbl); await p.waitForTimeout(1500);
+  await p.screenshot({ path: join(out, "webkit-table.png") });
   await b.close();
 }
 {
@@ -62,6 +67,12 @@ const stops = (p) => p.evaluate(() => [...document.querySelectorAll("[data-stop]
   const [, , cmp] = await stops(p);
   await p.evaluate((y) => scrollTo(0, y), cmp); await p.waitForTimeout(7000);
   await p.screenshot({ path: join(out, "retina-compare.png") });
+  const [, , , tbl] = await stops(p);
+  await p.evaluate((y) => scrollTo(0, y), tbl); await p.waitForTimeout(1500);
+  await p.screenshot({ path: join(out, "retina-table.png") });
+  await p.getByRole("button", { name: /Sushi Rush/ }).click();
+  await p.waitForTimeout(3000);
+  await p.screenshot({ path: join(out, "retina-table-game.png") });
   await b.close();
 }
 {
@@ -78,6 +89,9 @@ const stops = (p) => p.evaluate(() => [...document.querySelectorAll("[data-stop]
   const [, , cmp] = await stops(p);
   await p.evaluate((y) => scrollTo(0, y), cmp); await p.waitForTimeout(7000);
   await p.screenshot({ path: join(out, "phone-compare.png") });
+  const [, , , tbl] = await stops(p);
+  await p.evaluate((y) => scrollTo(0, y), tbl); await p.waitForTimeout(1500);
+  await p.screenshot({ path: join(out, "phone-table.png") });
   await b.close();
 }
 console.log("captured to", out);

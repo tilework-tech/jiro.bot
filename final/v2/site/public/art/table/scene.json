@@ -1,0 +1,236 @@
+{
+ "id": "table",
+ "size": [
+  360,
+  202
+ ],
+ "loop": 8000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [
+  {
+   "id": "lantern",
+   "src": "lantern.png",
+   "x": 161,
+   "y": 7,
+   "w": 26,
+   "h": 42,
+   "grain": 4,
+   "frames": 2,
+   "durations": [
+    3600,
+    400
+   ]
+  },
+  {
+   "id": "cat",
+   "src": "cat.png",
+   "x": 209,
+   "y": 21,
+   "w": 36,
+   "h": 21,
+   "grain": 8,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "cat"
+  },
+  {
+   "id": "cat-react",
+   "src": "cat-react.png",
+   "x": 209,
+   "y": 21,
+   "w": 36,
+   "h": 21,
+   "grain": 8,
+   "frames": 5,
+   "durations": [
+    100,
+    600,
+    700,
+    500,
+    300
+   ],
+   "trigger": true,
+   "egg": "cat"
+  },
+  {
+   "id": "spirit",
+   "src": "spirit.png",
+   "x": 171,
+   "y": 134,
+   "w": 18,
+   "h": 15,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    3200,
+    200,
+    4600
+   ],
+   "egg": "spirit"
+  },
+  {
+   "id": "spirit-react",
+   "src": "spirit-react.png",
+   "x": 171,
+   "y": 134,
+   "w": 18,
+   "h": 15,
+   "grain": 8,
+   "frames": 5,
+   "durations": [
+    100,
+    200,
+    200,
+    200,
+    300
+   ],
+   "trigger": true,
+   "egg": "spirit"
+  },
+  {
+   "id": "vent-eyes",
+   "src": "vent-eyes.png",
+   "x": 86,
+   "y": 129,
+   "w": 14,
+   "h": 10,
+   "grain": 8,
+   "frames": 4,
+   "durations": [
+    2800,
+    200,
+    4800,
+    200
+   ],
+   "egg": "vent-eyes"
+  },
+  {
+   "id": "coin",
+   "src": "coin.png",
+   "x": 220,
+   "y": 146,
+   "w": 15,
+   "h": 26,
+   "grain": 8,
+   "frames": 2,
+   "durations": [
+    1600,
+    400
+   ],
+   "egg": "coin"
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "stool",
+   "x": 180,
+   "y": 152,
+   "w": 26,
+   "h": 10
+  },
+  {
+   "id": "cabinet-top",
+   "x": 202,
+   "y": 30,
+   "w": 46,
+   "h": 8
+  },
+  {
+   "id": "floor",
+   "x": 120,
+   "y": 175,
+   "w": 60,
+   "h": 20
+  }
+ ],
+ "eggs": [
+  {
+   "id": "cat",
+   "name": "Cat on the high score",
+   "x": 211,
+   "y": 23,
+   "w": 32,
+   "h": 17,
+   "sprite": "cat",
+   "says": [
+    "mrrp. new high score?"
+   ]
+  },
+  {
+   "id": "lantern",
+   "name": "Arcade lantern",
+   "x": 164,
+   "y": 8,
+   "w": 20,
+   "h": 40,
+   "says": [
+    "Lights low, high scores high."
+   ]
+  },
+  {
+   "id": "spirit",
+   "name": "Player two",
+   "x": 172,
+   "y": 135,
+   "w": 16,
+   "h": 13,
+   "sprite": "spirit",
+   "says": [
+    "(it wants a turn)"
+   ]
+  },
+  {
+   "id": "vent-eyes",
+   "name": "Someone in the vent",
+   "x": 86,
+   "y": 128,
+   "w": 14,
+   "h": 11,
+   "sprite": "vent-eyes",
+   "says": [
+    "\u2026"
+   ]
+  },
+  {
+   "id": "marquee",
+   "name": "Read the marquee",
+   "x": 204,
+   "y": 44,
+   "w": 38,
+   "h": 22,
+   "says": [
+    "Insert coin. Or don't: free play."
+   ]
+  },
+  {
+   "id": "coin",
+   "name": "Free play",
+   "x": 221,
+   "y": 147,
+   "w": 13,
+   "h": 24,
+   "sprite": "coin",
+   "says": [
+    "Free play since 2026."
+   ]
+  },
+  {
+   "id": "crates",
+   "name": "Crates of rice",
+   "x": 134,
+   "y": 128,
+   "w": 30,
+   "h": 18,
+   "says": [
+    "Rice. Mostly rice."
+   ]
+  }
+ ]
+}

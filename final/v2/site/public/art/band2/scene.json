@@ -1,0 +1,104 @@
+{
+ "id": "band2",
+ "size": [
+  360,
+  100
+ ],
+ "loop": 8000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [
+  {
+   "id": "hanger",
+   "src": "hanger.png",
+   "x": 139,
+   "y": 66,
+   "w": 22,
+   "h": 34,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    3000,
+    200,
+    4800
+   ],
+   "egg": "hanger"
+  },
+  {
+   "id": "hanger-react",
+   "src": "hanger-react.png",
+   "x": 139,
+   "y": 66,
+   "w": 22,
+   "h": 34,
+   "grain": 8,
+   "frames": 6,
+   "durations": [
+    100,
+    250,
+    250,
+    250,
+    250,
+    300
+   ],
+   "trigger": true,
+   "egg": "hanger"
+  },
+  {
+   "id": "eyes",
+   "src": "eyes.png",
+   "x": 203,
+   "y": 85,
+   "w": 13,
+   "h": 10,
+   "grain": 8,
+   "frames": 4,
+   "durations": [
+    3400,
+    200,
+    4200,
+    200
+   ],
+   "egg": "eyes"
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "pipe",
+   "x": 10,
+   "y": 32,
+   "w": 260,
+   "h": 4
+  }
+ ],
+ "eggs": [
+  {
+   "id": "hanger",
+   "name": "Hanging around",
+   "x": 140,
+   "y": 67,
+   "w": 20,
+   "h": 32,
+   "sprite": "hanger",
+   "says": [
+    "wheee"
+   ]
+  },
+  {
+   "id": "eyes",
+   "name": "Eyes under the floor",
+   "x": 203,
+   "y": 85,
+   "w": 13,
+   "h": 10,
+   "sprite": "eyes",
+   "says": [
+    "\u2026"
+   ]
+  }
+ ]
+}

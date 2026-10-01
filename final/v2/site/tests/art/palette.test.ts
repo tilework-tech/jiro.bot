@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { palette, pngs, read } from "./helpers";
 
@@ -22,5 +24,13 @@ describe("art palette", () => {
       expect(partial, `${file} has semi-transparent pixels`).toBe(0);
       expect([...off].slice(0, 5), `${file} uses off-palette colours`).toEqual([]);
     }
+  });
+});
+
+describe("arcade cabinet palette", () => {
+  it("snaps Sushi Rush to the same master palette as the art", () => {
+    const cab = readFileSync(join(__dirname, "../../public/games/cabinet/jiro56.gpl"), "utf8");
+    const master = readFileSync(join(__dirname, "../../../palette/jiro56.gpl"), "utf8");
+    expect(cab).toBe(master);
   });
 });

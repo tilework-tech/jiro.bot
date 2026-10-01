@@ -66,7 +66,7 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 
 ## 8. Games
 
-- **Sushi Rush** (runner + Giant Puffer boss) lives in stop 4 as a pixel arcade cabinet beside the table; **Daily Roll** (daily maze) lives in stop 7 as a pond-side stall. Both play in place (not a modal), activate on click, pause on leave, release scroll keys. Re-skinned to the master palette.
+- **Sushi Rush** (runner + Giant Puffer boss) lives in stop 4 as a pixel arcade cabinet beside the table; **Daily Roll** (daily maze) lives in stop 7 as a pond-side stall. Both play in place (not a modal), activate on click, pause on leave, release scroll keys. Re-skinned to the master palette. Sushi Rush runs its untouched engine in a same-origin iframe inside the cabinet, created on first click, with every frame snapped to the master palette (`site/public/games/cabinet/`).
 
 ## 9. Animation
 

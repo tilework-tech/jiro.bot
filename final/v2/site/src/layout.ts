@@ -7,7 +7,7 @@ export type Region = StopId | `band-${number}`;
 
 export const STOPS: StopId[] = ["hero", "product", "compare", "table", "faq", "price", "pond"];
 /** Height of the joining band below each stop (none after the pond). */
-export const BANDS = [153, 86, 50, 80, 50, 70];
+export const BANDS = [153, 86, 100, 80, 50, 70];
 
 export function stopTop(id: StopId): number {
   let y = 0;

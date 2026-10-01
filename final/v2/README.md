@@ -2,7 +2,7 @@
 
 v2 rebuilds the Jiro scroll site from Martin Stübler's brief of 2026-10-01: a 16-bit pixel-art sushi restaurant seen from one fixed ¾ camera. The page slides straight down through seven stops: **hero → product → good/bad comparison → comparison table → FAQ → price → koi pond**. One continuous conveyor belt runs through all of them. v2 supersedes PR #13's `../site/` as the active build. That build stays in the tree because v2 reuses its copy and games.
 
-## Status: review gate B, round 3 (plus round 4 product resize and round 5 belt and stop-3 fixes)
+## Status: stop 4 built, review gate C
 
 Round 2 (`PLAN-R2.md`) applied Martin's 2026-10-01 17:44 feedback: much higher resolution for everything (above all Jiro, people, dust spirits and belt items), a smooth belt, fewer plates, then one more stop and a stop for review. Round 3 (`PLAN-R3.md`) applies his gate-B review: "crank it up a bit more and use even higher resolution moving forward", and in stop 3 move everything down so the belt runs along the bottom with only table space, condiments and the cat beneath it. This tree is at review gate B with round 3 applied:
 
@@ -13,7 +13,16 @@ Round 2 (`PLAN-R2.md`) applied Martin's 2026-10-01 17:44 feedback: much higher r
 - round 4 (`PLAN-R3.md`, "Round 4 addendum"): the product stop's pixel art is redrawn at about half size in the bottom-right corner, so the scripted demo panel is about 1.5× larger and nearly fills the screen
 - round 5 (`PLAN-R3.md`, "Round 5 addendum"): stop 3's replay panels run down to the belt, every belt end is cut horizontally where architecture covers it, and a scroll surges the belt harder (up to 6×) and longer (0.3 s) before the page moves
 
-The remaining four stops (table, FAQ, price, pond) come after Martin's review. `site/src/main.ts` only mounts the stops listed in `BUILT`. The belt route already runs on to the pond, but it is hidden below the last built stop.
+Stop 4 (`PLAN-S4.md`, after Martin's "produce the next scene according to the plan") is now built on top of that, and the tree is at review gate C:
+
+- band 2, a floor-slab cutaway between the dining room and the kitchen with a dust spirit hanging from a cable and a pair of eyes
+- stop 4 "How Jiro compares": a dim kitchen corner with the noriagentic.com comparison table on a light cream HTML menu board (Martin, 2026-09-29: "make the table more visible, lighter colours against the dark background"), refreshed to the live site's copy of 2026-10-01
+- Sushi Rush playing in place in the stop's arcade cabinet, in a same-origin iframe loaded on first click, snapped per frame to the master palette, paused when it scrolls out of view
+- the belt's right-edge run moved to x = 320 so it runs inside the steel shaft painted in band 2 and stop 4
+
+Open question for Martin: stop 4 has no Jiro (the brief puts him in the hero, product, FAQ and street).
+
+The remaining three stops (FAQ, price, pond) come after Martin's review. `site/src/main.ts` only mounts the stops listed in `BUILT`. The belt route already runs on to the pond, but it is hidden below the last built stop.
 
 **Resolution.** World coordinates stay 360 units across. Rooms and bands are fitted at grain 4 (1440 art px across, 1 CSS px per art px at 1440 wide). Characters, creatures, clickable props and all belt art are grain 8 (one art px per device pixel on a 2× retina screen at 1440 wide). The site sizes each scene canvas to the device (2, 4 or 8 canvas px per world unit) and averages finer art down once at load, so 1× screens and phones do not carry 8× canvases. Grain 8 is the ceiling the current 4K masters support. Gemini cannot draw pixel art this fine, so its scene masters are flat illustrations and our scripts make the pixel grid (see `art/README.md`, "Detail").
 
@@ -22,7 +31,7 @@ The remaining four stops (table, FAQ, price, pond) come after Martin's review. `
 | Path | What |
 | --- | --- |
 | `DESIGN-BRIEF.md` | The approved visual spec. It overrides the videos where they disagree. |
-| `PLAN.md`, `PLAN-R2.md`, `PLAN-R3.md`, `QUESTIONS.md` | The implementation plans (gate A, rounds 2 and 3) and Martin's decisions |
+| `PLAN.md`, `PLAN-R2.md`, `PLAN-R3.md`, `PLAN-S4.md`, `QUESTIONS.md` | The implementation plans (gate A, rounds 2 and 3, stop 4) and Martin's decisions |
 | `research/` | Frame-by-frame analyses of the nine reference videos (see `research/README.md`) |
 | `palette/` | The 56-colour master palette, plus a LibreSprite variant with a transparent slot at index 0 |
 | `art/` | Specs, prompts, refs, raw Gemini output, the Gemini call log and `.ase` sources. See `art/README.md`. |
@@ -98,9 +107,9 @@ node tools/capture.mjs http://127.0.0.1:3301/ ../review
 This writes:
 
 - a wheel-driven Chromium recording, converted to `scroll-desktop.mp4` with ffmpeg
-- desktop stills from Chromium and WebKit
-- retina stills of the hero and compare stops from Chromium at deviceScaleFactor 2 (`retina-hero.png`, `retina-compare.png`)
-- iPhone 13 stills from WebKit
+- desktop stills from Chromium and WebKit (the Chromium compare still scrolls straight to its stop after the recording; WebKit adds the table stop)
+- retina stills of the hero, compare and table stops from Chromium at deviceScaleFactor 2, plus one with Sushi Rush started (`retina-table-game.png`)
+- iPhone 13 stills from WebKit, including the table stop
 
 When sharing a preview URL, cache-bust with `?v=<timestamp>`, never `?t=`. Martin's standing rule comes from earlier sketch builds, where `?t=` froze the animation clock.
 

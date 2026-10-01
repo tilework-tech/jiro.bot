@@ -41,7 +41,7 @@ Positions in specs and `scene.json` (crop, roi, surfaces, eggs, sprite x/y/w/h, 
 
 | Grain | Art px across | At 1440 wide | Used for |
 | --- | --- | --- | --- |
-| 4 | 1440 | 1 CSS px per art px | room and band bases (1440 × 808 per stop; band 0 1440 × 612, band 1 1440 × 344), lanterns |
+| 4 | 1440 | 1 CSS px per art px | room and band bases (1440 × 808 per stop; band 0 1440 × 612, band 1 1440 × 344, band 2 1440 × 400), lanterns |
 | 8 | 2880 | ½ CSS px per art px (1 device px on a 2× retina screen) | Jiro, diners, dust spirits, eyes, every clickable prop, tea steam, belt tile, plates, belt items |
 
 Round 3 doubled both grains again (round 2 used 2 and 4) after Martin's gate-B review asked for even higher resolution from now on. Sprites set `"grain"` in the spec; the base grain is the base width / 360, and `export-scene.py` and `frames.py` fall back to it when a sprite sets none. Everything shares one palette, so the two grains read as one picture. The site picks how many of these art px it actually draws per device (`../site/docs.md`, Scenes).
@@ -50,6 +50,7 @@ Round 3 doubled both grains again (round 2 used 2 and 4) after Martin's gate-B r
 
 - **Palette.** `../palette/jiro56.gpl` is the master palette. Its groups (warm, cool, accents, plates, neutrals) are marked by `# name` header lines, and the tools can snap to a subset with `--groups` or the spec's `groups` field.
   - The palette started at 48 colours. Eight lantern-orange, tan, rust, olive and ash tones were added after the hero test fit showed 48 colours losing the lantern light.
+  - `../site/public/games/cabinet/jiro56.gpl` is a byte-identical copy that the Sushi Rush cabinet snaps every game frame to; an art test fails if it drifts from the master.
   - `jiro56-libresprite.gpl` is the copy LibreSprite indexes to. Its index 0 is a magenta transparent slot, so no real colour lands on LibreSprite's transparent index.
 
 ## Detail: why Gemini paints illustrations, not pixel art
@@ -75,6 +76,15 @@ Stop 3 and band 1 were generated new in round 2; band 1's master is a crop (`ban
 
 **Product master at half size (round 4).** Martin asked for the product stop's pixel art at about half size so the demo panel could grow to nearly fill the screen. `shrink-place.py` shrank `gen/hd/product-ill-a.jpg` by 0.5 into the bottom-right quarter (`gen/hd/product-half.png`), and Gemini Pro outpainted the rest as a dark upper wall, a ceiling beam with the lantern cord, and a long, calm, empty wall and floor on the left, where the panel sits (`gen/hd/product-half-fill.jpg`, used whole, so there is no seam). That is now the spec's `master`. Gemini kept the office in place closely enough that every world-unit box in `specs/product.json` (crop, roi, `frame_rois`, eggs, surfaces) was mapped by the placement itself, x' = 180 + x/2 and y' = 101 + y/2 with w and h halved, and checked with an ROI overlay. Every sprite was regenerated with `--regen`, so Jiro in the product stop is about half his former on-screen size but still grain 8. The base is fitted with `--warm-left 0.6` because the empty left field is wider than before.
 
+**Stop 4 and band 2 (new masters).** Both were generated directly as 4K flat illustrations with `gemini-3-pro-image`, using `gen/compare/compare-shift-fill.jpg` (and, for stop 4, `gen/hd/hero-master.jpg`) as style refs, so neither went through `soften.py`.
+
+- **Stop 4** (`specs/table.json`, master `gen/table/table-a.jpg`, prompt `src/prompts/table.txt`) is a dim kitchen corner: a calm tiled wall on the left 55% where the site lays its HTML menu board (the prompt forbids a painted board or text), a cherry-red arcade cabinet with a sleeping cat on top and a blank screen, a lantern, crates and a broom, a dust spirit by the cabinet, a vent with eyes, and the steel belt shaft at the right edge with an empty channel (the site draws the belt in it). `table-b.jpg` is an unused second render of the same prompt. The base is fitted at 1440 × 808 with `--smooth-dark 70 --warm-left 0.5` so the board's wall stays calm and warm.
+  - Sprites: the lantern (grain 4, glow flare), the cat (mask, single-frame at rest, wake-and-yawn reaction), the spirit (blink loop and blink reaction), the vent eyes (`compare: base`) and the coin-slot glow, all grain 8 except the lantern.
+  - Eggs are the cat, lantern, spirit, vent eyes, marquee, coin slot and crates; the lantern, marquee and crates are click-and-say. Surfaces are the stool, the cabinet top and a patch of floor.
+- **Band 2** (`specs/band2.json`, prompt `src/prompts/band2.txt`) is a floor-slab cutaway between the dining room and the kitchen: timber joists, a copper pipe, a sagging cable, and the same steel shaft on the right. The top of the render showed brightly lit diners, so the master is a crop of rows 430–2190 of `gen/band2/band2-a.jpg` (`band2-a-strip.png`), fitted to a 1440 × 400 base; the site's band 2 grew from 50 to 100 units to fit it.
+  - Sprites: the hanging dust spirit (`align: false`, blink as the ambient loop, leg-swing frames as the click reaction) and a pair of eyes in the dark corner. The surface is the pipe.
+- Stop 4 has no Jiro (flagged to Martin).
+
 ## Tools
 
 **`tools/gen.mjs`** calls the Gemini REST image API.
@@ -95,7 +105,7 @@ Stop 3 and band 1 were generated new in round 2; band 1's master is a crop (`ban
 6. Orphan-pixel cleanup.
 7. Optional `--smooth-dark`, a 3×3 majority filter over dark pixels that keeps copy fields calm.
 
-Bases use `--groups warm,cool,accents,plates,neutrals --cool-gate 22 --smooth-dark 80 --warm-left 0.4` for the hero; product uses the same flags with `--warm-left 0.6` (its copy field is the wider empty left side of the half-size master). Compare uses `--smooth-dark 60` without `--warm-left`; band 0 adds `--gain 1.25`. Specs carry `cool_gate` so `frames.py` snaps frames the same way.
+Bases use `--groups warm,cool,accents,plates,neutrals --cool-gate 22 --smooth-dark 80 --warm-left 0.4` for the hero; product uses the same flags with `--warm-left 0.6` (its copy field is the wider empty left side of the half-size master). Compare uses `--smooth-dark 60` without `--warm-left`; stop 4 uses `--smooth-dark 70 --warm-left 0.5`; band 0 adds `--gain 1.25`. Specs carry `cool_gate` so `frames.py` snaps frames the same way.
 
 **`tools/ls-index.sh in.png out-base [w h]`** opens the image in LibreSprite and runs these steps:
 
@@ -149,6 +159,7 @@ Frame 0 is the untouched base: cut from the fitted base when the sprite's grain 
 `cd ../site && npm test` runs the art tests over `site/public/art/`. They check that:
 
 - every opaque pixel uses a colour from the 56-colour palette, and no pixel is semi-transparent
+- the cabinet's palette copy matches the master palette
 - each plate uses only the plate colours
 - loops have no seam
 - ambient loop lengths divide the scene loop (one-shot `-react` strips are not loops and are skipped)

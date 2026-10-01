@@ -4,11 +4,12 @@ import { createJourney } from "./belt/motion";
 import { createEggs, say, type Egg } from "./eggs";
 import { BANDS, STOP_H, STOPS, WORLD_W, stopTop, type StopId } from "./layout";
 import { mountScene, sceneDensity, type SceneDef } from "./scene";
-import { initCompare, initDemo } from "./content";
+import { initCompare, initDemo, initTable } from "./content";
+import { mountCabinet } from "./cabinet";
 
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const narrow = () => innerWidth <= 760;
-const BUILT: StopId[] = ["hero", "product", "compare"];
+const BUILT: StopId[] = ["hero", "product", "compare", "table"];
 const REST = 4;
 
 const BELT_EGGS: Egg[] = [
@@ -23,6 +24,7 @@ const BELT_EGGS: Egg[] = [
   { id: "alive-blinking-maki", name: "Staring contest", scene: "belt" },
   { id: "alive-legged-maki", name: "Maki with legs", scene: "belt" },
   { id: "demo-pr", name: "Got a PR back from Jiro", scene: "product" },
+  { id: "game-rush", name: "Played Sushi Rush", scene: "table" },
 ];
 
 async function boot() {
@@ -83,6 +85,7 @@ async function boot() {
     bandEls.push(b);
   }
 
+  let cabinet: ReturnType<typeof mountCabinet> | undefined;
   function layout() {
     s = innerWidth / WORLD_W;
     document.documentElement.style.setProperty("--s", `${s}px`);
@@ -113,6 +116,7 @@ async function boot() {
     const lastTop = map.worldToPage({ x: 0, y: stopTop(lastBuilt) }).y;
     stage.style.height = `${Math.max(map.worldToPage({ x: 0, y: worldEnd }).y, lastTop + innerHeight)}px`;
     if (eggsReady) placeAllEggs();
+    cabinet?.place(s, copyH.table ?? 0, narrow());
   }
 
   // ---------------------------------------------------------------- scenes
@@ -175,6 +179,8 @@ async function boot() {
   eggsReady = true;
   initDemo((n) => { if (n === 3) eggs.find("demo-pr"); });
   initCompare(reduced);
+  initTable();
+  cabinet = mountCabinet(stopEls.get("table")!, () => eggs.find("game-rush"));
   layout();
 
   // ---------------------------------------------------------------- belt

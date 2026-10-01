@@ -6,7 +6,8 @@ Path: @/final/v2/site
 
 - This is the Vite + TypeScript scroll site for Jiro.bot v2. It is one tall page of pixel-art stops and joining bands, drawn on Canvas 2D under real HTML copy, with no WebGL.
 - A single conveyor belt runs through the whole page on a fixed full-viewport canvas. The belt's behaviour lives in a pure, seedable model in `@/final/v2/site/src/belt`, and a separate renderer draws it.
-- Review gate B (now at the round-3 resolution) builds the hero, product and compare stops plus the two bands between them. The other stops are listed in `@/final/v2/site/src/layout.ts`, but `@/final/v2/site/src/main.ts` does not mount them (`BUILT`).
+- Review gate C builds the hero, product, compare and table stops plus the three bands between them, at the round-3 resolution. The other stops are listed in `@/final/v2/site/src/layout.ts`, but `@/final/v2/site/src/main.ts` does not mount them (`BUILT`).
+- Stop 4 also hosts Sushi Rush, which plays in a same-origin iframe inside the arcade cabinet (`@/final/v2/site/src/cabinet.ts` on the page, `public/games/cabinet/` inside the frame).
 
 ### How it fits into the larger codebase
 
@@ -14,8 +15,8 @@ Path: @/final/v2/site
   - `public/art/<scene>/scene.json`, with its base PNG and sprite strips (scenes are the stops plus `band<N>`)
   - `public/art/belt/`: tile, plates, items and `items/frames.json`
 - Each `scene.json` carries `size` in world units, layers and sprites with their `grain`, loop durations, click reactions, `surfaces` (where plates can be set down) and `eggs` (click areas and speech lines). The site has no per-scene drawing code.
-- `@/final/v2/site/src/content.ts` and `public/games/` are copied from PR #13's `@/final/site`, including the scripted rate-limit replays used in the compare stop. Product facts come from noriagentic.com and are sourced in `@/final/site/docs/CONTENT-SOURCES.md`. The visual rules come from `@/final/v2/DESIGN-BRIEF.md`; the resolution changes and the stop-3 shift are planned in `@/final/v2/PLAN-R2.md` and `@/final/v2/PLAN-R3.md`.
-- `@/final/v2/site/tests/art` reads `public/art` and checks it against `@/final/v2/palette/jiro56.gpl`, so a re-export is checked on the next `npm test`. It also checks resolution: room layers at ≥4 art px per world unit, egg/trigger/character sprites at grain ≥8 with strips exactly `w × grain` by `h × grain`, plates ≥120 px opaque, items between 56 px and 70% of a plate.
+- `@/final/v2/site/src/content.ts` and `public/games/` are copied from PR #13's `@/final/site`, including the scripted rate-limit replays used in the compare stop and the shared game engine. `public/games/cabinet/` is v2's own embed page around that engine. Product facts come from noriagentic.com and are sourced in `@/final/site/docs/CONTENT-SOURCES.md` (PR #13's file, not edited here); the stop-4 table was refreshed from live noriagentic.com on 2026-10-01 (see Table stop). The visual rules come from `@/final/v2/DESIGN-BRIEF.md`; the resolution changes and the stop-3 shift are planned in `@/final/v2/PLAN-R2.md` and `@/final/v2/PLAN-R3.md`, and stop 4 in `@/final/v2/PLAN-S4.md`.
+- `@/final/v2/site/tests/art` reads `public/art` and checks it against `@/final/v2/palette/jiro56.gpl`, so a re-export is checked on the next `npm test`. It also asserts that `public/games/cabinet/jiro56.gpl` is byte-identical to the master palette, so the game and the art snap to the same colours. It also checks resolution: room layers at ≥4 art px per world unit, egg/trigger/character sprites at grain ≥8 with strips exactly `w × grain` by `h × grain`, plates ≥120 px opaque, items between 56 px and 70% of a plate.
 - `@/final/v2/site/tools/capture.mjs` and the Playwright e2e suite drive the page through `window.__jiro`, a read-only test hook set once boot finishes. It exposes:
   - a `ready` flag
   - belt speed and rest speed
@@ -29,7 +30,7 @@ Path: @/final/v2/site
 
 - The world is 360 units wide.
 - Each stop is 202 units tall.
-- Each stop is followed by a band with its own height (`BANDS`). The hero's crawlspace band is the tallest; band 1 (product → compare) is 86.
+- Each stop is followed by a band with its own height (`BANDS`). The hero's crawlspace band is the tallest; band 1 (product → compare) is 86 and band 2 (compare → table) is 100, raised from 50 so the band-2 floor-slab art has room.
 
 `stopTop` and `regionAtY` map world y to a stop or a band. Art density is separate from these units (see Scenes), so changing a grain never moves the route, surfaces or eggs.
 
@@ -43,7 +44,7 @@ Path: @/final/v2/site
 
 | Module | Responsibility |
 | --- | --- |
-| `route.ts` | A polyline (`routePoints`) with every corner filleted (`BEND_R`). It is sampled as a pose (x, y, heading) by arc length, and has `HIDDEN` rects where architecture covers the belt. A built route exposes those rects (`hidden`), `isHidden(p)` (a point is covered) and `isBuried(p, r)` (a square of half-size `r` around `p` is entirely covered). It runs from the kitchen hatch, along the hero diagonal (measured from the hero art), down behind the crawlspace beam, along the crawlspace floor, down the left edge into the compare stop's counter channel near the bottom of that stop (`COMPARE_CHANNEL`, measured from the compare art), and then switches back and forth down the page to the pond. |
+| `route.ts` | A polyline (`routePoints`) with every corner filleted (`BEND_R`). It is sampled as a pose (x, y, heading) by arc length, and has `HIDDEN` rects where architecture covers the belt. A built route exposes those rects (`hidden`), `isHidden(p)` (a point is covered) and `isBuried(p, r)` (a square of half-size `r` around `p` is entirely covered). It runs from the kitchen hatch, along the hero diagonal (measured from the hero art), down behind the crawlspace beam, along the crawlspace floor, down the left edge into the compare stop's counter channel near the bottom of that stop (`COMPARE_CHANNEL`, measured from the compare art), out through the right wall and straight down x = 320 (`R`) inside the steel shaft painted at the right edge of band 2 and stop 4, and then switches back and forth down the page to the pond. `R` was 338 before stop 4; it moved so the visible run sits in the shaft art. |
 | `stream.ts` | Slot `i`'s content is a pure function of `(seed, i)`. Two two-state chains decide it: one puts plates on about half the slots and is biased against long runs so bare belt shows between them; the other puts items on about half of those plates, in natural runs. Items are 70% food, 20% odd items, 10% living food. The rim is grey or blue at random per slot. Items sit 1–3 offset units off-centre and carry an effect index. |
 | `slats.ts` | `slatRows`: one row of the tile's period per sample step, placed at travel-shifted arc positions so slats move by the exact belt travel (sub-pixel included) instead of hopping a row at a time. |
 | `motion.ts` | `createJourney`. A fresh wheel gesture surges the belt (capped at 6× rest speed) and holds the page for ~300 ms before delivering the full scroll, so the belt visibly speeds up before the scene moves (round 5, Martin: "make the belt go a bit faster when I scroll, and then after that the scrolling kicks in"). Later input in the same gesture scrolls at once. `nudge` (touch and keyboard native scroll) only boosts the belt. The belt never runs backwards. |
@@ -94,13 +95,29 @@ Downsampling once at load keeps every per-frame draw a plain copy, and a 1× scr
  │ left edge
  │ (hidden: compare wall, above the channel)
  └──── compare counter channel ──── (hidden: compare wall, below the channel)
-                                     │ right edge … unbuilt stops (hidden)
+                                     │ right edge, x = 320
+                                     │ band 2 + table stop: in the steel shaft
+                                     │ … unbuilt stops (hidden)
 ```
+
+**Table stop** (`index.html` `#table`, `content.ts` `initTable`, `cabinet.ts`). Stop 4, *How Jiro compares*, is a dim kitchen corner with no Jiro: a dark tiled wall on the left, a cherry-red arcade cabinet with a sleeping cat on top, a lantern, crates, a dust spirit, a vent with eyes, and the steel belt shaft on the right.
+
+- **Menu board.** The comparison table is HTML (`.board-wrap`, `data-testid="menu-board"`) drawn over the empty tile wall: kicker, heading, `#cmp-table` filled by `initTable`, and a source line linking noriagentic.com. It is a light cream board with a copper frame because Martin asked (2026-09-29) for the table to be "more visible, lighter colours against the dark background"; the art deliberately has no board painted in. On desktop it sits at world units 6–168 across and 13–125 down. On narrow screens it is the stop's `.copy` block, stacked above the art, with a 40 px right gutter so it clears the belt, and the table keeps a 460 px minimum width inside a horizontally scrolling container with a fade mask hinting that it scrolls.
+- **Table copy.** Columns are Nori, Claude Tag, Devin and Cursor Cloud; rows are Agent, Model, Context, Cloud and Pricing. The header and the Agent list follow live noriagentic.com as fetched 2026-10-01 22:49 UTC. The Cloud cell's comma before "your VPC" is ours; the live page shows "your VPC" as a separate element.
+- **Sushi Rush cabinet.** `mountCabinet` wires a transparent "Play Sushi Rush" button laid over the cabinet screen in the art and a hidden `.cabinet` box with a close button. The first click creates the iframe (`games/cabinet/?autostart`) and finds the `game-rush` egg; nothing of the game loads before that. The box opens larger than the painted screen, between the board and the shaft on desktop (world x 172, y 60, 136 wide at the game's 640:300 aspect, covering the cabinet) and 352 units wide at y 20 on narrow screens. `place()` is called from `layout()` with the art's offset in the stop (the narrow copy height), so both rects follow the stacked layout.
+- **Pause and focus.** An `IntersectionObserver` (threshold 0.4) on the box posts `{cabinet: "pause"}` when it leaves view; there is no auto-resume, so coming back shows "Paused, click to carry on". Close (×) pauses and hides the box; reopening posts `resume`. The iframe is focused on load only if the box is in view. Messages are posted to and accepted from the page's own origin only.
+
+**Cabinet embed** (`public/games/cabinet/`). The page loads the untouched shared engine, maps, `sushi-rush/game.js` and `arcade/theme.js`, then its own `cabinet.js`, which owns the state machine (`title`, `play`, `paused`, `over`, exposed as `window.__cabinet` for tests) and the rAF loop.
+
+- The game renders at its native 640 × 300 into an offscreen canvas. Each drawn frame is snapped to the 56-colour palette through a 32 768-entry lookup (15-bit colour → nearest palette colour by redmean, built once from the local `jiro56.gpl`) and put to a pixelated visible canvas. Until the lookup is ready nothing is shown, and `?autostart` waits for it.
+- Space, the arrows and WASD go to the game only while the iframe has focus, because they are listened for inside the frame. The page itself never captures them, so Space keeps scrolling the page once focus is outside the game.
+- Input to start or resume is ignored for the first 0.3 s of a state, so the click that ends a game does not immediately restart it. A hidden tab also pauses. Game over stores the score with the engine's `Best`.
+- In the boss maze the maki steers toward the pointer at the next junction, the same rule as `public/games/arcade/arcade.js`.
 
 **Eggs** (`eggs.ts`). The tracker button sits top-centre in the fixed chrome and shows found / total, with a list of found names or `???`. It also shows a toast when an egg is found.
 
 - Found ids persist in `sessionStorage` (`jiro-eggs`). Ids no longer in the registry are dropped.
-- Scene egg ids are `<scene>-<id>`. Belt and demo eggs are declared in `main.ts`.
+- Scene egg ids are `<scene>-<id>`. Belt, demo and game eggs (`demo-pr`, `game-rush`) are declared in `main.ts`; stop 4's scene eggs are the cabinet, its cat and the creatures and props around it, and band 2's are the hanging dust spirit and the eyes.
 - `say` creates the speech bubbles. An egg may have a click area and `says` but no sprite (for example the compare room's soy set or miso bowl).
 
 **Frame loop and scroll** (`main.ts`).
@@ -110,9 +127,11 @@ Downsampling once at load keeps every per-frame draw a plain copy, and a 1× scr
 
 ### Things to Know
 
-- **The belt is hidden below the last built stop.** `buildPageRoute` adds an `unbuilt` rect from the bottom of the last `BUILT` stop downward to the `HIDDEN` rects. Adding a stop to `BUILT` needs its `scene.json` and the band art above it; the belt then appears there automatically.
+- **The belt is hidden below the last built stop.** With the table stop built, the belt is visible down the shaft through band 2 and stop 4 and cut at the bottom of stop 4. `buildPageRoute` adds an `unbuilt` rect from the bottom of the last `BUILT` stop downward to the `HIDDEN` rects. Adding a stop to `BUILT` needs its `scene.json` and the band art above it; the belt then appears there automatically.
 - **The compare and product panels break the 40% copy-field rule on purpose.** Martin asked three times for the compare panels to cover almost the whole scene, then for them to reach down to the belt; e2e asserts on desktop that they span ≥75% of the stop width and that each panel's bottom is at ≥68% of the art height and above the belt plates. He then asked for the product demo to be about 50% bigger and almost screen filling; `tests/e2e/product.spec.ts` asserts on desktop that the demo panel is ≥60% of the viewport width and ≥75% of its height, and that the product Jiro egg is ≤12% of the width and entirely right of the panel. The panel's world-unit box in `style.css` and the half-size product art have to move together: the empty left field in the art is what keeps the panel off the office.
 - **The compare belt is mostly inside walls.** It enters the counter channel from inside the left wall and leaves into the right wall, so both 90° corners there sit in `HIDDEN` rects. Those rects are derived from `COMPARE_CHANNEL`, so if the compare art is regenerated or shifted again, re-measuring that one constant moves the channel and the hidden corners together. E2E asserts that plates in the compare art sit below 75% of its height.
+- **The shaft, the route and the compare right-wall rect move together.** The visible right-edge run is at `R` = 320 because band 2 and stop 4 paint a steel shaft there; the compare stop's lower-right `HIDDEN` rect (x 300, 76 wide) must still cover the channel-exit corner at that x. Regenerating either art's shaft means re-measuring `R` and that rect.
+- **The game must stay out of the page's scope.** The engine has global classes, one endless rAF loop and no keyboard capture, which is why it runs in an iframe created on first click rather than being mounted into the page. Keep any new game control inside `public/games/cabinet/` and talk to it only by `postMessage`.
 - **Belt ends are cut by the hidden rects, not by the route.** Because the erase uses the same rects as hiding, a `HIDDEN` rect's top edge is where the visible belt stops. Moving or resizing a rect moves the cut line. E2E checks that the belt canvas has pixels 10 px above and none 3 px below the cut at the dining-room exit (176/202 of the compare art) and at the hero bottom. Picking, rare-event candidates and the `__jiro` plate and slot lists still use the centre test `isHidden`, so a plate half-cut at a belt end cannot be grabbed once its centre is covered.
 - **Never resize the belt canvas every frame.** Setting `canvas.width` or `canvas.height` clears the canvas. `resize()` only assigns the size when it actually changes, and runs only on relayout.
 - **Mobile copy-height race with web fonts.** On narrow screens the layout depends on `.copy` heights, and those change when web fonts arrive. A `ResizeObserver` on every `.copy` triggers `relayout()` (layout, route rebuild, belt resize) when a height differs from the cached `copyH`. A final `relayout()` also runs after `document.fonts.ready`. Without this, the belt and egg buttons drift away from the art on phones.
@@ -122,6 +141,6 @@ Downsampling once at load keeps every per-frame draw a plain copy, and a 1× scr
 - Rim colour is random per slot, not strictly alternating.
 - The belt seed is fixed (`20261001`), so every visit sees the same plate stream and the same rare-event schedule.
 - To cache-bust preview URLs, use `?v=`, never `?t=`. This is a standing review rule carried over from the sketch builds, where `?t=` controlled the animation clock.
-- E2E tests run serially (one worker) across Chromium and WebKit, each at a 1440 × 900 desktop and a 390 × 844 mobile viewport. Some WebKit cases are skipped by design. The per-device density test runs at deviceScaleFactor 1 and 2 on desktop only (canvas px per CSS px must be ≥ dpr and ≤ 2 · dpr); phones keep their own device scale. WebKit on the Linux VM needs the session-local library overlay described in `@/final/v2/README.md`.
+- E2E tests run serially (one worker) across Chromium and WebKit, each at a 1440 × 900 desktop and a 390 × 844 mobile viewport. Some WebKit cases are skipped by design. `tests/e2e/table.spec.ts` covers stop 4: stop order, the readable table and its source, the belt through the stop, the game playing inside the stop box with no dialog and palette-only pixels (it reads the iframe's canvas), the `game-rush` egg, Space scrolling the page and leaving pausing the game (desktop only), and that the stop's eggs are reachable and uncovered. The per-device density test runs at deviceScaleFactor 1 and 2 on desktop only (canvas px per CSS px must be ≥ dpr and ≤ 2 · dpr); phones keep their own device scale. WebKit on the Linux VM needs the session-local library overlay described in `@/final/v2/README.md`.
 
 Created and maintained by Nori.

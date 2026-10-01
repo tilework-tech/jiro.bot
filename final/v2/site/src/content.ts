@@ -139,9 +139,9 @@ export function initCompare(reduced: boolean) {
 }
 
 // ---------------------------------------------------------------- 4 · comparison table (noriagentic.com, "Cloud coding agents, compared.")
-const COLS = ["Jiro (Nori)", "Claude Tag", "Devin", "Cursor Cloud"];
+const COLS = ["Nori", "Claude Tag", "Devin", "Cursor Cloud"];
 const ROWS: [string, string[]][] = [
-  ["Agent", ["Claude Code, Codex CLI, Gemini CLI, Cursor Agent, Goose, GitHub Copilot and more, or your own agent", "Claude only", "Devin only", "Cursor only"]],
+  ["Agent", ["Claude Code, Codex CLI, Gemini CLI, pi, Cursor Agent, Goose, GitHub Copilot, Antigravity, Snowflake Cortex, or your own agent", "Claude only", "Devin only", "Cursor only"]],
   ["Model", ["any model, your keys", "Anthropic only", "routed for you", "Cursor's catalogue"]],
   ["Context", ["org-wide, portable", "Claude memories", "API export", "proprietary rules"]],
   ["Cloud", ["AWS · Azure · GCP, your VPC", "Anthropic only", "hosted (VPC on contract)", "hosted only"]],
