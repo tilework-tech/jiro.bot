@@ -145,7 +145,16 @@
      400
     ]
    },
-   "egg": "shelf-soot"
+   "egg": "shelf-soot",
+   "grain": 2,
+   "mask_prompt": "Isolate the small black fuzzy soot sprite sleeping on the shelf: keep only its round black body, eyes and any thin stick limbs.",
+   "palette": [
+    "#0b0302",
+    "#130a0c",
+    "#f4f4f2",
+    "#dfe3e6"
+   ],
+   "gain": 1.0
   },
   "lucky-cat": {
    "crop": [

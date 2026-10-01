@@ -72,7 +72,7 @@
    "y": 30,
    "w": 26,
    "h": 24,
-   "grain": 1,
+   "grain": 2,
    "frames": 2,
    "durations": [
     2000,
@@ -87,7 +87,7 @@
    "y": 30,
    "w": 26,
    "h": 24,
-   "grain": 1,
+   "grain": 2,
    "frames": 3,
    "durations": [
     100,

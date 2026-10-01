@@ -30,6 +30,18 @@ describe("ambient loops", () => {
     }
   });
 
+  it("actually move: no ambient strip is a run of identical frames", () => {
+    const all = scenes();
+    expect(all.length).toBeGreaterThan(0);
+    for (const { scene, dir } of all) for (const s of scene.sprites) {
+      if (s.frames < 2) continue;
+      const png = read(join(dir, s.src));
+      const w = png.width / s.frames, h = png.height;
+      const steps = Array.from({ length: s.frames - 1 }, (_, k) => diff(frame(png, s.frames, k), frame(png, s.frames, k + 1), w, h));
+      expect(Math.max(...steps), `${scene.id}/${s.id} never changes between frames`).toBeGreaterThan(0);
+    }
+  });
+
   it("have lengths that divide the scene loop, so the whole scene repeats cleanly", () => {
     const all = scenes();
     expect(all.length).toBeGreaterThan(0);

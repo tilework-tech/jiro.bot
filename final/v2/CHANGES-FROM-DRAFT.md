@@ -83,3 +83,14 @@ These override the brief and belt spec wherever they conflict.
 7. **Scroll smoothing:** 300 ms layer accepted.
 8. **Review gate:** yes, review style master + hero with belt before generating the other six stops. Gemini budget ~$25–40 approved.
 9. **Dependencies:** Vitest and @playwright/test approved. Martin will do one real Safari/iPhone pass once the review URL is up.
+
+## Applied in gate A (2026-10-01)
+
+- 1: the hero belt runs diagonally (route measured from the hero art); below the hero every run is horizontal or vertical with rounded corners.
+- 2: the CTA reads "Reserve a seat".
+- 3: pending, the price stop is Phase 2.
+- 4: Jiro's jaw plate has no vent; the reaction strip drops it along the mouth outline when he speaks.
+- 5: soot sprites rebuilt as susuwatari at hero grain (`art/README.md`, per-sprite `palette`), checked by `site/tests/art/creatures.test.ts`.
+- 6, 7: implemented in `site/src/belt/events.ts` and `site/src/belt/motion.ts`.
+- 8: this is the gate; the other six stops wait for Martin's review.
+- 9: Vitest and Playwright are in; WebKit runs on the VM with the recipe in `README.md`.

@@ -12,7 +12,9 @@ SPEC (per scene):
   "base": "art/work/hero/base.png",               # the fitted, LibreSprite-indexed world base (W x H)
   "groups": "warm,accents,neutrals,plates",
   "sprites": { "<id>": { "crop": [x,y,w,h], "roi": [x,y,w,h], "grain": 1,
-                         "frames": ["<edit prompt>", ...], "keep": [0, 1, 0, 2] } }
+                         "frames": ["<edit prompt>", ...], "keep": [0, 1, 0, 2],
+                         "gain": 1.0, "palette": ["#0b0302", ...] } }   # optional per-sprite overrides;
+                                                                           # palette needs grain > 1 (frame 0 is refit, not cut from base)
 }
 crop/roi are world art px. Frame 0 is always the untouched base. Each edit prompt yields one candidate; it is
 refitted to the grid, aligned (±2 px) on pixels outside the roi, and only changes inside the roi survive.
@@ -31,11 +33,26 @@ ASPECTS = {"1:1": 1, "4:3": 4 / 3, "3:4": 3 / 4, "16:9": 16 / 9, "9:16": 9 / 16,
 
 GAIN = 1.0
 
-def fit_crop(img: Image.Image, w: int, h: int, groups: str | None) -> np.ndarray:
+def parse_colours(colours: list[str]) -> np.ndarray:
+    """Hex colours from a sprite's `palette`; every one must exist in the master palette, since LibreSprite re-indexes to it."""
+    master = {tuple(c) for c in fit.PAL.tolist()}
+    out = []
+    for c in colours:
+        if not (isinstance(c, str) and len(c) == 7 and c[0] == "#"):
+            raise ValueError(f"palette colour {c!r} must be #rrggbb")
+        rgb = tuple(int(c[i:i + 2], 16) for i in (1, 3, 5))
+        if rgb not in master:
+            raise ValueError(f"palette colour {c} is not in palette/jiro56.gpl")
+        out.append(rgb)
+    return np.array(out, dtype=np.int32)
+
+def fit_crop(img: Image.Image, w: int, h: int, groups: str | None, colours: list[str] | None = None) -> np.ndarray:
     rgb = np.asarray(img.convert("RGB")).astype(np.int32)
     out, oa = fit.vote(rgb, np.ones(rgb.shape[:2], bool), w, h)
     out = np.clip(out * GAIN, 0, 255).astype(np.int32)
-    if groups:
+    if colours:
+        fit.PAL = parse_colours(colours)
+    elif groups:
         fit.PAL = np.array([c for g in groups.split(",") for c in fit.GROUPS[g]], dtype=np.int32)
     return fit.snap(out)
 
@@ -74,8 +91,8 @@ def main():
     regen = "--regen" in sys.argv
     spec = json.loads(spec_path.read_text())
     global GAIN
-    GAIN = spec.get("gain", 1.0)
     s = spec["sprites"][sid]
+    GAIN = s.get("gain", spec.get("gain", 1.0))
     master = Image.open(ROOT / spec["master"])
     base = np.asarray(Image.open(ROOT / spec["base"]).convert("RGB")).astype(np.int32)
     H, W, _ = base.shape
@@ -89,12 +106,18 @@ def main():
     src_path = work / "src.png"; src.save(src_path)
     ratio = cw / ch
     aspect = min(ASPECTS, key=lambda k: abs(np.log(ASPECTS[k] / ratio)))
-    base_crop = fit_crop(src, cw * g, ch * g, spec.get("groups"))
-    if g == 1:
-        base_crop = base[cy:cy + ch, cx:cx + cw]
-    ref_crop = fit_crop(src.resize((1024, round(1024 * src.height / src.width)), Image.LANCZOS).resize(src.size, Image.LANCZOS),
-                        cw * g, ch * g, spec.get("groups"))
+    colours = s.get("palette")
+    groups = spec.get("groups")
+    # Change detection always runs on the scene's full palette: a sprite `palette` narrows only what is written out,
+    # otherwise a dark body growing into dark wood would snap to the same colour and read as "no change".
+    base_full = fit_crop(src, cw * g, ch * g, groups)
+    base_crop = fit_crop(src, cw * g, ch * g, groups, colours) if colours else base_full
+    if g == 1 and not colours:
+        base_crop = base_full = base[cy:cy + ch, cx:cx + cw]
+    blurred = src.resize((1024, round(1024 * src.height / src.width)), Image.LANCZOS).resize(src.size, Image.LANCZOS)
+    ref = fit_crop(blurred, cw * g, ch * g, groups)
     frames = [base_crop]
+    changes = [np.zeros((ch * g, cw * g), bool)]
     for k, prompt in enumerate(s["frames"], start=1):
         out = work / f"edit{k}.png"
         if regen or not (out.exists() or out.with_suffix(".jpg").exists()):
@@ -105,27 +128,29 @@ def main():
                             "--aspect", aspect, "--size", "1K", "--prompt", full, str(src_path)], check=True)
         got = out if out.exists() else out.with_suffix(".jpg")
         ed = Image.open(got).convert("RGB").resize(src.size, Image.LANCZOS)
-        cand = fit_crop(ed, cw * g, ch * g, spec.get("groups"))
+        cand_full = fit_crop(ed, cw * g, ch * g, groups)
+        cand = fit_crop(ed, cw * g, ch * g, groups, colours) if colours else cand_full
         # align on pixels outside the roi
         roi = np.zeros((ch * g, cw * g), bool)
         roi[(ry - cy) * g:(ry - cy + rh) * g, (rx - cx) * g:(rx - cx + rw) * g] = True
         best, bo = None, (0, 0)
         for dy in range(-2 * g, 2 * g + 1):
             for dx in range(-2 * g, 2 * g + 1):
-                sh = np.roll(np.roll(cand, dy, 0), dx, 1)
-                d = (np.abs(sh - base_crop).sum(2) > 0)[~roi].mean()
+                sh = np.roll(np.roll(cand_full, dy, 0), dx, 1)
+                d = (np.abs(sh - base_full).sum(2) > 0)[~roi].mean()
                 if best is None or d < best: best, bo = d, (dy, dx)
         cand = np.roll(np.roll(cand, bo[0], 0), bo[1], 1)
-        ref = np.roll(np.roll(ref_crop, 0, 0), 0, 1)
+        cand_full = np.roll(np.roll(cand_full, bo[0], 0), bo[1], 1)
         froi = roi
         if s.get("frame_rois") and s["frame_rois"][k - 1]:
             fx, fy, fw, fh = s["frame_rois"][k - 1]
             froi = np.zeros_like(roi)
             froi[(fy - cy) * g:(fy - cy + fh) * g, (fx - cx) * g:(fx - cx + fw) * g] = True
-        changed = (significant(cand, base_crop) if s.get("compare") == "base" else significant(cand, ref) & significant(cand, base_crop)) & froi
+        changed = (significant(cand_full, base_full) if s.get("compare") == "base" else significant(cand_full, ref) & significant(cand_full, base_full)) & froi
         changed = keep_blobs(changed, s.get("min_blob", 10))
         f = base_crop.copy(); f[changed] = cand[changed]
         frames.append(f)
+        changes.append(changed)
         print(f"{sid} frame {k}: offset {bo}, outside-roi mismatch {best:.3f}, changed {changed.sum()} px")
     alpha = None
     if s.get("mask_prompt"):
@@ -140,6 +165,9 @@ def main():
         small = np.asarray(Image.fromarray((~key * 255).astype(np.uint8)).resize((cw * g, ch * g), Image.BOX)) > 127
         pad = np.pad(small, 1)
         alpha = small | (sum(np.roll(np.roll(pad, a, 0), b, 1) for a in (-1, 0, 1) for b in (-1, 0, 1))[1:-1, 1:-1] >= 5)
+    # The mask is drawn from the untouched crop, so each frame also keeps the pixels its own edit changed (a hop, a
+    # raised hand) instead of clipping them to the resting silhouette.
+    alphas = None if alpha is None else [alpha | ch_ for ch_ in changes]
     rs = slice((ry - cy) * g, (ry - cy + rh) * g), slice((rx - cx) * g, (rx - cx + rw) * g)
     outdir = ROOT / "art/work" / spec_path.stem / "sprites"
     outdir.mkdir(parents=True, exist_ok=True)
@@ -149,8 +177,8 @@ def main():
             continue
         strip = np.concatenate([frames[k][rs] for k in keep], axis=1).astype(np.uint8)
         dst = outdir / f"{sid}{name}-fit.png"
-        if alpha is not None:
-            a = np.concatenate([alpha[rs]] * len(keep), axis=1)
+        if alphas is not None:
+            a = np.concatenate([alphas[k][rs] for k in keep], axis=1)
             Image.fromarray(np.dstack([strip, np.where(a, 255, 0).astype(np.uint8)]), "RGBA").save(dst)
         else:
             Image.fromarray(strip, "RGB").save(dst)

@@ -18,7 +18,7 @@
    "y": 38,
    "w": 52,
    "h": 20,
-   "grain": 1,
+   "grain": 2,
    "frames": 4,
    "durations": [
     2600,
@@ -35,7 +35,7 @@
    "y": 38,
    "w": 52,
    "h": 20,
-   "grain": 1,
+   "grain": 2,
    "frames": 3,
    "durations": [
     100,

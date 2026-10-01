@@ -45,19 +45,20 @@ NOTE: I will write *all* tests before I add any implementation behavior.
 
 ## Tasks
 
-### Phase 0 — Tooling (½ day)
+### Phase 0 — Tooling (½ day) — done
 0. Add dev dependencies (needs Martin's OK, Q10): `vitest`, `happy-dom`, `@playwright/test`; CI-free, run locally.
 1. `final/v2/tools/libresprite/`: fetch script for the v1.2 AppImage (`--appimage-extract`, no FUSE/root; verified headless in this sandbox), wrapper `ls.sh` exporting `XDG_RUNTIME_DIR`. Batch helpers: `import.js` (`app.open` → `sprite.saveAs('.ase')`, palette set via `sprite.palette.set`) and `sheet.sh` (`-b … --sheet --data --format json-array`). Note: LibreSprite's `--palette` does not quantize and `app.command.*` segfaults headless, so quantization is step 3, not here.
 2. `tools/gen.mjs`: Gemini REST client (model, refs, aspect, size; writes PNG + prompt JSON to `art/log/` for reproducibility). One $0.07 probe call to settle `imageConfig` vs `responseFormat`.
 3. `tools/fit.py` (uv + Pillow): pseudo-pixel grid detection, per-cell mode downscale, `quantize(palette=jiro48, dither=NONE)`, `ModeFilter(3)` orphan cleanup, `#00ff00` chroma-key to alpha for sprites. Logs every step per asset to `art/log/`.
 4. `palette/jiro48.gpl` from brief §3.
 
-### Phase 1 — Style master + hero (review gate A, ~1.5 days)
+### Phase 1 — Style master + hero (review gate A, ~1.5 days) — done, under review
 5. Style master sheet (palette swatches, wood/plaster/paper tiles, Jiro canon at both grains, one plate, three items) → Martin approves look before mass generation. Seed: `art/probe/style-probe-gemini-3-pro-image.png` (one call, 21 s, ≈$0.13).
 6. Hero bar scene: layers `bg`, `mid` (counter, shelves), `fg` (stools, beam), `copy-field`; diners ×2 with 4–6 frame idle loops; Jiro knife loop; lanterns; hatch with occlusion mask; hidden eyes in the hatch.
 7. Belt model (`src/belt/path.ts`, `stream.ts`, `motion.ts`, `events.ts`) + renderer with moving slats, white plates, rotation through bends.
 8. Tracker + egg registry; 8 hero eggs.
 → Deliver a review URL with hero + belt + first transition. Get go/no-go on look and belt feel.
+   Delivered 2026-10-01: hero, crawlspace band and product stop on one belt, with Martin's answers applied (`CHANGES-FROM-DRAFT.md`). Phase 0's palette ended up as `palette/jiro56.gpl` (see `DESIGN-BRIEF.md` §3).
 
 ### Phase 2 — Remaining stops and bands (~3 days)
 9. Stop 2 product demo (Jiro waist-up at CRT, pupil-free eyes; clickable Slack → PR → proof walkthrough, labelled illustrative).

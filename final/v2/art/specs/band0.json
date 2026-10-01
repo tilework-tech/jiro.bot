@@ -47,7 +47,16 @@
      800
     ]
    },
-   "egg": "soot"
+   "egg": "soot",
+   "grain": 2,
+   "mask_prompt": "Isolate the three small black fuzzy soot sprites sitting on the joist: keep only their round black bodies, white eyes, pupils and thin stick legs.",
+   "gain": 1.0,
+   "palette": [
+    "#0b0302",
+    "#130a0c",
+    "#f4f4f2",
+    "#dfe3e6"
+   ]
   },
   "candle": {
    "crop": [
@@ -169,7 +178,7 @@
     "w": 14,
     "h": 12,
     "says": [
-     "\u2026",
+     "…",
      "(blink)"
     ]
    }

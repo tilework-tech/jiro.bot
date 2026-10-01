@@ -83,7 +83,9 @@ For the SIGTERM quirk, see `../README.md`.
 
 Frame 0 is always the untouched base.
 
-- `mask_prompt` asks Gemini for a green-keyed silhouette, which becomes the sprite's alpha. Jiro uses it.
+- `mask_prompt` asks Gemini for a green-keyed silhouette of the untouched crop, which becomes the sprite's alpha. Each frame's alpha also keeps the pixels that frame's edit changed, so a hop or a raised hand is not clipped to the resting silhouette. Jiro and the soot sprites use it.
+- `gain` on a sprite overrides the scene's `gain` for that sprite's refit (the crawlspace lifts its dark room by 1.5× but its soot sprites must stay black).
+- `palette` on a sprite is a list of `#rrggbb` colours from `jiro56.gpl`; the sprite's frames are snapped to only those colours. Change detection still runs on the scene's full palette, otherwise a black body growing into dark wood would read as no change. `palette` needs `grain` > 1, because at world grain frame 0 is cut from the base rather than refit. The soot sprites use `#0b0302 #130a0c #f4f4f2 #dfe3e6`: ink body, big white eyes, dark pupils.
 - `keep` and `durations` define the ambient loop.
 - `reaction.keep` and `reaction.durations` define a one-shot strip (`-react`) that plays when the sprite is clicked.
 

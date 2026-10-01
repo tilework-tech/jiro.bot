@@ -1,6 +1,6 @@
 # Jiro.bot v2.1 design brief
 
-Status: proposal for Martin's review (2026-10-01, v2.1). Everything produced for v2 (art, animation, code, copy) is judged against this file. Where the reference videos and this brief disagree, this brief wins; the disagreements are listed in "Deliberate departures from the videos". Martin's Slack message of 2026-10-01 is the acceptance text; `../MASTER-PROMPT.md` is the older synthesis and yields to it.
+Status: v2.1, accepted with Martin's answers of 2026-10-01 17:38 UTC (`CHANGES-FROM-DRAFT.md`, last section), which override this file where they conflict: diagonal hero belt, "Reserve a seat", plan names with Japanese subtitles, no jaw vent, Spirited-Away-style soot sprites. Gate A (hero, crawlspace band, product stop, belt) is built against it; see `README.md`. Everything produced for v2 (art, animation, code, copy) is judged against this file. Where the reference videos and this brief disagree, this brief wins; the disagreements are listed in "Deliberate departures from the videos". Martin's Slack message of 2026-10-01 is the acceptance text; `../MASTER-PROMPT.md` is the older synthesis and yields to it.
 
 Evidence: ten recordings re-inspected frame by frame at 0.5 s (`jiro.bot-media/analysis/v01…v10`), plus `research_product_facts.md` (noriagentic.com, fetched 2026-10-01), `research_tooling.md` (LibreSprite / Gemini / canvas, tested in-sandbox) and `research_repo.md` (what the repo already has). Companion files: `BELT-SPEC.md` (the belt, in full) and `CHANGES-FROM-DRAFT.md` (what changed since the draft and the open questions).
 
@@ -46,7 +46,7 @@ Numbers in this file are CSS px at the 1440 × 900 reference viewport unless mar
 - **Two grains, integer scaling only** (`image-rendering: pixelated`, backing store = CSS × DPR, draw scale = floor):
   - World (rooms, bands, people, props): 1 art px = 4 CSS px (native 360 × 225 per viewport).
   - Hero layer (Jiro in every scene, belt, rails, plates, belt items, koi, dust spirits, eyes, draggable props): 1 art px = 2 CSS px. v07 (≈1.5× bilinear), v01 (≈2.3× non-integer) and v10 (mixed 2 px / 4 px inside one video) are the defects.
-- **Master palette `jiro48.gpl` — 48 colours, shared by every asset, snapped without dither:**
+- **Master palette: `palette/jiro56.gpl`**, 56 colours shared by every asset, snapped without dither. It is the 48-colour set below plus eight lantern-orange, tan, rust, olive and ash tones that the hero test fit needed to keep the lantern light (`art/README.md`). References to `jiro48.gpl` elsewhere in this file mean `jiro56.gpl`.
 
 | Group | Colours |
 | --- | --- |
@@ -62,7 +62,7 @@ Numbers in this file are CSS px at the 1440 × 900 reference viewport unless mar
 ## 4. Jiro
 
 - Canon #19 (`brand/README.md`): rolled sleeves, slim copper arms, no shoulder pads, copper/cream riveted dome, white twisted hachimaki with the knot and two tails on one side, indigo happi with pale stripes and a dark V collar, copper three-finger hands, faces left. Rejected and never reintroduced: shoulder pads, rice-tin or visor heads, a mouth drawn as a line, mittens, aprons, the red hinomaru disc.
-- **No drawn mouth.** The chin is a copper jaw plate carrying the canon's three-slot vent at ≤ 1 tone of contrast (reads as a seam, never as teeth; v01 §8.1's smear line and v07's `▮▮▮` grille are the failure cases). The whole plate drops 1–2 art px when he "speaks" (a line in a bubble) and returns.
+- **No drawn mouth.** The chin is a plain copper jaw plate with no vent, no mouth line and no teeth (Martin, answer 4; v01 §8.1's smear line and v07's `▮▮▮` grille are the failure cases). Its upper edge follows the outline where a mouth would be, and the plate drops 1–2 art px along that outline when he "speaks" (a line in a bubble), then returns.
 - Eyes: cyan `#5fd4ff` rounded rectangles with a 1 px `#aaffff` core; blink = collapse to a 1 px dark line for 120–160 ms (v02's slit blink is right; v03's orange slit is wrong). Hero, FAQ, street, pond: a 1 px darker pupil that looks toward the cursor within ±1 art px. **Product scene: no pupils** — solid glowing panels.
 - One Jiro sprite set for all seven stops (v09 §6.6 had two different Jiros; v03's bike Jiro had a visor and v10's had a shoulder emblem — all discarded). Scene-specific poses are new frames of the same sheet: counter (knife), desk (keyboard), kitchen pass, storage stool, scooter saddle, pond bench.
 - Motion budget per scene loop: blink every 4–7 s (random), one small hand/knife/finger motion per loop, 1 px head tilt on a 6 s cycle, jaw only on speech. He never walks between scenes; he is simply present in each (the game-observer convention).
@@ -89,7 +89,7 @@ Numbers in this file are CSS px at the 1440 × 900 reference viewport unless mar
 
 ## 7. Creatures and Easter eggs
 
-- **Dust spirits** (original design: round black fuzz `#0b0302` with `#130a0c` fuzz tips, two white dot eyes, tiny stick limbs; inspired by, not copied from, Spirited Away): in groups of **1, 3 or 5**, in bands and dark corners, never more than one group per band. They mostly sit and blink (independent 3–6 s cycles); one in each group shuffles 4–8 art px and back every 20–40 s. Click → the group hops and regroups, one carries a grain of rice away, or they all look at the cursor. Never mice (replaced per Martin; v3 storage room's mouse trap is not reused).
+- **Soot sprites** (as close to Spirited Away's susuwatari as possible, per Martin's answer 5: round ink-black fuzzball `#0b0302`/`#130a0c`, two large white eyes `#f4f4f2` with a dark pupil each, thin black stick limbs; drawn at the hero grain): in groups of **1, 3 or 5**, in bands and dark corners, never more than one group per band. They mostly sit and blink (independent 3–6 s cycles); one in each group shuffles 4–8 art px and back every 20–40 s. Click → the group hops and regroups, one carries a grain of rice away, or they all look at the cursor. Never mice (replaced per Martin; v3 storage room's mouse trap is not reused).
 - **Eyes in the dark:** 8 pairs in dark corners (hero hatch, under-floor, shelf cutaway, cellar, dumbwaiter slot, alley, garden wall, boathouse) blinking on slow independent cycles (8–14 s), 2 × 2 art px `#f6ba64` or `#5fd4ff`. Click → they close and reappear in another corner 30 s later. v07 §5 f_014's yellow doorway eyes are the reference.
 - **Easter-egg tracker:** small pill fixed top-centre, `🍣 7 / 60`, always visible but ≤ 110 × 22 px, expands on click to a list of found names (unfound shown as `???`). Each find: pill flashes `#42be65` for 300 ms, a 3.5 s toast slides in bottom-left in its own slot (never over a game button — v06 §7.8).
 - **60 distinct eggs**, each a drawn object or creature with its own reaction, listed in §12. Includes both games.

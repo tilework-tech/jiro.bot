@@ -2,9 +2,9 @@
 
 v2 rebuilds the Jiro scroll site from Martin Stübler's brief of 2026-10-01: a 16-bit pixel-art sushi restaurant seen from one fixed ¾ camera. The page slides straight down through seven stops: **hero → product → good/bad comparison → comparison table → FAQ → price → koi pond**. One continuous conveyor belt runs through all of them. v2 supersedes PR #13's `../site/` as the active build. That build stays in the tree because v2 reuses its copy and games.
 
-## Status: review gate A
+## Status: review gate A, on the v2.1 brief
 
-This commit covers review gate A from `QUESTIONS.md` decision 9:
+Gate A (Martin's decision 8 in `CHANGES-FROM-DRAFT.md`) is built and merged into `site/final-pixel-restaurant`. It covers:
 
 - the hero bar and the crawlspace band below it
 - the product stop
@@ -12,6 +12,8 @@ This commit covers review gate A from `QUESTIONS.md` decision 9:
 - the Easter-egg tracker
 
 The other five stops are Phase 2 (`PLAN.md`). `site/src/main.ts` only mounts the stops listed in `BUILT`. The belt route already runs on to the pond, but nothing draws it past the last built stop.
+
+Martin's answers of 2026-10-01 (`CHANGES-FROM-DRAFT.md`, last section) are applied: the hero belt is diagonal and every later run is horizontal or vertical with rounded corners; the CTA reads "Reserve a seat"; Jiro has no jaw vent and his jaw plate drops along the mouth outline when he speaks (click him); the soot sprites are Spirited-Away-style susuwatari drawn at hero grain; the product-scene Jiro has no pupils. Web fonts are self-hosted in `site/public/fonts/` (OFL texts alongside), so the page makes no third-party request on load.
 
 ## Where things are
 
@@ -61,7 +63,7 @@ npm ci
 npm run build
 PORT=3301 node serve.mjs        # static server over dist/ with byte ranges and a /__diag beacon
 npm test                        # Vitest: unit (belt model) + art (palette, plates, loops, motion budget)
-npm run test:e2e                # Playwright: Chromium desktop, WebKit desktop, WebKit iPhone 13
+npm run test:e2e                # Playwright: Chromium and WebKit, each at 1440×900 and as a phone (Pixel 7 / iPhone 13)
 ```
 
 Playwright builds and serves the site on port 3301 itself, and reuses a server that is already running there.
@@ -74,13 +76,16 @@ source /home/sprite/org/workspace/.local/webkit-env.sh
 
 This setup is session-local and gitignored, so a new session must rebuild it:
 
-1. `apt-get download` Playwright's WebKit dependencies (Debian 12). Use the list from `npx playwright install-deps --dry-run webkit`.
-2. Extract each package into `.local/webkit-libs/` with `dpkg -x`.
+1. `apt-get download` Playwright's WebKit dependencies (Debian 12) into a user-writable apt state (`-o Dir::State=/tmp/apt -o Dir::Cache=/tmp/apt/cache -o Debug::NoLocking=1`, after an `update` with the same options). `install-deps --dry-run` fails on this image because of missing font packages; read the `debian12` → `webkit` package list out of `playwright-core/lib/coreBundle.js` instead.
+2. Extract each package into `.local/webkit-libs/` with `dpkg -x`. Playwright's list omits transitive libraries; `ldd` the extracted `.so` files and `MiniBrowser` and fetch what is reported missing (on this image: `libgstreamer-plugins-bad1.0-0`, `libflite1`, `libgav1-1`, `liborc-0.4-0`, `librav1e0`, `libsvtav1enc1`, `libwebpmux3`, `libyuv0`, `libdw1`, `libabsl20220623`, `libgraphene-1.0-0`, `libnice10`, `libgupnp-igd-1.0-4`, `liblzo2-2`, `libxkbcommon-x11-0`, `libva2`, `libva-drm2`, `libcloudproviders0`, `libcairo-script-interpreter2`) plus Mesa for software GL (`libegl-mesa0 libegl1 libgl1-mesa-dri libgbm1 libglapi-mesa libglvnd0 libgles2 libllvm15 libdrm2 …`), because the VM has no GPU and WebKit aborts with "Could not create EGL display" without it.
+   Do not add `glib-networking`: its GnuTLS GIO module crashes this WebKit's network process. The sandboxed WebKit therefore has no TLS, which is why the site's fonts are self-hosted.
 3. Run `.local/webkit-overlay.sh`. It builds `.local/pw-browsers/`, an overlay of `~/.cache/ms-playwright` whose WebKit `MiniBrowser` wrappers append `PW_WEBKIT_EXTRA_LD_PATH` to `LD_LIBRARY_PATH`. The stock wrappers overwrite `LD_LIBRARY_PATH`.
 4. `webkit-env.sh` sets the following, all pointing into the extracted tree:
    - `PLAYWRIGHT_BROWSERS_PATH`
    - `PW_WEBKIT_EXTRA_LD_PATH`
-   - the GStreamer, GIO, GSettings and EGL paths
+   - the GStreamer, GSettings and EGL vendor paths, with `GIO_MODULE_DIR` pointing at an empty directory
+   - `LIBGL_ALWAYS_SOFTWARE=1`, `EGL_PLATFORM=surfaceless`, `GALLIUM_DRIVER=llvmpipe`, `LIBGL_DRIVERS_PATH`
+   - `PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=1`, since Playwright's own `ldd` check does not see the overlay
 
 **Review capture.** With the site served:
 
