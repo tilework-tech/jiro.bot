@@ -53,6 +53,16 @@ const stops = (p) => p.evaluate(() => [...document.querySelectorAll("[data-stop]
   await b.close();
 }
 {
+  const b = await chromium.launch();
+  const p = await b.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 });
+  await p.goto(base); await ready(p); await p.waitForTimeout(1500);
+  await p.screenshot({ path: join(out, "retina-hero.png") });
+  const [, , cmp] = await stops(p);
+  await p.evaluate((y) => scrollTo(0, y), cmp); await p.waitForTimeout(7000);
+  await p.screenshot({ path: join(out, "retina-compare.png") });
+  await b.close();
+}
+{
   const b = await webkit.launch();
   const c = await b.newContext({ ...devices["iPhone 13"] });
   const p = await c.newPage();

@@ -48,7 +48,7 @@
     ]
    },
    "egg": "soot",
-   "grain": 4,
+   "grain": 8,
    "frame_rois": [
     [
      221,
@@ -111,7 +111,7 @@
     ]
    },
    "egg": "candle",
-   "grain": 4
+   "grain": 8
   },
   "eyes": {
    "crop": [
@@ -145,7 +145,7 @@
    ],
    "egg": "eyes",
    "compare": "base",
-   "grain": 4
+   "grain": 8
   }
  },
  "scene": {

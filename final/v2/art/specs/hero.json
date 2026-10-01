@@ -27,7 +27,7 @@
     3600,
     400
    ],
-   "grain": 2,
+   "grain": 4,
    "frame_rois": [
     [
      201,
@@ -61,7 +61,7 @@
     1700,
     300
    ],
-   "grain": 2,
+   "grain": 4,
    "frame_rois": [
     [
      299,
@@ -112,7 +112,7 @@
     ]
    },
    "model": "gemini-3-pro-image",
-   "grain": 4
+   "grain": 8
   },
   "diner-a": {
    "crop": [
@@ -143,7 +143,7 @@
     800,
     400
    ],
-   "grain": 4
+   "grain": 8
   },
   "diner-b": {
    "crop": [
@@ -174,7 +174,7 @@
     3000,
     1000
    ],
-   "grain": 4
+   "grain": 8
   },
   "cat": {
    "crop": [
@@ -219,7 +219,7 @@
     ]
    },
    "egg": "cat",
-   "grain": 4,
+   "grain": 8,
    "mask_prompt": "Isolate the sleeping orange tabby cat: keep only the cat."
   },
   "door-eyes": {
@@ -254,10 +254,10 @@
    "model": "gemini-3-pro-image",
    "min_blob": 2,
    "compare": "base",
-   "grain": 4
+   "grain": 8
   },
   "jiro": {
-   "grain": 4,
+   "grain": 8,
    "model": "gemini-3-pro-image",
    "crop": [
     190,
@@ -375,7 +375,7 @@
     ]
    },
    "egg": "lucky-cat",
-   "grain": 4
+   "grain": 8
   },
   "daruma": {
    "crop": [
@@ -419,7 +419,7 @@
     ]
    },
    "egg": "daruma",
-   "grain": 4
+   "grain": 8
   },
   "kettle": {
    "crop": [
@@ -461,7 +461,7 @@
     ]
    },
    "egg": "kettle",
-   "grain": 4
+   "grain": 8
   },
   "bonsai": {
    "crop": [
@@ -501,7 +501,7 @@
     ]
    },
    "egg": "bonsai",
-   "grain": 4
+   "grain": 8
   },
   "noren": {
    "crop": [
@@ -538,7 +538,7 @@
     ]
    },
    "egg": "noren",
-   "grain": 4
+   "grain": 8
   },
   "cooker": {
    "crop": [
@@ -575,7 +575,7 @@
     ]
    },
    "egg": "cooker",
-   "grain": 4,
+   "grain": 8,
    "frame_rois": [
     [
      247,
@@ -624,7 +624,7 @@
     ]
    },
    "egg": "sake",
-   "grain": 4
+   "grain": 8
   }
  },
  "scene": {

@@ -8,7 +8,7 @@
  "layers": [
   {
    "src": "base.png",
-   "grain": 2
+   "grain": 4
   }
  ],
  "sprites": [
@@ -19,7 +19,7 @@
    "y": 8,
    "w": 94,
    "h": 20,
-   "grain": 4,
+   "grain": 8,
    "frames": 7,
    "durations": [
     1800,
@@ -39,7 +39,7 @@
    "y": 8,
    "w": 94,
    "h": 20,
-   "grain": 4,
+   "grain": 8,
    "frames": 5,
    "durations": [
     100,
@@ -58,7 +58,7 @@
    "y": 66,
    "w": 15,
    "h": 19,
-   "grain": 4,
+   "grain": 8,
    "frames": 4,
    "durations": [
     3800,

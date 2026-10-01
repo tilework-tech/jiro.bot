@@ -3,7 +3,7 @@ import { buildRoute, routePoints, BELT_W, BEND_R, HIDDEN, type Pt } from "./belt
 import { createJourney } from "./belt/motion";
 import { createEggs, say, type Egg } from "./eggs";
 import { BANDS, STOP_H, STOPS, WORLD_W, stopTop, type StopId } from "./layout";
-import { mountScene, type SceneDef } from "./scene";
+import { mountScene, sceneDensity, type SceneDef } from "./scene";
 import { initCompare, initDemo } from "./content";
 
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -102,6 +102,8 @@ async function boot() {
       c.style.left = "0";
       c.style.width = "100%";
       c.style.height = `${Math.round(STOP_H * s)}px`;
+      // A canvas finer than the screen is shrunk by the browser: let it average rather than drop pixels.
+      c.style.imageRendering = density > s * (devicePixelRatio || 1) + 0.01 ? "auto" : "";
     }
     bandEls.forEach((b, i) => {
       const y0 = map.worldToPage({ x: 0, y: stopTop(STOPS[i]) + STOP_H }).y;
@@ -114,18 +116,26 @@ async function boot() {
   }
 
   // ---------------------------------------------------------------- scenes
-  for (const id of BUILT) {
-    const def = sceneDefs[id];
-    const canvas = stopEls.get(id)!.querySelector<HTMLCanvasElement>("canvas.scene")!;
-    if (def) scenes.set(id, await mountScene(canvas, `art/${id}`, def, reduced));
-    else paintPlaceholder(canvas);
-  }
+  // Canvas density follows the screen; a resize, zoom or move to another monitor that changes it remounts the scenes.
   const bandScenes: Awaited<ReturnType<typeof mountScene>>[] = [];
-  for (const [i, b] of bandEls.entries()) {
-    const def = bandDefs[i];
-    if (def) bandScenes[i] = await mountScene(b.querySelector("canvas")!, `art/band${i}`, def, reduced);
-    else paintPlaceholder(b.querySelector("canvas")!);
+  let density = 0;
+  async function mountAll() {
+    const want = sceneDensity(innerWidth / WORLD_W, devicePixelRatio || 1);
+    if (want === density) return;
+    density = want;
+    for (const id of BUILT) {
+      const def = sceneDefs[id];
+      const canvas = stopEls.get(id)!.querySelector<HTMLCanvasElement>("canvas.scene")!;
+      if (def) scenes.set(id, await mountScene(canvas, `art/${id}`, def, reduced, density));
+      else paintPlaceholder(canvas);
+    }
+    for (const [i, b] of bandEls.entries()) {
+      const def = bandDefs[i];
+      if (def) bandScenes[i] = await mountScene(b.querySelector("canvas")!, `art/band${i}`, def, reduced, density);
+      else paintPlaceholder(b.querySelector("canvas")!);
+    }
   }
+  await mountAll();
 
   // ---------------------------------------------------------------- eggs
   const sceneEggs: Egg[] = [];
@@ -133,7 +143,7 @@ async function boot() {
   bandScenes.forEach((sc, i) => { for (const e of sc?.def.eggs ?? []) sceneEggs.push({ id: `band${i}-${e.id}`, name: e.name, scene: `band${i}` }); });
   const eggs = createEggs([...sceneEggs, ...BELT_EGGS]);
 
-  function placeEggs(key: string, def: SceneDef, el: HTMLElement, sc: Awaited<ReturnType<typeof mountScene>>, top: number) {
+  function placeEggs(key: string, def: SceneDef, el: HTMLElement, scene: () => Awaited<ReturnType<typeof mountScene>>, top: number) {
     for (const e of def.eggs ?? []) {
       let b = el.querySelector<HTMLButtonElement>(`[data-egg="${e.id}"]`);
       if (!b) {
@@ -145,7 +155,7 @@ async function boot() {
         b.setAttribute("aria-label", "Something here");
         const btn = b;
         b.addEventListener("click", () => {
-          sc.poke(e.sprite ?? e.id, performance.now());
+          scene().poke(e.sprite ?? e.id, performance.now());
           if (e.says?.length) {
             const r = btn.getBoundingClientRect();
             say(e.says[Math.floor(Math.random() * e.says.length)], r.left + r.width / 2 + scrollX, r.top + scrollY - 4);
@@ -158,8 +168,8 @@ async function boot() {
     }
   }
   function placeAllEggs() {
-    for (const [id, sc] of scenes) placeEggs(id, sc.def, stopEls.get(id)!, sc, copyH[id] ?? 0);
-    bandScenes.forEach((sc, i) => sc && placeEggs(`band${i}`, sc.def, bandEls[i], sc, 0));
+    for (const [id, sc] of scenes) placeEggs(id, sc.def, stopEls.get(id)!, () => scenes.get(id)!, copyH[id] ?? 0);
+    bandScenes.forEach((sc, i) => sc && placeEggs(`band${i}`, sc.def, bandEls[i], () => bandScenes[i], 0));
   }
 
   eggsReady = true;
@@ -200,7 +210,9 @@ async function boot() {
   };
   const belt = await mountBelt(deps);
 
-  const relayout = () => { layout(); deps.route = buildPageRoute(); belt.resize(); };
+  const relayout = () => {
+    void mountAll().then(() => { layout(); deps.route = buildPageRoute(); belt.resize(); });
+  };
   addEventListener("resize", relayout);
   // Copy blocks set the mobile layout; they change height when the web fonts arrive.
   const copyObserver = new ResizeObserver(() => {

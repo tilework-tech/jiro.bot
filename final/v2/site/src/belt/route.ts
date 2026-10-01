@@ -76,7 +76,7 @@ export const BELT_W = 21;
 export const BEND_R = 32;
 
 /** The belt channel in the dining-room counter, as a fraction of the stop height (measured from the compare art). */
-const COMPARE_CHANNEL = { top: 117 / 202, mid: 131.5 / 202, bottom: 146 / 202 };
+const COMPARE_CHANNEL = { top: 149 / 202, mid: 162.5 / 202, bottom: 176 / 202 };
 
 /**
  * Where the belt is hidden behind scene architecture: the kitchen hatch sill, the timber beam under the hero, and the

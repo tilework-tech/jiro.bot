@@ -8,7 +8,7 @@
  "layers": [
   {
    "src": "base.png",
-   "grain": 2
+   "grain": 4
   }
  ],
  "sprites": [
@@ -19,7 +19,7 @@
    "y": 1,
    "w": 23,
    "h": 28,
-   "grain": 2,
+   "grain": 4,
    "frames": 2,
    "durations": [
     3600,
@@ -33,7 +33,7 @@
    "y": 0,
    "w": 21,
    "h": 29,
-   "grain": 2,
+   "grain": 4,
    "frames": 2,
    "durations": [
     1700,
@@ -47,7 +47,7 @@
    "y": 4,
    "w": 12,
    "h": 22,
-   "grain": 4,
+   "grain": 8,
    "frames": 1,
    "durations": [
     8000
@@ -61,7 +61,7 @@
    "y": 4,
    "w": 12,
    "h": 22,
-   "grain": 4,
+   "grain": 8,
    "frames": 5,
    "durations": [
     100,
@@ -80,7 +80,7 @@
    "y": 130,
    "w": 46,
    "h": 48,
-   "grain": 4,
+   "grain": 8,
    "frames": 4,
    "durations": [
     2400,
@@ -96,7 +96,7 @@
    "y": 90,
    "w": 44,
    "h": 48,
-   "grain": 4,
+   "grain": 8,
    "frames": 4,
    "durations": [
     3000,
@@ -112,7 +112,7 @@
    "y": 168,
    "w": 46,
    "h": 31,
-   "grain": 4,
+   "grain": 8,
    "frames": 2,
    "durations": [
     2000,
@@ -127,7 +127,7 @@
    "y": 168,
    "w": 46,
    "h": 31,
-   "grain": 4,
+   "grain": 8,
    "frames": 5,
    "durations": [
     100,
@@ -146,7 +146,7 @@
    "y": 64,
    "w": 18,
    "h": 12,
-   "grain": 4,
+   "grain": 8,
    "frames": 4,
    "durations": [
     3300,
@@ -163,7 +163,7 @@
    "y": 25,
    "w": 60,
    "h": 82,
-   "grain": 4,
+   "grain": 8,
    "frames": 5,
    "durations": [
     2600,
@@ -181,7 +181,7 @@
    "y": 25,
    "w": 60,
    "h": 82,
-   "grain": 4,
+   "grain": 8,
    "frames": 7,
    "durations": [
     100,
@@ -202,7 +202,7 @@
    "y": 26,
    "w": 20,
    "h": 23,
-   "grain": 4,
+   "grain": 8,
    "frames": 1,
    "durations": [
     8000
@@ -216,7 +216,7 @@
    "y": 26,
    "w": 20,
    "h": 23,
-   "grain": 4,
+   "grain": 8,
    "frames": 6,
    "durations": [
     100,
@@ -236,7 +236,7 @@
    "y": 2,
    "w": 23,
    "h": 26,
-   "grain": 4,
+   "grain": 8,
    "frames": 1,
    "durations": [
     8000
@@ -250,7 +250,7 @@
    "y": 2,
    "w": 23,
    "h": 26,
-   "grain": 4,
+   "grain": 8,
    "frames": 6,
    "durations": [
     100,
@@ -270,7 +270,7 @@
    "y": 42,
    "w": 24,
    "h": 27,
-   "grain": 4,
+   "grain": 8,
    "frames": 1,
    "durations": [
     8000
@@ -284,7 +284,7 @@
    "y": 42,
    "w": 24,
    "h": 27,
-   "grain": 4,
+   "grain": 8,
    "frames": 5,
    "durations": [
     100,
@@ -303,7 +303,7 @@
    "y": 94,
    "w": 32,
    "h": 34,
-   "grain": 4,
+   "grain": 8,
    "frames": 1,
    "durations": [
     8000
@@ -317,7 +317,7 @@
    "y": 94,
    "w": 32,
    "h": 34,
-   "grain": 4,
+   "grain": 8,
    "frames": 4,
    "durations": [
     100,
@@ -335,7 +335,7 @@
    "y": 3,
    "w": 46,
    "h": 44,
-   "grain": 4,
+   "grain": 8,
    "frames": 1,
    "durations": [
     8000
@@ -349,7 +349,7 @@
    "y": 3,
    "w": 46,
    "h": 44,
-   "grain": 4,
+   "grain": 8,
    "frames": 3,
    "durations": [
     100,
@@ -366,7 +366,7 @@
    "y": 48,
    "w": 30,
    "h": 42,
-   "grain": 4,
+   "grain": 8,
    "frames": 1,
    "durations": [
     8000
@@ -380,7 +380,7 @@
    "y": 48,
    "w": 30,
    "h": 42,
-   "grain": 4,
+   "grain": 8,
    "frames": 3,
    "durations": [
     100,
@@ -397,7 +397,7 @@
    "y": 0,
    "w": 32,
    "h": 25,
-   "grain": 4,
+   "grain": 8,
    "frames": 1,
    "durations": [
     8000
@@ -411,7 +411,7 @@
    "y": 0,
    "w": 32,
    "h": 25,
-   "grain": 4,
+   "grain": 8,
    "frames": 5,
    "durations": [
     100,

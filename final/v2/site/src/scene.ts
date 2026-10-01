@@ -10,24 +10,44 @@ export type SceneDef = {
   eggs?: { id: string; name: string; x: number; y: number; w: number; h: number; sprite?: string; says?: string[] }[];
 };
 
-type Loaded = { def: SpriteDef; img: HTMLImageElement };
+type Source = HTMLImageElement | HTMLCanvasElement;
+type Loaded = { def: SpriteDef; img: Source; scale: number };
 
-/** Canvas px per world unit: the finest art grain, so detail sprites (grain 4) draw 1:1 and rooms (grain 2) at 2x. */
-export const SCENE_G = 4;
+/** Art finer than the canvas is averaged down once at load, so every later draw is a cheap 1:1 copy. */
+function toDensity(img: HTMLImageElement, grain: number, G: number, frameCount = 1): { img: Source; scale: number } {
+  if (G >= grain) return { img, scale: G / grain };
+  const c = document.createElement("canvas");
+  c.width = Math.round((img.width * G) / grain);
+  c.height = Math.round((img.height * G) / grain);
+  const cx = c.getContext("2d")!;
+  cx.imageSmoothingEnabled = true;
+  cx.imageSmoothingQuality = "high";
+  // Each animation frame is averaged on its own so frame edges never bleed into their neighbours.
+  const sw = img.width / frameCount, dw = c.width / frameCount;
+  for (let k = 0; k < frameCount; k++) cx.drawImage(img, k * sw, 0, sw, img.height, k * dw, 0, dw, c.height);
+  return { img: c, scale: 1 };
+}
 
 /**
- * A scene drawn at the finest grain, so coarse room layers and fine detail sprites share one canvas.
+ * Canvas px per world unit for this screen: the smallest of 2, 4 or 8 that covers the device pixels a world unit
+ * spans, so a 2x retina laptop gets the full 8x detail and a 1x screen or a phone does not carry 8x canvases.
+ */
+export function sceneDensity(cssPerUnit: number, dpr: number) {
+  return [2, 4, 8].find((g) => g >= cssPerUnit * dpr - 0.01) ?? 8;
+}
+
+/**
+ * A scene drawn at G canvas px per world unit. Art finer than G (grain 8 on a 4x canvas) is downsampled smoothly.
  * `size` is in world units; layer and sprite images carry `grain` art px per world unit.
  * Ambient sprites play on their own clocks; trigger sprites play once when poked and return to frame 0.
  */
-export async function mountScene(canvas: HTMLCanvasElement, base: string, def: SceneDef, reduced: boolean) {
-  const G = SCENE_G;
+export async function mountScene(canvas: HTMLCanvasElement, base: string, def: SceneDef, reduced: boolean, G: number) {
   const [W, H] = def.size;
   canvas.width = W * G;
   canvas.height = H * G;
   const ctx = crispContext(canvas);
-  const layers = await Promise.all(def.layers.map((l) => loadImage(`${base}/${l.src}`)));
-  const sprites: Loaded[] = await Promise.all(def.sprites.map(async (d) => ({ def: d, img: await loadImage(`${base}/${d.src}`) })));
+  const layers = await Promise.all(def.layers.map(async (l) => toDensity(await loadImage(`${base}/${l.src}`), l.grain ?? G, G).img));
+  const sprites: Loaded[] = await Promise.all(def.sprites.map(async (d) => ({ def: d, ...toDensity(await loadImage(`${base}/${d.src}`), d.grain, G, d.frames) })));
   const ambient = sprites.filter((s) => !s.def.trigger);
   const reactions = new Map(sprites.filter((s) => s.def.trigger).map((s) => [s.def.id.replace(/-react$/, ""), s]));
   const playing = new Map<string, number>();
@@ -42,8 +62,7 @@ export async function mountScene(canvas: HTMLCanvasElement, base: string, def: S
   };
   const blit = (s: Loaded, k: number) => {
     const fw = s.img.width / s.def.frames;
-    const scale = G / s.def.grain;
-    ctx.drawImage(s.img, k * fw, 0, fw, s.img.height, s.def.x * G, s.def.y * G, fw * scale, s.img.height * scale);
+    ctx.drawImage(s.img, k * fw, 0, fw, s.img.height, s.def.x * G, s.def.y * G, fw * s.scale, s.img.height * s.scale);
   };
 
   function draw(now: number) {

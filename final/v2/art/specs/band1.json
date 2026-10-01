@@ -5,7 +5,7 @@
  "cool_gate": 22,
  "sprites": {
   "spirits": {
-   "grain": 4,
+   "grain": 8,
    "model": "gemini-3-pro-image",
    "crop": [
     184,
@@ -89,7 +89,7 @@
    "align": false
   },
   "hole-eyes": {
-   "grain": 4,
+   "grain": 8,
    "model": "gemini-3-pro-image",
    "crop": [
     278,

@@ -4,7 +4,7 @@
  "groups": "warm,cool,accents,plates,neutrals",
  "sprites": {
   "jiro": {
-   "grain": 4,
+   "grain": 8,
    "model": "gemini-3-pro-image",
    "crop": [
     244,
@@ -106,7 +106,7 @@
     3600,
     400
    ],
-   "grain": 2,
+   "grain": 4,
    "frame_rois": [
     [
      230,
@@ -155,7 +155,7 @@
     ]
    },
    "egg": "shelf-soot",
-   "grain": 4
+   "grain": 8
   },
   "lucky-cat": {
    "crop": [
@@ -197,7 +197,7 @@
     ]
    },
    "egg": "lucky-cat",
-   "grain": 4
+   "grain": 8
   },
   "plant": {
    "crop": [
@@ -239,7 +239,7 @@
     ]
    },
    "egg": "plant",
-   "grain": 4
+   "grain": 8
   },
   "notes": {
    "crop": [
@@ -276,7 +276,7 @@
     ]
    },
    "egg": "notes",
-   "grain": 4
+   "grain": 8
   }
  },
  "scene": {

@@ -20,22 +20,22 @@ function opaqueBox(png: PNG, frames: number, k: number) {
 }
 
 describe("resolution", () => {
-  it("draws every room and band layer at 2 art px per world unit or finer", () => {
+  it("draws every room and band layer at 4 art px per world unit or finer", () => {
     const all = scenes();
     expect(all.length).toBeGreaterThan(0);
     for (const { scene, dir } of all) for (const l of scene.layers) {
       const png = read(join(dir, l.src));
-      expect(png.width / scene.size[0], `${scene.id}/${l.src} width`).toBeGreaterThanOrEqual(2);
-      expect(png.height / scene.size[1], `${scene.id}/${l.src} height`).toBeGreaterThanOrEqual(2);
+      expect(png.width / scene.size[0], `${scene.id}/${l.src} width`).toBeGreaterThanOrEqual(4);
+      expect(png.height / scene.size[1], `${scene.id}/${l.src} height`).toBeGreaterThanOrEqual(4);
     }
   });
 
-  it("draws characters, creatures and clickable props at 4 art px per world unit", () => {
+  it("draws characters, creatures and clickable props at 8 art px per world unit", () => {
     let n = 0;
     for (const { scene, dir } of scenes()) for (const s of scene.sprites.filter(isDetail)) {
       n++;
       const png = read(join(dir, s.src));
-      expect(s.grain, `${scene.id}/${s.id} grain`).toBeGreaterThanOrEqual(4);
+      expect(s.grain, `${scene.id}/${s.id} grain`).toBeGreaterThanOrEqual(8);
       expect(png.width / s.frames, `${scene.id}/${s.id} frame width`).toBe(s.w * s.grain!);
       expect(png.height, `${scene.id}/${s.id} height`).toBe(s.h * s.grain!);
     }
@@ -45,7 +45,7 @@ describe("resolution", () => {
   it("has plates and belt items with enough pixels for real detail", () => {
     for (const rim of ["grey", "blue"]) {
       const png = read(join(ART, "belt", `plate-${rim}.png`));
-      expect(opaqueBox(png, 1, 0).w, `plate-${rim}`).toBeGreaterThanOrEqual(60);
+      expect(opaqueBox(png, 1, 0).w, `plate-${rim}`).toBeGreaterThanOrEqual(120);
     }
     const plateW = opaqueBox(read(join(ART, "belt", "plate-grey.png")), 1, 0).w;
     const dir = join(ART, "belt", "items");
@@ -55,7 +55,7 @@ describe("resolution", () => {
     for (const f of files) {
       const png = read(join(dir, f));
       const box = opaqueBox(png, frames[f.replace(/\.png$/, "")] ?? 1, 0);
-      expect(Math.max(box.w, box.h), `${f} size`).toBeGreaterThanOrEqual(28);
+      expect(Math.max(box.w, box.h), `${f} size`).toBeGreaterThanOrEqual(56);
       expect(box.w, `${f} fits its plate`).toBeLessThanOrEqual(plateW * 0.7);
     }
   });

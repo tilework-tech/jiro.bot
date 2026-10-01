@@ -23,7 +23,7 @@ pub.mkdir(parents=True, exist_ok=True); ase.mkdir(parents=True, exist_ok=True)
 jobs = [(ROOT / spec["base"], "base")]
 entries = []
 for sid, s in spec["sprites"].items():
-    g = s.get("grain", 2)
+    g = s.get("grain", Image.open(ROOT / spec["base"]).width // 360)
     rx, ry, rw, rh = s["roi"]
     for suffix, keep, durations, trigger in (("", s.get("keep"), s.get("durations"), False),
                                               ("-react", s.get("reaction", {}).get("keep"), s.get("reaction", {}).get("durations"), True)):

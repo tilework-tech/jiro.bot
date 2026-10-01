@@ -43,6 +43,29 @@ test("every scene canvas holds at least one canvas px per CSS px", async ({ page
   for (const r of ratios) expect(r).toBeGreaterThanOrEqual(1);
 });
 
+for (const dpr of [1, 2]) test.describe(`on a ${dpr}x screen`, () => {
+  test.use({ deviceScaleFactor: dpr });
+  test("scene canvases match the screen's pixel density without wasting memory", async ({ page, isMobile }) => {
+    test.skip(isMobile, "phones keep their own device scale");
+    await open(page);
+    const ratios = await page.evaluate(() => [...document.querySelectorAll<HTMLCanvasElement>("canvas.scene")]
+      .map((c) => c.width / c.getBoundingClientRect().width));
+    for (const r of ratios) {
+      expect(r).toBeGreaterThanOrEqual(dpr);
+      expect(r).toBeLessThanOrEqual(dpr * 2);
+    }
+  });
+});
+
+test("in the dining room the belt runs along the bottom, with only a sliver of table below it", async ({ page }) => {
+  await open(page);
+  await goToCompareArt(page);
+  const art = (await page.locator('canvas.scene[data-scene="compare"]').boundingBox())!;
+  // On the straight run between the two bends.
+  const p = await waitForPlate(page, (q) => q.y > art.y && q.y < art.y + art.height && q.x > art.x + art.width * 0.25 && q.x < art.x + art.width * 0.75);
+  expect((p.y - art.y) / art.height).toBeGreaterThan(0.75);
+});
+
 test("plates glide every frame instead of stepping", async ({ page }) => {
   await open(page);
   const p = await waitForPlate(page, (q) => q.y > 100 && q.y < page.viewportSize()!.height - 100);

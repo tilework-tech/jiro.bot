@@ -8,18 +8,18 @@
  "layers": [
   {
    "src": "base.png",
-   "grain": 2
+   "grain": 4
   }
  ],
  "sprites": [
   {
    "id": "cat",
    "src": "cat.png",
-   "x": 94,
-   "y": 151,
-   "w": 32,
-   "h": 22,
-   "grain": 4,
+   "x": 95,
+   "y": 182,
+   "w": 29,
+   "h": 18,
+   "grain": 8,
    "frames": 1,
    "durations": [
     8000
@@ -29,11 +29,11 @@
   {
    "id": "cat-react",
    "src": "cat-react.png",
-   "x": 94,
-   "y": 151,
-   "w": 32,
-   "h": 22,
-   "grain": 4,
+   "x": 95,
+   "y": 182,
+   "w": 29,
+   "h": 18,
+   "grain": 8,
    "frames": 4,
    "durations": [
     100,
@@ -45,60 +45,27 @@
    "egg": "cat"
   },
   {
-   "id": "kanpai",
-   "src": "kanpai.png",
-   "x": 286,
-   "y": 166,
-   "w": 65,
-   "h": 36,
-   "grain": 4,
+   "id": "kid",
+   "src": "kid.png",
+   "x": 36,
+   "y": 126,
+   "w": 26,
+   "h": 23,
+   "grain": 8,
    "frames": 1,
    "durations": [
     8000
    ],
-   "egg": "kanpai"
+   "egg": "kid"
   },
   {
-   "id": "kanpai-react",
-   "src": "kanpai-react.png",
-   "x": 286,
-   "y": 166,
-   "w": 65,
-   "h": 36,
-   "grain": 4,
-   "frames": 5,
-   "durations": [
-    100,
-    500,
-    300,
-    500,
-    400
-   ],
-   "trigger": true,
-   "egg": "kanpai"
-  },
-  {
-   "id": "diner-mid",
-   "src": "diner-mid.png",
-   "x": 142,
-   "y": 168,
-   "w": 34,
-   "h": 34,
-   "grain": 4,
-   "frames": 1,
-   "durations": [
-    8000
-   ],
-   "egg": "diner-mid"
-  },
-  {
-   "id": "diner-mid-react",
-   "src": "diner-mid-react.png",
-   "x": 142,
-   "y": 168,
-   "w": 34,
-   "h": 34,
-   "grain": 4,
+   "id": "kid-react",
+   "src": "kid-react.png",
+   "x": 36,
+   "y": 126,
+   "w": 26,
+   "h": 23,
+   "grain": 8,
    "frames": 5,
    "durations": [
     100,
@@ -108,81 +75,33 @@
     300
    ],
    "trigger": true,
-   "egg": "diner-mid"
+   "egg": "kid"
   },
   {
-   "id": "diner-maki",
-   "src": "diner-maki.png",
-   "x": 189,
-   "y": 166,
-   "w": 30,
-   "h": 36,
-   "grain": 4,
-   "frames": 1,
-   "durations": [
-    8000
-   ],
-   "egg": "diner-maki"
-  },
-  {
-   "id": "diner-maki-react",
-   "src": "diner-maki-react.png",
-   "x": 189,
-   "y": 166,
-   "w": 30,
-   "h": 36,
-   "grain": 4,
+   "id": "table-eyes",
+   "src": "table-eyes.png",
+   "x": 180,
+   "y": 130,
+   "w": 18,
+   "h": 8,
+   "grain": 8,
    "frames": 4,
    "durations": [
-    100,
-    600,
-    600,
-    300
+    3800,
+    200,
+    3800,
+    200
    ],
-   "trigger": true,
-   "egg": "diner-maki"
-  },
-  {
-   "id": "diner-left",
-   "src": "diner-left.png",
-   "x": 5,
-   "y": 165,
-   "w": 34,
-   "h": 37,
-   "grain": 4,
-   "frames": 1,
-   "durations": [
-    8000
-   ],
-   "egg": "diner-left"
-  },
-  {
-   "id": "diner-left-react",
-   "src": "diner-left-react.png",
-   "x": 5,
-   "y": 165,
-   "w": 34,
-   "h": 37,
-   "grain": 4,
-   "frames": 5,
-   "durations": [
-    100,
-    400,
-    300,
-    400,
-    300
-   ],
-   "trigger": true,
-   "egg": "diner-left"
+   "egg": "table-eyes"
   },
   {
    "id": "tea-l",
    "src": "tea-l.png",
    "x": 74,
-   "y": 147,
+   "y": 180,
    "w": 9,
-   "h": 21,
-   "grain": 4,
+   "h": 18,
+   "grain": 8,
    "frames": 2,
    "durations": [
     2000,
@@ -193,10 +112,10 @@
    "id": "tea-r",
    "src": "tea-r.png",
    "x": 345,
-   "y": 153,
-   "w": 10,
-   "h": 17,
-   "grain": 4,
+   "y": 184,
+   "w": 9,
+   "h": 18,
+   "grain": 8,
    "frames": 2,
    "durations": [
     2000,
@@ -207,23 +126,23 @@
  "surfaces": [
   {
    "id": "table",
-   "x": 140,
-   "y": 150,
-   "w": 84,
+   "x": 156,
+   "y": 121,
+   "w": 48,
    "h": 14
   },
   {
    "id": "table-left",
-   "x": 30,
-   "y": 150,
-   "w": 60,
-   "h": 13
+   "x": 26,
+   "y": 119,
+   "w": 48,
+   "h": 14
   },
   {
    "id": "table-right",
-   "x": 272,
-   "y": 150,
-   "w": 66,
+   "x": 282,
+   "y": 118,
+   "w": 50,
    "h": 12
   }
  ],
@@ -232,84 +151,81 @@
    "id": "cat",
    "name": "Woke the dining-room cat",
    "x": 96,
-   "y": 152,
-   "w": 28,
-   "h": 18,
+   "y": 183,
+   "w": 27,
+   "h": 16,
    "sprite": "cat",
    "says": [
     "mrrp?"
    ]
   },
   {
-   "id": "kanpai",
-   "name": "Kanpai!",
-   "x": 288,
-   "y": 168,
-   "w": 60,
-   "h": 32,
-   "sprite": "kanpai",
-   "says": [
-    "Kanpai!",
-    "To green builds!"
-   ]
-  },
-  {
-   "id": "diner-mid",
-   "name": "Interrupted dinner",
-   "x": 144,
-   "y": 170,
-   "w": 30,
-   "h": 30,
-   "sprite": "diner-mid",
-   "says": [
-    "Mm. Same prompt, better chef."
-   ]
-  },
-  {
-   "id": "diner-maki",
-   "name": "Last maki",
-   "x": 191,
-   "y": 168,
-   "w": 26,
-   "h": 32,
-   "sprite": "diner-maki",
-   "says": [
-    "Don't even think about it."
-   ]
-  },
-  {
-   "id": "diner-left",
-   "name": "A friendly wave",
-   "x": 7,
-   "y": 167,
-   "w": 30,
-   "h": 33,
-   "sprite": "diner-left",
-   "says": [
-    "Try the uni!"
-   ]
-  },
-  {
-   "id": "gap-eyes",
-   "name": "Something under the tables",
-   "x": 236,
-   "y": 156,
+   "id": "kid",
+   "name": "A small fan",
+   "x": 38,
+   "y": 128,
    "w": 22,
-   "h": 16,
+   "h": 20,
+   "sprite": "kid",
    "says": [
-    "\u2026",
-    "(two eyes blink, then vanish)"
+    "Is the robot real?"
+   ]
+  },
+  {
+   "id": "table-eyes",
+   "name": "Something under the table",
+   "x": 179,
+   "y": 129,
+   "w": 20,
+   "h": 10,
+   "sprite": "table-eyes",
+   "says": [
+    "\u2026"
    ]
   },
   {
    "id": "soy",
    "name": "Soy for one",
    "x": 169,
-   "y": 150,
-   "w": 25,
-   "h": 12,
+   "y": 181,
+   "w": 24,
+   "h": 14,
    "says": [
     "Low sodium. Like the diff."
+   ]
+  },
+  {
+   "id": "soy-left",
+   "name": "Shichimi, soy, vinegar",
+   "x": 31,
+   "y": 181,
+   "w": 18,
+   "h": 14,
+   "says": [
+    "Season to taste. Not to spec."
+   ]
+  },
+  {
+   "id": "seat",
+   "name": "Reserved seat",
+   "x": 260,
+   "y": 114,
+   "w": 24,
+   "h": 22,
+   "says": [
+    "Reserved for your next PR."
+   ]
+  },
+  {
+   "id": "tea",
+   "name": "Fresh tea",
+   "x": 344,
+   "y": 184,
+   "w": 11,
+   "h": 16,
+   "sprite": "tea-r",
+   "says": [
+    "H\u014djicha. Always."
    ]
   }
  ]
