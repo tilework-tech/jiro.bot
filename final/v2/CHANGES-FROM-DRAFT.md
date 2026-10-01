@@ -69,3 +69,17 @@ Draft = `DESIGN-BRIEF.md` as of the first v2 proposal (2026-10-01 morning). v2.1
 8. **Mobile.** Copy stacks above each scene, hero layer drops to the room grain, games open in a modal. OK for the first release?
 9. **Spend and gate.** ~$25–40 of Gemini generation; review the style master + hero with the belt (~2 days) before the other six stops (~4–5 more days)?
 10. **Safari and dependencies.** One manual check on a real iPhone/Mac from you; and may I add Vitest and @playwright/test to the repo?
+
+## Martin's answers (Slack, 2026-10-01 17:38 UTC)
+
+These override the brief and belt spec wherever they conflict.
+
+1. **Hero belt is diagonal**, as in the videos. Only the hero gets a diagonal run; every other scene and band uses horizontal or vertical runs joined by 90° quarter-circle corners. `BELT-SPEC.md` §3 needs a hero diagonal segment plus one transition corner into the first vertical run.
+2. **CTA:** "Reserve a seat" (links to the trial form).
+3. **Price tags:** real plan names *and* decorative Japanese subtitles (見習い / 板前 / 大将 / おまかせ).
+4. **Jaw:** no vent. The jaw plate follows the outline where a mouth would be and opens/closes along it, as realistically as possible. Still no drawn mouth line or teeth.
+5. **Spirits:** as close to the Spirited Away soot sprites as possible (round black fuzzball, large white eyes with black pupils, thin stick limbs). Replaces the "original design" wording in `DESIGN-BRIEF.md`.
+6. **Rare events:** two per visit (one legs-and-cuddle, one fall-off) is enough.
+7. **Scroll smoothing:** 300 ms layer accepted.
+8. **Review gate:** yes, review style master + hero with belt before generating the other six stops. Gemini budget ~$25–40 approved.
+9. **Dependencies:** Vitest and @playwright/test approved. Martin will do one real Safari/iPhone pass once the review URL is up.
