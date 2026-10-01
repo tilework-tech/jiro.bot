@@ -24,6 +24,8 @@ const stops = (p) => p.evaluate(() => [...document.querySelectorAll("[data-stop]
   await p.screenshot({ path: join(out, "desktop-band.png") });
   for (let k = 0; k < 14; k++) { await p.mouse.wheel(0, 120); await p.waitForTimeout(260); }
   await p.waitForTimeout(2500);
+  const [, prod] = await stops(p);
+  await p.evaluate((y) => scrollTo(0, y), prod); await p.waitForTimeout(1500);
   await p.screenshot({ path: join(out, "desktop-product.png") });
   for (let k = 0; k < 28; k++) { await p.mouse.wheel(0, 120); await p.waitForTimeout(260); }
   await p.waitForTimeout(6000);
