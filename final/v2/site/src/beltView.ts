@@ -4,6 +4,7 @@ import { resolveDrop, type Surface } from "./belt/drop";
 import { createRareEvents, type RareEvent } from "./belt/events";
 import type { createJourney } from "./belt/motion";
 import type { Pt, Route } from "./belt/route";
+import { slatRows } from "./belt/slats";
 import { createStream, type Slot } from "./belt/stream";
 import { mulberry32 } from "./belt/rng";
 
@@ -139,23 +140,31 @@ export async function mountBelt(d: BeltDeps) {
     return lo;
   };
 
+  /** The pose at arc length s, interpolated between table samples so slats and plates can sit between pixels. */
+  const poseAt = (t: NonNullable<typeof table>, s: number) => {
+    const f = s / t.step, n = Math.min(Math.floor(f), t.poses.length - 2), u = f - n;
+    const a = t.poses[n], b = t.poses[n + 1];
+    let dh = b.heading - a.heading;
+    if (dh > Math.PI) dh -= 2 * Math.PI;
+    if (dh < -Math.PI) dh += 2 * Math.PI;
+    return { x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u, heading: a.heading + dh * u, hidden: t.hidden[n] };
+  };
+
   function drawBelt() {
     const top = scrollY - 40, bottom = scrollY + innerHeight + 40;
-    const travel = travelPx();
-    const period = tile.height;
     const t = samples();
-    for (let n = firstAtOrBelow(t.poses, top); n < t.poses.length && t.poses[n].y <= bottom; n++) {
-      if (t.hidden[n]) continue;
-      const p = t.poses[n];
-      const s = n * t.step;
-      const row = (((Math.floor((s - travel) / hp) % period) + period) % period);
+    const from = Math.max(0, firstAtOrBelow(t.poses, top) - 1) * t.step;
+    const end = Math.min(firstAtOrBelow(t.poses, bottom) + 1, t.poses.length - 1) * t.step;
+    for (const r of slatRows(travelPx(), t.step, end, tile.height, from)) {
+      const p = poseAt(t, r.s);
+      if (p.hidden) continue;
       const c = toCanvas(p);
       const bedOnly = d.bedOnly(p);
       const x0 = bedOnly ? TILE_BED.x0 : 0, x1 = bedOnly ? TILE_BED.x1 : tile.width;
       ctx.save();
-      ctx.translate(Math.round(c.x), Math.round(c.y));
+      ctx.translate(c.x, c.y);
       ctx.rotate(p.heading - Math.PI / 2);
-      ctx.drawImage(tile, x0, row, x1 - x0, 1, -(tile.width / 2) + x0, -1, x1 - x0, 2);
+      ctx.drawImage(tile, x0, r.tileRow, x1 - x0, 1, -(tile.width / 2) + x0, -1, x1 - x0, 2);
       ctx.restore();
     }
   }
@@ -193,13 +202,13 @@ export async function mountBelt(d: BeltDeps) {
         case 15: rot = -0.35 * e; ox = -3 * e; break; // peek
       }
     }
-    ctx.drawImage(plate, Math.round(c.x - plate.width / 2), Math.round(c.y - plate.height / 2 + plateDy));
+    ctx.drawImage(plate, c.x - plate.width / 2, c.y - plate.height / 2 + plateDy);
     const draw = (it: Item, dx: number) => {
       const f = itemFrame(it.kind, now, slot);
       const h = f.img.height;
       ctx.save();
       ctx.globalAlpha = alpha;
-      ctx.translate(Math.round(c.x), Math.round(c.y - 3));
+      ctx.translate(c.x, c.y - 3);
       ctx.rotate(angle);
       ctx.translate(it.offset.x + ox + dx, it.offset.y + oy);
       ctx.rotate(rot);
@@ -420,6 +429,7 @@ export async function mountBelt(d: BeltDeps) {
     for (const v of vis) {
       if (d.route.isHidden(v.pos)) continue;
       const sl = stream.slot(v.i);
+      if (!sl.plate) continue;
       const o = overrides.get(v.i);
       const c = toCanvas(v.pos);
       const ang = itemAngle(v.pos);
@@ -440,7 +450,7 @@ export async function mountBelt(d: BeltDeps) {
       const img = it.kind === "legged-maki" ? f : items.get(it.kind)!;
       const n = framesOf(img), fw = img.width / n, k = Math.floor(now / 160) % n;
       const c = toCanvas(p);
-      ctx.drawImage(img, k * fw, 0, fw, img.height, Math.round(c.x - fw / 2), Math.round(c.y - img.height * 0.9), fw, img.height);
+      ctx.drawImage(img, k * fw, 0, fw, img.height, c.x - fw / 2, c.y - img.height * 0.9, fw, img.height);
       if (t >= 1) { overrides.set(walk.from, { kind: "guest", host: walk.to }); burst(b, "salmon-nigiri", 8, "sparkle"); walk = null; }
     }
     if (fall) {
@@ -467,7 +477,7 @@ export async function mountBelt(d: BeltDeps) {
     effectsActive: () => effects.length,
     platesInView: () =>
       visibleSlots()
-        .filter((v) => overrides.get(v.i)?.kind !== "gone")
+        .filter((v) => overrides.get(v.i)?.kind !== "gone" && stream.slot(v.i).plate)
         .filter((v) => !d.route.isHidden(v.pos) && v.pos.y >= scrollY && v.pos.y <= scrollY + innerHeight && v.pos.x >= 0 && v.pos.x <= innerWidth)
         .map((v) => {
           const o = overrides.get(v.i);
@@ -476,7 +486,11 @@ export async function mountBelt(d: BeltDeps) {
         }),
     slotsInView: () => {
       const v = visibleSlots().filter((x) => overrides.get(x.i)?.kind !== "gone" && x.pos.y >= scrollY && x.pos.y <= scrollY + innerHeight && !d.route.isHidden(x.pos));
-      return { total: v.length, filled: v.filter((x) => isOccupied(x.i) && !overrides.has(x.i)).length };
+      return {
+        total: v.length,
+        plates: v.filter((x) => stream.slot(x.i).plate).length,
+        filled: v.filter((x) => isOccupied(x.i) && !overrides.has(x.i)).length,
+      };
     },
   };
 }

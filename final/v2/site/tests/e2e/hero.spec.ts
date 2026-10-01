@@ -66,12 +66,14 @@ test("plates the belt reports are actually drawn: white, where it says", async (
   expect(white / (png.width * png.height)).toBeGreaterThan(0.15);
 });
 
-test("about half of the visible belt carries something", async ({ page }) => {
+test("the visible belt is spaced out: bare belt between plates, food on only some of them", async ({ page }) => {
   await open(page);
-  const n = await page.evaluate(() => (window as any).__jiro.slotsInView() as { filled: number; total: number });
+  const n = await page.evaluate(() => (window as any).__jiro.slotsInView() as { plates: number; filled: number; total: number });
   expect(n.total).toBeGreaterThanOrEqual(8);
-  expect(n.filled / n.total).toBeGreaterThan(0.2);
-  expect(n.filled / n.total).toBeLessThan(0.8);
+  expect(n.plates / n.total).toBeGreaterThan(0.2);
+  expect(n.plates / n.total).toBeLessThan(0.8);
+  expect(n.filled).toBeGreaterThanOrEqual(1);
+  expect(n.filled).toBeLessThan(n.plates);
 });
 
 test("the belt surges first when scrolling starts, then the scene moves", async ({ page, browserName, isMobile }) => {
@@ -163,9 +165,9 @@ test.describe("with reduced motion", () => {
     expect(await beltSpeed(page)).toBeLessThanOrEqual(normalRest * 0.3);
     expect(await beltSpeed(page)).toBeGreaterThan(0);
     await page.addStyleTag({ content: '[data-layer="belt"] { visibility: hidden !important; }' });
-    const a = await page.locator("#stage").screenshot();
+    const a = await page.screenshot();
     await page.waitForTimeout(2500);
-    const b = await page.locator("#stage").screenshot();
+    const b = await page.screenshot();
     expect(b.equals(a)).toBe(true);
   });
 });

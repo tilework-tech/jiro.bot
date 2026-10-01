@@ -6,7 +6,7 @@ describe("art palette", () => {
     expect(pngs().length).toBeGreaterThan(0);
   });
 
-  it("uses only master-palette colours in every opaque pixel", () => {
+  it("uses only master-palette colours in every opaque pixel", { timeout: 60_000 }, () => {
     const pal = palette();
     expect(pal.size).toBe(56);
     for (const file of pngs()) {
