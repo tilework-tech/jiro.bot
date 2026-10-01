@@ -15,11 +15,11 @@ def px(im,x,y,c):
     if 0<=x<S and 0<=y<S: im.putpixel((x,y),c)
 
 def outline(im):
-    src=im.copy(); out=im.copy()
-    for y in range(S):
-        for x in range(S):
+    src=im.copy(); out=im.copy(); W,H=im.size
+    for y in range(H):
+        for x in range(W):
             if src.getpixel((x,y))[3]==0:
-                if any(0<=x+dx<S and 0<=y+dy<S and src.getpixel((x+dx,y+dy))[3]>0 for dx,dy in((1,0),(-1,0),(0,1),(0,-1))):
+                if any(0<=x+dx<W and 0<=y+dy<H and src.getpixel((x+dx,y+dy))[3]>0 for dx,dy in((1,0),(-1,0),(0,1),(0,-1))):
                     out.putpixel((x,y),INK)
     return out
 
@@ -106,7 +106,7 @@ def zee(im,x,y,c=ZZZ,big=True):
     pts=((0,0),(1,0),(2,0),(3,0),(2,1),(1,2),(0,3),(1,3),(2,3),(3,3)) if big else ((0,0),(1,0),(2,0),(1,1),(0,2),(1,2),(2,2))
     for dx,dy in pts: px(im,x+dx,y+dy,c)
 def drop(im,x,y,c=ZZZ):
-    for dx,dy in ((0,0),(-1,1),(0,1),(1,1),(-1,2),(0,2),(1,2),(0,3)): px(im,x+dx,y+dy,c)
+    for dx,dy in ((0,0),(-1,1),(0,1),(1,1),(-1,2),(0,2),(1,2)): px(im,x+dx,y+dy,c)
 
 def face(im,fx,fy,mood,ink=INK,blush=BLUSH):
     lx,rx=fx,fx+7; my=fy+4; mx=fx+4
@@ -130,7 +130,7 @@ def face(im,fx,fy,mood,ink=INK,blush=BLUSH):
                 for dy in range(3): px(im,ex+dx,fy+dy,ink)
             px(im,ex+1,fy+1,WHITE)
         mouth_o(im,mx-1,my,ink)
-        drop(im,rx+6,fy-4)
+        drop(im,rx+5,fy-4)
 
 MOODS=['happy','wink','love','sleepy','angry','shocked']
 CHARS=[('salmon-nigiri',body_salmon,INK,BLUSH),('tamago-nigiri',body_tamago,INK,BLUSH),('maki-roll',body_maki,INK,BLUSH)]

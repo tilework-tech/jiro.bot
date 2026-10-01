@@ -114,6 +114,7 @@ All loops: Veo 3.1 image-to-video from the current still, locked camera, ~8 s, c
 - Made: salmon nigiri, tamago nigiri with a nori belt, and a maki roll cross-section, each 32x32 native with a 1px ink outline, pink cheeks, and six moods (happy, wink, love, sleepy, angry, shocked). Sheet on the gallery's dotted pink backdrop, individual transparent sprites at 1x and 8x, one mood strip per character.
 - Method: hand-placed pixels via Pillow, script committed this time at `character/06-sushi-mini-sprites/pipeline/draw_sushi_sprites.py` so the set can be extended with more moods or characters.
 - Files: `character/06-sushi-mini-sprites/`.
+- Follow-up: Martin liked the salmon nigiri and asked for an onigiri identical in shape to his reference. Made at 64x64 (hero) and 32x32 (matches the set): wide rounded triangle built as the hull of three disks, flat-topped nori cap flush with the apex, rice showing either side of the cap, shade rim along the bottom-left. Same six moods. Script `pipeline/draw_onigiri.py`.
 
 ## Open items
 

@@ -30,7 +30,7 @@ character/
   03-icons-handdrawn/          four 96x96 hand-drawn icon angles at 768px
   04-icons-aseprite/           icons derived from the original via Pillow + LibreSprite, plus the .ase bundle
   05-design-iterations/        numbered contact sheets (REF, 1 to 17) and round 2 (#18, #19 canon)
-  06-sushi-mini-sprites/       three 32x32 sushi characters (salmon nigiri, tamago nigiri, maki roll) with six moods each, in the onigiri-gallery style, plus the generator script
+  06-sushi-mini-sprites/       three 32x32 sushi characters (salmon nigiri, tamago nigiri, maki roll) and a reference-shaped onigiri at 64 and 32, six moods each, in the onigiri-gallery style, plus the generator scripts
 scenes/
   01-moodboard/                10 Gemini scene iterations, contact sheet
   02-bar-moodboard/            10 bar-scene iterations, contact sheet
