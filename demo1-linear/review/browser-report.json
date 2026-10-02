@@ -1,0 +1,374 @@
+{
+  "browser": "154.0.8037.97",
+  "scenes": [
+    {
+      "id": "hero",
+      "shot": "desktop-00-hero.png",
+      "scrollY": 0,
+      "scrollWidth": 1425,
+      "activeVideos": [
+        {
+          "src": "s0-hero.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "desktop",
+      "viewportWidth": 1440
+    },
+    {
+      "id": "demo",
+      "shot": "desktop-02-demo.png",
+      "scrollY": 1710,
+      "scrollWidth": 1425,
+      "activeVideos": [],
+      "device": "desktop",
+      "viewportWidth": 1440
+    },
+    {
+      "id": "restaurant",
+      "shot": "desktop-04-restaurant.png",
+      "scrollY": 3420,
+      "scrollWidth": 1425,
+      "activeVideos": [
+        {
+          "src": "s2-serve.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "desktop",
+      "viewportWidth": 1440
+    },
+    {
+      "id": "compare",
+      "shot": "desktop-06-compare.png",
+      "scrollY": 5130,
+      "scrollWidth": 1425,
+      "activeVideos": [
+        {
+          "src": "s7-closing-small.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "desktop",
+      "viewportWidth": 1440
+    },
+    {
+      "id": "faq",
+      "shot": "desktop-08-faq.png",
+      "scrollY": 6840,
+      "scrollWidth": 1425,
+      "activeVideos": [
+        {
+          "src": "s4-omakase.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "desktop",
+      "viewportWidth": 1440
+    },
+    {
+      "id": "pricing",
+      "shot": "desktop-10-pricing.png",
+      "scrollY": 8550,
+      "scrollWidth": 1425,
+      "activeVideos": [
+        {
+          "src": "s6-delivery.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "desktop",
+      "viewportWidth": 1440
+    },
+    {
+      "id": "pond",
+      "shot": "desktop-12-pond.png",
+      "scrollY": 10260,
+      "scrollWidth": 1425,
+      "activeVideos": [
+        {
+          "src": "e1-pond.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "desktop",
+      "viewportWidth": 1440
+    },
+    {
+      "id": "hero",
+      "shot": "mobile-00-hero.png",
+      "scrollY": 0,
+      "scrollWidth": 375,
+      "activeVideos": [
+        {
+          "src": "s0-hero.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "mobile",
+      "viewportWidth": 390
+    },
+    {
+      "id": "demo",
+      "shot": "mobile-02-demo.png",
+      "scrollY": 1603.5,
+      "scrollWidth": 375,
+      "activeVideos": [],
+      "device": "mobile",
+      "viewportWidth": 390
+    },
+    {
+      "id": "restaurant",
+      "shot": "mobile-04-restaurant.png",
+      "scrollY": 3207,
+      "scrollWidth": 375,
+      "activeVideos": [
+        {
+          "src": "s2-serve.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "mobile",
+      "viewportWidth": 390
+    },
+    {
+      "id": "compare",
+      "shot": "mobile-06-compare.png",
+      "scrollY": 4811,
+      "scrollWidth": 375,
+      "activeVideos": [
+        {
+          "src": "s7-closing-small.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "mobile",
+      "viewportWidth": 390
+    },
+    {
+      "id": "faq",
+      "shot": "mobile-08-faq.png",
+      "scrollY": 6414.5,
+      "scrollWidth": 375,
+      "activeVideos": [
+        {
+          "src": "s4-omakase.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "mobile",
+      "viewportWidth": 390
+    },
+    {
+      "id": "pricing",
+      "shot": "mobile-10-pricing.png",
+      "scrollY": 8018,
+      "scrollWidth": 375,
+      "activeVideos": [
+        {
+          "src": "s6-delivery.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "mobile",
+      "viewportWidth": 390
+    },
+    {
+      "id": "pond",
+      "shot": "mobile-12-pond.png",
+      "scrollY": 9621.5,
+      "scrollWidth": 375,
+      "activeVideos": [
+        {
+          "src": "e1-pond.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "mobile",
+      "viewportWidth": 390
+    }
+  ],
+  "passes": [
+    {
+      "id": "kitchen hatch",
+      "shot": "desktop-01-kitchen-hatch.png",
+      "scrollY": 1305,
+      "scrollWidth": 1425,
+      "activeVideos": [],
+      "device": "desktop",
+      "viewportWidth": 1440
+    },
+    {
+      "id": "shoji window",
+      "shot": "desktop-03-shoji-window.png",
+      "scrollY": 3015,
+      "scrollWidth": 1425,
+      "activeVideos": [
+        {
+          "src": "s2-serve.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "desktop",
+      "viewportWidth": 1440
+    },
+    {
+      "id": "moon window",
+      "shot": "desktop-05-moon-window.png",
+      "scrollY": 4725,
+      "scrollWidth": 1425,
+      "activeVideos": [
+        {
+          "src": "s7-closing-small.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "desktop",
+      "viewportWidth": 1440
+    },
+    {
+      "id": "sliding door",
+      "shot": "desktop-07-sliding-door.png",
+      "scrollY": 6435,
+      "scrollWidth": 1425,
+      "activeVideos": [
+        {
+          "src": "s4-omakase.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "desktop",
+      "viewportWidth": 1440
+    },
+    {
+      "id": "back door",
+      "shot": "desktop-09-back-door.png",
+      "scrollY": 8145,
+      "scrollWidth": 1425,
+      "activeVideos": [
+        {
+          "src": "s6-delivery.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "desktop",
+      "viewportWidth": 1440
+    },
+    {
+      "id": "garden fence",
+      "shot": "desktop-11-garden-fence.png",
+      "scrollY": 9855,
+      "scrollWidth": 1425,
+      "activeVideos": [
+        {
+          "src": "e1-pond.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "desktop",
+      "viewportWidth": 1440
+    },
+    {
+      "id": "kitchen hatch",
+      "shot": "mobile-01-kitchen-hatch.png",
+      "scrollY": 1224,
+      "scrollWidth": 375,
+      "activeVideos": [],
+      "device": "mobile",
+      "viewportWidth": 390
+    },
+    {
+      "id": "shoji window",
+      "shot": "mobile-03-shoji-window.png",
+      "scrollY": 2827.5,
+      "scrollWidth": 375,
+      "activeVideos": [
+        {
+          "src": "s2-serve.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "mobile",
+      "viewportWidth": 390
+    },
+    {
+      "id": "moon window",
+      "shot": "mobile-05-moon-window.png",
+      "scrollY": 4431,
+      "scrollWidth": 375,
+      "activeVideos": [
+        {
+          "src": "s7-closing-small.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "mobile",
+      "viewportWidth": 390
+    },
+    {
+      "id": "sliding door",
+      "shot": "mobile-07-sliding-door.png",
+      "scrollY": 6035,
+      "scrollWidth": 375,
+      "activeVideos": [
+        {
+          "src": "s4-omakase.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "mobile",
+      "viewportWidth": 390
+    },
+    {
+      "id": "back door",
+      "shot": "mobile-09-back-door.png",
+      "scrollY": 7638.5,
+      "scrollWidth": 375,
+      "activeVideos": [
+        {
+          "src": "s6-delivery.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "mobile",
+      "viewportWidth": 390
+    },
+    {
+      "id": "garden fence",
+      "shot": "mobile-11-garden-fence.png",
+      "scrollY": 9242,
+      "scrollWidth": 375,
+      "activeVideos": [
+        {
+          "src": "e1-pond.mp4",
+          "readyState": 4,
+          "error": null
+        }
+      ],
+      "device": "mobile",
+      "viewportWidth": 390
+    }
+  ],
+  "errors": []
+}
