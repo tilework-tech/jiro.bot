@@ -100,15 +100,30 @@ export async function mountBelt(d: BeltDeps) {
   let walk: null | { from: number; to: number; start: number; dur: number } = null;
   let fall: null | { slot: number; item: Item; rim: Slot["rim"]; p: Pt; v: Pt; floor: number; start: number } = null;
 
+  // The canvas lives in the page and scrolls with the scenes, so the browser moves belt and art together. It covers
+  // one and a half screens' height around the view and is re-anchored, at a whole CSS px, when the view nears either edge.
   let hp = 1; // CSS px per belt art px
   let k = 1; // device px per belt art px
+  let anchor = 0; // page y of the canvas top
+  let tall = 0; // canvas height, CSS px
   function resize() {
     hp = d.map.s / BELT_GRAIN;
     const dpr = devicePixelRatio || 1;
-    const w = Math.round(innerWidth * dpr), h = Math.round(innerHeight * dpr);
+    tall = Math.round(innerHeight * 1.5);
+    d.canvas.style.width = `${innerWidth}px`;
+    d.canvas.style.height = `${tall}px`;
+    const w = Math.round(innerWidth * dpr), h = Math.round(tall * dpr);
     if (d.canvas.width !== w) d.canvas.width = w;
     if (d.canvas.height !== h) d.canvas.height = h;
     k = hp * dpr;
+    anchor = NaN;
+    reanchor();
+  }
+  function reanchor() {
+    const margin = (tall - innerHeight) / 2;
+    if (anchor <= scrollY - margin / 2 && anchor + tall >= scrollY + innerHeight + margin / 2) return;
+    anchor = Math.max(0, Math.round(scrollY - margin));
+    d.canvas.style.top = `${anchor}px`;
   }
   resize();
 
@@ -139,7 +154,7 @@ export async function mountBelt(d: BeltDeps) {
   const itemAngle = (_pos?: { x: number; y: number; heading: number }) => 0;
 
   function visibleSlots() {
-    const top = scrollY - 80, bottom = scrollY + innerHeight + 80;
+    const top = anchor - 80, bottom = anchor + tall + 80;
     const out: { i: number; pos: ReturnType<Route["sample"]> }[] = [];
     const first = Math.ceil((travelPx() - d.route.length) / slotSpacing());
     const last = Math.floor(travelPx() / slotSpacing());
@@ -154,7 +169,7 @@ export async function mountBelt(d: BeltDeps) {
   }
 
   // ------------------------------------------------------------------ drawing
-  const toCanvas = (p: Pt) => ({ x: p.x / hp, y: (p.y - scrollY) / hp });
+  const toCanvas = (p: Pt) => ({ x: p.x / hp, y: (p.y - anchor) / hp });
 
   // One sample per hero px of belt, rebuilt when the route changes. The belt only travels down the page,
   // so y is non-decreasing along the table and the visible window is found by binary search.
@@ -188,7 +203,7 @@ export async function mountBelt(d: BeltDeps) {
   };
 
   function drawBelt() {
-    const top = scrollY - 40, bottom = scrollY + innerHeight + 40;
+    const top = anchor - 40, bottom = anchor + tall + 40;
     const t = samples();
     const from = Math.max(0, firstAtOrBelow(t.poses, top) - 1) * t.step;
     const end = Math.min(firstAtOrBelow(t.poses, bottom) + 1, t.poses.length - 1) * t.step;
@@ -546,6 +561,7 @@ export async function mountBelt(d: BeltDeps) {
   function frame(now: number) {
     const dt = Math.min(0.05, (now - lastNow) / 1000);
     lastNow = now;
+    reanchor();
     ctx.setTransform(k, 0, 0, k, 0, 0);
     ctx.imageSmoothingEnabled = false;
     ctx.clearRect(0, 0, d.canvas.width / k, d.canvas.height / k);
@@ -583,7 +599,7 @@ export async function mountBelt(d: BeltDeps) {
     // Architecture covers the belt here: erase along the covering rects so every belt end is a straight horizontal cut.
     ctx.save();
     ctx.globalCompositeOperation = "destination-out";
-    for (const r of d.route.hidden) ctx.fillRect(r.x / hp, (r.y - scrollY) / hp, r.w / hp, r.h / hp);
+    for (const r of d.route.hidden) ctx.fillRect(r.x / hp, (r.y - anchor) / hp, r.w / hp, r.h / hp);
     ctx.restore();
     if (fall) {
       fall.v.y += 520 * U * hp * dt;

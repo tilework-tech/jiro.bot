@@ -17,12 +17,8 @@ export const platesInView = (page: Page) =>
 
 export const beltSpeed = (page: Page) => page.evaluate(() => (window as any).__jiro.speed() as number);
 
-export async function tracker(page: Page) {
-  const t = page.getByTestId("egg-tracker");
-  await expect(t).toBeVisible();
-  const m = /(\d+)\s*\/\s*(\d+)/.exec((await t.textContent()) ?? "");
-  return { found: Number(m?.[1]), total: Number(m?.[2]) };
-}
+/** How many easter eggs the visitor has found, out of how many there are. */
+export const tracker = (page: Page) => page.evaluate(() => (window as any).__jiro.eggs() as { found: number; total: number });
 
 export async function waitForPlate(page: Page, pred: (p: PlateBox) => boolean = () => true) {
   for (let i = 0; i < 80; i++) {
@@ -33,14 +29,8 @@ export async function waitForPlate(page: Page, pred: (p: PlateBox) => boolean = 
   throw new Error("no plate in view");
 }
 
-/** Wait until the page stops moving (the magnetic scroll may glide on to a scene after a programmatic scroll). */
+/** Wait until the page has come to rest on a scene (the scroll may ride on to one after a programmatic scroll). */
 export async function settled(page: Page) {
-  let prev = -1;
-  for (let i = 0; i < 40; i++) {
-    const y = await page.evaluate(() => scrollY);
-    if (y === prev) return y;
-    prev = y;
-    await page.waitForTimeout(300);
-  }
-  return prev;
+  await expect.poll(() => page.evaluate(() => (window as any).__jiro.scroll().resting as boolean), { timeout: 10_000 }).toBe(true);
+  return page.evaluate(() => scrollY);
 }

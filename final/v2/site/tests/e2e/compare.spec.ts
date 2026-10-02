@@ -90,29 +90,6 @@ test("plates glide every frame instead of stepping", async ({ page }) => {
   expect(d.filter((x) => x >= 1.5).length / d.length).toBeLessThan(0.1);
 });
 
-test("the good-vs-bad-taste stop follows the product demo and reads without interaction", async ({ page, isMobile }) => {
-  const errors = await open(page);
-  const stops = await page.locator("[data-stop]").evaluateAll((els) => els.map((e) => (e as HTMLElement).dataset.stop));
-  expect(stops.slice(0, 3)).toEqual(["hero", "product", "compare"]);
-  await goToCompare(page);
-  const generic = compare(page).getByTestId("replay").filter({ hasText: /generic/i });
-  const jiro = compare(page).getByTestId("replay").filter({ hasText: /jiro/i });
-  await expect(generic).toHaveCount(1);
-  await expect(jiro).toHaveCount(1);
-  for (const panel of [generic, jiro]) {
-    await expect(panel).toBeVisible();
-    await expect(panel).toContainText(/illustrative/i);
-  }
-  await expect(generic).toContainText(/CI: FAIL/, { timeout: 15_000 });
-  await expect(jiro).toContainText(/PR ready for your review/, { timeout: 15_000 });
-  if (!isMobile) {
-    const a = (await generic.boundingBox())!, b = (await jiro.boundingBox())!;
-    const span = Math.max(a.x + a.width, b.x + b.width) - Math.min(a.x, b.x);
-    expect(span).toBeGreaterThanOrEqual(page.viewportSize()!.width * 0.75);
-  }
-  expect(errors).toEqual([]);
-});
-
 test("the belt runs through the good-vs-bad-taste stop", async ({ page }) => {
   await open(page);
   await goToCompareArt(page);
@@ -163,25 +140,13 @@ test("the dining room hides easter eggs a visitor can reach", async ({ page }) =
   await expect.poll(async () => (await tracker(page)).found).toBe(before + 1);
 });
 
-test("the replay panels reach all the way down to the belt", async ({ page, isMobile }) => {
-  test.skip(isMobile, "phones stack the panels above the art");
-  await open(page);
-  await goToCompare(page);
-  const art = (await page.locator('canvas.scene[data-scene="compare"]').boundingBox())!;
-  const panels = await compare(page).getByTestId("replay").evaluateAll((els) => els.map((e) => e.getBoundingClientRect().bottom));
-  const p = await waitForPlate(page, (q) => q.x > art.x + art.width * 0.25 && q.x < art.x + art.width * 0.75);
-  for (const bottom of panels) {
-    expect(bottom).toBeLessThanOrEqual(p.y - p.r * 0.5);
-    expect(bottom).toBeGreaterThanOrEqual(art.y + art.height * 0.68);
-  }
-});
-
 /** Where the belt leaves a section, its last drawn row is a straight horizontal edge, whatever the belt's angle. */
 async function beltRows(page: Page, x0: number, x1: number, y: number) {
   return page.evaluate(({ x0, x1, y }) => {
     const c = document.getElementById("belt") as HTMLCanvasElement;
-    const k = c.width / innerWidth;
-    const d = c.getContext("2d")!.getImageData(Math.round(x0 * k), Math.round(y * k), Math.round((x1 - x0) * k), 1).data;
+    const box = c.getBoundingClientRect();
+    const k = c.width / box.width;
+    const d = c.getContext("2d")!.getImageData(Math.round((x0 - box.left) * k), Math.round((y - box.top) * k), Math.round((x1 - x0) * k), 1).data;
     let n = 0;
     for (let i = 3; i < d.length; i += 4) if (d[i] > 0) n++;
     return n / (d.length / 4);

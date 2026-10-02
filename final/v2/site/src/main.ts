@@ -1,11 +1,11 @@
 import { mountBelt, type Mapping } from "./beltView";
 import { buildRoute, routePoints, BELT_W, BEND_R, HIDDEN, POND_TRESTLE, type Pt } from "./belt/route";
 import { createJourney } from "./belt/motion";
-import { glideTarget, wheelTarget, type StopSpan } from "./belt/snap";
+import { createScroller, type ScrollKey, type StopSpan } from "./belt/scroller";
 import { createEggs, say, type Egg } from "./eggs";
 import { BANDS, STOP_H, STOPS, WORLD_W, stopTop, type StopId } from "./layout";
 import { mountScene, sceneDensity, type SceneDef } from "./scene";
-import { initCompare, initDemo, initFaq, initPricing, initTable } from "./content";
+import { initFaq, initPricing } from "./content";
 import { DAILY_STALL, RUSH_CABINET, mountCabinet } from "./cabinet";
 
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -24,7 +24,6 @@ const BELT_EGGS: Egg[] = [
   { id: "alive-shivering-jelly", name: "Nervous pudding", scene: "belt" },
   { id: "alive-blinking-maki", name: "Staring contest", scene: "belt" },
   { id: "alive-legged-maki", name: "Maki with legs", scene: "belt" },
-  { id: "demo-pr", name: "Got a PR back from Jiro", scene: "product" },
   { id: "game-rush", name: "Played Sushi Rush", scene: "table" },
   { id: "faq-asked", name: "Asked Jiro a question", scene: "faq" },
   { id: "game-daily", name: "Played today's Daily Roll", scene: "pond" },
@@ -187,9 +186,6 @@ async function boot() {
   }
 
   eggsReady = true;
-  initDemo((n) => { if (n === 3) eggs.find("demo-pr"); });
-  initCompare(reduced);
-  initTable();
   cabinets = [
     { id: "table" as StopId, c: mountCabinet(stopEls.get("table")!, RUSH_CABINET, () => eggs.find("game-rush")) },
     { id: "pond" as StopId, c: mountCabinet(stopEls.get("pond")!, DAILY_STALL, () => eggs.find("game-daily")) },
@@ -231,10 +227,80 @@ async function boot() {
   };
   const belt = await mountBelt(deps);
 
+  // ---------------------------------------------------------------- scroll: Demo1's rides from scene to scene
+  // Wheel, touch and keys move the scroller; each frame its position is written to the page's own scroll, so links,
+  // focus and find-in-page still work and are picked up as foreign scrolls. While the page rides, the belt runs half
+  // again as fast.
+  const spans = (): StopSpan[] => STOPS.filter((id) => BUILT.includes(id))
+    .map((id) => { const el = stopEls.get(id)!; return { top: el.offsetTop, bottom: el.offsetTop + el.offsetHeight }; });
+  const scroller = createScroller({ spans, vh: () => innerHeight, reduced });
+  scroller.moved(scrollY, performance.now());
+  const written: number[] = []; // the last few positions written, so their scroll events are not taken as foreign
+  const canScrollInside = (el: EventTarget | null, dy: number) => {
+    for (let n = el instanceof HTMLElement ? el : null; n && n !== document.body; n = n.parentElement) {
+      const st = getComputedStyle(n);
+      if (/(auto|scroll)/.test(st.overflowY) && n.scrollHeight > n.clientHeight) {
+        if (dy > 0 ? n.scrollTop + n.clientHeight < n.scrollHeight - 1 : n.scrollTop > 0) return true;
+      }
+    }
+    return false;
+  };
+  addEventListener("wheel", (e) => {
+    if (e.ctrlKey) return; // pinch zoom
+    const dy = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
+    if (canScrollInside(e.target, dy)) return;
+    e.preventDefault();
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+    scroller.wheel(dy, performance.now());
+  }, { passive: false });
+  let touchY: number | null = null;
+  const oneFinger = (e: TouchEvent) => { touchY = e.touches.length === 1 ? e.touches[0].clientY : null; };
+  addEventListener("touchstart", oneFinger, { passive: true });
+  addEventListener("touchmove", (e) => {
+    // A plate being carried claims the move; a pinch-zoomed page pans natively.
+    if (touchY === null || e.touches.length !== 1 || e.defaultPrevented || (visualViewport?.scale ?? 1) > 1.01) return;
+    const y = e.touches[0].clientY;
+    if (canScrollInside(e.target, touchY - y)) return;
+    e.preventDefault();
+    scroller.drag(touchY - y, performance.now());
+    touchY = y;
+  }, { passive: false });
+  const touchDone = (e: TouchEvent) => {
+    oneFinger(e);
+    if (e.touches.length === 0) scroller.release(performance.now());
+  };
+  addEventListener("touchend", touchDone, { passive: true });
+  addEventListener("touchcancel", touchDone, { passive: true });
+  addEventListener("keydown", (e) => {
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+    const el = e.target as HTMLElement;
+    if (el.closest?.("input, textarea, select, [contenteditable], iframe")) return;
+    if (e.key === " " && el.closest?.("button, a")) return;
+    const now = performance.now();
+    const keys: Record<string, ScrollKey | number> = {
+      ArrowDown: 100, ArrowUp: -100, PageDown: "next", PageUp: "prev", " ": e.shiftKey ? "prev" : "next", Home: "home", End: "end",
+    };
+    const k = keys[e.key];
+    if (k === undefined) return;
+    e.preventDefault();
+    if (typeof k === "number") scroller.wheel(k, now);
+    else scroller.key(k, now);
+  });
+  addEventListener("scroll", () => {
+    if (written.some((y) => Math.abs(scrollY - y) < 1.5)) return;
+    scroller.moved(scrollY, performance.now());
+  }, { passive: true });
+  function writeScroll(now: number) {
+    const y = scroller.tick(now);
+    journey.glide(scroller.riding());
+    if (Math.abs(y - scrollY) < 1) return;
+    written.push(y);
+    if (written.length > 4) written.shift();
+    scrollTo(0, y);
+  }
+
   const relayout = () => {
-    // A resize moves every scene: drop any glide in flight and re-snap once the new layout is in.
-    if (glide) { glide = null; journey.glide(false); }
-    void mountAll().then(() => { layout(); deps.route = buildPageRoute(); belt.resize(); freeDir = 0; lastFree = performance.now(); });
+    void mountAll().then(() => { layout(); deps.route = buildPageRoute(); belt.resize(); scroller.resize(); });
   };
   addEventListener("resize", relayout);
   // Copy blocks set the mobile layout; they change height when the web fonts arrive.
@@ -245,86 +311,13 @@ async function boot() {
   });
   stage.querySelectorAll(".copy").forEach((el) => copyObserver.observe(el));
 
-  // ---------------------------------------------------------------- scroll: magnetic, always resting on a scene
-  // A wheel flick glides to the next or previous scene; any other scroll that ends between scenes glides on to one.
-  // While the page glides, the belt runs half again as fast.
-  let expectY: number | null = null; // where our own programmatic scroll should land
-  let lastY = scrollY;
-  let lastFree = 0, freeDir: 1 | -1 | 0 = 0, lastWheel = 0, swallowUntil = 0, touching = false, dragging = false;
-  let gesture = { acc: 0, glided: false };
-  let glide: null | { from: number; to: number; start: number; lead: number; dur: number } = null;
-  const spans = (): StopSpan[] => STOPS.filter((id) => BUILT.includes(id))
-    .map((id) => { const el = stopEls.get(id)!; return { top: el.offsetTop, bottom: el.offsetTop + el.offsetHeight }; });
-  const canScrollInside = (el: HTMLElement | null, dy: number) => {
-    for (let n = el; n && n !== document.body; n = n.parentElement) {
-      const st = getComputedStyle(n);
-      if (/(auto|scroll)/.test(st.overflowY) && n.scrollHeight > n.clientHeight) {
-        if (dy > 0 ? n.scrollTop + n.clientHeight < n.scrollHeight - 1 : n.scrollTop > 0) return true;
-      }
-    }
-    return false;
-  };
-  function glideTo(to: number, now: number, lead: number) {
-    const from = scrollY;
-    const max = document.documentElement.scrollHeight - innerHeight;
-    to = Math.max(0, Math.min(Math.round(to), max));
-    if (Math.abs(to - from) < 1) return;
-    glide = { from, to, start: now, lead: reduced ? 0 : lead, dur: reduced ? 1 : Math.min(1100, Math.max(650, 500 + Math.abs(to - from) * 0.3)) };
-    journey.glide(true);
-  }
-  addEventListener("wheel", (e) => {
-    if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || canScrollInside(e.target as HTMLElement, e.deltaY)) return;
-    const now = performance.now();
-    if (now - lastWheel > 250) gesture = { acc: 0, glided: false };
-    lastWheel = now;
-    if (glide || gesture.glided || now < swallowUntil) { e.preventDefault(); return; }
-    const to = wheelTarget(scrollY, e.deltaY > 0 ? 1 : -1, spans(), innerHeight);
-    if (to === null) return; // free scroll inside a tall scene, or nothing further that way
-    e.preventDefault();
-    gesture.acc += e.deltaY;
-    if (Math.abs(gesture.acc) < 4) return; // trackpads often open a gesture with a 1–2 px nudge
-    gesture.glided = true;
-    glideTo(to, now, 250);
-  }, { passive: false });
-  addEventListener("touchstart", () => { touching = true; glide = null; journey.glide(false); }, { passive: true });
-  const touchDone = (e: TouchEvent) => { if (e.touches.length === 0) { touching = false; lastFree = performance.now(); } };
-  addEventListener("touchend", touchDone, { passive: true });
-  addEventListener("touchcancel", touchDone, { passive: true });
-  // Holding the page's scrollbar: no glides until it is let go.
-  addEventListener("pointerdown", (e) => { if (e.clientX >= document.documentElement.clientWidth) dragging = true; });
-  addEventListener("pointerup", () => { if (dragging) { dragging = false; lastFree = performance.now(); } });
-  addEventListener("scroll", () => {
-    const dy = scrollY - lastY;
-    lastY = scrollY;
-    if (expectY !== null && Math.abs(scrollY - expectY) < 1.5) { if (!glide) expectY = null; return; }
-    if (glide && performance.now() - glide.start > glide.lead) { glide = null; journey.glide(false); }
-    if (dy !== 0) { freeDir = dy > 0 ? 1 : -1; lastFree = performance.now(); }
-  }, { passive: true });
-
-  function settle(now: number) {
-    if (glide) {
-      const t = Math.min(1, Math.max(0, (now - glide.start - glide.lead) / glide.dur));
-      if (now - glide.start < glide.lead) return;
-      const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-      const y = Math.round(glide.from + (glide.to - glide.from) * e);
-      expectY = y;
-      scrollTo(0, y);
-      if (t >= 1) { glide = null; journey.glide(false); swallowUntil = Math.max(swallowUntil, now + 200); }
-      return;
-    }
-    if (touching || dragging || lastFree === 0 || now - lastFree < 160 || now - lastWheel < 160) return;
-    const to = glideTarget(scrollY, freeDir, spans(), innerHeight);
-    lastFree = 0;
-    if (to !== null) glideTo(to, now, 0);
-  }
-
   // ---------------------------------------------------------------- frame loop
   let last = performance.now();
   function loop(now: number) {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     journey.tick(dt);
-    settle(now);
+    writeScroll(now);
     // Scenes more than 1.5 screens away hand their canvas memory back; within one screen they are restored.
     const tend = (sc: Awaited<ReturnType<typeof mountScene>>, el: HTMLElement) => {
       const r = el.getBoundingClientRect();
@@ -353,6 +346,8 @@ async function boot() {
     slotsInView: belt.slotsInView,
     effectsActive: belt.effectsActive,
     koi: belt.koi,
+    scroll: scroller.state,
+    eggs: () => ({ found: eggs.count(), total: eggs.total }),
     fx: (id: string) => (scenes.get(id as StopId) ?? bandScenes[Number(id.replace("band", ""))])?.fx(),
     surface: (id: string) => {
       const r = [...surfaces(), ...deps.water()].find((x) => x.id === id);

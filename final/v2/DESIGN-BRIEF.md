@@ -1,6 +1,6 @@
 # Jiro.bot v2 design brief
 
-Status: approved by Martin 2026-10-01 (answers in `QUESTIONS.md`). Grains (§3) and plate/item sizes (§5) were revised in round 2 after his 2026-10-01 17:44 feedback (`PLAN-R2.md`), and doubled again in round 3 after his gate-B review (`PLAN-R3.md`). The belt route and the koi ending (§5) were settled in the final pass (`PLAN-FINAL.md`). Belt speed, fill and item pose (§5), scrolling (§1, §6) and click reactions (§7, §9) were revised in round 6 after Martin's review of the final build (`PLAN-R6.md`). Plate clicks and drops (§5, §6), light and ambient animation (§3, §9) and idle people (§9) were revised in round 7 after his notes of 2026-10-02 (`PLAN-R7.md`). Everything produced for v2 (art, animation, code, copy) is judged against this file. Where the reference videos and this brief disagree, this brief wins; the disagreements are listed in "Deliberate departures from the videos".
+Status: approved by Martin 2026-10-01 (answers in `QUESTIONS.md`). Grains (§3) and plate/item sizes (§5) were revised in round 2 after his 2026-10-01 17:44 feedback (`PLAN-R2.md`), and doubled again in round 3 after his gate-B review (`PLAN-R3.md`). The belt route and the koi ending (§5) were settled in the final pass (`PLAN-FINAL.md`). Belt speed, fill and item pose (§5), scrolling (§1, §6) and click reactions (§7, §9) were revised in round 6 after Martin's review of the final build (`PLAN-R6.md`). Plate clicks and drops (§5, §6), light and ambient animation (§3, §9) and idle people (§9) were revised in round 7 after his notes of 2026-10-02 (`PLAN-R7.md`). Scrolling (§1, §6), the header and tracker (§7) and the copy (§2, §10) were revised in round 8 (`PLAN-R8.md`). Everything produced for v2 (art, animation, code, copy) is judged against this file. Where the reference videos and this brief disagree, this brief wins; the disagreements are listed in "Deliberate departures from the videos".
 
 Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re-inspected frame by frame at 0.5 s in `research/video-NN.md`. Martin's written direction of 2026-09-28 → 2026-10-01 (`../site/docs/FEEDBACK-VERBATIM.md` plus the 2026-10-01 thread message).
 
@@ -9,13 +9,13 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 - A single sushi house seen by a fixed game observer: elevated three-quarter view (SNES/Zelda-like), ~30° looking down. Every scene uses this angle. No zoom, rotation, tilt or sideways pan between scenes. The page slides vertically only, like videos 06 and 09 minus their zoom drift and sideways pan.
 - Seven stops, stacked top to bottom: **1 Hero bar → 2 Product demo → 3 Good vs bad taste → 4 How Jiro compares → 5 FAQ counter → 6 Price (night street) → 7 Koi pond**.
 - Between stops: a joining band 35–60% of a viewport tall (wall cross-section, floor beam, storage cutaway, garden wall), drawn in the same art. Bands are quiet, dark and inhabited by small creatures.
-- Each stop rests full-screen, and the page never rests in a band. Scrolling is magnetic (round 6): one wheel flick glides to the next or previous stop, and any other scroll (touch, keys, scrollbar) that ends between stops glides on to the nearest stop in its direction. Inside a stop taller than the screen (stacked copy on phones) the page scrolls natively. Details in §6.
+- Each stop rests full-screen, and the page never rests in a band. Scrolling follows Demo1 (round 8): input drags the page through a band with resistance, and when the gesture ends it rides on to the next stop or springs back, one stop per gesture. Inside a stop taller than the screen (stacked copy on phones, laptop heights) input moves the page 1:1. The belt moves with the art while scrolling, never a frame behind. Details in §6.
 
 ## 2. Composition rule: busy edge, calm copy field
 
 - Left 40–45% of every stop is a dark, low-contrast field for header + sub-header: blank plaster, shadowed wall, dim garden, or a deliberately pixel-softened (2× coarser grain, −40% value) continuation of the room. Copy never sits on detail.
 - The action cluster sits right-of-centre and occupies 35–55% of the frame. Some stops are bustling (hero, comparison room, street), some quiet (product demo, FAQ, pond). No stop is wall-to-wall action.
-- Product UI (demo, code panels, table, FAQ answers, price cards) is real HTML over the art, styled as part of the room (paper menus, wooden boards), never a floating white card.
+- Product UI (FAQ answers, price tags) is real HTML over the art, styled as part of the room (paper tickets, speech bubbles), never a floating white card. Since round 8 the other stops carry only short copy; the demo, replay and table panels were removed.
 
 ## 3. Art system
 
@@ -48,7 +48,7 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 - **Plates:** all white; each plate's rim is either faint grey or faint blue (seeded, roughly even, no other colour), no dark outline. Round 3: plates are 128 × 91 art px at grain 8 and items at most 84 px (at least 56 px, no wider than 70% of a plate); round 2 had 64 × 45 plates and items up to 42 px at grain 4. Item sits 1–3 world units off centre (seeded per plate). Plates and items never rotate: food always stands upright on its plate, whichever way the belt runs (round 6, Martin: food "always vertical"); only a click effect turns them briefly. A plate the visitor puts back on the belt somewhere else stays there and rides on from that spot (round 7, §6).
 - **Fill:** plates on ~50% of slots, seeded random with singles, pairs, runs and gaps; food on ~70% of those plates, so about a third of the belt carries food (round 6: ~40% more food than the earlier ~50% of plates); never reshuffled in view.
 - **Mix of occupied plates:** 70% funny sushi/food (nigiri with expressions, sleepy onigiri, suspicious wasabi, rice with a tiny umbrella, gyoza in a blanket…), 20% surprising non-food (rubber duck, floppy disk, tiny bonsai, lost sock, beetle, lucky cat, haunted laptop…), 10% very animated food (breathes, blinks, waves, shivers on its plate).
-- **Speed:** rest 24 px/s at 1440 px (6 world units/s; round 6 made it 50% faster than the earlier 16 px/s), constant, never stops. While the page glides between stops the belt eases up to 1.5× rest, starting 0.25 s before a wheel glide moves the scene so the speed-up reads as the belt registering the scroll, and eases back when the glide lands. (This replaces round 5's surge of up to ~6× with a 0.3 s hold.) Never reverses.
+- **Speed:** rest 24 px/s at 1440 px (6 world units/s; round 6 made it 50% faster than the earlier 16 px/s), constant, never stops. While the page rides between stops (round 8, Demo1's scrolling) the belt eases up to 1.5× rest and eases back when the page lands on a scene. (Round 6's glide replaced round 5's surge of up to ~6×; round 8 replaced the glide.) Never reverses.
 - **Rare events, once or twice per visit total:** one item grows legs, walks to a neighbouring plate and cuddles; one plate wobbles off a bend and lands on the floor (stays there, clickable). Scheduled, not looping.
 - **Ending:** at the pond the belt crosses a low trestle; a large koi leaps over it (≈2 s arc, a splash out and a splash back in) a few seconds after the pond comes into view, then about every 25 s, and whenever a plate is dropped in the water. It eats every item in its arc, aimed at the fullest run of food in view (Martin: "eat a whole lot of the belt"), not one small cluster; the plates roll on empty and leave the frame past the trestle's far end.
 
@@ -61,13 +61,13 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
   - in the pond → splash, koi gets it;
   - anywhere else → it goes back exactly where it was (a plate already moved along the belt stays moved).
 - Everything is optional. The page is fully readable and usable without clicking.
-- **Scrolling.** A wheel gesture (after a tiny threshold, so trackpad openers count) glides with an ease-in-out of about 0.65–1.1 s to the next or previous stop; the rest of that gesture and its inertia are swallowed, so one flick moves one stop. Touch, keyboard and scrollbar scrolls stay native while they last; once they stop between stops the page glides on with no lead. Grabbing the page (touch) cancels a glide. Reduced motion jumps instead of gliding.
+- **Scrolling** (round 8, Demo1's mechanics). Wheel and touch move a target: freely inside a stop, with resistance through a band. After 160 ms of quiet or a finger lift, a push past 7% of the band rides on to the next stop and anything less springs back; trackpad momentum after a ride is ignored, so one gesture moves at most one stop. Arrows nudge, PageUp/PageDown/Space step one stop, Home/End go to the ends. Links, focus and find-in-page still scroll the page and settle by the same rule. The belt runs 1.5× during a ride. Reduced motion lands at once.
 
 ## 7. Creatures and Easter eggs
 
 - **Dust spirits** (our own drawings, as close as practical to Spirited Away's susuwatari: round black soot fuzz with spiky outline, two large white eyes with black dot pupils, thin black stick limbs; never traced from film frames or named after the film): in groups of 1, 3 or 5, in joining bands and dark corners. Mostly sit and blink; occasionally one shuffles 4–8 art px and back. Click → the drawn spirit itself hops (the one peeking over the wall stretches up, the hanging one swings) and settles back in place.
 - **Eyes in the dark:** 6–8 pairs in dark corners (hatch, under-floor, storage, alley, reeds) that blink on slow independent cycles; click → they close and reappear elsewhere later.
-- **Easter-egg tracker:** small pill fixed top-centre ("🍣 7 / 54"), always visible, expands to a list of found ones (names only, unfound shown as ???).
+- **Easter eggs are counted, not displayed** (round 8): finding one shows a short "Found:" toast; the header carries only the logo and "Reserve a seat". (Until round 8 a top-centre tracker pill showed found / total.)
 - **≥ 54 distinct eggs:** each is a drawn object or creature with its own reaction (not a generic glyph): 8 hero, 6 product, 7 comparison room, 6 table/passage, 6 FAQ, 7 street, 8 pond, 6 belt specials. Includes both games.
 
 ## 8. Games
@@ -81,15 +81,15 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 - **Click reactions move the object, not a second picture** (round 6). A clicked creature or prop is lifted out as a cut-out of its own frame 0 and moved by a transform (hop with squash and stretch, a cat's stretch, a wobble about its base, a swing from its top) over a patch of the room behind it, then settles back pixel-exactly. Only state changes keep frame reactions: Jiro's jaw and blink, the traffic light. Reduced motion disables these moves.
 - Belt, koi and click moves excepted, ≤ 5% of a stop's pixels change at once. Lantern flicker, steam, eyes, reeds, rain, ripples, cloth.
 - Every ambient sprite loop is a sequence whose length divides the scene loop (e.g. 8 s scene loop, 0.5/1/2/4/8 s layers) and returns to frame 0 pixel-exactly. No video crossfades, no Veo, no whole-frame swaps. Procedural effects run on their own real-time clock and are not loops.
-- `prefers-reduced-motion`: belt slows to 25%, ambient loops pause at frame 0, procedural effects hold still (glows stay lit), koi, click and idle moves disabled, glides become jumps.
+- `prefers-reduced-motion`: belt slows to 25%, ambient loops pause at frame 0, procedural effects hold still (glows stay lit), koi, click and idle moves disabled, rides land at once.
 
 ## 10. Content integrity
 
-- Copy and numbers come from noriagentic.com only (pricing: Free trial / Developer $99 / Team $250 / Enterprise contact; comparison table; FAQ). Scripted demos are labelled "illustrative". No invented metrics.
+- Copy is Martin's minimal copy of 2026-10-02 (round 8); the FAQ is noriagentic.com's, verbatim. Prices follow noriagentic.com's plans under house names: Apprentice $0 (free trial), Itamae $99/mo (single developer), Omakase $250/mo (teams). No invented metrics.
 
 ## 11. Delivery
 
-- Canvas 2D + DOM, no WebGL. Static still fallback route: `/still/` (all seven stops as images plus their copy, no JavaScript, generated from the live copy at build time and linked from the pond). Tested in Chromium and WebKit (Playwright) at 1440 × 900 and 390 × 844. Full-scroll recording plus one still per stop. Review URL on the session host; cache-buster `?v=`, never `?t=`.
+- Canvas 2D + DOM, no WebGL. Static still fallback route: `/still/` (all seven stops as images plus their copy, no JavaScript, generated from the live copy at build time; since round 8 not linked from the animated page). Tested in Chromium and WebKit (Playwright) at 1440 × 900 and 390 × 844. Full-scroll recording plus one still per stop. Review URL on the session host; cache-buster `?v=`, never `?t=`.
 
 ## Deliberate departures from the videos
 
@@ -101,4 +101,4 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 | Veo clips with crossfade seams, 6–17% motion, head pose swaps | Sprite loops, ≤5% motion, pixel-exact seams | "No human eye can identify the loop" |
 | Jiro jaw grille reads as teeth; orange blink slit | Plain jaw plate; dark 1 px blink | Canon + feedback |
 | Neon pink/blue street, blue pond off-palette | Same scenes inside the shared night ramp | One coherent palette |
-| Placeholder prices ($49 Itamae etc.) | Live noriagentic.com pricing | No invented claims |
+| Placeholder prices ($49 Itamae etc.) | Live noriagentic.com prices ($0, $99/mo, $250/mo) under the house names | No invented claims |

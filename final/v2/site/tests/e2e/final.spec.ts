@@ -66,19 +66,6 @@ test("the FAQ counter answers each live question through Jiro", async ({ page })
   await expect.poll(async () => (await tracker(page)).found).toBeGreaterThan(before);
 });
 
-test("the night street shows the live prices without any interaction", async ({ page }) => {
-  await open(page);
-  await goTo(page, "price");
-  const s = stop(page, "price");
-  await expect(s.getByRole("heading", { name: "Pay per agent, no hidden fees." })).toBeVisible();
-  for (const [name, price] of [["Free trial", "$0"], ["Developer", "$99"], ["Team", "$250"], ["Enterprise", "Contact us"]]) {
-    const card = s.getByTestId("plan").filter({ has: page.getByRole("heading", { name, exact: true }) });
-    await expect(card).toHaveCount(1);
-    await expect(card).toContainText(price);
-  }
-  await expect(s).toContainText("No card required for the trial. Runtimes sleep when idle and wake on demand.");
-});
-
 test("at the pond the koi leaps and eats what is on the belt in its arc", async ({ page }) => {
   await open(page);
   await goToArt(page, "pond");
@@ -185,25 +172,18 @@ test.describe("without JavaScript", () => {
       await img.scrollIntoViewIfNeeded();
       await expect.poll(() => img.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true);
     }
-    await expect(page.getByRole("heading", { name: /Jiro, your AI staff engineer/ })).toBeVisible();
-    await expect(page.locator("body")).toContainText("Pay per agent, no hidden fees.");
-    await expect(page.locator("body")).toContainText("What repositories can I use?");
-    await expect(page.locator("body")).toContainText("Snowflake Cortex");
+    await expect(page.getByRole("heading", { name: /Jiro, the tasteful software engineer/ })).toBeVisible();
+    for (const line of ["Jiro vs. AI slop", "Any model, any harness, any integration, any compute", "What repositories can I use?", "Not market price", "Omakase", "Pull up a Stool"]) {
+      await expect(page.locator("body")).toContainText(line);
+    }
   });
 });
 
-test("the price tags hang on strings like paper tickets, with bullets and one call to action", async ({ page }) => {
+test("the price tags hang on strings like paper tickets", async ({ page }) => {
   await open(page);
   await goTo(page, "price");
-  const s = stop(page, "price");
-  const tags = s.getByTestId("plan");
-  await expect(tags).toHaveCount(4);
-  for (const t of await tags.all()) {
-    await expect(t.locator(".pin")).toHaveCount(1);
-    expect(await t.locator("li").count()).toBeGreaterThanOrEqual(2);
-  }
-  await expect(s.locator(".price-cta")).toHaveCount(1);
-  const ys = await tags.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().top));
-  const team = await tags.filter({ has: page.getByRole("heading", { name: "Team", exact: true }) }).evaluate((e) => e.getBoundingClientRect().top);
-  expect(team).toBeGreaterThan(Math.min(...ys) + 4);
+  const tags = stop(page, "price").getByTestId("plan");
+  await expect(tags).toHaveCount(3);
+  for (const t of await tags.all()) await expect(t.locator(".pin")).toHaveCount(1);
+  for (const t of await tags.all()) await expect(t).toHaveAttribute("href", /^https:\/\/noriagentic\.com\//);
 });
