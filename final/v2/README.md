@@ -2,9 +2,18 @@
 
 v2 rebuilds the Jiro scroll site from Martin Stübler's brief of 2026-10-01: a 16-bit pixel-art sushi restaurant seen from one fixed ¾ camera. The page slides straight down through seven stops: **hero → product → good/bad comparison → comparison table → FAQ → price → koi pond**. One continuous conveyor belt runs through all of them. v2 supersedes PR #13's `../site/` as the active build. That build stays in the tree because v2 reuses its copy and games.
 
-## Status: round 7
+## Status: round 8
 
-Every stop and band is built and mounted (`BUILT` in `site/src/main.ts` lists all seven). The tree is at round 7 (`PLAN-R7.md`), which applies Martin's notes of 2026-10-02:
+Every stop and band is built and mounted (`BUILT` in `site/src/main.ts` lists all seven). The tree is at round 8 (`PLAN-R8.md`), which applies Martin's request of 2026-10-02 on top of PR #14:
+
+- the belt no longer shakes while scrolling: its canvas lives in the page, a screen and a half tall, and scrolls with the art instead of being redrawn over a fixed viewport a frame late (`site/src/beltView.ts`)
+- Demo1's scrolling replaces round 6's magnetic glides: input drags the page through a band with resistance, and when the gesture ends a push past 7% of the band rides on to the next scene, otherwise it springs back; one scene per gesture, trackpad momentum ignored after a ride, the belt 1.5× during a ride (`site/src/belt/scroller.ts`)
+- Martin's minimal copy on every scene and nothing else: the product demo, the compare replays and the comparison table are gone; price is "Not market price" with three tags (Apprentice $0, Itamae $99/mo, Omakase $250/mo); the pond is only "Pull up a Stool"
+- the header is only the logo and "Reserve a seat" (to noriagentic.com); the egg tracker is gone, though eggs still count and toast
+
+Martin approved with "go ahead" without answering the plan's open questions, so its defaults were used (see `PLAN-R8.md`).
+
+Round 7 (`PLAN-R7.md`) applied Martin's notes of 2026-10-02:
 
 - clicked plates explode into their own colours and re-form (about 40%) or do one of twelve gags; empty plates spin
 - a plate dragged to another spot on the belt stays there and rides on, and every stop and band has wider flat surfaces to set plates on
@@ -15,7 +24,7 @@ Every stop and band is built and mounted (`BUILT` in `site/src/main.ts` lists al
 Round 6 (`PLAN-R6.md`) applied Martin's review of the final build (Slack, 2026-10-02):
 
 - the belt 50% faster, food always upright, and about 40% more food on it
-- magnetic scrolling: the page only rests on a scene and glides between scenes, with the belt 50% faster during the glide (replacing the round-5 surge)
+- magnetic scrolling: the page only rests on a scene and glides between scenes, with the belt 50% faster during the glide (replacing the round-5 surge; replaced in turn by Demo1's scrolling in round 8)
 - click reactions that move the drawn object (hop, stretch, wobble, swing) over a patch of the background behind it, instead of swapping in a second picture; built by the new `tools/motion.py`
 - the comparison table restyled after video 07 without its bottom line, and the price tags after video 03
 
@@ -34,7 +43,11 @@ The final pass (`PLAN-FINAL.md`, Martin on 2026-10-01: "build the entire scroll 
 - the belt running straight down the right-hand shaft from stop 3 to the pond, then one turn onto the trestle
 - the no-JavaScript still page (`site/public/still/`), far-off scene canvases released to save memory, and well over the brief's 54 Easter eggs in the tracker
 
-Open question for Martin: stop 4 has no Jiro (the brief puts him in the hero, product, FAQ and street; the pond has none by design).
+Open questions:
+
+- For Martin: stop 4 has no Jiro (the brief puts him in the hero, product, FAQ and street; the pond has none by design).
+- For Martin: "Reserve a seat" links to noriagentic.com because no trial signup URL is known yet.
+- Round 8 passed the full e2e suite in Chromium and WebKit (desktop and mobile) in Playwright, after the WebKit library overlay below was rebuilt. The new scrolling (non-passive wheel and touch handlers writing `scrollTo` each frame) still needs a check in real Safari and on a real iPhone.
 
 **Resolution.** World coordinates stay 360 units across. Rooms and bands are fitted at grain 4 (1440 art px across, 1 CSS px per art px at 1440 wide). Characters, creatures, clickable props and all belt art are grain 8 (one art px per device pixel on a 2× retina screen at 1440 wide). The site sizes each scene canvas to the device (2, 4 or 8 canvas px per world unit) and averages finer art down once at load, so 1× screens and phones do not carry 8× canvases. Grain 8 is the ceiling the current 4K masters support. Gemini cannot draw pixel art this fine, so its scene masters are flat illustrations and our scripts make the pixel grid (see `art/README.md`, "Detail").
 
@@ -43,7 +56,7 @@ Open question for Martin: stop 4 has no Jiro (the brief puts him in the hero, pr
 | Path | What |
 | --- | --- |
 | `DESIGN-BRIEF.md` | The approved visual spec. It overrides the videos where they disagree. |
-| `PLAN.md`, `PLAN-R2.md`, `PLAN-R3.md`, `PLAN-S4.md`, `PLAN-FINAL.md`, `PLAN-R6.md`, `PLAN-R7.md`, `QUESTIONS.md` | The implementation plans (gate A, rounds 2–5, stop 4, the final pass, rounds 6 and 7) and Martin's decisions |
+| `PLAN.md`, `PLAN-R2.md`, `PLAN-R3.md`, `PLAN-S4.md`, `PLAN-FINAL.md`, `PLAN-R6.md`, `PLAN-R7.md`, `PLAN-R8.md`, `QUESTIONS.md` | The implementation plans (gate A, rounds 2–5, stop 4, the final pass, rounds 6–8) and Martin's decisions |
 | `research/` | Frame-by-frame analyses of the nine reference videos (see `research/README.md`) |
 | `palette/` | The 56-colour master palette, plus a LibreSprite variant with a transparent slot at index 0 |
 | `art/` | Specs, prompts, refs, raw Gemini output, the Gemini call log and `.ase` sources. See `art/README.md`. |
@@ -91,7 +104,7 @@ npm run test:e2e                # Playwright: Chromium + WebKit, each at 1440×9
 
 Playwright builds and serves the site on port 3301 itself, and reuses a server that is already running there.
 
-**Rebuilding.** The site only reads exported files under `site/public/`, so a rebuild after an art change is: re-export (`tools/export-scene.py art/specs/<scene>.json`, or `tools/export-belt.sh` for belt art and the koi), then `npm test` and `npm run build` in `site/`. `npm run build` regenerates the still page first. `node tools/build-still.mjs` can also be run on its own; it pulls the table, FAQ and pricing copy out of `src/content.ts` and the base PNG of each stop, so it must be rerun whenever that copy or a stop's base changes, and it fails loudly if it cannot find the copy.
+**Rebuilding.** The site only reads exported files under `site/public/`, so a rebuild after an art change is: re-export (`tools/export-scene.py art/specs/<scene>.json`, or `tools/export-belt.sh` for belt art and the koi), then `npm test` and `npm run build` in `site/`. `npm run build` regenerates the still page first. `node tools/build-still.mjs` can also be run on its own; it pulls each stop's copy out of `index.html`, the FAQ and price tags out of `src/content.ts`, and the base PNG of each stop, so it must be rerun whenever that copy or a stop's base changes, and it fails loudly if it cannot find the copy (or finds other than three plans).
 
 **WebKit on the Linux VM.** WebKit needs host libraries that cannot be installed without root. Before running e2e tests or the capture, run:
 
