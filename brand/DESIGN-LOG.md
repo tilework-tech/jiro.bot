@@ -108,8 +108,21 @@ All loops: Veo 3.1 image-to-video from the current still, locked camera, ~8 s, c
 | v5 | belt v5 | Strict motion prompt: slow belt, no dropped plates, Jiro nearly still, curtains steady. Two of three takes swung a curtain open and were rejected | Martin chose smooth |
 | v6 | same take as v5 | Playback reversed so plates flow into the wall | Approved: "great" |
 
+## Round 14: Sushi mini sprites (2026-10-01)
+
+- Asked: three different sushi character mini sprites that follow the onigiri face gallery Martin posted in round 2.
+- Made: salmon nigiri, tamago nigiri with a nori belt, and a maki roll cross-section, each 32x32 native with a 1px ink outline, pink cheeks, and six moods (happy, wink, love, sleepy, angry, shocked). Sheet on the gallery's dotted pink backdrop, individual transparent sprites at 1x and 8x, one mood strip per character.
+- Method: hand-placed pixels via Pillow, script committed this time at `character/06-sushi-mini-sprites/pipeline/draw_sushi_sprites.py` so the set can be extended with more moods or characters.
+- Files: `character/06-sushi-mini-sprites/`.
+- Follow-up: Martin liked the salmon nigiri and asked for an onigiri identical in shape to his reference. Made at 64x64 (hero) and 32x32 (matches the set): wide rounded triangle built as the hull of three disks, flat-topped nori cap flush with the apex, rice showing either side of the cap, shade rim along the bottom-left. Same six moods. Script `pipeline/draw_onigiri.py`.
+- Martin: "take a good look at his onigiri and copy it in pixel art in great detail, copy the second." Made `onigiri-copy-1x.png` (62x60 native) by tracing the second gallery tile's silhouette from the reference pixels and repainting it: 2px ink outline, nori cap with the lifted dark corner, round eyes, open D-smile with tongue, three blush strokes per cheek. Script `pipeline/draw_onigiri_copy.py`.
+- Martin: "cool, i really like the last draft, can we use the same style for some more different sushi art?" Made eight 64x64 characters in that style (tuna, salmon, tamago, ebi nigiri, maki roll, inari, temari, wasabi), `sushi-set-sheet.png` and `set-*-1x.png`/`-8x.png`. Script `pipeline/draw_sushi_set.py`. The traced-onigiri style is now the preferred direction for sushi characters.
+- Martin: "be creative about non food japan or sushi related things that can also be cute pixel art." Made ten 64x64 characters in the same style: maneki-neko, daruma, chochin lantern, Mount Fuji, koinobori, sakura, kokeshi, uchiwa fan, sushi plate, tanuki. `japan-set-sheet.png` and `jp-*-1x.png`/`-8x.png`. Script `pipeline/draw_japan_set.py`.
+- Martin: "give me a clean front view of the head of Jirobot." Made `jiro-head-1x.png` (64x64) in the same style with the canon #19 features: copper dome with cream front panel and rivets, twisted hachimaki with the knot at the back so the head is strictly symmetrical (Martin: "not the first image at an angle, but just the front view"), cream faceplate, copper cheek guards and ear discs, blue glowing eyes, speaker grille. Also a first #19-based Slack icon candidate. Script `pipeline/draw_jiro_head.py`.
+- Martin rejected the hand-drawn head: "use a gemini key to create real pixel art and stick to the actual template at the beginning of this chat." Generated four straight-on head portraits with Gemini image models from the original artwork. Files and prompts in `character/07-jiro-head-front/`. Candidate 1 keeps the knot on his left as in the template; 2 and 4 are symmetrical with the knot at the back; 3 put the knot front-center.
+
 ## Open items
 
-- Slack icon: candidates exist in rounds 3 and 4 but none was chosen, and all predate the #19 redesign. A #19-based icon has not been made.
+- Slack icon: candidates exist in rounds 3 and 4 but none was chosen, and all predate the #19 redesign. `character/06-sushi-mini-sprites/jiro-head-*.png` (2026-10-01) is the first #19-based candidate.
 - Hero banners: real header and subheader copy not yet set. Other ratios (16:9 social, 3:1 LinkedIn) not exported.
 - Pipeline scripts and prompt files need to be rebuilt; see the README pipeline section.

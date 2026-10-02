@@ -18,6 +18,7 @@ Only the final animation loop is committed here. Loops v1 to v5 and the pixel-sn
 | Bar loop | `animation/v6-FINAL-reversed-flow.mp4` | Approved ("great") |
 | Hero banners | `scenes/03-hero-banners/*A-interior-mock.png` | Liked, header copy not yet set |
 | Slack icon | `character/03-icons-handdrawn/`, `character/04-icons-aseprite/` | Candidates only, none chosen |
+| Sushi characters | `character/06-sushi-mini-sprites/` | Martin likes the traced-onigiri style (`onigiri-copy-*.png`); eight-character set in that style delivered 2026-10-01 |
 
 ## Layout
 
@@ -29,6 +30,8 @@ character/
   03-icons-handdrawn/          four 96x96 hand-drawn icon angles at 768px
   04-icons-aseprite/           icons derived from the original via Pillow + LibreSprite, plus the .ase bundle
   05-design-iterations/        numbered contact sheets (REF, 1 to 17) and round 2 (#18, #19 canon)
+  07-jiro-head-front/          Gemini-generated straight-on head portraits from the original artwork, with prompts
+  06-sushi-mini-sprites/       three 32x32 sushi characters (salmon nigiri, tamago nigiri, maki roll) and a reference-shaped onigiri at 64 and 32, six moods each, in the onigiri-gallery style, plus the generator scripts
 scenes/
   01-moodboard/                10 Gemini scene iterations, contact sheet
   02-bar-moodboard/            10 bar-scene iterations, contact sheet
