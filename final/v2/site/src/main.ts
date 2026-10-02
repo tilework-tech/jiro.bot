@@ -1,6 +1,7 @@
 import { mountBelt, type Mapping } from "./beltView";
 import { buildRoute, routePoints, BELT_W, BEND_R, HIDDEN, POND_TRESTLE, type Pt } from "./belt/route";
 import { createJourney } from "./belt/motion";
+import { glideTarget, wheelTarget, type StopSpan } from "./belt/snap";
 import { createEggs, say, type Egg } from "./eggs";
 import { BANDS, STOP_H, STOPS, WORLD_W, stopTop, type StopId } from "./layout";
 import { mountScene, sceneDensity, type SceneDef } from "./scene";
@@ -10,7 +11,7 @@ import { DAILY_STALL, RUSH_CABINET, mountCabinet } from "./cabinet";
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const narrow = () => innerWidth <= 760;
 const BUILT: StopId[] = ["hero", "product", "compare", "table", "faq", "price", "pond"];
-const REST = 4;
+const REST = 6;
 
 const BELT_EGGS: Egg[] = [
   { id: "plate-poke", name: "Poked a plate", scene: "belt" },
@@ -222,7 +223,6 @@ async function boot() {
     seed: 20261001,
     reduced,
     bedOnly: (p: Pt) => p.y < heroBottom(),
-    upright: (p: Pt) => p.y < heroBottom(),
     surfaces,
     water: () => [...scenes].flatMap(([id, sc]) => (sc.def.water ?? []).map((r) => ({ ...r, id: `${id}-${r.id}`, y: r.y + stopTop(id) }))),
     koiLine: () => map.worldToPage({ x: 0, y: stopTop("pond") + STOP_H * POND_TRESTLE }).y,
@@ -232,7 +232,9 @@ async function boot() {
   const belt = await mountBelt(deps);
 
   const relayout = () => {
-    void mountAll().then(() => { layout(); deps.route = buildPageRoute(); belt.resize(); });
+    // A resize moves every scene: drop any glide in flight and re-snap once the new layout is in.
+    if (glide) { glide = null; journey.glide(false); }
+    void mountAll().then(() => { layout(); deps.route = buildPageRoute(); belt.resize(); freeDir = 0; lastFree = performance.now(); });
   };
   addEventListener("resize", relayout);
   // Copy blocks set the mobile layout; they change height when the web fonts arrive.
@@ -243,11 +245,16 @@ async function boot() {
   });
   stage.querySelectorAll(".copy").forEach((el) => copyObserver.observe(el));
 
-  // ---------------------------------------------------------------- scroll: belt first, then the scene
+  // ---------------------------------------------------------------- scroll: magnetic, always resting on a scene
+  // A wheel flick glides to the next or previous scene; any other scroll that ends between scenes glides on to one.
+  // While the page glides, the belt runs half again as fast.
   let expectY: number | null = null; // where our own programmatic scroll should land
   let lastY = scrollY;
-  let lastInput = 0;
-  let carry = 0;
+  let lastFree = 0, freeDir: 1 | -1 | 0 = 0, lastWheel = 0, swallowUntil = 0, touching = false, dragging = false;
+  let gesture = { acc: 0, glided: false };
+  let glide: null | { from: number; to: number; start: number; lead: number; dur: number } = null;
+  const spans = (): StopSpan[] => STOPS.filter((id) => BUILT.includes(id))
+    .map((id) => { const el = stopEls.get(id)!; return { top: el.offsetTop, bottom: el.offsetTop + el.offsetHeight }; });
   const canScrollInside = (el: HTMLElement | null, dy: number) => {
     for (let n = el; n && n !== document.body; n = n.parentElement) {
       const st = getComputedStyle(n);
@@ -257,36 +264,58 @@ async function boot() {
     }
     return false;
   };
+  function glideTo(to: number, now: number, lead: number) {
+    const from = scrollY;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    to = Math.max(0, Math.min(Math.round(to), max));
+    if (Math.abs(to - from) < 1) return;
+    glide = { from, to, start: now, lead: reduced ? 0 : lead, dur: reduced ? 1 : Math.min(1100, Math.max(650, 500 + Math.abs(to - from) * 0.3)) };
+    journey.glide(true);
+  }
   addEventListener("wheel", (e) => {
     if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || canScrollInside(e.target as HTMLElement, e.deltaY)) return;
+    const now = performance.now();
+    if (now - lastWheel > 250) gesture = { acc: 0, glided: false };
+    lastWheel = now;
+    if (glide || gesture.glided || now < swallowUntil) { e.preventDefault(); return; }
+    const to = wheelTarget(scrollY, e.deltaY > 0 ? 1 : -1, spans(), innerHeight);
+    if (to === null) return; // free scroll inside a tall scene, or nothing further that way
     e.preventDefault();
-    journey.wheel(e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerHeight : 1));
-    lastInput = performance.now();
-    settling = null;
+    gesture.acc += e.deltaY;
+    if (Math.abs(gesture.acc) < 4) return; // trackpads often open a gesture with a 1–2 px nudge
+    gesture.glided = true;
+    glideTo(to, now, 250);
   }, { passive: false });
+  addEventListener("touchstart", () => { touching = true; glide = null; journey.glide(false); }, { passive: true });
+  const touchDone = (e: TouchEvent) => { if (e.touches.length === 0) { touching = false; lastFree = performance.now(); } };
+  addEventListener("touchend", touchDone, { passive: true });
+  addEventListener("touchcancel", touchDone, { passive: true });
+  // Holding the page's scrollbar: no glides until it is let go.
+  addEventListener("pointerdown", (e) => { if (e.clientX >= document.documentElement.clientWidth) dragging = true; });
+  addEventListener("pointerup", () => { if (dragging) { dragging = false; lastFree = performance.now(); } });
   addEventListener("scroll", () => {
     const dy = scrollY - lastY;
     lastY = scrollY;
-    if (expectY !== null && Math.abs(scrollY - expectY) < 1.5) return;
-    if (dy !== 0) { journey.nudge(dy); lastInput = performance.now(); }
+    if (expectY !== null && Math.abs(scrollY - expectY) < 1.5) { if (!glide) expectY = null; return; }
+    if (glide && performance.now() - glide.start > glide.lead) { glide = null; journey.glide(false); }
+    if (dy !== 0) { freeDir = dy > 0 ? 1 : -1; lastFree = performance.now(); }
   }, { passive: true });
 
-  const stopTops = () => STOPS.filter((id) => BUILT.includes(id)).map((id) => stopEls.get(id)!.offsetTop);
-  let settling: null | { from: number; to: number; start: number } = null;
   function settle(now: number) {
-    if (settling) {
-      const t = Math.min(1, (now - settling.start) / 320);
-      const y = settling.from + (settling.to - settling.from) * (1 - Math.pow(1 - t, 3));
-      const target = t >= 1 ? settling.to : y;
-      expectY = Math.round(target);
-      scrollTo(0, target);
-      if (t >= 1) settling = null;
+    if (glide) {
+      const t = Math.min(1, Math.max(0, (now - glide.start - glide.lead) / glide.dur));
+      if (now - glide.start < glide.lead) return;
+      const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const y = Math.round(glide.from + (glide.to - glide.from) * e);
+      expectY = y;
+      scrollTo(0, y);
+      if (t >= 1) { glide = null; journey.glide(false); swallowUntil = Math.max(swallowUntil, now + 200); }
       return;
     }
-    if (now - lastInput < 180 || journey.state().pending !== 0) return;
-    const y = scrollY;
-    const near = stopTops().find((top) => Math.abs(top - y) <= 40 && Math.abs(top - y) >= 1);
-    if (near !== undefined) settling = { from: y, to: near, start: now };
+    if (touching || dragging || lastFree === 0 || now - lastFree < 160 || now - lastWheel < 160) return;
+    const to = glideTarget(scrollY, freeDir, spans(), innerHeight);
+    lastFree = 0;
+    if (to !== null) glideTo(to, now, 0);
   }
 
   // ---------------------------------------------------------------- frame loop
@@ -295,12 +324,6 @@ async function boot() {
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
     journey.tick(dt);
-    const st = journey.state();
-    if (st.sceneDelta) {
-      carry += st.sceneDelta;
-      const step = carry > 0 ? Math.floor(carry) : Math.ceil(carry);
-      if (step) { carry -= step; expectY = scrollY + step; scrollBy(0, step); }
-    }
     settle(now);
     // Scenes more than 1.5 screens away hand their canvas memory back; within one screen they are restored.
     const tend = (sc: Awaited<ReturnType<typeof mountScene>>, el: HTMLElement) => {

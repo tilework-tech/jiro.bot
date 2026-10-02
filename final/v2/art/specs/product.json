@@ -142,20 +142,10 @@
     2000,
     2000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     1500,
-     400
-    ]
-   },
    "egg": "shelf-soot",
-   "grain": 8
+   "grain": 8,
+   "motion": "hop",
+   "subject": "small black fuzzy soot sprite sitting on the shelf"
   },
   "lucky-cat": {
    "crop": [
@@ -180,24 +170,10 @@
    "durations": [
     8000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     2,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     450,
-     450,
-     450,
-     550
-    ]
-   },
    "egg": "lucky-cat",
-   "grain": 8
+   "grain": 8,
+   "motion": "wobble",
+   "subject": "small white lucky cat figurine"
   },
   "plant": {
    "crop": [
@@ -222,24 +198,10 @@
    "durations": [
     8000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     0,
-     2,
-     0
-    ],
-    "durations": [
-     100,
-     400,
-     400,
-     400,
-     700
-    ]
-   },
    "egg": "plant",
-   "grain": 8
+   "grain": 8,
+   "motion": "wobble",
+   "subject": "small potted plant"
   },
   "notes": {
    "crop": [
@@ -263,20 +225,10 @@
    "durations": [
     8000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     1200,
-     700
-    ]
-   },
    "egg": "notes",
-   "grain": 8
+   "grain": 8,
+   "motion": "swing",
+   "subject": "yellow sticky notes"
   }
  },
  "scene": {

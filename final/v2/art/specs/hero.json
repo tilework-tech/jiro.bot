@@ -95,24 +95,10 @@
     8000
    ],
    "egg": "chime",
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     0,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     450,
-     450,
-     450,
-     550
-    ]
-   },
    "model": "gemini-3-pro-image",
-   "grain": 8
+   "grain": 8,
+   "motion": "swing",
+   "subject": "small fish-shaped wooden wind chime and its string"
   },
   "diner-a": {
    "crop": [
@@ -202,25 +188,11 @@
     2000,
     2000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     2,
-     3,
-     2,
-     0
-    ],
-    "durations": [
-     100,
-     500,
-     800,
-     500,
-     100
-    ]
-   },
    "egg": "cat",
    "grain": 8,
-   "mask_prompt": "Isolate the sleeping orange tabby cat: keep only the cat."
+   "mask_prompt": "Isolate the sleeping orange tabby cat: keep only the cat.",
+   "motion": "stretch",
+   "subject": "sleeping orange tabby cat"
   },
   "door-eyes": {
    "crop": [
@@ -356,26 +328,10 @@
    "durations": [
     8000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     2,
-     1,
-     2,
-     0
-    ],
-    "durations": [
-     100,
-     350,
-     350,
-     350,
-     350,
-     500
-    ]
-   },
    "egg": "lucky-cat",
-   "grain": 8
+   "grain": 8,
+   "motion": "wobble",
+   "subject": "white beckoning lucky cat figurine"
   },
   "daruma": {
    "crop": [
@@ -400,26 +356,10 @@
    "durations": [
     8000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     2,
-     1,
-     2,
-     0
-    ],
-    "durations": [
-     100,
-     300,
-     400,
-     300,
-     400,
-     500
-    ]
-   },
    "egg": "daruma",
-   "grain": 8
+   "grain": 8,
+   "motion": "wobble",
+   "subject": "small red daruma doll"
   },
   "kettle": {
    "crop": [
@@ -444,24 +384,10 @@
    "durations": [
     8000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     2,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     400,
-     800,
-     400,
-     300
-    ]
-   },
    "egg": "kettle",
-   "grain": 8
+   "grain": 8,
+   "motion": "wobble",
+   "subject": "tea kettle"
   },
   "bonsai": {
    "crop": [
@@ -486,22 +412,10 @@
    "durations": [
     8000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     2,
-     0
-    ],
-    "durations": [
-     100,
-     600,
-     1200,
-     100
-    ]
-   },
    "egg": "bonsai",
-   "grain": 8
+   "grain": 8,
+   "motion": "wobble",
+   "subject": "small potted bonsai tree"
   },
   "noren": {
    "crop": [
@@ -525,20 +439,10 @@
    "durations": [
     8000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     1400,
-     500
-    ]
-   },
    "egg": "noren",
-   "grain": 8
+   "grain": 8,
+   "motion": "swing",
+   "subject": "indigo noren curtain"
   },
   "cooker": {
    "crop": [
@@ -562,18 +466,6 @@
    "durations": [
     8000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     1200,
-     700
-    ]
-   },
    "egg": "cooker",
    "grain": 8,
    "frame_rois": [
@@ -583,7 +475,9 @@
      30,
      32
     ]
-   ]
+   ],
+   "motion": "wobble",
+   "subject": "rice cooker"
   },
   "sake": {
    "crop": [
@@ -607,24 +501,10 @@
    "durations": [
     8000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     0,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     300,
-     300,
-     300,
-     1000
-    ]
-   },
    "egg": "sake",
-   "grain": 8
+   "grain": 8,
+   "motion": "wobble",
+   "subject": "sake bottles"
   }
  },
  "scene": {

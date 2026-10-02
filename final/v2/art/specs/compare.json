@@ -28,21 +28,9 @@
    "durations": [
     8000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     900,
-     900,
-     400
-    ]
-   },
-   "egg": "cat"
+   "egg": "cat",
+   "motion": "stretch",
+   "subject": "sleeping tabby cat (only the cat, not the cushion)"
   },
   "tea-l": {
    "grain": 8,

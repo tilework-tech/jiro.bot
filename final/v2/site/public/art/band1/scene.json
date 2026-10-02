@@ -30,26 +30,24 @@
     200,
     2000
    ],
-   "egg": "spirits"
-  },
-  {
-   "id": "spirits-react",
-   "src": "spirits-react.png",
-   "x": 190,
-   "y": 8,
-   "w": 94,
-   "h": 20,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    400,
-    250,
-    400,
-    350
-   ],
-   "trigger": true,
-   "egg": "spirits"
+   "egg": "spirits",
+   "motion": {
+    "kind": "hop",
+    "cut": "spirits-cut.png",
+    "under": "spirits-under.png",
+    "x": 184,
+    "y": 2,
+    "w": 106,
+    "h": 30,
+    "bottom": [
+     237.0,
+     32.0
+    ],
+    "top": [
+     237.0,
+     20.25
+    ]
+   }
   },
   {
    "id": "hole-eyes",

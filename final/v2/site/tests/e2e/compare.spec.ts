@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { open, platesInView, tracker, waitForPlate, type PlateBox } from "./helpers";
+import { open, platesInView, tracker, waitForPlate, type PlateBox, settled } from "./helpers";
 
 const compare = (page: Page) => page.locator('[data-stop="compare"]');
 
@@ -15,7 +15,8 @@ async function goToCompareArt(page: Page) {
   const top = await scene.evaluate((el) => el.getBoundingClientRect().top + scrollY);
   const target = Math.max(0, top - Math.max(0, page.viewportSize()!.height - (await scene.boundingBox())!.height));
   await page.evaluate((y) => scrollTo(0, y), target);
-  await expect.poll(() => scene.evaluate((el) => Math.round(el.getBoundingClientRect().bottom) <= innerHeight + 1)).toBe(true);
+  await settled(page);
+  await expect.poll(() => scene.evaluate((el) => { const r = el.getBoundingClientRect(); return r.top >= -1 && Math.round(r.bottom) <= innerHeight + 1; })).toBe(true);
 }
 
 /** A plate the visitor can actually grab: the belt canvas is what sits under the pointer. */
@@ -195,8 +196,10 @@ for (const where of [
     test.skip(isMobile, "checked at desktop size");
     await open(page);
     const art = page.locator(`canvas.scene[data-scene="${where.stop}"]`);
-    await art.evaluate((el) => scrollTo(0, el.getBoundingClientRect().top + scrollY + el.getBoundingClientRect().height - innerHeight / 2));
-    await page.waitForTimeout(600);
+    // Rest on the scene itself (the page never rests between scenes); the cut line is on screen there.
+    await page.locator(`[data-stop="${where.stop}"]`).evaluate((el) => scrollTo(0, el.getBoundingClientRect().top + scrollY));
+    await settled(page);
+    await page.waitForTimeout(300);
     const b = (await art.boundingBox())!;
     const cut = b.y + b.height * where.y;
     const x0 = b.x + b.width * where.x[0], x1 = b.x + b.width * where.x[1];

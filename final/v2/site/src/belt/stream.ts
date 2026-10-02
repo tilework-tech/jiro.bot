@@ -13,7 +13,7 @@ export const EFFECTS = 25;
 
 /**
  * The ordered plate stream. Slot i's content is a pure function of (seed, i), so a plate never changes once seen.
- * Plates sit on about half of the slots and items on about half of those plates (a quarter of the belt). Both use a
+ * Plates sit on about half of the slots and items on about 70% of those plates. Both use a
  * two-state chain: plates are biased against long runs so bare belt shows between them, food comes in natural runs.
  */
 export function createStream(seed: number) {
@@ -30,7 +30,7 @@ export function createStream(seed: number) {
     };
   };
   // Plates rarely follow each other for long, so the belt reads spaced out; food on plates may come in runs.
-  const hasPlate = chain(1, 0.45, 0.5), filled = chain(9, 0.6, 0.4);
+  const hasPlate = chain(1, 0.45, 0.5), filled = chain(9, 0.72, 0.65);
   return {
     slot(i: number): Slot {
       const rim = hash01(seed, i, 2) < 0.5 ? "grey" : "blue";

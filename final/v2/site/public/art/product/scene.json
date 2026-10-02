@@ -79,24 +79,24 @@
     2000,
     2000
    ],
-   "egg": "shelf-soot"
-  },
-  {
-   "id": "shelf-soot-react",
-   "src": "shelf-soot-react.png",
-   "x": 346,
-   "y": 116,
-   "w": 12,
-   "h": 12,
-   "grain": 8,
-   "frames": 3,
-   "durations": [
-    100,
-    1500,
-    400
-   ],
-   "trigger": true,
-   "egg": "shelf-soot"
+   "egg": "shelf-soot",
+   "motion": {
+    "kind": "hop",
+    "cut": "shelf-soot-cut.png",
+    "under": "shelf-soot-under.png",
+    "x": 344,
+    "y": 114,
+    "w": 16,
+    "h": 17,
+    "bottom": [
+     351.75,
+     124.875
+    ],
+    "top": [
+     351.75,
+     120.5
+    ]
+   }
   },
   {
    "id": "lucky-cat",
@@ -110,26 +110,24 @@
    "durations": [
     8000
    ],
-   "egg": "lucky-cat"
-  },
-  {
-   "id": "lucky-cat-react",
-   "src": "lucky-cat-react.png",
-   "x": 339,
-   "y": 112,
-   "w": 8,
-   "h": 11,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    450,
-    450,
-    450,
-    550
-   ],
-   "trigger": true,
-   "egg": "lucky-cat"
+   "egg": "lucky-cat",
+   "motion": {
+    "kind": "wobble",
+    "cut": "lucky-cat-cut.png",
+    "under": "lucky-cat-under.png",
+    "x": 336,
+    "y": 109,
+    "w": 14,
+    "h": 15,
+    "bottom": [
+     343.0,
+     119.375
+    ],
+    "top": [
+     343.0,
+     113.875
+    ]
+   }
   },
   {
    "id": "plant",
@@ -143,26 +141,24 @@
    "durations": [
     8000
    ],
-   "egg": "plant"
-  },
-  {
-   "id": "plant-react",
-   "src": "plant-react.png",
-   "x": 330,
-   "y": 102,
-   "w": 11,
-   "h": 13,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    400,
-    400,
-    400,
-    700
-   ],
-   "trigger": true,
-   "egg": "plant"
+   "egg": "plant",
+   "motion": {
+    "kind": "wobble",
+    "cut": "plant-cut.png",
+    "under": "plant-under.png",
+    "x": 327,
+    "y": 101,
+    "w": 17,
+    "h": 17,
+    "bottom": [
+     336.0625,
+     118.0
+    ],
+    "top": [
+     336.0625,
+     104.125
+    ]
+   }
   },
   {
    "id": "notes",
@@ -176,24 +172,24 @@
    "durations": [
     8000
    ],
-   "egg": "notes"
-  },
-  {
-   "id": "notes-react",
-   "src": "notes-react.png",
-   "x": 296,
-   "y": 132,
-   "w": 14,
-   "h": 14,
-   "grain": 8,
-   "frames": 3,
-   "durations": [
-    100,
-    1200,
-    700
-   ],
-   "trigger": true,
-   "egg": "notes"
+   "egg": "notes",
+   "motion": {
+    "kind": "swing",
+    "cut": "notes-cut.png",
+    "under": "notes-under.png",
+    "x": 292,
+    "y": 129,
+    "w": 20,
+    "h": 20,
+    "bottom": [
+     302.4375,
+     145.5
+    ],
+    "top": [
+     302.4375,
+     132.75
+    ]
+   }
   }
  ],
  "surfaces": [

@@ -76,10 +76,11 @@ test("the visible belt is spaced out: bare belt between plates, food on only som
   expect(n.filled).toBeLessThan(n.plates);
 });
 
-test("the belt surges first when scrolling starts, then the scene moves", async ({ page, browserName, isMobile }) => {
+test("one wheel flick glides to the next scene, the belt running half again as fast until it lands", async ({ page, isMobile }) => {
   test.skip(isMobile, "wheel input is desktop only");
   await open(page);
   const rest = await beltSpeed(page);
+  const next = await page.locator("[data-stop]").nth(1).evaluate((el) => el.getBoundingClientRect().top + scrollY);
   await page.evaluate(() => {
     const w = window as any;
     w.__samples = [] as { speed: number; y: number }[];
@@ -87,18 +88,25 @@ test("the belt surges first when scrolling starts, then the scene moves", async 
     requestAnimationFrame(loop);
   });
   await page.mouse.move(900, 450);
-  await page.mouse.wheel(0, 500);
-  await expect.poll(() => page.evaluate(() => scrollY), { timeout: 4000 }).toBeGreaterThan(300);
+  await page.mouse.wheel(0, 120);
+  await expect.poll(() => page.evaluate(() => scrollY), { timeout: 4000 }).toBe(Math.round(next));
   const samples = await page.evaluate(() => (window as any).__samples as { speed: number; y: number }[]);
-  const firstMove = samples.findIndex((s) => s.y > 0);
-  const firstSurge = samples.findIndex((s) => s.speed > rest * 1.5);
-  expect(firstSurge).toBeGreaterThanOrEqual(0);
-  expect(firstSurge).toBeLessThan(firstMove);
-  const peak = Math.max(...samples.map((s) => s.speed));
-  expect(peak).toBeGreaterThan(rest * 4);
-  expect(peak).toBeLessThanOrEqual(rest * 6.05);
-  await page.waitForTimeout(2500);
+  const moving = samples.filter((x) => x.y > 50 && x.y < next - 50);
+  expect(moving.length).toBeGreaterThan(5);
+  for (const m of moving) expect(m.speed).toBeGreaterThan(rest * 1.3);
+  expect(Math.max(...samples.map((x) => x.speed))).toBeLessThanOrEqual(rest * 1.55);
+  await page.waitForTimeout(1500);
   expect(await beltSpeed(page)).toBeCloseTo(rest, 0);
+});
+
+test("food rides upright on every plate, whatever the belt's direction", async ({ page }) => {
+  await open(page);
+  for (const id of ["hero", "compare", "pond"]) {
+    const top = await page.locator(`[data-stop="${id}"]`).evaluate((el) => el.getBoundingClientRect().top + scrollY);
+    await page.evaluate((y) => scrollTo(0, y), top);
+    await page.waitForTimeout(1500);
+    for (const p of await platesInView(page)) expect(p.angle, `${id} plate ${p.id}`).toBe(0);
+  }
 });
 
 test("clicking a plate triggers that plate's effect", async ({ page }) => {
@@ -141,22 +149,21 @@ test("the same belt continues below the hero", async ({ page }) => {
   await waitForPlate(page);
 });
 
-test("the first transition slides straight down and rests softly on the next stop", async ({ page }) => {
+test("the page never rests between scenes: a scroll that stops in a band glides on to a scene", async ({ page }) => {
   await open(page);
   const stops = page.locator("[data-stop]");
   const top = await stops.nth(1).evaluate((el) => el.getBoundingClientRect().top + scrollY);
-  const scaleOf = () => page.evaluate(() => {
-    const el = document.querySelector("[data-stop]")!;
-    return { sx: scrollX, w: el.getBoundingClientRect().width };
-  });
-  const atHero = await scaleOf();
-  await page.evaluate((y) => scrollTo(0, y), top - 30);
-  await expect.poll(() => page.evaluate(() => scrollY), { timeout: 2000 }).toBeCloseTo(top, 0);
-  expect(await scaleOf()).toEqual(atHero);
-  const bandMiddle = top - page.viewportSize()!.height * 0.5;
+  const atHero = await page.evaluate(() => ({ sx: scrollX, w: document.querySelector("[data-stop]")!.getBoundingClientRect().width }));
+  await page.evaluate((y) => scrollTo(0, y), top - 60);
+  await expect.poll(() => page.evaluate(() => scrollY), { timeout: 3000 }).toBe(Math.round(top));
+  expect(await page.evaluate(() => ({ sx: scrollX, w: document.querySelector("[data-stop]")!.getBoundingClientRect().width }))).toEqual(atHero);
+  const bandMiddle = top - page.viewportSize()!.height * 0.3;
   await page.evaluate((y) => scrollTo(0, y), bandMiddle);
-  await page.waitForTimeout(800);
-  expect(Math.abs((await page.evaluate(() => scrollY)) - bandMiddle)).toBeLessThan(1);
+  await expect.poll(async () => {
+    const y = await page.evaluate(() => scrollY);
+    const tops = await stops.evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top + scrollY)));
+    return tops.includes(y) || y === 0;
+  }, { timeout: 3000 }).toBe(true);
 });
 
 test.describe("with reduced motion", () => {

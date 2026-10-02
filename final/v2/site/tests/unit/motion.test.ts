@@ -6,74 +6,42 @@ const run = (j: ReturnType<typeof createJourney>, seconds: number, each?: () => 
   for (let t = 0; t < seconds; t += FRAME) { j.tick(FRAME); each?.(); }
 };
 
-describe("belt and scroll journey", () => {
+describe("belt journey", () => {
   it("keeps the belt crawling forward when nobody scrolls", () => {
     const j = createJourney();
     const a = j.state().travel;
     run(j, 30);
-    const b = j.state().travel;
-    expect(j.restSpeed).toBeGreaterThan(0);
-    expect(b - a).toBeCloseTo(j.restSpeed * 30, 0);
+    expect(j.state().travel - a).toBeCloseTo(j.restSpeed * 30, 0);
     expect(j.state().speed).toBeCloseTo(j.restSpeed, 5);
   });
 
-  it("speeds the belt up before the scene starts to move", () => {
+  it("moves the belt 50% faster at rest than before (6 units a second)", () => {
+    expect(createJourney().restSpeed).toBe(6);
+  });
+
+  it("runs the belt half again as fast while the page glides to the next scene, then settles back", () => {
     const j = createJourney();
     run(j, 2);
-    j.wheel(400);
-    let firstSceneMove: number | null = null;
-    let speedAtFirstMove = 0;
-    let t = 0;
-    run(j, 1.5, () => {
-      t += FRAME;
-      const st = j.state();
-      if (firstSceneMove === null && st.sceneDelta !== 0) { firstSceneMove = t; speedAtFirstMove = st.speed; }
-    });
-    expect(firstSceneMove).not.toBeNull();
-    expect(firstSceneMove!).toBeGreaterThan(0.25);
-    expect(speedAtFirstMove).toBeGreaterThan(j.restSpeed * 4);
+    j.glide(true);
+    run(j, 0.6);
+    expect(j.state().speed).toBeCloseTo(j.restSpeed * 1.5, 1);
+    j.glide(false);
+    run(j, 1.2);
+    expect(j.state().speed).toBeCloseTo(j.restSpeed, 1);
   });
 
-  it("delivers the whole scroll the visitor asked for", () => {
+  it("never runs faster than 1.5× rest or backwards, however the glides come", () => {
     const j = createJourney();
-    j.wheel(400);
-    let moved = 0;
-    run(j, 3, () => { moved += j.state().sceneDelta; });
-    expect(moved).toBeCloseTo(400, 0);
+    for (let k = 0; k < 6; k++) {
+      j.glide(k % 2 === 0);
+      run(j, 0.3, () => {
+        expect(j.state().speed).toBeGreaterThan(0);
+        expect(j.state().speed).toBeLessThanOrEqual(j.restSpeed * 1.5 + 1e-6);
+      });
+    }
   });
 
-  it("does not delay scrolling that continues an ongoing gesture", () => {
-    const j = createJourney();
-    j.wheel(100);
-    let moved = 0;
-    for (let t = 0; t < 3 && moved < 99.5; t += FRAME) { j.tick(FRAME); moved += j.state().sceneDelta; }
-    expect(moved).toBeCloseTo(100, 0);
-    j.wheel(100);
-    j.tick(FRAME);
-    expect(j.state().sceneDelta).toBeGreaterThan(0);
-  });
-
-  it("never surges past six times rest speed, however hard the visitor scrolls", () => {
-    const j = createJourney();
-    let peak = 0;
-    for (let k = 0; k < 5; k++) { j.wheel(2000); run(j, 0.3, () => { peak = Math.max(peak, j.state().speed); }); }
-    run(j, 3, () => { peak = Math.max(peak, j.state().speed); });
-    expect(peak).toBeGreaterThan(j.restSpeed * 5);
-    expect(peak).toBeLessThanOrEqual(j.restSpeed * 6 + 1e-6);
-  });
-
-  it("settles back to rest speed within about a second of the surge", () => {
-    const j = createJourney();
-    j.wheel(400);
-    run(j, 1.6);
-    expect(Math.abs(j.state().speed - j.restSpeed)).toBeLessThan(j.restSpeed * 0.1);
-  });
-
-  it("never runs the belt backwards, even when scrolling up", () => {
-    const j = createJourney();
-    j.wheel(-800);
-    let moved = 0;
-    run(j, 3, () => { expect(j.state().speed).toBeGreaterThan(0); moved += j.state().sceneDelta; });
-    expect(moved).toBeCloseTo(-800, 0);
+  it("can be slowed for visitors who prefer reduced motion", () => {
+    expect(createJourney({ restSpeed: 1.5 }).restSpeed).toBe(1.5);
   });
 });

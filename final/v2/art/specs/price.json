@@ -202,23 +202,9 @@
     200,
     4800
    ],
-   "reaction": {
-    "keep": [
-     0,
-     2,
-     0,
-     2,
-     0
-    ],
-    "durations": [
-     100,
-     300,
-     200,
-     300,
-     300
-    ]
-   },
-   "egg": "cat"
+   "egg": "cat",
+   "motion": "hop",
+   "subject": "small grey cat sitting on the doorstep"
   },
   "lamp": {
    "grain": 8,
@@ -285,21 +271,10 @@
     "x": 139,
     "y": 19,
     "w": 13,
-    "h": 27,
+    "h": 17,
     "sprite": "light",
     "says": [
      "Green! \u2026and red again."
-    ]
-   },
-   {
-    "id": "lantern-l",
-    "name": "Shop lantern",
-    "x": 155,
-    "y": 31,
-    "w": 16,
-    "h": 29,
-    "says": [
-     "Open late."
     ]
    },
    {

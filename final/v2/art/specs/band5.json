@@ -42,21 +42,9 @@
     200,
     5000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     2,
-     2,
-     0
-    ],
-    "durations": [
-     100,
-     700,
-     500,
-     300
-    ]
-   },
-   "egg": "peeker"
+   "egg": "peeker",
+   "motion": "stretch",
+   "subject": "small black fuzzy soot sprite peeking over the roof tiles"
   },
   "wall-lantern": {
    "grain": 4,

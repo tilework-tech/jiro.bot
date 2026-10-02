@@ -37,6 +37,13 @@ for sid, s in spec["sprites"].items():
             e["trigger"] = True
         if s.get("egg"):
             e["egg"] = s["egg"]
+        if s.get("motion") and not trigger:
+            mj = json.loads((work / "sprites" / f"{sid}-motion.json").read_text())
+            cx, cy, cw, ch = s["crop"]
+            e["motion"] = {"kind": s["motion"], "cut": f"{sid}-cut.png", "under": f"{sid}-under.png",
+                           "x": cx, "y": cy, "w": cw, "h": ch, "bottom": mj["bottom"], "top": mj["top"]}
+            jobs.append((work / "sprites" / f"{sid}-cut.png", f"{sid}-cut"))
+            jobs.append((work / "sprites" / f"{sid}-under.png", f"{sid}-under"))
         entries.append(e)
 
 def run(job):

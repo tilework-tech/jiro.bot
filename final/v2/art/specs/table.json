@@ -63,23 +63,9 @@
    "durations": [
     8000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     2,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     600,
-     700,
-     500,
-     300
-    ]
-   },
-   "egg": "cat"
+   "egg": "cat",
+   "motion": "stretch",
+   "subject": "sleeping orange tabby cat"
   },
   "spirit": {
    "grain": 8,
@@ -109,22 +95,6 @@
     200,
     4600
    ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     0,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     200,
-     200,
-     200,
-     300
-    ]
-   },
    "egg": "spirit",
    "frame_rois": [
     [
@@ -260,7 +230,6 @@
     "y": 135,
     "w": 16,
     "h": 13,
-    "sprite": "spirit",
     "says": [
      "(it wants a turn)"
     ]

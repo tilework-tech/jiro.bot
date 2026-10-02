@@ -69,24 +69,10 @@
     200,
     2000
    ],
-   "reaction": {
-    "keep": [
-     0,
-     4,
-     0,
-     4,
-     0
-    ],
-    "durations": [
-     100,
-     400,
-     250,
-     400,
-     350
-    ]
-   },
    "egg": "spirits",
-   "align": false
+   "align": false,
+   "motion": "hop",
+   "subject": "five small round black fuzzy soot sprites sitting on the pipe"
   },
   "hole-eyes": {
    "grain": 8,

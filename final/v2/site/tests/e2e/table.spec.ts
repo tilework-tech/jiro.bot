@@ -1,7 +1,7 @@
 import { expect, test, type Page, type FrameLocator } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { open, tracker, waitForPlate } from "./helpers";
+import { open, tracker, waitForPlate, settled } from "./helpers";
 
 const stop = (page: Page) => page.locator('[data-stop="table"]');
 
@@ -16,7 +16,8 @@ async function goToTableArt(page: Page) {
   const top = await scene.evaluate((el) => el.getBoundingClientRect().top + scrollY);
   const target = Math.max(0, top - Math.max(0, page.viewportSize()!.height - (await scene.boundingBox())!.height));
   await page.evaluate((y) => scrollTo(0, y), target);
-  await expect.poll(() => scene.evaluate((el) => Math.round(el.getBoundingClientRect().bottom) <= innerHeight + 1)).toBe(true);
+  await settled(page);
+  await expect.poll(() => scene.evaluate((el) => { const r = el.getBoundingClientRect(); return r.top >= -1 && Math.round(r.bottom) <= innerHeight + 1; })).toBe(true);
 }
 
 const palette = () => {
@@ -42,7 +43,6 @@ test("the comparison table follows the dining room and reads without interaction
   for (const col of ["Nori", "Claude Tag", "Devin", "Cursor Cloud"]) await expect(table.getByRole("columnheader", { name: col, exact: true })).toBeVisible();
   for (const row of ["Agent", "Model", "Context", "Cloud", "Pricing"]) await expect(table.getByRole("rowheader", { name: row })).toBeVisible();
   await expect(table).toContainText("Snowflake Cortex");
-  await expect(board).toContainText(/noriagentic\.com/);
   if (!isMobile) expect((await board.boundingBox())!.width).toBeGreaterThanOrEqual(page.viewportSize()!.width * 0.45);
   expect(errors).toEqual([]);
 });
@@ -110,4 +110,19 @@ test("the comparison room hides easter eggs a visitor can reach", async ({ page 
     });
     expect(onTop, `egg ${await egg.getAttribute("data-egg")} is covered`).toBe(true);
   }
+});
+
+test("the board hangs like the kitchen chart: no footer line, the Nori column outlined", async ({ page }) => {
+  await open(page);
+  await goToTable(page);
+  const board = stop(page).getByTestId("menu-board");
+  await expect(board.locator(".source, tfoot, .legend")).toHaveCount(0);
+  // Every Nori cell carries a green rule on both sides, so the column reads as one outlined box.
+  const sides = await board.locator(".us").evaluateAll((els) => els.map((e) => {
+    const st = getComputedStyle(e);
+    return [st.borderLeftColor, st.borderRightColor, st.borderLeftWidth];
+  }));
+  expect(sides.length).toBe(6);
+  for (const [l, r, w] of sides) { expect(l).toBe("rgb(106, 233, 130)"); expect(r).toBe(l); expect(parseFloat(w)).toBeGreaterThanOrEqual(2); }
+  await expect(board.locator(".rail .clip")).toHaveCount(4);
 });

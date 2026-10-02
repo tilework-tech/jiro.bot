@@ -26,26 +26,24 @@
     200,
     5200
    ],
-   "egg": "bunk"
-  },
-  {
-   "id": "bunk-react",
-   "src": "bunk-react.png",
-   "x": 203,
-   "y": 51,
-   "w": 52,
-   "h": 38,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    500,
-    300,
-    500,
-    300
-   ],
-   "trigger": true,
-   "egg": "bunk"
+   "egg": "bunk",
+   "motion": {
+    "kind": "hop",
+    "cut": "bunk-cut.png",
+    "under": "bunk-under.png",
+    "x": 200,
+    "y": 48,
+    "w": 58,
+    "h": 44,
+    "bottom": [
+     239.0625,
+     69.0
+    ],
+    "top": [
+     239.0625,
+     52.375
+    ]
+   }
   },
   {
    "id": "waver",
@@ -61,26 +59,24 @@
     200,
     4200
    ],
-   "egg": "waver"
-  },
-  {
-   "id": "waver-react",
-   "src": "waver-react.png",
-   "x": 259,
-   "y": 79,
-   "w": 18,
-   "h": 18,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    250,
-    200,
-    250,
-    300
-   ],
-   "trigger": true,
-   "egg": "waver"
+   "egg": "waver",
+   "motion": {
+    "kind": "hop",
+    "cut": "waver-cut.png",
+    "under": "waver-under.png",
+    "x": 256,
+    "y": 76,
+    "w": 24,
+    "h": 24,
+    "bottom": [
+     267.4375,
+     95.25
+    ],
+    "top": [
+     267.4375,
+     79.5
+    ]
+   }
   },
   {
    "id": "faucet",

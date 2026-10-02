@@ -42,23 +42,9 @@
     200,
     5200
    ],
-   "reaction": {
-    "keep": [
-     0,
-     2,
-     0,
-     2,
-     0
-    ],
-    "durations": [
-     100,
-     500,
-     300,
-     500,
-     300
-    ]
-   },
-   "egg": "bunk"
+   "egg": "bunk",
+   "motion": "hop",
+   "subject": "small black fuzzy soot sprite sitting on the top bunk"
   },
   "waver": {
    "grain": 8,
@@ -90,23 +76,9 @@
     200,
     4200
    ],
-   "reaction": {
-    "keep": [
-     0,
-     2,
-     0,
-     2,
-     0
-    ],
-    "durations": [
-     100,
-     250,
-     200,
-     250,
-     300
-    ]
-   },
-   "egg": "waver"
+   "egg": "waver",
+   "motion": "hop",
+   "subject": "small black fuzzy soot sprite waving"
   },
   "faucet": {
    "grain": 8,

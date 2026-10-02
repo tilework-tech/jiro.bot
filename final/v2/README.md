@@ -2,24 +2,29 @@
 
 v2 rebuilds the Jiro scroll site from Martin Stübler's brief of 2026-10-01: a 16-bit pixel-art sushi restaurant seen from one fixed ¾ camera. The page slides straight down through seven stops: **hero → product → good/bad comparison → comparison table → FAQ → price → koi pond**. One continuous conveyor belt runs through all of them. v2 supersedes PR #13's `../site/` as the active build. That build stays in the tree because v2 reuses its copy and games.
 
-## Status: all seven stops built, final review
+## Status: round 6, after the final review
 
-Martin asked on 2026-10-01 for the rest of the scroll in one pass: "build the entire scroll animation until the very end in one go… come back with one final review link". `PLAN-FINAL.md` is that pass, and the tree is now at the final review. Every stop and band is built and mounted (`BUILT` in `site/src/main.ts` lists all seven).
+Every stop and band is built and mounted (`BUILT` in `site/src/main.ts` lists all seven). The tree is at round 6 (`PLAN-R6.md`), which applies Martin's review of the final build (Slack, 2026-10-02):
+
+- the belt 50% faster, food always upright, and about 40% more food on it
+- magnetic scrolling: the page only rests on a scene and glides between scenes, with the belt 50% faster during the glide (replacing the round-5 surge)
+- click reactions that move the drawn object (hop, stretch, wobble, swing) over a patch of the background behind it, instead of swapping in a second picture; built by the new `tools/motion.py`
+- the comparison table restyled after video 07 without its bottom line, and the price tags after video 03
 
 What came before, in order:
 
 - Round 2 (`PLAN-R2.md`) applied Martin's 2026-10-01 17:44 feedback: much higher resolution for everything (above all Jiro, people, dust spirits and belt items), a smooth belt and fewer plates.
-- Round 3 (`PLAN-R3.md`) applied his gate-B review: "crank it up a bit more and use even higher resolution moving forward", and stop 3 moved down so the belt runs along the bottom. Rounds 4 and 5 (addenda in the same file) halved the product art so the demo panel nearly fills the screen, ran the stop-3 panels down to the belt, cut every belt end horizontally, and made the scroll surge stronger.
-- Stop 4 (`PLAN-S4.md`): band 2, the comparison table on a cream menu board, Sushi Rush in the arcade cabinet, and the belt's right-hand run moved to x = 320 inside the painted steel shaft.
+- Round 3 (`PLAN-R3.md`) applied his gate-B review: "crank it up a bit more and use even higher resolution moving forward", and stop 3 moved down so the belt runs along the bottom. Rounds 4 and 5 (addenda in the same file) halved the product art so the demo panel nearly fills the screen, ran the stop-3 panels down to the belt, cut every belt end horizontally, and made the scroll surge stronger (replaced by the magnetic glide in round 6).
+- Stop 4 (`PLAN-S4.md`): band 2, the comparison table on a cream menu board (dark since round 6), Sushi Rush in the arcade cabinet, and the belt's right-hand run moved to x = 320 inside the painted steel shaft.
 
-The final pass (`PLAN-FINAL.md`) added:
+The final pass (`PLAN-FINAL.md`, Martin on 2026-10-01: "build the entire scroll animation until the very end in one go… come back with one final review link") added:
 
 - band 3 (storage cutaway with a dust-spirit bunk room), band 4 (drain cross-section) and band 5 (garden wall with a moon gate)
 - stop 5, the FAQ counter: the live noriagentic.com FAQ verbatim, as question bubbles over six plates; clicking one makes Jiro answer
-- stop 6, the night street: the live plans on hanging paper tags, Jiro on a bicycle at a red light
+- stop 6, the night street: the live plans on hanging paper tags (restyled in round 6), Jiro on a bicycle at a red light
 - stop 7, the koi pond: closing CTAs, Daily Roll in the yatai stall, and the koi that leaps over the belt trestle and eats what is on the plates in its arc
 - the belt running straight down the right-hand shaft from stop 3 to the pond, then one turn onto the trestle
-- the no-JavaScript still page (`site/public/still/`), far-off scene canvases released to save memory, and 87 Easter eggs in the tracker
+- the no-JavaScript still page (`site/public/still/`), far-off scene canvases released to save memory, and well over the brief's 54 Easter eggs in the tracker
 
 Open question for Martin: stop 4 has no Jiro (the brief puts him in the hero, product, FAQ and street; the pond has none by design).
 
@@ -30,7 +35,7 @@ Open question for Martin: stop 4 has no Jiro (the brief puts him in the hero, pr
 | Path | What |
 | --- | --- |
 | `DESIGN-BRIEF.md` | The approved visual spec. It overrides the videos where they disagree. |
-| `PLAN.md`, `PLAN-R2.md`, `PLAN-R3.md`, `PLAN-S4.md`, `PLAN-FINAL.md`, `QUESTIONS.md` | The implementation plans (gate A, rounds 2–5, stop 4, the final pass) and Martin's decisions |
+| `PLAN.md`, `PLAN-R2.md`, `PLAN-R3.md`, `PLAN-S4.md`, `PLAN-FINAL.md`, `PLAN-R6.md`, `QUESTIONS.md` | The implementation plans (gate A, rounds 2–5, stop 4, the final pass, round 6) and Martin's decisions |
 | `research/` | Frame-by-frame analyses of the nine reference videos (see `research/README.md`) |
 | `palette/` | The 56-colour master palette, plus a LibreSprite variant with a transparent slot at index 0 |
 | `art/` | Specs, prompts, refs, raw Gemini output, the Gemini call log and `.ase` sources. See `art/README.md`. |
@@ -122,7 +127,8 @@ See `art/README.md`. In short:
 2. `tools/fit.py` pixelates it onto the grain-4 grid and snaps it to the palette.
 3. `tools/ls-index.sh` indexes it to the palette.
 4. `tools/frames.py` builds the animation frames for each sprite, at the sprite's grain.
-5. `tools/export-scene.py` writes `site/public/art/<scene>/`.
+5. `tools/motion.py` builds the cut-out and background patch for each sprite with a `motion` click reaction.
+6. `tools/export-scene.py` writes `site/public/art/<scene>/`.
 
 Belt art (including the koi) goes through `tools/cut-sheet.py`, then `tools/item-frames.py` for living items, then `tools/export-belt.sh`. After any re-export, run `npm test` in `site/`. The art tests enforce:
 
@@ -134,12 +140,14 @@ Belt art (including the koi) goes through `tools/cut-sheet.py`, then `tools/item
 
 ## Gemini spend
 
-`art/log/gemini-calls.jsonl` has one line per call. The final pass (entries from 2026-10-02T00:00 UTC on) made 49 calls, about $6.80 at list price:
+`art/log/gemini-calls.jsonl` has one line per call. The final pass (entries from 2026-10-02T00:00 to 02:30 UTC) made 49 calls, about $6.80 at list price:
 
 | Calls | Model and size | Unit | Subtotal |
 | --- | --- | --- | --- |
 | 9 | `gemini-3-pro-image` 4K (six scene masters, the street edit, the two shaft outpaints) | $0.24 | $2.16 |
 | 19 | `gemini-3-pro-image` 1K/2K (Jiro, soot-sprite and eye frame edits, two masks, two koi renders) | $0.134 | $2.55 |
 | 21 | `gemini-3.1-flash-image` 2K (lantern, sushi, cat, firefly and other frame edits) | $0.101 | $2.12 |
+
+Round 6 (entries from 2026-10-02T02:30 UTC on) made 47 calls for `tools/motion.py`'s silhouettes and background edits, all `gemini-3-pro-image` at 1K or 2K: about $6.30 at the $0.134 unit above.
 
 To recount, filter the log on its `t` field and group by `model` and `size`.

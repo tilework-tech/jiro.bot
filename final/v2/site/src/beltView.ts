@@ -21,7 +21,9 @@ const U = BELT_GRAIN / 4;
 /** Item offsets in the stream are in 2x-grain units (1–3); belt art px per offset unit. */
 const OFFSET_PX = BELT_GRAIN / 2;
 /** World units between the koi arc's centre and where it falls back through the belt line. */
-const DESCENT = 44.4;
+const DESCENT = 27.1;
+/** World x range for the koi arc's centre, so both ends of the leap land in the painted water. */
+const REACH: [number, number] = [50, 160];
 /** Half-width of the koi's bite along the belt, in world units. */
 const BITE = 34;
 const ALIVE_FRAME_MS = 420;
@@ -42,8 +44,6 @@ export type BeltDeps = {
   reduced: boolean;
   /** Page-space band where the belt bed is painted into the scene art and only the slats are overdrawn. */
   bedOnly: (p: Pt) => boolean;
-  /** Page-space band where items keep their upright pose (the straight hero run). */
-  upright: (p: Pt) => boolean;
   surfaces: () => Surface[]; // world coords
   water: () => Surface[];
   /** Page y of the pond trestle's belt line, where the koi leaps over. */
@@ -119,8 +119,8 @@ export async function mountBelt(d: BeltDeps) {
   };
   const isPickable = (i: number) => stream.slot(i).item && !overrides.has(i) && ![...overrides.values()].some((o) => o.kind === "guest" && o.host === i);
 
-  /** Item rotation follows the belt: upright on the hero run, otherwise turned with the belt heading. */
-  const itemAngle = (pos: { x: number; y: number; heading: number }) => (d.upright(pos) ? 0 : pos.heading - Math.PI / 2);
+  /** Food always rides upright on its plate, whichever way the belt runs. */
+  const itemAngle = (_pos?: { x: number; y: number; heading: number }) => 0;
 
   function visibleSlots() {
     const top = scrollY - 80, bottom = scrollY + innerHeight + 80;
@@ -443,10 +443,10 @@ export async function mountBelt(d: BeltDeps) {
   function leapAt(target: number, now: number) {
     if (koi) return;
     const s = d.map.s, line = d.koiLine();
-    // With this arc the koi falls back through the belt line at t ≈ 0.87, 44 units left of the arc's centre.
+    // With this arc the koi falls back through the belt line at t ≈ 0.80, 27 units left of the arc's centre.
     // Both ends stay in the painted pond (world x 5–205 at the koi's depth).
-    const cx = Math.min(Math.max(target + DESCENT * s, 65 * s), 145 * s);
-    koi = { leap: { from: { x: cx + 60 * s, y: line + 55 * s }, to: { x: cx - 60 * s, y: line + 50 * s }, height: 115 * s }, start: now, dur: 2000, splashed: [false, false] };
+    const cx = Math.min(Math.max(target + DESCENT * s, REACH[0] * s), REACH[1] * s);
+    koi = { leap: { from: { x: cx + 45 * s, y: line + 55 * s }, to: { x: cx - 45 * s, y: line + 50 * s }, height: 80 * s }, start: now, dur: 2000, splashed: [false, false] };
     koiStats.leaps++;
     d.onEgg("koi-leap");
   }
@@ -454,9 +454,9 @@ export async function mountBelt(d: BeltDeps) {
   /** Page x where the koi's descent covers the most visible plates with food, within the reach of the pond. */
   function fullestRun(vis: ReturnType<typeof visibleSlots>, line: number) {
     const s = d.map.s;
-    const reach = (x: number) => x >= (65 - DESCENT) * s && x <= (145 - DESCENT) * s;
+    const reach = (x: number) => x >= (REACH[0] - DESCENT) * s && x <= (REACH[1] - DESCENT) * s;
     const xs = vis.filter((v) => Math.abs(v.pos.y - line) < 4 * s && reach(v.pos.x) && !d.route.isHidden(v.pos) && isOccupied(v.i) && !overrides.has(v.i)).map((v) => v.pos.x);
-    if (!xs.length) return (100 - DESCENT) * s;
+    if (!xs.length) return null;
     let best = xs[0], most = 0;
     for (const x of xs) { const n = xs.filter((o) => Math.abs(o - x) < BITE * s).length; if (n > most) { most = n; best = x; } }
     return best;
@@ -554,7 +554,11 @@ export async function mountBelt(d: BeltDeps) {
       drawPlate({ x: c.x, y: c.y - 8 * U }, held.rim, held.item, 0, now, held.slot);
     }
     const line = d.koiLine();
-    if (koiPlan.tick(dt, line > scrollY + 60 && line < scrollY + innerHeight - 60)) leapAt(fullestRun(vis, line), now);
+    if (koiPlan.tick(dt, line > scrollY + 60 && line < scrollY + innerHeight - 60)) {
+      const target = fullestRun(vis, line);
+      if (target === null) koiPlan.retry(1.5);
+      else leapAt(target, now);
+    }
     drawKoi(now, vis);
     drawParticles(dt);
   }
@@ -571,7 +575,7 @@ export async function mountBelt(d: BeltDeps) {
         .map((v) => {
           const o = overrides.get(v.i);
           const it = stream.slot(v.i).item;
-          return { id: v.i, x: v.pos.x - scrollX, y: v.pos.y - scrollY, r: 26 * U * hp, kind: it && (!o || o.kind === "walking") ? it.kind : "empty" };
+          return { id: v.i, x: v.pos.x - scrollX, y: v.pos.y - scrollY, r: 26 * U * hp, kind: it && (!o || o.kind === "walking") ? it.kind : "empty", angle: itemAngle(v.pos) };
         }),
     slotsInView: () => {
       const v = visibleSlots().filter((x) => overrides.get(x.i)?.kind !== "gone" && x.pos.y >= scrollY && x.pos.y <= scrollY + innerHeight && !d.route.isHidden(x.pos));

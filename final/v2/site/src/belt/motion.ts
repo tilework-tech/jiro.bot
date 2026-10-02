@@ -1,49 +1,24 @@
 /**
- * The belt/scroll journey. Belt speed is in world art px per second; scroll is in CSS px.
- * A fresh wheel gesture first surges the belt, then releases the page scroll after HOLD seconds,
- * so the visitor sees the belt react before the scene moves. Follow-up input in the same gesture scrolls at once.
+ * The belt's speed along its journey, in world units per second. It crawls forward at rest speed forever, and runs
+ * half again as fast while the page glides from one scene to the next ("it registered the scroll"). Never backwards.
  */
 export function createJourney(opts: { restSpeed?: number } = {}) {
-  const restSpeed = opts.restSpeed ?? 4;
-  const MAX = restSpeed * 6;
-  const HOLD = 0.3;
-  const IDLE = 0.6;
+  const restSpeed = opts.restSpeed ?? 6;
+  const FAST = restSpeed * 1.5;
   let speed = restSpeed;
-  let boost = 0;
   let travel = 0;
-  let pending = 0;
-  let hold = 0;
-  let idle = Infinity;
-  let sceneDelta = 0;
+  let gliding = false;
 
   return {
     restSpeed,
-    wheel(dy: number) {
-      if (idle > IDLE && pending === 0) hold = HOLD;
-      pending += dy;
-      idle = 0;
-      boost = Math.min(1, boost + Math.min(Math.abs(dy) / 300, 1));
-    },
+    /** The page started (true) or finished (false) gliding to a scene. */
+    glide(on: boolean) { gliding = on; },
     tick(dt: number) {
-      idle += dt;
-      sceneDelta = 0;
-      if (hold > 0) hold -= dt;
-      else if (pending !== 0) {
-        const step = Math.abs(pending) < 0.5 ? pending : pending * Math.min(1, dt * 12);
-        sceneDelta = step;
-        pending -= step;
-      }
-      const target = restSpeed + (MAX - restSpeed) * boost;
-      speed += (target - speed) * Math.min(1, dt * 18);
-      boost = Math.max(0, boost - dt * 1.4);
-      speed = Math.min(Math.max(speed, restSpeed * 0.25), MAX);
+      const target = gliding ? FAST : restSpeed;
+      speed += (target - speed) * Math.min(1, dt * (gliding ? 10 : 4));
+      speed = Math.min(Math.max(speed, restSpeed * 0.25), FAST);
       travel += speed * dt;
     },
-    /** Touch and keyboard scroll natively; only the belt reacts. */
-    nudge(dy: number) {
-      idle = 0;
-      boost = Math.min(1, boost + Math.min(Math.abs(dy) / 300, 1));
-    },
-    state: () => ({ speed, travel, sceneDelta, pending }),
+    state: () => ({ speed, travel }),
   };
 }

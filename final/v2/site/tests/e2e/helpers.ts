@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 
-export type PlateBox = { id: number; x: number; y: number; r: number; kind: string };
+export type PlateBox = { id: number; x: number; y: number; r: number; kind: string; angle: number };
 
 export async function open(page: Page, query = "") {
   const errors: string[] = [];
@@ -31,4 +31,16 @@ export async function waitForPlate(page: Page, pred: (p: PlateBox) => boolean = 
     await page.waitForTimeout(250);
   }
   throw new Error("no plate in view");
+}
+
+/** Wait until the page stops moving (the magnetic scroll may glide on to a scene after a programmatic scroll). */
+export async function settled(page: Page) {
+  let prev = -1;
+  for (let i = 0; i < 40; i++) {
+    const y = await page.evaluate(() => scrollY);
+    if (y === prev) return y;
+    prev = y;
+    await page.waitForTimeout(300);
+  }
+  return prev;
 }

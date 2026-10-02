@@ -26,25 +26,24 @@
     200,
     5000
    ],
-   "egg": "peeker"
-  },
-  {
-   "id": "peeker-react",
-   "src": "peeker-react.png",
-   "x": 118,
-   "y": 3,
-   "w": 20,
-   "h": 17,
-   "grain": 8,
-   "frames": 4,
-   "durations": [
-    100,
-    700,
-    500,
-    300
-   ],
-   "trigger": true,
-   "egg": "peeker"
+   "egg": "peeker",
+   "motion": {
+    "kind": "stretch",
+    "cut": "peeker-cut.png",
+    "under": "peeker-under.png",
+    "x": 115,
+    "y": 1,
+    "w": 26,
+    "h": 22,
+    "bottom": [
+     128.5,
+     20.875
+    ],
+    "top": [
+     128.5,
+     3.625
+    ]
+   }
   },
   {
    "id": "wall-lantern",

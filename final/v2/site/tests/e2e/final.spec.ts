@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { open, platesInView, tracker } from "./helpers";
+import { open, platesInView, tracker, settled } from "./helpers";
 
 const stop = (page: Page, id: string) => page.locator(`[data-stop="${id}"]`);
 
@@ -17,7 +17,8 @@ async function goToArt(page: Page, id: string) {
   const top = await scene.evaluate((el) => el.getBoundingClientRect().top + scrollY);
   const target = Math.max(0, top - Math.max(0, page.viewportSize()!.height - (await scene.boundingBox())!.height));
   await page.evaluate((y) => scrollTo(0, y), target);
-  await expect.poll(() => scene.evaluate((el) => Math.round(el.getBoundingClientRect().bottom) <= innerHeight + 1)).toBe(true);
+  await settled(page);
+  await expect.poll(() => scene.evaluate((el) => { const r = el.getBoundingClientRect(); return r.top >= -1 && Math.round(r.bottom) <= innerHeight + 1; })).toBe(true);
 }
 
 const palette = () => {
@@ -189,4 +190,20 @@ test.describe("without JavaScript", () => {
     await expect(page.locator("body")).toContainText("What repositories can I use?");
     await expect(page.locator("body")).toContainText("Snowflake Cortex");
   });
+});
+
+test("the price tags hang on strings like paper tickets, with bullets and one call to action", async ({ page }) => {
+  await open(page);
+  await goTo(page, "price");
+  const s = stop(page, "price");
+  const tags = s.getByTestId("plan");
+  await expect(tags).toHaveCount(4);
+  for (const t of await tags.all()) {
+    await expect(t.locator(".pin")).toHaveCount(1);
+    expect(await t.locator("li").count()).toBeGreaterThanOrEqual(2);
+  }
+  await expect(s.locator(".price-cta")).toHaveCount(1);
+  const ys = await tags.evaluateAll((els) => els.map((e) => e.getBoundingClientRect().top));
+  const team = await tags.filter({ has: page.getByRole("heading", { name: "Team", exact: true }) }).evaluate((e) => e.getBoundingClientRect().top);
+  expect(team).toBeGreaterThan(Math.min(...ys) + 4);
 });

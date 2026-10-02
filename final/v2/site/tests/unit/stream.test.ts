@@ -15,7 +15,7 @@ describe("the plate stream", () => {
     }
   });
 
-  it("puts something on about half of the plates, a quarter of the belt", () => {
+  it("puts something on about 70% of the plates (40% more food than half)", () => {
     const N = 1000;
     for (let seed = 1; seed <= 200; seed++) {
       const s = createStream(seed);
@@ -25,10 +25,10 @@ describe("the plate stream", () => {
         if (sl.plate) plates++;
         if (sl.item) items++;
       }
-      expect(items / plates).toBeGreaterThanOrEqual(0.4);
-      expect(items / plates).toBeLessThanOrEqual(0.6);
-      expect(items / N).toBeGreaterThanOrEqual(0.18);
-      expect(items / N).toBeLessThanOrEqual(0.32);
+      expect(items / plates).toBeGreaterThanOrEqual(0.62);
+      expect(items / plates).toBeLessThanOrEqual(0.78);
+      expect(items / N).toBeGreaterThanOrEqual(0.28);
+      expect(items / N).toBeLessThanOrEqual(0.42);
     }
   });
 

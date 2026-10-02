@@ -17,9 +17,12 @@ art/work/<scene>/base.png ── tools/ls-index.sh ──► art/src/ase/<scene>
         │  tools/frames.py <spec> <sprite>  (Gemini edits of a crop → refit → align → diff)
         ▼
 art/work/<scene>/sprites/<id>[-react]-fit.png
+        │  tools/motion.py <spec> <sprite>  (motion sprites: cut-out + background patch)
+        ▼
+art/work/<scene>/sprites/<id>-{cut,under}.png, <id>-motion.json
         │  tools/export-scene.py art/specs/<scene>.json
         ▼
-site/public/art/<scene>/{base.png, <sprite>.png, scene.json}
+site/public/art/<scene>/{base.png, <sprite>.png, <sprite>-{cut,under}.png, scene.json}
 ```
 
 ## Folders
@@ -79,10 +82,10 @@ Stop 3 and band 1 were generated new in round 2; band 1's master is a crop (`ban
 **Stop 4 and band 2 (new masters).** Both were generated directly as 4K flat illustrations with `gemini-3-pro-image`, using `gen/compare/compare-shift-fill.jpg` (and, for stop 4, `gen/hd/hero-master.jpg`) as style refs, so neither went through `soften.py`.
 
 - **Stop 4** (`specs/table.json`, master `gen/table/table-a.jpg`, prompt `src/prompts/table.txt`) is a dim kitchen corner: a calm tiled wall on the left 55% where the site lays its HTML menu board (the prompt forbids a painted board or text), a cherry-red arcade cabinet with a sleeping cat on top and a blank screen, a lantern, crates and a broom, a dust spirit by the cabinet, a vent with eyes, and the steel belt shaft at the right edge with an empty channel (the site draws the belt in it). `table-b.jpg` is an unused second render of the same prompt. The base is fitted at 1440 × 808 with `--smooth-dark 70 --warm-left 0.5` so the board's wall stays calm and warm.
-  - Sprites: the lantern (grain 4, glow flare), the cat (mask, single-frame at rest, wake-and-yawn reaction), the spirit (blink loop and blink reaction), the vent eyes (`compare: base`) and the coin-slot glow, all grain 8 except the lantern.
+  - Sprites: the lantern (grain 4, glow flare), the cat (mask, single-frame at rest; its wake-and-yawn strip became a `stretch` motion in round 6), the spirit (blink loop; its blink reaction was dropped in round 6, see Click motion), the vent eyes (`compare: base`) and the coin-slot glow, all grain 8 except the lantern.
   - Eggs are the cat, lantern, spirit, vent eyes, marquee, coin slot and crates; the lantern, marquee and crates are click-and-say. Surfaces are the stool, the cabinet top and a patch of floor.
 - **Band 2** (`specs/band2.json`, prompt `src/prompts/band2.txt`) is a floor-slab cutaway between the dining room and the kitchen: timber joists, a copper pipe, a sagging cable, and the same steel shaft on the right. The top of the render showed brightly lit diners, so the master is a crop of rows 430–2190 of `gen/band2/band2-a.jpg` (`band2-a-strip.png`), fitted to a 1440 × 400 base; the site's band 2 grew from 50 to 100 units to fit it.
-  - Sprites: the hanging dust spirit (`align: false`, blink as the ambient loop, leg-swing frames as the click reaction) and a pair of eyes in the dark corner. The surface is the pipe.
+  - Sprites: the hanging dust spirit (`align: false`, blink as the ambient loop; its leg-swing click strip became a `swing` motion in round 6) and a pair of eyes in the dark corner. The surface is the pipe.
 - Stop 4 has no Jiro (flagged to Martin).
 
 **Final pass: bands 3–5 and stops 5–7 (new masters).** All six were generated directly as 4K flat illustrations with `gemini-3-pro-image` (prompts `src/prompts/{band3,band4,band5,faq,price,pond}.txt`), with `gen/compare/compare-shift-fill.jpg` as the style ref and `src/refs/jiro-canon.png` added for the two stops with Jiro. Every prompt except the pond's paints the steel shaft at the far right with an empty channel; the pond paints a trestle with an empty channel across the full width.
@@ -140,14 +143,23 @@ Frame 0 is the untouched base: cut from the fitted base when the sprite's grain 
 
 - `mask_prompt` asks Gemini for a green-keyed silhouette, which becomes the sprite's alpha, so a grain-8 character does not paint its rectangle over the grain-4 room. Jiro and the cats use it. Gemini sometimes inverts the mask, painting the subject green on black instead of green around it; `frames.py` checks the crop's border and flips the key when most of the border is not green. The round-4 product Jiro mask came back inverted.
 - `keep` and `durations` define the ambient loop. A single-frame `keep` (`[0]`) is still exported, so a detail sprite shows at grain 8 at rest instead of the coarser base.
-- `reaction.keep` and `reaction.durations` define a one-shot strip (`-react`) that plays when the sprite is clicked.
+- `reaction.keep` and `reaction.durations` define a one-shot strip (`-react`) that plays when the sprite is clicked. Since round 6 only state changes use it (Jiro's jaw and blink, the traffic light, band 0's candle); creatures and props use `motion` instead (`tools/motion.py`).
+
+**`tools/motion.py <spec> <sprite> [--regen]`** builds click motion (round 6). Martin found the old click reactions crude: a `-react` strip swaps in a Gemini-edited second picture that never quite matches frame 0. A sprite with `"motion"` (`hop`, `stretch`, `wobble` or `swing`) and a `"subject"` description in its spec instead gets a cut-out of itself that the site moves, plus a patch of the room behind it to show while it is away. Run `frames.py` first so the crop's `src.png` exists.
+
+1. **Silhouette.** Gemini isolates the subject on flat green (`cut-mask`; the sprite's existing `mask_prompt` mask is reused when it has one). The key reuses `frames.py`'s fit and handles every matte Gemini answers with: green around the subject, green on black (flipped by the border test), or white on black when there is no green at all. If the silhouette covers under 2% or over 90% of the crop, it asks once more with a stricter prompt, then gives up.
+2. **Background.** A Gemini 2K edit removes the subject (`clean`). It is fitted at the sprite's grain and aligned to frame 0 within ±2 grain px, matching only pixels well away from the subject.
+3. **Acceptance.** Gemini's background is kept only if the alignment did not hit the search limit, at least 60% of the silhouette's pixels actually changed (the subject is gone), and the mismatch away from the subject is at most 0.8. Otherwise, or when the spec sets `"under": "fill"`, `grow_fill` grows the surrounding room inward over the silhouette dilated by 2 world units, each pass giving edge pixels the most common colour of their filled neighbours. The script prints which source it used.
+4. **Output** in `work/<scene>/sprites/`: `<id>-cut.png` (frame 0, only the subject opaque), `<id>-under.png` (the background, opaque only over the slightly dilated silhouette, or the fill area) and `<id>-motion.json` (the silhouette's bottom-centre and top-centre pivots in world units). Both PNGs cover the whole crop.
+
+The spec's old `reaction` block is removed for these sprites, and their `-react` strips were deleted from `work/` and `site/public/art/`. Creatures and props across the stops and bands now move this way; Jiro's jaw and blink, the traffic light and the candle keep frame reactions because they are state changes. Stop 4's half-hidden spirit could not be cut out cleanly, so it has no click reaction and its egg is click-and-say only.
 
 **`tools/export-scene.py <spec>`** (1) indexes the base and every strip through `ls-index.sh`, (2) copies them to `site/public/art/<scene>/`, and (3) writes `scene.json`. That file holds:
 
 - `size` in world units
 - the scene loop, which is the longest ambient loop
 - layers, each with its `grain`
-- sprites, with x, y, w, h, grain, frame count, durations, the `trigger` flag for reactions, and the `egg` id
+- sprites, with x, y, w, h, grain, frame count, durations, the `trigger` flag for reactions, the `egg` id, and for motion sprites a `motion` block: kind, `cut` and `under` file names, the crop box and the `bottom`/`top` pivots from `<id>-motion.json` (the cut and patch PNGs are indexed through `ls-index.sh` like the strips)
 - the spec's `scene` block, which carries `surfaces` (where plates can be set down) and `eggs` (click areas, names and speech lines)
 
 ## Belt art

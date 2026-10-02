@@ -26,27 +26,24 @@
     200,
     4800
    ],
-   "egg": "hanger"
-  },
-  {
-   "id": "hanger-react",
-   "src": "hanger-react.png",
-   "x": 139,
-   "y": 66,
-   "w": 22,
-   "h": 34,
-   "grain": 8,
-   "frames": 6,
-   "durations": [
-    100,
-    250,
-    250,
-    250,
-    250,
-    300
-   ],
-   "trigger": true,
-   "egg": "hanger"
+   "egg": "hanger",
+   "motion": {
+    "kind": "swing",
+    "cut": "hanger-cut.png",
+    "under": "hanger-under.png",
+    "x": 134,
+    "y": 62,
+    "w": 32,
+    "h": 40,
+    "bottom": [
+     150.0,
+     98.0
+    ],
+    "top": [
+     150.0,
+     66.375
+    ]
+   }
   },
   {
    "id": "eyes",

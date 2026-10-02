@@ -121,26 +121,24 @@
     200,
     4800
    ],
-   "egg": "cat"
-  },
-  {
-   "id": "cat-react",
-   "src": "cat-react.png",
-   "x": 115,
-   "y": 107,
-   "w": 14,
-   "h": 24,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    300,
-    200,
-    300,
-    300
-   ],
-   "trigger": true,
-   "egg": "cat"
+   "egg": "cat",
+   "motion": {
+    "kind": "hop",
+    "cut": "cat-cut.png",
+    "under": "cat-under.png",
+    "x": 111,
+    "y": 104,
+    "w": 22,
+    "h": 30,
+    "bottom": [
+     122.5625,
+     130.875
+    ],
+    "top": [
+     122.5625,
+     107.5
+    ]
+   }
   },
   {
    "id": "lamp",
@@ -194,21 +192,10 @@
    "x": 139,
    "y": 19,
    "w": 13,
-   "h": 27,
+   "h": 17,
    "sprite": "light",
    "says": [
     "Green! \u2026and red again."
-   ]
-  },
-  {
-   "id": "lantern-l",
-   "name": "Shop lantern",
-   "x": 155,
-   "y": 31,
-   "w": 16,
-   "h": 29,
-   "says": [
-    "Open late."
    ]
   },
   {

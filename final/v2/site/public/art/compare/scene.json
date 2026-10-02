@@ -24,25 +24,24 @@
    "durations": [
     8000
    ],
-   "egg": "cat"
-  },
-  {
-   "id": "cat-react",
-   "src": "cat-react.png",
-   "x": 95,
-   "y": 182,
-   "w": 29,
-   "h": 18,
-   "grain": 8,
-   "frames": 4,
-   "durations": [
-    100,
-    900,
-    900,
-    400
-   ],
-   "trigger": true,
-   "egg": "cat"
+   "egg": "cat",
+   "motion": {
+    "kind": "stretch",
+    "cut": "cat-cut.png",
+    "under": "cat-under.png",
+    "x": 90,
+    "y": 178,
+    "w": 40,
+    "h": 24,
+    "bottom": [
+     110.0,
+     202.0
+    ],
+    "top": [
+     110.0,
+     180.125
+    ]
+   }
   },
   {
    "id": "tea-l",

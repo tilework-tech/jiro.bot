@@ -38,26 +38,24 @@
    "durations": [
     8000
    ],
-   "egg": "cat"
-  },
-  {
-   "id": "cat-react",
-   "src": "cat-react.png",
-   "x": 209,
-   "y": 21,
-   "w": 36,
-   "h": 21,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    600,
-    700,
-    500,
-    300
-   ],
-   "trigger": true,
-   "egg": "cat"
+   "egg": "cat",
+   "motion": {
+    "kind": "stretch",
+    "cut": "cat-cut.png",
+    "under": "cat-under.png",
+    "x": 205,
+    "y": 17,
+    "w": 44,
+    "h": 28,
+    "bottom": [
+     227.75,
+     45.0
+    ],
+    "top": [
+     227.75,
+     22.5
+    ]
+   }
   },
   {
    "id": "spirit",
@@ -73,25 +71,6 @@
     200,
     4600
    ],
-   "egg": "spirit"
-  },
-  {
-   "id": "spirit-react",
-   "src": "spirit-react.png",
-   "x": 171,
-   "y": 134,
-   "w": 18,
-   "h": 15,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    200,
-    200,
-    200,
-    300
-   ],
-   "trigger": true,
    "egg": "spirit"
   },
   {
@@ -181,7 +160,6 @@
    "y": 135,
    "w": 16,
    "h": 13,
-   "sprite": "spirit",
    "says": [
     "(it wants a turn)"
    ]

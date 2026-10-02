@@ -24,5 +24,7 @@ export function createKoiSchedule(o: { reduced: boolean; first: number; every: n
       wait = o.every;
       return true;
     },
+    /** Nothing worth eating came by: look again in `sec` seconds instead of waiting a full round. */
+    retry(sec: number) { wait = sec; },
   };
 }

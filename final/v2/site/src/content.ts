@@ -187,13 +187,13 @@ export function initPricing() {
     { n: "Team", jp: "厨房", p: "$250", per: "/month", f: "Multiple users, five shared runtimes, organization controls, integrations, and collaboration", cta: "Get started", href: "https://noriagentic.com/#pricing", hot: true },
     { n: "Enterprise", jp: "おまかせ", p: "Contact us", per: "", f: "Custom capacity, role-based access control, audit trails, deployment, onboarding, and support", cta: "Talk to us", href: "mailto:amol@noriagentic.com?subject=Nori%20Sessions%20Enterprise" },
   ];
+  const bullets = (f: string) => f.split(/, (?:and )?| and /).map((x) => x.charAt(0).toUpperCase() + x.slice(1));
   $("#price-tags").innerHTML = plans.map((x, i) => `
-    <div class="tag ${x.hot ? "hot" : ""}" data-testid="plan" style="--i:${i}">
-      <span class="string" aria-hidden="true"></span>
-      <span class="jp" lang="ja" aria-hidden="true">${x.jp}</span>
+    <a class="tag ${x.hot ? "hot" : ""}" data-testid="plan" href="${x.href}" rel="noopener" style="--i:${i}">
+      <span class="string" aria-hidden="true"></span><span class="pin" aria-hidden="true"></span>
       <h3>${esc(x.n)}</h3>
+      <span class="jp" lang="ja" aria-hidden="true">${x.jp}</span>
       <div class="price">${esc(x.p)}<small>${esc(x.per)}</small></div>
-      <p>${esc(x.f)}</p>
-      <a class="go" href="${x.href}" rel="noopener">${esc(x.cta)} →</a>
-    </div>`).join("");
+      <ul>${bullets(x.f).map((b) => `<li>${esc(b)}</li>`).join("")}</ul>
+    </a>`).join("");
 }

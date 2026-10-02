@@ -38,3 +38,16 @@ describe("the koi", () => {
     expect(n).toBe(0);
   });
 });
+
+describe("the koi's timing", () => {
+  it("can be asked to try again soon when there is nothing to eat", () => {
+    const k = createKoiSchedule({ reduced: false, first: 3, every: 25 });
+    let t = 0;
+    while (!k.tick(0.1, true)) t += 0.1;
+    k.retry(1.5);
+    let again = 0;
+    while (!k.tick(0.1, true)) again += 0.1;
+    expect(again).toBeGreaterThan(1.3);
+    expect(again).toBeLessThan(1.7);
+  });
+});

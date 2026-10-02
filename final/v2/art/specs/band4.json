@@ -41,23 +41,9 @@
     200,
     4800
    ],
-   "reaction": {
-    "keep": [
-     0,
-     2,
-     0,
-     2,
-     0
-    ],
-    "durations": [
-     100,
-     300,
-     200,
-     300,
-     300
-    ]
-   },
-   "egg": "trio"
+   "egg": "trio",
+   "motion": "hop",
+   "subject": "three small black fuzzy soot sprites and their red paper umbrella"
   },
   "pipe-eyes": {
    "grain": 8,

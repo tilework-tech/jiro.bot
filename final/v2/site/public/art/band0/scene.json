@@ -27,24 +27,24 @@
     1000,
     200
    ],
-   "egg": "soot"
-  },
-  {
-   "id": "soot-react",
-   "src": "soot-react.png",
-   "x": 218,
-   "y": 38,
-   "w": 52,
-   "h": 20,
-   "grain": 8,
-   "frames": 3,
-   "durations": [
-    100,
-    1100,
-    800
-   ],
-   "trigger": true,
-   "egg": "soot"
+   "egg": "soot",
+   "motion": {
+    "kind": "hop",
+    "cut": "soot-cut.png",
+    "under": "soot-under.png",
+    "x": 215,
+    "y": 30,
+    "w": 60,
+    "h": 30,
+    "bottom": [
+     244.75,
+     60.0
+    ],
+    "top": [
+     244.75,
+     39.25
+    ]
+   }
   },
   {
    "id": "candle",

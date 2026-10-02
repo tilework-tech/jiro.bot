@@ -52,26 +52,24 @@
    "durations": [
     8000
    ],
-   "egg": "chime"
-  },
-  {
-   "id": "chime-react",
-   "src": "chime-react.png",
-   "x": 225,
-   "y": 4,
-   "w": 12,
-   "h": 22,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    450,
-    450,
-    450,
-    550
-   ],
-   "trigger": true,
-   "egg": "chime"
+   "egg": "chime",
+   "motion": {
+    "kind": "swing",
+    "cut": "chime-cut.png",
+    "under": "chime-under.png",
+    "x": 218,
+    "y": 0,
+    "w": 26,
+    "h": 26,
+    "bottom": [
+     232.125,
+     26.0
+    ],
+    "top": [
+     232.125,
+     0.0
+    ]
+   }
   },
   {
    "id": "diner-a",
@@ -118,26 +116,24 @@
     2000,
     2000
    ],
-   "egg": "cat"
-  },
-  {
-   "id": "cat-react",
-   "src": "cat-react.png",
-   "x": 312,
-   "y": 168,
-   "w": 46,
-   "h": 31,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    500,
-    800,
-    500,
-    100
-   ],
-   "trigger": true,
-   "egg": "cat"
+   "egg": "cat",
+   "motion": {
+    "kind": "stretch",
+    "cut": "cat-cut.png",
+    "under": "cat-under.png",
+    "x": 303,
+    "y": 158,
+    "w": 57,
+    "h": 44,
+    "bottom": [
+     336.5625,
+     187.75
+    ],
+    "top": [
+     336.5625,
+     168.0
+    ]
+   }
   },
   {
    "id": "door-eyes",
@@ -207,27 +203,24 @@
    "durations": [
     8000
    ],
-   "egg": "lucky-cat"
-  },
-  {
-   "id": "lucky-cat-react",
-   "src": "lucky-cat-react.png",
-   "x": 261,
-   "y": 26,
-   "w": 20,
-   "h": 23,
-   "grain": 8,
-   "frames": 6,
-   "durations": [
-    100,
-    350,
-    350,
-    350,
-    350,
-    500
-   ],
-   "trigger": true,
-   "egg": "lucky-cat"
+   "egg": "lucky-cat",
+   "motion": {
+    "kind": "wobble",
+    "cut": "lucky-cat-cut.png",
+    "under": "lucky-cat-under.png",
+    "x": 256,
+    "y": 24,
+    "w": 30,
+    "h": 30,
+    "bottom": [
+     271.75,
+     46.75
+    ],
+    "top": [
+     271.75,
+     27.75
+    ]
+   }
   },
   {
    "id": "daruma",
@@ -241,27 +234,24 @@
    "durations": [
     8000
    ],
-   "egg": "daruma"
-  },
-  {
-   "id": "daruma-react",
-   "src": "daruma-react.png",
-   "x": 242,
-   "y": 2,
-   "w": 23,
-   "h": 26,
-   "grain": 8,
-   "frames": 6,
-   "durations": [
-    100,
-    300,
-    400,
-    300,
-    400,
-    500
-   ],
-   "trigger": true,
-   "egg": "daruma"
+   "egg": "daruma",
+   "motion": {
+    "kind": "wobble",
+    "cut": "daruma-cut.png",
+    "under": "daruma-under.png",
+    "x": 238,
+    "y": 0,
+    "w": 30,
+    "h": 30,
+    "bottom": [
+     252.25,
+     25.625
+    ],
+    "top": [
+     252.25,
+     5.875
+    ]
+   }
   },
   {
    "id": "kettle",
@@ -275,26 +265,24 @@
    "durations": [
     8000
    ],
-   "egg": "kettle"
-  },
-  {
-   "id": "kettle-react",
-   "src": "kettle-react.png",
-   "x": 235,
-   "y": 42,
-   "w": 24,
-   "h": 27,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    400,
-    800,
-    400,
-    300
-   ],
-   "trigger": true,
-   "egg": "kettle"
+   "egg": "kettle",
+   "motion": {
+    "kind": "wobble",
+    "cut": "kettle-cut.png",
+    "under": "kettle-under.png",
+    "x": 232,
+    "y": 42,
+    "w": 30,
+    "h": 30,
+    "bottom": [
+     247.75,
+     68.75
+    ],
+    "top": [
+     247.75,
+     50.625
+    ]
+   }
   },
   {
    "id": "bonsai",
@@ -308,25 +296,24 @@
    "durations": [
     8000
    ],
-   "egg": "bonsai"
-  },
-  {
-   "id": "bonsai-react",
-   "src": "bonsai-react.png",
-   "x": 186,
-   "y": 94,
-   "w": 32,
-   "h": 34,
-   "grain": 8,
-   "frames": 4,
-   "durations": [
-    100,
-    600,
-    1200,
-    100
-   ],
-   "trigger": true,
-   "egg": "bonsai"
+   "egg": "bonsai",
+   "motion": {
+    "kind": "wobble",
+    "cut": "bonsai-cut.png",
+    "under": "bonsai-under.png",
+    "x": 182,
+    "y": 90,
+    "w": 40,
+    "h": 40,
+    "bottom": [
+     202.375,
+     130.0
+    ],
+    "top": [
+     202.375,
+     102.0
+    ]
+   }
   },
   {
    "id": "noren",
@@ -340,24 +327,24 @@
    "durations": [
     8000
    ],
-   "egg": "noren"
-  },
-  {
-   "id": "noren-react",
-   "src": "noren-react.png",
-   "x": 150,
-   "y": 3,
-   "w": 46,
-   "h": 44,
-   "grain": 8,
-   "frames": 3,
-   "durations": [
-    100,
-    1400,
-    500
-   ],
-   "trigger": true,
-   "egg": "noren"
+   "egg": "noren",
+   "motion": {
+    "kind": "swing",
+    "cut": "noren-cut.png",
+    "under": "noren-under.png",
+    "x": 148,
+    "y": 0,
+    "w": 50,
+    "h": 50,
+    "bottom": [
+     173.0,
+     44.5
+    ],
+    "top": [
+     173.0,
+     7.0
+    ]
+   }
   },
   {
    "id": "cooker",
@@ -371,24 +358,24 @@
    "durations": [
     8000
    ],
-   "egg": "cooker"
-  },
-  {
-   "id": "cooker-react",
-   "src": "cooker-react.png",
-   "x": 246,
-   "y": 48,
-   "w": 30,
-   "h": 42,
-   "grain": 8,
-   "frames": 3,
-   "durations": [
-    100,
-    1200,
-    700
-   ],
-   "trigger": true,
-   "egg": "cooker"
+   "egg": "cooker",
+   "motion": {
+    "kind": "wobble",
+    "cut": "cooker-cut.png",
+    "under": "cooker-under.png",
+    "x": 240,
+    "y": 44,
+    "w": 40,
+    "h": 48,
+    "bottom": [
+     259.5,
+     88.625
+    ],
+    "top": [
+     259.5,
+     52.875
+    ]
+   }
   },
   {
    "id": "sake",
@@ -402,26 +389,24 @@
    "durations": [
     8000
    ],
-   "egg": "sake"
-  },
-  {
-   "id": "sake-react",
-   "src": "sake-react.png",
-   "x": 261,
-   "y": 0,
-   "w": 32,
-   "h": 25,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    300,
-    300,
-    300,
-    1000
-   ],
-   "trigger": true,
-   "egg": "sake"
+   "egg": "sake",
+   "motion": {
+    "kind": "wobble",
+    "cut": "sake-cut.png",
+    "under": "sake-under.png",
+    "x": 258,
+    "y": 0,
+    "w": 40,
+    "h": 30,
+    "bottom": [
+     271.125,
+     23.875
+    ],
+    "top": [
+     271.125,
+     3.25
+    ]
+   }
   }
  ],
  "surfaces": [

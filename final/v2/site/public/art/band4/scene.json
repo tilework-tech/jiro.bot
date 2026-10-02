@@ -26,26 +26,24 @@
     200,
     4800
    ],
-   "egg": "trio"
-  },
-  {
-   "id": "trio-react",
-   "src": "trio-react.png",
-   "x": 175,
-   "y": 62,
-   "w": 46,
-   "h": 26,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    300,
-    200,
-    300,
-    300
-   ],
-   "trigger": true,
-   "egg": "trio"
+   "egg": "trio",
+   "motion": {
+    "kind": "hop",
+    "cut": "trio-cut.png",
+    "under": "trio-under.png",
+    "x": 172,
+    "y": 58,
+    "w": 52,
+    "h": 32,
+    "bottom": [
+     198.0,
+     88.75
+    ],
+    "top": [
+     198.0,
+     62.125
+    ]
+   }
   },
   {
    "id": "pipe-eyes",
