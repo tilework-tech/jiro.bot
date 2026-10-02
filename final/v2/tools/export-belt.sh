@@ -10,3 +10,5 @@ ls site/public/art/belt/items | wc -l
 cat > site/public/art/belt/items/frames.json <<'J'
 { "breathing-onigiri": 2, "waving-ebi": 3, "shivering-jelly": 3, "blinking-maki": 2, "legged-maki": 3 }
 J
+# the koi that ends the belt at the pond (drawn on the belt canvas at belt grain)
+tools/ls-index.sh art/work/koi/koi.png art/src/ase/belt/koi >/dev/null && cp art/src/ase/belt/koi.png site/public/art/belt/koi.png

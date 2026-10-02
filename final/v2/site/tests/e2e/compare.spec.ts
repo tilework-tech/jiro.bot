@@ -37,9 +37,11 @@ async function grabbablePlate(page: Page, pred: (p: PlateBox) => boolean) {
 test("every scene canvas holds at least one canvas px per CSS px", async ({ page, isMobile }) => {
   test.skip(isMobile, "phones show the scene narrower than its art");
   await open(page);
+  // Scenes far away hand their memory back (see final.spec.ts); the ones near the screen must be sharp.
   const ratios = await page.evaluate(() => [...document.querySelectorAll<HTMLCanvasElement>("canvas.scene")]
+    .filter((c) => { const r = c.getBoundingClientRect(); return r.bottom > -innerHeight && r.top < innerHeight * 2; })
     .map((c) => c.width / c.getBoundingClientRect().width));
-  expect(ratios.length).toBeGreaterThanOrEqual(5);
+  expect(ratios.length).toBeGreaterThanOrEqual(2);
   for (const r of ratios) expect(r).toBeGreaterThanOrEqual(1);
 });
 
@@ -49,7 +51,9 @@ for (const dpr of [1, 2]) test.describe(`on a ${dpr}x screen`, () => {
     test.skip(isMobile, "phones keep their own device scale");
     await open(page);
     const ratios = await page.evaluate(() => [...document.querySelectorAll<HTMLCanvasElement>("canvas.scene")]
+      .filter((c) => { const r = c.getBoundingClientRect(); return r.bottom > -innerHeight && r.top < innerHeight * 2; })
       .map((c) => c.width / c.getBoundingClientRect().width));
+    expect(ratios.length).toBeGreaterThanOrEqual(2);
     for (const r of ratios) {
       expect(r).toBeGreaterThanOrEqual(dpr);
       expect(r).toBeLessThanOrEqual(dpr * 2);

@@ -7,6 +7,7 @@ import type { Pt, Route } from "./belt/route";
 import { slatRows } from "./belt/slats";
 import { createStream, type Slot } from "./belt/stream";
 import { mulberry32 } from "./belt/rng";
+import { createKoiSchedule, koiPose, type Leap } from "./belt/koi";
 
 /** World art px between plate slots along the belt. */
 export const SLOT = 22;
@@ -19,6 +20,10 @@ export const BELT_GRAIN = 8;
 const U = BELT_GRAIN / 4;
 /** Item offsets in the stream are in 2x-grain units (1–3); belt art px per offset unit. */
 const OFFSET_PX = BELT_GRAIN / 2;
+/** World units between the koi arc's centre and where it falls back through the belt line. */
+const DESCENT = 44.4;
+/** Half-width of the koi's bite along the belt, in world units. */
+const BITE = 34;
 const ALIVE_FRAME_MS = 420;
 
 export type Mapping = {
@@ -41,6 +46,8 @@ export type BeltDeps = {
   upright: (p: Pt) => boolean;
   surfaces: () => Surface[]; // world coords
   water: () => Surface[];
+  /** Page y of the pond trestle's belt line, where the koi leaps over. */
+  koiLine: () => number;
   onEgg: (id: string) => void;
   onSay: (text: string, page: Pt) => void;
 };
@@ -51,7 +58,8 @@ type Particle = { x: number; y: number; vx: number; vy: number; c: string; life:
 type Override =
   | { kind: "gone" }
   | { kind: "walking"; to: number; start: number }
-  | { kind: "guest"; host: number };
+  | { kind: "guest"; host: number }
+  | { kind: "eaten" };
 
 const QUIPS: Record<string, string[]> = {
   "rubber-duck": ["quack.", "Have you tried explaining it to me?"],
@@ -71,9 +79,12 @@ export async function mountBelt(d: BeltDeps) {
   const stream = createStream(d.seed);
   const rare = createRareEvents(d.seed);
   const rand = mulberry32(d.seed ^ 0x5bd1e995);
-  const [tile, plateGrey, plateBlue] = await Promise.all([
-    loadImage("art/belt/tile.png"), loadImage("art/belt/plate-grey.png"), loadImage("art/belt/plate-blue.png"),
+  const [tile, plateGrey, plateBlue, koiImg] = await Promise.all([
+    loadImage("art/belt/tile.png"), loadImage("art/belt/plate-grey.png"), loadImage("art/belt/plate-blue.png"), loadImage("art/belt/koi.png"),
   ]);
+  const koiPlan = createKoiSchedule({ reduced: d.reduced, first: 3, every: 25 });
+  const koiStats = { leaps: 0, eaten: 0, fed: 0 };
+  let koi: null | { leap: Leap; start: number; dur: number; splashed: [boolean, boolean] } = null;
   const items = new Map<string, HTMLImageElement>();
   const meta: Record<string, number> = await (await fetch("art/belt/items/frames.json")).json();
   await Promise.all(MENU.map(async (m) => items.set(m.kind, await loadImage(`art/belt/items/${m.kind}.png`))));
@@ -336,6 +347,9 @@ export async function mountBelt(d: BeltDeps) {
       held.el?.remove();
       overrides.set(held.slot, { kind: "gone" });
       burst(page, "miso-soup", 16, "steam");
+      koiStats.fed++;
+      d.onEgg("koi-fed");
+      if (!d.reduced) leapAt(page.x, performance.now());
     } else if (held.from === "belt") {
       overrides.delete(held.slot);
     } else if (held.el) {
@@ -424,6 +438,57 @@ export async function mountBelt(d: BeltDeps) {
     return true;
   }
 
+  // ------------------------------------------------------------------ koi
+  /** The koi leaps over the trestle and comes down on page x `target`, eating every item it passes through. */
+  function leapAt(target: number, now: number) {
+    if (koi) return;
+    const s = d.map.s, line = d.koiLine();
+    // With this arc the koi falls back through the belt line at t ≈ 0.87, 44 units left of the arc's centre.
+    // Both ends stay in the painted pond (world x 5–205 at the koi's depth).
+    const cx = Math.min(Math.max(target + DESCENT * s, 65 * s), 145 * s);
+    koi = { leap: { from: { x: cx + 60 * s, y: line + 55 * s }, to: { x: cx - 60 * s, y: line + 50 * s }, height: 115 * s }, start: now, dur: 2000, splashed: [false, false] };
+    koiStats.leaps++;
+    d.onEgg("koi-leap");
+  }
+
+  /** Page x where the koi's descent covers the most visible plates with food, within the reach of the pond. */
+  function fullestRun(vis: ReturnType<typeof visibleSlots>, line: number) {
+    const s = d.map.s;
+    const reach = (x: number) => x >= (65 - DESCENT) * s && x <= (145 - DESCENT) * s;
+    const xs = vis.filter((v) => Math.abs(v.pos.y - line) < 4 * s && reach(v.pos.x) && !d.route.isHidden(v.pos) && isOccupied(v.i) && !overrides.has(v.i)).map((v) => v.pos.x);
+    if (!xs.length) return (100 - DESCENT) * s;
+    let best = xs[0], most = 0;
+    for (const x of xs) { const n = xs.filter((o) => Math.abs(o - x) < BITE * s).length; if (n > most) { most = n; best = x; } }
+    return best;
+  }
+
+  function drawKoi(now: number, vis: ReturnType<typeof visibleSlots>) {
+    if (!koi) return;
+    const t = (now - koi.start) / koi.dur;
+    if (t >= 1) { koi = null; return; }
+    const p = koiPose(koi.leap, t);
+    const s = d.map.s, line = d.koiLine();
+    if (!koi.splashed[0] && t > 0.04) { koi.splashed[0] = true; burst({ x: koi.leap.from.x, y: koi.leap.from.y - 6 * s }, "miso-soup", 22, "steam"); }
+    if (!koi.splashed[1] && t > 0.94) { koi.splashed[1] = true; burst({ x: koi.leap.to.x, y: koi.leap.to.y - 6 * s }, "miso-soup", 22, "steam"); }
+    if (t > 0.5 && Math.abs(p.y - line) < 30 * s) {
+      for (const v of vis) {
+        if (Math.abs(v.pos.y - line) > 4 * s || Math.abs(v.pos.x - p.x) > BITE * s || d.route.isHidden(v.pos)) continue;
+        if (!isOccupied(v.i) || overrides.has(v.i)) continue;
+        overrides.set(v.i, { kind: "eaten" });
+        koiStats.eaten++;
+      }
+    }
+    const c = toCanvas(p);
+    ctx.save();
+    ctx.imageSmoothingEnabled = k < 1;
+    ctx.translate(c.x, c.y);
+    ctx.rotate(p.heading * (koi.leap.to.x < koi.leap.from.x ? -1 : 1));
+    if (koi.leap.to.x > koi.leap.from.x) ctx.scale(-1, 1);
+    ctx.scale(0.8, 0.8);
+    ctx.drawImage(koiImg, -koiImg.width / 2, -koiImg.height / 2);
+    ctx.restore();
+  }
+
   // ------------------------------------------------------------------ frame
   let lastNow = performance.now();
   function frame(now: number) {
@@ -453,7 +518,7 @@ export async function mountBelt(d: BeltDeps) {
       const guestItem = guest ? stream.slot(guest[0]).item! : undefined;
       if (o?.kind === "gone") continue;
       if (o?.kind === "guest") { drawPlate(c, sl.rim, null, ang, now, v.i); continue; }
-      if (o?.kind === "walking") { drawPlate(c, sl.rim, null, ang, now, v.i); continue; }
+      if (o?.kind === "walking" || o?.kind === "eaten") { drawPlate(c, sl.rim, null, ang, now, v.i); continue; }
       drawPlate(c, sl.rim, sl.item, ang, now, v.i, fx, guestItem);
     }
     if (walk) {
@@ -488,6 +553,9 @@ export async function mountBelt(d: BeltDeps) {
       ctx.globalAlpha = 1;
       drawPlate({ x: c.x, y: c.y - 8 * U }, held.rim, held.item, 0, now, held.slot);
     }
+    const line = d.koiLine();
+    if (koiPlan.tick(dt, line > scrollY + 60 && line < scrollY + innerHeight - 60)) leapAt(fullestRun(vis, line), now);
+    drawKoi(now, vis);
     drawParticles(dt);
   }
 
@@ -495,6 +563,7 @@ export async function mountBelt(d: BeltDeps) {
     frame,
     resize,
     effectsActive: () => effects.length,
+    koi: () => ({ ...koiStats }),
     platesInView: () =>
       visibleSlots()
         .filter((v) => overrides.get(v.i)?.kind !== "gone" && stream.slot(v.i).plate)

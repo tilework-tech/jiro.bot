@@ -30,7 +30,7 @@ site/public/art/<scene>/{base.png, <sprite>.png, scene.json}
 | `src/refs/` | Reference images passed to Gemini: video frames and the Jiro canon |
 | `src/ase/` | LibreSprite `.ase` sources, plus the indexed PNG written next to each one |
 | `specs/` | One JSON spec per scene: master, base, palette groups, sprites, surfaces and eggs |
-| `gen/` | Raw Gemini output. `gen/hd/` holds the illustration masters (round 2, plus the round-4 half-size product master and its shrunk input) and the failed high-density pixel-art probes; `gen/hd8/` holds the rejected round-3 close-up repaint of Jiro. |
+| `gen/` | Raw Gemini output, one folder per scene (masters, crops, shifts and outpaints; `gen/koi/` holds the koi renders). `gen/hd/` holds the illustration masters (round 2, plus the round-4 half-size product master and its shrunk input) and the failed high-density pixel-art probes; `gen/hd8/` holds the rejected round-3 close-up repaint of Jiro. |
 | `work/` | Intermediate output: fitted bases, frame edits, strips and belt cut-outs |
 | `log/gemini-calls.jsonl` | One line per Gemini call, recording time, output path, model, aspect, size, full prompt and ref file names |
 | `probe/` | The first API probe |
@@ -41,8 +41,8 @@ Positions in specs and `scene.json` (crop, roi, surfaces, eggs, sprite x/y/w/h, 
 
 | Grain | Art px across | At 1440 wide | Used for |
 | --- | --- | --- | --- |
-| 4 | 1440 | 1 CSS px per art px | room and band bases (1440 × 808 per stop; band 0 1440 × 612, band 1 1440 × 344, band 2 1440 × 400), lanterns |
-| 8 | 2880 | ½ CSS px per art px (1 device px on a 2× retina screen) | Jiro, diners, dust spirits, eyes, every clickable prop, tea steam, belt tile, plates, belt items |
+| 4 | 1440 | 1 CSS px per art px | room and band bases (1440 × 808 per stop; each band is 1440 wide and 4 art px per unit of its height in `site/src/layout.ts` `BANDS`), lanterns |
+| 8 | 2880 | ½ CSS px per art px (1 device px on a 2× retina screen) | Jiro, diners, dust spirits, eyes, every clickable prop, tea steam, belt tile, plates, belt items, the koi |
 
 Round 3 doubled both grains again (round 2 used 2 and 4) after Martin's gate-B review asked for even higher resolution from now on. Sprites set `"grain"` in the spec; the base grain is the base width / 360, and `export-scene.py` and `frames.py` fall back to it when a sprite sets none. Everything shares one palette, so the two grains read as one picture. The site picks how many of these art px it actually draws per device (`../site/docs.md`, Scenes).
 
@@ -64,7 +64,7 @@ What works:
 3. Lost props are re-added with one edit, and `tools/compose.py` merges the edit's right side over the original so the calm copy field survives. The hero master is such a composite: the copy field from `hero-ill-a`, the right side from `hero-ill-a-edit1`, which restored the sleeping cat and the doorway eyes.
 4. `tools/fit.py` pixelates the illustration onto the true grid at whatever grain we choose.
 
-To reframe a master, `tools/shift-down.py IN OUT --d D` moves it down by D px on the same canvas, dropping the bottom rows and leaving a black strip on top for Gemini to outpaint. `tools/shrink-place.py IN OUT --f F --x X --y Y` shrinks it by F and pastes it at fractional position (X, Y) on a black canvas of the original size, leaving everything else for Gemini to outpaint.
+To reframe a master, `tools/shift-down.py IN OUT --d D` moves it down by D px on the same canvas, dropping the bottom rows and leaving a black strip on top for Gemini to outpaint. `tools/shift-x.py IN OUT --d D` does the same sideways (negative D moves left): by default the opened strip repeats the neighbouring D columns, and with `--blank` it stays black for a Gemini outpaint. `tools/shrink-place.py IN OUT --f F --x X --y Y` shrinks it by F and pastes it at fractional position (X, Y) on a black canvas of the original size, leaving everything else for Gemini to outpaint.
 
 Our scripts make the pixel grid, not Gemini. The item sheets went the same way (`gen/hd/items-*-ill*.jpg`). Sheets 1 and 3 were regenerated with an explicit item list, because the first repaint turned suspicious wasabi into a poop emoji and sheet 3's background was not clean green.
 
@@ -84,6 +84,15 @@ Stop 3 and band 1 were generated new in round 2; band 1's master is a crop (`ban
 - **Band 2** (`specs/band2.json`, prompt `src/prompts/band2.txt`) is a floor-slab cutaway between the dining room and the kitchen: timber joists, a copper pipe, a sagging cable, and the same steel shaft on the right. The top of the render showed brightly lit diners, so the master is a crop of rows 430–2190 of `gen/band2/band2-a.jpg` (`band2-a-strip.png`), fitted to a 1440 × 400 base; the site's band 2 grew from 50 to 100 units to fit it.
   - Sprites: the hanging dust spirit (`align: false`, blink as the ambient loop, leg-swing frames as the click reaction) and a pair of eyes in the dark corner. The surface is the pipe.
 - Stop 4 has no Jiro (flagged to Martin).
+
+**Final pass: bands 3–5 and stops 5–7 (new masters).** All six were generated directly as 4K flat illustrations with `gemini-3-pro-image` (prompts `src/prompts/{band3,band4,band5,faq,price,pond}.txt`), with `gen/compare/compare-shift-fill.jpg` as the style ref and `src/refs/jiro-canon.png` added for the two stops with Jiro. Every prompt except the pond's paints the steel shaft at the far right with an empty channel; the pond paints a trestle with an empty channel across the full width.
+
+- **Lining the shaft up with the belt.** The site draws the belt at x = 320 in every stop, so a painted shaft that lands elsewhere has to move. The FAQ and street masters were shifted left (`shift-x.py --d -245` and `--d -153` source px) with `--blank` (`gen/faq/faq-shift.jpg`, `gen/price/price-shift.jpg`), and Gemini Pro outpainted only the opened right-hand strip as the continuation of the shaft wall and floor (`faq-master.jpg`, `price-master.jpg`, used whole, so there is no seam). Band 4's crop was shifted right instead (`--d 176`, repeating columns, no outpaint) to `band4-strip.png`.
+- **Band strips.** Each band master is a crop of its 6336 × 2688 render: `band3-strip.png` rows 300–2240, `band4-crop.png` rows 300–2200 (then the shift above), `band5-strip.png` rows 200–2400. They are fitted to 1440 × 440, 1440 × 432 and 1440 × 500, the bands' heights in `site/src/layout.ts`.
+- **Street edit.** `gen/price/price-a-edit1.jpg` removes every painted character and letter from the shopfront tags, sign and noren, and puts Jiro's near foot on the ground at the red light. It is the input to the shift.
+- **Fit flags.** FAQ: `--cool-gate 22 --smooth-dark 70 --warm-left 0.33`; band 3: `--cool-gate 22 --smooth-dark 70`; street, pond, bands 4 and 5: `--smooth-dark 50` without a cool gate, since they are night scenes that should snap into the cool ramp.
+- **Sprites.** Jiro at the counter and on the bicycle (masked, frame edits with Gemini Pro: a blink, the jaw plate dropping to speak, and at the counter a presenting hand); the six counter plates (tuna, salmon, ikura, maki, onigiri, tea cup) that the site's FAQ question bubbles sit over; lanterns, the traffic light, a street cat and lamp; the pond's fireflies, stone toro lanterns and the stall lantern; soot sprites in each band (a bunk-room crate, a waver, a trio on a ledge, a peeker over the wall) plus pipe eyes and a faucet. Soot-sprite and Jiro frames used Gemini Pro; the rest used Flash.
+- **Scene data.** The pond spec adds a `water` block (the open water in front of the trestle) next to `surfaces` and `eggs`; `export-scene.py` passes it through to `scene.json`, and the site treats a plate dropped there as fed to the koi. The pond has no Jiro.
 
 ## Tools
 
@@ -105,7 +114,7 @@ Stop 3 and band 1 were generated new in round 2; band 1's master is a crop (`ban
 6. Orphan-pixel cleanup.
 7. Optional `--smooth-dark`, a 3×3 majority filter over dark pixels that keeps copy fields calm.
 
-Bases use `--groups warm,cool,accents,plates,neutrals --cool-gate 22 --smooth-dark 80 --warm-left 0.4` for the hero; product uses the same flags with `--warm-left 0.6` (its copy field is the wider empty left side of the half-size master). Compare uses `--smooth-dark 60` without `--warm-left`; stop 4 uses `--smooth-dark 70 --warm-left 0.5`; band 0 adds `--gain 1.25`. Specs carry `cool_gate` so `frames.py` snaps frames the same way.
+Bases use `--groups warm,cool,accents,plates,neutrals --cool-gate 22 --smooth-dark 80 --warm-left 0.4` for the hero (the final-pass scenes' flags are listed in their section above); product uses the same flags with `--warm-left 0.6` (its copy field is the wider empty left side of the half-size master). Compare uses `--smooth-dark 60` without `--warm-left`; stop 4 uses `--smooth-dark 70 --warm-left 0.5`; band 0 adds `--gain 1.25`. Specs carry `cool_gate` so `frames.py` snaps frames the same way.
 
 **`tools/ls-index.sh in.png out-base [w h]`** opens the image in LibreSprite and runs these steps:
 
@@ -152,6 +161,7 @@ Frame 0 is the untouched base: cut from the fitted base when the sprite's grain 
   - `--max` caps outsized items. Round-3 items are cut from the same 4K sheets at `--scale 0.12` or `0.10` with `--max 84`, so they are at most 84 px on a 128 × 91 plate.
   - Cells are trimmed 4% to drop grid remnants. Opaque islands under 3% of the sprite are dropped as specks, and the item's bounding box is found on a coarse speck-free mask.
 - **Living items.** `tools/item-frames.py` makes their frames. Each frame is a Gemini edit of the item's sheet cell (the prompt no longer asks Gemini to keep a pixel grid, since the cells are illustrations), and all frames are fitted in one shared bounding box so the item does not jump between frames. Round 3 ran it at `--scale 0.10 --max 84`.
+- **Koi.** `gen/koi/koi-b.jpg` is a single kohaku koi leaping left, mouth open, on flat green (`koi-a.jpg`, made with the pond master as a ref, is unused). `cut-sheet.py --grid 1x1 --names koi --scale 0.3 --max 640` keys and fits it to `work/koi/koi.png` (640 × 328, grain 8), and `export-belt.sh` indexes it to `src/ase/belt/koi.{ase,png}` and copies it to `site/public/art/belt/koi.png`. The site draws it on the belt canvas, not in the pond scene, so it can pass over the plates.
 - **Export.** `tools/export-belt.sh` indexes items, plates and tile into `site/public/art/belt/`. It also writes `items/frames.json`, the frame counts of the animated items. Edit that list by hand in the script when adding a living item.
 
 ## Checks

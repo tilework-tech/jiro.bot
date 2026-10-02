@@ -1,0 +1,145 @@
+{
+ "master": "art/gen/band4/band4-strip.png",
+ "base": "art/work/band4/base.png",
+ "groups": "warm,cool,accents,plates,neutrals",
+ "sprites": {
+  "trio": {
+   "grain": 8,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    172,
+    58,
+    52,
+    32
+   ],
+   "roi": [
+    175,
+    62,
+    46,
+    26
+   ],
+   "align": false,
+   "frame_rois": [
+    [
+     178,
+     76,
+     40,
+     6
+    ]
+   ],
+   "frames": [
+    "all three small soot sprites blinks: their big white eyes are closed.",
+    "the small soot sprite holding the red paper umbrella twirls it, tilting it the other way."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    3000,
+    200,
+    4800
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     2,
+     0,
+     2,
+     0
+    ],
+    "durations": [
+     100,
+     300,
+     200,
+     300,
+     300
+    ]
+   },
+   "egg": "trio"
+  },
+  "pipe-eyes": {
+   "grain": 8,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    244,
+    35,
+    30,
+    22
+   ],
+   "roi": [
+    250,
+    40,
+    18,
+    10
+   ],
+   "compare": "base",
+   "min_blob": 1,
+   "frames": [
+    "the two glowing yellow eyes inside the dark pipe close: only darkness."
+   ],
+   "keep": [
+    0,
+    1,
+    0,
+    1
+   ],
+   "durations": [
+    3600,
+    200,
+    4000,
+    200
+   ],
+   "egg": "pipe-eyes"
+  }
+ },
+ "scene": {
+  "surfaces": [
+   {
+    "id": "ledge",
+    "x": 160,
+    "y": 86,
+    "w": 80,
+    "h": 6
+   }
+  ],
+  "eggs": [
+   {
+    "id": "trio",
+    "name": "Umbrella club",
+    "x": 176,
+    "y": 63,
+    "w": 44,
+    "h": 24,
+    "sprite": "trio",
+    "says": [
+     "it's dry down here. we just like the umbrella."
+    ]
+   },
+   {
+    "id": "pipe-eyes",
+    "name": "Eyes in the pipe",
+    "x": 250,
+    "y": 39,
+    "w": 18,
+    "h": 12,
+    "sprite": "pipe-eyes",
+    "says": [
+     "\u2026"
+    ]
+   },
+   {
+    "id": "boat",
+    "name": "Paper boat",
+    "x": 96,
+    "y": 92,
+    "w": 16,
+    "h": 10,
+    "says": [
+     "Bound for the koi pond."
+    ]
+   }
+  ]
+ }
+}

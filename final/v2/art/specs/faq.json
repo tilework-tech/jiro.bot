@@ -1,0 +1,371 @@
+{
+ "master": "art/gen/faq/faq-master.jpg",
+ "base": "art/work/faq/base.png",
+ "groups": "warm,cool,accents,plates,neutrals",
+ "cool_gate": 22,
+ "sprites": {
+  "lantern": {
+   "grain": 4,
+   "crop": [
+    186,
+    10,
+    30,
+    44
+   ],
+   "roi": [
+    190,
+    14,
+    21,
+    36
+   ],
+   "frame_rois": [
+    [
+     192,
+     18,
+     17,
+     26
+    ]
+   ],
+   "frames": [
+    "the paper lantern's paper glows a little brighter and paler yellow inside, as if the candle flared; nothing else changes."
+   ],
+   "keep": [
+    0,
+    1
+   ],
+   "durations": [
+    3400,
+    600
+   ]
+  },
+  "jiro": {
+   "grain": 8,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    218,
+    52,
+    76,
+    82
+   ],
+   "roi": [
+    222,
+    56,
+    68,
+    74
+   ],
+   "mask_prompt": "Isolate the robot sushi chef: keep only the robot (head, headband, body, arms and hands).",
+   "frame_rois": [
+    [
+     251,
+     69,
+     16,
+     8
+    ],
+    [
+     249,
+     77,
+     18,
+     9
+    ],
+    [
+     222,
+     80,
+     30,
+     28
+    ]
+   ],
+   "frames": [
+    "the robot's two glowing cyan eyes are closed: each eye becomes a thin dark horizontal line.",
+    "the robot's plain copper jaw plate is lowered by a tiny amount, as if he is speaking. No mouth, no teeth.",
+    "the robot's raised open hand tilts a little further toward the plates, as if presenting them."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    2600,
+    150,
+    5250
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "durations": [
+     100,
+     180,
+     200,
+     180,
+     340
+    ]
+   },
+   "egg": "jiro"
+  },
+  "tuna": {
+   "grain": 8,
+   "crop": [
+    116,
+    96,
+    28,
+    18
+   ],
+   "roi": [
+    119,
+    98,
+    22,
+    14
+   ],
+   "align": false,
+   "frames": [
+    "the little tuna nigiri stretches upward a tiny bit, happily, like waking up."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    2600,
+    500,
+    900
+   ]
+  },
+  "salmon": {
+   "grain": 8,
+   "crop": [
+    141,
+    106,
+    28,
+    18
+   ],
+   "roi": [
+    144,
+    108,
+    22,
+    14
+   ],
+   "align": false,
+   "frames": [
+    "the little salmon nigiri wiggles, leaning slightly to one side."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    1400,
+    400,
+    2200
+   ]
+  },
+  "ikura": {
+   "grain": 8,
+   "crop": [
+    167,
+    111,
+    27,
+    20
+   ],
+   "roi": [
+    170,
+    113,
+    21,
+    16
+   ],
+   "align": false,
+   "frames": [
+    "the little ikura gunkan blinks its two dot eyes closed."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    1800,
+    200,
+    2000
+   ]
+  },
+  "maki": {
+   "grain": 8,
+   "crop": [
+    192,
+    121,
+    28,
+    20
+   ],
+   "roi": [
+    195,
+    123,
+    22,
+    16
+   ],
+   "align": false,
+   "frames": [
+    "the two little cucumber maki rolls lean toward each other a tiny bit."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    2600,
+    600,
+    800
+   ]
+  },
+  "onigiri": {
+   "grain": 8,
+   "crop": [
+    218,
+    128,
+    28,
+    22
+   ],
+   "roi": [
+    221,
+    130,
+    22,
+    18
+   ],
+   "align": false,
+   "frames": [
+    "the little onigiri stretches its rice body upward a tiny bit and smiles."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    1000,
+    700,
+    2300
+   ]
+  },
+  "cup": {
+   "grain": 8,
+   "crop": [
+    249,
+    138,
+    18,
+    20
+   ],
+   "roi": [
+    251,
+    140,
+    14,
+    16
+   ],
+   "align": false,
+   "frames": [
+    "a thin wisp of steam rises from the little tea cup."
+   ],
+   "keep": [
+    0,
+    1
+   ],
+   "durations": [
+    2000,
+    2000
+   ]
+  }
+ },
+ "scene": {
+  "surfaces": [
+   {
+    "id": "counter",
+    "x": 120,
+    "y": 150,
+    "w": 120,
+    "h": 10
+   },
+   {
+    "id": "floor",
+    "x": 40,
+    "y": 175,
+    "w": 80,
+    "h": 20
+   }
+  ],
+  "eggs": [
+   {
+    "id": "jiro",
+    "name": "Jiro, at your service",
+    "x": 248,
+    "y": 57,
+    "w": 28,
+    "h": 26,
+    "sprite": "jiro",
+    "says": [
+     "Ask the plates. I answer.",
+     "Every question gets a straight answer."
+    ]
+   },
+   {
+    "id": "lantern",
+    "name": "Counter lantern",
+    "x": 191,
+    "y": 15,
+    "w": 19,
+    "h": 34,
+    "says": [
+     "Warm light, honest answers."
+    ]
+   },
+   {
+    "id": "jars",
+    "name": "Pickle jars",
+    "x": 142,
+    "y": 10,
+    "w": 30,
+    "h": 14,
+    "says": [
+     "Gari, umeboshi, and one jar of semicolons."
+    ]
+   },
+   {
+    "id": "bowls",
+    "name": "Stacked bowls",
+    "x": 149,
+    "y": 29,
+    "w": 23,
+    "h": 12,
+    "says": [
+     "Washed, dried, stacked. Like a clean merge."
+    ]
+   },
+   {
+    "id": "bottles",
+    "name": "Soy and vinegar",
+    "x": 129,
+    "y": 44,
+    "w": 12,
+    "h": 10,
+    "says": [
+     "Season to taste."
+    ]
+   },
+   {
+    "id": "rice",
+    "name": "A lost grain of rice",
+    "x": 66,
+    "y": 170,
+    "w": 12,
+    "h": 8,
+    "says": [
+     "Jiro will find it."
+    ]
+   }
+  ]
+ }
+}

@@ -32,12 +32,20 @@ const stops = (p) => p.evaluate(() => [...document.querySelectorAll("[data-stop]
   const [, , cmpTop] = await stops(p);
   await p.evaluate((y) => scrollTo(0, y), cmpTop); await p.waitForTimeout(6000);
   await p.screenshot({ path: join(out, "desktop-compare.png") });
+  // the rest of the journey by wheel, pausing on each stop, ending on the koi
+  const rest = (await stops(p)).slice(3);
+  for (const top of rest) {
+    while ((await p.evaluate(() => scrollY)) < top - 40) { await p.mouse.wheel(0, 120); await p.waitForTimeout(240); }
+    await p.waitForTimeout(1800);
+  }
+  await p.waitForTimeout(6000);
+  await p.screenshot({ path: join(out, "desktop-pond.png") });
   await ctx.close(); await b.close();
   const v = readdirSync(join(out, "tmp")).find((f) => f.endsWith(".webm"));
   renameSync(join(out, "tmp", v), join(out, "scroll-desktop.webm"));
   rmSync(join(out, "tmp"), { recursive: true, force: true });
   execFileSync("ffmpeg", ["-loglevel", "error", "-y", "-i", join(out, "scroll-desktop.webm"), "-c:v", "libx264", "-pix_fmt", "yuv420p",
-    "-crf", "22", "-movflags", "+faststart", join(out, "scroll-desktop.mp4")]);
+    "-vf", "scale=1280:-2", "-crf", "30", "-preset", "slow", "-movflags", "+faststart", join(out, "scroll-desktop.mp4")]);
   rmSync(join(out, "scroll-desktop.webm"));
 }
 {
@@ -67,6 +75,11 @@ const stops = (p) => p.evaluate(() => [...document.querySelectorAll("[data-stop]
   const [, , cmp] = await stops(p);
   await p.evaluate((y) => scrollTo(0, y), cmp); await p.waitForTimeout(7000);
   await p.screenshot({ path: join(out, "retina-compare.png") });
+  const all = await stops(p);
+  for (const [k, name] of ["faq", "price", "pond"].entries()) {
+    await p.evaluate((y) => scrollTo(0, y), all[4 + k]); await p.waitForTimeout(name === "pond" ? 5200 : 1500);
+    await p.screenshot({ path: join(out, `retina-${name}.png`) });
+  }
   const [, , , tbl] = await stops(p);
   await p.evaluate((y) => scrollTo(0, y), tbl); await p.waitForTimeout(1500);
   await p.screenshot({ path: join(out, "retina-table.png") });
@@ -89,9 +102,13 @@ const stops = (p) => p.evaluate(() => [...document.querySelectorAll("[data-stop]
   const [, , cmp] = await stops(p);
   await p.evaluate((y) => scrollTo(0, y), cmp); await p.waitForTimeout(7000);
   await p.screenshot({ path: join(out, "phone-compare.png") });
-  const [, , , tbl] = await stops(p);
+  const [, , , tbl, faqTop, priceTop, pondTop] = await stops(p);
   await p.evaluate((y) => scrollTo(0, y), tbl); await p.waitForTimeout(1500);
   await p.screenshot({ path: join(out, "phone-table.png") });
+  for (const [name, y] of [["faq", faqTop], ["price", priceTop], ["pond", pondTop]]) {
+    await p.evaluate((v) => scrollTo(0, v), y); await p.waitForTimeout(1500);
+    await p.screenshot({ path: join(out, `phone-${name}.png`) });
+  }
   await b.close();
 }
 console.log("captured to", out);

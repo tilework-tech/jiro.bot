@@ -1,6 +1,6 @@
 # Jiro.bot v2 design brief
 
-Status: approved by Martin 2026-10-01 (answers in `QUESTIONS.md`). Grains (§3) and plate/item sizes (§5) were revised in round 2 after his 2026-10-01 17:44 feedback (`PLAN-R2.md`), and doubled again in round 3 after his gate-B review (`PLAN-R3.md`). Everything produced for v2 (art, animation, code, copy) is judged against this file. Where the reference videos and this brief disagree, this brief wins; the disagreements are listed in "Deliberate departures from the videos".
+Status: approved by Martin 2026-10-01 (answers in `QUESTIONS.md`). Grains (§3) and plate/item sizes (§5) were revised in round 2 after his 2026-10-01 17:44 feedback (`PLAN-R2.md`), and doubled again in round 3 after his gate-B review (`PLAN-R3.md`). The belt route and the koi ending (§5) were settled in the final pass (`PLAN-FINAL.md`). Everything produced for v2 (art, animation, code, copy) is judged against this file. Where the reference videos and this brief disagree, this brief wins; the disagreements are listed in "Deliberate departures from the videos".
 
 Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re-inspected frame by frame at 0.5 s in `research/video-NN.md`. Martin's written direction of 2026-09-28 → 2026-10-01 (`../site/docs/FEEDBACK-VERBATIM.md` plus the 2026-10-01 thread message).
 
@@ -22,7 +22,7 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 - **Medium:** polished 16-bit pixel art. All raster art is generated with Gemini (`gemini-3-pro-image` for scene masters, `gemini-3.1-flash-image` for sprites/frames) and finished in **LibreSprite 1.2** (indexed palette conversion, nearest-neighbour scaling, `.ase` sources, sprite-sheet + JSON export). No hand-placed pixels; any cleanup is scripted (grid-fit, mode downscale, palette snap, orphan-pixel removal) and logged.
 - **Two grains** (revised in round 2, `PLAN-R2.md`, and again in round 3, `PLAN-R3.md`). Martin's feedback of 2026-10-01 17:44 asked for much higher resolution for everything, above all Jiro, people, dust spirits and belt items; at gate B he asked to "crank it up a bit more and use even higher resolution moving forward". Layout stays in a 360-unit-wide world; only art px per unit changed:
   - Rooms and bands: grain 4, 1440 art px across, 1 art px = 1 CSS px at 1440 px width (round 2: 720 across, 2 CSS px; originally 360 across, 4 CSS px).
-  - Detail layer (Jiro, people, dust spirits, eyes, every clickable prop, belt tile, plates, belt items, later koi): grain 8, 1 art px = ½ CSS px, one device px on a 2× retina screen (round 2: grain 4). Same palette.
+  - Detail layer (Jiro, people, dust spirits, eyes, every clickable prop, belt tile, plates, belt items, the koi): grain 8, 1 art px = ½ CSS px, one device px on a 2× retina screen (round 2: grain 4). Same palette.
   - Each scene canvas is backed at 2, 4 or 8 px per world unit to match the device; finer art is averaged down smoothly, so on 1× screens and phones grain-8 detail reads as a sharp illustration rather than hard pixels.
   - Grain 8 is the ceiling the current 4K masters support (about 1.9 source px per art px). Gemini cannot draw pixel art at these densities, so masters are 4K flat illustrations and the pixel grid is made by our fit script (`art/README.md`, "Detail").
 - **Master palette:** one 56-colour `.gpl` (`palette/jiro56.gpl`), shared by every asset, snapped without dither. It began at 48; eight lantern-orange, tan, rust, olive and ash tones were added after the hero test fit measured where 48 colours lost the lantern light.
@@ -43,13 +43,14 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 
 - **One belt**, one ordered plate stream, kitchen hatch to pond. Origin: a lit hatch in the hero's back wall; plates emerge from behind its frame (occluded), never pop in.
 - Path: straight runs plus **90° bends only**, each with a centre radius ≥ 1.5 belt widths, drawn as fanned segment plates (airport-carousel style). Hero run is straight in world space (appears diagonal in the ¾ view). Bends are visible where they read well, otherwise hidden behind beams, walls, or bridge rails.
+- Route (as built): hatch → hero diagonal → down behind the crawlspace beam → crawlspace floor → down the left edge → along the bottom of the comparison room → straight down a steel shaft at the right edge through the table stop, FAQ, street and the bands between them ("have the belt go straight down and don't interface with the bike at all… then go straight down to the pond", 2026-09-29) → hidden behind the garden wall, bridge and stall → one 90° turn onto the pond trestle, running left and out of sight past its far end. It never crosses a copy field.
 - Construction: walnut/copper rail, charcoal slats that **move with the plates** (no static slats).
 - **Plates:** all white; each plate's rim is either faint grey or faint blue (seeded, roughly even, no other colour), no dark outline. Round 3: plates are 128 × 91 art px at grain 8 and items at most 84 px (at least 56 px, no wider than 70% of a plate); round 2 had 64 × 45 plates and items up to 42 px at grain 4. Item sits 1–3 world units off centre (seeded per plate). In bends, plate and item rotate with the belt tangent.
 - **Fill:** ~50% of slots, seeded random with singles, pairs, runs and gaps; never reshuffled in view.
 - **Mix of occupied plates:** 70% funny sushi/food (nigiri with expressions, sleepy onigiri, suspicious wasabi, rice with a tiny umbrella, gyoza in a blanket…), 20% surprising non-food (rubber duck, floppy disk, tiny bonsai, lost sock, beetle, lucky cat, haunted laptop…), 10% very animated food (breathes, blinks, waves, shivers on its plate).
 - **Speed:** rest 16 px/s at 1440 px (constant, never stops). On first scroll input the belt visibly surges (up to ~6×) and the page holds for 0.3 s so the surge shows **before** the scene moves, then eases back within ~1 s. (Round 5: Martin asked for the belt to go a bit faster on scroll before the scrolling kicks in; it was ~4× with a 0.16 s hold.) Never reverses.
 - **Rare events, once or twice per visit total:** one item grows legs, walks to a neighbouring plate and cuddles; one plate wobbles off a bend and lands on the floor (stays there, clickable). Scheduled, not looping.
-- **Ending:** at the pond the belt crosses a low trestle; a large koi leaps (≈2 s arc, splash, ripples that decay), eats one small cluster (2–4 items), plates continue empty and are refilled out of view.
+- **Ending:** at the pond the belt crosses a low trestle; a large koi leaps over it (≈2 s arc, a splash out and a splash back in) a few seconds after the pond comes into view, then about every 25 s, and whenever a plate is dropped in the water. It eats every item in its arc, aimed at the fullest run of food in view (Martin: "eat a whole lot of the belt"), not one small cluster; the plates roll on empty and leave the frame past the trestle's far end.
 
 ## 6. Interaction
 
@@ -66,7 +67,7 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 
 ## 8. Games
 
-- **Sushi Rush** (runner + Giant Puffer boss) lives in stop 4 as a pixel arcade cabinet beside the table; **Daily Roll** (daily maze) lives in stop 7 as a pond-side stall. Both play in place (not a modal), activate on click, pause on leave, release scroll keys. Re-skinned to the master palette. Sushi Rush runs its untouched engine in a same-origin iframe inside the cabinet, created on first click, with every frame snapped to the master palette (`site/public/games/cabinet/`).
+- **Sushi Rush** (runner + Giant Puffer boss) lives in stop 4 as a pixel arcade cabinet beside the table; **Daily Roll** (daily maze) lives in stop 7 as a pond-side stall. Both play in place (not a modal), activate on click, pause on leave, release scroll keys. Re-skinned to the master palette. Both run the untouched engine in the same same-origin embed page (`site/public/games/cabinet/`, `?game=rush` or `?game=daily`), loaded in an iframe on first click, with every frame snapped to the master palette.
 
 ## 9. Animation
 
@@ -80,7 +81,7 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 
 ## 11. Delivery
 
-- Canvas 2D + DOM, no WebGL. Static still fallback route. Tested in Chromium and WebKit (Playwright) at 1440 × 900 and 390 × 844. Full-scroll recording plus one still per stop. Review URL on the session host; cache-buster `?v=`, never `?t=`.
+- Canvas 2D + DOM, no WebGL. Static still fallback route: `/still/` (all seven stops as images plus their copy, no JavaScript, generated from the live copy at build time and linked from the pond). Tested in Chromium and WebKit (Playwright) at 1440 × 900 and 390 × 844. Full-scroll recording plus one still per stop. Review URL on the session host; cache-buster `?v=`, never `?t=`.
 
 ## Deliberate departures from the videos
 

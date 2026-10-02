@@ -1,0 +1,125 @@
+{
+ "id": "band5",
+ "size": [
+  360,
+  125
+ ],
+ "loop": 8000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [
+  {
+   "id": "peeker",
+   "src": "peeker.png",
+   "x": 118,
+   "y": 3,
+   "w": 20,
+   "h": 17,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    2800,
+    200,
+    5000
+   ],
+   "egg": "peeker"
+  },
+  {
+   "id": "peeker-react",
+   "src": "peeker-react.png",
+   "x": 118,
+   "y": 3,
+   "w": 20,
+   "h": 17,
+   "grain": 8,
+   "frames": 4,
+   "durations": [
+    100,
+    700,
+    500,
+    300
+   ],
+   "trigger": true,
+   "egg": "peeker"
+  },
+  {
+   "id": "wall-lantern",
+   "src": "wall-lantern.png",
+   "x": 111,
+   "y": 54,
+   "w": 20,
+   "h": 26,
+   "grain": 4,
+   "frames": 2,
+   "durations": [
+    3200,
+    800
+   ]
+  },
+  {
+   "id": "fly",
+   "src": "fly.png",
+   "x": 189,
+   "y": 61,
+   "w": 6,
+   "h": 6,
+   "grain": 8,
+   "frames": 2,
+   "durations": [
+    1600,
+    400
+   ],
+   "egg": "fly"
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "rail",
+   "x": 150,
+   "y": 95,
+   "w": 120,
+   "h": 5
+  }
+ ],
+ "eggs": [
+  {
+   "id": "peeker",
+   "name": "Over the wall",
+   "x": 119,
+   "y": 4,
+   "w": 18,
+   "h": 15,
+   "sprite": "peeker",
+   "says": [
+    "(hides)"
+   ]
+  },
+  {
+   "id": "wall-lantern",
+   "name": "Wall lantern",
+   "x": 112,
+   "y": 55,
+   "w": 18,
+   "h": 24,
+   "says": [
+    "Almost there."
+   ]
+  },
+  {
+   "id": "fly",
+   "name": "Firefly",
+   "x": 188,
+   "y": 60,
+   "w": 8,
+   "h": 8,
+   "sprite": "fly",
+   "says": [
+    "*blink*"
+   ]
+  }
+ ]
+}

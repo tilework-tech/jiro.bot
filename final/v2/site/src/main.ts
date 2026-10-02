@@ -1,15 +1,15 @@
 import { mountBelt, type Mapping } from "./beltView";
-import { buildRoute, routePoints, BELT_W, BEND_R, HIDDEN, type Pt } from "./belt/route";
+import { buildRoute, routePoints, BELT_W, BEND_R, HIDDEN, POND_TRESTLE, type Pt } from "./belt/route";
 import { createJourney } from "./belt/motion";
 import { createEggs, say, type Egg } from "./eggs";
 import { BANDS, STOP_H, STOPS, WORLD_W, stopTop, type StopId } from "./layout";
 import { mountScene, sceneDensity, type SceneDef } from "./scene";
-import { initCompare, initDemo, initTable } from "./content";
-import { mountCabinet } from "./cabinet";
+import { initCompare, initDemo, initFaq, initPricing, initTable } from "./content";
+import { DAILY_STALL, RUSH_CABINET, mountCabinet } from "./cabinet";
 
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const narrow = () => innerWidth <= 760;
-const BUILT: StopId[] = ["hero", "product", "compare", "table"];
+const BUILT: StopId[] = ["hero", "product", "compare", "table", "faq", "price", "pond"];
 const REST = 4;
 
 const BELT_EGGS: Egg[] = [
@@ -25,6 +25,10 @@ const BELT_EGGS: Egg[] = [
   { id: "alive-legged-maki", name: "Maki with legs", scene: "belt" },
   { id: "demo-pr", name: "Got a PR back from Jiro", scene: "product" },
   { id: "game-rush", name: "Played Sushi Rush", scene: "table" },
+  { id: "faq-asked", name: "Asked Jiro a question", scene: "faq" },
+  { id: "game-daily", name: "Played today's Daily Roll", scene: "pond" },
+  { id: "koi-leap", name: "Saw the koi leap", scene: "pond" },
+  { id: "koi-fed", name: "Fed the koi", scene: "pond" },
 ];
 
 async function boot() {
@@ -85,7 +89,7 @@ async function boot() {
     bandEls.push(b);
   }
 
-  let cabinet: ReturnType<typeof mountCabinet> | undefined;
+  let cabinets: { id: StopId; c: ReturnType<typeof mountCabinet> }[] = [];
   function layout() {
     s = innerWidth / WORLD_W;
     document.documentElement.style.setProperty("--s", `${s}px`);
@@ -116,28 +120,33 @@ async function boot() {
     const lastTop = map.worldToPage({ x: 0, y: stopTop(lastBuilt) }).y;
     stage.style.height = `${Math.max(map.worldToPage({ x: 0, y: worldEnd }).y, lastTop + innerHeight)}px`;
     if (eggsReady) placeAllEggs();
-    cabinet?.place(s, copyH.table ?? 0, narrow());
+    for (const { id, c } of cabinets) c.place(s, copyH[id] ?? 0, narrow());
   }
 
   // ---------------------------------------------------------------- scenes
   // Canvas density follows the screen; a resize, zoom or move to another monitor that changes it remounts the scenes.
   const bandScenes: Awaited<ReturnType<typeof mountScene>>[] = [];
   let density = 0;
+  let mounting = false;
   async function mountAll() {
     const want = sceneDensity(innerWidth / WORLD_W, devicePixelRatio || 1);
     if (want === density) return;
     density = want;
-    for (const id of BUILT) {
-      const def = sceneDefs[id];
-      const canvas = stopEls.get(id)!.querySelector<HTMLCanvasElement>("canvas.scene")!;
-      if (def) scenes.set(id, await mountScene(canvas, `art/${id}`, def, reduced, density));
-      else paintPlaceholder(canvas);
-    }
-    for (const [i, b] of bandEls.entries()) {
-      const def = bandDefs[i];
-      if (def) bandScenes[i] = await mountScene(b.querySelector("canvas")!, `art/band${i}`, def, reduced, density);
-      else paintPlaceholder(b.querySelector("canvas")!);
-    }
+    mounting = true;
+    await Promise.all([
+      ...BUILT.map(async (id) => {
+        const def = sceneDefs[id];
+        const canvas = stopEls.get(id)!.querySelector<HTMLCanvasElement>("canvas.scene")!;
+        if (def) scenes.set(id, await mountScene(canvas, `art/${id}`, def, reduced, density));
+        else paintPlaceholder(canvas);
+      }),
+      ...bandEls.map(async (b, i) => {
+        const def = bandDefs[i];
+        if (def) bandScenes[i] = await mountScene(b.querySelector("canvas")!, `art/band${i}`, def, reduced, density);
+        else paintPlaceholder(b.querySelector("canvas")!);
+      }),
+    ]);
+    mounting = false;
   }
   await mountAll();
 
@@ -180,7 +189,12 @@ async function boot() {
   initDemo((n) => { if (n === 3) eggs.find("demo-pr"); });
   initCompare(reduced);
   initTable();
-  cabinet = mountCabinet(stopEls.get("table")!, () => eggs.find("game-rush"));
+  cabinets = [
+    { id: "table" as StopId, c: mountCabinet(stopEls.get("table")!, RUSH_CABINET, () => eggs.find("game-rush")) },
+    { id: "pond" as StopId, c: mountCabinet(stopEls.get("pond")!, DAILY_STALL, () => eggs.find("game-daily")) },
+  ];
+  initFaq(() => { scenes.get("faq")?.poke("jiro", performance.now()); eggs.find("faq-asked"); });
+  initPricing();
   layout();
 
   // ---------------------------------------------------------------- belt
@@ -210,7 +224,8 @@ async function boot() {
     bedOnly: (p: Pt) => p.y < heroBottom(),
     upright: (p: Pt) => p.y < heroBottom(),
     surfaces,
-    water: () => [],
+    water: () => [...scenes].flatMap(([id, sc]) => (sc.def.water ?? []).map((r) => ({ ...r, id: `${id}-${r.id}`, y: r.y + stopTop(id) }))),
+    koiLine: () => map.worldToPage({ x: 0, y: stopTop("pond") + STOP_H * POND_TRESTLE }).y,
     onEgg: (id: string) => eggs.find(id),
     onSay: (text: string, p: Pt) => say(text, p.x, p.y),
   };
@@ -287,19 +302,19 @@ async function boot() {
       if (step) { carry -= step; expectY = scrollY + step; scrollBy(0, step); }
     }
     settle(now);
-    for (const [id, sc] of scenes) {
-      const el = stopEls.get(id)!;
+    // Scenes more than 1.5 screens away hand their canvas memory back; within one screen they are restored.
+    const tend = (sc: Awaited<ReturnType<typeof mountScene>>, el: HTMLElement) => {
       const r = el.getBoundingClientRect();
-      const vis = r.bottom > -50 && r.top < innerHeight + 50;
-      sc.setVisible(vis);
-      sc.draw(now);
-    }
-    bandScenes.forEach((sc, i) => {
-      if (!sc) return;
-      const r = bandEls[i].getBoundingClientRect();
+      const gap = r.bottom < 0 ? -r.bottom : r.top > innerHeight ? r.top - innerHeight : 0;
+      if (gap > innerHeight * 1.5) sc.release();
+      else if (gap < innerHeight) sc.restore();
       sc.setVisible(r.bottom > -50 && r.top < innerHeight + 50);
       sc.draw(now);
-    });
+    };
+    if (!mounting) {
+      for (const [id, sc] of scenes) tend(sc, stopEls.get(id)!);
+      bandScenes.forEach((sc, i) => sc && tend(sc, bandEls[i]));
+    }
     belt.frame(now);
     requestAnimationFrame(loop);
   }
@@ -314,8 +329,9 @@ async function boot() {
     platesInView: belt.platesInView,
     slotsInView: belt.slotsInView,
     effectsActive: belt.effectsActive,
+    koi: belt.koi,
     surface: (id: string) => {
-      const r = surfaces().find((x) => x.id === id);
+      const r = [...surfaces(), ...deps.water()].find((x) => x.id === id);
       if (!r) throw new Error(`no surface ${id}`);
       const p = map.worldToPage({ x: r.x + r.w / 2, y: r.y + r.h / 2 });
       return { x: p.x - scrollX, y: p.y - scrollY, w: r.w * s, h: r.h * s };

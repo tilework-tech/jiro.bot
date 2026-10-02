@@ -84,6 +84,9 @@ export const BEND_R = 32;
 /** The belt channel in the dining-room counter, as a fraction of the stop height (measured from the compare art). */
 const COMPARE_CHANNEL = { top: 149 / 202, mid: 162.5 / 202, bottom: 176 / 202 };
 
+/** The pond trestle's channel centre, as a fraction of the stop height (measured from the pond art). */
+export const POND_TRESTLE = 93.75 / 202;
+
 /**
  * Where the belt is hidden behind scene architecture: the kitchen hatch sill, the timber beam under the hero, and the
  * dining-room walls the belt runs inside before it drops into the counter channel and after it leaves it.
@@ -93,11 +96,14 @@ export const HIDDEN: Rect[] = [
   { x: 121, y: 201, w: 55, h: 153 },
   { x: 0, y: stopTop("compare") - 1, w: 44, h: 202 * COMPARE_CHANNEL.top + 1 },
   { x: 300, y: stopTop("compare") + 202 * COMPARE_CHANNEL.bottom, w: 76, h: 202 * (1 - COMPARE_CHANNEL.bottom) + 1 },
+  // pond: down behind the garden wall, bridge and yatai stall, out along the trestle, into the dark past its far end
+  { x: 248, y: stopTop("pond") - 1, w: 134, h: 202 * POND_TRESTLE + 15 },
+  { x: -100, y: stopTop("pond") + 202 * POND_TRESTLE - 20, w: 106, h: 40 },
 ];
 
 /** The one belt: hatch → hero diagonal → down behind the crawlspace beam → along the crawlspace floor → down the left edge →
- *  along the comparison room →
- *  down the right edge → across the FAQ floor → down the left edge past the street → across the pond trestle. */
+ *  along the comparison room → down the steel shaft at the right through the arcade, FAQ, street and garden wall →
+ *  one turn onto the pond trestle, ending at the trestle's far end. */
 export function routePoints(): Pt[] {
   const L = 22, R = 320;
   const y = (id: Parameters<typeof stopTop>[0], f: number) => stopTop(id) + 202 * f;
@@ -111,10 +117,8 @@ export function routePoints(): Pt[] {
     { x: L, y: crawl },
     { x: L, y: y("compare", COMPARE_CHANNEL.mid) },
     { x: R, y: y("compare", COMPARE_CHANNEL.mid) },
-    { x: R, y: y("faq", 0.9) },
-    { x: L, y: y("faq", 0.9) },
-    { x: L, y: y("pond", 0.47) },
-    { x: 400, y: y("pond", 0.47) },
+    { x: R, y: y("pond", POND_TRESTLE) },
+    { x: -60, y: y("pond", POND_TRESTLE) },
   ];
 }
 

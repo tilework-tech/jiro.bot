@@ -130,6 +130,54 @@ body.dragging, body.dragging * { cursor: grabbing !important; }
 .cabinet iframe { display: block; width: 100%; height: 100%; border: 0; }
 .cabinet-close { position: absolute; top: -14px; right: -14px; width: 28px; height: 28px; border-radius: 50%; border: 2px solid #9e5231; background: #241510; color: #efdabd; font-size: 18px; line-height: 1; cursor: pointer; }
 
+/* ---------------------------------------------------------------- 5 · FAQ counter */
+#faq .faq-wrap { left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; text-shadow: none; }
+#faq .faq-wrap > * { pointer-events: auto; }
+#faq .faq-title { position: absolute; left: calc(var(--s) * 14); top: calc(var(--s) * 40); width: calc(var(--s) * 96); text-shadow: 0 2px 0 #000; }
+#faq .faq-title h2 { margin: 6px 0 8px; font-family: var(--pixel); font-size: clamp(24px, 2.4vw, 38px); line-height: 1.1; color: var(--cream); }
+#faq .faq-title .sub { margin: 0; color: var(--paper); font-size: clamp(14px, 1.1vw, 17px); }
+.faq-q { position: absolute; left: calc(var(--s) * var(--x)); top: calc(var(--s) * var(--y)); transform: translateX(-50%); width: calc(var(--s) * 48);
+  padding: 6px 9px; border: 2px solid #351e1a; border-radius: 10px; background: #efdabd; color: #241510; font: 600 clamp(11px, 0.85vw, 13px)/1.25 var(--sans);
+  text-align: center; cursor: pointer; box-shadow: 0 3px 0 #000; }
+.faq-q span { display: block; animation: bob 5.5s ease-in-out infinite; animation-delay: calc(var(--x) * -37ms); }
+.faq-q::after { content: ""; position: absolute; left: 50%; bottom: -9px; width: 8px; height: 8px; margin-left: -4px; background: #efdabd; border: 2px solid #351e1a; border-top: 0; border-left: 0; transform: rotate(45deg); }
+.faq-q:hover, .faq-q.on { background: #f6ba64; }
+@keyframes bob { 50% { transform: translateY(-2px); } }
+.faq-answer { position: absolute; left: calc(var(--s) * 206); top: calc(var(--s) * 3); width: calc(var(--s) * 98); max-height: calc(var(--s) * 52); overflow: auto;
+  padding: 10px 14px; border: 2px solid #351e1a; border-radius: 12px; background: #f4f4f2; color: #241510; font-size: clamp(12px, 0.92vw, 14px); line-height: 1.4; box-shadow: 0 4px 0 #000; }
+.faq-answer b { display: block; margin-bottom: 4px; font-family: var(--pixel); font-weight: 400; color: #613124; }
+.faq-answer p { margin: 0; }
+.faq-answer.pop { animation: pop 0.25s ease-out; }
+@keyframes pop { from { transform: scale(0.96); opacity: 0.4; } }
+
+/* ---------------------------------------------------------------- 6 · night street pricing */
+#price .price-wrap { left: calc(var(--s) * 6); top: calc(var(--s) * 15); width: calc(var(--s) * 134); text-shadow: none; display: flex; flex-direction: column; gap: 6px; }
+#price .price-wrap .kicker { margin: 0; color: #fdd081; font-family: var(--pixel); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; text-shadow: 0 2px 0 #000; }
+#price .price-wrap h2 { margin: 0; font-family: var(--pixel); font-size: clamp(20px, 2vw, 30px); color: var(--cream); text-shadow: 0 2px 0 #000; }
+.price-tags { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 8px; margin-top: 6px; }
+.tag { position: relative; display: flex; flex-direction: column; gap: 2px; padding: 9px 11px 8px; background: #efdabd; color: #241510; border: 2px solid #80452e;
+  box-shadow: 0 4px 0 #000; transform-origin: 50% -10px; animation: sway 7s ease-in-out infinite; animation-delay: calc(var(--i) * -1.7s); }
+.tag .string { position: absolute; left: 50%; top: -10px; width: 2px; height: 10px; background: #af9782; }
+.tag .jp { position: absolute; right: 8px; top: 6px; font-size: 11px; color: #9e5231; }
+.tag h3 { margin: 0; font-family: var(--pixel); font-weight: 400; font-size: clamp(14px, 1.15vw, 18px); color: #613124; }
+.tag .price { font-family: var(--pixel); font-size: clamp(18px, 1.6vw, 26px); color: #241510; }
+.tag .price small { font-family: var(--sans); font-size: 12px; margin-left: 3px; color: #613124; }
+.tag p { margin: 0; font-size: clamp(11px, 0.82vw, 13px); line-height: 1.3; flex: 1; }
+.tag .go { align-self: flex-start; margin-top: 3px; font-size: 12px; font-weight: 600; color: #80452e; }
+.tag.hot { background: #fdd081; border-color: #9e5231; }
+@keyframes sway { 50% { transform: rotate(0.8deg); } }
+#price .fine { margin: 0; font-size: 12px; color: var(--paper); text-shadow: 0 2px 0 #000; }
+
+/* ---------------------------------------------------------------- 7 · koi pond */
+#pond .pond-copy { left: calc(var(--s) * 12); top: calc(var(--s) * 16); width: calc(var(--s) * 140); }
+#pond .pond-copy h2 { margin: 4px 0 6px; font-family: var(--pixel); font-size: calc(var(--s) * 9.5); line-height: 1.1; color: var(--cream); }
+#pond .pond-copy .body { margin: 0; font-size: max(13px, calc(var(--s) * 4)); }
+.cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin: calc(var(--s) * 3) 0 calc(var(--s) * 2); }
+.cta-btn { display: inline-block; padding: 10px 16px; background: var(--copper); color: var(--ink); font-weight: 600; text-decoration: none; text-shadow: none; box-shadow: 0 3px 0 #000; }
+.cta-btn.ghost { background: transparent; color: var(--cream); border: 2px solid var(--copper); }
+#pond .foot { font-size: 12px; color: var(--paper); }
+#pond .foot a { color: #fdd081; }
+
 /* ---------------------------------------------------------------- 2 · product demo */
 #product .demo-wrap { left: calc(var(--s) * 36); top: calc(var(--s) * 12); width: calc(var(--s) * 240); height: calc(var(--s) * 184); display: flex; flex-direction: column; text-shadow: none; }
 #product .kicker { margin-bottom: 10px; }
@@ -178,6 +226,16 @@ body.dragging, body.dragging * { cursor: grabbing !important; }
   #compare.stop .cmp-wrap { position: relative; left: auto; top: auto; width: auto; height: auto; margin: 0 8px 0 34px; padding: 14px; box-shadow: 0 6px 0 #000; }
   #compare .cmp-grid { grid-template-columns: 1fr; }
   .cabinet-play span { font-size: 11px; } .cabinet-play small { display: none; }
+  #faq .faq-wrap { position: relative; left: auto; top: auto; width: auto; height: auto; padding: 22px 40px 16px 14px; display: flex; flex-direction: column; gap: 10px; }
+  #faq .faq-title, .faq-q, .faq-answer { position: static; left: auto; top: auto; width: auto; max-height: none; transform: none; animation: none; }
+  .faq-q span { animation: none; }
+  #pond .pond-copy h2 { font-size: 28px; } #pond .pond-copy .body { font-size: 15px; }
+  #faq .faq-wrap, #pond .pond-copy { padding-top: 64px; } #price .price-wrap { padding-top: 64px; }
+  .faq-qs { display: flex; flex-direction: column; gap: 6px; }
+  .faq-q { text-align: left; } .faq-q::after { display: none; }
+  #price .price-wrap { position: relative; left: auto; top: auto; width: auto; height: auto; margin: 0 40px 0 8px; padding-top: 22px; }
+  .price-tags { grid-template-columns: 1fr 1fr; }
+  #pond .pond-copy { position: relative; left: auto; top: auto; width: auto; padding: 22px 40px 16px 14px; }
   #table .board-wrap { position: relative; left: auto; top: auto; width: auto; height: auto; margin: 0 40px 0 8px; padding: 14px; }
   #table .table-scroll { -webkit-mask-image: linear-gradient(to right, #000 82%, transparent); mask-image: linear-gradient(to right, #000 82%, transparent); }
   #table .cmp-table { font-size: 12px; min-width: 460px; }

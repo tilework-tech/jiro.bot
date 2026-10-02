@@ -1,0 +1,364 @@
+{
+ "master": "art/gen/price/price-master.jpg",
+ "base": "art/work/price/base.png",
+ "groups": "warm,cool,accents,plates,neutrals",
+ "sprites": {
+  "jiro": {
+   "grain": 8,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    196,
+    46,
+    52,
+    80
+   ],
+   "roi": [
+    200,
+    50,
+    44,
+    72
+   ],
+   "mask_prompt": "Isolate the robot on the bicycle: keep only the robot's head, headband, cape, body and arms (not the bicycle).",
+   "frame_rois": [
+    [
+     208,
+     64,
+     16,
+     9
+    ],
+    [
+     206,
+     74,
+     20,
+     9
+    ]
+   ],
+   "frames": [
+    "the robot's two glowing cyan eyes are closed: each eye becomes a thin dark horizontal line.",
+    "the robot's plain copper jaw plate is lowered by a tiny amount, as if he is speaking. No mouth, no teeth."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    2600,
+    160,
+    5240
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "durations": [
+     100,
+     180,
+     200,
+     180,
+     340
+    ]
+   },
+   "egg": "jiro"
+  },
+  "light": {
+   "grain": 8,
+   "crop": [
+    135,
+    15,
+    22,
+    36
+   ],
+   "roi": [
+    139,
+    19,
+    13,
+    27
+   ],
+   "compare": "base",
+   "frames": [
+    "the small traffic light's top lamp goes dark and its bottom lamp glows bright green."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     1,
+     1,
+     0
+    ],
+    "durations": [
+     100,
+     700,
+     500,
+     300
+    ]
+   },
+   "egg": "light"
+  },
+  "lantern-l": {
+   "grain": 4,
+   "crop": [
+    150,
+    26,
+    26,
+    40
+   ],
+   "roi": [
+    154,
+    30,
+    18,
+    31
+   ],
+   "frame_rois": [
+    [
+     156,
+     34,
+     14,
+     22
+    ]
+   ],
+   "frames": [
+    "the paper lantern's paper glows a little brighter and paler yellow inside, as if the candle flared; nothing else changes."
+   ],
+   "keep": [
+    0,
+    1
+   ],
+   "durations": [
+    3600,
+    400
+   ]
+  },
+  "lantern-r": {
+   "grain": 4,
+   "crop": [
+    245,
+    8,
+    24,
+    36
+   ],
+   "roi": [
+    249,
+    11,
+    16,
+    29
+   ],
+   "frame_rois": [
+    [
+     251,
+     15,
+     12,
+     20
+    ]
+   ],
+   "frames": [
+    "the paper lantern's paper glows a little brighter and paler yellow inside, as if the candle flared; nothing else changes."
+   ],
+   "keep": [
+    0,
+    1
+   ],
+   "durations": [
+    1600,
+    400
+   ]
+  },
+  "cat": {
+   "grain": 8,
+   "crop": [
+    111,
+    104,
+    22,
+    30
+   ],
+   "roi": [
+    115,
+    107,
+    14,
+    24
+   ],
+   "align": false,
+   "frames": [
+    "the small grey cat on the doorstep blinks its eyes closed.",
+    "the small grey cat on the doorstep flicks its ears and tail."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    3000,
+    200,
+    4800
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     2,
+     0,
+     2,
+     0
+    ],
+    "durations": [
+     100,
+     300,
+     200,
+     300,
+     300
+    ]
+   },
+   "egg": "cat"
+  },
+  "lamp": {
+   "grain": 8,
+   "crop": [
+    181,
+    113,
+    14,
+    16
+   ],
+   "roi": [
+    184,
+    116,
+    8,
+    10
+   ],
+   "frames": [
+    "the bicycle's round headlamp glows a little brighter."
+   ],
+   "keep": [
+    0,
+    1
+   ],
+   "durations": [
+    3000,
+    1000
+   ],
+   "egg": "lamp"
+  }
+ },
+ "scene": {
+  "surfaces": [
+   {
+    "id": "step",
+    "x": 100,
+    "y": 130,
+    "w": 40,
+    "h": 8
+   },
+   {
+    "id": "street",
+    "x": 60,
+    "y": 175,
+    "w": 100,
+    "h": 20
+   }
+  ],
+  "eggs": [
+   {
+    "id": "jiro",
+    "name": "Waiting for the green",
+    "x": 202,
+    "y": 52,
+    "w": 40,
+    "h": 66,
+    "sprite": "jiro",
+    "says": [
+     "Light's red. I wait.",
+     "Delivery in four minutes. Tests in three."
+    ]
+   },
+   {
+    "id": "light",
+    "name": "Changed the light",
+    "x": 139,
+    "y": 19,
+    "w": 13,
+    "h": 27,
+    "sprite": "light",
+    "says": [
+     "Green! \u2026and red again."
+    ]
+   },
+   {
+    "id": "lantern-l",
+    "name": "Shop lantern",
+    "x": 155,
+    "y": 31,
+    "w": 16,
+    "h": 29,
+    "says": [
+     "Open late."
+    ]
+   },
+   {
+    "id": "lantern-r",
+    "name": "Second lantern",
+    "x": 250,
+    "y": 12,
+    "w": 14,
+    "h": 27,
+    "says": [
+     "Still open."
+    ]
+   },
+   {
+    "id": "cat",
+    "name": "Street cat",
+    "x": 115,
+    "y": 112,
+    "w": 14,
+    "h": 19,
+    "sprite": "cat",
+    "says": [
+     "mrrp."
+    ]
+   },
+   {
+    "id": "lamp",
+    "name": "Headlamp",
+    "x": 184,
+    "y": 116,
+    "w": 8,
+    "h": 10,
+    "sprite": "lamp",
+    "says": [
+     "Lights on at night. Like logging."
+    ]
+   },
+   {
+    "id": "crate",
+    "name": "Tonight's delivery",
+    "x": 236,
+    "y": 68,
+    "w": 26,
+    "h": 26,
+    "says": [
+     "Twelve nigiri and one pull request."
+    ]
+   },
+   {
+    "id": "puddle",
+    "name": "Splash",
+    "x": 248,
+    "y": 174,
+    "w": 36,
+    "h": 15,
+    "says": [
+     "*splash*"
+    ]
+   }
+  ]
+ }
+}

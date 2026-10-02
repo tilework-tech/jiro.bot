@@ -1,0 +1,203 @@
+{
+ "id": "pond",
+ "size": [
+  360,
+  202
+ ],
+ "loop": 4000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [
+  {
+   "id": "fly-a",
+   "src": "fly-a.png",
+   "x": 18,
+   "y": 64,
+   "w": 6,
+   "h": 6,
+   "grain": 8,
+   "frames": 2,
+   "durations": [
+    1400,
+    600
+   ]
+  },
+  {
+   "id": "fly-b",
+   "src": "fly-b.png",
+   "x": 205,
+   "y": 64,
+   "w": 6,
+   "h": 6,
+   "grain": 8,
+   "frames": 2,
+   "durations": [
+    1600,
+    400
+   ]
+  },
+  {
+   "id": "toro-l",
+   "src": "toro-l.png",
+   "x": 14,
+   "y": 148,
+   "w": 26,
+   "h": 34,
+   "grain": 4,
+   "frames": 2,
+   "durations": [
+    3000,
+    1000
+   ]
+  },
+  {
+   "id": "toro-r",
+   "src": "toro-r.png",
+   "x": 266,
+   "y": 161,
+   "w": 24,
+   "h": 34,
+   "grain": 4,
+   "frames": 2,
+   "durations": [
+    3400,
+    600
+   ]
+  },
+  {
+   "id": "stall-lantern",
+   "src": "stall-lantern.png",
+   "x": 250,
+   "y": 82,
+   "w": 12,
+   "h": 18,
+   "grain": 8,
+   "frames": 2,
+   "durations": [
+    2000,
+    2000
+   ],
+   "egg": "stall-lantern"
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "bank",
+   "x": 270,
+   "y": 125,
+   "w": 30,
+   "h": 15
+  },
+  {
+   "id": "stool",
+   "x": 261,
+   "y": 128,
+   "w": 14,
+   "h": 8
+  }
+ ],
+ "water": [
+  {
+   "id": "water",
+   "x": 70,
+   "y": 122,
+   "w": 130,
+   "h": 60
+  }
+ ],
+ "eggs": [
+  {
+   "id": "moon",
+   "name": "Moon in the pond",
+   "x": 229,
+   "y": 4,
+   "w": 40,
+   "h": 36,
+   "says": [
+    "Only a reflection. Still counts."
+   ]
+  },
+  {
+   "id": "bridge",
+   "name": "Empty bridge",
+   "x": 290,
+   "y": 10,
+   "w": 66,
+   "h": 40,
+   "says": [
+    "Jiro is out on a delivery."
+   ]
+  },
+  {
+   "id": "toro-l",
+   "name": "Stone lantern",
+   "x": 15,
+   "y": 149,
+   "w": 24,
+   "h": 32,
+   "says": [
+    "Lit since the first commit."
+   ]
+  },
+  {
+   "id": "toro-r",
+   "name": "Other stone lantern",
+   "x": 267,
+   "y": 162,
+   "w": 22,
+   "h": 32,
+   "says": [
+    "Symmetry."
+   ]
+  },
+  {
+   "id": "cattails",
+   "name": "Cattails",
+   "x": 226,
+   "y": 152,
+   "w": 36,
+   "h": 46,
+   "says": [
+    "*rustle*"
+   ]
+  },
+  {
+   "id": "reeds",
+   "name": "Island reeds",
+   "x": 168,
+   "y": 4,
+   "w": 32,
+   "h": 26,
+   "says": [
+    "A heron left. Probably."
+   ]
+  },
+  {
+   "id": "lily",
+   "name": "Lily pads",
+   "x": 275,
+   "y": 14,
+   "w": 15,
+   "h": 16,
+   "says": [
+    "No frogs tonight."
+   ]
+  },
+  {
+   "id": "stall-lantern",
+   "name": "Stall lantern",
+   "x": 250,
+   "y": 82,
+   "w": 12,
+   "h": 18,
+   "sprite": "stall-lantern",
+   "says": [
+    "Daily Roll: one maze a day."
+   ]
+  }
+ ]
+}

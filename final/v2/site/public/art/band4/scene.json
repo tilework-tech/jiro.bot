@@ -1,0 +1,114 @@
+{
+ "id": "band4",
+ "size": [
+  360,
+  108
+ ],
+ "loop": 8000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [
+  {
+   "id": "trio",
+   "src": "trio.png",
+   "x": 175,
+   "y": 62,
+   "w": 46,
+   "h": 26,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    3000,
+    200,
+    4800
+   ],
+   "egg": "trio"
+  },
+  {
+   "id": "trio-react",
+   "src": "trio-react.png",
+   "x": 175,
+   "y": 62,
+   "w": 46,
+   "h": 26,
+   "grain": 8,
+   "frames": 5,
+   "durations": [
+    100,
+    300,
+    200,
+    300,
+    300
+   ],
+   "trigger": true,
+   "egg": "trio"
+  },
+  {
+   "id": "pipe-eyes",
+   "src": "pipe-eyes.png",
+   "x": 250,
+   "y": 40,
+   "w": 18,
+   "h": 10,
+   "grain": 8,
+   "frames": 4,
+   "durations": [
+    3600,
+    200,
+    4000,
+    200
+   ],
+   "egg": "pipe-eyes"
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "ledge",
+   "x": 160,
+   "y": 86,
+   "w": 80,
+   "h": 6
+  }
+ ],
+ "eggs": [
+  {
+   "id": "trio",
+   "name": "Umbrella club",
+   "x": 176,
+   "y": 63,
+   "w": 44,
+   "h": 24,
+   "sprite": "trio",
+   "says": [
+    "it's dry down here. we just like the umbrella."
+   ]
+  },
+  {
+   "id": "pipe-eyes",
+   "name": "Eyes in the pipe",
+   "x": 250,
+   "y": 39,
+   "w": 18,
+   "h": 12,
+   "sprite": "pipe-eyes",
+   "says": [
+    "\u2026"
+   ]
+  },
+  {
+   "id": "boat",
+   "name": "Paper boat",
+   "x": 96,
+   "y": 92,
+   "w": 16,
+   "h": 10,
+   "says": [
+    "Bound for the koi pond."
+   ]
+  }
+ ]
+}

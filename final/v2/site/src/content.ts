@@ -1,6 +1,6 @@
 /**
  * Scene copy. Product facts (comparison, FAQ, pricing) are taken verbatim or lightly shortened from
- * noriagentic.com as of 2026-09-30; see final/site/docs/CONTENT-SOURCES.md. Nothing here should be invented.
+ * noriagentic.com (comparison, FAQ and pricing re-fetched 2026-10-01/02); see final/site/docs/CONTENT-SOURCES.md and final/v2/site/docs.md. Nothing here should be invented.
  */
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector(s) as T;
@@ -153,29 +153,47 @@ export function initTable() {
     `<tbody>${ROWS.map(([k, v]) => `<tr><th scope="row">${esc(k)}</th>${v.map((c, i) => `<td class="${i === 0 ? "us" : ""}">${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody>`;
 }
 
-// ---------------------------------------------------------------- 5 · FAQ (noriagentic.com FAQ, shortened)
+// ---------------------------------------------------------------- 5 · FAQ (noriagentic.com "Frequently Asked Questions", verbatim, fetched 2026-10-02)
 export const FAQ: { q: string; a: string }[] = [
-  { q: "Which agents can I run?", a: "Claude Code, Codex, and Cursor. Any agent that speaks the Agent Client Protocol can be registered alongside them, and you can mix agents across tasks." },
-  { q: "Non-engineering tools too?", a: "Yes. Salesforce, HubSpot, Google Sheets, Google Drive, Notion, Linear, Jira, Stripe, and Gmail, plus hundreds more. One agent across the stack, scoped per person." },
-  { q: "Where does the agent work?", a: "In an isolated cloud environment with your repository, tools, dependencies, and services ready to use." },
-  { q: "How does billing work?", a: "Plans are sized by runtimes. Runtimes sleep when idle and wake on demand. The free trial runs five for 30 days." },
-  { q: "Always a pull request?", a: "No. A pull request, commit, comment, or completed task for you to review, merge, or send back. Or a file: a doc, a spreadsheet, a deck." },
+  { q: "Which coding agents can I run?", a: "Claude Code, Codex, and Cursor. Any agent that speaks the Agent Client Protocol can be registered alongside them. Every agent runs on the same environment primitives, so you can mix agents across tasks or run several inside one workspace." },
+  { q: "Can it work with our non-engineering tools?", a: "Yes. Salesforce, HubSpot, Google Sheets, Google Drive, Notion, Linear, Jira, Stripe, and Gmail, plus hundreds more. One agent across the stack, scoped per person, rather than a pile of logins. Ops, finance, and data teams describe the work in Slack or Teams the way they would ask a teammate. No CLI and no new dashboard." },
+  { q: "What does an agent's environment look like?", a: "Each agent works in an isolated cloud environment with your repository, tools, dependencies, and services ready to use." },
+  { q: "How does billing work?", a: "Plans are sized by runtimes. The free trial runs five for 30 days, Developer gives one user up to three persistent runtimes, and Team gives multiple users five shared ones. Enterprise sets capacity to fit. Runtimes sleep when idle and wake on demand." },
+  { q: "Is the output always a pull request?", a: "No. Agents can return a pull request, commit, comment, or completed task for you to review, merge, or send back. An output can also be a file when that is what the work produces: a document, a spreadsheet, a presentation, or another office artifact." },
+  { q: "What repositories can I use?", a: "Any GitHub repository you have access to. Connect your GitHub account and select which repos to enable." },
 ];
+/** Where each question bubble sits over the counter (world units: centre x, top y), one per plate in the FAQ art. */
+const FAQ_SPOTS: [number, number][] = [[130, 72], [155, 56], [180, 88], [206, 72], [232, 102], [257, 86]];
+
+/** Question bubbles over the plates; clicking one makes Jiro answer in his bubble. */
+export function initFaq(onAsk: (i: number) => void) {
+  const list = $("#faq .faq-qs");
+  const answer = $("#faq [data-testid=faq-answer]");
+  list.innerHTML = FAQ.map((f, i) => `<button type="button" class="faq-q" data-testid="faq-question" data-i="${i}" style="--x:${FAQ_SPOTS[i][0]};--y:${FAQ_SPOTS[i][1]}"><span>${esc(f.q)}</span></button>`).join("");
+  list.querySelectorAll<HTMLButtonElement>(".faq-q").forEach((b) => (b.onclick = () => {
+    const i = Number(b.dataset.i);
+    list.querySelectorAll(".faq-q").forEach((x) => x.classList.toggle("on", x === b));
+    answer.innerHTML = `<b>${esc(FAQ[i].q)}</b><p>${esc(FAQ[i].a)}</p>`;
+    answer.classList.remove("pop"); void answer.offsetWidth; answer.classList.add("pop");
+    onAsk(i);
+  }));
+}
 
 // ---------------------------------------------------------------- 6 · pricing (noriagentic.com, "Pay per agent, no hidden fees.")
 export function initPricing() {
   const plans = [
-    { n: "Free trial", jp: "お試し", p: "$0", per: "for 30 days", f: "Five runtimes and the complete team experience", cta: "Start free" },
-    { n: "Developer", jp: "板前", p: "$99", per: "/month", f: "One user, up to three persistent runtimes, integrations, triggers, and BYOK", cta: "Get started" },
-    { n: "Team", jp: "厨房", p: "$250", per: "/month", f: "Multiple users, five shared runtimes, organization controls, integrations, and collaboration", cta: "Get started", hot: true },
-    { n: "Enterprise", jp: "おまかせ", p: "Contact us", per: "", f: "Custom capacity, role-based access control, audit trails, deployment, onboarding, and support", cta: "Talk to us" },
+    { n: "Free trial", jp: "お試し", p: "$0", per: "for 30 days", f: "Five runtimes and the complete team experience", cta: "Start free", href: "https://noriagentic.com/#pricing" },
+    { n: "Developer", jp: "板前", p: "$99", per: "/month", f: "One user, up to three persistent runtimes, integrations, triggers, and BYOK", cta: "Get started", href: "https://noriagentic.com/#pricing" },
+    { n: "Team", jp: "厨房", p: "$250", per: "/month", f: "Multiple users, five shared runtimes, organization controls, integrations, and collaboration", cta: "Get started", href: "https://noriagentic.com/#pricing", hot: true },
+    { n: "Enterprise", jp: "おまかせ", p: "Contact us", per: "", f: "Custom capacity, role-based access control, audit trails, deployment, onboarding, and support", cta: "Talk to us", href: "mailto:amol@noriagentic.com?subject=Nori%20Sessions%20Enterprise" },
   ];
   $("#price-tags").innerHTML = plans.map((x, i) => `
-    <a class="tag ${x.hot ? "hot" : ""}" href="https://noriagentic.com/#pricing" target="_blank" rel="noopener" style="--i:${i}">
-      <span class="string"></span>
-      <h3>${esc(x.n)}<span class="jp">${x.jp}</span></h3>
+    <div class="tag ${x.hot ? "hot" : ""}" data-testid="plan" style="--i:${i}">
+      <span class="string" aria-hidden="true"></span>
+      <span class="jp" lang="ja" aria-hidden="true">${x.jp}</span>
+      <h3>${esc(x.n)}</h3>
       <div class="price">${esc(x.p)}<small>${esc(x.per)}</small></div>
       <p>${esc(x.f)}</p>
-      <span class="go">${esc(x.cta)} →</span>
-    </a>`).join("");
+      <a class="go" href="${x.href}" rel="noopener">${esc(x.cta)} →</a>
+    </div>`).join("");
 }

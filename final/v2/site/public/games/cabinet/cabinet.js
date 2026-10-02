@@ -1,6 +1,6 @@
 'use strict';
 /*
- * Sushi Rush inside Jiro's arcade cabinet (stop 4). The engine runs untouched at its native 640 × 300;
+ * Sushi Rush (stop 4's arcade cabinet, ?game=rush) or Daily Roll (stop 7's pond stall, ?game=daily). The engine runs untouched at its native 640 × 300;
  * every frame is snapped to the site's 56-colour palette so the game sits in the same art as the room.
  * The page around it sends {cabinet: "pause" | "resume"} when the cabinet leaves or re-enters the view.
  * Keys only reach the game while this frame has focus, so Space and the arrows keep scrolling the page.
@@ -9,8 +9,13 @@ const canvas = document.querySelector('canvas');
 const view = canvas.getContext('2d', { willReadFrequently: true });
 const work = document.createElement('canvas');
 const ctx = work.getContext('2d', { willReadFrequently: true });
-const game = new Rush(RUSH_W, RUSH_H);
-canvas.width = work.width = RUSH_W; canvas.height = work.height = RUSH_H;
+const params = new URLSearchParams(location.search);
+const daily = params.get('game') === 'daily';
+const W = daily ? DAILY_W : RUSH_W, H = daily ? DAILY_H : RUSH_H;
+const id = daily ? 'daily-' + DAILY.date : 'rush';
+const make = () => (daily ? new Maze(DAILY_W, DAILY_H, dailyMode()) : new Rush(RUSH_W, RUSH_H));
+let game = make();
+canvas.width = work.width = W; canvas.height = work.height = H;
 
 // 15-bit colour → nearest palette colour (redmean), built once.
 let lut = null;
@@ -34,8 +39,8 @@ ready.catch((e) => console.error('cabinet palette', e));
 const cab = { state: 'title', t: 0, mouse: null };
 window.__cabinet = cab;
 const set = (s) => { cab.state = s; cab.t = 0; };
-const start = () => { game.reset(); set('play'); };
-if (new URLSearchParams(location.search).has('autostart')) ready.then(start);
+const start = () => { game = make(); set('play'); };
+if (params.has('autostart')) ready.then(start);
 
 addEventListener('message', (e) => {
   if (e.origin !== location.origin || !e.data) return;
@@ -46,14 +51,14 @@ document.addEventListener('visibilitychange', () => { if (document.hidden && cab
 
 const logical = (e) => {
   const r = canvas.getBoundingClientRect();
-  return { x: ((e.clientX - r.left) / r.width) * RUSH_W, y: ((e.clientY - r.top) / r.height) * RUSH_H };
+  return { x: ((e.clientX - r.left) / r.width) * W, y: ((e.clientY - r.top) / r.height) * H };
 };
 canvas.addEventListener('pointermove', (e) => { cab.mouse = logical(e); });
 canvas.addEventListener('pointerdown', (e) => {
   cab.mouse = logical(e);
   if (cab.state === 'paused') return set('play');
   if (cab.state !== 'play') { if (cab.t > 0.3) start(); return; }
-  game.tap();
+  if (game.tap) game.tap();
 });
 const KEYS = new Set(['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyA', 'KeyS', 'KeyD']);
 for (const type of ['keydown', 'keyup']) addEventListener(type, (e) => {
@@ -63,10 +68,11 @@ for (const type of ['keydown', 'keyup']) addEventListener(type, (e) => {
   game.input(e.code, type === 'keydown');
 });
 
-/** In the boss maze the maki turns toward the pointer at the next junction (same rule as the arcade page). */
+/** In a maze (Daily Roll, or the Sushi Rush boss) the maki turns toward the pointer at the next junction. */
 function steer() {
-  if (game.phase !== 'boss' || !cab.mouse) return;
-  const m = game.cur, p = m.players[0], [px, py] = m.pos(p);
+  const m = game instanceof Maze ? game : game.phase === 'boss' ? game.cur : null;
+  if (!m || !cab.mouse) return;
+  const p = m.players[0], [px, py] = m.pos(p);
   const dx = (cab.mouse.x - m.ox) / m.ts - 0.5 - px, dy = (cab.mouse.y - m.oy) / m.ts - 0.5 - py;
   if (Math.hypot(dx, dy) < 0.5) return;
   const horiz = Math.abs(dx) > Math.abs(dy);
@@ -79,9 +85,9 @@ function steer() {
 }
 
 function overlay(a, b) {
-  ctx.fillStyle = 'rgba(11,3,2,.66)'; ctx.fillRect(0, 0, RUSH_W, RUSH_H);
-  ctx.textAlign = 'center'; ctx.fillStyle = '#efdabd'; ctx.font = '700 26px system-ui, sans-serif'; ctx.fillText(a, RUSH_W / 2, RUSH_H / 2 - 4);
-  ctx.fillStyle = '#d9c9b0'; ctx.font = '500 15px system-ui, sans-serif'; ctx.fillText(b, RUSH_W / 2, RUSH_H / 2 + 22); ctx.textAlign = 'left';
+  ctx.fillStyle = 'rgba(11,3,2,.66)'; ctx.fillRect(0, 0, W, H);
+  ctx.textAlign = 'center'; ctx.fillStyle = '#efdabd'; ctx.font = '700 26px system-ui, sans-serif'; ctx.fillText(a, W / 2, H / 2 - 4);
+  ctx.fillStyle = '#d9c9b0'; ctx.font = '500 15px system-ui, sans-serif'; ctx.fillText(b, W / 2, H / 2 + 22); ctx.textAlign = 'left';
 }
 
 let last = performance.now();
@@ -90,15 +96,18 @@ let last = performance.now();
   cab.t += dt;
   if (cab.state === 'play') {
     steer(); game.update(dt);
-    if (game.over) { Best.set('rush', game.score); set('over'); }
+    if (game.over) {
+      Best.set(id, game.score); set('over');
+      if (daily) EVT.emit('gameover', { engine: game });
+    }
   }
   if (cab.state !== 'paused' || cab.t < 0.1) {
     game.draw(ctx);
-    if (cab.state === 'title') overlay('Sushi Rush', 'Click or press Space to play');
+    if (cab.state === 'title') overlay(daily ? 'Daily Roll' : 'Sushi Rush', 'Click or press Space to play');
     else if (cab.state === 'paused') overlay('Paused', 'Click to carry on');
     else if (cab.state === 'over') overlay(game.overMsg || 'Game over', `Score ${Math.floor(game.score)} · click to play again`);
     if (lut) {
-      const img = ctx.getImageData(0, 0, RUSH_W, RUSH_H), px = new Uint32Array(img.data.buffer);
+      const img = ctx.getImageData(0, 0, W, H), px = new Uint32Array(img.data.buffer);
       for (let i = 0; i < px.length; i++) { const c = px[i]; px[i] = lut[((c & 0xf8) << 7) | ((c >> 6) & 0x3e0) | ((c >> 19) & 0x1f)]; }
       view.putImageData(img, 0, 0);
     }

@@ -123,7 +123,7 @@ def main():
         cand = np.roll(np.roll(cand, bo[0], 0), bo[1], 1)
         ref = np.roll(np.roll(ref_crop, 0, 0), 0, 1)
         froi = roi
-        if s.get("frame_rois") and s["frame_rois"][k - 1]:
+        if k - 1 < len(s.get("frame_rois") or []) and s["frame_rois"][k - 1]:
             fx, fy, fw, fh = s["frame_rois"][k - 1]
             froi = np.zeros_like(roi)
             froi[(fy - cy) * g:(fy - cy + fh) * g, (fx - cx) * g:(fx - cx + fw) * g] = True

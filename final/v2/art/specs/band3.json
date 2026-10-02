@@ -1,0 +1,205 @@
+{
+ "master": "art/gen/band3/band3-strip.png",
+ "base": "art/work/band3/base.png",
+ "groups": "warm,cool,accents,plates,neutrals",
+ "cool_gate": 22,
+ "sprites": {
+  "bunk": {
+   "grain": 8,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    200,
+    48,
+    58,
+    44
+   ],
+   "roi": [
+    203,
+    51,
+    52,
+    38
+   ],
+   "frame_rois": [
+    [
+     235,
+     54,
+     10,
+     6
+    ]
+   ],
+   "align": false,
+   "frames": [
+    "the soot sprite on the top bunk blinks: its big white eyes are closed.",
+    "the two sleeping soot sprites in the matchbox beds breathe in, their blankets rising slightly."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    2600,
+    200,
+    5200
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     2,
+     0,
+     2,
+     0
+    ],
+    "durations": [
+     100,
+     500,
+     300,
+     500,
+     300
+    ]
+   },
+   "egg": "bunk"
+  },
+  "waver": {
+   "grain": 8,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    256,
+    76,
+    24,
+    24
+   ],
+   "roi": [
+    259,
+    79,
+    18,
+    18
+   ],
+   "align": false,
+   "frames": [
+    "the small soot sprite blinks: its big white eyes are closed.",
+    "the small soot sprite waves its thin arm higher."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    3600,
+    200,
+    4200
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     2,
+     0,
+     2,
+     0
+    ],
+    "durations": [
+     100,
+     250,
+     200,
+     250,
+     300
+    ]
+   },
+   "egg": "waver"
+  },
+  "faucet": {
+   "grain": 8,
+   "crop": [
+    118,
+    56,
+    20,
+    30
+   ],
+   "roi": [
+    121,
+    59,
+    13,
+    24
+   ],
+   "frame_rois": [
+    [
+     123,
+     74,
+     8,
+     8
+    ]
+   ],
+   "frames": [
+    "a water drop hangs from the copper faucet, about to fall."
+   ],
+   "keep": [
+    0,
+    1
+   ],
+   "durations": [
+    1500,
+    500
+   ]
+  }
+ },
+ "scene": {
+  "surfaces": [
+   {
+    "id": "shelf",
+    "x": 20,
+    "y": 92,
+    "w": 250,
+    "h": 6
+   }
+  ],
+  "eggs": [
+   {
+    "id": "bunk",
+    "name": "The soot bunk room",
+    "x": 204,
+    "y": 52,
+    "w": 50,
+    "h": 36,
+    "sprite": "bunk",
+    "says": [
+     "shh. lights out."
+    ]
+   },
+   {
+    "id": "waver",
+    "name": "Waved back",
+    "x": 260,
+    "y": 80,
+    "w": 16,
+    "h": 16,
+    "sprite": "waver",
+    "says": [
+     "(waves)"
+    ]
+   },
+   {
+    "id": "reader",
+    "name": "Morning paper",
+    "x": 181,
+    "y": 80,
+    "w": 17,
+    "h": 14,
+    "says": [
+     "Headline: BELT RUNS ON TIME."
+    ]
+   },
+   {
+    "id": "faucet",
+    "name": "Dripping faucet",
+    "x": 121,
+    "y": 59,
+    "w": 13,
+    "h": 24,
+    "says": [
+     "drip."
+    ]
+   }
+  ]
+ }
+}

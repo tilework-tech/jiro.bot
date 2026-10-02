@@ -1,21 +1,35 @@
-/** Where the arcade cabinet sits in the stop-4 art, in world units. */
-const SCREEN = { x: 203, y: 68, w: 46, h: 50 };
-/** The game while it plays, between the menu board and the belt shaft, at the game's 640:300 aspect. */
-const PLAY = { x: 172, y: 60, w: 136, h: 136 * (300 / 640) };
+type Rect = { x: number; y: number; w: number; h: number };
+export type CabinetConfig = {
+  /** The painted screen the play button sits on, in world units. */
+  screen: Rect;
+  /** The game box while it plays (desktop), at the game's 640:300 aspect. */
+  play: Rect;
+  /** Embed page: `games/cabinet/?game=…`. */
+  game: "rush" | "daily";
+  title: string;
+};
+
+/** Stop 4: the arcade cabinet between the menu board and the belt shaft. */
+export const RUSH_CABINET: CabinetConfig = {
+  screen: { x: 203, y: 68, w: 46, h: 50 }, play: { x: 172, y: 60, w: 136, h: 136 * (300 / 640) }, game: "rush", title: "Sushi Rush",
+};
+/** Stop 7: the yatai stall on the pond bank; the game opens over the water below the copy. */
+export const DAILY_STALL: CabinetConfig = {
+  screen: { x: 263, y: 98, w: 42, h: 24 }, play: { x: 112, y: 110, w: 136, h: 136 * (300 / 640) }, game: "daily", title: "Daily Roll",
+};
 
 /**
- * Sushi Rush plays inside the stop-4 arcade cabinet. The game page is only loaded on the first click, in a
- * same-origin iframe, so its globals and animation loop never touch the site; it pauses whenever the cabinet
- * leaves the view; coming back shows its paused screen until the visitor clicks.
+ * A game that plays in place inside a stop. The game page is only loaded on the first click, in a same-origin
+ * iframe, so its globals and animation loop never touch the site; it pauses whenever the box leaves the view, and
+ * coming back shows its paused screen until the visitor clicks.
  */
-export function mountCabinet(stop: HTMLElement, onStart: () => void) {
+export function mountCabinet(stop: HTMLElement, cfg: CabinetConfig, onStart: () => void) {
   const play = stop.querySelector<HTMLButtonElement>("[data-cabinet-play]")!;
   const box = stop.querySelector<HTMLElement>("[data-cabinet]")!;
   const close = box.querySelector<HTMLButtonElement>(".cabinet-close")!;
   let frame: HTMLIFrameElement | null = null;
   let inView = true;
 
-  // Leaving the view pauses; coming back shows "Paused, click to carry on" rather than resuming mid-jump.
   const send = (cmd: "pause" | "resume") => frame?.contentWindow?.postMessage({ cabinet: cmd }, location.origin);
   new IntersectionObserver(([e]) => {
     inView = e.isIntersecting;
@@ -27,8 +41,8 @@ export function mountCabinet(stop: HTMLElement, onStart: () => void) {
     play.hidden = true;
     if (!frame) {
       frame = document.createElement("iframe");
-      frame.title = "Sushi Rush";
-      frame.src = "games/cabinet/?autostart";
+      frame.title = cfg.title;
+      frame.src = `games/cabinet/?game=${cfg.game}&autostart`;
       frame.addEventListener("load", () => { if (inView) frame!.focus(); else send("pause"); });
       box.prepend(frame);
     } else { send("resume"); frame.focus(); }
@@ -42,12 +56,11 @@ export function mountCabinet(stop: HTMLElement, onStart: () => void) {
   });
 
   return {
-    /** Position the button over the cabinet screen and the game box around it; `top` is the art's offset in the stop. */
+    /** Position the button over the painted screen and the game box; `top` is the art's offset in the stop. */
     place(s: number, top: number, narrow: boolean) {
-      const r = (q: typeof SCREEN) => ({ left: `${q.x * s}px`, top: `${top + q.y * s}px`, width: `${q.w * s}px`, height: `${q.h * s}px` });
-      Object.assign(play.style, r(SCREEN));
-      const game = narrow ? { x: 4, y: 20, w: 352, h: 352 * (75 / 160) } : PLAY;
-      Object.assign(box.style, r(game));
+      const r = (q: Rect) => ({ left: `${q.x * s}px`, top: `${top + q.y * s}px`, width: `${q.w * s}px`, height: `${q.h * s}px` });
+      Object.assign(play.style, r(cfg.screen));
+      Object.assign(box.style, r(narrow ? { x: 4, y: 20, w: 352, h: 352 * (300 / 640) } : cfg.play));
     },
   };
 }

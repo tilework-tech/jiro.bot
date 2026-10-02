@@ -7,6 +7,8 @@ export type SpriteDef = {
 export type SceneDef = {
   id: string; size: [number, number]; loop: number; layers: { src: string; grain?: number }[]; sprites: SpriteDef[];
   surfaces?: { id: string; x: number; y: number; w: number; h: number }[];
+  /** Pond water: a plate dropped here goes to the koi. */
+  water?: { id: string; x: number; y: number; w: number; h: number }[];
   eggs?: { id: string; name: string; x: number; y: number; w: number; h: number; sprite?: string; says?: string[] }[];
 };
 
@@ -53,6 +55,7 @@ export async function mountScene(canvas: HTMLCanvasElement, base: string, def: S
   const playing = new Map<string, number>();
   let last = -1;
   let visible = true;
+  let released = false;
 
   const frameAt = (d: SpriteDef, t: number) => {
     const total = d.durations.reduce((a, b) => a + b, 0);
@@ -85,7 +88,14 @@ export async function mountScene(canvas: HTMLCanvasElement, base: string, def: S
 
   return {
     def,
-    draw: (now: number) => { if (visible) draw(now); },
+    draw: (now: number) => { if (visible && !released) draw(now); },
+    /** Give the canvas memory back while the scene is far off screen. */
+    release() { if (released) return; released = true; canvas.width = 1; canvas.height = 1; },
+    /** Reallocate and repaint on the next draw. */
+    restore() {
+      if (!released) return;
+      released = false; canvas.width = W * G; canvas.height = H * G; crispContext(canvas); last = -1;
+    },
     setVisible(v: boolean) { visible = v; },
     poke(id: string, now: number) {
       if (reactions.has(id) && !playing.has(id)) { playing.set(id, now); last = -1; }

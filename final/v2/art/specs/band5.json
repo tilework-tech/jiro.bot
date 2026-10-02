@@ -1,0 +1,173 @@
+{
+ "master": "art/gen/band5/band5-strip.png",
+ "base": "art/work/band5/base.png",
+ "groups": "warm,cool,accents,plates,neutrals",
+ "sprites": {
+  "peeker": {
+   "grain": 8,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    115,
+    1,
+    26,
+    22
+   ],
+   "roi": [
+    118,
+    3,
+    20,
+    17
+   ],
+   "align": false,
+   "frame_rois": [
+    [
+     121,
+     7,
+     14,
+     7
+    ],
+    null
+   ],
+   "frames": [
+    "the soot sprite peeking over the roof tiles blinks: its big white eyes are closed.",
+    "the soot sprite ducks down so only the top of its fuzzy head shows above the roof tiles."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    2800,
+    200,
+    5000
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     2,
+     2,
+     0
+    ],
+    "durations": [
+     100,
+     700,
+     500,
+     300
+    ]
+   },
+   "egg": "peeker"
+  },
+  "wall-lantern": {
+   "grain": 4,
+   "crop": [
+    107,
+    50,
+    28,
+    34
+   ],
+   "roi": [
+    111,
+    54,
+    20,
+    26
+   ],
+   "frame_rois": [
+    [
+     114,
+     58,
+     14,
+     16
+    ]
+   ],
+   "frames": [
+    "the small wall lantern glows a little brighter."
+   ],
+   "keep": [
+    0,
+    1
+   ],
+   "durations": [
+    3200,
+    800
+   ]
+  },
+  "fly": {
+   "grain": 8,
+   "crop": [
+    187,
+    59,
+    10,
+    10
+   ],
+   "roi": [
+    189,
+    61,
+    6,
+    6
+   ],
+   "compare": "base",
+   "min_blob": 1,
+   "frames": [
+    "the small amber firefly glows brighter."
+   ],
+   "keep": [
+    0,
+    1
+   ],
+   "durations": [
+    1600,
+    400
+   ],
+   "egg": "fly"
+  }
+ },
+ "scene": {
+  "surfaces": [
+   {
+    "id": "rail",
+    "x": 150,
+    "y": 95,
+    "w": 120,
+    "h": 5
+   }
+  ],
+  "eggs": [
+   {
+    "id": "peeker",
+    "name": "Over the wall",
+    "x": 119,
+    "y": 4,
+    "w": 18,
+    "h": 15,
+    "sprite": "peeker",
+    "says": [
+     "(hides)"
+    ]
+   },
+   {
+    "id": "wall-lantern",
+    "name": "Wall lantern",
+    "x": 112,
+    "y": 55,
+    "w": 18,
+    "h": 24,
+    "says": [
+     "Almost there."
+    ]
+   },
+   {
+    "id": "fly",
+    "name": "Firefly",
+    "x": 188,
+    "y": 60,
+    "w": 8,
+    "h": 8,
+    "sprite": "fly",
+    "says": [
+     "*blink*"
+    ]
+   }
+  ]
+ }
+}

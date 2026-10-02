@@ -1,0 +1,272 @@
+{
+ "id": "price",
+ "size": [
+  360,
+  202
+ ],
+ "loop": 8000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [
+  {
+   "id": "jiro",
+   "src": "jiro.png",
+   "x": 200,
+   "y": 50,
+   "w": 44,
+   "h": 72,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    2600,
+    160,
+    5240
+   ],
+   "egg": "jiro"
+  },
+  {
+   "id": "jiro-react",
+   "src": "jiro-react.png",
+   "x": 200,
+   "y": 50,
+   "w": 44,
+   "h": 72,
+   "grain": 8,
+   "frames": 5,
+   "durations": [
+    100,
+    180,
+    200,
+    180,
+    340
+   ],
+   "trigger": true,
+   "egg": "jiro"
+  },
+  {
+   "id": "light",
+   "src": "light.png",
+   "x": 139,
+   "y": 19,
+   "w": 13,
+   "h": 27,
+   "grain": 8,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "light"
+  },
+  {
+   "id": "light-react",
+   "src": "light-react.png",
+   "x": 139,
+   "y": 19,
+   "w": 13,
+   "h": 27,
+   "grain": 8,
+   "frames": 4,
+   "durations": [
+    100,
+    700,
+    500,
+    300
+   ],
+   "trigger": true,
+   "egg": "light"
+  },
+  {
+   "id": "lantern-l",
+   "src": "lantern-l.png",
+   "x": 154,
+   "y": 30,
+   "w": 18,
+   "h": 31,
+   "grain": 4,
+   "frames": 2,
+   "durations": [
+    3600,
+    400
+   ]
+  },
+  {
+   "id": "lantern-r",
+   "src": "lantern-r.png",
+   "x": 249,
+   "y": 11,
+   "w": 16,
+   "h": 29,
+   "grain": 4,
+   "frames": 2,
+   "durations": [
+    1600,
+    400
+   ]
+  },
+  {
+   "id": "cat",
+   "src": "cat.png",
+   "x": 115,
+   "y": 107,
+   "w": 14,
+   "h": 24,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    3000,
+    200,
+    4800
+   ],
+   "egg": "cat"
+  },
+  {
+   "id": "cat-react",
+   "src": "cat-react.png",
+   "x": 115,
+   "y": 107,
+   "w": 14,
+   "h": 24,
+   "grain": 8,
+   "frames": 5,
+   "durations": [
+    100,
+    300,
+    200,
+    300,
+    300
+   ],
+   "trigger": true,
+   "egg": "cat"
+  },
+  {
+   "id": "lamp",
+   "src": "lamp.png",
+   "x": 184,
+   "y": 116,
+   "w": 8,
+   "h": 10,
+   "grain": 8,
+   "frames": 2,
+   "durations": [
+    3000,
+    1000
+   ],
+   "egg": "lamp"
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "step",
+   "x": 100,
+   "y": 130,
+   "w": 40,
+   "h": 8
+  },
+  {
+   "id": "street",
+   "x": 60,
+   "y": 175,
+   "w": 100,
+   "h": 20
+  }
+ ],
+ "eggs": [
+  {
+   "id": "jiro",
+   "name": "Waiting for the green",
+   "x": 202,
+   "y": 52,
+   "w": 40,
+   "h": 66,
+   "sprite": "jiro",
+   "says": [
+    "Light's red. I wait.",
+    "Delivery in four minutes. Tests in three."
+   ]
+  },
+  {
+   "id": "light",
+   "name": "Changed the light",
+   "x": 139,
+   "y": 19,
+   "w": 13,
+   "h": 27,
+   "sprite": "light",
+   "says": [
+    "Green! \u2026and red again."
+   ]
+  },
+  {
+   "id": "lantern-l",
+   "name": "Shop lantern",
+   "x": 155,
+   "y": 31,
+   "w": 16,
+   "h": 29,
+   "says": [
+    "Open late."
+   ]
+  },
+  {
+   "id": "lantern-r",
+   "name": "Second lantern",
+   "x": 250,
+   "y": 12,
+   "w": 14,
+   "h": 27,
+   "says": [
+    "Still open."
+   ]
+  },
+  {
+   "id": "cat",
+   "name": "Street cat",
+   "x": 115,
+   "y": 112,
+   "w": 14,
+   "h": 19,
+   "sprite": "cat",
+   "says": [
+    "mrrp."
+   ]
+  },
+  {
+   "id": "lamp",
+   "name": "Headlamp",
+   "x": 184,
+   "y": 116,
+   "w": 8,
+   "h": 10,
+   "sprite": "lamp",
+   "says": [
+    "Lights on at night. Like logging."
+   ]
+  },
+  {
+   "id": "crate",
+   "name": "Tonight's delivery",
+   "x": 236,
+   "y": 68,
+   "w": 26,
+   "h": 26,
+   "says": [
+    "Twelve nigiri and one pull request."
+   ]
+  },
+  {
+   "id": "puddle",
+   "name": "Splash",
+   "x": 248,
+   "y": 174,
+   "w": 36,
+   "h": 15,
+   "says": [
+    "*splash*"
+   ]
+  }
+ ]
+}
