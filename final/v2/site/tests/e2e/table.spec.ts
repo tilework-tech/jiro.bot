@@ -58,10 +58,13 @@ test("Sushi Rush plays right inside the arcade cabinet, in the palette of the ho
   await open(page);
   await goToTableArt(page);
   const before = (await tracker(page)).found;
-  await stop(page).getByRole("button", { name: /Sushi Rush/i }).click();
+  // Press where the button is, without letting the test runner scroll the page first.
+  const btn = (await stop(page).getByRole("button", { name: /Sushi Rush/i }).boundingBox())!;
+  await page.mouse.click(btn.x + btn.width / 2, btn.y + btn.height / 2);
   const frame = stop(page).locator("iframe");
   await expect(frame).toBeVisible();
-  const box = (await frame.boundingBox())!, s = (await stop(page).boundingBox())!;
+  await settled(page);
+  const [box, s] = await stop(page).evaluate((el) => [el.querySelector("iframe")!.getBoundingClientRect().toJSON(), el.getBoundingClientRect().toJSON()]);
   expect(box.x).toBeGreaterThanOrEqual(s.x);
   expect(box.y).toBeGreaterThanOrEqual(s.y);
   expect(box.x + box.width).toBeLessThanOrEqual(s.x + s.width);

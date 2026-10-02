@@ -44,35 +44,6 @@
      3.625
     ]
    }
-  },
-  {
-   "id": "wall-lantern",
-   "src": "wall-lantern.png",
-   "x": 111,
-   "y": 54,
-   "w": 20,
-   "h": 26,
-   "grain": 4,
-   "frames": 2,
-   "durations": [
-    3200,
-    800
-   ]
-  },
-  {
-   "id": "fly",
-   "src": "fly.png",
-   "x": 189,
-   "y": 61,
-   "w": 6,
-   "h": 6,
-   "grain": 8,
-   "frames": 2,
-   "durations": [
-    1600,
-    400
-   ],
-   "egg": "fly"
   }
  ],
  "surfaces": [
@@ -115,10 +86,31 @@
    "y": 60,
    "w": 8,
    "h": 8,
-   "sprite": "fly",
    "says": [
     "*blink*"
    ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "fireflies",
+   "area": {
+    "x": 120,
+    "y": 20,
+    "w": 200,
+    "h": 70
+   },
+   "n": 4,
+   "swarmEvery": 30
+  },
+  {
+   "kind": "glow",
+   "x": 121.0,
+   "y": 67.0,
+   "r": 28.6,
+   "color": "#fdd081",
+   "period": 2.97,
+   "amp": 0.05
   }
  ]
 }

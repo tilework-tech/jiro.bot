@@ -43,9 +43,11 @@ export function mountCabinet(stop: HTMLElement, cfg: CabinetConfig, onStart: () 
       frame = document.createElement("iframe");
       frame.title = cfg.title;
       frame.src = `games/cabinet/?game=${cfg.game}&autostart`;
-      frame.addEventListener("load", () => { if (inView) frame!.focus(); else send("pause"); });
+      // The observer may not have caught up with the box being shown yet: look at where it really is.
+      const onScreen = () => { const r = box.getBoundingClientRect(); return r.bottom > 0 && r.top < innerHeight; };
+      frame.addEventListener("load", () => { if (onScreen()) frame!.focus({ preventScroll: true }); else send("pause"); });
       box.prepend(frame);
-    } else { send("resume"); frame.focus(); }
+    } else { send("resume"); frame.focus({ preventScroll: true }); }
     onStart();
   });
   close.addEventListener("click", () => {

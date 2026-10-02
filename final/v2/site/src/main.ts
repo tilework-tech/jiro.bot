@@ -353,6 +353,7 @@ async function boot() {
     slotsInView: belt.slotsInView,
     effectsActive: belt.effectsActive,
     koi: belt.koi,
+    fx: (id: string) => (scenes.get(id as StopId) ?? bandScenes[Number(id.replace("band", ""))])?.fx(),
     surface: (id: string) => {
       const r = [...surfaces(), ...deps.water()].find((x) => x.id === id);
       if (!r) throw new Error(`no surface ${id}`);

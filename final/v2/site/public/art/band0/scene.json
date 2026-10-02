@@ -47,40 +47,6 @@
    }
   },
   {
-   "id": "candle",
-   "src": "candle.png",
-   "x": 305,
-   "y": 97,
-   "w": 20,
-   "h": 22,
-   "grain": 8,
-   "frames": 2,
-   "durations": [
-    700,
-    300
-   ],
-   "egg": "candle"
-  },
-  {
-   "id": "candle-react",
-   "src": "candle-react.png",
-   "x": 305,
-   "y": 97,
-   "w": 20,
-   "h": 22,
-   "grain": 8,
-   "frames": 5,
-   "durations": [
-    100,
-    500,
-    300,
-    500,
-    600
-   ],
-   "trigger": true,
-   "egg": "candle"
-  },
-  {
    "id": "eyes",
    "src": "eyes.png",
    "x": 344,
@@ -131,7 +97,10 @@
    "y": 97,
    "w": 20,
    "h": 22,
-   "sprite": "candle"
+   "says": [
+    "A candle stub. Still burning.",
+    "Someone's working late down here."
+   ]
   },
   {
    "id": "eyes",
@@ -144,6 +113,18 @@
     "\u2026",
     "(blink)"
    ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "glow",
+   "x": 315.0,
+   "y": 108.0,
+   "r": 24.2,
+   "color": "#f6ba64",
+   "period": 2.6,
+   "amp": 0.05,
+   "flicker": true
   }
  ]
 }

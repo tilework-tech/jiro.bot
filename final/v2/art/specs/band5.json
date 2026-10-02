@@ -45,69 +45,6 @@
    "egg": "peeker",
    "motion": "stretch",
    "subject": "small black fuzzy soot sprite peeking over the roof tiles"
-  },
-  "wall-lantern": {
-   "grain": 4,
-   "crop": [
-    107,
-    50,
-    28,
-    34
-   ],
-   "roi": [
-    111,
-    54,
-    20,
-    26
-   ],
-   "frame_rois": [
-    [
-     114,
-     58,
-     14,
-     16
-    ]
-   ],
-   "frames": [
-    "the small wall lantern glows a little brighter."
-   ],
-   "keep": [
-    0,
-    1
-   ],
-   "durations": [
-    3200,
-    800
-   ]
-  },
-  "fly": {
-   "grain": 8,
-   "crop": [
-    187,
-    59,
-    10,
-    10
-   ],
-   "roi": [
-    189,
-    61,
-    6,
-    6
-   ],
-   "compare": "base",
-   "min_blob": 1,
-   "frames": [
-    "the small amber firefly glows brighter."
-   ],
-   "keep": [
-    0,
-    1
-   ],
-   "durations": [
-    1600,
-    400
-   ],
-   "egg": "fly"
   }
  },
  "scene": {
@@ -151,10 +88,31 @@
     "y": 60,
     "w": 8,
     "h": 8,
-    "sprite": "fly",
     "says": [
      "*blink*"
     ]
+   }
+  ],
+  "fx": [
+   {
+    "kind": "fireflies",
+    "area": {
+     "x": 120,
+     "y": 20,
+     "w": 200,
+     "h": 70
+    },
+    "n": 4,
+    "swarmEvery": 30
+   },
+   {
+    "kind": "glow",
+    "x": 121.0,
+    "y": 67.0,
+    "r": 28.6,
+    "color": "#fdd081",
+    "period": 2.97,
+    "amp": 0.05
    }
   ]
  }

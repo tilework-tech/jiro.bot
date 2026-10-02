@@ -79,40 +79,6 @@
    "egg": "waver",
    "motion": "hop",
    "subject": "small black fuzzy soot sprite waving"
-  },
-  "faucet": {
-   "grain": 8,
-   "crop": [
-    118,
-    56,
-    20,
-    30
-   ],
-   "roi": [
-    121,
-    59,
-    13,
-    24
-   ],
-   "frame_rois": [
-    [
-     123,
-     74,
-     8,
-     8
-    ]
-   ],
-   "frames": [
-    "a water drop hangs from the copper faucet, about to fall."
-   ],
-   "keep": [
-    0,
-    1
-   ],
-   "durations": [
-    1500,
-    500
-   ]
   }
  },
  "scene": {
@@ -171,6 +137,15 @@
     "says": [
      "drip."
     ]
+   }
+  ],
+  "fx": [
+   {
+    "kind": "drip",
+    "x": 127,
+    "y": 75,
+    "fall": 7,
+    "every": 2.4
    }
   ]
  }

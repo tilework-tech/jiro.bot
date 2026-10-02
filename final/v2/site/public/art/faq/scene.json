@@ -13,20 +13,6 @@
  ],
  "sprites": [
   {
-   "id": "lantern",
-   "src": "lantern.png",
-   "x": 190,
-   "y": 14,
-   "w": 21,
-   "h": 36,
-   "grain": 4,
-   "frames": 2,
-   "durations": [
-    3400,
-    600
-   ]
-  },
-  {
    "id": "jiro",
    "src": "jiro.png",
    "x": 222,
@@ -40,7 +26,29 @@
     150,
     5250
    ],
-   "egg": "jiro"
+   "egg": "jiro",
+   "idle": {
+    "kind": "breathe",
+    "every": 10000,
+    "offset": 400
+   },
+   "motion": {
+    "kind": null,
+    "cut": "jiro-cut.png",
+    "under": "jiro-under.png",
+    "x": 218,
+    "y": 52,
+    "w": 76,
+    "h": 82,
+    "bottom": [
+     255.375,
+     129.375
+    ],
+    "top": [
+     255.375,
+     58.125
+    ]
+   }
   },
   {
    "id": "jiro-react",
@@ -135,20 +143,6 @@
     700,
     2300
    ]
-  },
-  {
-   "id": "cup",
-   "src": "cup.png",
-   "x": 251,
-   "y": 140,
-   "w": 14,
-   "h": 16,
-   "grain": 8,
-   "frames": 2,
-   "durations": [
-    2000,
-    2000
-   ]
   }
  ],
  "surfaces": [
@@ -165,6 +159,13 @@
    "y": 175,
    "w": 80,
    "h": 20
+  },
+  {
+   "id": "floor-front",
+   "x": 40,
+   "y": 185,
+   "w": 200,
+   "h": 15
   }
  ],
  "eggs": [
@@ -235,6 +236,23 @@
    "says": [
     "Jiro will find it."
    ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "steam",
+   "x": 258,
+   "y": 140,
+   "h": 12
+  },
+  {
+   "kind": "glow",
+   "x": 200.5,
+   "y": 32.0,
+   "r": 39.6,
+   "color": "#fdd081",
+   "period": 2.97,
+   "amp": 0.05
   }
  ]
 }

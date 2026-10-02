@@ -31,76 +31,6 @@
    "egg": "cat",
    "motion": "stretch",
    "subject": "sleeping tabby cat (only the cat, not the cushion)"
-  },
-  "tea-l": {
-   "grain": 8,
-   "crop": [
-    69,
-    176,
-    20,
-    24
-   ],
-   "roi": [
-    74,
-    180,
-    9,
-    18
-   ],
-   "frames": [
-    "the thin wisp of steam above the tea cup curls the other way."
-   ],
-   "keep": [
-    0,
-    1
-   ],
-   "durations": [
-    2000,
-    2000
-   ],
-   "frame_rois": [
-    [
-     74,
-     180,
-     9,
-     9
-    ]
-   ],
-   "align": false
-  },
-  "tea-r": {
-   "grain": 8,
-   "crop": [
-    340,
-    180,
-    20,
-    22
-   ],
-   "roi": [
-    345,
-    184,
-    9,
-    18
-   ],
-   "frames": [
-    "the thin wisp of steam above the tea cup curls the other way."
-   ],
-   "keep": [
-    0,
-    1
-   ],
-   "durations": [
-    2000,
-    2000
-   ],
-   "frame_rois": [
-    [
-     345,
-     184,
-     9,
-     8
-    ]
-   ],
-   "align": false
   }
  },
  "scene": {
@@ -125,6 +55,13 @@
     "y": 118,
     "w": 50,
     "h": 12
+   },
+   {
+    "id": "ledge",
+    "x": 0,
+    "y": 180,
+    "w": 300,
+    "h": 18
    }
   ],
   "eggs": [
@@ -169,7 +106,6 @@
     "y": 184,
     "w": 11,
     "h": 16,
-    "sprite": "tea-r",
     "says": [
      "H\u014djicha. Always."
     ]
@@ -206,6 +142,20 @@
     "says": [
      "Still warm."
     ]
+   }
+  ],
+  "fx": [
+   {
+    "kind": "steam",
+    "x": 78,
+    "y": 180,
+    "h": 12
+   },
+   {
+    "kind": "steam",
+    "x": 349,
+    "y": 184,
+    "h": 12
    }
   ]
  }

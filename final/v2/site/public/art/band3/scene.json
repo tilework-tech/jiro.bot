@@ -77,20 +77,6 @@
      79.5
     ]
    }
-  },
-  {
-   "id": "faucet",
-   "src": "faucet.png",
-   "x": 121,
-   "y": 59,
-   "w": 13,
-   "h": 24,
-   "grain": 8,
-   "frames": 2,
-   "durations": [
-    1500,
-    500
-   ]
   }
  ],
  "surfaces": [
@@ -148,6 +134,15 @@
    "says": [
     "drip."
    ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "drip",
+   "x": 127,
+   "y": 75,
+   "fall": 7,
+   "every": 2.4
   }
  ]
 }

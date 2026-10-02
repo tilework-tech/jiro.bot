@@ -15,3 +15,12 @@ describe("dropping a plate", () => {
     expect(resolveDrop({ x: 50, y: 320 }, surfaces, water)).toEqual({ kind: "koi" });
   });
 });
+
+describe("dropping a plate back on the belt", () => {
+  it("keeps it on the belt where it was put", () => {
+    expect(resolveDrop({ x: 20, y: 20 }, surfaces, water, true)).toEqual({ kind: "belt" });
+  });
+  it("prefers the belt over a surface underneath it", () => {
+    expect(resolveDrop({ x: 150, y: 125 }, surfaces, water, true)).toEqual({ kind: "belt" });
+  });
+});

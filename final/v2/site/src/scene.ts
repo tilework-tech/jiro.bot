@@ -1,18 +1,22 @@
 import { crispContext, loadImage } from "./art";
+import { createFx, type FxDef } from "./fx";
 
 /** A click reaction that moves the object itself: its cut-out over a patch of the background behind it. */
 export type MotionDef = {
-  kind: "hop" | "stretch" | "wobble" | "swing"; cut: string; under: string;
+  kind?: "hop" | "stretch" | "wobble" | "swing"; cut: string; under: string;
   x: number; y: number; w: number; h: number; bottom: [number, number]; top: [number, number];
 };
 export type SpriteDef = {
   id: string; src: string; x: number; y: number; w: number; h: number; grain: number;
   frames: number; durations: number[]; trigger?: boolean; egg?: string; motion?: MotionDef;
+  /** A gentle movement the sprite makes by itself every `every` ms (people nodding, Jiro breathing). */
+  idle?: { kind: "nod" | "breathe" | "sway"; every: number; offset?: number };
 };
 
 /** Duration (ms) and pose at time t (0..1) of each kind of reaction, in world units / radians / scale. */
-export const MOTION_MS: Record<MotionDef["kind"], number> = { hop: 800, stretch: 1300, wobble: 1100, swing: 1600 };
-export function motionPose(kind: MotionDef["kind"], t: number) {
+type Kind = NonNullable<MotionDef["kind"]> | "nod" | "breathe" | "sway";
+export const MOTION_MS: Record<Kind, number> = { hop: 800, stretch: 1300, wobble: 1100, swing: 1600, nod: 2600, breathe: 3200, sway: 4200 };
+export function motionPose(kind: Kind, t: number) {
   const ease = Math.sin(Math.PI * t);
   switch (kind) {
     case "hop": {
@@ -27,11 +31,18 @@ export function motionPose(kind: MotionDef["kind"], t: number) {
       return { dy: 0, rot: 0.16 * Math.sin(t * Math.PI * 4) * (1 - t), sx: 1, sy: 1, pivot: "bottom" as const };
     case "swing":
       return { dy: 0, rot: 0.2 * Math.sin(t * Math.PI * 4) * (1 - t), sx: 1, sy: 1, pivot: "top" as const };
+    case "nod": // a diner leaning in to eat or talk, and back
+      return { dy: 0.8 * ease, rot: 0.06 * Math.sin(Math.PI * t) * Math.sin(t * Math.PI * 2 + 0.6), sx: 1, sy: 1 - 0.015 * ease, pivot: "bottom" as const };
+    case "breathe":
+      return { dy: -0.7 * ease, rot: 0, sx: 1, sy: 1 + 0.012 * ease, pivot: "bottom" as const };
+    case "sway": // relaxed weight shift, as if waiting at a light
+      return { dy: -0.4 * ease, rot: 0.03 * Math.sin(t * Math.PI * 2), sx: 1, sy: 1, pivot: "bottom" as const };
   }
 }
 export type SceneDef = {
   id: string; size: [number, number]; loop: number; layers: { src: string; grain?: number }[]; sprites: SpriteDef[];
   surfaces?: { id: string; x: number; y: number; w: number; h: number }[];
+  fx?: FxDef[];
   /** Pond water: a plate dropped here goes to the koi. */
   water?: { id: string; x: number; y: number; w: number; h: number }[];
   eggs?: { id: string; name: string; x: number; y: number; w: number; h: number; sprite?: string; says?: string[] }[];
@@ -82,7 +93,9 @@ export async function mountScene(canvas: HTMLCanvasElement, base: string, def: S
     const [cut, under] = await Promise.all([loadImage(`${base}/${m.cut}`), loadImage(`${base}/${m.under}`)]);
     return [s.def.id, { m, cut: toDensity(cut, s.def.grain, G), under: toDensity(under, s.def.grain, G) }] as const;
   })));
-  const moving = new Map<string, number>();
+  const moving = new Map<string, { start: number; kind: Kind }>();
+  const fx = createFx(def.fx ?? [], def.id.split("").reduce((a, c) => a * 31 + c.charCodeAt(0), 7) >>> 0, reduced);
+  const idlers = sprites.filter((s) => s.def.idle && motions.has(s.def.id));
   const playing = new Map<string, number>();
   let last = -1;
   let visible = true;
@@ -94,10 +107,37 @@ export async function mountScene(canvas: HTMLCanvasElement, base: string, def: S
     for (let k = 0; k < d.frames; k++) { if (r < d.durations[k]) return k; r -= d.durations[k]; }
     return 0;
   };
-  const blit = (s: Loaded, k: number) => {
+  const blit = (s: Loaded, k: number, target = ctx) => {
     const fw = s.img.width / s.def.frames;
-    ctx.drawImage(s.img, k * fw, 0, fw, s.img.height, s.def.x * G, s.def.y * G, fw * s.scale, s.img.height * s.scale);
+    target.drawImage(s.img, k * fw, 0, fw, s.img.height, s.def.x * G, s.def.y * G, fw * s.scale, s.img.height * s.scale);
   };
+
+  // The scene without its effects is painted into `comp` only when a sprite frame changes; effects scenes then copy
+  // it each frame and draw the effects on top, instead of repainting every layer and sprite 30 times a second.
+  const comp = fx.animated ? document.createElement("canvas") : null;
+  if (comp) { comp.width = W * G; comp.height = H * G; }
+  const cctx = comp ? crispContext(comp) : ctx;
+  let compSig = -1, lastFx = -1;
+
+  function paint(target: CanvasRenderingContext2D, now: number, t: number) {
+    for (const l of layers) target.drawImage(l, 0, 0, W * G, H * G);
+    const sw = (img: { img: Source; scale: number }) => img.img.width * img.scale, sh = (img: { img: Source; scale: number }) => img.img.height * img.scale;
+    // The background behind a moving object goes under everything else, so it never paints over a neighbour.
+    for (const id of moving.keys()) { const { m, under } = motions.get(id)!; target.drawImage(under.img, m.x * G, m.y * G, sw(under), sh(under)); }
+    for (const s of ambient) if (!playing.has(s.def.id) && !moving.has(s.def.id)) blit(s, frameAt(s.def, t), target);
+    for (const [id, start] of playing) blit(reactions.get(id)!, frameAt(reactions.get(id)!.def, now - start), target);
+    for (const [id, mv] of moving) {
+      const { m, cut } = motions.get(id)!;
+      const p = motionPose(mv.kind, Math.min(1, (now - mv.start) / MOTION_MS[mv.kind]));
+      const [px, py] = p.pivot === "top" ? m.top : m.bottom;
+      target.save();
+      target.translate(px * G, (py + p.dy) * G);
+      target.rotate(p.rot);
+      target.scale(p.sx, p.sy);
+      target.drawImage(cut.img, (m.x - px) * G, (m.y - py) * G, sw(cut), sh(cut));
+      target.restore();
+    }
+  }
 
   function draw(now: number) {
     const t = reduced ? 0 : now;
@@ -109,47 +149,53 @@ export async function mountScene(canvas: HTMLCanvasElement, base: string, def: S
       if (now - start >= total) playing.delete(id);
       else key.push(1000 + frameAt(r.def, now - start));
     }
-    for (const [id, start] of moving) {
-      if (now - start >= MOTION_MS[motions.get(id)!.m.kind]) moving.delete(id);
-      else key.push(2000 + Math.floor((now - start) / 16));
+    if (!reduced) for (const s of idlers) {
+      const { every, offset = 0, kind } = s.def.idle!;
+      const phase = (now + offset) % every;
+      if (phase < MOTION_MS[kind] && !moving.has(s.def.id) && !playing.has(s.def.id)) moving.set(s.def.id, { start: now - phase, kind });
+    }
+    for (const [id, mv] of moving) {
+      if (now - mv.start >= MOTION_MS[mv.kind]) moving.delete(id);
+      else key.push(2000 + Math.floor((now - mv.start) / 16));
     }
     const sig = key.reduce((a, b) => (a * 31 + b) % 1e9, playing.size + moving.size * 7);
-    if (sig === last) return;
-    last = sig;
-    for (const l of layers) ctx.drawImage(l, 0, 0, W * G, H * G);
-    const sw = (img: { img: Source; scale: number }) => img.img.width * img.scale, sh = (img: { img: Source; scale: number }) => img.img.height * img.scale;
-    // The background behind a moving object goes under everything else, so it never paints over a neighbour.
-    for (const id of moving.keys()) { const { m, under } = motions.get(id)!; ctx.drawImage(under.img, m.x * G, m.y * G, sw(under), sh(under)); }
-    for (const s of ambient) if (!playing.has(s.def.id) && !moving.has(s.def.id)) blit(s, frameAt(s.def, t));
-    for (const [id, start] of playing) blit(reactions.get(id)!, frameAt(reactions.get(id)!.def, now - start));
-    for (const [id, start] of moving) {
-      const { m, cut } = motions.get(id)!;
-      const p = motionPose(m.kind, Math.min(1, (now - start) / MOTION_MS[m.kind]));
-      const [px, py] = p.pivot === "top" ? m.top : m.bottom;
-      ctx.save();
-      ctx.translate(px * G, (py + p.dy) * G);
-      ctx.rotate(p.rot);
-      ctx.scale(p.sx, p.sy);
-      ctx.drawImage(cut.img, (m.x - px) * G, (m.y - py) * G, sw(cut), sh(cut));
-      ctx.restore();
+    if (!comp) {
+      if (sig === last) return;
+      last = sig;
+      paint(ctx, now, t);
+      fx.draw(ctx, G, 0); // reduced motion: the effects hold still (glows stay lit)
+      return;
     }
+    if (sig !== compSig || last === -1) { compSig = sig; last = sig; cctx.clearRect(0, 0, comp.width, comp.height); paint(cctx, now, t); }
+    if (now - lastFx < 30) return;
+    const dt = lastFx < 0 ? 0 : Math.min(0.1, (now - lastFx) / 1000);
+    lastFx = now;
+    ctx.drawImage(comp, 0, 0);
+    fx.draw(ctx, G, dt);
   }
+
 
   return {
     def,
     draw: (now: number) => { if (visible && !released) draw(now); },
     /** Give the canvas memory back while the scene is far off screen. */
-    release() { if (released) return; released = true; canvas.width = 1; canvas.height = 1; },
+    release() { if (released) return; released = true; canvas.width = 1; canvas.height = 1; if (comp) { comp.width = 1; comp.height = 1; } },
     /** Reallocate and repaint on the next draw. */
     restore() {
       if (!released) return;
       released = false; canvas.width = W * G; canvas.height = H * G; crispContext(canvas); last = -1;
+      if (comp) { comp.width = W * G; comp.height = H * G; crispContext(comp); compSig = -1; }
     },
     setVisible(v: boolean) { visible = v; },
     poke(id: string, now: number) {
-      if (motions.has(id)) { if (!reduced && !moving.has(id)) { moving.set(id, now); last = -1; } }
-      else if (reactions.has(id) && !playing.has(id)) { playing.set(id, now); last = -1; }
+      const m = motions.get(id)?.m;
+      if (m?.kind) {
+        const cur = moving.get(id);
+        if (!reduced && cur?.kind !== m.kind) { moving.set(id, { start: now, kind: m.kind }); last = -1; }
+      }
+      else if (reactions.has(id) && !playing.has(id)) { moving.delete(id); playing.set(id, now); last = -1; } // a reaction (Jiro's jaw) wins over an idle move
     },
-    hasReaction: (id: string) => reactions.has(id) || motions.has(id),
+    hasReaction: (id: string) => reactions.has(id) || !!motions.get(id)?.m.kind,
+    fx: () => ({ swarming: fx.swarming(), kinds: fx.kinds() }),
   };
 }

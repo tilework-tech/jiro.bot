@@ -3,74 +3,6 @@
  "base": "art/work/hero/base.png",
  "groups": "warm,cool,accents,plates,neutrals",
  "sprites": {
-  "lantern-l": {
-   "crop": [
-    190,
-    0,
-    40,
-    40
-   ],
-   "roi": [
-    198,
-    1,
-    23,
-    28
-   ],
-   "frames": [
-    "the paper lantern's paper glows a little brighter and paler yellow inside, as if the candle flared; nothing else changes."
-   ],
-   "keep": [
-    0,
-    1
-   ],
-   "durations": [
-    3600,
-    400
-   ],
-   "grain": 4,
-   "frame_rois": [
-    [
-     201,
-     5,
-     17,
-     19
-    ]
-   ]
-  },
-  "lantern-r": {
-   "crop": [
-    287,
-    0,
-    40,
-    40
-   ],
-   "roi": [
-    296,
-    0,
-    21,
-    29
-   ],
-   "frames": [
-    "the paper lantern's paper glows a little brighter and paler yellow inside, as if the candle flared; nothing else changes."
-   ],
-   "keep": [
-    0,
-    1
-   ],
-   "durations": [
-    1700,
-    300
-   ],
-   "grain": 4,
-   "frame_rois": [
-    [
-     299,
-     4,
-     15,
-     20
-    ]
-   ]
-  },
   "chime": {
    "crop": [
     218,
@@ -129,7 +61,13 @@
     800,
     400
    ],
-   "grain": 8
+   "grain": 8,
+   "idle": {
+    "kind": "nod",
+    "every": 9000,
+    "offset": 0
+   },
+   "subject": "diner closest to the viewer (the person on the stool, with their cup)"
   },
   "diner-b": {
    "crop": [
@@ -160,7 +98,13 @@
     3000,
     1000
    ],
-   "grain": 8
+   "grain": 8,
+   "idle": {
+    "kind": "nod",
+    "every": 11000,
+    "offset": 2100
+   },
+   "subject": "diner at the right with the bowl (the whole person)"
   },
   "cat": {
    "crop": [
@@ -303,7 +247,13 @@
      12
     ]
    ],
-   "mask_prompt": "Isolate the robot sushi chef: keep only the robot (head, headband, body, arms, hands and the knife he holds)."
+   "mask_prompt": "Isolate the robot sushi chef: keep only the robot (head, headband, body, arms, hands and the knife he holds).",
+   "idle": {
+    "kind": "breathe",
+    "every": 9500,
+    "offset": 900
+   },
+   "subject": "robot sushi chef"
   },
   "lucky-cat": {
    "crop": [
@@ -529,6 +479,13 @@
     "y": 184,
     "w": 110,
     "h": 18
+   },
+   {
+    "id": "floor-left",
+    "x": 20,
+    "y": 184,
+    "w": 170,
+    "h": 16
    }
   ],
   "eggs": [
@@ -641,6 +598,32 @@
     "says": [
      "eep!"
     ]
+   }
+  ],
+  "fx": [
+   {
+    "kind": "steam",
+    "x": 261,
+    "y": 48,
+    "h": 16
+   },
+   {
+    "kind": "glow",
+    "x": 209.5,
+    "y": 15.0,
+    "r": 30.8,
+    "color": "#fdd081",
+    "period": 2.97,
+    "amp": 0.05
+   },
+   {
+    "kind": "glow",
+    "x": 306.5,
+    "y": 14.5,
+    "r": 31.9,
+    "color": "#fdd081",
+    "period": 3.34,
+    "amp": 0.05
    }
   ]
  },

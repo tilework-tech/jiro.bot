@@ -33,13 +33,13 @@ export function glideTarget(y: number, dir: 1 | -1 | 0, stops: StopSpan[], vh: n
   const spans = stops.map((s) => rest(s, vh));
   if (spans.some((r) => y >= r.lo - EPS && y <= r.hi + EPS)) return null;
   const after = spans.find((r) => r.lo > y)?.lo;
-  const prevSpan = [...spans].reverse().find((r) => r.hi < y);
-  const before = prevSpan?.hi;
-  // A small overshoot past the end of a scene the visitor was scrolling through settles back onto it.
-  if (prevSpan && prevSpan.hi > prevSpan.lo && y - prevSpan.hi < vh * 0.2) return prevSpan.hi;
-  if (dir > 0 && after !== undefined) return after;
-  if (dir < 0 && before !== undefined) return before;
-  if (after === undefined) return before ?? null;
-  if (before === undefined) return after;
-  return y - before < after - y ? before : after;
+  const before = [...spans].reverse().find((r) => r.hi < y)?.hi;
+  // A nudge less than 15% of the way into the gap settles back; anything further carries on in its direction.
+  if (before !== undefined && after !== undefined) {
+    const gap = after - before;
+    if (dir > 0) return y - before < gap * 0.15 ? before : after;
+    if (dir < 0) return after - y < gap * 0.15 ? after : before;
+    return y - before < after - y ? before : after;
+  }
+  return after ?? before ?? null;
 }

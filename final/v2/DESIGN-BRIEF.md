@@ -1,6 +1,6 @@
 # Jiro.bot v2 design brief
 
-Status: approved by Martin 2026-10-01 (answers in `QUESTIONS.md`). Grains (§3) and plate/item sizes (§5) were revised in round 2 after his 2026-10-01 17:44 feedback (`PLAN-R2.md`), and doubled again in round 3 after his gate-B review (`PLAN-R3.md`). The belt route and the koi ending (§5) were settled in the final pass (`PLAN-FINAL.md`). Belt speed, fill and item pose (§5), scrolling (§1, §6) and click reactions (§7, §9) were revised in round 6 after Martin's review of the final build (`PLAN-R6.md`). Everything produced for v2 (art, animation, code, copy) is judged against this file. Where the reference videos and this brief disagree, this brief wins; the disagreements are listed in "Deliberate departures from the videos".
+Status: approved by Martin 2026-10-01 (answers in `QUESTIONS.md`). Grains (§3) and plate/item sizes (§5) were revised in round 2 after his 2026-10-01 17:44 feedback (`PLAN-R2.md`), and doubled again in round 3 after his gate-B review (`PLAN-R3.md`). The belt route and the koi ending (§5) were settled in the final pass (`PLAN-FINAL.md`). Belt speed, fill and item pose (§5), scrolling (§1, §6) and click reactions (§7, §9) were revised in round 6 after Martin's review of the final build (`PLAN-R6.md`). Plate clicks and drops (§5, §6), light and ambient animation (§3, §9) and idle people (§9) were revised in round 7 after his notes of 2026-10-02 (`PLAN-R7.md`). Everything produced for v2 (art, animation, code, copy) is judged against this file. Where the reference videos and this brief disagree, this brief wins; the disagreements are listed in "Deliberate departures from the videos".
 
 Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re-inspected frame by frame at 0.5 s in `research/video-NN.md`. Martin's written direction of 2026-09-28 → 2026-10-01 (`../site/docs/FEEDBACK-VERBATIM.md` plus the 2026-10-01 thread message).
 
@@ -30,7 +30,7 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
   - Cool night ramp (12): `#0e1424`, navy `#1a2c4d`, `#27325c` indigo, `#34467a`, moon `#f9efce`, reed sage `#576a58`, moss, lily green ×2, olive `#5e6e30`, lantern-glass `#d6f4be`, water hi ×2. Used for street, garden and pond, so night scenes stay in the same family instead of neon blue/pink.
   - Accents (≤8): Jiro cyan `#5fd4ff` / `#aaffff` (eyes and product highlights only), koi coral `#dc795c`, salmon, tuna red, tamago yellow, wasabi green, nori.
   - Plate set (5): white `#f4f4f2`, shade `#dfe3e6`, faint grey rim `#cfd0d0`, faint blue rim `#c4d4e4`, rim shadow `#aeb8c2`.
-- Light: warm paper lanterns indoors (falloff in 3 bands, plum shadows, never grey); moon + stone lanterns outdoors. Light pools are baked; only flicker is animated.
+- Light: warm paper lanterns indoors (falloff in 3 bands, plum shadows, never grey); moon + stone lanterns outdoors. Light pools are baked; only a soft glow is animated on top (round 7): a halo drawn in code that breathes ±5% over 2.6–4.8 s, with a small flicker for flames. Lights never swap frames.
 
 ## 4. Jiro
 
@@ -45,7 +45,7 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 - Path: straight runs plus **90° bends only**, each with a centre radius ≥ 1.5 belt widths, drawn as fanned segment plates (airport-carousel style). Hero run is straight in world space (appears diagonal in the ¾ view). Bends are visible where they read well, otherwise hidden behind beams, walls, or bridge rails.
 - Route (as built): hatch → hero diagonal → down behind the crawlspace beam → crawlspace floor → down the left edge → along the bottom of the comparison room → straight down a steel shaft at the right edge through the table stop, FAQ, street and the bands between them ("have the belt go straight down and don't interface with the bike at all… then go straight down to the pond", 2026-09-29) → hidden behind the garden wall, bridge and stall → one 90° turn onto the pond trestle, running left and out of sight past its far end. It never crosses a copy field.
 - Construction: walnut/copper rail, charcoal slats that **move with the plates** (no static slats).
-- **Plates:** all white; each plate's rim is either faint grey or faint blue (seeded, roughly even, no other colour), no dark outline. Round 3: plates are 128 × 91 art px at grain 8 and items at most 84 px (at least 56 px, no wider than 70% of a plate); round 2 had 64 × 45 plates and items up to 42 px at grain 4. Item sits 1–3 world units off centre (seeded per plate). Plates and items never rotate: food always stands upright on its plate, whichever way the belt runs (round 6, Martin: food "always vertical").
+- **Plates:** all white; each plate's rim is either faint grey or faint blue (seeded, roughly even, no other colour), no dark outline. Round 3: plates are 128 × 91 art px at grain 8 and items at most 84 px (at least 56 px, no wider than 70% of a plate); round 2 had 64 × 45 plates and items up to 42 px at grain 4. Item sits 1–3 world units off centre (seeded per plate). Plates and items never rotate: food always stands upright on its plate, whichever way the belt runs (round 6, Martin: food "always vertical"); only a click effect turns them briefly. A plate the visitor puts back on the belt somewhere else stays there and rides on from that spot (round 7, §6).
 - **Fill:** plates on ~50% of slots, seeded random with singles, pairs, runs and gaps; food on ~70% of those plates, so about a third of the belt carries food (round 6: ~40% more food than the earlier ~50% of plates); never reshuffled in view.
 - **Mix of occupied plates:** 70% funny sushi/food (nigiri with expressions, sleepy onigiri, suspicious wasabi, rice with a tiny umbrella, gyoza in a blanket…), 20% surprising non-food (rubber duck, floppy disk, tiny bonsai, lost sock, beetle, lucky cat, haunted laptop…), 10% very animated food (breathes, blinks, waves, shivers on its plate).
 - **Speed:** rest 24 px/s at 1440 px (6 world units/s; round 6 made it 50% faster than the earlier 16 px/s), constant, never stops. While the page glides between stops the belt eases up to 1.5× rest, starting 0.25 s before a wheel glide moves the scene so the speed-up reads as the belt registering the scroll, and eases back when the glide lands. (This replaces round 5's surge of up to ~6× with a 0.3 s hold.) Never reverses.
@@ -54,8 +54,12 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 
 ## 6. Interaction
 
-- Click a plate → that plate's seeded effect (puff, sparkle, item hops, tiny explosion into confetti rice and re-forms, fortune slip, steam, wasabi sneeze…). ~25 distinct effects.
-- Drag any plate off the belt. Drop on a flat surface (counters, tables, shelves, floor, bridge, crate, desk) → it stays, rendered in place, persisted for the visit. Drop elsewhere → it slides back to its slot. Drop in the pond → splash, koi gets it.
+- Click a plate → that plate's seeded effect, and every click reacts (round 7, Martin: plates "explode or do funny things"). About 40% explode: the item bursts into particles of its own colours, vanishes and grows back. The rest do one of twelve gags (hop, spin, wobble, squash, puff, sparkle, flip, float, shiver, grow, peek, bounce). Steaming food also steams, and some odd items sometimes quip. An empty plate spins.
+- Drag any plate with food off the belt. Drop it:
+  - on the belt, on bare belt or an empty plate near the drop → it stays at that spot and rides on (an empty plate there swaps to the dragged plate's old slot);
+  - on a flat surface (counters, tables, shelves, floors, sidewalk and street, ledges, bridge and pond bank, crate, desk; every stop and band has some) → it rests there, rendered in place, persisted for the visit;
+  - in the pond → splash, koi gets it;
+  - anywhere else → it goes back exactly where it was (a plate already moved along the belt stays moved).
 - Everything is optional. The page is fully readable and usable without clicking.
 - **Scrolling.** A wheel gesture (after a tiny threshold, so trackpad openers count) glides with an ease-in-out of about 0.65–1.1 s to the next or previous stop; the rest of that gesture and its inertia are swallowed, so one flick moves one stop. Touch, keyboard and scrollbar scrolls stay native while they last; once they stop between stops the page glides on with no lead. Grabbing the page (touch) cancels a glide. Reduced motion jumps instead of gliding.
 
@@ -72,10 +76,12 @@ Evidence: nine Slack recordings (byte-identical to videos 01–09 of PR #13), re
 
 ## 9. Animation
 
-- **Click reactions move the object, not a second picture** (round 6). A clicked creature or prop is lifted out as a cut-out of its own frame 0 and moved by a transform (hop with squash and stretch, a cat's stretch, a wobble about its base, a swing from its top) over a patch of the room behind it, then settles back pixel-exactly. Only state changes keep frame reactions: Jiro's jaw and blink, the traffic light, the candle. Reduced motion disables these moves.
+- **No frame-swapped lights** (round 7). Martin: an animation must never look like "a square appearing over it". Lantern, lamp and candle light is a procedural glow over the baked light pool, and the reference videos' small details are drawn in code too: fireflies that wander and now and then (roughly every 22–30 s) gather into a circling swarm and scatter; pond ripples and fish shadows; rain and puddle splashes; steam wisps; a dripping faucet. The references show lanterns steady or breathing ±2–5%, which the glows follow; the firefly swarm is Martin's recollection, not seen in the logged frames.
+- **People move by themselves** (round 7). Every 9–11 s the hero diners nod, Jiro breathes (hero, FAQ) and Jiro on the bike sways, using the same cut-outs as click moves.
+- **Click reactions move the object, not a second picture** (round 6). A clicked creature or prop is lifted out as a cut-out of its own frame 0 and moved by a transform (hop with squash and stretch, a cat's stretch, a wobble about its base, a swing from its top) over a patch of the room behind it, then settles back pixel-exactly. Only state changes keep frame reactions: Jiro's jaw and blink, the traffic light. Reduced motion disables these moves.
 - Belt, koi and click moves excepted, ≤ 5% of a stop's pixels change at once. Lantern flicker, steam, eyes, reeds, rain, ripples, cloth.
-- Every ambient loop is a sprite sequence whose length divides the scene loop (e.g. 8 s scene loop, 0.5/1/2/4/8 s layers) and returns to frame 0 pixel-exactly. No video crossfades, no Veo, no whole-frame swaps.
-- `prefers-reduced-motion`: belt slows to 25%, ambient loops pause at frame 0, koi and click moves disabled, glides become jumps.
+- Every ambient sprite loop is a sequence whose length divides the scene loop (e.g. 8 s scene loop, 0.5/1/2/4/8 s layers) and returns to frame 0 pixel-exactly. No video crossfades, no Veo, no whole-frame swaps. Procedural effects run on their own real-time clock and are not loops.
+- `prefers-reduced-motion`: belt slows to 25%, ambient loops pause at frame 0, procedural effects hold still (glows stay lit), koi, click and idle moves disabled, glides become jumps.
 
 ## 10. Content integrity
 

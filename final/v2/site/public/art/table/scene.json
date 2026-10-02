@@ -13,20 +13,6 @@
  ],
  "sprites": [
   {
-   "id": "lantern",
-   "src": "lantern.png",
-   "x": 161,
-   "y": 7,
-   "w": 26,
-   "h": 42,
-   "grain": 4,
-   "frames": 2,
-   "durations": [
-    3600,
-    400
-   ]
-  },
-  {
    "id": "cat",
    "src": "cat.png",
    "x": 209,
@@ -89,21 +75,6 @@
     200
    ],
    "egg": "vent-eyes"
-  },
-  {
-   "id": "coin",
-   "src": "coin.png",
-   "x": 220,
-   "y": 146,
-   "w": 15,
-   "h": 26,
-   "grain": 8,
-   "frames": 2,
-   "durations": [
-    1600,
-    400
-   ],
-   "egg": "coin"
   }
  ],
  "surfaces": [
@@ -127,6 +98,13 @@
    "y": 175,
    "w": 60,
    "h": 20
+  },
+  {
+   "id": "counter",
+   "x": 0,
+   "y": 146,
+   "w": 110,
+   "h": 22
   }
  ],
  "eggs": [
@@ -194,7 +172,6 @@
    "y": 147,
    "w": 13,
    "h": 24,
-   "sprite": "coin",
    "says": [
     "Free play since 2026."
    ]
@@ -209,6 +186,26 @@
    "says": [
     "Rice. Mostly rice."
    ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "glow",
+   "x": 174.0,
+   "y": 28.0,
+   "r": 46.2,
+   "color": "#fdd081",
+   "period": 2.6,
+   "amp": 0.05
+  },
+  {
+   "kind": "glow",
+   "x": 227.5,
+   "y": 159.0,
+   "r": 28.6,
+   "color": "#f6ba64",
+   "period": 2.97,
+   "amp": 0.05
   }
  ]
 }

@@ -2,159 +2,7 @@
  "master": "art/gen/pond/pond-a.jpg",
  "base": "art/work/pond/base.png",
  "groups": "warm,cool,accents,plates,neutrals",
- "sprites": {
-  "fly-a": {
-   "grain": 8,
-   "crop": [
-    16,
-    62,
-    10,
-    10
-   ],
-   "roi": [
-    18,
-    64,
-    6,
-    6
-   ],
-   "compare": "base",
-   "min_blob": 1,
-   "frames": [
-    "the small amber firefly glows brighter."
-   ],
-   "keep": [
-    0,
-    1
-   ],
-   "durations": [
-    1400,
-    600
-   ]
-  },
-  "fly-b": {
-   "grain": 8,
-   "crop": [
-    203,
-    62,
-    10,
-    10
-   ],
-   "roi": [
-    205,
-    64,
-    6,
-    6
-   ],
-   "compare": "base",
-   "min_blob": 1,
-   "frames": [
-    "the small amber firefly glows brighter."
-   ],
-   "keep": [
-    0,
-    1
-   ],
-   "durations": [
-    1600,
-    400
-   ]
-  },
-  "toro-l": {
-   "grain": 4,
-   "crop": [
-    10,
-    145,
-    34,
-    40
-   ],
-   "roi": [
-    14,
-    148,
-    26,
-    34
-   ],
-   "frame_rois": [
-    [
-     22,
-     156,
-     12,
-     12
-    ]
-   ],
-   "frames": [
-    "the stone lantern's window glows a little brighter."
-   ],
-   "keep": [
-    0,
-    1
-   ],
-   "durations": [
-    3000,
-    1000
-   ]
-  },
-  "toro-r": {
-   "grain": 4,
-   "crop": [
-    262,
-    158,
-    32,
-    40
-   ],
-   "roi": [
-    266,
-    161,
-    24,
-    34
-   ],
-   "frame_rois": [
-    [
-     272,
-     170,
-     12,
-     10
-    ]
-   ],
-   "frames": [
-    "the stone lantern's window glows a little brighter."
-   ],
-   "keep": [
-    0,
-    1
-   ],
-   "durations": [
-    3400,
-    600
-   ]
-  },
-  "stall-lantern": {
-   "grain": 8,
-   "crop": [
-    247,
-    79,
-    18,
-    24
-   ],
-   "roi": [
-    250,
-    82,
-    12,
-    18
-   ],
-   "frames": [
-    "the red paper lantern on the food stall glows brighter."
-   ],
-   "keep": [
-    0,
-    1
-   ],
-   "durations": [
-    2000,
-    2000
-   ],
-   "egg": "stall-lantern"
-  }
- },
+ "sprites": {},
  "scene": {
   "surfaces": [
    {
@@ -170,6 +18,20 @@
     "y": 128,
     "w": 14,
     "h": 8
+   },
+   {
+    "id": "bank-left",
+    "x": 0,
+    "y": 160,
+    "w": 55,
+    "h": 40
+   },
+   {
+    "id": "bridge",
+    "x": 296,
+    "y": 20,
+    "w": 50,
+    "h": 16
    }
   ],
   "water": [
@@ -266,10 +128,92 @@
     "y": 82,
     "w": 12,
     "h": 18,
-    "sprite": "stall-lantern",
     "says": [
      "Daily Roll: one maze a day."
     ]
+   }
+  ],
+  "fx": [
+   {
+    "kind": "fireflies",
+    "area": {
+     "x": 4,
+     "y": 4,
+     "w": 160,
+     "h": 80
+    },
+    "n": 7,
+    "swarmEvery": 22
+   },
+   {
+    "kind": "ripples",
+    "areas": [
+     {
+      "x": 40,
+      "y": 20,
+      "w": 150,
+      "h": 60
+     },
+     {
+      "x": 30,
+      "y": 125,
+      "w": 200,
+      "h": 60
+     }
+    ],
+    "every": 1.4,
+    "maxR": 13
+   },
+   {
+    "kind": "ripples",
+    "areas": [
+     {
+      "x": 228,
+      "y": 18,
+      "w": 40,
+      "h": 22
+     }
+    ],
+    "every": 3.5,
+    "maxR": 9,
+    "color": "#f9efce"
+   },
+   {
+    "kind": "fish",
+    "area": {
+     "x": 20,
+     "y": 130,
+     "w": 200,
+     "h": 50
+    },
+    "n": 2
+   },
+   {
+    "kind": "glow",
+    "x": 27.0,
+    "y": 165.0,
+    "r": 37.4,
+    "color": "#f6ba64",
+    "period": 4.08,
+    "amp": 0.05
+   },
+   {
+    "kind": "glow",
+    "x": 278.0,
+    "y": 178.0,
+    "r": 37.4,
+    "color": "#f6ba64",
+    "period": 4.45,
+    "amp": 0.05
+   },
+   {
+    "kind": "glow",
+    "x": 256.0,
+    "y": 91.0,
+    "r": 19.8,
+    "color": "#fdd081",
+    "period": 4.82,
+    "amp": 0.05
    }
   ]
  }

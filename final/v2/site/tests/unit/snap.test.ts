@@ -38,3 +38,12 @@ describe("magnetic scrolling near the end of a tall scene", () => {
     expect(glideTarget(1500, 1, tall, vh)).toBe(1800);
   });
 });
+
+describe("magnetic scrolling after a small nudge", () => {
+  it("glides back to the scene when a scroll only nudged a little way into the gap", () => {
+    // gap between the first stop (rests at 0) and the second (rests at 1100) is 1100 px; 15% of it is 165 px
+    expect(glideTarget(100, 1, short, vh)).toBe(0);
+    expect(glideTarget(1000, -1, short, vh)).toBe(1100);
+    expect(glideTarget(200, 1, short, vh)).toBe(1100);
+  });
+});

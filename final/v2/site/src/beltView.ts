@@ -8,6 +8,7 @@ import { slatRows } from "./belt/slats";
 import { createStream, type Slot } from "./belt/stream";
 import { mulberry32 } from "./belt/rng";
 import { createKoiSchedule, koiPose, type Leap } from "./belt/koi";
+import { plateEffect } from "./belt/effects";
 
 /** World art px between plate slots along the belt. */
 export const SLOT = 22;
@@ -53,13 +54,14 @@ export type BeltDeps = {
 };
 
 type Item = NonNullable<Slot["item"]>;
-type Effect = { slot: number; type: number; start: number; dur: number };
+type Effect = { slot: number; type: number; start: number; dur: number; empty?: boolean };
 type Particle = { x: number; y: number; vx: number; vy: number; c: string; life: number; age: number; g: number };
 type Override =
   | { kind: "gone" }
   | { kind: "walking"; to: number; start: number }
   | { kind: "guest"; host: number }
-  | { kind: "eaten" };
+  | { kind: "eaten" }
+  | { kind: "moved"; item: Item | null; rim: Slot["rim"] };
 
 const QUIPS: Record<string, string[]> = {
   "rubber-duck": ["quack.", "Have you tried explaining it to me?"],
@@ -94,7 +96,7 @@ export async function mountBelt(d: BeltDeps) {
   const overrides = new Map<number, Override>();
   const effects: Effect[] = [];
   const particles: Particle[] = [];
-  let held: null | { slot: number; item: Item; rim: Slot["rim"]; page: Pt; from: "belt" | "placed"; el?: HTMLElement } = null;
+  let held: null | { slot: number; item: Item; rim: Slot["rim"]; page: Pt; from: "belt" | "placed"; el?: HTMLElement; prev?: Override } = null;
   let walk: null | { from: number; to: number; start: number; dur: number } = null;
   let fall: null | { slot: number; item: Item; rim: Slot["rim"]; p: Pt; v: Pt; floor: number; start: number } = null;
 
@@ -113,11 +115,25 @@ export async function mountBelt(d: BeltDeps) {
   const slotSpacing = () => SLOT * d.map.s;
   const travelPx = () => (d.journey.state().travel + PREFILL) * d.map.s;
   const slotPos = (i: number) => travelPx() - i * slotSpacing();
+  /** Food the koi, the rare events and the counters can see: on the stream or moved there by the visitor. */
   const isOccupied = (i: number) => {
     const o = overrides.get(i);
-    return stream.slot(i).item && (!o || o.kind === "walking");
+    if (o?.kind === "moved") return !!o.item;
+    return !!stream.slot(i).item && (!o || o.kind === "walking");
   };
-  const isPickable = (i: number) => stream.slot(i).item && !overrides.has(i) && ![...overrides.values()].some((o) => o.kind === "guest" && o.host === i);
+  /** The plate on slot i as the visitor sees it now: moved plates, eaten food and removed plates included. */
+  const slotPlate = (i: number): null | { rim: Slot["rim"]; item: Item | null } => {
+    const o = overrides.get(i);
+    if (o?.kind === "moved") return { rim: o.rim, item: o.item };
+    if (o?.kind === "gone") return null;
+    const sl = stream.slot(i);
+    if (!sl.plate) return null;
+    return { rim: sl.rim, item: o?.kind === "eaten" || o?.kind === "walking" || o?.kind === "guest" ? null : sl.item };
+  };
+  const isPickable = (i: number) => {
+    const o = overrides.get(i);
+    return !!slotPlate(i) && (!o || o.kind === "moved") && ![...overrides.values()].some((x) => x.kind === "guest" && x.host === i);
+  };
 
   /** Food always rides upright on its plate, whichever way the belt runs. */
   const itemAngle = (_pos?: { x: number; y: number; heading: number }) => 0;
@@ -206,28 +222,30 @@ export async function mountBelt(d: BeltDeps) {
     if (fx) {
       const t = Math.min(1, (now - fx.start) / fx.dur);
       const e = Math.sin(t * Math.PI);
-      switch (fx.type % 16) {
-        case 0: oy = -20 * U * e; break; // hop
-        case 1: rot = t * Math.PI * 2; break; // spin
-        case 2: rot = Math.sin(t * Math.PI * 6) * 0.3 * (1 - t); break; // wobble
-        case 3: sy = 1 - 0.4 * e; sx = 1 + 0.25 * e; break; // squash
-        case 4: break; // puff (particles only)
-        case 5: alpha = t < 0.15 || t > 0.85 ? 1 : 0; break; // explode and re-form
-        case 6: break; // sparkle
-        case 7: oy = -8 * U * Math.abs(Math.sin(t * Math.PI * 3)); break; // bounce x3
-        case 8: sx = sy = 1 - 0.45 * e; break; // shrink
-        case 9: sx = Math.cos(t * Math.PI * 2); break; // flip
-        case 10: plateDy = -4 * U * Math.abs(Math.sin(t * Math.PI * 4)); oy = plateDy; break; // plate rattles
-        case 11: oy = -28 * U * e; rot = 0.2 * e; break; // float
-        case 12: ox = (Math.random() - 0.5) * 4 * U * (1 - t); break; // shiver
-        case 13: ox = 12 * U * e; break; // slide to the rim and back
-        case 14: sx = sy = 1 + 0.35 * e; break; // grow
-        case 15: rot = -0.35 * e; ox = -6 * U * e; break; // peek
+      switch (plateEffect(fx.type).kind) {
+        case "hop": oy = -24 * U * e; rot = 0.25 * Math.sin(t * Math.PI * 2); break;
+        case "spin": rot = t * Math.PI * 4; oy = -6 * U * e; break;
+        case "wobble": rot = Math.sin(t * Math.PI * 8) * 0.35 * (1 - t); break;
+        case "squash": sy = 1 - 0.45 * e; sx = 1 + 0.35 * e; break;
+        case "puff": sx = sy = 1 + 0.25 * e; break;
+        case "sparkle": oy = -6 * U * e; break;
+        case "explode": alpha = t < 0.08 || t > 0.78 ? 1 : 0; sx = sy = t > 0.78 ? 0.6 + 0.4 * ((t - 0.78) / 0.22) : 1; break;
+        case "bounce": oy = -10 * U * Math.abs(Math.sin(t * Math.PI * 3)) * (1 - t * 0.5); break;
+        case "flip": sx = Math.cos(t * Math.PI * 4); break;
+        case "float": oy = -32 * U * e; rot = 0.3 * Math.sin(t * Math.PI * 3); break;
+        case "shiver": ox = (Math.random() - 0.5) * 6 * U * (1 - t); plateDy = (Math.random() - 0.5) * 2 * U * (1 - t); break;
+        case "grow": sx = sy = 1 + 0.6 * e; break;
+        case "peek": rot = -0.45 * e; ox = -8 * U * e; break;
       }
+      if (fx.empty) { plateDy = -6 * U * e; ox = 0; }
     }
     // Plates and items are finer than a 1x screen or a phone: average them down there (slats stay hard, they are cheap that way).
     ctx.imageSmoothingEnabled = k < 1;
-    ctx.drawImage(plate, c.x - plate.width / 2, c.y - plate.height / 2 + plateDy);
+    if (fx?.empty) {
+      const t = Math.min(1, (now - fx.start) / fx.dur);
+      ctx.save(); ctx.translate(c.x, c.y + plateDy); ctx.rotate(t * Math.PI * 2);
+      ctx.drawImage(plate, -plate.width / 2, -plate.height / 2); ctx.restore();
+    } else ctx.drawImage(plate, c.x - plate.width / 2, c.y - plate.height / 2 + plateDy);
     const draw = (it: Item, dx: number) => {
       const f = itemFrame(it.kind, now, slot);
       const h = f.img.height;
@@ -296,13 +314,15 @@ export async function mountBelt(d: BeltDeps) {
   }
 
   function trigger(i: number, page: Pt, now: number) {
-    const it = stream.slot(i).item!;
+    const it = slotPlate(i)?.item;
+    if (!it) { effects.push({ slot: i, type: 1, start: now, dur: 700, empty: true }); return; } // an empty plate just spins up
     const type = it.effect;
-    effects.push({ slot: i, type, start: now, dur: 900 });
+    const fx = plateEffect(type);
+    effects.push({ slot: i, type, start: now, dur: fx.ms });
     const kind = it.kind;
-    if (type % 16 === 4) burst(page, kind, 18, "puff");
-    if (type % 16 === 5) burst(page, kind, 40, "explode");
-    if (type % 16 === 6 || type % 16 === 14) burst(page, kind, 14, "sparkle");
+    if (fx.kind === "puff") burst(page, kind, 24, "puff");
+    if (fx.kind === "explode") { burst(page, kind, 70, "explode"); burst(page, kind, 12, "sparkle"); }
+    if (fx.kind === "sparkle" || fx.kind === "grow") burst(page, kind, 18, "sparkle");
     if (["miso-soup", "matcha", "ramen-bowl", "teapot-mini"].includes(kind)) burst(page, kind, 10, "steam");
     const quips = QUIPS[kind];
     if (quips && type % 3 === 0) d.onSay(quips[Math.floor(rand() * quips.length)], { x: page.x, y: page.y - 18 });
@@ -334,15 +354,45 @@ export async function mountBelt(d: BeltDeps) {
     return el;
   }
 
+  /** A bare slot on the visible belt right where the visitor let go, or null when the drop is not on the belt. */
+  function beltSpot(page: Pt): number | null {
+    const reach = SLOT * d.map.s * 0.75;
+    let best: null | { i: number; dist: number } = null;
+    for (const v of visibleSlots()) {
+      if (d.route.isHidden(v.pos)) continue;
+      const dist = Math.hypot(page.x - v.pos.x, page.y - v.pos.y);
+      if (dist > reach) continue;
+      if (held && v.i === held.slot) continue;
+      const o = overrides.get(v.i), there = slotPlate(v.i);
+      if (there?.item || (o && o.kind !== "moved")) continue; // only bare belt or an empty plate
+      if (!best || dist < best.dist) best = { i: v.i, dist };
+    }
+    return best?.i ?? null;
+  }
+
+  /** A plate taken off the belt and not put anywhere goes back exactly as it was (a moved plate stays moved). */
+  function putBack(h: NonNullable<typeof held>) {
+    if (h.prev) overrides.set(h.slot, h.prev); else overrides.delete(h.slot);
+  }
+
   function drop(page: Pt) {
     if (!held) return;
     const w = d.map.pageToWorld(page);
-    const res = resolveDrop(w, d.surfaces(), d.water());
+    const spot = beltSpot(page);
+    const res = resolveDrop(w, d.surfaces(), d.water(), spot !== null);
     if (res.kind === "placed") {
       if (held.el) { held.el.style.left = `${page.x}px`; held.el.style.top = `${page.y - 12 * U * hp}px`; held.el.style.visibility = ""; }
       else placedElement(held.item, held.rim, page);
       overrides.set(held.slot, { kind: "gone" });
       d.onEgg("table-for-one");
+    } else if (res.kind === "belt") {
+      // An empty plate already at that spot swaps over to where the dragged plate came from.
+      const empty = slotPlate(spot!);
+      if (empty && held.from === "belt") overrides.set(held.slot, { kind: "moved", item: null, rim: empty.rim });
+      else overrides.set(held.slot, { kind: "gone" });
+      overrides.set(spot!, { kind: "moved", item: held.item, rim: held.rim });
+      held.el?.remove();
+      burst(page, held.item.kind, 6, "sparkle");
     } else if (res.kind === "koi") {
       held.el?.remove();
       overrides.set(held.slot, { kind: "gone" });
@@ -351,7 +401,7 @@ export async function mountBelt(d: BeltDeps) {
       d.onEgg("koi-fed");
       if (!d.reduced) leapAt(page.x, performance.now());
     } else if (held.from === "belt") {
-      overrides.delete(held.slot);
+      putBack(held);
     } else if (held.el) {
       held.el.style.visibility = "";
     }
@@ -371,8 +421,9 @@ export async function mountBelt(d: BeltDeps) {
       held = { slot: -1, item: p.item, rim: p.rim, page: press.page, from: "placed", el: press.el };
       press.el.style.visibility = "hidden";
     } else if (press.slot !== undefined) {
-      const sl = stream.slot(press.slot);
-      held = { slot: press.slot, item: sl.item!, rim: sl.rim, page: press.page, from: "belt" };
+      const sl = slotPlate(press.slot);
+      if (!sl?.item) { press = null; return; } // empty plates only spin when clicked
+      held = { slot: press.slot, item: sl.item, rim: sl.rim, page: press.page, from: "belt", prev: overrides.get(press.slot) };
       overrides.set(press.slot, { kind: "gone" });
     }
     document.body.classList.add("dragging");
@@ -410,7 +461,7 @@ export async function mountBelt(d: BeltDeps) {
     if (press) clearTimeout(press.timer);
     press = null;
     if (!held) return;
-    if (held.from === "belt") overrides.delete(held.slot);
+    if (held.from === "belt") putBack(held);
     else if (held.el) held.el.style.visibility = "";
     held = null;
     document.body.classList.remove("dragging");
@@ -455,7 +506,7 @@ export async function mountBelt(d: BeltDeps) {
   function fullestRun(vis: ReturnType<typeof visibleSlots>, line: number) {
     const s = d.map.s;
     const reach = (x: number) => x >= (REACH[0] - DESCENT) * s && x <= (REACH[1] - DESCENT) * s;
-    const xs = vis.filter((v) => Math.abs(v.pos.y - line) < 4 * s && reach(v.pos.x) && !d.route.isHidden(v.pos) && isOccupied(v.i) && !overrides.has(v.i)).map((v) => v.pos.x);
+    const xs = vis.filter((v) => Math.abs(v.pos.y - line) < 4 * s && reach(v.pos.x) && !d.route.isHidden(v.pos) && isOccupied(v.i) && (!overrides.has(v.i) || overrides.get(v.i)!.kind === "moved")).map((v) => v.pos.x);
     if (!xs.length) return null;
     let best = xs[0], most = 0;
     for (const x of xs) { const n = xs.filter((o) => Math.abs(o - x) < BITE * s).length; if (n > most) { most = n; best = x; } }
@@ -473,8 +524,9 @@ export async function mountBelt(d: BeltDeps) {
     if (t > 0.5 && Math.abs(p.y - line) < 30 * s) {
       for (const v of vis) {
         if (Math.abs(v.pos.y - line) > 4 * s || Math.abs(v.pos.x - p.x) > BITE * s || d.route.isHidden(v.pos)) continue;
-        if (!isOccupied(v.i) || overrides.has(v.i)) continue;
-        overrides.set(v.i, { kind: "eaten" });
+        if (!isOccupied(v.i) || (overrides.has(v.i) && overrides.get(v.i)!.kind !== "moved")) continue;
+        const o = overrides.get(v.i);
+        overrides.set(v.i, o?.kind === "moved" ? { kind: "moved", item: null, rim: o.rim } : { kind: "eaten" });
         koiStats.eaten++;
       }
     }
@@ -508,18 +560,13 @@ export async function mountBelt(d: BeltDeps) {
     for (let k = effects.length - 1; k >= 0; k--) if (now - effects[k].start > effects[k].dur) effects.splice(k, 1);
     for (const v of vis) {
       if (d.route.isBuried(v.pos, 40 * U * hp)) continue;
-      const sl = stream.slot(v.i);
-      if (!sl.plate) continue;
-      const o = overrides.get(v.i);
+      const sl = slotPlate(v.i);
+      if (!sl) continue;
       const c = toCanvas(v.pos);
-      const ang = itemAngle(v.pos);
       const fx = effects.find((f) => f.slot === v.i);
       const guest = [...overrides.entries()].find(([, ov]) => ov.kind === "guest" && ov.host === v.i);
       const guestItem = guest ? stream.slot(guest[0]).item! : undefined;
-      if (o?.kind === "gone") continue;
-      if (o?.kind === "guest") { drawPlate(c, sl.rim, null, ang, now, v.i); continue; }
-      if (o?.kind === "walking" || o?.kind === "eaten") { drawPlate(c, sl.rim, null, ang, now, v.i); continue; }
-      drawPlate(c, sl.rim, sl.item, ang, now, v.i, fx, guestItem);
+      drawPlate(c, sl.rim, sl.item, itemAngle(v.pos), now, v.i, fx, guestItem);
     }
     if (walk) {
       const t = Math.min(1, (now - walk.start) / walk.dur);
@@ -570,18 +617,17 @@ export async function mountBelt(d: BeltDeps) {
     koi: () => ({ ...koiStats }),
     platesInView: () =>
       visibleSlots()
-        .filter((v) => overrides.get(v.i)?.kind !== "gone" && stream.slot(v.i).plate)
+        .filter((v) => slotPlate(v.i))
         .filter((v) => !d.route.isHidden(v.pos) && v.pos.y >= scrollY && v.pos.y <= scrollY + innerHeight && v.pos.x >= 0 && v.pos.x <= innerWidth)
         .map((v) => {
-          const o = overrides.get(v.i);
-          const it = stream.slot(v.i).item;
-          return { id: v.i, x: v.pos.x - scrollX, y: v.pos.y - scrollY, r: 26 * U * hp, kind: it && (!o || o.kind === "walking") ? it.kind : "empty", angle: itemAngle(v.pos) };
+          const it = slotPlate(v.i)!.item;
+          return { id: v.i, x: v.pos.x - scrollX, y: v.pos.y - scrollY, r: 26 * U * hp, kind: it ? it.kind : "empty", angle: itemAngle(v.pos) };
         }),
     slotsInView: () => {
       const v = visibleSlots().filter((x) => overrides.get(x.i)?.kind !== "gone" && x.pos.y >= scrollY && x.pos.y <= scrollY + innerHeight && !d.route.isHidden(x.pos));
       return {
         total: v.length,
-        plates: v.filter((x) => stream.slot(x.i).plate).length,
+        plates: v.filter((x) => slotPlate(x.i)).length,
         filled: v.filter((x) => isOccupied(x.i) && !overrides.has(x.i)).length,
       };
     },

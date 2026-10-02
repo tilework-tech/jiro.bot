@@ -13,34 +13,6 @@
  ],
  "sprites": [
   {
-   "id": "lantern-l",
-   "src": "lantern-l.png",
-   "x": 198,
-   "y": 1,
-   "w": 23,
-   "h": 28,
-   "grain": 4,
-   "frames": 2,
-   "durations": [
-    3600,
-    400
-   ]
-  },
-  {
-   "id": "lantern-r",
-   "src": "lantern-r.png",
-   "x": 296,
-   "y": 0,
-   "w": 21,
-   "h": 29,
-   "grain": 4,
-   "frames": 2,
-   "durations": [
-    1700,
-    300
-   ]
-  },
-  {
    "id": "chime",
    "src": "chime.png",
    "x": 225,
@@ -85,7 +57,29 @@
     400,
     800,
     400
-   ]
+   ],
+   "idle": {
+    "kind": "nod",
+    "every": 9000,
+    "offset": 0
+   },
+   "motion": {
+    "kind": null,
+    "cut": "diner-a-cut.png",
+    "under": "diner-a-under.png",
+    "x": 248,
+    "y": 122,
+    "w": 60,
+    "h": 62,
+    "bottom": [
+     275.9375,
+     184.0
+    ],
+    "top": [
+     275.9375,
+     130.0
+    ]
+   }
   },
   {
    "id": "diner-b",
@@ -101,7 +95,29 @@
     1000,
     3000,
     1000
-   ]
+   ],
+   "idle": {
+    "kind": "nod",
+    "every": 11000,
+    "offset": 2100
+   },
+   "motion": {
+    "kind": null,
+    "cut": "diner-b-cut.png",
+    "under": "diner-b-under.png",
+    "x": 305,
+    "y": 85,
+    "w": 55,
+    "h": 55,
+    "bottom": [
+     332.6875,
+     140.0
+    ],
+    "top": [
+     332.6875,
+     85.0
+    ]
+   }
   },
   {
    "id": "cat",
@@ -168,7 +184,29 @@
     1000,
     2000
    ],
-   "egg": "jiro"
+   "egg": "jiro",
+   "idle": {
+    "kind": "breathe",
+    "every": 9500,
+    "offset": 900
+   },
+   "motion": {
+    "kind": null,
+    "cut": "jiro-cut.png",
+    "under": "jiro-under.png",
+    "x": 190,
+    "y": 20,
+    "w": 68,
+    "h": 90,
+    "bottom": [
+     224.1875,
+     110.0
+    ],
+    "top": [
+     224.1875,
+     30.375
+    ]
+   }
   },
   {
    "id": "jiro-react",
@@ -430,6 +468,13 @@
    "y": 184,
    "w": 110,
    "h": 18
+  },
+  {
+   "id": "floor-left",
+   "x": 20,
+   "y": 184,
+   "w": 170,
+   "h": 16
   }
  ],
  "eggs": [
@@ -542,6 +587,32 @@
    "says": [
     "eep!"
    ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "steam",
+   "x": 261,
+   "y": 48,
+   "h": 16
+  },
+  {
+   "kind": "glow",
+   "x": 209.5,
+   "y": 15.0,
+   "r": 30.8,
+   "color": "#fdd081",
+   "period": 2.97,
+   "amp": 0.05
+  },
+  {
+   "kind": "glow",
+   "x": 306.5,
+   "y": 14.5,
+   "r": 31.9,
+   "color": "#fdd081",
+   "period": 3.34,
+   "amp": 0.05
   }
  ]
 }

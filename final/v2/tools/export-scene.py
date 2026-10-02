@@ -37,10 +37,12 @@ for sid, s in spec["sprites"].items():
             e["trigger"] = True
         if s.get("egg"):
             e["egg"] = s["egg"]
-        if s.get("motion") and not trigger:
+        if s.get("idle") and not trigger:
+            e["idle"] = s["idle"]
+        if (s.get("motion") or s.get("idle")) and not trigger:
             mj = json.loads((work / "sprites" / f"{sid}-motion.json").read_text())
             cx, cy, cw, ch = s["crop"]
-            e["motion"] = {"kind": s["motion"], "cut": f"{sid}-cut.png", "under": f"{sid}-under.png",
+            e["motion"] = {"kind": s.get("motion"), "cut": f"{sid}-cut.png", "under": f"{sid}-under.png",
                            "x": cx, "y": cy, "w": cw, "h": ch, "bottom": mj["bottom"], "top": mj["top"]}
             jobs.append((work / "sprites" / f"{sid}-cut.png", f"{sid}-cut"))
             jobs.append((work / "sprites" / f"{sid}-under.png", f"{sid}-under"))
@@ -58,7 +60,7 @@ with ThreadPoolExecutor(4) as ex:
 
 base = Image.open(pub / "base.png")
 bg = base.width // 360
-loop = max(sum(e["durations"]) for e in entries if not e.get("trigger"))
+loop = max([sum(e["durations"]) for e in entries if not e.get("trigger")] or [8000])
 out = {"id": scene, "size": [base.width // bg, base.height // bg], "loop": loop, "layers": [{"src": "base.png", "grain": bg}], "sprites": entries}
 extra = spec.get("scene", {})
 out.update(extra)

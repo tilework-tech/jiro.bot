@@ -26,7 +26,29 @@
     160,
     5240
    ],
-   "egg": "jiro"
+   "egg": "jiro",
+   "idle": {
+    "kind": "sway",
+    "every": 10500,
+    "offset": 0
+   },
+   "motion": {
+    "kind": null,
+    "cut": "jiro-cut.png",
+    "under": "jiro-under.png",
+    "x": 196,
+    "y": 46,
+    "w": 52,
+    "h": 80,
+    "bottom": [
+     218.25,
+     126.0
+    ],
+    "top": [
+     218.25,
+     52.875
+    ]
+   }
   },
   {
    "id": "jiro-react",
@@ -80,34 +102,6 @@
    "egg": "light"
   },
   {
-   "id": "lantern-l",
-   "src": "lantern-l.png",
-   "x": 154,
-   "y": 30,
-   "w": 18,
-   "h": 31,
-   "grain": 4,
-   "frames": 2,
-   "durations": [
-    3600,
-    400
-   ]
-  },
-  {
-   "id": "lantern-r",
-   "src": "lantern-r.png",
-   "x": 249,
-   "y": 11,
-   "w": 16,
-   "h": 29,
-   "grain": 4,
-   "frames": 2,
-   "durations": [
-    1600,
-    400
-   ]
-  },
-  {
    "id": "cat",
    "src": "cat.png",
    "x": 115,
@@ -139,21 +133,6 @@
      107.5
     ]
    }
-  },
-  {
-   "id": "lamp",
-   "src": "lamp.png",
-   "x": 184,
-   "y": 116,
-   "w": 8,
-   "h": 10,
-   "grain": 8,
-   "frames": 2,
-   "durations": [
-    3000,
-    1000
-   ],
-   "egg": "lamp"
   }
  ],
  "surfaces": [
@@ -166,10 +145,17 @@
   },
   {
    "id": "street",
-   "x": 60,
-   "y": 175,
-   "w": 100,
-   "h": 20
+   "x": 20,
+   "y": 172,
+   "w": 240,
+   "h": 26
+  },
+  {
+   "id": "sidewalk",
+   "x": 0,
+   "y": 150,
+   "w": 160,
+   "h": 22
   }
  ],
  "eggs": [
@@ -228,7 +214,6 @@
    "y": 116,
    "w": 8,
    "h": 10,
-   "sprite": "lamp",
    "says": [
     "Lights on at night. Like logging."
    ]
@@ -254,6 +239,71 @@
    "says": [
     "*splash*"
    ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "rain",
+   "area": {
+    "x": 0,
+    "y": 0,
+    "w": 300,
+    "h": 202
+   },
+   "n": 26
+  },
+  {
+   "kind": "splash",
+   "spots": [
+    [
+     62,
+     166
+    ],
+    [
+     92,
+     172
+    ],
+    [
+     262,
+     176
+    ],
+    [
+     300,
+     186
+    ],
+    [
+     200,
+     195
+    ]
+   ],
+   "every": 2.2
+  },
+  {
+   "kind": "glow",
+   "x": 163.0,
+   "y": 45.5,
+   "r": 34.1,
+   "color": "#fdd081",
+   "period": 3.34,
+   "amp": 0.05
+  },
+  {
+   "kind": "glow",
+   "x": 257.0,
+   "y": 25.5,
+   "r": 31.9,
+   "color": "#fdd081",
+   "period": 3.71,
+   "amp": 0.05
+  },
+  {
+   "kind": "glow",
+   "x": 188.0,
+   "y": 121.0,
+   "r": 11.0,
+   "color": "#f9efce",
+   "period": 4.08,
+   "amp": 0.05
   }
  ]
 }

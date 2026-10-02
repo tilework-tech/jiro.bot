@@ -60,49 +60,6 @@
    "motion": "hop",
    "subject": "three small round black fuzzy soot sprites sitting on the beam"
   },
-  "candle": {
-   "crop": [
-    300,
-    95,
-    30,
-    30
-   ],
-   "roi": [
-    305,
-    97,
-    20,
-    22
-   ],
-   "frames": [
-    "the small candle flame flickers taller and a little brighter."
-   ],
-   "keep": [
-    0,
-    1
-   ],
-   "durations": [
-    700,
-    300
-   ],
-   "reaction": {
-    "keep": [
-     0,
-     1,
-     0,
-     1,
-     0
-    ],
-    "durations": [
-     100,
-     500,
-     300,
-     500,
-     600
-    ]
-   },
-   "egg": "candle",
-   "grain": 8
-  },
   "eyes": {
    "crop": [
     332,
@@ -172,7 +129,10 @@
     "y": 97,
     "w": 20,
     "h": 22,
-    "sprite": "candle"
+    "says": [
+     "A candle stub. Still burning.",
+     "Someone's working late down here."
+    ]
    },
    {
     "id": "eyes",
@@ -185,6 +145,18 @@
      "\u2026",
      "(blink)"
     ]
+   }
+  ],
+  "fx": [
+   {
+    "kind": "glow",
+    "x": 315.0,
+    "y": 108.0,
+    "r": 24.2,
+    "color": "#f6ba64",
+    "period": 2.6,
+    "amp": 0.05,
+    "flicker": true
    }
   ]
  },

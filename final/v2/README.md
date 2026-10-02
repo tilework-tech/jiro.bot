@@ -2,9 +2,17 @@
 
 v2 rebuilds the Jiro scroll site from Martin Stübler's brief of 2026-10-01: a 16-bit pixel-art sushi restaurant seen from one fixed ¾ camera. The page slides straight down through seven stops: **hero → product → good/bad comparison → comparison table → FAQ → price → koi pond**. One continuous conveyor belt runs through all of them. v2 supersedes PR #13's `../site/` as the active build. That build stays in the tree because v2 reuses its copy and games.
 
-## Status: round 6, after the final review
+## Status: round 7
 
-Every stop and band is built and mounted (`BUILT` in `site/src/main.ts` lists all seven). The tree is at round 6 (`PLAN-R6.md`), which applies Martin's review of the final build (Slack, 2026-10-02):
+Every stop and band is built and mounted (`BUILT` in `site/src/main.ts` lists all seven). The tree is at round 7 (`PLAN-R7.md`), which applies Martin's notes of 2026-10-02:
+
+- clicked plates explode into their own colours and re-form (about 40%) or do one of twelve gags; empty plates spin
+- a plate dragged to another spot on the belt stays there and rides on, and every stop and band has wider flat surfaces to set plates on
+- no light swaps in a second picture any more ("a square appearing over it"): lanterns, lamps and the candle glow softly, drawn in code (`site/src/fx.ts`), and the old light, firefly, tea, cup and faucet sprites are gone
+- the reference videos' small details are back as procedural effects: fireflies that swarm now and then, pond ripples and fish shadows, rain and puddle splashes on the street, steam, a dripping faucet
+- people move by themselves: the hero diners nod, Jiro breathes, Jiro on the bike sways (idle moves using round 6's cut-outs)
+
+Round 6 (`PLAN-R6.md`) applied Martin's review of the final build (Slack, 2026-10-02):
 
 - the belt 50% faster, food always upright, and about 40% more food on it
 - magnetic scrolling: the page only rests on a scene and glides between scenes, with the belt 50% faster during the glide (replacing the round-5 surge)
@@ -35,7 +43,7 @@ Open question for Martin: stop 4 has no Jiro (the brief puts him in the hero, pr
 | Path | What |
 | --- | --- |
 | `DESIGN-BRIEF.md` | The approved visual spec. It overrides the videos where they disagree. |
-| `PLAN.md`, `PLAN-R2.md`, `PLAN-R3.md`, `PLAN-S4.md`, `PLAN-FINAL.md`, `PLAN-R6.md`, `QUESTIONS.md` | The implementation plans (gate A, rounds 2–5, stop 4, the final pass, round 6) and Martin's decisions |
+| `PLAN.md`, `PLAN-R2.md`, `PLAN-R3.md`, `PLAN-S4.md`, `PLAN-FINAL.md`, `PLAN-R6.md`, `PLAN-R7.md`, `QUESTIONS.md` | The implementation plans (gate A, rounds 2–5, stop 4, the final pass, rounds 6 and 7) and Martin's decisions |
 | `research/` | Frame-by-frame analyses of the nine reference videos (see `research/README.md`) |
 | `palette/` | The 56-colour master palette, plus a LibreSprite variant with a transparent slot at index 0 |
 | `art/` | Specs, prompts, refs, raw Gemini output, the Gemini call log and `.ase` sources. See `art/README.md`. |
@@ -77,7 +85,7 @@ cd site
 npm ci
 npm run build                   # writes public/still/index.html (tools/build-still.mjs), type-checks, then vite build
 PORT=3301 node serve.mjs        # static server over dist/ with byte ranges and a /__diag beacon
-npm test                        # Vitest: unit (belt model) + art (palette, plates, loops, motion budget, resolution)
+npm test                        # Vitest: unit (belt model, scene effects) + art (palette, plates, loops, motion budget, resolution)
 npm run test:e2e                # Playwright: Chromium + WebKit, each at 1440×900 desktop and 390×844 mobile
 ```
 
@@ -127,7 +135,7 @@ See `art/README.md`. In short:
 2. `tools/fit.py` pixelates it onto the grain-4 grid and snaps it to the palette.
 3. `tools/ls-index.sh` indexes it to the palette.
 4. `tools/frames.py` builds the animation frames for each sprite, at the sprite's grain.
-5. `tools/motion.py` builds the cut-out and background patch for each sprite with a `motion` click reaction.
+5. `tools/motion.py` builds the cut-out and background patch for each sprite with a `motion` click reaction or an `idle` move.
 6. `tools/export-scene.py` writes `site/public/art/<scene>/`.
 
 Belt art (including the koi) goes through `tools/cut-sheet.py`, then `tools/item-frames.py` for living items, then `tools/export-belt.sh`. After any re-export, run `npm test` in `site/`. The art tests enforce:
@@ -148,6 +156,6 @@ Belt art (including the koi) goes through `tools/cut-sheet.py`, then `tools/item
 | 19 | `gemini-3-pro-image` 1K/2K (Jiro, soot-sprite and eye frame edits, two masks, two koi renders) | $0.134 | $2.55 |
 | 21 | `gemini-3.1-flash-image` 2K (lantern, sushi, cat, firefly and other frame edits) | $0.101 | $2.12 |
 
-Round 6 (entries from 2026-10-02T02:30 UTC on) made 47 calls for `tools/motion.py`'s silhouettes and background edits, all `gemini-3-pro-image` at 1K or 2K: about $6.30 at the $0.134 unit above.
+Round 6 (entries from 2026-10-02T02:30 UTC on) made 47 calls for `tools/motion.py`'s silhouettes and background edits, all `gemini-3-pro-image` at 1K or 2K: about $6.30 at the $0.134 unit above. Round 7 (entries from 2026-10-02T14:28 UTC) made 7 more of the same kind for the idle cut-outs of the hero diners and the three Jiros: about $0.94. Its glows and other effects are drawn in code and cost no calls.
 
 To recount, filter the log on its `t` field and group by `model` and `size`.
