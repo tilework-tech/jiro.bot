@@ -1,0 +1,38 @@
+{
+  "date": "2026-09-30",
+  "sourceBaselineCommit": "03ddbabca71647f9ab362b7b665eb5f1dcea7873",
+  "node": "v22.20.0",
+  "demos": [
+    1,
+    2,
+    4,
+    5
+  ],
+  "restoredFilesVerified": 515,
+  "newSceneAndTransitionStills": 117,
+  "runtimeExternalRequests": 0,
+  "runtimePageErrors": 0,
+  "failedHTTPResponses": 0,
+  "fontFamilies": [
+    "Inter",
+    "Pixelify Sans",
+    "JetBrains Mono",
+    "Instrument Sans",
+    "Silkscreen"
+  ],
+  "fresh3DValidation": "Unavailable: Demo1 used WebGL fallback. Original walkthrough and source retained.",
+  "newWalkthroughs": [
+    "demo2: 57.3 seconds",
+    "demo4: 50.1 seconds"
+  ],
+  "originalWalkthroughs": [
+    "demo1/reference/walkthrough.mp4",
+    "demo5/site/reference/full-scroll.mp4"
+  ],
+  "limitations": [
+    "Random/time-dependent live states are not frame-identical across runs.",
+    "Capture videos have sampled/compressed frames and no audio.",
+    "OS/browser/GPU/emoji rasterization may differ.",
+    "Safari and real mobile compatibility were not newly verified."
+  ]
+}

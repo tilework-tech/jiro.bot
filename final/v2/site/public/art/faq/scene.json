@@ -1,0 +1,258 @@
+{
+ "id": "faq",
+ "size": [
+  360,
+  202
+ ],
+ "loop": 8000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [
+  {
+   "id": "jiro",
+   "src": "jiro.png",
+   "x": 222,
+   "y": 56,
+   "w": 68,
+   "h": 74,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    2600,
+    150,
+    5250
+   ],
+   "egg": "jiro",
+   "idle": {
+    "kind": "breathe",
+    "every": 10000,
+    "offset": 400
+   },
+   "motion": {
+    "kind": null,
+    "cut": "jiro-cut.png",
+    "under": "jiro-under.png",
+    "x": 218,
+    "y": 52,
+    "w": 76,
+    "h": 82,
+    "bottom": [
+     255.375,
+     129.375
+    ],
+    "top": [
+     255.375,
+     58.125
+    ]
+   }
+  },
+  {
+   "id": "jiro-react",
+   "src": "jiro-react.png",
+   "x": 222,
+   "y": 56,
+   "w": 68,
+   "h": 74,
+   "grain": 8,
+   "frames": 5,
+   "durations": [
+    100,
+    180,
+    200,
+    180,
+    340
+   ],
+   "trigger": true,
+   "egg": "jiro"
+  },
+  {
+   "id": "tuna",
+   "src": "tuna.png",
+   "x": 119,
+   "y": 98,
+   "w": 22,
+   "h": 14,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    2600,
+    500,
+    900
+   ]
+  },
+  {
+   "id": "salmon",
+   "src": "salmon.png",
+   "x": 144,
+   "y": 108,
+   "w": 22,
+   "h": 14,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    1400,
+    400,
+    2200
+   ]
+  },
+  {
+   "id": "ikura",
+   "src": "ikura.png",
+   "x": 170,
+   "y": 113,
+   "w": 21,
+   "h": 16,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    1800,
+    200,
+    2000
+   ]
+  },
+  {
+   "id": "maki",
+   "src": "maki.png",
+   "x": 195,
+   "y": 123,
+   "w": 22,
+   "h": 16,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    2600,
+    600,
+    800
+   ]
+  },
+  {
+   "id": "onigiri",
+   "src": "onigiri.png",
+   "x": 221,
+   "y": 130,
+   "w": 22,
+   "h": 18,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    1000,
+    700,
+    2300
+   ]
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "counter",
+   "x": 120,
+   "y": 150,
+   "w": 120,
+   "h": 10
+  },
+  {
+   "id": "floor",
+   "x": 40,
+   "y": 175,
+   "w": 80,
+   "h": 20
+  },
+  {
+   "id": "floor-front",
+   "x": 40,
+   "y": 185,
+   "w": 200,
+   "h": 15
+  }
+ ],
+ "eggs": [
+  {
+   "id": "jiro",
+   "name": "Jiro, at your service",
+   "x": 248,
+   "y": 57,
+   "w": 28,
+   "h": 26,
+   "sprite": "jiro",
+   "says": [
+    "Ask the plates. I answer.",
+    "Every question gets a straight answer."
+   ]
+  },
+  {
+   "id": "lantern",
+   "name": "Counter lantern",
+   "x": 191,
+   "y": 15,
+   "w": 19,
+   "h": 34,
+   "says": [
+    "Warm light, honest answers."
+   ]
+  },
+  {
+   "id": "jars",
+   "name": "Pickle jars",
+   "x": 142,
+   "y": 10,
+   "w": 30,
+   "h": 14,
+   "says": [
+    "Gari, umeboshi, and one jar of semicolons."
+   ]
+  },
+  {
+   "id": "bowls",
+   "name": "Stacked bowls",
+   "x": 149,
+   "y": 29,
+   "w": 23,
+   "h": 12,
+   "says": [
+    "Washed, dried, stacked. Like a clean merge."
+   ]
+  },
+  {
+   "id": "bottles",
+   "name": "Soy and vinegar",
+   "x": 129,
+   "y": 44,
+   "w": 12,
+   "h": 10,
+   "says": [
+    "Season to taste."
+   ]
+  },
+  {
+   "id": "rice",
+   "name": "A lost grain of rice",
+   "x": 66,
+   "y": 170,
+   "w": 12,
+   "h": 8,
+   "says": [
+    "Jiro will find it."
+   ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "steam",
+   "x": 258,
+   "y": 140,
+   "h": 12
+  },
+  {
+   "kind": "glow",
+   "x": 200.5,
+   "y": 32.0,
+   "r": 39.6,
+   "color": "#fdd081",
+   "period": 2.97,
+   "amp": 0.05
+  }
+ ]
+}

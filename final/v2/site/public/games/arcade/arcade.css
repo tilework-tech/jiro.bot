@@ -1,0 +1,50 @@
+@font-face { font-family:"Arcade JP"; font-style:normal; font-weight:400; font-display:swap; src:url("./japanese-labels.ttf") format("truetype"); }
+[lang="ja"], .noren span { font-family:"Arcade JP",serif; }
+:root { --ink:#192c39; --paper:#f3ecdd; --muted:#657077; --red:#a53f30; --salmon:#ff9b73; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--paper); color:var(--ink); font-family:'Instrument Sans',system-ui,sans-serif; }
+.wrap { max-width:1320px; margin:auto; padding:0 32px; }
+header { display:flex; align-items:center; justify-content:space-between; padding:22px 0; border-bottom:1px solid #cfc8b9; }
+.logo { font-family:'JetBrains Mono',monospace; font-weight:600; color:var(--ink); text-decoration:none; }
+.logo span { color:var(--red); }
+nav a { color:var(--ink); text-decoration:none; margin-left:24px; font-size:13px; }
+a:hover { text-decoration:underline; }
+a:focus-visible { outline:2px solid var(--red); outline-offset:5px; }
+.intro { text-align:center; padding:42px 0 34px; }
+.eyebrow,.menu-note,.counter-label,.badge { font-family:'JetBrains Mono',monospace; }
+.eyebrow { font-size:10px; letter-spacing:.12em; color:var(--red); text-transform:uppercase; }
+.eyebrow span { font-size:13px; letter-spacing:.2em; }
+h1 { font-family:'Fraunces',Georgia,serif; font-size:clamp(34px,4vw,54px); line-height:1.1; font-weight:500; letter-spacing:-.035em; margin:18px 0; }
+h1 em { font-weight:400; }
+.intro p { color:#515e63; font-size:14px; margin:0 auto; max-width:580px; line-height:1.6; }
+.counter-label { display:flex; align-items:center; gap:15px; border-top:1px solid #cfc8b9; padding:14px 0; font-size:10px; letter-spacing:.1em; color:#53606a; }
+.counter-label>span:first-child { font-size:15px; color:var(--ink); }
+.seal { margin-left:auto; border:2px solid var(--red); padding:4px; color:var(--red); font-size:15px; line-height:1; transform:rotate(-5deg); }
+.games { display:grid; grid-template-columns:1fr 1fr; align-items:start; gap:24px; padding-bottom:36px; }
+.game { min-width:0; overflow:hidden; background:#15252f; color:var(--paper); border:2px solid #15252f; border-radius:4px; padding:0 18px 18px; transition:border-color .15s; }
+.game.live { border-color:var(--salmon); }
+.noren { display:flex; gap:5px; height:35px; margin:0 -2px 20px; pointer-events:none; }
+.noren span { flex:1; display:grid; place-items:center; background:#29424f; color:#cbd0c8; border-radius:0 0 2px 2px; font-family:"Arcade JP",serif; font-size:16px; }
+.noren span:nth-child(2) { flex:1.35; }
+.game-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:16px; }
+.menu-note { font-size:9px; letter-spacing:.1em; color:#bbc5c4; }
+.menu-note span { font-size:11px; }
+.game h2 { font-family:'Fraunces',Georgia,serif; font-size:27px; font-weight:500; margin:3px 0 0; }
+.badge { flex-shrink:0; font-size:10px; color:#c6ceca; border:1px solid #5c707a; border-radius:3px; padding:5px 8px; }
+.badge::before { content:'○ '; }
+.game.live .badge { color:var(--salmon); border-color:var(--salmon); }
+.game.live .badge::before { content:'● '; }
+canvas { display:block; width:100%; height:auto; border:1px solid #52616a; border-radius:2px; cursor:crosshair; touch-action:none; }
+.game p { color:#c0c9c5; font-size:12px; line-height:1.65; margin:14px 0 0; }
+footer { display:flex; justify-content:space-between; gap:16px; border-top:1px solid #cfc8b9; padding:20px 0 28px; color:#53606a; font-size:11px; line-height:1.6; }
+footer span[lang] { color:var(--red); }
+body.focus-rush #daily, body.focus-daily #rush { display:none; }
+body.focus-rush .games, body.focus-daily .games { grid-template-columns:minmax(0, 720px); justify-content:center; }
+body.focus-rush .intro, body.focus-daily .intro { padding:12px 0 14px; }
+body.focus-rush .intro h1, body.focus-daily .intro h1 { font-size:28px; margin:7px 0; }
+body.focus-rush .intro p, body.focus-daily .intro p { font-size:12px; }
+body.focus-rush .counter-label, body.focus-daily .counter-label { padding:6px 0; }
+body.focus-rush header, body.focus-daily header { padding:8px 0; }
+@media (max-width:900px) { .games { grid-template-columns:1fr; } .wrap { max-width:720px; padding:0 20px; } }
+@media (max-width:480px) { .wrap { padding:0 12px; } .intro { padding:30px 0; } .eyebrow { font-size:8px; letter-spacing:.04em; } .eyebrow span { font-size:11px; } .counter-label { gap:8px; font-size:8px; } .game { padding:0 10px 14px; } .game h2 { font-size:24px; } footer { flex-direction:column; gap:6px; } }
+@media (prefers-reduced-motion:reduce) { .game { transition:none; } }

@@ -1,0 +1,5 @@
+# Python deps for pipeline/*.py and tools/**/*.py (verified versions from the original ~/.venv-sushi, Python 3.11).
+pillow==12.3.0
+numpy==2.4.6
+requests==2.34.2
+imageio-ffmpeg==0.6.0

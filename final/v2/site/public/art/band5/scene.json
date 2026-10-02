@@ -1,0 +1,116 @@
+{
+ "id": "band5",
+ "size": [
+  360,
+  125
+ ],
+ "loop": 8000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [
+  {
+   "id": "peeker",
+   "src": "peeker.png",
+   "x": 118,
+   "y": 3,
+   "w": 20,
+   "h": 17,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    2800,
+    200,
+    5000
+   ],
+   "egg": "peeker",
+   "motion": {
+    "kind": "stretch",
+    "cut": "peeker-cut.png",
+    "under": "peeker-under.png",
+    "x": 115,
+    "y": 1,
+    "w": 26,
+    "h": 22,
+    "bottom": [
+     128.5,
+     20.875
+    ],
+    "top": [
+     128.5,
+     3.625
+    ]
+   }
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "rail",
+   "x": 150,
+   "y": 95,
+   "w": 120,
+   "h": 5
+  }
+ ],
+ "eggs": [
+  {
+   "id": "peeker",
+   "name": "Over the wall",
+   "x": 119,
+   "y": 4,
+   "w": 18,
+   "h": 15,
+   "sprite": "peeker",
+   "says": [
+    "(hides)"
+   ]
+  },
+  {
+   "id": "wall-lantern",
+   "name": "Wall lantern",
+   "x": 112,
+   "y": 55,
+   "w": 18,
+   "h": 24,
+   "says": [
+    "Almost there."
+   ]
+  },
+  {
+   "id": "fly",
+   "name": "Firefly",
+   "x": 188,
+   "y": 60,
+   "w": 8,
+   "h": 8,
+   "says": [
+    "*blink*"
+   ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "fireflies",
+   "area": {
+    "x": 120,
+    "y": 20,
+    "w": 200,
+    "h": 70
+   },
+   "n": 4,
+   "swarmEvery": 30
+  },
+  {
+   "kind": "glow",
+   "x": 121.0,
+   "y": 67.0,
+   "r": 28.6,
+   "color": "#fdd081",
+   "period": 2.97,
+   "amp": 0.05
+  }
+ ]
+}

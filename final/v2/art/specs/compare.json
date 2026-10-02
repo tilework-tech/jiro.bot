@@ -1,0 +1,162 @@
+{
+ "master": "art/gen/compare/compare-shift-fill.jpg",
+ "base": "art/work/compare/base.png",
+ "groups": "warm,cool,accents,plates,neutrals",
+ "cool_gate": 22,
+ "sprites": {
+  "cat": {
+   "grain": 8,
+   "crop": [
+    90,
+    178,
+    40,
+    24
+   ],
+   "roi": [
+    95,
+    182,
+    29,
+    18
+   ],
+   "mask_prompt": "Isolate the sleeping tabby cat on its cushion: keep only the cat and the cushion.",
+   "frames": [
+    "the tabby cat lifts its head and opens its eyes."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "egg": "cat",
+   "motion": "stretch",
+   "subject": "sleeping tabby cat (only the cat, not the cushion)"
+  }
+ },
+ "scene": {
+  "surfaces": [
+   {
+    "id": "table",
+    "x": 156,
+    "y": 121,
+    "w": 48,
+    "h": 14
+   },
+   {
+    "id": "table-left",
+    "x": 26,
+    "y": 119,
+    "w": 48,
+    "h": 14
+   },
+   {
+    "id": "table-right",
+    "x": 282,
+    "y": 118,
+    "w": 50,
+    "h": 12
+   },
+   {
+    "id": "ledge",
+    "x": 0,
+    "y": 180,
+    "w": 300,
+    "h": 18
+   }
+  ],
+  "eggs": [
+   {
+    "id": "cat",
+    "name": "Woke the dining-room cat",
+    "x": 96,
+    "y": 183,
+    "w": 27,
+    "h": 16,
+    "sprite": "cat",
+    "says": [
+     "mrrp?"
+    ]
+   },
+   {
+    "id": "soy",
+    "name": "Soy for one",
+    "x": 169,
+    "y": 181,
+    "w": 24,
+    "h": 14,
+    "says": [
+     "Low sodium. Like the diff."
+    ]
+   },
+   {
+    "id": "soy-left",
+    "name": "Shichimi, soy, vinegar",
+    "x": 31,
+    "y": 181,
+    "w": 18,
+    "h": 14,
+    "says": [
+     "Season to taste. Not to spec."
+    ]
+   },
+   {
+    "id": "tea",
+    "name": "Fresh tea",
+    "x": 344,
+    "y": 184,
+    "w": 11,
+    "h": 16,
+    "says": [
+     "H\u014djicha. Always."
+    ]
+   },
+   {
+    "id": "tea-mid",
+    "name": "Refill, please",
+    "x": 211,
+    "y": 190,
+    "w": 10,
+    "h": 10,
+    "says": [
+     "Another h\u014djicha?"
+    ]
+   },
+   {
+    "id": "last-sushi",
+    "name": "The last piece",
+    "x": 14,
+    "y": 195,
+    "w": 15,
+    "h": 7,
+    "says": [
+     "Nobody takes the last piece."
+    ]
+   },
+   {
+    "id": "bowl",
+    "name": "Miso at the end of the row",
+    "x": 329,
+    "y": 194,
+    "w": 17,
+    "h": 8,
+    "says": [
+     "Still warm."
+    ]
+   }
+  ],
+  "fx": [
+   {
+    "kind": "steam",
+    "x": 78,
+    "y": 180,
+    "h": 12
+   },
+   {
+    "kind": "steam",
+    "x": 349,
+    "y": 184,
+    "h": 12
+   }
+  ]
+ }
+}

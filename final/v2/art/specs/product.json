@@ -1,0 +1,297 @@
+{
+ "master": "art/gen/hd/product-half-fill.jpg",
+ "base": "art/work/product/base.png",
+ "groups": "warm,cool,accents,plates,neutrals",
+ "sprites": {
+  "jiro": {
+   "grain": 8,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    302,
+    123,
+    43,
+    56
+   ],
+   "roi": [
+    305,
+    126,
+    37,
+    50
+   ],
+   "frame_rois": [
+    [
+     316,
+     140,
+     12,
+     6
+    ],
+    [
+     305,
+     156,
+     22,
+     12
+    ],
+    [
+     316,
+     146,
+     12,
+     8
+    ]
+   ],
+   "mask_prompt": "Isolate the robot: keep only the robot (head, headband, body, arms and hands).",
+   "frames": [
+    "the robot's two glowing cyan eyes blink: each becomes a thin dark horizontal line.",
+    "the robot's copper fingers press different keys on the keyboard, a few fingers lifted.",
+    "the robot's plain copper jaw plate is lowered by a tiny amount, as if speaking. No mouth, no teeth."
+   ],
+   "keep": [
+    0,
+    2,
+    0,
+    2,
+    0,
+    1,
+    0,
+    2
+   ],
+   "durations": [
+    900,
+    300,
+    900,
+    300,
+    2600,
+    150,
+    1550,
+    1300
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     3,
+     0,
+     3,
+     0
+    ],
+    "durations": [
+     100,
+     300,
+     300,
+     300,
+     1000
+    ]
+   },
+   "egg": "jiro"
+  },
+  "shelf-soot": {
+   "crop": [
+    344,
+    114,
+    16,
+    17
+   ],
+   "roi": [
+    346,
+    116,
+    12,
+    12
+   ],
+   "model": "gemini-3-pro-image",
+   "frames": [
+    "the sleeping black soot sprite opens its big white eyes wide.",
+    "the sleeping soot sprite's fuzzy body puffs up slightly as it breathes in."
+   ],
+   "keep": [
+    0,
+    2
+   ],
+   "durations": [
+    2000,
+    2000
+   ],
+   "egg": "shelf-soot",
+   "grain": 8,
+   "motion": "hop",
+   "subject": "small black fuzzy soot sprite sitting on the shelf"
+  },
+  "lucky-cat": {
+   "crop": [
+    336,
+    109,
+    14,
+    15
+   ],
+   "roi": [
+    339,
+    112,
+    8,
+    11
+   ],
+   "frames": [
+    "the white lucky cat raises its beckoning paw higher.",
+    "the white lucky cat lowers its beckoning paw."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "egg": "lucky-cat",
+   "grain": 8,
+   "motion": "wobble",
+   "subject": "small white lucky cat figurine"
+  },
+  "plant": {
+   "crop": [
+    327,
+    101,
+    17,
+    17
+   ],
+   "roi": [
+    330,
+    102,
+    11,
+    13
+   ],
+   "frames": [
+    "the potted plant's leaves sway to the left.",
+    "the potted plant's leaves sway to the right."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "egg": "plant",
+   "grain": 8,
+   "motion": "wobble",
+   "subject": "small potted plant"
+  },
+  "notes": {
+   "crop": [
+    292,
+    129,
+    20,
+    20
+   ],
+   "roi": [
+    296,
+    132,
+    14,
+    14
+   ],
+   "frames": [
+    "one of the yellow sticky notes on the wall flutters and curls up at its corner."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "egg": "notes",
+   "grain": 8,
+   "motion": "swing",
+   "subject": "yellow sticky notes"
+  }
+ },
+ "scene": {
+  "surfaces": [
+   {
+    "id": "desk",
+    "x": 325,
+    "y": 177,
+    "w": 15,
+    "h": 7
+   },
+   {
+    "id": "floor",
+    "x": 200,
+    "y": 194,
+    "w": 80,
+    "h": 7
+   }
+  ],
+  "eggs": [
+   {
+    "id": "jiro",
+    "name": "Interrupted Jiro mid-commit",
+    "x": 309,
+    "y": 127,
+    "w": 28,
+    "h": 30,
+    "sprite": "jiro",
+    "says": [
+     "One sec, I'm reading the failing test.",
+     "I'll open a draft PR.",
+     "Small, reviewable diffs."
+    ]
+   },
+   {
+    "id": "lucky-cat",
+    "name": "Desk lucky cat",
+    "x": 339,
+    "y": 112,
+    "w": 8,
+    "h": 11,
+    "sprite": "lucky-cat"
+   },
+   {
+    "id": "plant",
+    "name": "Watered the desk plant",
+    "x": 330,
+    "y": 102,
+    "w": 11,
+    "h": 13,
+    "sprite": "plant"
+   },
+   {
+    "id": "notes",
+    "name": "Read the sticky notes",
+    "x": 296,
+    "y": 132,
+    "w": 14,
+    "h": 14,
+    "sprite": "notes",
+    "says": [
+     "TODO: fewer TODOs",
+     "run the tests first"
+    ]
+   },
+   {
+    "id": "shelf-soot",
+    "name": "Woke the shelf sprite",
+    "x": 346,
+    "y": 116,
+    "w": 12,
+    "h": 12,
+    "sprite": "shelf-soot"
+   },
+   {
+    "id": "tea",
+    "name": "Jiro's tea",
+    "x": 311,
+    "y": 172,
+    "w": 8,
+    "h": 11,
+    "says": [
+     "Genmaicha. Correct choice."
+    ]
+   }
+  ],
+  "fx": [
+   {
+    "kind": "glow",
+    "x": 299.0,
+    "y": 116.0,
+    "r": 28.6,
+    "color": "#fdd081",
+    "period": 2.6,
+    "amp": 0.05
+   }
+  ]
+ },
+ "cool_gate": 22
+}

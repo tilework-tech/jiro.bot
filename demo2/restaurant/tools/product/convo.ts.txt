@@ -1,0 +1,128 @@
+if (state !== 'landing' && !done) {
+  chatStore.activeTranscriptId = 'flaky-checkout';
+  chatStore.activeSessionUrl = 'https://box.example.test';
+  chatStore.contextUsage = { used: 48_900, size: 200_000 };
+  chatStore.firstTranscriptPrompt =
+    '@nori checkout.spec.ts has failed 3 of the last 10 CI runs on acme/checkout. Find out why and fix it.';
+  chatStore.messages.push(
+    {
+      id: 'u1',
+      role: 'user',
+      text: '@nori checkout.spec.ts has failed 3 of the last 10 CI runs on acme/checkout. Find out why and fix it.',
+      createdAt: now - minutes(11),
+    },
+    {
+      id: 'th1',
+      role: 'thought',
+      text: 'Start from the CI logs of the failing runs, then read the spec and the payment mock it waits on.',
+    },
+    { id: 't1', role: 'tool', toolCallId: 'c1', title: 'Ran gh run list --workflow ci.yml --limit 10', status: 'completed' },
+    { id: 't2', role: 'tool', toolCallId: 'c2', title: 'Read tests/e2e/checkout.spec.ts', status: 'completed' },
+    { id: 't3', role: 'tool', toolCallId: 'c3', title: 'Search "waitForTimeout" in tests/', status: 'completed' },
+    {
+      id: 'a1',
+      role: 'assistant',
+      streaming: false,
+      createdAt: now - minutes(7),
+      text: `Found it. All three failures time out on the same step: **"Pay now" is clicked before the payment iframe finishes loading.**
+
+| Run | Failed step | Waited |
+| --- | --- | --- |
+| #4812 | \`click Pay now\` | 5.0s |
+| #4797 | \`click Pay now\` | 5.0s |
+| #4790 | \`click Pay now\` | 5.0s |
+
+The spec sleeps a fixed 500ms instead of waiting for the iframe:
+
+\`\`\`ts
+await page.waitForTimeout(500);
+await page.getByRole('button', { name: 'Pay now' }).click();
+\`\`\`
+
+I'll replace the sleep with a wait on the iframe's ready event and run the spec 50 times to be sure.`,
+    },
+    {
+      id: 'u2',
+      role: 'user',
+      text: 'Sounds right. Keep the fix to the test, the checkout code is fine.',
+      createdAt: now - minutes(5),
+    },
+    { id: 'th2', role: 'thought', text: 'Only the spec changes; wait for the frame, not a timer.' },
+    { id: 't5', role: 'tool', toolCallId: 'c5', title: 'Edit tests/e2e/checkout.spec.ts', status: 'completed' },
+    { id: 't6', role: 'tool', toolCallId: 'c6', title: 'Ran npx playwright test checkout.spec.ts --repeat-each=50', status: 'in_progress' },
+    {
+      id: 'a2',
+      role: 'assistant',
+      streaming,
+      text: 'The spec now waits for the payment frame to report ready before clicking "Pay now". Running it 50 times in a row: 31 passed so far, none failed, and',
+    },
+  );
+  chatStore.artifacts.push({
+    id: 'art1',
+    ownerId: 'a1',
+    kind: 'code',
+    title: 'checkout.spec.ts',
+    language: 'ts',
+    content: `test('pays with a saved card', async ({ page }) => {
+  await page.goto('/checkout');
+  const frame = page.frameLocator('#payment-frame');
+  await expect(frame.getByTestId('card-ready')).toBeVisible();
+  await page.getByRole('button', { name: 'Pay now' }).click();
+  await expect(page.getByText('Order confirmed')).toBeVisible();
+});`,
+  });
+  chatStore.isStreaming = streaming;
+}
+
+if (done) {
+  chatStore.activeTranscriptId = 'tuna-inventory';
+  chatStore.activeSessionUrl = 'https://box.example.test';
+  chatStore.contextUsage = { used: 92_300, size: 200_000 };
+  chatStore.firstTranscriptPrompt =
+    'Refactor the tuna-inventory service: split stock reservations out of InventoryService and add tests. Open a PR on acme/checkout.';
+  chatStore.messages.push(
+    {
+      id: 'u1',
+      role: 'user',
+      text: 'Refactor the tuna-inventory service: split stock reservations out of InventoryService and add tests. Open a PR on acme/checkout.',
+      createdAt: now - minutes(58),
+    },
+    { id: 'th1', role: 'thought', text: 'Map every caller of reserve() and release() before moving anything.' },
+    { id: 't1', role: 'tool', toolCallId: 'c1', title: 'Search "inventory.reserve(" in services/', status: 'completed' },
+    { id: 't2', role: 'tool', toolCallId: 'c2', title: 'Read services/tuna-inventory/src/InventoryService.ts', status: 'completed' },
+    { id: 't3', role: 'tool', toolCallId: 'c3', title: 'Edit services/tuna-inventory/src/ReservationService.ts', status: 'completed' },
+    { id: 't4', role: 'tool', toolCallId: 'c4', title: 'Edit services/tuna-inventory/src/InventoryService.ts', status: 'completed' },
+    { id: 't5', role: 'tool', toolCallId: 'c5', title: 'Ran pnpm test --filter tuna-inventory', status: 'completed' },
+    { id: 't6', role: 'tool', toolCallId: 'c6', title: 'Ran gh pr create --fill', status: 'completed' },
+    {
+      id: 'a1',
+      role: 'assistant',
+      streaming: false,
+      createdAt: now - minutes(34),
+      text: `Done. PR is open and CI is green: [acme/checkout#2231](https://github.com/acme/checkout/pull/2231)
+
+- **ReservationService** now owns \`reserve()\`, \`release()\` and the 15-minute hold expiry.
+- **InventoryService** only tracks stock levels; it dropped from 640 to 210 lines.
+- 18 new unit tests, including the double-release race that caused last week's oversell.
+
+| Package | Tests | Coverage |
+| --- | --- | --- |
+| tuna-inventory | 64 passed | 71% → 88% |
+| checkout-api | 212 passed | unchanged |
+
+No API changes, so no callers needed updating.`,
+    },
+  );
+  chatStore.artifacts.push({
+    id: 'art-pr',
+    ownerId: 'a1',
+    kind: 'pull_request',
+    title: 'Split reservations out of InventoryService',
+    url: 'https://github.com/acme/checkout/pull/2231',
+    owner: 'acme',
+    repository: 'checkout',
+    number: 2231,
+  });
+  chatStore.isStreaming = false;
+}
+

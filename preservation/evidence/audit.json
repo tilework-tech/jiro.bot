@@ -1,0 +1,1449 @@
+{
+  "capturedAt": "2026-09-30T22:03:44.863Z",
+  "browser": "154.0.8037.57",
+  "viewport": {
+    "width": 1600,
+    "height": 900
+  },
+  "dpr": 1,
+  "externalNetwork": "blocked",
+  "sourceCommit": "03ddbab",
+  "demos": {
+    "demo1": {
+      "has3d": false,
+      "url": "http://127.0.0.1:3201/demo1/fallback/",
+      "note": "WebGL unavailable; original saved 3D walkthrough remains authoritative"
+    },
+    "demo2": {
+      "segments": [
+        {
+          "id": "bar",
+          "start": 0,
+          "len": 1.2
+        },
+        {
+          "id": "bar>office",
+          "start": 1.2,
+          "len": 0.9
+        },
+        {
+          "id": "office",
+          "start": 2.1,
+          "len": 1.6
+        },
+        {
+          "id": "office>dining",
+          "start": 3.7,
+          "len": 2
+        },
+        {
+          "id": "dining",
+          "start": 5.7,
+          "len": 1.3
+        },
+        {
+          "id": "dining>kitchen",
+          "start": 7,
+          "len": 0.7
+        },
+        {
+          "id": "kitchen",
+          "start": 7.7,
+          "len": 1.6
+        },
+        {
+          "id": "kitchen>storage",
+          "start": 9.3,
+          "len": 0.7
+        },
+        {
+          "id": "storage",
+          "start": 10,
+          "len": 1.1
+        },
+        {
+          "id": "storage>pantry",
+          "start": 11.1,
+          "len": 0.35
+        },
+        {
+          "id": "pantry",
+          "start": 11.45,
+          "len": 1.5
+        },
+        {
+          "id": "pantry>street",
+          "start": 12.95,
+          "len": 0.7
+        },
+        {
+          "id": "street",
+          "start": 13.649999999999999,
+          "len": 1.6
+        },
+        {
+          "id": "street>pond",
+          "start": 15.249999999999998,
+          "len": 0.8
+        },
+        {
+          "id": "pond",
+          "start": 16.049999999999997,
+          "len": 1.8
+        }
+      ],
+      "shots": [
+        {
+          "file": "scene-bar-5.jpg",
+          "position": {
+            "segment": "bar",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.280399999999441
+        },
+        {
+          "file": "transition-bar-office-1.jpg",
+          "position": {
+            "segment": "bar>office",
+            "progress": 0.1,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.3108000000007451
+        },
+        {
+          "file": "transition-bar-office-25.jpg",
+          "position": {
+            "segment": "bar>office",
+            "progress": 0.25,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.5292000000001862
+        },
+        {
+          "file": "transition-bar-office-5.jpg",
+          "position": {
+            "segment": "bar>office",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.0869000000003726
+        },
+        {
+          "file": "transition-bar-office-75.jpg",
+          "position": {
+            "segment": "bar>office",
+            "progress": 0.75,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.1127999999998137
+        },
+        {
+          "file": "transition-bar-office-9.jpg",
+          "position": {
+            "segment": "bar>office",
+            "progress": 0.9,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.1918999999994413
+        },
+        {
+          "file": "scene-office-5.jpg",
+          "position": {
+            "segment": "office",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.116199999999255
+        },
+        {
+          "file": "transition-office-dining-1.jpg",
+          "position": {
+            "segment": "office>dining",
+            "progress": 0.1,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.1542999999998138
+        },
+        {
+          "file": "transition-office-dining-25.jpg",
+          "position": {
+            "segment": "office>dining",
+            "progress": 0.25,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.1972000000001863
+        },
+        {
+          "file": "transition-office-dining-5.jpg",
+          "position": {
+            "segment": "office>dining",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.2126000000005588
+        },
+        {
+          "file": "transition-office-dining-75.jpg",
+          "position": {
+            "segment": "office>dining",
+            "progress": 0.75,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.1715
+        },
+        {
+          "file": "transition-office-dining-9.jpg",
+          "position": {
+            "segment": "office>dining",
+            "progress": 0.9,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.2663999999994413
+        },
+        {
+          "file": "scene-dining-5.jpg",
+          "position": {
+            "segment": "dining",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.5802999999998137
+        },
+        {
+          "file": "transition-dining-kitchen-1.jpg",
+          "position": {
+            "segment": "dining>kitchen",
+            "progress": 0.1,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.1002999999998138
+        },
+        {
+          "file": "transition-dining-kitchen-25.jpg",
+          "position": {
+            "segment": "dining>kitchen",
+            "progress": 0.25,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9822000000001863
+        },
+        {
+          "file": "transition-dining-kitchen-5.jpg",
+          "position": {
+            "segment": "dining>kitchen",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.6914000000003726
+        },
+        {
+          "file": "transition-dining-kitchen-75.jpg",
+          "position": {
+            "segment": "dining>kitchen",
+            "progress": 0.75,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.1020999999996275
+        },
+        {
+          "file": "transition-dining-kitchen-9.jpg",
+          "position": {
+            "segment": "dining>kitchen",
+            "progress": 0.9,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.1982999999998136
+        },
+        {
+          "file": "scene-kitchen-5.jpg",
+          "position": {
+            "segment": "kitchen",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.957
+        },
+        {
+          "file": "transition-kitchen-storage-1.jpg",
+          "position": {
+            "segment": "kitchen>storage",
+            "progress": 0.1,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.750699999999255
+        },
+        {
+          "file": "transition-kitchen-storage-25.jpg",
+          "position": {
+            "segment": "kitchen>storage",
+            "progress": 0.25,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.172
+        },
+        {
+          "file": "transition-kitchen-storage-5.jpg",
+          "position": {
+            "segment": "kitchen>storage",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.4539000000003726
+        },
+        {
+          "file": "transition-kitchen-storage-75.jpg",
+          "position": {
+            "segment": "kitchen>storage",
+            "progress": 0.75,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.5453999999994412
+        },
+        {
+          "file": "transition-kitchen-storage-9.jpg",
+          "position": {
+            "segment": "kitchen>storage",
+            "progress": 0.9,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.3592999999998137
+        },
+        {
+          "file": "scene-storage-5.jpg",
+          "position": {
+            "segment": "storage",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.928
+        },
+        {
+          "file": "transition-storage-pantry-1.jpg",
+          "position": {
+            "segment": "storage>pantry",
+            "progress": 0.1,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.973
+        },
+        {
+          "file": "transition-storage-pantry-25.jpg",
+          "position": {
+            "segment": "storage>pantry",
+            "progress": 0.25,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9185
+        },
+        {
+          "file": "transition-storage-pantry-5.jpg",
+          "position": {
+            "segment": "storage>pantry",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9610999999996275
+        },
+        {
+          "file": "transition-storage-pantry-75.jpg",
+          "position": {
+            "segment": "storage>pantry",
+            "progress": 0.75,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.8319000000003726
+        },
+        {
+          "file": "transition-storage-pantry-9.jpg",
+          "position": {
+            "segment": "storage>pantry",
+            "progress": 0.9,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9730999999996275
+        },
+        {
+          "file": "scene-pantry-5.jpg",
+          "position": {
+            "segment": "pantry",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.96
+        },
+        {
+          "file": "transition-pantry-street-1.jpg",
+          "position": {
+            "segment": "pantry>street",
+            "progress": 0.1,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9820999999996275
+        },
+        {
+          "file": "transition-pantry-street-25.jpg",
+          "position": {
+            "segment": "pantry>street",
+            "progress": 0.25,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.0282000000001863
+        },
+        {
+          "file": "transition-pantry-street-5.jpg",
+          "position": {
+            "segment": "pantry>street",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9013999999994412
+        },
+        {
+          "file": "transition-pantry-street-75.jpg",
+          "position": {
+            "segment": "pantry>street",
+            "progress": 0.75,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.8944000000003726
+        },
+        {
+          "file": "transition-pantry-street-9.jpg",
+          "position": {
+            "segment": "pantry>street",
+            "progress": 0.9,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.0745
+        },
+        {
+          "file": "scene-street-5.jpg",
+          "position": {
+            "segment": "street",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9147999999998138
+        },
+        {
+          "file": "transition-street-pond-1.jpg",
+          "position": {
+            "segment": "street>pond",
+            "progress": 0.1,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.3235999999996275
+        },
+        {
+          "file": "transition-street-pond-25.jpg",
+          "position": {
+            "segment": "street>pond",
+            "progress": 0.25,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.1472999999998137
+        },
+        {
+          "file": "transition-street-pond-5.jpg",
+          "position": {
+            "segment": "street>pond",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.7914000000003725
+        },
+        {
+          "file": "transition-street-pond-75.jpg",
+          "position": {
+            "segment": "street>pond",
+            "progress": 0.75,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.279
+        },
+        {
+          "file": "transition-street-pond-9.jpg",
+          "position": {
+            "segment": "street>pond",
+            "progress": 0.9,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.2645999999996276
+        },
+        {
+          "file": "scene-pond-5.jpg",
+          "position": {
+            "segment": "pond",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9867000000001863
+        }
+      ],
+      "fontStatus": "loaded",
+      "fonts": [
+        {
+          "family": "Instrument Sans",
+          "weight": "400 700"
+        },
+        {
+          "family": "JetBrains Mono",
+          "weight": "400"
+        },
+        {
+          "family": "Silkscreen",
+          "weight": "400"
+        }
+      ],
+      "pageErrors": []
+    },
+    "demo4": {
+      "segments": [
+        {
+          "id": "bar",
+          "start": 0,
+          "len": 1.2
+        },
+        {
+          "id": "bar>office",
+          "start": 1.2,
+          "len": 1.5
+        },
+        {
+          "id": "office",
+          "start": 2.7,
+          "len": 1.6
+        },
+        {
+          "id": "office>dining",
+          "start": 4.300000000000001,
+          "len": 1.6
+        },
+        {
+          "id": "dining",
+          "start": 5.9,
+          "len": 1.6
+        },
+        {
+          "id": "dining>kitchen",
+          "start": 7.5,
+          "len": 1.4
+        },
+        {
+          "id": "kitchen",
+          "start": 8.9,
+          "len": 1.6
+        },
+        {
+          "id": "kitchen>storage",
+          "start": 10.5,
+          "len": 1.4
+        },
+        {
+          "id": "storage",
+          "start": 11.9,
+          "len": 1.6
+        },
+        {
+          "id": "storage>street",
+          "start": 13.5,
+          "len": 1.4
+        },
+        {
+          "id": "street",
+          "start": 14.9,
+          "len": 1.6
+        },
+        {
+          "id": "street>pond",
+          "start": 16.5,
+          "len": 1.4
+        },
+        {
+          "id": "pond",
+          "start": 17.9,
+          "len": 1.8
+        }
+      ],
+      "shots": [
+        {
+          "file": "scene-bar-5.jpg",
+          "position": {
+            "segment": "bar",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.8270999999996275
+        },
+        {
+          "file": "transition-bar-office-1.jpg",
+          "position": {
+            "segment": "bar>office",
+            "progress": 0.1,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9781000000005587
+        },
+        {
+          "file": "transition-bar-office-25.jpg",
+          "position": {
+            "segment": "bar>office",
+            "progress": 0.25,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.0789000000003726
+        },
+        {
+          "file": "transition-bar-office-5.jpg",
+          "position": {
+            "segment": "bar>office",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.1556000000005588
+        },
+        {
+          "file": "transition-bar-office-75.jpg",
+          "position": {
+            "segment": "bar>office",
+            "progress": 0.75,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9207000000001863
+        },
+        {
+          "file": "transition-bar-office-9.jpg",
+          "position": {
+            "segment": "bar>office",
+            "progress": 0.9,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.989
+        },
+        {
+          "file": "scene-office-5.jpg",
+          "position": {
+            "segment": "office",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.763
+        },
+        {
+          "file": "transition-office-dining-1.jpg",
+          "position": {
+            "segment": "office>dining",
+            "progress": 0.1,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.0401000000005587
+        },
+        {
+          "file": "transition-office-dining-25.jpg",
+          "position": {
+            "segment": "office>dining",
+            "progress": 0.25,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9267000000001863
+        },
+        {
+          "file": "transition-office-dining-5.jpg",
+          "position": {
+            "segment": "office>dining",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.0894000000003725
+        },
+        {
+          "file": "transition-office-dining-75.jpg",
+          "position": {
+            "segment": "office>dining",
+            "progress": 0.75,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.0757000000001862
+        },
+        {
+          "file": "transition-office-dining-9.jpg",
+          "position": {
+            "segment": "office>dining",
+            "progress": 0.9,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.1065
+        },
+        {
+          "file": "scene-dining-5.jpg",
+          "position": {
+            "segment": "dining",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.109699999999255
+        },
+        {
+          "file": "transition-dining-kitchen-1.jpg",
+          "position": {
+            "segment": "dining>kitchen",
+            "progress": 0.1,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9134000000003726
+        },
+        {
+          "file": "transition-dining-kitchen-25.jpg",
+          "position": {
+            "segment": "dining>kitchen",
+            "progress": 0.25,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.803
+        },
+        {
+          "file": "transition-dining-kitchen-5.jpg",
+          "position": {
+            "segment": "dining>kitchen",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.8712000000001863
+        },
+        {
+          "file": "transition-dining-kitchen-75.jpg",
+          "position": {
+            "segment": "dining>kitchen",
+            "progress": 0.75,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.8053999999994412
+        },
+        {
+          "file": "transition-dining-kitchen-9.jpg",
+          "position": {
+            "segment": "dining>kitchen",
+            "progress": 0.9,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.8635
+        },
+        {
+          "file": "scene-kitchen-5.jpg",
+          "position": {
+            "segment": "kitchen",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.1866000000005588
+        },
+        {
+          "file": "transition-kitchen-storage-1.jpg",
+          "position": {
+            "segment": "kitchen>storage",
+            "progress": 0.1,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.978
+        },
+        {
+          "file": "transition-kitchen-storage-25.jpg",
+          "position": {
+            "segment": "kitchen>storage",
+            "progress": 0.25,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9502999999998137
+        },
+        {
+          "file": "transition-kitchen-storage-5.jpg",
+          "position": {
+            "segment": "kitchen>storage",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.8631999999992549
+        },
+        {
+          "file": "transition-kitchen-storage-75.jpg",
+          "position": {
+            "segment": "kitchen>storage",
+            "progress": 0.75,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9876000000005588
+        },
+        {
+          "file": "transition-kitchen-storage-9.jpg",
+          "position": {
+            "segment": "kitchen>storage",
+            "progress": 0.9,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.2192999999998138
+        },
+        {
+          "file": "scene-storage-5.jpg",
+          "position": {
+            "segment": "storage",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9258999999994412
+        },
+        {
+          "file": "transition-storage-street-1.jpg",
+          "position": {
+            "segment": "storage>street",
+            "progress": 0.1,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.1472999999998137
+        },
+        {
+          "file": "transition-storage-street-25.jpg",
+          "position": {
+            "segment": "storage>street",
+            "progress": 0.25,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.2032999999998137
+        },
+        {
+          "file": "transition-storage-street-5.jpg",
+          "position": {
+            "segment": "storage>street",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.2129000000003725
+        },
+        {
+          "file": "transition-storage-street-75.jpg",
+          "position": {
+            "segment": "storage>street",
+            "progress": 0.75,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.9655
+        },
+        {
+          "file": "transition-storage-street-9.jpg",
+          "position": {
+            "segment": "storage>street",
+            "progress": 0.9,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.8930999999996275
+        },
+        {
+          "file": "scene-street-5.jpg",
+          "position": {
+            "segment": "street",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.8817999999998137
+        },
+        {
+          "file": "transition-street-pond-1.jpg",
+          "position": {
+            "segment": "street>pond",
+            "progress": 0.1,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.253
+        },
+        {
+          "file": "transition-street-pond-25.jpg",
+          "position": {
+            "segment": "street>pond",
+            "progress": 0.25,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.0288000000007451
+        },
+        {
+          "file": "transition-street-pond-5.jpg",
+          "position": {
+            "segment": "street>pond",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.1133000000007451
+        },
+        {
+          "file": "transition-street-pond-75.jpg",
+          "position": {
+            "segment": "street>pond",
+            "progress": 0.75,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.0895999999996275
+        },
+        {
+          "file": "transition-street-pond-9.jpg",
+          "position": {
+            "segment": "street>pond",
+            "progress": 0.9,
+            "engineSeconds": 5
+          },
+          "atSeconds": 1.0279000000003726
+        },
+        {
+          "file": "scene-pond-5.jpg",
+          "position": {
+            "segment": "pond",
+            "progress": 0.5,
+            "engineSeconds": 5
+          },
+          "atSeconds": 0.8173000000007451
+        }
+      ],
+      "fontStatus": "loaded",
+      "fonts": [
+        {
+          "family": "Instrument Sans",
+          "weight": "400 700"
+        },
+        {
+          "family": "JetBrains Mono",
+          "weight": "400"
+        },
+        {
+          "family": "Silkscreen",
+          "weight": "400"
+        }
+      ],
+      "pageErrors": []
+    },
+    "demo5": {
+      "sections": [
+        {
+          "id": "hero",
+          "kind": "scene",
+          "top": 0,
+          "height": 900
+        },
+        {
+          "id": "pass-0",
+          "kind": "transition",
+          "top": 900,
+          "height": 450
+        },
+        {
+          "id": "demo",
+          "kind": "scene",
+          "top": 1350,
+          "height": 900
+        },
+        {
+          "id": "pass-1",
+          "kind": "transition",
+          "top": 2250,
+          "height": 450
+        },
+        {
+          "id": "restaurant",
+          "kind": "scene",
+          "top": 2700,
+          "height": 900
+        },
+        {
+          "id": "pass-2",
+          "kind": "transition",
+          "top": 3600,
+          "height": 450
+        },
+        {
+          "id": "compare",
+          "kind": "scene",
+          "top": 4050,
+          "height": 900
+        },
+        {
+          "id": "pass-3",
+          "kind": "transition",
+          "top": 4950,
+          "height": 450
+        },
+        {
+          "id": "faq",
+          "kind": "scene",
+          "top": 5400,
+          "height": 900
+        },
+        {
+          "id": "pass-4",
+          "kind": "transition",
+          "top": 6300,
+          "height": 450
+        },
+        {
+          "id": "pricing",
+          "kind": "scene",
+          "top": 6750,
+          "height": 900
+        },
+        {
+          "id": "pass-5",
+          "kind": "transition",
+          "top": 7650,
+          "height": 450
+        },
+        {
+          "id": "pond",
+          "kind": "scene",
+          "top": 8100,
+          "height": 900
+        }
+      ],
+      "captureOnly": "scroll event propagation suppressed to prevent idle snap during passage stills; app files unchanged",
+      "shots": [
+        {
+          "file": "scene-hero-0.jpg",
+          "position": {
+            "id": "hero",
+            "kind": "scene",
+            "top": 0,
+            "height": 900,
+            "scrollY": 0
+          },
+          "atSeconds": 3.7247999999998136
+        },
+        {
+          "file": "transition-pass-0-0.jpg",
+          "position": {
+            "id": "pass-0",
+            "kind": "transition",
+            "top": 900,
+            "height": 450,
+            "scrollY": 495
+          },
+          "atSeconds": 4.257699999999255
+        },
+        {
+          "file": "transition-pass-0-1.jpg",
+          "position": {
+            "id": "pass-0",
+            "kind": "transition",
+            "top": 900,
+            "height": 450,
+            "scrollY": 562.5
+          },
+          "atSeconds": 4.851399999999441
+        },
+        {
+          "file": "transition-pass-0-2.jpg",
+          "position": {
+            "id": "pass-0",
+            "kind": "transition",
+            "top": 900,
+            "height": 450,
+            "scrollY": 675
+          },
+          "atSeconds": 5.3508999999994415
+        },
+        {
+          "file": "transition-pass-0-3.jpg",
+          "position": {
+            "id": "pass-0",
+            "kind": "transition",
+            "top": 900,
+            "height": 450,
+            "scrollY": 787.5
+          },
+          "atSeconds": 5.890699999999255
+        },
+        {
+          "file": "transition-pass-0-4.jpg",
+          "position": {
+            "id": "pass-0",
+            "kind": "transition",
+            "top": 900,
+            "height": 450,
+            "scrollY": 855
+          },
+          "atSeconds": 6.401199999999255
+        },
+        {
+          "file": "scene-demo-0.jpg",
+          "position": {
+            "id": "demo",
+            "kind": "scene",
+            "top": 1350,
+            "height": 900,
+            "scrollY": 1350
+          },
+          "atSeconds": 6.936799999999813
+        },
+        {
+          "file": "transition-pass-1-0.jpg",
+          "position": {
+            "id": "pass-1",
+            "kind": "transition",
+            "top": 2250,
+            "height": 450,
+            "scrollY": 1845
+          },
+          "atSeconds": 7.469199999999255
+        },
+        {
+          "file": "transition-pass-1-1.jpg",
+          "position": {
+            "id": "pass-1",
+            "kind": "transition",
+            "top": 2250,
+            "height": 450,
+            "scrollY": 1912.5
+          },
+          "atSeconds": 7.975199999999255
+        },
+        {
+          "file": "transition-pass-1-2.jpg",
+          "position": {
+            "id": "pass-1",
+            "kind": "transition",
+            "top": 2250,
+            "height": 450,
+            "scrollY": 2025
+          },
+          "atSeconds": 8.518599999999628
+        },
+        {
+          "file": "transition-pass-1-3.jpg",
+          "position": {
+            "id": "pass-1",
+            "kind": "transition",
+            "top": 2250,
+            "height": 450,
+            "scrollY": 2137.5
+          },
+          "atSeconds": 9.015199999999256
+        },
+        {
+          "file": "transition-pass-1-4.jpg",
+          "position": {
+            "id": "pass-1",
+            "kind": "transition",
+            "top": 2250,
+            "height": 450,
+            "scrollY": 2205
+          },
+          "atSeconds": 9.602
+        },
+        {
+          "file": "scene-restaurant-0.jpg",
+          "position": {
+            "id": "restaurant",
+            "kind": "scene",
+            "top": 2700,
+            "height": 900,
+            "scrollY": 2700
+          },
+          "atSeconds": 10.143199999999254
+        },
+        {
+          "file": "transition-pass-2-0.jpg",
+          "position": {
+            "id": "pass-2",
+            "kind": "transition",
+            "top": 3600,
+            "height": 450,
+            "scrollY": 3195
+          },
+          "atSeconds": 10.736799999999814
+        },
+        {
+          "file": "transition-pass-2-1.jpg",
+          "position": {
+            "id": "pass-2",
+            "kind": "transition",
+            "top": 3600,
+            "height": 450,
+            "scrollY": 3262.5
+          },
+          "atSeconds": 11.273399999999441
+        },
+        {
+          "file": "transition-pass-2-2.jpg",
+          "position": {
+            "id": "pass-2",
+            "kind": "transition",
+            "top": 3600,
+            "height": 450,
+            "scrollY": 3375
+          },
+          "atSeconds": 11.840699999999256
+        },
+        {
+          "file": "transition-pass-2-3.jpg",
+          "position": {
+            "id": "pass-2",
+            "kind": "transition",
+            "top": 3600,
+            "height": 450,
+            "scrollY": 3487.5
+          },
+          "atSeconds": 12.423199999999255
+        },
+        {
+          "file": "transition-pass-2-4.jpg",
+          "position": {
+            "id": "pass-2",
+            "kind": "transition",
+            "top": 3600,
+            "height": 450,
+            "scrollY": 3555
+          },
+          "atSeconds": 12.973599999999628
+        },
+        {
+          "file": "scene-compare-0.jpg",
+          "position": {
+            "id": "compare",
+            "kind": "scene",
+            "top": 4050,
+            "height": 900,
+            "scrollY": 4050
+          },
+          "atSeconds": 13.525099999999627
+        },
+        {
+          "file": "transition-pass-3-0.jpg",
+          "position": {
+            "id": "pass-3",
+            "kind": "transition",
+            "top": 4950,
+            "height": 450,
+            "scrollY": 4545
+          },
+          "atSeconds": 14.075
+        },
+        {
+          "file": "transition-pass-3-1.jpg",
+          "position": {
+            "id": "pass-3",
+            "kind": "transition",
+            "top": 4950,
+            "height": 450,
+            "scrollY": 4612.5
+          },
+          "atSeconds": 14.677799999999813
+        },
+        {
+          "file": "transition-pass-3-2.jpg",
+          "position": {
+            "id": "pass-3",
+            "kind": "transition",
+            "top": 4950,
+            "height": 450,
+            "scrollY": 4725
+          },
+          "atSeconds": 15.214699999999254
+        },
+        {
+          "file": "transition-pass-3-3.jpg",
+          "position": {
+            "id": "pass-3",
+            "kind": "transition",
+            "top": 4950,
+            "height": 450,
+            "scrollY": 4837.5
+          },
+          "atSeconds": 15.820799999999814
+        },
+        {
+          "file": "transition-pass-3-4.jpg",
+          "position": {
+            "id": "pass-3",
+            "kind": "transition",
+            "top": 4950,
+            "height": 450,
+            "scrollY": 4905
+          },
+          "atSeconds": 16.395099999999626
+        },
+        {
+          "file": "scene-faq-0.jpg",
+          "position": {
+            "id": "faq",
+            "kind": "scene",
+            "top": 5400,
+            "height": 900,
+            "scrollY": 5400
+          },
+          "atSeconds": 16.929699999999254
+        },
+        {
+          "file": "transition-pass-4-0.jpg",
+          "position": {
+            "id": "pass-4",
+            "kind": "transition",
+            "top": 6300,
+            "height": 450,
+            "scrollY": 5895
+          },
+          "atSeconds": 17.450799999999813
+        },
+        {
+          "file": "transition-pass-4-1.jpg",
+          "position": {
+            "id": "pass-4",
+            "kind": "transition",
+            "top": 6300,
+            "height": 450,
+            "scrollY": 5962.5
+          },
+          "atSeconds": 17.978599999999627
+        },
+        {
+          "file": "transition-pass-4-2.jpg",
+          "position": {
+            "id": "pass-4",
+            "kind": "transition",
+            "top": 6300,
+            "height": 450,
+            "scrollY": 6075
+          },
+          "atSeconds": 18.519
+        },
+        {
+          "file": "transition-pass-4-3.jpg",
+          "position": {
+            "id": "pass-4",
+            "kind": "transition",
+            "top": 6300,
+            "height": 450,
+            "scrollY": 6187.5
+          },
+          "atSeconds": 19.074799999999815
+        },
+        {
+          "file": "transition-pass-4-4.jpg",
+          "position": {
+            "id": "pass-4",
+            "kind": "transition",
+            "top": 6300,
+            "height": 450,
+            "scrollY": 6255
+          },
+          "atSeconds": 19.61809999999963
+        },
+        {
+          "file": "scene-pricing-0.jpg",
+          "position": {
+            "id": "pricing",
+            "kind": "scene",
+            "top": 6750,
+            "height": 900,
+            "scrollY": 6750
+          },
+          "atSeconds": 20.169799999999814
+        },
+        {
+          "file": "transition-pass-5-0.jpg",
+          "position": {
+            "id": "pass-5",
+            "kind": "transition",
+            "top": 7650,
+            "height": 450,
+            "scrollY": 7245
+          },
+          "atSeconds": 20.756699999999256
+        },
+        {
+          "file": "transition-pass-5-1.jpg",
+          "position": {
+            "id": "pass-5",
+            "kind": "transition",
+            "top": 7650,
+            "height": 450,
+            "scrollY": 7312.5
+          },
+          "atSeconds": 21.316899999999443
+        },
+        {
+          "file": "transition-pass-5-2.jpg",
+          "position": {
+            "id": "pass-5",
+            "kind": "transition",
+            "top": 7650,
+            "height": 450,
+            "scrollY": 7425
+          },
+          "atSeconds": 21.8845
+        },
+        {
+          "file": "transition-pass-5-3.jpg",
+          "position": {
+            "id": "pass-5",
+            "kind": "transition",
+            "top": 7650,
+            "height": 450,
+            "scrollY": 7537.5
+          },
+          "atSeconds": 22.470199999999256
+        },
+        {
+          "file": "transition-pass-5-4.jpg",
+          "position": {
+            "id": "pass-5",
+            "kind": "transition",
+            "top": 7650,
+            "height": 450,
+            "scrollY": 7605
+          },
+          "atSeconds": 23.058199999999253
+        },
+        {
+          "file": "scene-pond-0.jpg",
+          "position": {
+            "id": "pond",
+            "kind": "scene",
+            "top": 8100,
+            "height": 900,
+            "scrollY": 8100
+          },
+          "atSeconds": 23.657
+        }
+      ],
+      "fontStatus": "loaded",
+      "fonts": [
+        {
+          "family": "Inter",
+          "weight": "400"
+        },
+        {
+          "family": "Inter",
+          "weight": "600"
+        },
+        {
+          "family": "Inter",
+          "weight": "700"
+        },
+        {
+          "family": "JetBrains Mono",
+          "weight": "400"
+        },
+        {
+          "family": "Pixelify Sans",
+          "weight": "400"
+        },
+        {
+          "family": "Pixelify Sans",
+          "weight": "600"
+        },
+        {
+          "family": "Pixelify Sans",
+          "weight": "700"
+        }
+      ],
+      "pageErrors": []
+    }
+  },
+  "errors": [],
+  "failed": [],
+  "external": []
+}

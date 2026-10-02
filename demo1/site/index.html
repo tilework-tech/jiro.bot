@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect width=%2216%22 height=%2216%22 fill=%22%23e0894c%22/%3E%3Crect x=%224%22 y=%226%22 width=%223%22 height=%223%22 fill=%22%235fd4ff%22/%3E%3Crect x=%229%22 y=%226%22 width=%223%22 height=%223%22 fill=%22%235fd4ff%22/%3E%3C/svg%3E" />
+  <title>Jiro — your AI staff engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    (() => {
+      const fallback = (why) => { try { navigator.sendBeacon("__diag", JSON.stringify({ kind: "fallback", why: String(why), ua: navigator.userAgent })); } catch (_) {} location.replace(new URL("fallback/", location.href)); };
+      let supported = false;
+      try { supported = !!document.createElement("canvas").getContext("webgl2"); } catch (_) {}
+      if (!supported) fallback("no webgl2");
+      // never fail silently: report to the preview server, show what broke, offer the scene reel
+      const diag = (kind, data) => {
+        try { navigator.sendBeacon("__diag", JSON.stringify({ kind, href: location.href, t: Math.round(performance.now()), ...data })); } catch (_) {}
+      };
+      window.__diag = diag;
+      const report = (msg) => {
+        diag("fatal", { msg: String(msg), frames: window.__jiroFrames || 0 });
+        if (document.getElementById("boot-error")) return;
+        const d = document.createElement("div"); d.id = "boot-error";
+        d.style.cssText = "position:fixed;inset:auto 24px 24px 24px;z-index:99;background:#2a1a12;color:#f2e7d7;border:1px solid #e0894c;padding:14px 18px;font:14px system-ui,sans-serif";
+        d.innerHTML = "<b>The 3D scene failed to start.</b> <a style='color:#ffc174' href='fallback/'>Open the scene reel instead</a><br><small></small>";
+        d.querySelector("small").textContent = String(msg) + " | " + navigator.userAgent;
+        (document.body || document.documentElement).appendChild(d);
+      };
+      addEventListener("error", (e) => {
+        const t = e.target;
+        if (t && t !== window && t.tagName) { diag("resource", { tag: t.tagName, src: t.currentSrc || t.src || t.href, code: t.error && t.error.code }); return; }
+        report((e.message || "error") + (e.filename ? " @ " + e.filename + ":" + e.lineno + ":" + e.colno : "") + (e.error && e.error.stack ? " | " + e.error.stack : ""));
+      }, true);
+      addEventListener("unhandledrejection", (e) => report("unhandled: " + (e.reason && e.reason.stack || e.reason)));
+      const snapshot = (label) => {
+        const vids = (window.__jiroVideos || []).map((v) => ({ src: v.currentSrc.split("/").pop(), rs: v.readyState, ns: v.networkState, paused: v.paused, err: v.error && v.error.code, t: +v.currentTime.toFixed(2) }));
+        let gl = {};
+        try { const c = document.getElementById("gl"), x = c && (c.__ctx || null); gl = { w: c.width, h: c.height, lost: x ? x.isContextLost() : null, info: window.__jiroGL || null }; } catch (_) {}
+        diag(label, { frames: window.__jiroFrames || 0, dpr: devicePixelRatio, vw: innerWidth, vh: innerHeight, gl, vids });
+      };
+      diag("boot", { ua: navigator.userAgent, dpr: devicePixelRatio, vw: innerWidth, vh: innerHeight });
+      setTimeout(() => snapshot("t3"), 3000);
+      setTimeout(() => { snapshot("t10"); if (!window.__jiroFrames) report("no frame rendered after 10s"); }, 10000);
+      setTimeout(() => snapshot("t30"), 30000);
+      addEventListener("DOMContentLoaded", () => {
+        document.getElementById("gl")?.addEventListener("webglcontextlost", () => fallback("context lost"));
+      });
+    })();
+  </script>
+</head>
+<body>
+  <canvas id="gl"></canvas>
+  <div id="flash"></div>
+  <div id="bubbles"></div>
+
+  <header class="chrome">
+    <div class="mark">jiro<span>.bot</span></div>
+    <a class="cta" href="#reserve" data-go="5">Reserve a seat</a>
+  </header>
+
+  <div id="rail"><div id="rail-fill"></div></div>
+  <div id="eggs" class="hidden"><b id="egg-n">0</b>/<span id="egg-t">0</span> easter eggs</div>
+  <div id="toast"></div>
+  <div id="hint">scroll to follow the belt <i>↓</i></div>
+
+  <main id="overlays">
+    <!-- 0 hero -->
+    <section class="ov" data-stop="0" id="ov-hero">
+      <div class="hero-copy">
+        <p class="kicker">Counter open · 24/7</p>
+        <h1>Jiro, your AI<br />staff engineer</h1>
+        <p class="sub">Bring your own subscription.</p>
+      </div>
+    </section>
+
+    <!-- 1 product demo -->
+    <section class="ov" data-stop="1" id="ov-demo">
+      <div class="panel demo" id="demo"></div>
+    </section>
+
+    <!-- 3 side-by-side -->
+    <section class="ov" data-stop="2" id="ov-compare">
+      <div class="compare">
+        <div class="compare-head"><h2>Same prompt. Different chef.</h2><p class="prompt">“Add rate limiting to the login endpoint.”</p></div>
+        <div class="vids">
+          <div class="vid" id="vid-generic"><div class="vid-top"><span class="dot r"></span>Generic cloud agent</div><div class="term"></div></div>
+          <div class="vid" id="vid-jiro"><div class="vid-top"><span class="dot g"></span>Jiro</div><div class="term"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 comparison table -->
+    <section class="ov" data-stop="3" id="ov-table">
+      <div class="panel table-wrap">
+        <h2>How Jiro compares</h2>
+        <table class="cmp">
+          <thead><tr><th></th><th class="us">Jiro</th><th>Devin</th><th>Factory</th><th>Cursor Cloud</th></tr></thead>
+          <tbody id="cmp-body"></tbody>
+        </table>
+        <p class="fine">Competitor cells are draft copy, to be fact-checked before launch.</p>
+      </div>
+    </section>
+
+    <!-- 6 FAQ -->
+    <section class="ov" data-stop="4" id="ov-faq">
+      <div class="faq-title"><h2>Questions from the counter</h2><p>Tap a thought bubble.</p></div>
+      <div id="faq-bubbles"></div>
+      <div class="faq-answer panel" id="faq-answer"></div>
+    </section>
+
+    <!-- 7 pricing -->
+    <section class="ov" data-stop="5" id="ov-pricing">
+      <div class="pricing">
+        <h2>Not market price.</h2>
+        <p class="sub2">You bring the subscription. Jiro brings the knife skills.</p>
+        <div class="tags" id="tags"></div>
+        <a class="big-cta" href="#reserve" id="reserve">Reserve a seat</a>
+        <p class="fine">Plans and prices are placeholders.</p>
+      </div>
+    </section>
+
+    <!-- 9 footer -->
+    <section class="ov" data-stop="6" id="ov-footer">
+      <footer class="foot">
+        <div class="foot-row"><span class="mark">jiro<span>.bot</span></span><span>Made by a robot who eats rocks · No sushi was harmed. Most of it, anyway.</span></div>
+        <div class="foot-row small"><a href="#">Docs</a><a href="#">Security</a><a href="#">Privacy</a><a href="#">Terms</a><span id="stay-hint">psst… stay a while</span></div>
+      </footer>
+    </section>
+  </main>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

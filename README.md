@@ -1,3 +1,7 @@
+# Preserved demos
+
+See [DEMOS.md](DEMOS.md) for Demo1, Demo2, and Demo4. Demo3 is intentionally unused because its selected review version is already Demo1.
+
 # jiro.bot
 
 Landing page for Jiro, your AI Staff Engineer. A sushi bar you can play with: a

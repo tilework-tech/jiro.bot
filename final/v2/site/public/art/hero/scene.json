@@ -1,0 +1,618 @@
+{
+ "id": "hero",
+ "size": [
+  360,
+  202
+ ],
+ "loop": 8000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [
+  {
+   "id": "chime",
+   "src": "chime.png",
+   "x": 225,
+   "y": 4,
+   "w": 12,
+   "h": 22,
+   "grain": 8,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "chime",
+   "motion": {
+    "kind": "swing",
+    "cut": "chime-cut.png",
+    "under": "chime-under.png",
+    "x": 218,
+    "y": 0,
+    "w": 26,
+    "h": 26,
+    "bottom": [
+     232.125,
+     26.0
+    ],
+    "top": [
+     232.125,
+     0.0
+    ]
+   }
+  },
+  {
+   "id": "diner-a",
+   "src": "diner-a.png",
+   "x": 255,
+   "y": 130,
+   "w": 46,
+   "h": 48,
+   "grain": 8,
+   "frames": 4,
+   "durations": [
+    2400,
+    400,
+    800,
+    400
+   ],
+   "idle": {
+    "kind": "nod",
+    "every": 9000,
+    "offset": 0
+   },
+   "motion": {
+    "kind": null,
+    "cut": "diner-a-cut.png",
+    "under": "diner-a-under.png",
+    "x": 248,
+    "y": 122,
+    "w": 60,
+    "h": 62,
+    "bottom": [
+     275.9375,
+     184.0
+    ],
+    "top": [
+     275.9375,
+     130.0
+    ]
+   }
+  },
+  {
+   "id": "diner-b",
+   "src": "diner-b.png",
+   "x": 313,
+   "y": 90,
+   "w": 44,
+   "h": 48,
+   "grain": 8,
+   "frames": 4,
+   "durations": [
+    3000,
+    1000,
+    3000,
+    1000
+   ],
+   "idle": {
+    "kind": "nod",
+    "every": 11000,
+    "offset": 2100
+   },
+   "motion": {
+    "kind": null,
+    "cut": "diner-b-cut.png",
+    "under": "diner-b-under.png",
+    "x": 305,
+    "y": 85,
+    "w": 55,
+    "h": 55,
+    "bottom": [
+     332.6875,
+     140.0
+    ],
+    "top": [
+     332.6875,
+     85.0
+    ]
+   }
+  },
+  {
+   "id": "cat",
+   "src": "cat.png",
+   "x": 312,
+   "y": 168,
+   "w": 46,
+   "h": 31,
+   "grain": 8,
+   "frames": 2,
+   "durations": [
+    2000,
+    2000
+   ],
+   "egg": "cat",
+   "motion": {
+    "kind": "stretch",
+    "cut": "cat-cut.png",
+    "under": "cat-under.png",
+    "x": 303,
+    "y": 158,
+    "w": 57,
+    "h": 44,
+    "bottom": [
+     336.5625,
+     187.75
+    ],
+    "top": [
+     336.5625,
+     168.0
+    ]
+   }
+  },
+  {
+   "id": "door-eyes",
+   "src": "door-eyes.png",
+   "x": 176,
+   "y": 64,
+   "w": 18,
+   "h": 12,
+   "grain": 8,
+   "frames": 4,
+   "durations": [
+    3300,
+    200,
+    3500,
+    1000
+   ],
+   "egg": "door-eyes"
+  },
+  {
+   "id": "jiro",
+   "src": "jiro.png",
+   "x": 195,
+   "y": 25,
+   "w": 60,
+   "h": 82,
+   "grain": 8,
+   "frames": 5,
+   "durations": [
+    2600,
+    150,
+    2250,
+    1000,
+    2000
+   ],
+   "egg": "jiro",
+   "idle": {
+    "kind": "breathe",
+    "every": 9500,
+    "offset": 900
+   },
+   "motion": {
+    "kind": null,
+    "cut": "jiro-cut.png",
+    "under": "jiro-under.png",
+    "x": 190,
+    "y": 20,
+    "w": 68,
+    "h": 90,
+    "bottom": [
+     224.1875,
+     110.0
+    ],
+    "top": [
+     224.1875,
+     30.375
+    ]
+   }
+  },
+  {
+   "id": "jiro-react",
+   "src": "jiro-react.png",
+   "x": 195,
+   "y": 25,
+   "w": 60,
+   "h": 82,
+   "grain": 8,
+   "frames": 7,
+   "durations": [
+    100,
+    250,
+    200,
+    250,
+    200,
+    250,
+    750
+   ],
+   "trigger": true,
+   "egg": "jiro"
+  },
+  {
+   "id": "lucky-cat",
+   "src": "lucky-cat.png",
+   "x": 261,
+   "y": 26,
+   "w": 20,
+   "h": 23,
+   "grain": 8,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "lucky-cat",
+   "motion": {
+    "kind": "wobble",
+    "cut": "lucky-cat-cut.png",
+    "under": "lucky-cat-under.png",
+    "x": 256,
+    "y": 24,
+    "w": 30,
+    "h": 30,
+    "bottom": [
+     271.75,
+     46.75
+    ],
+    "top": [
+     271.75,
+     27.75
+    ]
+   }
+  },
+  {
+   "id": "daruma",
+   "src": "daruma.png",
+   "x": 242,
+   "y": 2,
+   "w": 23,
+   "h": 26,
+   "grain": 8,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "daruma",
+   "motion": {
+    "kind": "wobble",
+    "cut": "daruma-cut.png",
+    "under": "daruma-under.png",
+    "x": 238,
+    "y": 0,
+    "w": 30,
+    "h": 30,
+    "bottom": [
+     252.25,
+     25.625
+    ],
+    "top": [
+     252.25,
+     5.875
+    ]
+   }
+  },
+  {
+   "id": "kettle",
+   "src": "kettle.png",
+   "x": 235,
+   "y": 42,
+   "w": 24,
+   "h": 27,
+   "grain": 8,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "kettle",
+   "motion": {
+    "kind": "wobble",
+    "cut": "kettle-cut.png",
+    "under": "kettle-under.png",
+    "x": 232,
+    "y": 42,
+    "w": 30,
+    "h": 30,
+    "bottom": [
+     247.75,
+     68.75
+    ],
+    "top": [
+     247.75,
+     50.625
+    ]
+   }
+  },
+  {
+   "id": "bonsai",
+   "src": "bonsai.png",
+   "x": 186,
+   "y": 94,
+   "w": 32,
+   "h": 34,
+   "grain": 8,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "bonsai",
+   "motion": {
+    "kind": "wobble",
+    "cut": "bonsai-cut.png",
+    "under": "bonsai-under.png",
+    "x": 182,
+    "y": 90,
+    "w": 40,
+    "h": 40,
+    "bottom": [
+     202.375,
+     130.0
+    ],
+    "top": [
+     202.375,
+     102.0
+    ]
+   }
+  },
+  {
+   "id": "noren",
+   "src": "noren.png",
+   "x": 150,
+   "y": 3,
+   "w": 46,
+   "h": 44,
+   "grain": 8,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "noren",
+   "motion": {
+    "kind": "swing",
+    "cut": "noren-cut.png",
+    "under": "noren-under.png",
+    "x": 148,
+    "y": 0,
+    "w": 50,
+    "h": 50,
+    "bottom": [
+     173.0,
+     44.5
+    ],
+    "top": [
+     173.0,
+     7.0
+    ]
+   }
+  },
+  {
+   "id": "cooker",
+   "src": "cooker.png",
+   "x": 246,
+   "y": 48,
+   "w": 30,
+   "h": 42,
+   "grain": 8,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "cooker",
+   "motion": {
+    "kind": "wobble",
+    "cut": "cooker-cut.png",
+    "under": "cooker-under.png",
+    "x": 240,
+    "y": 44,
+    "w": 40,
+    "h": 48,
+    "bottom": [
+     259.5,
+     88.625
+    ],
+    "top": [
+     259.5,
+     52.875
+    ]
+   }
+  },
+  {
+   "id": "sake",
+   "src": "sake.png",
+   "x": 261,
+   "y": 0,
+   "w": 32,
+   "h": 25,
+   "grain": 8,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "sake",
+   "motion": {
+    "kind": "wobble",
+    "cut": "sake-cut.png",
+    "under": "sake-under.png",
+    "x": 258,
+    "y": 0,
+    "w": 40,
+    "h": 30,
+    "bottom": [
+     271.125,
+     23.875
+    ],
+    "top": [
+     271.125,
+     3.25
+    ]
+   }
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "counter",
+   "x": 268,
+   "y": 108,
+   "w": 42,
+   "h": 26
+  },
+  {
+   "id": "back-counter",
+   "x": 214,
+   "y": 110,
+   "w": 30,
+   "h": 12
+  },
+  {
+   "id": "floor",
+   "x": 196,
+   "y": 184,
+   "w": 110,
+   "h": 18
+  },
+  {
+   "id": "floor-left",
+   "x": 20,
+   "y": 184,
+   "w": 170,
+   "h": 16
+  }
+ ],
+ "eggs": [
+  {
+   "id": "jiro",
+   "name": "Jiro has opinions",
+   "x": 200,
+   "y": 28,
+   "w": 48,
+   "h": 56,
+   "sprite": "jiro",
+   "says": [
+    "Hai. Small diffs only.",
+    "I read the whole file before I cut.",
+    "Tests first, then taste.",
+    "Your PR is ready for review."
+   ]
+  },
+  {
+   "id": "lucky-cat",
+   "name": "Beckoned by the lucky cat",
+   "x": 262,
+   "y": 27,
+   "w": 18,
+   "h": 21,
+   "sprite": "lucky-cat"
+  },
+  {
+   "id": "daruma",
+   "name": "Wobbled the daruma",
+   "x": 243,
+   "y": 3,
+   "w": 21,
+   "h": 24,
+   "sprite": "daruma"
+  },
+  {
+   "id": "chime",
+   "name": "Rang the fish chime",
+   "x": 224,
+   "y": 4,
+   "w": 12,
+   "h": 22,
+   "sprite": "chime"
+  },
+  {
+   "id": "kettle",
+   "name": "Tea's ready",
+   "x": 236,
+   "y": 44,
+   "w": 12,
+   "h": 10,
+   "sprite": "kettle"
+  },
+  {
+   "id": "bonsai",
+   "name": "Shook the bonsai",
+   "x": 188,
+   "y": 96,
+   "w": 26,
+   "h": 30,
+   "sprite": "bonsai"
+  },
+  {
+   "id": "noren",
+   "name": "Peeked behind the noren",
+   "x": 152,
+   "y": 4,
+   "w": 42,
+   "h": 38,
+   "sprite": "noren"
+  },
+  {
+   "id": "cooker",
+   "name": "Rice is done",
+   "x": 250,
+   "y": 56,
+   "w": 22,
+   "h": 32,
+   "sprite": "cooker"
+  },
+  {
+   "id": "sake",
+   "name": "Steadied the sake",
+   "x": 262,
+   "y": 1,
+   "w": 30,
+   "h": 22,
+   "sprite": "sake"
+  },
+  {
+   "id": "cat",
+   "name": "Woke the shop cat",
+   "x": 314,
+   "y": 170,
+   "w": 40,
+   "h": 27,
+   "sprite": "cat",
+   "says": [
+    "mrrp."
+   ]
+  },
+  {
+   "id": "door-eyes",
+   "name": "Something is watching from the doorway",
+   "x": 176,
+   "y": 64,
+   "w": 18,
+   "h": 12,
+   "says": [
+    "eep!"
+   ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "steam",
+   "x": 261,
+   "y": 48,
+   "h": 16
+  },
+  {
+   "kind": "glow",
+   "x": 209.5,
+   "y": 15.0,
+   "r": 30.8,
+   "color": "#fdd081",
+   "period": 2.97,
+   "amp": 0.05
+  },
+  {
+   "kind": "glow",
+   "x": 306.5,
+   "y": 14.5,
+   "r": 31.9,
+   "color": "#fdd081",
+   "period": 3.34,
+   "amp": 0.05
+  }
+ ]
+}

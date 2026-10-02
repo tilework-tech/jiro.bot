@@ -1,0 +1,115 @@
+{
+ "master": "art/gen/band2/band2-a-strip.png",
+ "base": "art/work/band2/base.png",
+ "groups": "warm,cool,accents,plates,neutrals",
+ "cool_gate": 22,
+ "sprites": {
+  "hanger": {
+   "grain": 8,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    134,
+    62,
+    32,
+    40
+   ],
+   "roi": [
+    139,
+    66,
+    22,
+    34
+   ],
+   "align": false,
+   "frames": [
+    "the black soot sprite hanging from the cable kicks its thin legs to the left, swinging.",
+    "the black soot sprite hanging from the cable kicks its thin legs to the right, swinging.",
+    "the black soot sprite hanging from the cable blinks: its big white eyes are closed."
+   ],
+   "keep": [
+    0,
+    3,
+    0
+   ],
+   "durations": [
+    3000,
+    200,
+    4800
+   ],
+   "egg": "hanger",
+   "motion": "swing",
+   "subject": "small black fuzzy soot sprite hanging from the cable by its arms"
+  },
+  "eyes": {
+   "grain": 8,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    198,
+    80,
+    24,
+    18
+   ],
+   "roi": [
+    203,
+    85,
+    13,
+    10
+   ],
+   "compare": "base",
+   "min_blob": 1,
+   "frames": [
+    "the two tiny glowing yellow eyes in the dark corner close: only darkness."
+   ],
+   "keep": [
+    0,
+    1,
+    0,
+    1
+   ],
+   "durations": [
+    3400,
+    200,
+    4200,
+    200
+   ],
+   "egg": "eyes"
+  }
+ },
+ "scene": {
+  "surfaces": [
+   {
+    "id": "pipe",
+    "x": 10,
+    "y": 32,
+    "w": 260,
+    "h": 4
+   }
+  ],
+  "eggs": [
+   {
+    "id": "hanger",
+    "name": "Hanging around",
+    "x": 140,
+    "y": 67,
+    "w": 20,
+    "h": 32,
+    "sprite": "hanger",
+    "says": [
+     "wheee"
+    ]
+   },
+   {
+    "id": "eyes",
+    "name": "Eyes under the floor",
+    "x": 203,
+    "y": 85,
+    "w": 13,
+    "h": 10,
+    "sprite": "eyes",
+    "says": [
+     "\u2026"
+    ]
+   }
+  ],
+  "fx": []
+ }
+}

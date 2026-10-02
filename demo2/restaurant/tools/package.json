@@ -1,0 +1,13 @@
+{
+  "name": "jiro-restaurant-tools",
+  "private": true,
+  "type": "module",
+  "description": "Playwright QA/capture/recording scripts for Jiro's Restaurant. See ../docs/06-art-and-tooling.md.",
+  "scripts": {
+    "install-browser": "playwright install chromium",
+    "seg": "node qa/seg.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.63.0"
+  }
+}

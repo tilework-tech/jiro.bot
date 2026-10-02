@@ -1,0 +1,631 @@
+{
+ "master": "art/gen/hd/hero-master.jpg",
+ "base": "art/work/hero/base.png",
+ "groups": "warm,cool,accents,plates,neutrals",
+ "sprites": {
+  "chime": {
+   "crop": [
+    218,
+    0,
+    26,
+    26
+   ],
+   "roi": [
+    225,
+    4,
+    12,
+    22
+   ],
+   "frames": [
+    "the small fish-shaped wooden wind chime hanging from the ceiling swings slightly to the left.",
+    "the small fish-shaped wooden wind chime hanging from the ceiling swings slightly to the right."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "egg": "chime",
+   "model": "gemini-3-pro-image",
+   "grain": 8,
+   "motion": "swing",
+   "subject": "small fish-shaped wooden wind chime and its string"
+  },
+  "diner-a": {
+   "crop": [
+    248,
+    122,
+    60,
+    62
+   ],
+   "roi": [
+    255,
+    130,
+    46,
+    48
+   ],
+   "frames": [
+    "the diner closest to the viewer raises his hands halfway toward his mouth.",
+    "the diner closest to the viewer brings his cup right to his mouth and drinks."
+   ],
+   "keep": [
+    0,
+    1,
+    2,
+    1
+   ],
+   "durations": [
+    2400,
+    400,
+    800,
+    400
+   ],
+   "grain": 8,
+   "idle": {
+    "kind": "nod",
+    "every": 9000,
+    "offset": 0
+   },
+   "subject": "diner closest to the viewer (the person on the stool, with their cup)"
+  },
+  "diner-b": {
+   "crop": [
+    305,
+    85,
+    55,
+    55
+   ],
+   "roi": [
+    313,
+    90,
+    44,
+    48
+   ],
+   "frames": [
+    "the diner at the right lifts his bowl a little closer to his face.",
+    "the diner at the right tilts his head slightly down toward his bowl."
+   ],
+   "keep": [
+    0,
+    1,
+    0,
+    2
+   ],
+   "durations": [
+    3000,
+    1000,
+    3000,
+    1000
+   ],
+   "grain": 8,
+   "idle": {
+    "kind": "nod",
+    "every": 11000,
+    "offset": 2100
+   },
+   "subject": "diner at the right with the bowl (the whole person)"
+  },
+  "cat": {
+   "crop": [
+    303,
+    158,
+    57,
+    44
+   ],
+   "roi": [
+    312,
+    168,
+    46,
+    31
+   ],
+   "frames": [
+    "the sleeping orange cat's body rises very slightly as it breathes in.",
+    "the orange cat lifts its head and opens its eyes.",
+    "the orange cat stretches its front paws forward and yawns."
+   ],
+   "keep": [
+    0,
+    1
+   ],
+   "durations": [
+    2000,
+    2000
+   ],
+   "egg": "cat",
+   "grain": 8,
+   "mask_prompt": "Isolate the sleeping orange tabby cat: keep only the cat.",
+   "motion": "stretch",
+   "subject": "sleeping orange tabby cat"
+  },
+  "door-eyes": {
+   "crop": [
+    166,
+    54,
+    38,
+    32
+   ],
+   "roi": [
+    176,
+    64,
+    18,
+    12
+   ],
+   "frames": [
+    "in the dark doorway beneath the curtain, add two small, clearly visible glowing yellow eyes side by side, peeking out of the darkness, about one third of the way down the opening."
+   ],
+   "keep": [
+    1,
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    3300,
+    200,
+    3500,
+    1000
+   ],
+   "egg": "door-eyes",
+   "model": "gemini-3-pro-image",
+   "min_blob": 2,
+   "compare": "base",
+   "grain": 8
+  },
+  "jiro": {
+   "grain": 8,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    190,
+    20,
+    68,
+    90
+   ],
+   "roi": [
+    195,
+    25,
+    60,
+    82
+   ],
+   "frames": [
+    "the robot chef's two glowing cyan eyes are closed: each eye becomes a thin dark horizontal line.",
+    "the robot chef's right hand (on the left of the image) lifts the long straight kitchen knife a few pixels higher above the salmon fillet; the knife stays one clean straight silver blade, everything else unchanged.",
+    "the robot chef's plain copper jaw plate is lowered by a tiny amount, as if he is speaking. No mouth, no teeth."
+   ],
+   "keep": [
+    0,
+    1,
+    0,
+    2,
+    0
+   ],
+   "durations": [
+    2600,
+    150,
+    2250,
+    1000,
+    2000
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     3,
+     0,
+     3,
+     0,
+     3,
+     0
+    ],
+    "durations": [
+     100,
+     250,
+     200,
+     250,
+     200,
+     250,
+     750
+    ]
+   },
+   "egg": "jiro",
+   "frame_rois": [
+    [
+     220,
+     46,
+     16,
+     9
+    ],
+    [
+     208,
+     82,
+     47,
+     24
+    ],
+    [
+     219,
+     54,
+     19,
+     12
+    ]
+   ],
+   "mask_prompt": "Isolate the robot sushi chef: keep only the robot (head, headband, body, arms, hands and the knife he holds).",
+   "idle": {
+    "kind": "breathe",
+    "every": 9500,
+    "offset": 900
+   },
+   "subject": "robot sushi chef"
+  },
+  "lucky-cat": {
+   "crop": [
+    256,
+    24,
+    30,
+    30
+   ],
+   "roi": [
+    261,
+    26,
+    20,
+    23
+   ],
+   "frames": [
+    "the white lucky cat figurine raises its beckoning paw higher.",
+    "the white lucky cat figurine lowers its beckoning paw."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "egg": "lucky-cat",
+   "grain": 8,
+   "motion": "wobble",
+   "subject": "white beckoning lucky cat figurine"
+  },
+  "daruma": {
+   "crop": [
+    238,
+    0,
+    30,
+    30
+   ],
+   "roi": [
+    242,
+    2,
+    23,
+    26
+   ],
+   "frames": [
+    "the red daruma doll tilts to the left.",
+    "the red daruma doll tilts to the right."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "egg": "daruma",
+   "grain": 8,
+   "motion": "wobble",
+   "subject": "small red daruma doll"
+  },
+  "kettle": {
+   "crop": [
+    232,
+    42,
+    30,
+    30
+   ],
+   "roi": [
+    235,
+    42,
+    24,
+    27
+   ],
+   "frames": [
+    "a small puff of white steam shoots out of the kettle's spout.",
+    "a bigger soft cloud of white steam drifts above the kettle."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "egg": "kettle",
+   "grain": 8,
+   "motion": "wobble",
+   "subject": "tea kettle"
+  },
+  "bonsai": {
+   "crop": [
+    182,
+    90,
+    40,
+    40
+   ],
+   "roi": [
+    186,
+    94,
+    32,
+    34
+   ],
+   "frames": [
+    "the bonsai tree's leaves rustle and one tiny green leaf falls from it.",
+    "one tiny green leaf lies on the counter beside the bonsai pot."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "egg": "bonsai",
+   "grain": 8,
+   "motion": "wobble",
+   "subject": "small potted bonsai tree"
+  },
+  "noren": {
+   "crop": [
+    148,
+    0,
+    50,
+    50
+   ],
+   "roi": [
+    150,
+    3,
+    46,
+    44
+   ],
+   "frames": [
+    "the indigo noren curtain sways gently as if someone brushed past it."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "egg": "noren",
+   "grain": 8,
+   "motion": "swing",
+   "subject": "indigo noren curtain"
+  },
+  "cooker": {
+   "crop": [
+    240,
+    44,
+    40,
+    48
+   ],
+   "roi": [
+    246,
+    48,
+    30,
+    42
+   ],
+   "frames": [
+    "the rice cooker's lid pops up slightly with a puff of steam."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "egg": "cooker",
+   "grain": 8,
+   "frame_rois": [
+    [
+     247,
+     58,
+     30,
+     32
+    ]
+   ],
+   "motion": "wobble",
+   "subject": "rice cooker"
+  },
+  "sake": {
+   "crop": [
+    258,
+    0,
+    40,
+    30
+   ],
+   "roi": [
+    261,
+    0,
+    32,
+    25
+   ],
+   "frames": [
+    "one of the sake bottles on the shelf wobbles and tilts slightly."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "egg": "sake",
+   "grain": 8,
+   "motion": "wobble",
+   "subject": "sake bottles"
+  }
+ },
+ "scene": {
+  "surfaces": [
+   {
+    "id": "counter",
+    "x": 268,
+    "y": 108,
+    "w": 42,
+    "h": 26
+   },
+   {
+    "id": "back-counter",
+    "x": 214,
+    "y": 110,
+    "w": 30,
+    "h": 12
+   },
+   {
+    "id": "floor",
+    "x": 196,
+    "y": 184,
+    "w": 110,
+    "h": 18
+   },
+   {
+    "id": "floor-left",
+    "x": 20,
+    "y": 184,
+    "w": 170,
+    "h": 16
+   }
+  ],
+  "eggs": [
+   {
+    "id": "jiro",
+    "name": "Jiro has opinions",
+    "x": 200,
+    "y": 28,
+    "w": 48,
+    "h": 56,
+    "sprite": "jiro",
+    "says": [
+     "Hai. Small diffs only.",
+     "I read the whole file before I cut.",
+     "Tests first, then taste.",
+     "Your PR is ready for review."
+    ]
+   },
+   {
+    "id": "lucky-cat",
+    "name": "Beckoned by the lucky cat",
+    "x": 262,
+    "y": 27,
+    "w": 18,
+    "h": 21,
+    "sprite": "lucky-cat"
+   },
+   {
+    "id": "daruma",
+    "name": "Wobbled the daruma",
+    "x": 243,
+    "y": 3,
+    "w": 21,
+    "h": 24,
+    "sprite": "daruma"
+   },
+   {
+    "id": "chime",
+    "name": "Rang the fish chime",
+    "x": 224,
+    "y": 4,
+    "w": 12,
+    "h": 22,
+    "sprite": "chime"
+   },
+   {
+    "id": "kettle",
+    "name": "Tea's ready",
+    "x": 236,
+    "y": 44,
+    "w": 12,
+    "h": 10,
+    "sprite": "kettle"
+   },
+   {
+    "id": "bonsai",
+    "name": "Shook the bonsai",
+    "x": 188,
+    "y": 96,
+    "w": 26,
+    "h": 30,
+    "sprite": "bonsai"
+   },
+   {
+    "id": "noren",
+    "name": "Peeked behind the noren",
+    "x": 152,
+    "y": 4,
+    "w": 42,
+    "h": 38,
+    "sprite": "noren"
+   },
+   {
+    "id": "cooker",
+    "name": "Rice is done",
+    "x": 250,
+    "y": 56,
+    "w": 22,
+    "h": 32,
+    "sprite": "cooker"
+   },
+   {
+    "id": "sake",
+    "name": "Steadied the sake",
+    "x": 262,
+    "y": 1,
+    "w": 30,
+    "h": 22,
+    "sprite": "sake"
+   },
+   {
+    "id": "cat",
+    "name": "Woke the shop cat",
+    "x": 314,
+    "y": 170,
+    "w": 40,
+    "h": 27,
+    "sprite": "cat",
+    "says": [
+     "mrrp."
+    ]
+   },
+   {
+    "id": "door-eyes",
+    "name": "Something is watching from the doorway",
+    "x": 176,
+    "y": 64,
+    "w": 18,
+    "h": 12,
+    "says": [
+     "eep!"
+    ]
+   }
+  ],
+  "fx": [
+   {
+    "kind": "steam",
+    "x": 261,
+    "y": 48,
+    "h": 16
+   },
+   {
+    "kind": "glow",
+    "x": 209.5,
+    "y": 15.0,
+    "r": 30.8,
+    "color": "#fdd081",
+    "period": 2.97,
+    "amp": 0.05
+   },
+   {
+    "kind": "glow",
+    "x": 306.5,
+    "y": 14.5,
+    "r": 31.9,
+    "color": "#fdd081",
+    "period": 3.34,
+    "amp": 0.05
+   }
+  ]
+ },
+ "cool_gate": 22
+}

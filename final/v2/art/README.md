@@ -1,0 +1,196 @@
+# v2 art pipeline
+
+Gemini generates all raster art. Scripts fit it onto a true pixel grid and snap it to one palette. LibreSprite then indexes it, and the result is exported for the site. No pixel is placed by hand: every cleanup step is a script under `../tools/`, and every Gemini call is logged.
+
+```
+art/src/prompts + art/src/refs
+        │  tools/gen.mjs  (Gemini; appends to art/log/gemini-calls.jsonl)
+        ▼
+art/gen/<scene>/*.jpg  (approved pixel-art masters)
+        │  tools/soften.py  (blur away Gemini's pixel grid)
+        │  tools/gen.mjs    (Gemini Pro repaints it as a 4K flat illustration; tools/compose.py merges edits)
+        ▼
+art/gen/hd/*.jpg  (4K illustration masters)
+        │  tools/fit.py   (grid vote → palette snap → cleanup, at grain 4)
+        ▼
+art/work/<scene>/base.png ── tools/ls-index.sh ──► art/src/ase/<scene>/*.ase
+        │  tools/frames.py <spec> <sprite>  (Gemini edits of a crop → refit → align → diff)
+        ▼
+art/work/<scene>/sprites/<id>[-react]-fit.png
+        │  tools/motion.py <spec> <sprite>  (motion and idle sprites: cut-out + background patch)
+        ▼
+art/work/<scene>/sprites/<id>-{cut,under}.png, <id>-motion.json
+        │  tools/export-scene.py art/specs/<scene>.json
+        ▼
+site/public/art/<scene>/{base.png, <sprite>.png, <sprite>-{cut,under}.png, scene.json}
+```
+
+## Folders
+
+| Folder | Contents |
+| --- | --- |
+| `src/prompts/` | Prompt text for scene masters, master edits, belt item sheets and the illustration repaints (`hd-*.txt`) |
+| `src/refs/` | Reference images passed to Gemini: video frames and the Jiro canon |
+| `src/ase/` | LibreSprite `.ase` sources, plus the indexed PNG written next to each one |
+| `specs/` | One JSON spec per scene: master, base, palette groups, sprites, and a `scene` block with surfaces, water, eggs and effects (`fx`) |
+| `gen/` | Raw Gemini output, one folder per scene (masters, crops, shifts and outpaints; `gen/koi/` holds the koi renders). `gen/hd/` holds the illustration masters (round 2, plus the round-4 half-size product master and its shrunk input) and the failed high-density pixel-art probes; `gen/hd8/` holds the rejected round-3 close-up repaint of Jiro. |
+| `work/` | Intermediate output: fitted bases, frame edits, strips and belt cut-outs |
+| `log/gemini-calls.jsonl` | One line per Gemini call, recording time, output path, model, aspect, size, full prompt and ref file names |
+| `probe/` | The first API probe |
+
+## Grain and palette
+
+Positions in specs and `scene.json` (crop, roi, surfaces, eggs, effects, sprite x/y/w/h, `size`) are in **world units**: the world is 360 units across and each stop is 360 × 202. A **grain** is art px per world unit.
+
+| Grain | Art px across | At 1440 wide | Used for |
+| --- | --- | --- | --- |
+| 4 | 1440 | 1 CSS px per art px | room and band bases (1440 × 808 per stop; each band is 1440 wide and 4 art px per unit of its height in `site/src/layout.ts` `BANDS`) |
+| 8 | 2880 | ½ CSS px per art px (1 device px on a 2× retina screen) | Jiro, diners, dust spirits, eyes, every clickable prop, belt tile, plates, belt items, the koi |
+
+Round 3 doubled both grains again (round 2 used 2 and 4) after Martin's gate-B review asked for even higher resolution from now on. Sprites set `"grain"` in the spec; the base grain is the base width / 360, and `export-scene.py` and `frames.py` fall back to it when a sprite sets none. Everything shares one palette, so the two grains read as one picture. The site picks how many of these art px it actually draws per device (`../site/docs.md`, Scenes).
+
+**Why 8 is the ceiling.** Every grain-8 sprite is fitted straight from the existing 4K illustration master (5504 px across, about 1.9 source px per art px at grain 8). A dedicated close-up repaint of Jiro (`gen/hd8/jiro-hd`) was tried and rejected: it added a little detail but drifted the framing against the room. Going past 8 would need such per-sprite repaints. Round 3 reused the existing Gemini frame edits (`frames.py` without `--regen`) and only refitted them at the new grain.
+
+- **Palette.** `../palette/jiro56.gpl` is the master palette. Its groups (warm, cool, accents, plates, neutrals) are marked by `# name` header lines, and the tools can snap to a subset with `--groups` or the spec's `groups` field.
+  - The palette started at 48 colours. Eight lantern-orange, tan, rust, olive and ash tones were added after the hero test fit showed 48 colours losing the lantern light.
+  - `../site/public/games/cabinet/jiro56.gpl` is a byte-identical copy that the Sushi Rush cabinet snaps every game frame to; an art test fails if it drifts from the master.
+  - `jiro56-libresprite.gpl` is the copy LibreSprite indexes to. Its index 0 is a magenta transparent slot, so no real colour lands on LibreSprite's transparent index.
+
+## Detail: why Gemini paints illustrations, not pixel art
+
+Gemini's pixel-art mode has a fixed density. It draws about 110–130 "pixels" across any output, whatever `imageSize` or prompt is asked for, and its edits copy the input's pixel grid. Asking for finer pixel art, at 4K or with "4× density", returns the same chunky grid (probes in `gen/hd/hero-hd-a` and `gen/hd/hero-jiro-*`).
+
+What works:
+
+1. `tools/soften.py` blurs the approved master (downscale, Gaussian blur, upscale) so it carries no grid.
+2. Gemini Pro repaints it at 4K as a flat cel-shaded illustration of the same composition (`src/prompts/hd-illustration.txt`, plus a per-scene `hd-*.txt` and the shared `hd-tail-common.txt`).
+3. Lost props are re-added with one edit, and `tools/compose.py` merges the edit's right side over the original so the calm copy field survives. The hero master is such a composite: the copy field from `hero-ill-a`, the right side from `hero-ill-a-edit1`, which restored the sleeping cat and the doorway eyes.
+4. `tools/fit.py` pixelates the illustration onto the true grid at whatever grain we choose.
+
+To reframe a master, `tools/shift-down.py IN OUT --d D` moves it down by D px on the same canvas, dropping the bottom rows and leaving a black strip on top for Gemini to outpaint. `tools/shift-x.py IN OUT --d D` does the same sideways (negative D moves left): by default the opened strip repeats the neighbouring D columns, and with `--blank` it stays black for a Gemini outpaint. `tools/shrink-place.py IN OUT --f F --x X --y Y` shrinks it by F and pastes it at fractional position (X, Y) on a black canvas of the original size, leaving everything else for Gemini to outpaint.
+
+Our scripts make the pixel grid, not Gemini. The item sheets went the same way (`gen/hd/items-*-ill*.jpg`). Sheets 1 and 3 were regenerated with an explicit item list, because the first repaint turned suspicious wasabi into a poop emoji and sheet 3's background was not clean green.
+
+Stop 3 and band 1 were generated new in round 2; band 1's master is a crop (`band1-a-strip.png`) of a taller render.
+
+**Stop 3 shift (round 3).** Martin asked for everything in stop 3 to move down so the belt runs along the bottom, with only table space, condiments and the cat visible below it. `compare-c-edit1` was shifted down 466 px (about 30.5 world units) with `shift-down.py`, and Gemini outpainted the strip as ceiling beams and lanterns (`gen/compare/compare-shift-fill.jpg`, used whole, so there is no seam). The new counter channel sits at 149–176 of 202 units, re-measured into `COMPARE_CHANNEL` in `../site/src/belt/route.ts`. The old diner, kanpai and gap-eyes sprites fell out of frame or out of the new composition. The spec then had the cat, a kid who waves on click, eyes under the middle table, and two tea cups whose frames only changed the steam (`frame_rois`, `align: false`; replaced by drawn steam in round 7). Surfaces are the three middle-row tables, and the eggs were the cat, kid, table eyes, two condiment sets, a reserved seat and the tea.
+
+**Stop 3 panels to the belt (round 5).** The site's replay panels now run down to the counter channel and cover the middle-row diners, so the kid and table-eyes sprites (and their `work/` and `public/` files) and the kid, table-eyes and reserved-seat eggs were removed from `specs/compare.json`. Three click-and-say eggs without sprites were added in the sliver below the channel: a tea refill, the last piece of sushi and a miso bowl. The stop has seven eggs: the cat (a sprite), the tea, the two condiment sets and the three new ones. A `ledge` surface along the bottom sliver was added in round 7. No art was regenerated; `scene.json` was re-exported.
+
+**Product master at half size (round 4).** Martin asked for the product stop's pixel art at about half size so the demo panel could grow to nearly fill the screen. `shrink-place.py` shrank `gen/hd/product-ill-a.jpg` by 0.5 into the bottom-right quarter (`gen/hd/product-half.png`), and Gemini Pro outpainted the rest as a dark upper wall, a ceiling beam with the lantern cord, and a long, calm, empty wall and floor on the left, where the panel sits (`gen/hd/product-half-fill.jpg`, used whole, so there is no seam). That is now the spec's `master`. Gemini kept the office in place closely enough that every world-unit box in `specs/product.json` (crop, roi, `frame_rois`, eggs, surfaces) was mapped by the placement itself, x' = 180 + x/2 and y' = 101 + y/2 with w and h halved, and checked with an ROI overlay. Every sprite was regenerated with `--regen`, so Jiro in the product stop is about half his former on-screen size but still grain 8. The base is fitted with `--warm-left 0.6` because the empty left field is wider than before.
+
+**Stop 4 and band 2 (new masters).** Both were generated directly as 4K flat illustrations with `gemini-3-pro-image`, using `gen/compare/compare-shift-fill.jpg` (and, for stop 4, `gen/hd/hero-master.jpg`) as style refs, so neither went through `soften.py`.
+
+- **Stop 4** (`specs/table.json`, master `gen/table/table-a.jpg`, prompt `src/prompts/table.txt`) is a dim kitchen corner: a calm tiled wall on the left 55% where the site lays its HTML menu board (the prompt forbids a painted board or text), a cherry-red arcade cabinet with a sleeping cat on top and a blank screen, a lantern, crates and a broom, a dust spirit by the cabinet, a vent with eyes, and the steel belt shaft at the right edge with an empty channel (the site draws the belt in it). `table-b.jpg` is an unused second render of the same prompt. The base is fitted at 1440 × 808 with `--smooth-dark 70 --warm-left 0.5` so the board's wall stays calm and warm.
+  - Sprites: the cat (mask, single-frame at rest; its wake-and-yawn strip became a `stretch` motion in round 6), the spirit (blink loop; its blink reaction was dropped in round 6, see Click motion) and the vent eyes (`compare: base`), all grain 8. The lantern and coin-slot flare sprites were removed in round 7 for glows (see Ambient effects).
+  - Eggs are the cat, lantern, spirit, vent eyes, marquee, coin slot and crates; the lantern, coin slot, marquee and crates are click-and-say. Surfaces are the stool, the cabinet top, a patch of floor and (round 7) the counter.
+- **Band 2** (`specs/band2.json`, prompt `src/prompts/band2.txt`) is a floor-slab cutaway between the dining room and the kitchen: timber joists, a copper pipe, a sagging cable, and the same steel shaft on the right. The top of the render showed brightly lit diners, so the master is a crop of rows 430–2190 of `gen/band2/band2-a.jpg` (`band2-a-strip.png`), fitted to a 1440 × 400 base; the site's band 2 grew from 50 to 100 units to fit it.
+  - Sprites: the hanging dust spirit (`align: false`, blink as the ambient loop; its leg-swing click strip became a `swing` motion in round 6) and a pair of eyes in the dark corner. The surface is the pipe.
+- Stop 4 has no Jiro (flagged to Martin).
+
+**Final pass: bands 3–5 and stops 5–7 (new masters).** All six were generated directly as 4K flat illustrations with `gemini-3-pro-image` (prompts `src/prompts/{band3,band4,band5,faq,price,pond}.txt`), with `gen/compare/compare-shift-fill.jpg` as the style ref and `src/refs/jiro-canon.png` added for the two stops with Jiro. Every prompt except the pond's paints the steel shaft at the far right with an empty channel; the pond paints a trestle with an empty channel across the full width.
+
+- **Lining the shaft up with the belt.** The site draws the belt at x = 320 in every stop, so a painted shaft that lands elsewhere has to move. The FAQ and street masters were shifted left (`shift-x.py --d -245` and `--d -153` source px) with `--blank` (`gen/faq/faq-shift.jpg`, `gen/price/price-shift.jpg`), and Gemini Pro outpainted only the opened right-hand strip as the continuation of the shaft wall and floor (`faq-master.jpg`, `price-master.jpg`, used whole, so there is no seam). Band 4's crop was shifted right instead (`--d 176`, repeating columns, no outpaint) to `band4-strip.png`.
+- **Band strips.** Each band master is a crop of its 6336 × 2688 render: `band3-strip.png` rows 300–2240, `band4-crop.png` rows 300–2200 (then the shift above), `band5-strip.png` rows 200–2400. They are fitted to 1440 × 440, 1440 × 432 and 1440 × 500, the bands' heights in `site/src/layout.ts`.
+- **Street edit.** `gen/price/price-a-edit1.jpg` removes every painted character and letter from the shopfront tags, sign and noren, and puts Jiro's near foot on the ground at the red light. It is the input to the shift.
+- **Fit flags.** FAQ: `--cool-gate 22 --smooth-dark 70 --warm-left 0.33`; band 3: `--cool-gate 22 --smooth-dark 70`; street, pond, bands 4 and 5: `--smooth-dark 50` without a cool gate, since they are night scenes that should snap into the cool ramp.
+- **Sprites.** Jiro at the counter and on the bicycle (masked, frame edits with Gemini Pro: a blink, the jaw plate dropping to speak, and at the counter a presenting hand); five of the six counter plates (tuna, salmon, ikura, maki, onigiri) that the site's FAQ question bubbles sit over; the traffic light and a street cat; soot sprites in each band (a bunk-room crate, a waver, a trio on a ledge, a peeker over the wall) plus pipe eyes. The lanterns, street lamp, pond fireflies, toro and stall lanterns, the counter's tea cup and band 3's faucet were also sprites until round 7 replaced them with drawn effects; their eggs stay as click areas. Soot-sprite and Jiro frames used Gemini Pro; the rest used Flash.
+- **Scene data.** The pond spec adds a `water` block (the open water in front of the trestle) next to `surfaces` and `eggs`; `export-scene.py` passes it through to `scene.json`, and the site treats a plate dropped there as fed to the koi. The pond has no Jiro.
+
+## Tools
+
+**`tools/gen.mjs`** calls the Gemini REST image API.
+
+- Usage: `node tools/gen.mjs out.png --prompt … [--model] [--aspect] [--size] [refs…]`
+- It retries on 429 and 5xx responses, and writes `.jpg` when Gemini returns JPEG.
+- Scene masters and illustration repaints use `gemini-3-pro-image` at 4K. Frame edits default to `gemini-3.1-flash-image` unless the sprite spec sets `model`; they are requested at 2K for sprites of grain 4 or finer and 1K otherwise.
+
+**`tools/fit.py`** (`uv run`) fits a render onto the native grid in these steps:
+
+1. Optional `--crop`.
+2. Optional `--key`. This only keys near-pure `#00FF00`, so green food (wasabi, edamame, cactus) survives.
+3. Per-cell vote (vectorized). Each target pixel takes the mean of the dominant 4-bit colour bucket in its source cell. This removes JPEG noise and soft illustration edges.
+4. Optional `--gain` to lift dark renders.
+5. Palette snap with the redmean metric, with two optional gates:
+   - `--cool-gate N`: a pixel may snap to the cool night ramp only if its blue exceeds its red by N. This stops navy speckle in warm darks.
+   - `--warm-left F`: the copy field (the left F of the width) snaps to the warm ramp only.
+6. Orphan-pixel cleanup.
+7. Optional `--smooth-dark`, a 3×3 majority filter over dark pixels that keeps copy fields calm.
+
+Bases use `--groups warm,cool,accents,plates,neutrals --cool-gate 22 --smooth-dark 80 --warm-left 0.4` for the hero (the final-pass scenes' flags are listed in their section above); product uses the same flags with `--warm-left 0.6` (its copy field is the wider empty left side of the half-size master). Compare uses `--smooth-dark 60` without `--warm-left`; stop 4 uses `--smooth-dark 70 --warm-left 0.5`; band 0 adds `--gain 1.25`. Specs carry `cool_gate` so `frames.py` snaps frames the same way.
+
+**`tools/ls-index.sh in.png out-base [w h]`** opens the image in LibreSprite and runs these steps:
+
+1. Load the palette.
+2. Convert to indexed with no dither.
+3. Optionally resize with nearest-neighbour.
+4. Save `.ase` and `.png`.
+
+For the SIGTERM quirk, see `../README.md`.
+
+**`tools/frames.py <spec> <sprite>`** builds animation frames.
+
+1. It crops the sprite's `crop` box (world units) out of the scene master. The master is mapped through the 360-unit world, so any master size works.
+2. Each `frames` prompt becomes one Gemini edit of that crop.
+3. Each edit is refitted to the grid at the sprite's grain (default: the base grain).
+4. The edit is aligned within ±2 units against the base, matching only on pixels outside the `roi`. `"align": false` skips this when Gemini's edit is already registered; band 1's spirits need it, because auto-alignment picked ±8 px offsets and smeared their blinks.
+5. Only *significant* colour changes survive:
+   - they must fall inside the `roi`, or the per-frame `frame_rois` entry when one is set. `frame_rois` also keep edits from repainting floors and walls (lanterns are limited to their paper interiors).
+   - they must sit in blobs of at least `min_blob` pixels
+   - by default a change must differ from both the base and a Gemini-free refit of the crop. That filters out re-encoding drift. `"compare": "base"` compares against the base only, which tiny sprites such as door eyes need.
+
+Frame 0 is the untouched base: cut from the fitted base when the sprite's grain equals the base grain, otherwise a fresh fit of the master crop at the sprite's grain.
+
+- `mask_prompt` asks Gemini for a green-keyed silhouette, which becomes the sprite's alpha, so a grain-8 character does not paint its rectangle over the grain-4 room. Jiro and the cats use it. Gemini sometimes inverts the mask, painting the subject green on black instead of green around it; `frames.py` checks the crop's border and flips the key when most of the border is not green. The round-4 product Jiro mask came back inverted.
+- `keep` and `durations` define the ambient loop. A single-frame `keep` (`[0]`) is still exported, so a detail sprite shows at grain 8 at rest instead of the coarser base.
+- `reaction.keep` and `reaction.durations` define a one-shot strip (`-react`) that plays when the sprite is clicked. Only state changes use it (Jiro's jaw and blink, the traffic light); creatures and props use `motion` instead (`tools/motion.py`). Band 0's candle kept one until round 7 turned it into a flickering glow.
+
+**`tools/motion.py <spec> <sprite> [--regen]`** builds click motion (round 6) and the cut-outs for idle moves (round 7). Martin found the old click reactions crude: a `-react` strip swaps in a Gemini-edited second picture that never quite matches frame 0. A sprite with `"motion"` (`hop`, `stretch`, `wobble` or `swing`) and a `"subject"` description in its spec instead gets a cut-out of itself that the site moves, plus a patch of the room behind it to show while it is away. A sprite with `"idle"` (`{kind: nod|breathe|sway, every, offset}` in ms) and a `"subject"` gets the same cut-out and patch, which the site moves by itself every `every` ms; it may have an idle move with or without a click `motion`. Round 7 gave idle moves to the hero diners and to Jiro in the hero, at the FAQ and on the bike. Run `frames.py` first so the crop's `src.png` exists.
+
+1. **Silhouette.** Gemini isolates the subject on flat green (`cut-mask`; the sprite's existing `mask_prompt` mask is reused when it has one). The key reuses `frames.py`'s fit and handles every matte Gemini answers with: green around the subject, green on black (flipped by the border test), or white on black when there is no green at all. If the silhouette covers under 2% or over 90% of the crop, it asks once more with a stricter prompt, then gives up.
+2. **Background.** A Gemini 2K edit removes the subject (`clean`). It is fitted at the sprite's grain and aligned to frame 0 within ±2 grain px, matching only pixels well away from the subject.
+3. **Acceptance.** Gemini's background is kept only if the alignment did not hit the search limit, at least 60% of the silhouette's pixels actually changed (the subject is gone), and the mismatch away from the subject is at most 0.8. Otherwise, or when the spec sets `"under": "fill"`, `grow_fill` grows the surrounding room inward over the silhouette dilated by 2 world units, each pass giving edge pixels the most common colour of their filled neighbours. The script prints which source it used.
+4. **Output** in `work/<scene>/sprites/`: `<id>-cut.png` (frame 0, only the subject opaque), `<id>-under.png` (the background, opaque only over the slightly dilated silhouette, or the fill area) and `<id>-motion.json` (the silhouette's bottom-centre and top-centre pivots in world units). Both PNGs cover the whole crop.
+
+The spec's old `reaction` block is removed for these sprites, and their `-react` strips were deleted from `work/` and `site/public/art/`. Creatures and props across the stops and bands now move this way; Jiro's jaw and blink and the traffic light keep frame reactions because they are state changes. Stop 4's half-hidden spirit could not be cut out cleanly, so it has no click reaction and its egg is click-and-say only.
+
+**`tools/export-scene.py <spec>`** (1) indexes the base and every strip through `ls-index.sh`, (2) copies them to `site/public/art/<scene>/`, and (3) writes `scene.json`. That file holds:
+
+- `size` in world units
+- the scene loop, which is the longest ambient loop, or 8000 ms when the scene has no ambient sprites (the pond since round 7)
+- layers, each with its `grain`
+- sprites, with x, y, w, h, grain, frame count, durations, the `trigger` flag for reactions, the `egg` id, the spec's `idle` move, and for sprites with `motion` or `idle` a `motion` block: kind (`null` for an idle-only sprite), `cut` and `under` file names, the crop box and the `bottom`/`top` pivots from `<id>-motion.json` (the cut and patch PNGs are indexed through `ls-index.sh` like the strips)
+- the spec's `scene` block, copied as is: `surfaces` (where plates can be set down), `water` (pond), `eggs` (click areas, names and speech lines) and `fx` (procedural effects)
+
+## Ambient effects (round 7)
+
+Martin asked that no light or animation look like "a square appearing over it", which is what a two-frame light swap does: a flared lantern frame changes its whole crop at once. Round 7 removed every frame-swap light sprite (the hero, product, table, FAQ and street lanterns, the street lamp, the table's coin slot, the pond's toro and stall lanterns, band 0's candle, band 5's wall lantern) and the firefly, tea, cup and faucet sprites, from the specs, `work/` and `site/public/art/`. No art was regenerated.
+
+In their place each spec's `scene.fx` lists effects in world units, drawn by the site in code (`../site/src/fx.ts`, `../site/docs.md`, Ambient effects): `glow` halos centred on the painted lights (the light pools stay baked into the base), fireflies at the pond and in band 5, ripples and fish shadows at the pond, rain and puddle splashes on the street, steam over the hero rice cooker, the compare tea cups and the FAQ cup, and a drip under band 3's faucet. The removed sprites' eggs remain as click areas, most with their speech lines. Round 7 also widened the surfaces in the hero, compare, table, street, pond and FAQ specs.
+
+## Belt art
+
+- **Plates and tile.** Each is generated singly (`art/gen/belt/`) and fitted at grain 8. Plates are 128 × 91. The tile is 168 × 48, fitted from a crop of `gen/belt/tile.jpg` to 168 × 480, from which the most periodic 48-row window (one slat period) is kept so it tiles without a seam. Its bed spans columns 24–144, which the site overdraws where the bed is baked into scene art.
+  - The blue-rim plate is derived from the grey-rim plate by swapping the rim colour, so both plates share one silhouette.
+  - On both plates, the outer edge is recoloured to the rim colour by rule.
+  - `tools/plate-rims.py` does both steps after `cut-sheet.py`. `site/tests/art/plates.test.ts` guards the result: plates may use only the plate colours, must be mostly white, and must use their own rim colour.
+- **Items.** Three 4×4 sprite sheets on flat green (`src/prompts/items-*.txt`) are cut by `tools/cut-sheet.py --grid 4x4 --names … --scale K [--max N]`.
+  - One shared scale per sheet keeps relative sizes intact.
+  - `--max` caps outsized items. Round-3 items are cut from the same 4K sheets at `--scale 0.12` or `0.10` with `--max 84`, so they are at most 84 px on a 128 × 91 plate.
+  - Cells are trimmed 4% to drop grid remnants. Opaque islands under 3% of the sprite are dropped as specks, and the item's bounding box is found on a coarse speck-free mask.
+- **Living items.** `tools/item-frames.py` makes their frames. Each frame is a Gemini edit of the item's sheet cell (the prompt no longer asks Gemini to keep a pixel grid, since the cells are illustrations), and all frames are fitted in one shared bounding box so the item does not jump between frames. Round 3 ran it at `--scale 0.10 --max 84`.
+- **Koi.** `gen/koi/koi-b.jpg` is a single kohaku koi leaping left, mouth open, on flat green (`koi-a.jpg`, made with the pond master as a ref, is unused). `cut-sheet.py --grid 1x1 --names koi --scale 0.3 --max 640` keys and fits it to `work/koi/koi.png` (640 × 328, grain 8), and `export-belt.sh` indexes it to `src/ase/belt/koi.{ase,png}` and copies it to `site/public/art/belt/koi.png`. The site draws it on the belt canvas, not in the pond scene, so it can pass over the plates.
+- **Export.** `tools/export-belt.sh` indexes items, plates and tile into `site/public/art/belt/`. It also writes `items/frames.json`, the frame counts of the animated items. Edit that list by hand in the script when adding a living item.
+
+## Checks
+
+`cd ../site && npm test` runs the art tests over `site/public/art/`. They check that:
+
+- every opaque pixel uses a colour from the 56-colour palette, and no pixel is semi-transparent
+- the cabinet's palette copy matches the master palette
+- each plate uses only the plate colours
+- loops have no seam
+- ambient loop lengths divide the scene loop (one-shot `-react` strips are not loops and are skipped)
+- per-frame change stays within the motion budget
+- room layers are at least 4 art px per world unit; egg, trigger and character sprites are grain 8 or finer, and their strips are exactly `w × grain` by `h × grain`
+- plates are at least 120 px wide, and items are at least 56 px and no wider than 70% of a plate

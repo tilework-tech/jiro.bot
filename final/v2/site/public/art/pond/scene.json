@@ -1,0 +1,227 @@
+{
+ "id": "pond",
+ "size": [
+  360,
+  202
+ ],
+ "loop": 8000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [],
+ "surfaces": [
+  {
+   "id": "bank",
+   "x": 270,
+   "y": 125,
+   "w": 30,
+   "h": 15
+  },
+  {
+   "id": "stool",
+   "x": 261,
+   "y": 128,
+   "w": 14,
+   "h": 8
+  },
+  {
+   "id": "bank-left",
+   "x": 0,
+   "y": 160,
+   "w": 55,
+   "h": 40
+  },
+  {
+   "id": "bridge",
+   "x": 296,
+   "y": 20,
+   "w": 50,
+   "h": 16
+  }
+ ],
+ "water": [
+  {
+   "id": "water",
+   "x": 70,
+   "y": 122,
+   "w": 130,
+   "h": 60
+  }
+ ],
+ "eggs": [
+  {
+   "id": "moon",
+   "name": "Moon in the pond",
+   "x": 229,
+   "y": 4,
+   "w": 40,
+   "h": 36,
+   "says": [
+    "Only a reflection. Still counts."
+   ]
+  },
+  {
+   "id": "bridge",
+   "name": "Empty bridge",
+   "x": 290,
+   "y": 10,
+   "w": 66,
+   "h": 40,
+   "says": [
+    "Jiro is out on a delivery."
+   ]
+  },
+  {
+   "id": "toro-l",
+   "name": "Stone lantern",
+   "x": 15,
+   "y": 149,
+   "w": 24,
+   "h": 32,
+   "says": [
+    "Lit since the first commit."
+   ]
+  },
+  {
+   "id": "toro-r",
+   "name": "Other stone lantern",
+   "x": 267,
+   "y": 162,
+   "w": 22,
+   "h": 32,
+   "says": [
+    "Symmetry."
+   ]
+  },
+  {
+   "id": "cattails",
+   "name": "Cattails",
+   "x": 226,
+   "y": 152,
+   "w": 36,
+   "h": 46,
+   "says": [
+    "*rustle*"
+   ]
+  },
+  {
+   "id": "reeds",
+   "name": "Island reeds",
+   "x": 168,
+   "y": 4,
+   "w": 32,
+   "h": 26,
+   "says": [
+    "A heron left. Probably."
+   ]
+  },
+  {
+   "id": "lily",
+   "name": "Lily pads",
+   "x": 275,
+   "y": 14,
+   "w": 15,
+   "h": 16,
+   "says": [
+    "No frogs tonight."
+   ]
+  },
+  {
+   "id": "stall-lantern",
+   "name": "Stall lantern",
+   "x": 250,
+   "y": 82,
+   "w": 12,
+   "h": 18,
+   "says": [
+    "Daily Roll: one maze a day."
+   ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "fireflies",
+   "area": {
+    "x": 4,
+    "y": 4,
+    "w": 160,
+    "h": 80
+   },
+   "n": 7,
+   "swarmEvery": 22
+  },
+  {
+   "kind": "ripples",
+   "areas": [
+    {
+     "x": 40,
+     "y": 20,
+     "w": 150,
+     "h": 60
+    },
+    {
+     "x": 30,
+     "y": 125,
+     "w": 200,
+     "h": 60
+    }
+   ],
+   "every": 1.4,
+   "maxR": 13
+  },
+  {
+   "kind": "ripples",
+   "areas": [
+    {
+     "x": 228,
+     "y": 18,
+     "w": 40,
+     "h": 22
+    }
+   ],
+   "every": 3.5,
+   "maxR": 9,
+   "color": "#f9efce"
+  },
+  {
+   "kind": "fish",
+   "area": {
+    "x": 20,
+    "y": 130,
+    "w": 200,
+    "h": 50
+   },
+   "n": 2
+  },
+  {
+   "kind": "glow",
+   "x": 27.0,
+   "y": 165.0,
+   "r": 37.4,
+   "color": "#f6ba64",
+   "period": 4.08,
+   "amp": 0.05
+  },
+  {
+   "kind": "glow",
+   "x": 278.0,
+   "y": 178.0,
+   "r": 37.4,
+   "color": "#f6ba64",
+   "period": 4.45,
+   "amp": 0.05
+  },
+  {
+   "kind": "glow",
+   "x": 256.0,
+   "y": 91.0,
+   "r": 19.8,
+   "color": "#fdd081",
+   "period": 4.82,
+   "amp": 0.05
+  }
+ ]
+}

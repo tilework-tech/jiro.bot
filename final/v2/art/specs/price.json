@@ -1,0 +1,321 @@
+{
+ "master": "art/gen/price/price-master.jpg",
+ "base": "art/work/price/base.png",
+ "groups": "warm,cool,accents,plates,neutrals",
+ "sprites": {
+  "jiro": {
+   "grain": 8,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    196,
+    46,
+    52,
+    80
+   ],
+   "roi": [
+    200,
+    50,
+    44,
+    72
+   ],
+   "mask_prompt": "Isolate the robot on the bicycle: keep only the robot's head, headband, cape, body and arms (not the bicycle).",
+   "frame_rois": [
+    [
+     208,
+     64,
+     16,
+     9
+    ],
+    [
+     206,
+     74,
+     20,
+     9
+    ]
+   ],
+   "frames": [
+    "the robot's two glowing cyan eyes are closed: each eye becomes a thin dark horizontal line.",
+    "the robot's plain copper jaw plate is lowered by a tiny amount, as if he is speaking. No mouth, no teeth."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    2600,
+    160,
+    5240
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "durations": [
+     100,
+     180,
+     200,
+     180,
+     340
+    ]
+   },
+   "egg": "jiro",
+   "idle": {
+    "kind": "sway",
+    "every": 10500,
+    "offset": 0
+   },
+   "subject": "robot on the bicycle (only the robot, not the bicycle)"
+  },
+  "light": {
+   "grain": 8,
+   "crop": [
+    135,
+    15,
+    22,
+    36
+   ],
+   "roi": [
+    139,
+    19,
+    13,
+    27
+   ],
+   "compare": "base",
+   "frames": [
+    "the small traffic light's top lamp goes dark and its bottom lamp glows bright green."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "reaction": {
+    "keep": [
+     0,
+     1,
+     1,
+     0
+    ],
+    "durations": [
+     100,
+     700,
+     500,
+     300
+    ]
+   },
+   "egg": "light"
+  },
+  "cat": {
+   "grain": 8,
+   "crop": [
+    111,
+    104,
+    22,
+    30
+   ],
+   "roi": [
+    115,
+    107,
+    14,
+    24
+   ],
+   "align": false,
+   "frames": [
+    "the small grey cat on the doorstep blinks its eyes closed.",
+    "the small grey cat on the doorstep flicks its ears and tail."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    3000,
+    200,
+    4800
+   ],
+   "egg": "cat",
+   "motion": "hop",
+   "subject": "small grey cat sitting on the doorstep"
+  }
+ },
+ "scene": {
+  "surfaces": [
+   {
+    "id": "step",
+    "x": 100,
+    "y": 130,
+    "w": 40,
+    "h": 8
+   },
+   {
+    "id": "street",
+    "x": 20,
+    "y": 172,
+    "w": 240,
+    "h": 26
+   },
+   {
+    "id": "sidewalk",
+    "x": 0,
+    "y": 150,
+    "w": 160,
+    "h": 22
+   }
+  ],
+  "eggs": [
+   {
+    "id": "jiro",
+    "name": "Waiting for the green",
+    "x": 202,
+    "y": 52,
+    "w": 40,
+    "h": 66,
+    "sprite": "jiro",
+    "says": [
+     "Light's red. I wait.",
+     "Delivery in four minutes. Tests in three."
+    ]
+   },
+   {
+    "id": "light",
+    "name": "Changed the light",
+    "x": 139,
+    "y": 19,
+    "w": 13,
+    "h": 17,
+    "sprite": "light",
+    "says": [
+     "Green! \u2026and red again."
+    ]
+   },
+   {
+    "id": "lantern-r",
+    "name": "Second lantern",
+    "x": 250,
+    "y": 12,
+    "w": 14,
+    "h": 27,
+    "says": [
+     "Still open."
+    ]
+   },
+   {
+    "id": "cat",
+    "name": "Street cat",
+    "x": 115,
+    "y": 112,
+    "w": 14,
+    "h": 19,
+    "sprite": "cat",
+    "says": [
+     "mrrp."
+    ]
+   },
+   {
+    "id": "lamp",
+    "name": "Headlamp",
+    "x": 184,
+    "y": 116,
+    "w": 8,
+    "h": 10,
+    "says": [
+     "Lights on at night. Like logging."
+    ]
+   },
+   {
+    "id": "crate",
+    "name": "Tonight's delivery",
+    "x": 236,
+    "y": 68,
+    "w": 26,
+    "h": 26,
+    "says": [
+     "Twelve nigiri and one pull request."
+    ]
+   },
+   {
+    "id": "puddle",
+    "name": "Splash",
+    "x": 248,
+    "y": 174,
+    "w": 36,
+    "h": 15,
+    "says": [
+     "*splash*"
+    ]
+   }
+  ],
+  "fx": [
+   {
+    "kind": "rain",
+    "area": {
+     "x": 0,
+     "y": 0,
+     "w": 300,
+     "h": 202
+    },
+    "n": 26
+   },
+   {
+    "kind": "splash",
+    "spots": [
+     [
+      62,
+      166
+     ],
+     [
+      92,
+      172
+     ],
+     [
+      262,
+      176
+     ],
+     [
+      300,
+      186
+     ],
+     [
+      200,
+      195
+     ]
+    ],
+    "every": 2.2
+   },
+   {
+    "kind": "glow",
+    "x": 163.0,
+    "y": 45.5,
+    "r": 34.1,
+    "color": "#fdd081",
+    "period": 3.34,
+    "amp": 0.05
+   },
+   {
+    "kind": "glow",
+    "x": 257.0,
+    "y": 25.5,
+    "r": 31.9,
+    "color": "#fdd081",
+    "period": 3.71,
+    "amp": 0.05
+   },
+   {
+    "kind": "glow",
+    "x": 188.0,
+    "y": 121.0,
+    "r": 11.0,
+    "color": "#f9efce",
+    "period": 4.08,
+    "amp": 0.05
+   }
+  ]
+ }
+}

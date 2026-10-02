@@ -1,0 +1,211 @@
+{
+ "id": "table",
+ "size": [
+  360,
+  202
+ ],
+ "loop": 8000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [
+  {
+   "id": "cat",
+   "src": "cat.png",
+   "x": 209,
+   "y": 21,
+   "w": 36,
+   "h": 21,
+   "grain": 8,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "cat",
+   "motion": {
+    "kind": "stretch",
+    "cut": "cat-cut.png",
+    "under": "cat-under.png",
+    "x": 205,
+    "y": 17,
+    "w": 44,
+    "h": 28,
+    "bottom": [
+     227.75,
+     45.0
+    ],
+    "top": [
+     227.75,
+     22.5
+    ]
+   }
+  },
+  {
+   "id": "spirit",
+   "src": "spirit.png",
+   "x": 171,
+   "y": 134,
+   "w": 18,
+   "h": 15,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    3200,
+    200,
+    4600
+   ],
+   "egg": "spirit"
+  },
+  {
+   "id": "vent-eyes",
+   "src": "vent-eyes.png",
+   "x": 86,
+   "y": 129,
+   "w": 14,
+   "h": 10,
+   "grain": 8,
+   "frames": 4,
+   "durations": [
+    2800,
+    200,
+    4800,
+    200
+   ],
+   "egg": "vent-eyes"
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "stool",
+   "x": 180,
+   "y": 152,
+   "w": 26,
+   "h": 10
+  },
+  {
+   "id": "cabinet-top",
+   "x": 202,
+   "y": 30,
+   "w": 46,
+   "h": 8
+  },
+  {
+   "id": "floor",
+   "x": 120,
+   "y": 175,
+   "w": 60,
+   "h": 20
+  },
+  {
+   "id": "counter",
+   "x": 0,
+   "y": 146,
+   "w": 110,
+   "h": 22
+  }
+ ],
+ "eggs": [
+  {
+   "id": "cat",
+   "name": "Cat on the high score",
+   "x": 211,
+   "y": 23,
+   "w": 32,
+   "h": 17,
+   "sprite": "cat",
+   "says": [
+    "mrrp. new high score?"
+   ]
+  },
+  {
+   "id": "lantern",
+   "name": "Arcade lantern",
+   "x": 164,
+   "y": 8,
+   "w": 20,
+   "h": 40,
+   "says": [
+    "Lights low, high scores high."
+   ]
+  },
+  {
+   "id": "spirit",
+   "name": "Player two",
+   "x": 172,
+   "y": 135,
+   "w": 16,
+   "h": 13,
+   "says": [
+    "(it wants a turn)"
+   ]
+  },
+  {
+   "id": "vent-eyes",
+   "name": "Someone in the vent",
+   "x": 86,
+   "y": 128,
+   "w": 14,
+   "h": 11,
+   "sprite": "vent-eyes",
+   "says": [
+    "\u2026"
+   ]
+  },
+  {
+   "id": "marquee",
+   "name": "Read the marquee",
+   "x": 204,
+   "y": 44,
+   "w": 38,
+   "h": 22,
+   "says": [
+    "Insert coin. Or don't: free play."
+   ]
+  },
+  {
+   "id": "coin",
+   "name": "Free play",
+   "x": 221,
+   "y": 147,
+   "w": 13,
+   "h": 24,
+   "says": [
+    "Free play since 2026."
+   ]
+  },
+  {
+   "id": "crates",
+   "name": "Crates of rice",
+   "x": 134,
+   "y": 128,
+   "w": 30,
+   "h": 18,
+   "says": [
+    "Rice. Mostly rice."
+   ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "glow",
+   "x": 174.0,
+   "y": 28.0,
+   "r": 46.2,
+   "color": "#fdd081",
+   "period": 2.6,
+   "amp": 0.05
+  },
+  {
+   "kind": "glow",
+   "x": 227.5,
+   "y": 159.0,
+   "r": 28.6,
+   "color": "#f6ba64",
+   "period": 2.97,
+   "amp": 0.05
+  }
+ ]
+}

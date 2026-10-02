@@ -1,0 +1,6 @@
+Repaint image 2 (a dining room layout) in exactly the rendering style, darkness and lighting of image 1: the same crisp cel-shaded look with flat colour areas, hard-edged shadows, dark outlines on people and props, and the same deep warm night palette where most of the room sits in plum-brown shadow and light only comes from paper lanterns, warm bulbs and glowing shoji windows in soft pools. Make the whole room much darker and more muted than image 2, like a cosy restaurant late at night; the middle of the image (20-74% of the height) is the darkest and calmest part. Keep image 2's layout and the happy diners (smiling, chatting, toasting, eating sushi), but:
+- the camera is image 1's elevated three-quarter view looking down about 30 degrees;
+- replace the two troughs with ONE long, low, straight wooden serving ledge running horizontally across the full width of the image at 76-86% of the height, with an empty dark recessed channel on top (no conveyor belt, no plates);
+- below it, at the bottom left and bottom right corners, one small table of happy diners each, seen from slightly behind;
+- keep the sleeping cat on a cushion, a soot sprite (round black fuzzy soot ball with big white eyes) peeking out behind a lantern on the back wall, and one pair of tiny glowing eyes under a table.
+No robot anywhere. 

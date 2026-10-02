@@ -1,0 +1,114 @@
+{
+ "id": "band1",
+ "size": [
+  360,
+  86
+ ],
+ "loop": 8000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [
+  {
+   "id": "spirits",
+   "src": "spirits.png",
+   "x": 190,
+   "y": 8,
+   "w": 94,
+   "h": 20,
+   "grain": 8,
+   "frames": 7,
+   "durations": [
+    1800,
+    200,
+    2200,
+    200,
+    1400,
+    200,
+    2000
+   ],
+   "egg": "spirits",
+   "motion": {
+    "kind": "hop",
+    "cut": "spirits-cut.png",
+    "under": "spirits-under.png",
+    "x": 184,
+    "y": 2,
+    "w": 106,
+    "h": 30,
+    "bottom": [
+     237.0,
+     32.0
+    ],
+    "top": [
+     237.0,
+     20.25
+    ]
+   }
+  },
+  {
+   "id": "hole-eyes",
+   "src": "hole-eyes.png",
+   "x": 285,
+   "y": 66,
+   "w": 15,
+   "h": 19,
+   "grain": 8,
+   "frames": 4,
+   "durations": [
+    3800,
+    200,
+    3800,
+    200
+   ],
+   "egg": "hole-eyes"
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "crate",
+   "x": 93,
+   "y": 66,
+   "w": 40,
+   "h": 6
+  }
+ ],
+ "eggs": [
+  {
+   "id": "spirits",
+   "name": "Five dust spirits on a pipe",
+   "x": 190,
+   "y": 8,
+   "w": 94,
+   "h": 20,
+   "sprite": "spirits"
+  },
+  {
+   "id": "hole-eyes",
+   "name": "Not a mouse",
+   "x": 284,
+   "y": 64,
+   "w": 17,
+   "h": 21,
+   "sprite": "hole-eyes",
+   "says": [
+    "\u2026not a mouse."
+   ]
+  },
+  {
+   "id": "crate",
+   "name": "A crate of extra rice",
+   "x": 92,
+   "y": 64,
+   "w": 42,
+   "h": 21,
+   "says": [
+    "Emergency rice. Do not open."
+   ]
+  }
+ ],
+ "fx": []
+}

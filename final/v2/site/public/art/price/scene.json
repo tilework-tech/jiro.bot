@@ -1,0 +1,309 @@
+{
+ "id": "price",
+ "size": [
+  360,
+  202
+ ],
+ "loop": 8000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [
+  {
+   "id": "jiro",
+   "src": "jiro.png",
+   "x": 200,
+   "y": 50,
+   "w": 44,
+   "h": 72,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    2600,
+    160,
+    5240
+   ],
+   "egg": "jiro",
+   "idle": {
+    "kind": "sway",
+    "every": 10500,
+    "offset": 0
+   },
+   "motion": {
+    "kind": null,
+    "cut": "jiro-cut.png",
+    "under": "jiro-under.png",
+    "x": 196,
+    "y": 46,
+    "w": 52,
+    "h": 80,
+    "bottom": [
+     218.25,
+     126.0
+    ],
+    "top": [
+     218.25,
+     52.875
+    ]
+   }
+  },
+  {
+   "id": "jiro-react",
+   "src": "jiro-react.png",
+   "x": 200,
+   "y": 50,
+   "w": 44,
+   "h": 72,
+   "grain": 8,
+   "frames": 5,
+   "durations": [
+    100,
+    180,
+    200,
+    180,
+    340
+   ],
+   "trigger": true,
+   "egg": "jiro"
+  },
+  {
+   "id": "light",
+   "src": "light.png",
+   "x": 139,
+   "y": 19,
+   "w": 13,
+   "h": 27,
+   "grain": 8,
+   "frames": 1,
+   "durations": [
+    8000
+   ],
+   "egg": "light"
+  },
+  {
+   "id": "light-react",
+   "src": "light-react.png",
+   "x": 139,
+   "y": 19,
+   "w": 13,
+   "h": 27,
+   "grain": 8,
+   "frames": 4,
+   "durations": [
+    100,
+    700,
+    500,
+    300
+   ],
+   "trigger": true,
+   "egg": "light"
+  },
+  {
+   "id": "cat",
+   "src": "cat.png",
+   "x": 115,
+   "y": 107,
+   "w": 14,
+   "h": 24,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    3000,
+    200,
+    4800
+   ],
+   "egg": "cat",
+   "motion": {
+    "kind": "hop",
+    "cut": "cat-cut.png",
+    "under": "cat-under.png",
+    "x": 111,
+    "y": 104,
+    "w": 22,
+    "h": 30,
+    "bottom": [
+     122.5625,
+     130.875
+    ],
+    "top": [
+     122.5625,
+     107.5
+    ]
+   }
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "step",
+   "x": 100,
+   "y": 130,
+   "w": 40,
+   "h": 8
+  },
+  {
+   "id": "street",
+   "x": 20,
+   "y": 172,
+   "w": 240,
+   "h": 26
+  },
+  {
+   "id": "sidewalk",
+   "x": 0,
+   "y": 150,
+   "w": 160,
+   "h": 22
+  }
+ ],
+ "eggs": [
+  {
+   "id": "jiro",
+   "name": "Waiting for the green",
+   "x": 202,
+   "y": 52,
+   "w": 40,
+   "h": 66,
+   "sprite": "jiro",
+   "says": [
+    "Light's red. I wait.",
+    "Delivery in four minutes. Tests in three."
+   ]
+  },
+  {
+   "id": "light",
+   "name": "Changed the light",
+   "x": 139,
+   "y": 19,
+   "w": 13,
+   "h": 17,
+   "sprite": "light",
+   "says": [
+    "Green! \u2026and red again."
+   ]
+  },
+  {
+   "id": "lantern-r",
+   "name": "Second lantern",
+   "x": 250,
+   "y": 12,
+   "w": 14,
+   "h": 27,
+   "says": [
+    "Still open."
+   ]
+  },
+  {
+   "id": "cat",
+   "name": "Street cat",
+   "x": 115,
+   "y": 112,
+   "w": 14,
+   "h": 19,
+   "sprite": "cat",
+   "says": [
+    "mrrp."
+   ]
+  },
+  {
+   "id": "lamp",
+   "name": "Headlamp",
+   "x": 184,
+   "y": 116,
+   "w": 8,
+   "h": 10,
+   "says": [
+    "Lights on at night. Like logging."
+   ]
+  },
+  {
+   "id": "crate",
+   "name": "Tonight's delivery",
+   "x": 236,
+   "y": 68,
+   "w": 26,
+   "h": 26,
+   "says": [
+    "Twelve nigiri and one pull request."
+   ]
+  },
+  {
+   "id": "puddle",
+   "name": "Splash",
+   "x": 248,
+   "y": 174,
+   "w": 36,
+   "h": 15,
+   "says": [
+    "*splash*"
+   ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "rain",
+   "area": {
+    "x": 0,
+    "y": 0,
+    "w": 300,
+    "h": 202
+   },
+   "n": 26
+  },
+  {
+   "kind": "splash",
+   "spots": [
+    [
+     62,
+     166
+    ],
+    [
+     92,
+     172
+    ],
+    [
+     262,
+     176
+    ],
+    [
+     300,
+     186
+    ],
+    [
+     200,
+     195
+    ]
+   ],
+   "every": 2.2
+  },
+  {
+   "kind": "glow",
+   "x": 163.0,
+   "y": 45.5,
+   "r": 34.1,
+   "color": "#fdd081",
+   "period": 3.34,
+   "amp": 0.05
+  },
+  {
+   "kind": "glow",
+   "x": 257.0,
+   "y": 25.5,
+   "r": 31.9,
+   "color": "#fdd081",
+   "period": 3.71,
+   "amp": 0.05
+  },
+  {
+   "kind": "glow",
+   "x": 188.0,
+   "y": 121.0,
+   "r": 11.0,
+   "color": "#f9efce",
+   "period": 4.08,
+   "amp": 0.05
+  }
+ ]
+}

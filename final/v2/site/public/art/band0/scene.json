@@ -1,0 +1,130 @@
+{
+ "id": "band0",
+ "size": [
+  360,
+  153
+ ],
+ "loop": 4000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [
+  {
+   "id": "soot",
+   "src": "soot.png",
+   "x": 218,
+   "y": 38,
+   "w": 52,
+   "h": 20,
+   "grain": 8,
+   "frames": 4,
+   "durations": [
+    2600,
+    200,
+    1000,
+    200
+   ],
+   "egg": "soot",
+   "motion": {
+    "kind": "hop",
+    "cut": "soot-cut.png",
+    "under": "soot-under.png",
+    "x": 215,
+    "y": 30,
+    "w": 60,
+    "h": 30,
+    "bottom": [
+     244.75,
+     60.0
+    ],
+    "top": [
+     244.75,
+     39.25
+    ]
+   }
+  },
+  {
+   "id": "eyes",
+   "src": "eyes.png",
+   "x": 344,
+   "y": 114,
+   "w": 14,
+   "h": 10,
+   "grain": 8,
+   "frames": 4,
+   "durations": [
+    3000,
+    200,
+    600,
+    200
+   ],
+   "egg": "eyes"
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "joist",
+   "x": 180,
+   "y": 56,
+   "w": 110,
+   "h": 6
+  },
+  {
+   "id": "floor",
+   "x": 40,
+   "y": 134,
+   "w": 70,
+   "h": 16
+  }
+ ],
+ "eggs": [
+  {
+   "id": "soot",
+   "name": "Startled the soot sprites",
+   "x": 218,
+   "y": 38,
+   "w": 52,
+   "h": 20,
+   "sprite": "soot"
+  },
+  {
+   "id": "candle",
+   "name": "Candle in the crawlspace",
+   "x": 305,
+   "y": 97,
+   "w": 20,
+   "h": 22,
+   "says": [
+    "A candle stub. Still burning.",
+    "Someone's working late down here."
+   ]
+  },
+  {
+   "id": "eyes",
+   "name": "Eyes under the floor",
+   "x": 344,
+   "y": 112,
+   "w": 14,
+   "h": 12,
+   "says": [
+    "\u2026",
+    "(blink)"
+   ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "glow",
+   "x": 315.0,
+   "y": 108.0,
+   "r": 24.2,
+   "color": "#f6ba64",
+   "period": 2.6,
+   "amp": 0.05,
+   "flicker": true
+  }
+ ]
+}

@@ -1,0 +1,148 @@
+{
+ "id": "band3",
+ "size": [
+  360,
+  110
+ ],
+ "loop": 8000,
+ "layers": [
+  {
+   "src": "base.png",
+   "grain": 4
+  }
+ ],
+ "sprites": [
+  {
+   "id": "bunk",
+   "src": "bunk.png",
+   "x": 203,
+   "y": 51,
+   "w": 52,
+   "h": 38,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    2600,
+    200,
+    5200
+   ],
+   "egg": "bunk",
+   "motion": {
+    "kind": "hop",
+    "cut": "bunk-cut.png",
+    "under": "bunk-under.png",
+    "x": 200,
+    "y": 48,
+    "w": 58,
+    "h": 44,
+    "bottom": [
+     239.0625,
+     69.0
+    ],
+    "top": [
+     239.0625,
+     52.375
+    ]
+   }
+  },
+  {
+   "id": "waver",
+   "src": "waver.png",
+   "x": 259,
+   "y": 79,
+   "w": 18,
+   "h": 18,
+   "grain": 8,
+   "frames": 3,
+   "durations": [
+    3600,
+    200,
+    4200
+   ],
+   "egg": "waver",
+   "motion": {
+    "kind": "hop",
+    "cut": "waver-cut.png",
+    "under": "waver-under.png",
+    "x": 256,
+    "y": 76,
+    "w": 24,
+    "h": 24,
+    "bottom": [
+     267.4375,
+     95.25
+    ],
+    "top": [
+     267.4375,
+     79.5
+    ]
+   }
+  }
+ ],
+ "surfaces": [
+  {
+   "id": "shelf",
+   "x": 20,
+   "y": 92,
+   "w": 250,
+   "h": 6
+  }
+ ],
+ "eggs": [
+  {
+   "id": "bunk",
+   "name": "The soot bunk room",
+   "x": 204,
+   "y": 52,
+   "w": 50,
+   "h": 36,
+   "sprite": "bunk",
+   "says": [
+    "shh. lights out."
+   ]
+  },
+  {
+   "id": "waver",
+   "name": "Waved back",
+   "x": 260,
+   "y": 80,
+   "w": 16,
+   "h": 16,
+   "sprite": "waver",
+   "says": [
+    "(waves)"
+   ]
+  },
+  {
+   "id": "reader",
+   "name": "Morning paper",
+   "x": 181,
+   "y": 80,
+   "w": 17,
+   "h": 14,
+   "says": [
+    "Headline: BELT RUNS ON TIME."
+   ]
+  },
+  {
+   "id": "faucet",
+   "name": "Dripping faucet",
+   "x": 121,
+   "y": 59,
+   "w": 13,
+   "h": 24,
+   "says": [
+    "drip."
+   ]
+  }
+ ],
+ "fx": [
+  {
+   "kind": "drip",
+   "x": 127,
+   "y": 75,
+   "fall": 7,
+   "every": 2.4
+  }
+ ]
+}

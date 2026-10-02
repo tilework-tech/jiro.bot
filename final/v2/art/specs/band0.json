@@ -1,0 +1,164 @@
+{
+ "master": "art/gen/hd/band0-ill-a.jpg",
+ "base": "art/work/band0/base.png",
+ "groups": "warm,cool,accents,plates,neutrals",
+ "gain": 1.25,
+ "sprites": {
+  "soot": {
+   "crop": [
+    215,
+    30,
+    60,
+    30
+   ],
+   "roi": [
+    218,
+    38,
+    52,
+    20
+   ],
+   "model": "gemini-3-pro-image",
+   "frames": [
+    "the left black soot sprite blinks: its big white eyes are closed.",
+    "the right black soot sprite blinks: its big white eyes are closed.",
+    "all three black soot sprites hop up a little, startled, eyes wide open."
+   ],
+   "keep": [
+    0,
+    1,
+    0,
+    2
+   ],
+   "durations": [
+    2600,
+    200,
+    1000,
+    200
+   ],
+   "egg": "soot",
+   "grain": 8,
+   "frame_rois": [
+    [
+     221,
+     42,
+     13,
+     9
+    ],
+    [
+     255,
+     43,
+     12,
+     9
+    ],
+    [
+     218,
+     38,
+     52,
+     14
+    ]
+   ],
+   "motion": "hop",
+   "subject": "three small round black fuzzy soot sprites sitting on the beam"
+  },
+  "eyes": {
+   "crop": [
+    332,
+    104,
+    28,
+    28
+   ],
+   "roi": [
+    344,
+    114,
+    14,
+    10
+   ],
+   "min_blob": 1,
+   "model": "gemini-3-pro-image",
+   "frames": [
+    "the two tiny glowing yellow eyes in the dark corner close: only darkness."
+   ],
+   "keep": [
+    0,
+    1,
+    0,
+    1
+   ],
+   "durations": [
+    3000,
+    200,
+    600,
+    200
+   ],
+   "egg": "eyes",
+   "compare": "base",
+   "grain": 8
+  }
+ },
+ "scene": {
+  "surfaces": [
+   {
+    "id": "joist",
+    "x": 180,
+    "y": 56,
+    "w": 110,
+    "h": 6
+   },
+   {
+    "id": "floor",
+    "x": 40,
+    "y": 134,
+    "w": 70,
+    "h": 16
+   }
+  ],
+  "eggs": [
+   {
+    "id": "soot",
+    "name": "Startled the soot sprites",
+    "x": 218,
+    "y": 38,
+    "w": 52,
+    "h": 20,
+    "sprite": "soot"
+   },
+   {
+    "id": "candle",
+    "name": "Candle in the crawlspace",
+    "x": 305,
+    "y": 97,
+    "w": 20,
+    "h": 22,
+    "says": [
+     "A candle stub. Still burning.",
+     "Someone's working late down here."
+    ]
+   },
+   {
+    "id": "eyes",
+    "name": "Eyes under the floor",
+    "x": 344,
+    "y": 112,
+    "w": 14,
+    "h": 12,
+    "says": [
+     "\u2026",
+     "(blink)"
+    ]
+   }
+  ],
+  "fx": [
+   {
+    "kind": "glow",
+    "x": 315.0,
+    "y": 108.0,
+    "r": 24.2,
+    "color": "#f6ba64",
+    "period": 2.6,
+    "amp": 0.05,
+    "flicker": true
+   }
+  ]
+ },
+ "cool_gate": 22
+}

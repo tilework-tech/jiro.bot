@@ -1,0 +1,242 @@
+{
+ "master": "art/gen/table/table-a.jpg",
+ "base": "art/work/table/base.png",
+ "groups": "warm,cool,accents,plates,neutrals",
+ "cool_gate": 22,
+ "sprites": {
+  "cat": {
+   "grain": 8,
+   "crop": [
+    205,
+    17,
+    44,
+    28
+   ],
+   "roi": [
+    209,
+    21,
+    36,
+    21
+   ],
+   "mask_prompt": "Isolate the sleeping orange tabby cat: keep only the cat.",
+   "frames": [
+    "the orange tabby cat lifts its head and opens its eyes.",
+    "the orange tabby cat stretches one front paw over the edge and yawns."
+   ],
+   "keep": [
+    0
+   ],
+   "durations": [
+    8000
+   ],
+   "egg": "cat",
+   "motion": "stretch",
+   "subject": "sleeping orange tabby cat"
+  },
+  "spirit": {
+   "grain": 8,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    167,
+    130,
+    26,
+    22
+   ],
+   "roi": [
+    171,
+    134,
+    18,
+    15
+   ],
+   "frames": [
+    "the small black soot sprite blinks: its big white eyes are closed."
+   ],
+   "keep": [
+    0,
+    1,
+    0
+   ],
+   "durations": [
+    3200,
+    200,
+    4600
+   ],
+   "egg": "spirit",
+   "frame_rois": [
+    [
+     174,
+     137,
+     13,
+     10
+    ]
+   ]
+  },
+  "vent-eyes": {
+   "grain": 8,
+   "model": "gemini-3-pro-image",
+   "crop": [
+    80,
+    123,
+    26,
+    22
+   ],
+   "roi": [
+    86,
+    129,
+    14,
+    10
+   ],
+   "compare": "base",
+   "min_blob": 1,
+   "frames": [
+    "the two tiny glowing yellow eyes behind the small wall vent close: only darkness."
+   ],
+   "keep": [
+    0,
+    1,
+    0,
+    1
+   ],
+   "durations": [
+    2800,
+    200,
+    4800,
+    200
+   ],
+   "egg": "vent-eyes"
+  }
+ },
+ "scene": {
+  "surfaces": [
+   {
+    "id": "stool",
+    "x": 180,
+    "y": 152,
+    "w": 26,
+    "h": 10
+   },
+   {
+    "id": "cabinet-top",
+    "x": 202,
+    "y": 30,
+    "w": 46,
+    "h": 8
+   },
+   {
+    "id": "floor",
+    "x": 120,
+    "y": 175,
+    "w": 60,
+    "h": 20
+   },
+   {
+    "id": "counter",
+    "x": 0,
+    "y": 146,
+    "w": 110,
+    "h": 22
+   }
+  ],
+  "eggs": [
+   {
+    "id": "cat",
+    "name": "Cat on the high score",
+    "x": 211,
+    "y": 23,
+    "w": 32,
+    "h": 17,
+    "sprite": "cat",
+    "says": [
+     "mrrp. new high score?"
+    ]
+   },
+   {
+    "id": "lantern",
+    "name": "Arcade lantern",
+    "x": 164,
+    "y": 8,
+    "w": 20,
+    "h": 40,
+    "says": [
+     "Lights low, high scores high."
+    ]
+   },
+   {
+    "id": "spirit",
+    "name": "Player two",
+    "x": 172,
+    "y": 135,
+    "w": 16,
+    "h": 13,
+    "says": [
+     "(it wants a turn)"
+    ]
+   },
+   {
+    "id": "vent-eyes",
+    "name": "Someone in the vent",
+    "x": 86,
+    "y": 128,
+    "w": 14,
+    "h": 11,
+    "sprite": "vent-eyes",
+    "says": [
+     "\u2026"
+    ]
+   },
+   {
+    "id": "marquee",
+    "name": "Read the marquee",
+    "x": 204,
+    "y": 44,
+    "w": 38,
+    "h": 22,
+    "says": [
+     "Insert coin. Or don't: free play."
+    ]
+   },
+   {
+    "id": "coin",
+    "name": "Free play",
+    "x": 221,
+    "y": 147,
+    "w": 13,
+    "h": 24,
+    "says": [
+     "Free play since 2026."
+    ]
+   },
+   {
+    "id": "crates",
+    "name": "Crates of rice",
+    "x": 134,
+    "y": 128,
+    "w": 30,
+    "h": 18,
+    "says": [
+     "Rice. Mostly rice."
+    ]
+   }
+  ],
+  "fx": [
+   {
+    "kind": "glow",
+    "x": 174.0,
+    "y": 28.0,
+    "r": 46.2,
+    "color": "#fdd081",
+    "period": 2.6,
+    "amp": 0.05
+   },
+   {
+    "kind": "glow",
+    "x": 227.5,
+    "y": 159.0,
+    "r": 28.6,
+    "color": "#f6ba64",
+    "period": 2.97,
+    "amp": 0.05
+   }
+  ]
+ }
+}
