@@ -153,9 +153,11 @@ test("the page never rests between scenes: a scroll that stops in a band rides o
   const bandMiddle = top - page.viewportSize()!.height * 0.3;
   await page.evaluate((y) => scrollTo(0, y), bandMiddle);
   await expect.poll(async () => {
-    const y = await page.evaluate(() => scrollY);
-    const tops = await stops.evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top + scrollY)));
-    return tops.includes(y) || y === 0;
+    // A scene taller than the screen can rest anywhere from its top to its bottom minus one screen.
+    return page.evaluate(() => [...document.querySelectorAll<HTMLElement>("[data-stop]")].some((e) => {
+      const top = Math.round(e.getBoundingClientRect().top + scrollY);
+      return scrollY >= top - 1 && scrollY <= Math.max(top, top + e.offsetHeight - innerHeight) + 1 && (window as any).__jiro.scroll().resting;
+    }));
   }, { timeout: 6000 }).toBe(true);
 });
 

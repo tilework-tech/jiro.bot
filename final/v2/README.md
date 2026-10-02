@@ -47,7 +47,7 @@ Open questions:
 
 - For Martin: stop 4 has no Jiro (the brief puts him in the hero, product, FAQ and street; the pond has none by design).
 - For Martin: "Reserve a seat" links to noriagentic.com because no trial signup URL is known yet.
-- Round 8 was not tested in WebKit: the WebKit e2e run could not start in this session (missing system libraries, no sudo, and the library overlay below was not rebuilt). The new scrolling (non-passive wheel and touch handlers writing `scrollTo` each frame) still needs a Safari and real iOS device check.
+- Round 8 passed the full e2e suite in Chromium and WebKit (desktop and mobile) in Playwright, after the WebKit library overlay below was rebuilt. The new scrolling (non-passive wheel and touch handlers writing `scrollTo` each frame) still needs a check in real Safari and on a real iPhone.
 
 **Resolution.** World coordinates stay 360 units across. Rooms and bands are fitted at grain 4 (1440 art px across, 1 CSS px per art px at 1440 wide). Characters, creatures, clickable props and all belt art are grain 8 (one art px per device pixel on a 2× retina screen at 1440 wide). The site sizes each scene canvas to the device (2, 4 or 8 canvas px per world unit) and averages finer art down once at load, so 1× screens and phones do not carry 8× canvases. Grain 8 is the ceiling the current 4K masters support. Gemini cannot draw pixel art this fine, so its scene masters are flat illustrations and our scripts make the pixel grid (see `art/README.md`, "Detail").
 

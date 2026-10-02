@@ -31,6 +31,11 @@ export async function waitForPlate(page: Page, pred: (p: PlateBox) => boolean = 
 
 /** Wait until the page has come to rest on a scene (the scroll may ride on to one after a programmatic scroll). */
 export async function settled(page: Page) {
-  await expect.poll(() => page.evaluate(() => (window as any).__jiro.scroll().resting as boolean), { timeout: 10_000 }).toBe(true);
+  // Two frames first, so a scroll just made by the test has reached the scroller.
+  await page.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done))));
+  await expect.poll(() => page.evaluate(() => {
+    const st = (window as any).__jiro.scroll();
+    return st.resting && Math.abs(scrollY - st.y) < 1;
+  }), { timeout: 10_000 }).toBe(true);
   return page.evaluate(() => scrollY);
 }

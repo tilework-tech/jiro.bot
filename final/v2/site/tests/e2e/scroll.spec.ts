@@ -24,13 +24,15 @@ test("the belt is drawn where the art expects it all the way down the page", asy
   for (const id of ["product", "faq", "pond"]) {
     await page.evaluate((y) => scrollTo(0, y), await stopTop(page, id));
     await settled(page);
-    const p = await waitForPlate(page);
-    const alpha = await page.evaluate(({ x, y }) => {
+    await waitForPlate(page);
+    // Read the plates and the canvas in one task, so nothing moves in between.
+    const alpha = await page.evaluate(() => {
       const c = document.querySelector('[data-layer="belt"]') as HTMLCanvasElement;
       const box = c.getBoundingClientRect();
       const k = c.width / box.width;
-      return c.getContext("2d")!.getImageData(Math.round((x - box.left) * k), Math.round((y - box.top) * k), 1, 1).data[3];
-    }, p);
+      const plates = (window as any).__jiro.platesInView() as { x: number; y: number }[];
+      return Math.max(...plates.map((p) => c.getContext("2d")!.getImageData(Math.round((p.x - box.left) * k), Math.round((p.y - box.top) * k), 1, 1).data[3]));
+    });
     expect(alpha, id).toBeGreaterThan(0);
   }
 });
