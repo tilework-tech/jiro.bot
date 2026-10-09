@@ -1,7 +1,8 @@
-# jiro.bot placeholder
+# jiro.bot
 
 Placeholder landing page for jiro.bot: the Jiro onigiri and a sign-up link.
-The full interactive site is in progress in `tilework-tech/jiro.bot`.
+The previous interactive site work is preserved on the
+`backup/jiro-site-2026-10-09` branch (and `jiro-site`, which open PRs target).
 
 - `site/` — static files published as-is
 - `infra/site.cfn.yaml` — CloudFormation stack `jiro-bot-site` (S3, CloudFront, ACM, Route 53, deploy role)

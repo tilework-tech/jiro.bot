@@ -27,7 +27,7 @@ Parameters:
 
   GitHubRepo:
     Type: String
-    Default: jiro.bot-placeholder@1412115237
+    Default: jiro.bot@1388248848
 
   DeployRoleName:
     Type: String
