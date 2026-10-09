@@ -136,6 +136,7 @@ main { flex: 1; display: flex; flex-direction: column; justify-content: center; 
   var anim = null, hovering = false;
 
   function px(x, y, c) { jx.fillStyle = c; jx.fillRect(x * S, y * S, S, S); }
+  function hpx(x, y, c) { jx.fillStyle = c; jx.fillRect(x * S / 2, y * S / 2, S / 2, S / 2); }
 
   function draw(lift, squash, happy) {
     jx.clearRect(0, 0, GW * S, GH * S);
@@ -153,8 +154,9 @@ main { flex: 1; display: flex; flex-direction: column; justify-content: center; 
     }
 
     if (happy) {
-      // resting dot eyes, mouth widens into a small v smile
-      [[5, 5], [9, 5], [6, 6], [8, 6], [7, 7]].forEach(function (p) { px(BX + p[0], oy + p[1], PAL.k); });
+      // small ^ ^ eyes drawn in half pixels, resting dot mouth
+      [[10, 10], [11, 10], [9, 11], [12, 11], [18, 10], [19, 10], [17, 11], [20, 11]].forEach(function (p) { hpx(BX * 2 + p[0], oy * 2 + p[1], PAL.k); });
+      px(BX + 7, oy + 6, PAL.k);
     } else {
       px(BX + 5, oy + 5, PAL.k); px(BX + 9, oy + 5, PAL.k);
       px(BX + 7, oy + 6, PAL.k);
