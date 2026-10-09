@@ -20,13 +20,14 @@ Parameters:
     Type: String
     Default: arn:aws:iam::870844658207:oidc-provider/token.actions.githubusercontent.com
 
+  # New repos get GitHub's immutable OIDC subject: owner@id/repo@id.
   GitHubOrg:
     Type: String
-    Default: tilework-tech
+    Default: tilework-tech@240563687
 
   GitHubRepo:
     Type: String
-    Default: jiro.bot-placeholder
+    Default: jiro.bot-placeholder@1412115237
 
   DeployRoleName:
     Type: String
