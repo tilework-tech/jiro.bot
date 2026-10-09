@@ -1,0 +1,338 @@
+/* ============================================================
+   nori design tokens · v3.1
+   Source of truth: the nori-design skill (SKILL.md next to this
+   file) and the nori-theming skill (color law). Living specimen
+   (full component library, live demos):
+   docs/design/nori-design-specimen-v3.html in the nori workspace
+   repo (tilework-tech/nori-monorepo).
+
+   Usage in a site repo:
+     1. Copy this file into the site (do not hotlink across repos).
+     2. Load fonts in <head> BEFORE this stylesheet:
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@1,6..72,300..600&display=swap" rel="stylesheet">
+     3. <link rel="stylesheet" href="design-tokens.css">
+
+   Library-only atoms (receipt, rice-grain progress, fish → roll
+   easter egg) live in the specimen, not here — no public
+   placement yet.
+
+   There is no light theme.
+   ============================================================ */
+
+:root {
+  color-scheme: dark;
+
+  /* ---- structural ramp (IBM Carbon / oxocarbon descent) ---- */
+  --deep:    #0e0e0e;  /* marketing page canvas */
+  --base:    #161616;  /* product UI canvas, panels on marketing */
+  --surface: #1c1c1c;  /* raised surfaces, bars */
+  --overlay: #262626;  /* primary hairlines, borders */
+  --subtle:  #393939;  /* nested borders, schematic boxes */
+  --muted:   #525252;  /* disabled, placeholder (sub-AA by design) */
+  --comment: #8a8f98;  /* secondary text, labels        5.6:1 AA  */
+  --text:    #dde1e6;  /* body                         13.8:1 AAA */
+  --fg:      #f2f4f8;  /* headings, emphasis           16.4:1 AAA */
+
+  /* texture only — canvas rules + heatmap cell noise, never UI */
+  --rule:    #141414;
+
+  /* ---- functional (normal / bright) ---- */
+  --green:          #42be65;  --green-bright:   #6fdc8c;  /* THE brand accent */
+  --red:            #f47067;  --red-bright:     #ff9cac;
+  --yellow:         #f2cc60;  --yellow-bright:  #fddc69;
+  --blue:           #78a9ff;  --blue-bright:    #a6c8ff;
+  --magenta:        #be95ff;  --magenta-bright: #d4b0ff;
+  --cyan:           #08bdba;  --cyan-bright:    #3ddbd9;
+  --selection:      #2a3b2e;
+  --focus:          rgba(66, 190, 101, .5);
+
+  /* ---- verdant DATA ramp — green as MEASURE (calibrated surfaces only) ---- */
+  --g0:#161616; --g1:#17251b; --g2:#1b3a27; --g3:#215033;
+  --g4:#2c6b41; --g5:#389150; --g6:#42be65; --g7:#6fdc8c;
+
+  /* ---- typography ---- */
+  --mono:  'IBM Plex Mono', ui-monospace, Menlo, monospace;   /* voice A: leads */
+  --serif: 'Newsreader', 'Iowan Old Style', Georgia, serif;   /* voice B: answers (italic display only) */
+
+  /* type scale */
+  --fs-display: clamp(20px, 7.2vw, 44px); /* the two-voice H1 (~32–44px desktop) */
+  --fs-conv:    30px;                     /* Newsreader italic 380–420, lh 1.2   */
+  --fs-h1:      24px;                     /* Plex Mono 600, track -1%            */
+  --fs-h2:      17px;                     /* Plex Mono 600                       */
+  --fs-body:    15px;                     /* Plex Mono 400, lh 1.75, <=62ch      */
+  --fs-small:   13px;
+  --fs-label:   11px;                     /* Plex Mono 500, caps, track +9%      */
+
+  /* ---- structure ---- */
+  --hair:        1px solid var(--overlay);
+  --hair-nested: 1px solid var(--subtle);
+  --radius-btn:  6px;
+  --radius-tag:  4px;
+
+  /* spacing: 4px base — 8 / 16 / 24 / 32 / 48 / 72 / 96 */
+  --sp-2: 8px; --sp-4: 16px; --sp-6: 24px; --sp-8: 32px;
+  --sp-12: 48px; --sp-18: 72px; --sp-24: 96px;
+
+  /* ---- motion law ---- */
+  --t-hover: .12s linear;     /* hover/focus transitions          */
+  --t-blink: 1.1s;            /* cursor blink, steps(1)           */
+  --t-belt: 46s;              /* harness belt drift, linear       */
+  --t-belt-logos: 60s;        /* logo belt drift, linear          */
+}
+
+/* ============ base ============ */
+body {
+  background: var(--deep);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: var(--fs-body);
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+}
+::selection { background: var(--selection); color: var(--fg); }
+a { color: var(--green); text-decoration: none; }
+a:hover { color: var(--green-bright); text-decoration: underline; text-underline-offset: 3px; }
+a:visited { color: var(--magenta); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+h1, h2, h3 { color: var(--fg); margin: 0; text-wrap: balance; }
+code, kbd, pre { font-family: var(--mono); }
+code {
+  background: var(--overlay); border: var(--hair-nested);
+  border-radius: var(--radius-tag); padding: 1px 6px; font-size: 13px; color: var(--fg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+  html { scroll-behavior: auto !important; }
+}
+
+/* ============ the graph-rule canvas ============ */
+/* 24px drafting-paper rules — sanctioned gradient syntax: renders flat hairlines */
+.frame {
+  max-width: 1120px; margin: 0 auto;
+  border-left: var(--hair); border-right: var(--hair);
+  background-image:
+    repeating-linear-gradient(0deg,  var(--rule) 0, var(--rule) 1px, transparent 1px, transparent 24px),
+    repeating-linear-gradient(90deg, var(--rule) 0, var(--rule) 1px, transparent 1px, transparent 24px);
+}
+/* section rule with the --flag eyebrow ON it and + marks where it crosses the rails */
+.sect { position: relative; padding: 84px 60px; border-top: var(--hair); }
+.sect::before, .sect::after {
+  content: '+'; position: absolute; top: -0.72em; color: var(--subtle);
+  font-size: 13px; line-height: 1; background: var(--deep); padding: 2px 0;
+}
+.sect::before { left: -4.6px; }
+.sect::after { right: -4.6px; }
+.eyebrow {
+  position: absolute; top: -0.8em; left: 56px; background: var(--deep);
+  padding: 0 10px; font-size: 13px; font-weight: 500; color: var(--comment);
+}
+.eyebrow b { color: var(--green); font-weight: 500; }
+
+/* ============ display type — the two-voice H1 ============ */
+.h1-stack { display: flex; flex-direction: column; align-items: flex-start; gap: .14em;
+            font-size: var(--fs-display); line-height: 1.12; }
+.h1-hl {
+  font-family: var(--mono); font-weight: 600; letter-spacing: -.02em;
+  background: var(--green); color: var(--deep); padding: .02em .3em; border-radius: 6px;
+}
+.h1-serif { font-family: var(--serif); font-style: italic; font-weight: 420; letter-spacing: -.01em; padding: .02em 0; }
+.t-conv {
+  font-family: var(--serif); font-style: italic; font-weight: 400;
+  font-size: var(--fs-conv); line-height: 1.2; color: var(--fg);
+}
+.label {
+  font-size: var(--fs-label); font-weight: 500; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--comment);
+}
+
+/* ============ wordmark ============ */
+.wordmark { color: var(--fg); font-weight: 600; letter-spacing: -.01em; white-space: nowrap; }
+.wordmark .prompt { color: var(--green-bright); }
+.cursor {
+  display: inline-block; width: .55em; height: 1.05em; margin-left: 2px;
+  background: var(--green-bright); vertical-align: text-bottom;
+  animation: nori-blink var(--t-blink) steps(1) infinite;
+}
+@keyframes nori-blink { 50% { opacity: 0; } }
+
+/* ============ buttons — kbd chips must be wired to real shortcuts ============ */
+button, .btn {
+  font-family: var(--mono); font-size: 14px; font-weight: 500;
+  border-radius: var(--radius-btn); padding: 9px 16px; cursor: pointer;
+  border: 1px solid transparent; display: inline-flex; align-items: center; gap: 9px;
+  line-height: 1.2; transition: background-color var(--t-hover), color var(--t-hover);
+}
+.btn-primary { background: var(--green); color: var(--base); }
+.btn-primary:hover { background: var(--green-bright); }
+.btn-primary kbd { background: rgba(14,14,14,.2); color: var(--base); }
+.btn-secondary { background: var(--overlay); color: var(--text); }
+.btn-secondary:hover { background: var(--subtle); }
+.btn-secondary kbd { background: var(--base); color: var(--comment); border: var(--hair-nested); }
+.btn-ghost { background: transparent; color: var(--green); }
+.btn-ghost:hover { background: rgba(66,190,101,.1); }
+.btn-destructive { background: var(--red); color: var(--base); }
+.btn-destructive:hover { background: var(--red-bright); }
+kbd { font-size: 11px; padding: 1.5px 6px; border-radius: var(--radius-tag); }
+
+/* ============ inputs ============ */
+input[type="text"], input[type="email"], textarea {
+  font-family: var(--mono); font-size: 14px; color: var(--fg);
+  background: var(--base); border: var(--hair-nested);
+  border-radius: var(--radius-btn); padding: 9px 12px;
+}
+input::placeholder, textarea::placeholder { color: var(--muted); }
+input:focus, textarea:focus { border-color: var(--green); outline: none; }
+input[aria-invalid="true"] { border-color: var(--red); }
+
+/* ============ callouts — 9% tint, bright text, 3px spine ============ */
+.callout { padding: 12px 16px; font-size: 13.5px; border-left: 3px solid; }
+.callout-success { background: rgba(66,190,101,.09);  border-color: var(--green);  color: var(--green-bright); }
+.callout-error   { background: rgba(244,112,103,.09); border-color: var(--red);    color: var(--red-bright); }
+.callout-warn    { background: rgba(242,204,96,.09);  border-color: var(--yellow); color: var(--yellow-bright); }
+.callout-info    { background: rgba(120,169,255,.09); border-color: var(--blue);   color: var(--blue-bright); }
+
+/* ============ terminal window — ONE per view ============ */
+/* title names what the window shows (a session, a channel, a path);
+   no invented protocols; never macOS traffic-light dots */
+.term { border: var(--hair); background: var(--base); }
+.term-bar {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--surface); border-bottom: var(--hair);
+  padding: 9px 14px; font-size: 12px; color: var(--comment);
+}
+.term-bar .path { color: var(--comment); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.term-bar .path b { color: var(--text); font-weight: 500; }
+.term-bar .status {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 6px;
+  color: var(--green); font-size: 11px; letter-spacing: .06em; white-space: nowrap;
+}
+.term-bar .status .led { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+.term-body { padding: 16px 18px 20px; font-size: 13px; line-height: 1.95; overflow-x: auto; white-space: pre; }
+.term-body .ps { color: var(--green); }        /* $ prompt         */
+.term-body .cmd { color: var(--fg); }          /* typed command    */
+.term-body .dim { color: var(--comment); }     /* tool noise       */
+.term-body .ok { color: var(--green); }        /* success          */
+.term-body .accent { color: var(--green-bright); } /* the win      */
+.term-body .warn { color: var(--yellow); }
+.term-body .info { color: var(--blue); }
+.term-body .add { color: var(--green); }       /* diffstat +       */
+.term-body .del { color: var(--red); }         /* diffstat −       */
+
+/* ============ the belts — the one sanctioned drift ============ */
+/* spacing via margins (not gap) so the -50% translate wraps seamlessly;
+   duplicate the group aria-hidden; pause on hover AND focus;
+   reduced motion = static wrapped grid */
+.belt-eyebrow { font-size: 12px; color: var(--comment); letter-spacing: .08em; margin-bottom: 18px; }
+.belt-strip {
+  position: relative; height: 66px; overflow: hidden;
+  border-top: var(--hair-nested); border-bottom: var(--hair-nested);
+  /* edge fade = a transparency mask, not a color gradient — sanctioned */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 48px, #000 calc(100% - 48px), transparent 100%);
+}
+.belt-strip:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.belt-ticklayer { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.belt-ticktrack { display: flex; width: max-content; height: 100%; animation: belt-run 92s linear infinite; will-change: transform; }
+.belt-tickgroup { display: flex; height: 100%; }
+.belt-tick { position: relative; width: 38px; height: 100%; flex: none; }
+.belt-tick::before, .belt-tick::after { content: ''; position: absolute; left: 0; width: 1px; height: 5px; background: var(--overlay); }
+.belt-tick::before { top: 0; }
+.belt-tick::after { bottom: 0; }
+.belt-track {
+  position: relative; z-index: 1; display: flex; align-items: center;
+  height: 100%; width: max-content;
+  animation: belt-run var(--t-belt) linear infinite; will-change: transform;
+}
+.belt-group { display: flex; align-items: center; }
+.belt-card {
+  display: inline-flex; align-items: center; gap: 9px;
+  flex: none; background: var(--surface); border: var(--hair-nested);
+  border-radius: var(--radius-tag); padding: 8px 14px 8px 10px; font-size: 13px; line-height: 1;
+  color: var(--text); white-space: nowrap;
+  margin-right: 14px;
+}
+.belt-card-own { color: var(--comment); padding-left: 14px; }
+.belt-arrow { color: var(--green); }
+/* icon slot — live sites drop the real product mark in this tile */
+.belt-ic {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 18px; height: 18px; border: var(--hair-nested); border-radius: var(--radius-tag);
+  background: var(--overlay); color: var(--comment); font-size: 10px; font-weight: 500; line-height: 1;
+}
+/* logo belt — trusted-by: same drift, no rails; live sites ride real logo images */
+.belt-strip--logos { height: 52px; border-top: none; border-bottom: none; }
+.belt-track--logos { animation-duration: var(--t-belt-logos); }
+.belt-logo {
+  flex: none; color: var(--comment); font-size: 14.5px; font-weight: 500;
+  letter-spacing: .04em; white-space: nowrap; margin-right: 56px; line-height: 1;
+}
+.belt-strip--logos:hover .belt-logo, .belt-strip--logos:focus-within .belt-logo { color: var(--text); }
+@keyframes belt-run { to { transform: translateX(-50%); } }
+.belt-strip:hover .belt-track, .belt-strip:hover .belt-ticktrack,
+.belt-strip:focus-within .belt-track, .belt-strip:focus-within .belt-ticktrack { animation-play-state: paused; }
+.belt-note { font-size: 11px; color: var(--comment); margin-top: 16px; letter-spacing: .02em; }
+@media (prefers-reduced-motion: reduce) {
+  .belt-strip { height: auto; overflow: visible; border: none; -webkit-mask-image: none; mask-image: none; }
+  .belt-ticklayer { display: none; }
+  .belt-track { animation: none; width: auto; height: auto; flex-wrap: wrap; justify-content: flex-start; row-gap: 12px; }
+  .belt-logo { margin-right: 32px; margin-bottom: 8px; }
+  .belt-group { display: contents; }
+  .belt-ticktrack { animation: none; }
+}
+
+/* ============ tables ============ */
+.proof-table { width: 100%; border-collapse: collapse; border: var(--hair); font-size: 13.5px; }
+.proof-table th, .proof-table td { border: var(--hair); padding: 10px 14px; text-align: left; font-weight: 400; vertical-align: top; }
+.proof-table th { color: var(--comment); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+/* tone chips carry the scan in dense tables — outline + colored text, deep well.
+   assign semantics per table; status elsewhere stays a plain colored word */
+.chip {
+  display: inline-block; font-size: 11px; font-weight: 500; line-height: 1;
+  padding: 5px 9px; border-radius: var(--radius-tag); background: var(--deep); white-space: nowrap;
+}
+.chip-green  { color: var(--green);   border: 1px solid var(--green); }
+.chip-blue   { color: var(--blue);    border: 1px solid var(--blue); }
+.chip-yellow { color: var(--yellow);  border: 1px solid var(--yellow); }
+.chip-cyan   { color: var(--cyan);    border: 1px solid var(--cyan); }
+.chip-gray   { color: var(--comment); border: 1px solid var(--muted); }
+
+/* ============ the ls listing — enumerable inventory, not logos ============ */
+.lsgrid { border: var(--hair); background: var(--base); padding: 16px 20px; font-size: 13px; line-height: 2.1; overflow-x: auto; }
+.lsgrid .ps { color: var(--green); }
+.lsgrid .d { color: var(--text); margin-right: 26px; white-space: nowrap; display: inline-block; }
+.lsgrid .d i { font-style: normal; color: var(--muted); }
+.lsgrid .sum { color: var(--comment); display: block; border-top: 1px dashed var(--subtle); margin-top: 8px; padding-top: 8px; }
+
+/* ============ footer heatmap field — NORI in the cells ============ */
+/* the public wordmark treatment: cells on the carbon ramp + verdant steps,
+   letters a few ramp steps above the noise. cell generator: see specimen JS. */
+.hm-root { width: 100%; font-family: var(--mono); }
+.hm-footer {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px 24px; flex-wrap: wrap;
+  padding: 14px 4px; border-top: var(--hair-nested);
+}
+.hm-copy { color: var(--muted); font-size: 12px; letter-spacing: .01em; }
+.hm-sign { color: var(--comment); font-size: 12px; letter-spacing: .01em; white-space: nowrap; }
+.hm-sign .hm-p { color: var(--green); }
+.hm-strip { display: grid; gap: 3px; width: 100%; margin-top: 14px; }
+.hm-c { aspect-ratio: 1; min-width: 0; border-radius: 1px; }
+.hm-g0 { background: var(--g0); } .hm-g1 { background: var(--g1); }
+.hm-g2 { background: var(--g2); } .hm-g3 { background: var(--g3); }
+.hm-g4 { background: var(--g4); } .hm-g6 { background: var(--g6); }
+.hm-g7 { background: var(--g7); }
+.hm-breathe { animation: hm-breathe 8s ease-in-out infinite; } /* <=6 cells */
+@keyframes hm-breathe { 0%, 100% { opacity: 1; } 50% { opacity: .42; } }
+@media (prefers-reduced-motion: reduce) { .hm-breathe { animation: none; } }
+
+/* ============ structure helpers ============ */
+.hairline { border-top: var(--hair); }
+.dim-note { display: flex; align-items: center; gap: 8px; color: var(--comment); font-size: 10.5px; letter-spacing: .04em; }
+.dim-note b { flex: 1; border-top: 1px solid var(--subtle); font-weight: 400; }
+.dim-note i { width: 1px; height: 9px; background: var(--subtle); flex: none; }
+.annot { padding-top: 14px; border-top: 1px dashed var(--subtle); color: var(--comment); font-size: 13px; line-height: 1.8; }
+.annot::before { content: '// '; color: var(--muted); }
+.table-scroll { overflow-x: auto; }

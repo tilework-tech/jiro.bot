@@ -1,0 +1,31 @@
+name: deploy
+
+# Publishes site/ to jiro.bot. Manual dispatch only, from main. Infra lives in
+# the jiro-bot-site CloudFormation stack (infra/site.cfn.yaml).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency: deploy
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      BUCKET: jiro-bot-site
+      DISTRIBUTION_ID: E364CP1QS1OBQ6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::870844658207:role/github-actions-jiro-bot-deploy
+          aws-region: us-east-1
+      - name: Sync site
+        run: aws s3 sync site/ "s3://$BUCKET/" --delete --cache-control "public,max-age=300"
+      - name: Invalidate CloudFront
+        run: aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths "/*"
