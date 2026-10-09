@@ -1,6 +1,6 @@
 # jiro.bot
 
-Placeholder landing page for jiro.bot: the Jiro onigiri and a sign-up link.
+Placeholder landing page for jiro.bot: the 16x14 Jiro sprite on a pixel heatmap and a sign-up link.
 The previous interactive site work is preserved on the
 `backup/jiro-site-2026-10-09` branch (and `jiro-site`, which open PRs target).
 

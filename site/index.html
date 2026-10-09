@@ -1,42 +1,287 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jiro</title>
-  <meta name="description" content="Jiro by Nori.">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="fonts/newsreader-italic.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="fonts.css">
-  <link rel="stylesheet" href="design-tokens.css">
-  <link rel="stylesheet" href="blog.css">
-  <style>
-    /* jiro.bot placeholder — page-specific layout on design tokens */
-    .jiro-section { min-height: calc(100vh - 60px); display: flex; align-items: center; justify-content: center; padding: 96px 24px; text-align: center; }
-    .jiro-inner h1 { margin-bottom: 32px; }
-    .jiro-onigiri { display: block; width: 120px; height: auto; margin: 0 auto 28px; image-rendering: pixelated; }
-    .jiro-inner .btn-primary, .jiro-inner .btn-primary:hover { color: #000; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Jiro</title>
+<meta name="description" content="Jiro by Nori.">
+<link rel="icon" href="jiro-16px.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: one centered stage (Jiro + sign-up link) on a fixed dithered pixel grid. One typeface throughout. */
+:root {
+  --jungle: #24a148;
+  --gunmetal: #424242;
+  --emerald: #6fdc8c;
+  --mist: #f3eff5;
+  --apricot: #ed9b40;
+
+  --bg: #f3eff5;
+  --fg: #424242;
+  --btn: #24a148;
+  --btn-hover: #1f8f3f;
+  --btn-fg: #ffffff;
+  --btn-edge: #424242;
+
+  /* heat ramp 0 → 4 */
+  --h0: #e9e4ec;
+  --h1: #d6ecdb;
+  --h2: #b6e6c2;
+  --h3: #91dfa6;
+  --h4: #6fdc8c;
+
+  --font: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1d1c; --fg: #f3eff5; --btn: #24a148; --btn-hover: #2bb553; --btn-fg: #ffffff; --btn-edge: #0c0d0c;
+    --h0: #212422; --h1: #1c3424; --h2: #1d4a2c; --h3: #1f6033; --h4: #24763c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1d1c; --fg: #f3eff5; --btn: #24a148; --btn-hover: #2bb553; --btn-fg: #ffffff; --btn-edge: #0c0d0c;
+  --h0: #212422; --h1: #1c3424; --h2: #1d4a2c; --h3: #1f6033; --h4: #24763c;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-weight: 500;
+  padding-inline: 20px;
+  padding-block: 0;
+  -webkit-font-smoothing: antialiased;
+}
+#heat { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; }
+
+.shell { position: relative; z-index: 1; min-height: 100%; max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; }
+
+/* Shared label style */
+.label { font-family: var(--font); font-weight: 500; font-size: 16px; letter-spacing: 0.12em; font-variant-caps: all-small-caps; }
+
+main { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 36px; padding-block: 48px; }
+
+.stage { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; }
+#jiro { display: block; }
+
+.signup {
+  display: inline-flex; align-items: center; text-decoration: none;
+  color: var(--btn-fg); background: var(--btn); border: 0; cursor: pointer;
+  padding: 14px 24px; min-height: 44px;
+  box-shadow: 0 0 0 3px var(--btn-edge), 6px 6px 0 3px var(--btn-edge);
+  transition: transform 90ms ease-out, box-shadow 90ms ease-out, background-color 90ms ease-out;
+}
+.signup:hover { background: var(--btn-hover); transform: translate(3px, 3px); box-shadow: 0 0 0 3px var(--btn-edge), 3px 3px 0 3px var(--btn-edge); }
+.signup:active { transform: translate(6px, 6px); box-shadow: 0 0 0 3px var(--btn-edge), 0 0 0 3px var(--btn-edge); }
+.signup:focus-visible { outline: 3px solid var(--apricot); outline-offset: 8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .signup { transition: none; }
+}
+</style>
 </head>
 <body>
 
-  <nav class="nav">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo"><svg class="logo-icon" aria-hidden="true" width="16" height="16" viewBox="0 0 32 32" fill="none"><rect x="1" y="11" width="20" height="20" rx="2" fill="#42be65" style="stroke: var(--base)" stroke-width="1.5"/><rect x="11" y="1" width="20" height="20" rx="2" fill="#42be65" style="stroke: var(--base)" stroke-width="1.5"/></svg>jiro<span class="prompt"> &gt;</span><span class="cursor" aria-hidden="true"></span></a>
-      <div class="nav-links">
-        <a href="https://login.norisessions.com" class="nav-cta">Sign in</a>
-      </div>
-    </div>
-  </nav>
+<canvas id="heat" aria-hidden="true"></canvas>
 
-  <section class="jiro-section">
-    <div class="jiro-inner">
-      <h1>Jiro.</h1>
-      <img src="onigiri.png" alt="" class="jiro-onigiri" width="120" height="114">
-      <a href="https://login.norisessions.com/?signup=1&amp;entrypoint=jiro" class="btn btn-primary btn-lg">Sign up</a>
+<div class="shell">
+  <main>
+    <div class="stage">
+      <canvas id="jiro" width="252" height="238" role="img" aria-label="Jiro, a pixel onigiri"></canvas>
+      <a class="signup label" href="https://login.norisessions.com/?signup=1&amp;entrypoint=jiro">sign up ›</a>
     </div>
-  </section>
+  </main>
+</div>
+
+<script>
+(function () {
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  /* ---------- Jiro sprite (exact 16x14 onigiri, new palette) ---------- */
+  var BODY = [
+    "......oooo......",
+    ".....owwwwo.....",
+    "....owwwwwwo....",
+    "....owwwwwso....",
+    "...owwwwwwwso...",
+    "...owwwwwwwso...",
+    "..owwwwwwwwwso..",
+    "..owwwwwwwwwso..",
+    ".owwwnnnnnwwwso.",
+    ".owwnnnnnnnwsso.",
+    "owwwnnnnnnnwwsso",
+    "owwwnnnnnnnwssso",
+    ".oossnnnnnnnsso.",
+    "..oooooooooooo.."
+  ];
+  var PAL = { o: "#424242", w: "#f3eff5", s: "#d9d2de", n: "#24a148", k: "#424242", b: "#ed9b40", sh: "#424242" };
+  var S = 14;                                      // one art pixel = one background cell
+  var GW = 18, GH = 17, BX = 1, BY = 2;
+  var jc = document.getElementById("jiro");
+  var jx = jc.getContext("2d");
+  var jdpr = Math.min(window.devicePixelRatio || 1, 2);
+  jc.width = GW * S * jdpr; jc.height = GH * S * jdpr;
+  jc.style.width = GW * S + "px"; jc.style.height = GH * S + "px";
+  jx.setTransform(jdpr, 0, 0, jdpr, 0, 0);
+
+  var HOP = [1, 2, 2, 2, 1, "q", 0];               // pixels up per frame; "q" = landing squash
+  var FRAME_MS = 70;
+  var anim = null, hovering = false;
+
+  function px(x, y, c) { jx.fillStyle = c; jx.fillRect(x * S, y * S, S, S); }
+
+  function draw(lift, squash, happy) {
+    jx.clearRect(0, 0, GW * S, GH * S);
+
+    var sw = 10 - lift * 2, sx = BX + 8 - sw / 2;
+    jx.globalAlpha = 0.18;
+    for (var i = 0; i < sw; i++) px(sx + i, BY + 14, PAL.sh);
+    jx.globalAlpha = 1;
+
+    var oy = BY - lift;
+    for (var r = 0; r < BODY.length; r++) {
+      if (squash && r === 1) continue;
+      var yy = oy + r + (squash && r === 0 ? 1 : 0);
+      for (var c = 0; c < 16; c++) { var ch = BODY[r][c]; if (ch !== ".") px(BX + c, yy, PAL[ch]); }
+    }
+
+    if (happy) {
+      // ^ ^ eyes, small mouth one row lower so it never touches them
+      [[5, 4], [4, 5], [6, 5], [9, 4], [8, 5], [10, 5]].forEach(function (p) { px(BX + p[0], oy + p[1], PAL.k); });
+      px(BX + 7, oy + 7, PAL.k);
+    } else {
+      px(BX + 5, oy + 5, PAL.k); px(BX + 9, oy + 5, PAL.k);
+      px(BX + 7, oy + 6, PAL.k);
+    }
+    px(BX + 4, oy + 6, PAL.b); px(BX + 10, oy + 6, PAL.b);
+  }
+
+  function rest() { draw(0, false, hovering); }
+
+  function hop() {
+    if (reduce.matches) { rest(); return; }
+    if (anim) return;
+    var start = performance.now();
+    anim = function (now) {
+      var f = Math.floor((now - start) / FRAME_MS);
+      if (f >= HOP.length) { anim = null; rest(); return; }
+      var v = HOP[f];
+      draw(v === "q" ? 0 : v, v === "q", true);
+      requestAnimationFrame(anim);
+    };
+    requestAnimationFrame(anim);
+  }
+
+  jc.addEventListener("pointerenter", function () { hovering = true; hop(); if (!anim) rest(); });
+  jc.addEventListener("pointerleave", function () { hovering = false; if (!anim) rest(); });
+
+  rest();
+  setTimeout(hop, 350);
+
+  /* ---------- Pixel heat background ---------- */
+  var canvas = document.getElementById("heat");
+  var ctx = canvas.getContext("2d");
+  var PITCH = S, GAP = 2, CELL = PITCH - GAP, OX = 0, OY = 0;   // grid snapped to the sprite pixels
+  var cols = 0, rows = 0, base, heat, shown, colors = [], bg = "#f3eff5";
+  var BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(function (v) { return (v + 0.5) / 16; });
+
+  function readColors() {
+    var cs = getComputedStyle(document.documentElement);
+    colors = ["--h0", "--h1", "--h2", "--h3", "--h4"].map(function (v) { return cs.getPropertyValue(v).trim(); });
+    bg = cs.getPropertyValue("--bg").trim();
+  }
+  function hash(x, y) { var s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return s - Math.floor(s); }
+  function noise(x, y) {
+    var xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+    var u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+    var a = hash(xi, yi), b = hash(xi + 1, yi), c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
+    return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+  }
+  function level(i, c, r) {
+    var v = base[i] + heat[i], f = Math.floor(v), t = BAYER[(r & 3) * 4 + (c & 3)];
+    return Math.min(4, f + (v - f > t ? 1 : 0));
+  }
+  function drawCell(c, r, lv) { ctx.fillStyle = colors[lv]; ctx.fillRect(OX + (c - 1) * PITCH + GAP / 2, OY + (r - 1) * PITCH + GAP / 2, CELL, CELL); }
+  function fullDraw() {
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+      var i = r * cols + c, lv = level(i, c, r); shown[i] = lv; drawCell(c, r, lv);
+    }
+  }
+  function resize() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2), w = window.innerWidth, h = window.innerHeight;
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var jr = jc.getBoundingClientRect();
+    OX = ((Math.round(jr.left) % PITCH) + PITCH) % PITCH; OY = ((Math.round(jr.top) % PITCH) + PITCH) % PITCH;
+    var oc = cols, oh = heat;
+    cols = Math.ceil(w / PITCH) + 2; rows = Math.ceil(h / PITCH) + 2;
+    base = new Float32Array(cols * rows); heat = new Float32Array(cols * rows); shown = new Int8Array(cols * rows);
+    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+      var n = noise(c * 0.085, r * 0.085) * 0.8 + noise(c * 0.25 + 40, r * 0.25) * 0.35;
+      base[r * cols + c] = Math.max(0, n - 0.42) * 1.5;
+    }
+    if (oh && oc) {
+      var orows = oh.length / oc;
+      for (var r2 = 0; r2 < Math.min(rows, orows); r2++) for (var c2 = 0; c2 < Math.min(cols, oc); c2++) heat[r2 * cols + c2] = oh[r2 * oc + c2];
+    }
+    fullDraw();
+  }
+  function stamp(x, y, amt) {
+    var cc = (x - OX) / PITCH + 1, rr = (y - OY) / PITCH + 1, R = 5;
+    var c0 = Math.max(0, Math.floor(cc - R)), c1 = Math.min(cols - 1, Math.ceil(cc + R));
+    var r0 = Math.max(0, Math.floor(rr - R)), r1 = Math.min(rows - 1, Math.ceil(rr + R));
+    for (var r = r0; r <= r1; r++) for (var c = c0; c <= c1; c++) {
+      var dx = c + 0.5 - cc, dy = r + 0.5 - rr, d = Math.sqrt(dx * dx + dy * dy);
+      if (d > R) continue;
+      var f = 1 - d / R, i = r * cols + c;
+      heat[i] = Math.min(3.6, heat[i] + amt * f * f);
+    }
+  }
+
+  var last = null, heatRunning = false;
+  window.addEventListener("pointermove", function (e) {
+    if (reduce.matches) return;
+    if (last) {
+      var dx = e.clientX - last.x, dy = e.clientY - last.y, dist = Math.sqrt(dx * dx + dy * dy);
+      var steps = Math.min(30, Math.max(1, Math.round(dist / (PITCH * 1.5))));
+      for (var s = 1; s <= steps; s++) stamp(last.x + dx * s / steps, last.y + dy * s / steps, 0.22);
+    } else stamp(e.clientX, e.clientY, 0.22);
+    last = { x: e.clientX, y: e.clientY };
+    if (!heatRunning) { heatRunning = true; requestAnimationFrame(stepHeat); }
+  }, { passive: true });
+  document.addEventListener("pointerleave", function () { last = null; });
+  window.addEventListener("blur", function () { last = null; });
+  window.addEventListener("resize", resize);
+
+  function stepHeat() {
+    var any = false;
+    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+      var i = r * cols + c;
+      if (heat[i] > 0.02) { heat[i] *= 0.972; any = true; } else heat[i] = 0;
+      var lv = level(i, c, r);
+      if (lv !== shown[i]) { shown[i] = lv; drawCell(c, r, lv); }
+    }
+    if (any) requestAnimationFrame(stepHeat); else heatRunning = false;
+  }
+
+  function retheme() { readColors(); if (cols) fullDraw(); }
+  var mq = window.matchMedia("(prefers-color-scheme: dark)");
+  if (mq.addEventListener) mq.addEventListener("change", retheme);
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  readColors();
+  resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(resize);
+})();
+</script>
 
 </body>
 </html>
