@@ -153,9 +153,8 @@ main { flex: 1; display: flex; flex-direction: column; justify-content: center; 
     }
 
     if (happy) {
-      // ^ ^ eyes, small mouth one row lower so it never touches them
-      [[5, 4], [4, 5], [6, 5], [9, 4], [8, 5], [10, 5]].forEach(function (p) { px(BX + p[0], oy + p[1], PAL.k); });
-      px(BX + 7, oy + 7, PAL.k);
+      // resting dot eyes, mouth widens into a small v smile
+      [[5, 5], [9, 5], [6, 6], [8, 6], [7, 7]].forEach(function (p) { px(BX + p[0], oy + p[1], PAL.k); });
     } else {
       px(BX + 5, oy + 5, PAL.k); px(BX + 9, oy + 5, PAL.k);
       px(BX + 7, oy + 6, PAL.k);
