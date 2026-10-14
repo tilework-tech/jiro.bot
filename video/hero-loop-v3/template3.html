@@ -73,6 +73,23 @@ code { font: 400 13px var(--mono); background: #262626; border-radius: 4px; padd
 .ctools .sp { margin-left: auto; }
 .send { width: 30px; height: 30px; border-radius: 50%; background: #f2f4f8; display: grid; place-items: center; color: #161616; }
 
+
+/* speaker labels: subdued per-persona colors */
+.who { display: flex; align-items: center; gap: 7px; font: 600 12px/16px var(--sans); letter-spacing: .02em; margin: 4px 0 4px; }
+.who.r { justify-content: flex-end; }
+.who .av { width: 18px; height: 18px; border-radius: 5px; display: grid; place-items: center; flex: none; font: 700 9px var(--sans); color: #fff; }
+.who.j { color: #7fb7c9; } .who.j .av { background: #1d3640; display: flex; align-items: center; justify-content: center; } .who.j .av i { width: 4px; height: 4px; border-radius: 1px; background: #5fd4ff; display: inline-block; margin: 0 1px; }
+.who.you { color: #a0a6ae; } .who.you .av { background: #3a3d42; }
+.who.slack { color: #b79bc2; } .who.slack .av { background: #4a2f52; }
+.who.cli { color: #8fbf9c; } .who.cli .av { background: #2c4434; }
+.who.alert { color: #c99a8f; } .who.alert .av { background: #4a2c26; }
+.jiro .txt, .li, .work, .it .achip { border-left: 2px solid #24414b; }
+.jiro .txt, .li { padding-left: 10px; } .work { padding-left: 6px; } .it .achip { margin-left: 0; }
+.bubble.you { background: #26282b; }
+.bubble.slack { background: #2f2534; }
+.bubble.cli { background: #22302a; }
+.bubble.alert { background: #33241f; }
+
 /* PR view (generic code-host mock) */
 #pr { background: #0d1117; }
 .prh { padding: 14px 14px 10px; border-bottom: 1px solid #222; }
@@ -219,7 +236,7 @@ const ITEMS = [
   { t: 29.1, k: 'achip', html: '<span class="k">File</span>docs/payments.md' },
   { t: 30.85, k: 'jiro', d: 1.1, txt: 'Heads up: PR #430 from another agent removes that retry. I pointed it to the docs.' },
   // 3 AM (its own automation session)
-  { t: 34.55, k: 'user', s2: 1, txt: 'Alert: checkout returns 500s' },
+  { t: 34.55, k: 'user', s2: 1, src: 'alert', txt: 'Checkout returns 500s' },
   { t: 35.0, k: 'work', s2: 1, took: '9m', gap: .42, rows: [['search', 'Traced it to cart/total.ts'], ['file-text', 'Wrote a failing test'], ['pencil', 'Fixed the rounding'], ['terminal', 'Tests pass']] },
   { t: 37.2, k: 'achip', s2: 1, html: '<span class="k">Pull request</span>#418 Fix discounted totals (draft)' },
   { t: 41.5, k: 'user', s2: 1, txt: '…oh nice.' },
@@ -242,9 +259,10 @@ const list = document.getElementById('list');
 const node = (it) => {
   const el = document.createElement('div'); el.className = 'it';
   const inn = document.createElement('div'); inn.className = 'in'; el.appendChild(inn);
-  if (it.k === 'jiro') inn.innerHTML = `<div class="jiro"><div class="txt"></div></div>`;
-  else if (it.k === 'user') inn.innerHTML = `<div class="user"><div class="bubble">${it.txt}</div></div>`;
-  else if (it.k === 'work') inn.innerHTML = `<div class="work"><div class="fold">Working…</div>` + it.rows.map(([i, t]) => `<div class="wr">${ICONS[i]}<span class="t">${t}</span><span class="st"><span class="spin"></span>${ICONS.check}</span></div>`).join('') + `</div>`;
+  const P = { you: ['You', 'Y'], slack: ['Sam · Slack', 'S'], cli: ['Priya · CLI', 'P'], alert: ['Alert automation', '!'] };
+  if (it.k === 'jiro') inn.innerHTML = (it.who ? `<div class="who j"><span class="av"><i></i><i></i></span>Jiro</div>` : '') + `<div class="jiro"><div class="txt"></div></div>`;
+  else if (it.k === 'user') { const src = it.src ?? 'you'; inn.innerHTML = (it.who ? `<div class="who r ${src}">${P[src][0]}<span class="av">${P[src][1]}</span></div>` : '') + `<div class="user"><div class="bubble ${src}">${it.txt}</div></div>`; }
+  else if (it.k === 'work') inn.innerHTML = (it.who ? `<div class="who j"><span class="av"><i></i><i></i></span>Jiro</div>` : '') + `<div class="work"><div class="fold">Working…</div>` + it.rows.map(([i, t]) => `<div class="wr">${ICONS[i]}<span class="t">${t}</span><span class="st"><span class="spin"></span>${ICONS.check}</span></div>`).join('') + `</div>`;
   else if (it.k === 'li') { inn.innerHTML = `<div class="li">${it.html}</div>`; inn.style.padding = '1px 0'; }
   else if (it.k === 'achip') inn.innerHTML = `<div class="achip">${it.html}</div>`;
   list.appendChild(el); it.el = el;
@@ -254,6 +272,11 @@ window.__init = async () => {
   document.body.style.width = W + 'px'; document.body.style.height = H + 'px';
   const st = document.getElementById('stage'); st.style.width = W + 'px'; st.style.height = H + 'px';
   await document.fonts.ready;
+  let prev = null;
+  for (const it of ITEMS) {
+    const sp = it.k === 'user' ? (it.src ?? 'you') : 'jiro';
+    it.who = sp !== prev || !!it.s2 !== !!(prev && ITEMS[ITEMS.indexOf(it) - 1].s2); prev = sp;
+  }
   ITEMS.forEach(node);
   for (const it of ITEMS) { it.el.style.display = 'block'; if (it.k === 'jiro') it.el.querySelector('.txt').textContent = it.txt; it.h = it.el.querySelector('.in').offsetHeight; it.el.style.display = 'none'; }
   window.__seek(0);
