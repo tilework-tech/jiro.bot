@@ -1,0 +1,349 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/600.css">
+<link rel="stylesheet" href="node_modules/@fontsource/ibm-plex-mono/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/ibm-plex-mono/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/lato/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/lato/900.css">
+<link rel="stylesheet" href="brand/fonts/fonts.css">
+<style>
+:root {
+  --page: #121212; --app: #161616; --surface: #1c1c1c; --nested: #262626; --strong: #393939;
+  --comment: #8a8f98; --text: #dde1e6; --fg: #f2f4f8; --green: #42be65; --red: #f47067; --rowon: #2a3b2e;
+  --sans: 'Inter', system-ui, sans-serif; --mono: 'IBM Plex Mono', monospace; --gs: 'General Sans', 'Inter', sans-serif; --lato: 'Lato', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--page); }
+body { font-family: var(--sans); color: var(--text); -webkit-font-smoothing: antialiased; }
+.ico { width: 16px; height: 16px; flex: none; }
+#stage { position: absolute; inset: 0; overflow: hidden; }
+#dots { position: absolute; inset: 0; background-image: radial-gradient(circle, #1f1f1f 1.2px, transparent 1.3px); background-size: 32px 32px; }
+#night { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, #142040 0%, #0a0f1f 70%); opacity: 0; }
+
+/* step chip + caption (site wrapper: General Sans + Plex Mono) */
+#chip { position: absolute; left: 200px; top: 42px; height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 16px 0 14px; border: 1px solid #2b2d2c; border-radius: 999px; background: #161616;
+  font: 500 15px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #fff; }
+#chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+#chip .ico { width: 16px; height: 16px; color: #c9d3ff; display: none; }
+#chip.night .ico { display: block; }
+#chip.night .dot { display: none; }
+#cap { position: absolute; left: 0; right: 0; top: 994px; text-align: center; font: 500 34px/1.2 var(--gs); color: #fff; letter-spacing: -.01em; }
+#cap span { color: rgba(255,255,255,.5); }
+
+/* app window */
+#win { position: absolute; left: 200px; top: 104px; width: 1520px; height: 866px; border-radius: 14px; overflow: hidden; border: 1px solid #2b2d2c; background: var(--app); display: flex; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+#side { width: 260px; flex: none; padding: 8px; border-right: 1px solid #222; display: flex; flex-direction: column; transition: none; }
+.brand { height: 36px; display: flex; align-items: center; gap: 10px; padding: 0 8px; font: 600 17px var(--sans); color: var(--fg); }
+.brand .ico { color: var(--comment); }
+.nav { height: 33px; display: flex; align-items: center; gap: 10px; padding: 0 10px; font-size: 14px; color: var(--text); border-radius: 6px; }
+.nav .ico { color: var(--comment); }
+.search { margin: 8px 0 6px; padding-top: 8px; border-top: 1px solid #262626; height: 42px; display: flex; align-items: center; gap: 10px; padding-left: 10px; font-size: 15px; color: var(--comment); }
+.grp { font: 600 12px/18px var(--sans); color: var(--comment); padding: 14px 10px 4px; }
+.row { height: 32px; display: flex; align-items: center; gap: 10px; padding: 0 10px; border-radius: 6px; font-size: 14px; color: var(--fg); white-space: nowrap; overflow: hidden; }
+.row .ico { color: var(--comment); }
+.row.on { background: var(--rowon); }
+.row .t { overflow: hidden; text-overflow: ellipsis; flex: 1; }
+.row .live { width: 7px; height: 7px; border-radius: 50%; background: var(--green); flex: none; }
+.foot { margin-top: auto; height: 46px; border-top: 1px solid #262626; display: flex; align-items: center; gap: 10px; padding: 0 10px; font-size: 13px; }
+#main { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; }
+.head { height: 44px; flex: none; display: flex; align-items: center; padding: 0 16px; gap: 22px; font-size: 14px; color: var(--text); }
+.head .title { font-weight: 500; color: var(--fg); display: flex; align-items: center; gap: 6px; margin-right: auto; }
+.head .act { display: flex; align-items: center; gap: 7px; color: var(--comment); }
+#list { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 18px; }
+.it { width: 760px; flex: none; overflow: hidden; }
+.it > .in { padding: 9px 0; }
+.jiro { font-size: 16px; line-height: 25px; color: var(--fg); }
+.who { display: flex; align-items: center; gap: 8px; font: 500 13px var(--sans); color: var(--comment); margin-bottom: 4px; }
+.who .av { width: 20px; height: 20px; border-radius: 6px; background: #262626; display: grid; place-items: center; }
+.who .av i { width: 6px; height: 6px; border-radius: 1px; background: #5fd4ff; display: inline-block; margin: 0 1px; }
+.user { display: flex; justify-content: flex-end; }
+.bubble { background: #262626; border-radius: 16px; padding: 11px 16px; font-size: 15px; line-height: 23px; color: var(--fg); max-width: 560px; }
+.src { display: flex; justify-content: flex-end; font: 500 12px var(--sans); color: var(--comment); margin-top: 5px; gap: 6px; align-items: center; }
+.work { font-size: 14px; line-height: 20px; color: var(--text); }
+.wr { display: flex; align-items: center; gap: 10px; height: 27px; padding: 0 6px; }
+.wr .ico { color: var(--comment); }
+.wr .t { flex: 1; }
+.wr .st { width: 16px; height: 16px; display: grid; place-items: center; }
+.wr .st .ico { color: var(--text); width: 15px; height: 15px; }
+.wr .spin { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+.fold { font-size: 14px; color: var(--comment); padding: 0 6px 4px; display: flex; gap: 6px; align-items: center; }
+.cards { display: grid; gap: 8px; }
+.card { display: flex; gap: 10px; align-items: baseline; font-size: 16px; line-height: 25px; color: var(--fg); padding-left: 4px; }
+.card .n { flex: none; color: var(--text); }
+.card b { font-weight: 600; color: var(--fg); }
+.card span { color: var(--text); }
+code { font: 400 14px var(--mono); background: #262626; border-radius: 4px; padding: 1px 5px; color: var(--fg); }
+.pr { display: flex; align-items: center; gap: 14px; background: #1c1c1c; border: 1px solid #2c2c2c; border-radius: 12px; padding: 14px 16px; }
+.pr .ico { width: 20px; height: 20px; color: var(--green); }
+.pr .tt { flex: 1; }
+.pr b { display: block; font: 500 15px/22px var(--sans); color: var(--fg); }
+.pr span { font-size: 13px; color: var(--comment); }
+.pr .tag { font: 500 12px var(--mono); color: var(--comment); border: 1px solid #393939; border-radius: 999px; padding: 3px 9px; }
+.pr .d { font: 500 13px var(--mono); } .pr .d .a { color: var(--green); } .pr .d .r { color: var(--red); }
+.achip { display: inline-flex; align-items: center; gap: 9px; border: 1px solid #262626; background: #1c1c1c; border-radius: 8px; padding: 7px 12px; font: 400 14px var(--sans); color: var(--text); }
+.achip .k { font: 400 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--comment); }
+.file .ico { color: var(--comment); }
+.file .a { color: var(--green); }
+.alert { display: flex; align-items: center; gap: 12px; border: 1px solid #4a2a2a; background: #241818; border-radius: 12px; padding: 12px 16px; font-size: 15px; color: var(--fg); }
+.alert .ico { color: var(--red); width: 18px; height: 18px; }
+.alert span { color: var(--comment); font-size: 13px; margin-left: auto; font-family: var(--mono); }
+#comp { width: 768px; align-self: center; margin-bottom: 16px; flex: none; border: 1px solid #393939; background: #1c1c1c; border-radius: 16px; padding: 14px 16px 10px; }
+#ctext { font-size: 16px; line-height: 24px; color: var(--fg); min-height: 24px; }
+#ctext.ph { color: #6f737a; }
+#caret { display: inline-block; width: 2px; height: 19px; background: var(--fg); vertical-align: -3px; margin-left: 1px; }
+.ctools { display: flex; align-items: center; gap: 14px; margin-top: 12px; color: var(--comment); font-size: 13px; }
+.ctools .sp { margin-left: auto; }
+.send { width: 32px; height: 32px; border-radius: 50%; background: #f2f4f8; display: grid; place-items: center; color: #161616; }
+.send .ico { width: 16px; height: 16px; }
+#dim { position: absolute; inset: 0; background: #070b18; opacity: 0; pointer-events: none; }
+
+/* chip-in surfaces */
+.plabel { display: flex; align-items: center; gap: 8px; font: 500 13px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #fff; margin-bottom: 10px; }
+.plabel .ico { width: 18px; height: 18px; }
+#slack { position: absolute; left: 1360px; top: 330px; width: 470px; }
+.sl { background: #fff; border-radius: 12px; overflow: hidden; font-family: var(--lato); color: #1d1c1d; box-shadow: 0 24px 60px rgba(0,0,0,.5); }
+.sl-h { background: #3f0e40; color: #fff; font: 900 15px var(--lato); padding: 11px 16px; display: flex; gap: 8px; align-items: center; }
+.sl-h span { font-weight: 400; opacity: .75; font-size: 13px; }
+.sm { display: flex; gap: 10px; padding: 12px 16px; }
+.sav { width: 36px; height: 36px; border-radius: 6px; flex: none; display: grid; place-items: center; font: 700 15px var(--sans); color: #fff; }
+.sb { font-size: 15px; line-height: 22px; }
+.sb .n { font-weight: 900; margin-right: 6px; } .sb .tm { color: #616061; font-size: 12px; }
+.sapp { display: inline-block; font: 700 10px/14px var(--lato); background: rgba(29,28,29,.13); color: rgba(29,28,29,.7); padding: 0 3px; border-radius: 2px; margin-right: 6px; vertical-align: 2px; }
+#cli { position: absolute; left: 70px; top: 560px; width: 520px; }
+.term { background: #0b0b0b; border: 1px solid #393939; border-radius: 12px; overflow: hidden; font: 400 15px/23px var(--mono); color: #dde1e6; box-shadow: 0 24px 60px rgba(0,0,0,.5); }
+.term .tb { height: 30px; background: #1a1a1a; display: flex; align-items: center; gap: 7px; padding: 0 12px; }
+.term .tb i { width: 11px; height: 11px; border-radius: 50%; background: #393939; display: block; }
+.term .tb span { margin-left: 10px; font-size: 12px; color: var(--comment); }
+.term .bd { padding: 12px 16px 14px; }
+.term .dim { color: #6f737a; }
+.term .g { color: var(--green); }
+#cliCaret { display: inline-block; width: 9px; height: 18px; background: #dde1e6; vertical-align: -3px; }
+
+/* end tagline */
+#end { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; background: rgba(18,18,18,.93); backdrop-filter: blur(6px); }
+#end .t { text-align: center; }
+#end h1 { font: 600 76px/1.05 var(--gs); color: #fff; letter-spacing: -.02em; }
+#end p { font: 500 30px/1.3 var(--gs); color: rgba(255,255,255,.55); margin-top: 18px; }
+#end .url { font: 500 20px var(--mono); color: var(--green); margin-top: 30px; letter-spacing: .04em; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="dots"></div>
+  <div id="night"></div>
+  <div id="chip"><span class="dot"></span>{{i:moon}}<span id="chipT">Day 1 · 10:02</span></div>
+
+  <div id="win">
+    <div id="side">
+      <div class="brand">{{i:panel-left}}nori ›</div>
+      <div class="nav">{{i:message-square}}Chat</div>
+      <div class="nav">{{i:folder}}Projects</div>
+      <div class="nav">{{i:zap}}Automations</div>
+      <div class="nav">{{i:plug}}Integrations</div>
+      <div class="search">{{i:search}}Search</div>
+      <div class="grp">Today</div>
+      <div class="row" id="row2">{{i:zap}}<span class="t">Checkout 500s on discounted carts</span><span class="live"></span></div>
+      <div class="row on" id="row1">{{i:message-square}}<span class="t">Getting to know acme/shop</span><span class="live"></span></div>
+      <div class="row">{{i:zap}}<span class="t">Docs gardening</span></div>
+      <div class="row">{{i:zap}}<span class="t">Nightly testing</span></div>
+      <div class="grp">Yesterday</div>
+      <div class="row">{{i:message-square}}<span class="t">Checkout flow cleanup</span></div>
+      <div class="row">{{i:message-square}}<span class="t">Release notes draft</span></div>
+      <div class="foot">{{i:circle-user-round}}you@acme.dev</div>
+    </div>
+    <div id="main">
+      <div class="head"><span class="title"><span id="title">Getting to know acme/shop</span> {{i:chevron-down}}</span>
+        <span class="act">{{i:eye}}Preview</span><span class="act">{{i:copy}}Artifacts</span><span class="act">{{i:upload}}Export</span><span class="act">{{i:square-pen}}New chat</span></div>
+      <div id="list"></div>
+      <div id="comp">
+        <div id="ctext" class="ph">Send a message…</div>
+        <div class="ctools">{{i:paperclip}}{{i:sliders-horizontal}}<span>Opus 4.8</span><span class="sp"></span>{{i:mic}}<span class="send">{{i:arrow-up:2.5}}</span></div>
+      </div>
+      <div id="dim"></div>
+    </div>
+  </div>
+
+  <div id="slack">
+    <div class="plabel">{{slack}}Slack</div>
+    <div class="sl">
+      <div class="sl-h"># eng <span>Thread</span></div>
+      <div class="sm"><div class="sav" style="background:#2b7a78">SL</div>
+        <div class="sb"><span class="n">Sam Lee</span><span class="tm">10:06 AM</span><div id="slText"></div></div></div>
+    </div>
+  </div>
+  <div id="cli">
+    <div class="plabel">{{i:terminal}}CLI</div>
+    <div class="term"><div class="tb"><i></i><i></i><i></i><span>nori cloud · acme/shop</span></div>
+      <div class="bd"><div class="dim">priya@acme ~/shop</div><div><span class="g">›</span> <span id="cliText"></span><span id="cliCaret"></span></div></div></div>
+  </div>
+
+  <div id="cap"></div>
+  <div id="end"><div class="t"><h1>Jiro</h1><p>The tasteful, proactive software engineer.</p><div class="url">jiro.bot</div></div></div>
+</div>
+
+<script>
+const D = 30;
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const prog = (t, a, d) => clamp((t - a) / d);
+const eo = (x) => 1 - Math.pow(1 - x, 3);
+const eio = (x) => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const ICON = (n) => document.querySelector(`#icons [data-i="${n}"]`).innerHTML;
+
+// ---------- copy (all on-screen text) ----------
+const CHIPS = [
+  { t: 0, txt: 'Day 1 · 10:02' },
+  { t: 4.3, txt: 'Day 1 · 11:04' },
+  { t: 12.3, txt: 'Day 3 · 14:20' },
+  { t: 18.0, txt: 'Week 2 · 03:12', night: true },
+  { t: 23.3, txt: 'Week 2 · 08:02' },
+  { t: 28.6, txt: 'Day 1 · 10:02', silent: true },
+];
+const CAPS = [
+  { t0: 0.0, t1: 4.2, txt: 'Jiro reads your whole codebase first.' },
+  { t0: 4.3, t1: 8.8, txt: 'Then suggests changes that make it easier for agents.' },
+  { t0: 8.8, t1: 12.2, txt: 'Your team weighs in from web, Slack, or the CLI.' },
+  { t0: 12.3, t1: 17.9, txt: 'It asks before it assumes, then writes it down.' },
+  { t0: 18.0, t1: 23.2, txt: '3 AM. An alert fires. Jiro takes it.' },
+  { t0: 23.3, t1: 26.6, txt: 'By morning, a draft fix is waiting for review.' },
+];
+const ITEMS = [
+  { t: 0.5, k: 'jiro', d: 1.6, txt: "Hi, I'm Jiro. I'm reading acme/shop now. Back in an hour with what I'd change." },
+  { t: 2.3, k: 'work', took: '52m', rows: [['book-open', 'Read the codebase: 9 modules, 3 services'], ['git-pull-request', 'Reviewed recent PRs and CI runs'], ['file-text', 'Checked docs, tests and agent instructions']], gap: .45 },
+  { t: 4.5, k: 'jiro', d: 1.0, txt: 'Three changes would make this repo easier for agents to work in:' },
+  { t: 5.5, k: 'card', n: 1, b: 'Add AGENTS.md with a codebase map', s: 'Agents currently guess where things live.' },
+  { t: 6.2, k: 'card', n: 2, b: 'Merge <code>payments/</code> and <code>billing/</code>', s: 'Two modules doing one job.' },
+  { t: 6.9, k: 'card', n: 3, b: 'Move tests into one place', s: 'They live in four folders today.' },
+  { t: 7.6, k: 'jiro', d: .8, txt: 'Want a draft PR for the first one?' },
+  { t: 9.35, k: 'user', txt: '+1, AGENTS.md first.', src: 'slack' },
+  { t: 10.25, k: 'user', txt: 'And the tests move as a follow-up.', src: 'cli' },
+  { t: 11.0, k: 'user', txt: 'Go ahead.', src: 'web' },
+  { t: 11.35, k: 'jiro', d: .8, txt: 'On it. AGENTS.md first, opened as a draft.' },
+  { t: 12.6, k: 'jiro', d: 1.6, txt: 'Quick question: orders retry twice on a decline, and docs/payments.md doesn\'t say why. Is that intentional?' },
+  { t: 15.0, k: 'user', txt: 'Yes, the card network flakes. Keep it.', src: 'web' },
+  { t: 15.9, k: 'jiro', d: 1.0, txt: 'Thanks. Added it to the docs so the next agent doesn\'t "fix" it.' },
+  { t: 17.0, k: 'achip', html: '<span class="k">File</span>docs/payments.md' },
+  { t: 18.35, k: 'user', s2: 1, txt: 'Alert: checkout returns 500 for discounted carts. Find the cause and open a draft fix.', src: 'web' },
+  { t: 19.1, k: 'work', s2: 1, took: '9m', rows: [['search', 'Traced it to roundTotal() in cart/total.ts'], ['file-text', 'Wrote a failing test'], ['pencil', 'Fixed rounding on discounted totals'], ['terminal', 'Ran the test suite: all passing']], gap: .55 },
+  { t: 22.0, k: 'achip', s2: 1, html: '<span class="k">Pull request</span>#418 Fix rounding on discounted cart totals (draft)' },
+  { t: 23.6, k: 'jiro', s2: 1, d: 1.4, txt: 'Found this at 3:12 AM. The draft PR has a failing test and the fix. Your call.' },
+];
+const WEB_TYPE = [[10.45, 10.85, 'Go ahead.'], [14.35, 14.85, 'Yes, the card network flakes. Keep it.']];
+const SENDS = [11.0, 15.0];
+const SLACK = { show: [8.9, 12.3], type: [9.15, 9.35], txt: '+1, AGENTS.md first.' };
+const CLI = { show: [9.3, 12.3], type: [9.55, 10.2], txt: 'and the tests move as a follow-up' };
+const NIGHT = [[18.0, 18.6, 1], [23.3, 23.9, 0]];
+const END = [26.6, 27.2, 29.1, 29.8];
+const SWITCH = 18.0;
+
+// ---------- build ----------
+const list = document.getElementById('list');
+const SRCLBL = { slack: '{{slack}}from Slack · sam@acme.dev', cli: '{{i:terminal}}from the CLI · priya@acme.dev', web: '' };
+const node = (it) => {
+  const el = document.createElement('div'); el.className = 'it';
+  const inn = document.createElement('div'); inn.className = 'in'; el.appendChild(inn);
+  if (it.k === 'jiro') { inn.innerHTML = `<div class="jiro"><div class="txt"></div></div>`; }
+  else if (it.k === 'user') { inn.innerHTML = `<div class="user"><div class="bubble">${it.txt}</div></div>` ; }
+  else if (it.k === 'work') { inn.innerHTML = `<div class="work"><div class="fold">Working…</div>` + it.rows.map(([i, t]) => `<div class="wr">${ICONS[i]}<span class="t">${t}</span><span class="st"><span class="spin"></span>${ICONS.check}</span></div>`).join('') + `</div>`; }
+  else if (it.k === 'card') { inn.innerHTML = `<div class="card"><span class="n">${it.n}.</span><div><b>${it.b}.</b> <span>${it.s}</span></div></div>`; inn.style.padding = '2px 0'; }
+  else if (it.k === 'pr') inn.innerHTML = `<div class="pr">${it.html}</div>`;
+  else if (it.k === 'achip') inn.innerHTML = `<div class="achip">${it.html}</div>`;
+  else if (it.k === 'alert') inn.innerHTML = `<div class="alert">${it.html}</div>`;
+  list.appendChild(el); it.el = el;
+};
+const ICONS = { 'book-open': `{{i:book-open}}`, 'git-pull-request': `{{i:git-pull-request}}`, 'file-text': `{{i:file-text}}`, search: `{{i:search}}`, pencil: `{{i:pencil}}`, terminal: `{{i:terminal}}`, check: `{{i:check:2.25}}` };
+
+window.__init = async () => {
+  await document.fonts.ready;
+  ITEMS.forEach(node);
+  for (const it of ITEMS) { it.el.style.display = 'block'; if (it.k === 'jiro') it.el.querySelector('.txt').textContent = it.txt; it.h = it.el.querySelector('.in').offsetHeight; it.el.style.display = 'none'; }
+  window.__seek(0);
+  return D;
+};
+
+const lastAt = (arr, t) => { let c = arr[0]; for (const a of arr) if (t >= a.t) c = a; return c; };
+window.__seek = (t) => {
+  // loop fade: content dissolves back to the frame-0 state
+  const outA = 1 - prog(t, END[2], END[3] - END[2]);
+  for (const it of ITEMS) {
+    const gone = !it.s2 ? 1 - prog(t, SWITCH - .25, .25) : 1;
+    if (t < it.t || outA <= 0 || gone <= 0) { it.el.style.display = 'none'; continue; }
+    it.el.style.display = 'block';
+    const p = eo(prog(t, it.t, .28));
+    it.el.style.maxHeight = p < 1 ? `${it.h * p}px` : 'none';
+    it.el.style.opacity = String(p * outA * gone);
+    it.el.style.transform = `translateY(${(1 - p) * 10}px)`;
+    if (it.k === 'jiro') { const n = Math.round(it.txt.length * prog(t, it.t, it.d)); it.el.querySelector('.txt').textContent = it.txt.slice(0, n); }
+    if (it.k === 'work') {
+      const rows = it.el.querySelectorAll('.wr');
+      rows.forEach((r, i) => { const a = it.t + .15 + i * it.gap; const done = t >= a + it.gap * .85; r.style.display = t >= a ? 'flex' : 'none';
+        r.querySelector('.spin').style.display = done ? 'none' : 'block'; r.querySelector('.st .ico').style.display = done ? 'block' : 'none'; });
+      const allDone = t >= it.t + .15 + (rows.length - 1) * it.gap + it.gap * .85;
+      it.el.querySelector('.fold').textContent = allDone ? `Worked for ${it.took} · ${rows.length} actions` : 'Working…';
+    }
+  }
+  // composer typing
+  const ct = document.getElementById('ctext'); let typed = null;
+  for (const [a, b, s] of WEB_TYPE) if (t >= a && t < SENDS[WEB_TYPE.findIndex((w) => w[0] === a)]) typed = s.slice(0, Math.round(s.length * prog(t, a, b - a)));
+  if (typed == null) { ct.className = 'ph'; ct.textContent = 'Send a message…'; } else { ct.className = ''; ct.innerHTML = typed.replace(/&/g, '&amp;') + '<span id="caret"></span>'; }
+  // chip + caption
+  const c = lastAt(CHIPS, t); const chip = document.getElementById('chip');
+  document.getElementById('chipT').textContent = c.txt; chip.classList.toggle('night', !!c.night);
+  const cpulse = Math.max(...CHIPS.filter((x) => x.t > 0 && !x.silent).map((x) => 1 - prog(t, x.t, .35) * (t >= x.t ? 1 : 0) - (t < x.t ? 1 : 0)));
+  chip.style.transform = `scale(${1 + .06 * Math.max(0, cpulse)})`;
+  chip.style.opacity = String(outA + (1 - outA) * 1);
+  let cp = null; for (const x of CAPS) if (t >= x.t0 && t < x.t1) cp = x;
+  const cap = document.getElementById('cap');
+  if (cp) { cap.textContent = cp.txt; const a = Math.min(prog(t, cp.t0, .25), 1 - prog(t, cp.t1 - .25, .25)); cap.style.opacity = String(a); cap.style.transform = `translateY(${(1 - eo(prog(t, cp.t0, .3))) * 8}px)`; }
+  else cap.style.opacity = '0';
+  // 3 AM: the automation starts its own session
+  const sw = t >= SWITCH && outA > 0;
+  const r2 = document.getElementById('row2'); const r2p = eo(prog(t, SWITCH, .3));
+  r2.style.display = t >= SWITCH && t < END[3] ? 'flex' : 'none'; r2.style.height = `${32 * r2p}px`; r2.style.opacity = String(r2p);
+  r2.classList.toggle('on', sw); document.getElementById('row1').classList.toggle('on', !sw);
+  document.querySelector('#row1 .live').style.display = sw ? 'none' : 'block';
+  document.getElementById('title').textContent = sw ? 'Checkout 500s on discounted carts' : 'Getting to know acme/shop';
+  // night
+  let n = 0; for (const [a, b, v] of NIGHT) if (t >= a) n = v === 1 ? eio(prog(t, a, b - a)) : 1 - eio(prog(t, a, b - a));
+  document.getElementById('night').style.opacity = String(n);
+  document.getElementById('side').style.opacity = String(1 - .5 * n);
+  document.querySelector('.head').style.opacity = String(1 - .4 * n);
+  // chip-in surfaces
+  const surf = (id, cfg, tid, caret) => {
+    const el = document.getElementById(id);
+    const a = Math.min(eo(prog(t, cfg.show[0], .3)), 1 - prog(t, cfg.show[1] - .3, .3));
+    el.style.opacity = String(Math.max(0, a)); el.style.transform = `translateY(${(1 - eo(prog(t, cfg.show[0], .35))) * 24}px)`;
+    el.style.display = a > 0 ? 'block' : 'none';
+    document.getElementById(tid).textContent = cfg.txt.slice(0, Math.round(cfg.txt.length * prog(t, cfg.type[0], cfg.type[1] - cfg.type[0])));
+    if (caret) document.getElementById(caret).style.opacity = t < cfg.type[1] + .1 ? '1' : '0';
+  };
+  surf('slack', SLACK, 'slText'); surf('cli', CLI, 'cliText', 'cliCaret');
+  // end tagline
+  const e = Math.min(eio(prog(t, END[0], END[1] - END[0])), 1 - eio(prog(t, END[2], END[3] - END[2])));
+  const end = document.getElementById('end'); end.style.opacity = String(Math.max(0, e));
+  end.querySelector('.t').style.transform = `translateY(${(1 - eo(prog(t, END[0], .8))) * 14}px)`;
+};
+
+window.__cues = () => {
+  const out = [];
+  out.push({ t: SWITCH, k: 'busy' });
+  CHIPS.slice(1).filter((c) => !c.silent).forEach((c) => out.push({ t: c.t, k: 'chip' }));
+  for (const it of ITEMS) {
+    if (it.k === 'jiro') out.push({ t: it.t, k: 'msg' });
+    if (it.k === 'card' || it.k === 'achip') out.push({ t: it.t, k: 'pop' });
+    if (it.k === 'work') it.rows.forEach((_, i) => out.push({ t: it.t + .15 + i * it.gap + it.gap * .85, k: 'tick' }));
+    if (it.k === 'achip' && it.s2) out.push({ t: it.t, k: 'chime' });
+  }
+  const typing = (a, b, s) => { const n = s.length; for (let i = 0; i < n; i += 2) out.push({ t: a + (b - a) * i / n, k: 'key' }); };
+  for (const [a, b, s] of WEB_TYPE) typing(a, b, s);
+  typing(...CLI.type, CLI.txt); typing(...SLACK.type, SLACK.txt);
+  SENDS.forEach((s) => out.push({ t: s, k: 'send' }));
+  out.push({ t: SLACK.show[0], k: 'pop' }, { t: CLI.show[0], k: 'pop' }, { t: CLI.type[1] + .05, k: 'enter' }, { t: SLACK.type[1] + .05, k: 'enter' });
+  return out.sort((a, b) => a.t - b.t);
+};
+</script>
+</body>
+</html>
