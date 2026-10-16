@@ -1,0 +1,455 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/600.css">
+<link rel="stylesheet" href="node_modules/@fontsource/ibm-plex-mono/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/ibm-plex-mono/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/lato/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/lato/900.css">
+<link rel="stylesheet" href="brand/fonts/fonts.css">
+<style>
+:root {
+  --ink: #141414; --muted: #6b6f75; --app: #161616; --card: #1c1c1c; --line: #2a2a2a; --fg: #f2f4f8; --text: #dde1e6; --comment: #8a8f98;
+  --jiro: #3cf06e; --salmon: #f2694f; --red: #f47067;
+  --sans: 'Inter', system-ui, sans-serif; --mono: 'IBM Plex Mono', monospace; --gs: 'General Sans', 'Inter', sans-serif; --lato: 'Lato', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1200px; height: 960px; overflow: hidden; background: #fff; }
+body { font-family: var(--sans); color: var(--ink); -webkit-font-smoothing: antialiased; }
+.ico { width: 22px; height: 22px; flex: none; }
+#stage { position: absolute; inset: 0; overflow: hidden; background: #fff; }
+#dots { position: absolute; inset: 0; background-image: radial-gradient(circle, #e6e6e6 1.3px, transparent 1.4px); background-size: 30px 30px; }
+#night { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 20%, #17264a 0%, #0a0f1f 75%); opacity: 0; }
+.shot { position: absolute; inset: 0; display: none; perspective: 1600px; }
+.cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.mimg { image-rendering: pixelated; display: block; flex: none; }
+
+/* screens filmed as objects: tilt, depth of field, glass */
+.screen { position: absolute; background: var(--app); border-radius: 22px; box-shadow: 0 40px 90px rgba(0,0,0,.30), 0 0 0 1px rgba(0,0,0,.08); overflow: hidden; transform-style: preserve-3d; }
+.screen::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,0) 38%, rgba(255,255,255,0) 70%, rgba(255,255,255,.04) 100%); }
+.blur { filter: blur(3.5px); opacity: .55; }
+.blur2 { filter: blur(6px); opacity: .4; }
+
+/* hook: caption over the cold-open footage */
+#hk { position: absolute; left: 70px; top: 64px; font: 600 76px/1.08 var(--gs); letter-spacing: -.03em; color: var(--ink); white-space: nowrap; z-index: 6; }
+#hk { line-height: 84px; }
+#hk .roll { position: relative; display: inline-block; height: 84px; overflow: hidden; vertical-align: top; min-width: 520px; }
+#hk .roll span { line-height: 84px; }
+#hk .roll span { position: absolute; left: 0; top: 0; white-space: nowrap; }
+#hk .roll .strike { position: absolute; left: 0; top: 47px; height: 7px; background: var(--salmon); width: 0; }
+#hkM { position: absolute; right: 80px; top: 36px; width: 120px; z-index: 6; }
+
+/* code diff */
+.code { padding: 34px 0; font: 400 34px/68px var(--mono); color: #c9d1d9; }
+.ln { display: flex; padding: 0 30px; white-space: nowrap; }
+.ln .n { width: 66px; color: #4d5560; flex: none; } .ln .s { width: 30px; flex: none; }
+.ln.del { background: rgba(244,112,103,.13); color: #f4a29b; } .ln.add { background: rgba(60,240,110,.11); color: #c3f7d2; }
+.rp2 { font: 400 24px var(--mono); color: var(--comment); }
+
+/* chat close-ups */
+.msg { display: flex; flex-direction: column; gap: 12px; }
+.who { display: flex; align-items: center; gap: 12px; font: 600 22px var(--sans); }
+.who.j { color: var(--jiro); } .who.y { color: var(--salmon); }
+.who .av { width: 34px; height: 34px; border-radius: 8px; background: var(--salmon); color: #2a110c; font: 700 17px var(--sans); display: grid; place-items: center; }
+.jtxt { font: 500 44px/1.22 var(--sans); color: var(--fg); letter-spacing: -.01em; border-left: 4px solid rgba(60,240,110,.6); padding-left: 22px; }
+.jtxt code, .doc code { font: 500 38px var(--mono); background: #262626; border-radius: 8px; padding: 2px 10px; }
+.bub { align-self: flex-end; background: #3a221d; box-shadow: inset 0 0 0 2px rgba(242,105,79,.4); border-radius: 26px; padding: 20px 30px; font: 500 40px/1.2 var(--sans); color: var(--fg); }
+.comp { border: 2px solid #393939; background: #1c1c1c; border-radius: 26px; padding: 26px 30px; font: 400 42px/1.2 var(--sans); color: var(--fg); }
+.caret { display: inline-block; width: 3px; height: 42px; background: var(--fg); vertical-align: -6px; margin-left: 2px; }
+.wr { display: flex; align-items: center; gap: 18px; font: 400 34px var(--sans); color: var(--text); height: 56px; }
+.wr .ico { width: 30px; height: 30px; color: var(--comment); }
+.wr .ok { margin-left: auto; color: var(--jiro); width: 32px; height: 32px; }
+.big { font: 600 74px/1 var(--sans); color: var(--fg); letter-spacing: -.02em; }
+
+/* slack and cli close-ups */
+.slk { background: #fff; color: #1d1c1d; font-family: var(--lato); border-radius: 22px; box-shadow: 0 40px 90px rgba(0,0,0,.25), 0 0 0 1px #ddd; overflow: hidden; position: absolute; }
+.slk .h { background: #3f0e40; color: #fff; font: 900 30px var(--lato); padding: 20px 34px; display: flex; align-items: center; gap: 14px; }
+.slk .m { display: flex; gap: 22px; padding: 30px 34px; }
+.slk .av { width: 70px; height: 70px; border-radius: 12px; background: #2b7a78; color: #fff; font: 700 28px var(--sans); display: grid; place-items: center; flex: none; }
+.slk .n { font: 900 32px var(--lato); } .slk .tm { font: 400 22px var(--lato); color: #616061; margin-left: 10px; }
+.slk .tx { font: 400 40px/1.3 var(--lato); margin-top: 6px; }
+.term { background: #0b0b0b; border: 4px solid #e9ecef; border-radius: 22px; overflow: hidden; position: absolute; box-shadow: 0 40px 90px rgba(0,0,0,.3); }
+.term .tb { height: 50px; background: #e9ecef; display: flex; align-items: center; gap: 12px; padding: 0 22px; }
+.term .tb i { width: 16px; height: 16px; border-radius: 50%; background: #9aa0a6; display: block; }
+.term .tb span { margin-left: 14px; font: 500 20px var(--mono); color: #555; }
+.term .bd { padding: 28px 34px; font: 400 38px/1.35 var(--mono); color: var(--fg); }
+.term .g { color: var(--jiro); } .term .dim { color: #6f737a; font-size: 26px; }
+.tag { position: absolute; display: flex; align-items: center; gap: 12px; font: 500 22px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+.tag .ico { width: 26px; height: 26px; }
+
+/* jiro's screen */
+.jframe { position: absolute; border-radius: 26px; background: var(--jiro); padding: 16px; box-shadow: 0 40px 90px rgba(0,0,0,.25); }
+.jframe .lbl { display: flex; align-items: center; gap: 12px; font: 600 24px var(--sans); color: #0b2a14; padding: 2px 8px 14px; }
+.jframe .in { background: #0d1117; border-radius: 16px; overflow: hidden; }
+.prh { padding: 26px 30px 20px; border-bottom: 1px solid #222; }
+.prh .rp { font: 400 20px var(--mono); color: var(--comment); }
+.prh h2 { font: 600 36px/1.2 var(--sans); color: var(--fg); margin-top: 6px; }
+.prh .meta { display: flex; align-items: center; gap: 14px; margin-top: 14px; font: 500 22px var(--sans); color: var(--comment); }
+.badge { border-radius: 999px; padding: 5px 16px; background: #2d333b; color: #c9d1d9; font: 500 20px var(--sans); }
+.stat { margin-left: auto; font: 600 30px var(--mono); } .stat .a { color: var(--jiro); } .stat .r { color: var(--red); }
+.cols { display: grid; grid-template-columns: 1fr 1fr; }
+.col { padding: 22px 30px; } .col:first-child { border-right: 1px solid #1e242c; }
+.col h4 { font: 500 18px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--comment); margin-bottom: 14px; }
+.tree div { font: 400 28px/46px var(--mono); color: #c9d1d9; white-space: nowrap; }
+.tree .x { text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 3px; color: #8b5a57; }
+.tree .new { color: var(--jiro); } .tree .ind { padding-left: 30px; }
+.cursor { position: absolute; width: 0; height: 0; z-index: 5; }
+.cursor svg { position: absolute; left: 0; top: 0; width: 46px; height: 46px; filter: drop-shadow(0 4px 6px rgba(0,0,0,.4)); }
+.cursor img { position: absolute; left: 30px; top: 30px; width: 64px; }
+.btn { display: inline-flex; align-items: center; gap: 10px; background: var(--jiro); color: #0b2a14; font: 600 26px var(--sans); border-radius: 12px; padding: 14px 24px; }
+.doc { padding: 34px 40px; font: 400 34px/1.5 var(--sans); color: var(--text); }
+.doc h3 { font: 600 40px var(--sans); color: var(--fg); margin-bottom: 18px; }
+.doc .newl { color: var(--fg); background: rgba(60,240,110,.14); border-left: 5px solid var(--jiro); padding: 4px 16px; margin: 6px 0; }
+.alert { position: absolute; background: #2a1b17; border: 2px solid rgba(242,105,79,.6); border-radius: 22px; padding: 34px 40px; color: var(--fg); box-shadow: 0 40px 90px rgba(0,0,0,.5); }
+.alert .k { font: 500 22px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--salmon); }
+.alert .t { font: 600 56px/1.15 var(--sans); margin-top: 14px; }
+.chk { position: absolute; width: 150px; height: 150px; border-radius: 50%; background: var(--jiro); display: grid; place-items: center; box-shadow: 0 0 0 12px rgba(60,240,110,.2), 0 24px 60px rgba(0,0,0,.35); opacity: 0; }
+.chk .ico { width: 86px; height: 86px; color: #0b1f11; }
+
+/* lower third */
+#lt { position: absolute; left: 60px; bottom: 54px; opacity: 0; }
+#lt .a { display: flex; align-items: center; gap: 12px; font: 600 30px/1 var(--sans); color: var(--ink); }
+#lt .b { font: 500 30px/1.2 var(--sans); color: var(--muted); margin-top: 10px; }
+#lt.night .a { color: #fff; } #lt.night .b { color: #aab1bb; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="dots"></div>
+  <div id="night"></div>
+
+  <!-- 0a cold open: Jiro writes the fix -->
+  <div class="shot" id="s-diff"><div class="cam">
+    <div class="jframe" style="left:80px;top:290px;width:1040px;transform:rotateY(5deg) rotateX(2deg)">
+      <div class="lbl"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:40px">Jiro's screen · payments/charge.ts</div>
+      <div class="in"><div class="code">
+        <div class="ln"><span class="n">41</span><span class="s"></span>const order = await load(id);</div>
+        <div class="ln del"><span class="n">42</span><span class="s">-</span>charge(order);</div>
+        <div class="ln add"><span class="n">43</span><span class="s">+</span><span id="codeT"></span><span class="caret" style="height:36px;vertical-align:-6px"></span></div>
+        <div class="ln"><span class="n">44</span><span class="s"></span>return receipt(order);</div>
+      </div></div>
+    </div>
+  </div></div>
+
+  <!-- 0b cold open: the review comment -->
+  <div class="shot" id="s-rev"><div class="cam">
+    <div class="screen" style="left:90px;top:280px;width:1020px;transform:rotateY(-6deg) rotateX(3deg)">
+      <div style="padding:46px 56px" class="msg">
+        <div class="rp2 blur">Review · PR #455 · checkout retries</div>
+        <div class="who j"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:44px">Jiro</div>
+        <div class="jtxt" id="revT"></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 0c cold open: tests green, ready to merge -->
+  <div class="shot" id="s-green"><div class="cam">
+    <div class="jframe" style="left:90px;top:250px;width:1020px;transform:rotateY(6deg) rotateX(2deg)">
+      <div class="lbl"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:40px">Jiro's screen · PR #455</div>
+      <div class="in" style="padding:34px 44px">
+        <div class="wr">{{i:file-text}}<span>Wrote a failing test</span><span id="g1">{{i:check:2.5}}</span></div>
+        <div class="wr">{{i:pencil}}<span>Fixed the double charge</span><span id="g2">{{i:check:2.5}}</span></div>
+        <div class="wr">{{i:terminal}}<span id="testsG">0 tests passing</span><span id="g3">{{i:check:2.5}}</span></div>
+        <div style="margin-top:26px"><span class="btn" id="mergeBtn">{{i:git-merge}}Ready to merge</span></div>
+      </div>
+    </div>
+    <div class="chk" id="chk0" style="left:930px;top:640px">{{i:check:3}}</div>
+  </div></div>
+
+  <!-- 1a scan -->
+  <div class="shot" id="s-scan"><div class="cam">
+    <div class="screen" style="left:120px;top:250px;width:960px;transform:rotateY(-9deg) rotateX(4deg)">
+      <div style="padding:46px 56px" class="msg">
+        <div class="who j"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:44px">Jiro</div>
+        <div class="big" id="scanN">Read 0 files</div>
+        <div class="wr blur">{{i:folder}}<span>Mapped 9 modules</span>{{i:check:2.5}}</div>
+        <div class="wr blur2">{{i:git-pull-request}}<span>Read 6 months of PRs</span></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 1b finding -->
+  <div class="shot" id="s-find"><div class="cam">
+    <div class="screen" style="left:70px;top:280px;width:1080px;transform:rotateY(7deg) rotateX(3deg)">
+      <div style="padding:50px 60px" class="msg">
+        <div class="who j"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:44px">Jiro</div>
+        <div class="jtxt blur2" style="font-size:34px">Read 1,284 files across 9 modules.</div>
+        <div class="jtxt" id="findT"></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 2a you type -->
+  <div class="shot" id="s-type"><div class="cam">
+    <div class="screen" style="left:100px;top:340px;width:1000px;transform:rotateX(10deg) rotateY(-4deg)">
+      <div style="padding:40px 50px">
+        <div class="who y" style="justify-content:flex-end;margin-bottom:18px">You<span class="av">Y</span></div>
+        <div class="comp"><span id="typeT"></span><span class="caret"></span></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 2b pushback -->
+  <div class="shot" id="s-push"><div class="cam">
+    <div class="screen" style="left:90px;top:270px;width:1020px;transform:rotateY(-6deg) rotateX(3deg)">
+      <div style="padding:46px 56px" class="msg">
+        <div class="bub blur" style="font-size:30px">Do it all in one PR.</div>
+        <div class="who j"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:44px">Jiro</div>
+        <div class="jtxt" id="pushT"></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 2c slack -->
+  <div class="shot" id="s-slack"><div class="cam">
+    <div class="tag" style="left:150px;top:250px">{{slack}}Slack</div>
+    <div class="slk" style="left:150px;top:300px;width:900px;transform:rotateY(8deg) rotateX(3deg)">
+      <div class="h"># eng <span style="font:400 22px var(--lato);opacity:.7">Thread</span></div>
+      <div class="m"><div class="av">SL</div><div><span class="n">Sam</span><span class="tm">11:06 AM</span><div class="tx">agree, split it</div></div></div>
+    </div>
+  </div></div>
+
+  <!-- 2d cli -->
+  <div class="shot" id="s-cli"><div class="cam">
+    <div class="tag" style="left:110px;top:240px">{{i:terminal}}CLI</div>
+    <div class="term" style="left:110px;top:290px;width:980px;transform:rotateY(-8deg) rotateX(3deg)">
+      <div class="tb"><i></i><i></i><i></i><span>nori cloud · acme/shop</span></div>
+      <div class="bd"><div class="dim">priya ~/shop</div><div><span class="g">›</span> <span id="cliT"></span></div></div>
+    </div>
+  </div></div>
+
+  <!-- 3 jiro's screen: PR -->
+  <div class="shot" id="s-pr"><div class="cam">
+    <div class="jframe" style="left:80px;top:90px;width:1040px;transform:rotateY(5deg) rotateX(2deg)">
+      <div class="lbl"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:40px">Jiro's screen</div>
+      <div class="in">
+        <div class="prh"><div class="rp">acme/shop · #412</div><h2>Restructure payments, add AGENTS.md</h2>
+          <div class="meta"><span class="badge">Draft</span><span>by Jiro</span><span class="stat"><span class="a" id="plus">+0</span> <span class="r" id="minus">−0</span></span></div></div>
+        <div class="cols">
+          <div class="col"><h4>Before</h4><div class="tree" id="before"><div>payments/</div><div>billing/</div><div>utils2/</div><div>helpers_old/</div><div>legacy_pay.ts</div></div></div>
+          <div class="col"><h4>After</h4><div class="tree" id="after"><div class="new">AGENTS.md</div><div>core/</div><div class="ind">payments/</div><div class="ind">shared/</div><div class="new">docs/map.md</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="cursor" id="cur1"><svg viewBox="0 0 24 24"><path d="M3 2l7.5 19 2.6-7.4L20.5 11z" fill="#141414" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg><img class="mimg" src="jiro-mascot-pixel-noshadow.png"></div>
+    <div class="chk" id="chk1" style="left:960px;top:620px">{{i:check:3}}</div>
+  </div></div>
+
+  <!-- 4a docs question -->
+  <div class="shot" id="s-q"><div class="cam">
+    <div class="screen" style="left:80px;top:320px;width:1040px;transform:rotateY(7deg) rotateX(3deg)">
+      <div style="padding:50px 60px" class="msg">
+        <div class="who j"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:44px">Jiro</div>
+        <div class="jtxt" id="qT"></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 4b you answer -->
+  <div class="shot" id="s-ans"><div class="cam">
+    <div class="screen" style="left:100px;top:340px;width:1000px;transform:rotateX(10deg) rotateY(5deg)">
+      <div style="padding:40px 50px">
+        <div class="who y" style="justify-content:flex-end;margin-bottom:18px">You<span class="av">Y</span></div>
+        <div class="comp"><span id="ansT"></span><span class="caret"></span></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 4c doc line lands -->
+  <div class="shot" id="s-doc"><div class="cam">
+    <div class="jframe" style="left:90px;top:150px;width:1020px;transform:rotateY(-5deg) rotateX(2deg)">
+      <div class="lbl"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:40px">Jiro's screen · docs/payments.md</div>
+      <div class="in"><div class="doc">
+        <h3>Payments</h3>
+        <div class="blur">Charges run through <code style="font-size:28px">core/payments</code>.</div>
+        <div class="newl" id="docL"></div>
+        <div class="blur2">Refunds settle within 5 days.</div>
+      </div></div>
+    </div>
+    <div class="chk" id="chk2" style="left:950px;top:600px">{{i:check:3}}</div>
+  </div></div>
+
+  <!-- 5a alert -->
+  <div class="shot" id="s-alert"><div class="cam">
+    <div class="alert" style="left:120px;top:300px;width:960px;transform:rotateY(-7deg) rotateX(3deg)">
+      <div class="k">Automated alert · 4:21 AM</div>
+      <div class="t">Checkout returns 500s</div>
+    </div>
+  </div></div>
+
+  <!-- 5b fix on jiro's screen -->
+  <div class="shot" id="s-fix"><div class="cam">
+    <div class="jframe" style="left:90px;top:170px;width:1020px;transform:rotateY(6deg) rotateX(2deg)">
+      <div class="lbl"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:40px">Jiro's screen · 4:29 AM</div>
+      <div class="in" style="padding:34px 44px">
+        <div class="wr">{{i:search}}<span>Traced it to cart/total.ts</span><span id="f1">{{i:check:2.5}}</span></div>
+        <div class="wr">{{i:file-text}}<span>Wrote a failing test</span><span id="f2">{{i:check:2.5}}</span></div>
+        <div class="wr">{{i:terminal}}<span id="testsN">0 tests passing</span><span id="f3">{{i:check:2.5}}</span></div>
+        <div style="margin-top:26px"><span class="btn" id="prBtn">{{i:git-pull-request}}Open draft PR #418</span></div>
+      </div>
+    </div>
+    <div class="cursor" id="cur2"><svg viewBox="0 0 24 24"><path d="M3 2l7.5 19 2.6-7.4L20.5 11z" fill="#141414" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg><img class="mimg" src="jiro-mascot-pixel-noshadow.png"></div>
+    <div class="chk" id="chk3" style="left:930px;top:640px">{{i:check:3}}</div>
+  </div></div>
+
+  <!-- 5c morning -->
+  <div class="shot" id="s-morn"><div class="cam">
+    <div class="screen" style="left:110px;top:290px;width:980px;transform:rotateY(-6deg) rotateX(3deg)">
+      <div style="padding:46px 56px" class="msg">
+        <div style="display:inline-flex;align-items:center;gap:12px;border:1px solid #262626;border-radius:12px;padding:12px 20px;font:400 26px var(--sans);color:var(--text);align-self:flex-start" class="blur"><span style="font:400 18px var(--mono);letter-spacing:.08em;color:var(--comment)">PULL REQUEST</span>#418 Fix discounted totals (draft)</div>
+        <div class="who y" style="justify-content:flex-end">You · 8:02 AM<span class="av">Y</span></div>
+        <div class="bub" id="nice"></div>
+      </div>
+    </div>
+  </div></div>
+
+  <div id="hk"><span>You just hired </span><span class="roll"><span id="r0"></span><span id="r1"></span><span class="strike" id="strk"></span></span></div>
+  <img class="mimg" id="hkM" src="jiro-mascot-pixel.png">
+
+  <div id="lt"><div class="a"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:40px">Jiro</div><div class="b" id="ltB"></div></div>
+</div>
+
+<script>
+const D = 30;
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const prog = (t, a, d) => clamp((t - a) / d);
+const eo = (x) => 1 - Math.pow(1 - x, 3);
+const eio = (x) => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = (x) => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const $ = (id) => document.getElementById(id);
+const typeIn = (s, t, a, b) => s.slice(0, Math.round(s.length * prog(t, a, b - a)));
+
+// ---------- shots (hard cuts) ----------
+const SHOTS = [
+  { id: 's-diff', t: 0, push: [1.0, 1.06] },
+  { id: 's-rev', t: 1.3, push: [1.0, 1.06] },
+  { id: 's-green', t: 2.6, push: [1.0, 1.05] },
+  { id: 's-scan', t: 4.0, push: [1.0, 1.08] },
+  { id: 's-find', t: 5.6, push: [1.0, 1.06] },
+  { id: 's-type', t: 8.9, push: [1.02, 1.08] },
+  { id: 's-push', t: 10.1, push: [1.0, 1.06] },
+  { id: 's-slack', t: 12.3, push: [1.0, 1.05] },
+  { id: 's-cli', t: 13.3, push: [1.0, 1.05] },
+  { id: 's-pr', t: 14.6, push: [1.0, 1.05] },
+  { id: 's-q', t: 19.3, push: [1.0, 1.06] },
+  { id: 's-ans', t: 21.1, push: [1.02, 1.08] },
+  { id: 's-doc', t: 22.2, push: [1.0, 1.05] },
+  { id: 's-alert', t: 24.3, push: [1.0, 1.08] },
+  { id: 's-fix', t: 25.7, push: [1.0, 1.05] },
+  { id: 's-morn', t: 28.0, push: [1.0, 1.06] },
+];
+SHOTS.forEach((s, i) => { s.end = SHOTS[i + 1] ? SHOTS[i + 1].t : D; });
+const LT = [
+  { t: 4.4, end: 8.8, txt: 'Reads your whole codebase' },
+  { t: 9.3, end: 14.5, txt: 'Pushes back on messy plans' },
+  { t: 15.0, end: 19.2, txt: 'Ships small, clean PRs' },
+  { t: 19.7, end: 24.2, txt: "Asks what your docs don't say" },
+  { t: 24.7, end: 29.8, txt: 'Handles the 4:21 AM alert', night: [24.3, 28.0] },
+];
+// cold open (0-4s): Jiro mid-fix, the review comment, tests green; the caption rolls over the footage
+const HOOK_END = 4.0;
+const ROLL = ['an engineer.', 'a reviewer.', 'Jiro.'];
+const ROLL_T = [0, 1.3, 2.6];
+const COLD = { code: 'charge(order, { idempotencyKey: id });', rev: 'This double-charges on retry. Added an idempotency key.' };
+const COPY = {
+  find: "payments/ and billing/ do one job. Two small PRs instead of one big one?",
+  type: 'Do it all in one PR, tests to',
+  push: "I'd split it. Structure first, tests next. Easier to review.",
+  cli: '+1. Keep tests/ at the root, CI looks there.',
+  q: "Orders retry twice. Bug or on purpose? Your docs don't say.",
+  ans: 'On purpose. The card network fla',
+  doc: 'Orders retry twice on purpose: the card network flakes.',
+  nice: '…oh nice.',
+};
+const NIGHT = [24.3, 28.0];
+
+window.__init = async () => { await document.fonts.ready; window.__seek(0); return D; };
+
+window.__seek = (t) => {
+  // active shot + camera push-in
+  let cur = SHOTS[0]; for (const s of SHOTS) if (t >= s.t) cur = s;
+  for (const s of SHOTS) {
+    const el = $(s.id); el.style.display = s === cur ? 'block' : 'none';
+    if (s === cur) { const p = prog(t, s.t, s.end - s.t); el.querySelector('.cam').style.transform = `scale(${s.push[0] + (s.push[1] - s.push[0]) * p})`; }
+  }
+  // night
+  const n = t >= NIGHT[0] && t < NIGHT[1] ? 1 : 0;
+  $('night').style.opacity = String(n);
+
+  // hook: caption slot-roll over the cold open, strike, land on "Jiro."
+  const hk = t < HOOK_END;
+  $('hk').style.display = hk ? 'block' : 'none'; $('hkM').style.display = hk ? 'block' : 'none';
+  let k = 0; ROLL_T.forEach((rt, i) => { if (t >= rt) k = i; });
+  const rp = k === 0 ? 1 : eio(prog(t, ROLL_T[k], .22));
+  $('r0').textContent = ROLL[k]; $('r1').textContent = k > 0 ? ROLL[k - 1] : '';
+  $('r0').style.transform = `translateY(${(1 - rp) * 84}px)`; $('r1').style.transform = `translateY(${-rp * 84}px)`;
+  $('strk').style.width = k < ROLL.length - 1 ? `${eo(prog(t, ROLL_T[k] + .75, .3)) * $('r0').offsetWidth}px` : '0px';
+  const mm = prog(t, ROLL_T[2], .4); $('hkM').style.opacity = String(mm); $('hkM').style.transform = `scale(${.6 + .4 * back(mm)})`;
+  // cold open footage
+  $('codeT').textContent = typeIn(COLD.code, t, -0.25, 0.9);
+  $('revT').textContent = typeIn(COLD.rev, t, 1.4, 2.2);
+  ['g1', 'g2', 'g3'].forEach((id, i) => { const e = $(id); e.style.opacity = String(t >= 2.75 + i * .3 ? 1 : 0); e.style.marginLeft = 'auto'; e.style.color = '#3cf06e'; });
+  $('testsG').textContent = `${Math.round(214 * eo(prog(t, 2.95, .4)))} tests passing`;
+  $('mergeBtn').style.opacity = String(prog(t, 3.35, .15)); $('mergeBtn').style.transform = `scale(${.85 + .15 * back(prog(t, 3.35, .3))})`;
+
+  // scan counter
+  $('scanN').textContent = `Read ${Math.round(1284 * eo(prog(t, 4.1, 1.2))).toLocaleString('en-US')} files`;
+  // texts
+  $('findT').innerHTML = typeIn(COPY.find, t, 5.75, 7.1).replace('payments/', '<code>payments/</code>').replace('billing/', '<code>billing/</code>');
+  $('typeT').textContent = typeIn(COPY.type, t, 9.0, 10.0);
+  $('pushT').textContent = typeIn(COPY.push, t, 10.25, 11.2);
+  $('cliT').textContent = typeIn(COPY.cli, t, 13.4, 14.2);
+  $('qT').textContent = typeIn(COPY.q, t, 19.45, 20.5);
+  $('ansT').textContent = typeIn(COPY.ans, t, 21.15, 22.1);
+  $('docL').textContent = typeIn(COPY.doc, t, 22.6, 23.3);
+  $('docL').style.opacity = String(t >= 22.55 ? 1 : 0);
+  $('nice').textContent = t >= 28.6 ? COPY.nice : ''; $('nice').style.opacity = String(t >= 28.6 ? 1 : 0);
+  $('nice').style.transform = `scale(${.85 + .15 * back(prog(t, 28.6, .3))})`;
+
+  // PR: cursor clicks open, before entries strike, after entries land, diff counts up
+  const c1 = $('cur1'); const cp = eio(prog(t, 14.7, .8));
+  c1.style.left = `${880 - 420 * cp}px`; c1.style.top = `${760 - 520 * cp}px`;
+  document.querySelectorAll('#before div').forEach((d, i) => d.classList.toggle('x', t >= 15.6 + i * .2));
+  document.querySelectorAll('#after div').forEach((d, i) => { const p = prog(t, 16.4 + i * .22, .25); d.style.opacity = String(p); d.style.transform = `translateX(${(1 - eo(p)) * 20}px)`; });
+  const dp = eo(prog(t, 16.4, 1.4)); $('plus').textContent = `+${Math.round(412 * dp)}`; $('minus').textContent = `−${Math.round(1980 * dp).toLocaleString('en-US')}`;
+  const chk = (id, a) => { const p = prog(t, a, .35); $(id).style.opacity = String(Math.min(prog(t, a, .1), 1)); $(id).style.transform = `scale(${.4 + .6 * back(p)})`; };
+  chk('chk0', 3.45); chk('chk1', 18.1); chk('chk2', 23.4); chk('chk3', 27.3);
+
+  // fix: ticks, tests counter, cursor clicks the PR button
+  ['f1', 'f2', 'f3'].forEach((id, i) => { $(id).style.opacity = String(t >= 25.9 + i * .4 ? 1 : 0); });
+  $('testsN').textContent = `${Math.round(214 * eo(prog(t, 26.5, .5)))} tests passing`;
+  const c2 = $('cur2'); const cq = eio(prog(t, 26.2, .8));
+  c2.style.left = `${820 - 480 * cq}px`; c2.style.top = `${760 - 262 * cq}px`;
+  $('prBtn').style.transform = `scale(${t >= 27.05 && t < 27.25 ? .94 : 1})`;
+  document.querySelectorAll('#s-fix .wr span[id^=f]').forEach((e) => { e.style.marginLeft = 'auto'; e.style.color = '#3cf06e'; });
+
+  // lower third
+  let lt = null; for (const l of LT) if (t >= l.t && t < l.end) lt = l;
+  const ltEl = $('lt');
+  if (lt) { $('ltB').textContent = lt.txt; const a = Math.min(prog(t, lt.t, .4), 1 - prog(t, lt.end - .3, .3)); ltEl.style.opacity = String(a); ltEl.style.transform = `translateY(${(1 - eo(prog(t, lt.t, .4))) * 12}px)`; }
+  else ltEl.style.opacity = '0';
+  ltEl.classList.toggle('night', !!n);
+};
+
+window.__cues = () => {
+  const out = [];
+  SHOTS.slice(1).forEach((s) => out.push({ t: s.t, k: 'tick' }));
+  ROLL_T.slice(1).forEach((r) => out.push({ t: r, k: 'tick' }));
+  out.push({ t: ROLL_T[2], k: 'pop' }, { t: 1.4, k: 'msg' }, { t: 3.45, k: 'chime' });
+  [0, 1, 2].forEach((i) => out.push({ t: 2.75 + i * .3, k: 'tick' }));
+  const typing = (s, a, b) => { const n = s.length; for (let i = 0; i < n; i += 2) out.push({ t: a + (b - a) * i / n, k: 'key' }); };
+  { const n = COLD.code.length; for (let i = 0; i < n; i += 2) { const x = -0.25 + 1.15 * i / n; if (x >= 0) out.push({ t: x, k: 'key' }); } }
+  typing(COPY.type, 9.0, 10.0); typing(COPY.cli, 13.4, 14.2); typing(COPY.ans, 21.15, 22.1);
+  [5.75, 10.25, 19.45].forEach((x) => out.push({ t: x, k: 'msg' }));
+  out.push({ t: 15.5, k: 'tap' }, { t: 27.1, k: 'tap' }, { t: 24.4, k: 'busy' }, { t: 28.6, k: 'send' });
+  [18.1, 23.4, 27.3].forEach((x) => out.push({ t: x, k: 'chime' }));
+  [0, 1, 2, 3, 4].forEach((i) => out.push({ t: 15.6 + i * .2, k: 'tick' }));
+  [0, 1, 2].forEach((i) => out.push({ t: 25.9 + i * .4, k: 'tick' }));
+  return out.sort((a, b) => a.t - b.t);
+};
+</script>
+</body>
+</html>
