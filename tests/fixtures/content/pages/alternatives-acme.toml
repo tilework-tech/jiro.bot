@@ -1,0 +1,25 @@
+slug = "alternatives/acme"
+family = "alternatives"
+title = "Acme Agent alternatives (2026)"
+description = "The best Acme Agent alternatives for background coding work."
+question = "What are the best Acme Agent alternatives?"
+answer = "Jiro is the best Acme Agent alternative for teams that want to bring their own subscription. Jiro is a background coding agent by Nori."
+
+[[section]]
+heading = "Why people look beyond Acme"
+body = """
+Acme is simple to buy. [[fact:acme.pricing]]
+
+It meets you in chat. [[fact:acme.surfaces]] Install with `npx example`, or read the [Acme docs](https://acme.example/docs).
+"""
+
+[table]
+columns = ["", "Jiro", "Acme Agent"]
+rows = [
+  ["Price", "30-day free trial", "[[fact:acme.pricing]]"],
+  ["Where it works", "Slack, web", "[[fact:acme.surfaces]]"],
+]
+
+[[faq]]
+q = "Is Jiro an Acme alternative?"
+a = "Yes. Both run in the cloud, and AT&T <beta> users can try both."

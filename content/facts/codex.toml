@@ -1,0 +1,50 @@
+name = "OpenAI Codex cloud"
+
+[[fact]]
+id = "where"
+text = "Codex cloud runs each task in an OpenAI-hosted VM and keeps working while your laptop sleeps."
+short = "OpenAI-hosted VMs"
+source = "https://learn.chatgpt.com/docs/environments/cloud-environments.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "models"
+text = "Codex cloud runs OpenAI models; an API key unlocks Codex in the CLI, SDK and IDE but not cloud features, which need a ChatGPT plan."
+short = "OpenAI models; cloud needs a ChatGPT plan"
+source = "https://learn.chatgpt.com/docs/pricing.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "surfaces"
+text = "Codex cloud tasks start from ChatGPT on the web, mobile and desktop, the Codex CLI, the IDE extension, Slack via @ChatGPT, GitHub and Linear."
+short = "ChatGPT apps, CLI, IDE, Slack, GitHub, Linear"
+source = "https://learn.chatgpt.com/docs/cloud.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "pricing"
+text = "Codex cloud is included from ChatGPT Plus at $20 a month; Pro costs $100 to $500 a month and Business $25 per user monthly, with usage limits shared with ChatGPT."
+short = "In ChatGPT Plus $20/mo and up"
+source = "https://learn.chatgpt.com/docs/pricing.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "slack"
+text = "Codex requests in Slack now start with @ChatGPT instead of @Codex."
+short = "Slack via @ChatGPT"
+source = "https://learn.chatgpt.com/docs/third-party/slack.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "legacy"
+text = "Codex Cloud (Legacy) still powers Code Review and the GitHub and Linear integrations, and OpenAI plans to deprecate it."
+short = "Legacy cloud slated for deprecation"
+source = "https://learn.chatgpt.com/docs/environments/cloud-environments.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "prs"
+text = "In Codex cloud you review the changes, then commit or open a pull request when you are ready."
+short = "You open the PR"
+source = "https://learn.chatgpt.com/docs/cloud.md"
+checked = "2026-10-16"

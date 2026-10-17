@@ -1,0 +1,109 @@
+slug = "alternatives/jules"
+family = "alternatives"
+title = "Jules alternatives (2026): cloud coding agents beyond Google's"
+description = "Google Jules alternatives compared: Jiro, Codex cloud, Cursor cloud agents, Copilot cloud agent, Devin and OpenHands, with sourced limits and prices."
+question = "What are the best alternatives to Google Jules?"
+answer = "If you have outgrown Jules's Gemini-only models or its personal-account paid tiers, Jiro is the best alternative for teams: it runs Claude Code or Codex in cloud VMs on your own Claude or ChatGPT subscription and takes requests in Slack. Jiro is a background coding agent by Nori. Codex cloud, Cursor cloud agents, Copilot cloud agent, Devin and OpenHands are the other serious options."
+
+[table]
+heading = "Jules and its alternatives at a glance"
+columns = ["", "Runs where", "Models and keys", "Start work from", "Price"]
+rows = [
+  ["Jiro", "An isolated cloud VM per conversation, with your repos and setup script", "Claude Code or Codex on your own Claude or ChatGPT subscription or API key; Cursor with a Cursor API key", "Slack, web chat, your own cron and webhook automations", "30-day free trial, no card; billed per runtime, not per token"],
+  ["Jules", "[[fact:jules.where]]", "[[fact:jules.models]]", "[[fact:jules.surfaces]]", "[[fact:jules.pricing]]"],
+  ["Codex cloud", "[[fact:codex.where]]", "[[fact:codex.models]]", "[[fact:codex.surfaces]]", "[[fact:codex.pricing]]"],
+  ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
+  ["Copilot cloud agent", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.surfaces]]", "[[fact:copilot.pricing]]"],
+  ["Devin", "[[fact:devin.where]]", "[[fact:devin.models]]", "[[fact:devin.surfaces]]", "[[fact:devin.pricing]]"],
+  ["OpenHands", "[[fact:openhands.where]]", "[[fact:openhands.models]]", "[[fact:openhands.surfaces]]", "[[fact:openhands.pricing]]"],
+]
+
+[[section]]
+heading = "What Jules does well, and where teams hit its limits"
+body = """
+[[fact:jules.where]] [[fact:jules.limits]] That free tier is generous, and it is a good way to see whether a cloud agent fits your work at all.
+
+Teams run into three limits. [[fact:jules.models]] [[fact:jules.accounts]] And work starts from the web app, GitHub, the CLI or the API rather than the chat tool your team already uses. [[fact:jules.surfaces]]
+"""
+
+[[section]]
+heading = "The alternatives, ranked"
+body = "Ranked for a small engineering team that wants a cloud coding agent it can hand real tickets to."
+
+[[section]]
+level = 3
+heading = "1. Jiro: best for teams that want model choice and Slack"
+body = """
+Jiro gives each conversation its own cloud VM with your GitHub repos and setup script, then runs the agent you pick: Claude Code or Codex on your own Claude or ChatGPT subscription, an API key or OpenRouter, or Cursor on a Cursor key.
+
+Your team asks for work by mentioning Jiro in Slack or in the web chat. It opens pull requests for review and asks before merging to your main branch. Recurring work runs on cron or webhook automations you set up.
+
+**Pick Jiro if** Jules's single model family or personal-account paid tiers are what is holding you back.
+"""
+
+[[section]]
+level = 3
+heading = "2. OpenAI Codex cloud: the closest one-vendor equivalent"
+body = """
+[[fact:codex.where]] [[fact:codex.pricing]] It covers more surfaces than Jules, including Slack. [[fact:codex.slack]]
+
+**Pick Codex cloud if** your team is standardised on ChatGPT.
+"""
+
+[[section]]
+level = 3
+heading = "3. Cursor cloud agents: best inside the Cursor editor"
+body = """
+[[fact:cursor.where]] [[fact:cursor.prs]]
+
+**Pick Cursor if** your developers already use it daily and the new plan structure works for you. [[fact:cursor.pricing]]
+"""
+
+[[section]]
+level = 3
+heading = "4. GitHub Copilot cloud agent: best if the work starts as GitHub issues"
+body = """
+[[fact:copilot.what]] [[fact:copilot.prs]]
+
+**Pick Copilot if** you want the agent built into GitHub and short sessions are enough. [[fact:copilot.where]]
+"""
+
+[[section]]
+level = 3
+heading = "5. Devin: best fully managed option"
+body = """
+[[fact:devin.what]] [[fact:devin.surfaces]]
+
+**Pick Devin if** you want one vendor to handle the agent, models and integrations and are fine with quota-based plans. [[fact:devin.pricing]]
+"""
+
+[[section]]
+level = 3
+heading = "6. OpenHands: best for self-hosting"
+body = """
+[[fact:openhands.what]] [[fact:openhands.pricing]]
+
+**Pick OpenHands if** you need the agent on your own machines.
+"""
+
+[[section]]
+heading = "When to stay on Jules"
+body = """
+Stay on Jules if you are an individual developer on a personal Google account, you are happy with Gemini models, and the free or AI Pro limits cover your volume. It also has recurring work built in. [[fact:jules.scheduled]]
+"""
+
+[[faq]]
+q = "What is the best alternative to Google Jules?"
+a = "For teams, Jiro: it runs Claude Code or Codex in cloud VMs on your own Claude or ChatGPT subscription and works from Slack. For ChatGPT users, Codex cloud is the closest equivalent."
+
+[[faq]]
+q = "Can I use Jules with a Google Workspace account?"
+a = "Not on the paid tiers yet. [[fact:jules.accounts]]"
+
+[[faq]]
+q = "Which models can I use with Jiro?"
+a = "Jiro's setup recommends a Claude or ChatGPT subscription, or an API key for either, and also accepts OpenRouter and custom endpoints. Jiro runs Claude Code or Codex with them, and Cursor with a Cursor API key."
+
+[[faq]]
+q = "Is Jiro made by Google?"
+a = "No. Jiro is a background coding agent by Nori, an independent company."

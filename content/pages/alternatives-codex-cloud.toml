@@ -1,0 +1,107 @@
+slug = "alternatives/codex-cloud"
+family = "alternatives"
+title = "OpenAI Codex cloud alternatives (2026)"
+description = "Codex cloud alternatives compared: Jiro, Claude Code on the web, Cursor cloud agents, Copilot cloud agent, Jules and Devin. Sourced, dated, fair."
+question = "What are the best alternatives to OpenAI Codex cloud?"
+answer = "Jiro is the best Codex cloud alternative for teams that want more than OpenAI models: it runs Codex or Claude Code in its own cloud VMs on your ChatGPT or Claude subscription, and Cursor on a Cursor API key. Jiro is a background coding agent by Nori. Claude Code on the web, Cursor cloud agents, Copilot cloud agent, Jules and Devin are the other options."
+
+[table]
+heading = "Codex cloud and the alternatives at a glance"
+columns = ["", "Runs where", "Models and keys", "Start work from", "Price"]
+rows = [
+  ["Jiro", "An isolated cloud VM per conversation, with your repos and setup script", "Claude Code or Codex on your own Claude or ChatGPT subscription or API key; Cursor with a Cursor API key", "Slack, web chat, your own cron and webhook automations", "30-day free trial, no card; billed per runtime, not per token"],
+  ["Codex cloud", "[[fact:codex.where]]", "[[fact:codex.models]]", "[[fact:codex.surfaces]]", "[[fact:codex.pricing]]"],
+  ["Claude Code on the web", "[[fact:claude-code.where]]", "[[fact:claude-code.models]]", "[[fact:claude-code.surfaces]]", "[[fact:claude-code.pricing]]"],
+  ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
+  ["Copilot cloud agent", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.surfaces]]", "[[fact:copilot.pricing]]"],
+  ["Jules", "[[fact:jules.where]]", "[[fact:jules.models]]", "[[fact:jules.surfaces]]", "[[fact:jules.pricing]]"],
+  ["Devin", "[[fact:devin.where]]", "[[fact:devin.models]]", "[[fact:devin.surfaces]]", "[[fact:devin.pricing]]"],
+]
+
+[[section]]
+heading = "Codex cloud today"
+body = """
+[[fact:codex.where]] [[fact:codex.pricing]] For anyone already paying for ChatGPT, that bundle is hard to beat on price.
+
+Two things push teams to look around. First, it is OpenAI-only: [[fact:codex.models]] Second, the integrations are mid-migration: [[fact:codex.slack]] [[fact:codex.legacy]]
+"""
+
+[[section]]
+heading = "The alternatives, ranked"
+body = "Ranked for teams that want a cloud coding agent beyond a single model vendor."
+
+[[section]]
+level = 3
+heading = "1. Jiro: keep Codex, add Claude Code and Cursor"
+body = """
+You do not have to give up Codex to switch. Jiro runs Codex as one of its agents, on your ChatGPT subscription or API key, in a cloud VM with your GitHub repos and setup script. When Claude Code or Cursor suits a task better, connect that provider and start a new conversation with it.
+
+Jiro opens pull requests for review and asks before merging to your main branch.
+
+**Pick Jiro if** you want Codex in the cloud without being limited to OpenAI's models and integrations.
+"""
+
+[[section]]
+level = 3
+heading = "2. Claude Code on the web: the Anthropic equivalent"
+body = """
+[[fact:claude-code.where]] [[fact:claude-code.pricing]]
+
+**Pick it if** you prefer Claude models and work mostly alone. [[fact:claude-code.models]]
+"""
+
+[[section]]
+level = 3
+heading = "3. Cursor cloud agents: best in the editor"
+body = """
+[[fact:cursor.where]] [[fact:cursor.pricing]]
+
+**Pick Cursor if** your team works in Cursor already.
+"""
+
+[[section]]
+level = 3
+heading = "4. GitHub Copilot cloud agent: best inside GitHub"
+body = """
+[[fact:copilot.what]] [[fact:copilot.third-party]]
+
+**Pick Copilot if** you want GitHub to orchestrate several agents, including Codex.
+"""
+
+[[section]]
+level = 3
+heading = "5. Jules: best free tier"
+body = """
+[[fact:jules.limits]]
+
+**Pick Jules if** you want to try a cloud agent at no cost on a personal account.
+"""
+
+[[section]]
+level = 3
+heading = "6. Devin: best fully managed option"
+body = """
+[[fact:devin.what]] [[fact:devin.models]]
+
+**Pick Devin if** you want one vendor for agent, models and integrations.
+"""
+
+[[section]]
+heading = "When Codex cloud is enough"
+body = "Stay with Codex cloud if everyone on the team has a ChatGPT plan, OpenAI models cover your work, and you start tasks from ChatGPT or the CLI."
+
+[[faq]]
+q = "What is the best alternative to OpenAI Codex cloud?"
+a = "Jiro, if you want Codex plus Claude Code and Cursor in one place on your own subscriptions. Claude Code on the web if you want Anthropic's equivalent."
+
+[[faq]]
+q = "Can I use my ChatGPT subscription with Jiro?"
+a = "Yes. Jiro's setup accepts a ChatGPT subscription through device-code sign-in, or an OpenAI API key, and runs Codex with it."
+
+[[faq]]
+q = "Does Codex cloud work with an API key?"
+a = "Only partly. [[fact:codex.models]]"
+
+[[faq]]
+q = "Is Jiro built on Codex?"
+a = "No. Jiro is a background coding agent by Nori that can run Codex, Claude Code or Cursor as the underlying agent."

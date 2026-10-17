@@ -1,0 +1,300 @@
+{
+ "model": "gemini-2.5-flash",
+ "runs": 3,
+ "questions": {
+  "How do I run Claude Code in Slack for my team?": {
+   "cat": "how-to",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Claude Code": 3
+   }
+  },
+  "How can I have an AI agent clean up dead code in my repo every week?": {
+   "cat": "how-to",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Copilot": 2,
+    "Cursor": 2,
+    "Claude Code": 1,
+    "Devin": 1
+   }
+  },
+  "How do I run a coding agent in the cloud with my own Claude subscription?": {
+   "cat": "how-to",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Claude Code": 3
+   }
+  },
+  "What's the best background coding agent for a Django codebase?": {
+   "cat": "guide",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Copilot": 2,
+    "Cursor": 2
+   }
+  },
+  "How do I set up an AI agent that opens pull requests on my Next.js repo?": {
+   "cat": "guide",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Claude Code": 1,
+    "Codex": 1,
+    "Copilot": 2,
+    "Sweep": 1
+   }
+  },
+  "What are the best alternatives to Devin?": {
+   "cat": "compare",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Aider": 3,
+    "Amp": 2,
+    "Claude Code": 3,
+    "Cursor": 3,
+    "Devin": 3,
+    "Factory": 2,
+    "Kilo": 2,
+    "Kiro": 3,
+    "OpenHands": 3,
+    "Codex": 2,
+    "Cline": 1,
+    "Copilot": 1
+   }
+  },
+  "Jiro vs Devin: which is better?": {
+   "cat": "compare",
+   "runs": 3,
+   "mention": 2,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Devin": 3,
+    "Jiro": 3
+   }
+  },
+  "What is Jiro (jiro.bot) AI software engineer?": {
+   "cat": "brand",
+   "runs": 3,
+   "mention": 3,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Claude Code": 3,
+    "Jiro": 3,
+    "Cursor": 1
+   }
+  },
+  "What are the best Devin alternatives?": {
+   "cat": "alternatives",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Aider": 3,
+    "Amp": 3,
+    "Claude Code": 3,
+    "Copilot": 2,
+    "Cursor": 3,
+    "Devin": 3,
+    "Factory": 3,
+    "Kilo": 3,
+    "OpenHands": 3,
+    "Cline": 1,
+    "Codex": 2,
+    "Kiro": 2
+   }
+  },
+  "What are the best Factory alternatives?": {
+   "cat": "alternatives",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Claude Code": 1,
+    "Codex": 1,
+    "Copilot": 1,
+    "Cursor": 1,
+    "Devin": 1,
+    "Factory": 3
+   }
+  },
+  "What are the best Cursor background agents alternatives?": {
+   "cat": "alternatives",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Aider": 1,
+    "Claude Code": 3,
+    "Cline": 2,
+    "Codex": 2,
+    "Copilot": 3,
+    "Cursor": 3,
+    "Devin": 2,
+    "Tembo": 1
+   }
+  },
+  "What are the best OpenAI Codex cloud alternatives?": {
+   "cat": "alternatives",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Claude Code": 3,
+    "Codex": 3,
+    "Copilot": 3,
+    "Cursor": 3,
+    "Aider": 1
+   }
+  },
+  "What are the best GitHub Copilot coding agent alternatives?": {
+   "cat": "alternatives",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Claude Code": 3,
+    "Codex": 2,
+    "Copilot": 3,
+    "Cursor": 3,
+    "Devin": 2,
+    "Kilo": 2,
+    "Aider": 2
+   }
+  },
+  "What are the best Claude Code on the web alternatives?": {
+   "cat": "alternatives",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Aider": 3,
+    "Claude Code": 3,
+    "Cline": 3,
+    "Codex": 3,
+    "Copilot": 3,
+    "Cursor": 3,
+    "Devin": 2,
+    "Factory": 1,
+    "Kilo": 2,
+    "OpenHands": 2
+   }
+  },
+  "What are the best Amp alternatives?": {
+   "cat": "alternatives",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Amp": 3,
+    "Copilot": 1
+   }
+  },
+  "What are the best Warp alternatives?": {
+   "cat": "alternatives",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Cursor": 3,
+    "Warp": 3,
+    "Copilot": 1,
+    "Nori": 1
+   }
+  },
+  "What are the best Jules alternatives?": {
+   "cat": "alternatives",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Claude Code": 3,
+    "Codex": 3,
+    "Copilot": 3,
+    "Cursor": 3,
+    "Devin": 3,
+    "Jules": 3,
+    "Aider": 1,
+    "Cline": 1,
+    "Nori": 1,
+    "OpenHands": 1,
+    "Tembo": 1
+   }
+  },
+  "What are the best Kiro alternatives?": {
+   "cat": "alternatives",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Aider": 3,
+    "Claude Code": 3,
+    "Codex": 3,
+    "Copilot": 3,
+    "Cursor": 3,
+    "Devin": 3,
+    "Kiro": 3,
+    "Warp": 3
+   }
+  },
+  "Jiro vs Kiro: what is the difference?": {
+   "cat": "compare",
+   "runs": 3,
+   "mention": 2,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Jiro": 3,
+    "Kiro": 3
+   }
+  },
+  "What are the best background coding agents in 2026?": {
+   "cat": "list",
+   "runs": 3,
+   "mention": 0,
+   "cited": 0,
+   "kiro_confusion": 0,
+   "brands": {
+    "Aider": 1,
+    "Claude Code": 3,
+    "Cline": 2,
+    "Codex": 3,
+    "Copilot": 3,
+    "Cursor": 3,
+    "Devin": 2,
+    "Jules": 1,
+    "Kiro": 1,
+    "OpenHands": 1
+   }
+  }
+ }
+}

@@ -1,0 +1,107 @@
+slug = "alternatives/copilot-coding-agent"
+family = "alternatives"
+title = "GitHub Copilot coding agent alternatives (2026)"
+description = "Alternatives to GitHub Copilot coding agent (now Copilot cloud agent): Jiro, Codex cloud, Cursor cloud agents, Claude Code on the web, Devin and OpenHands."
+question = "What are the best alternatives to GitHub Copilot coding agent?"
+answer = "The best GitHub Copilot coding agent alternatives are Jiro, OpenAI Codex cloud, Cursor cloud agents, Claude Code on the web, Devin and OpenHands, and Jiro is the top pick when work starts in Slack rather than GitHub issues, because it gives each conversation its own cloud VM and runs Claude Code, Codex or Cursor on your own subscription. Jiro is a background coding agent by Nori."
+
+[table]
+heading = "Copilot cloud agent and the alternatives at a glance"
+columns = ["", "Runs where", "Models and keys", "Start work from", "Price"]
+rows = [
+  ["Jiro", "An isolated cloud VM per conversation, with your repos and setup script", "Claude Code or Codex on your own Claude or ChatGPT subscription or API key; Cursor with a Cursor API key", "Slack, web chat, your own cron and webhook automations", "30-day free trial, no card; billed per runtime, not per token"],
+  ["Copilot cloud agent", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.surfaces]]", "[[fact:copilot.pricing]]"],
+  ["Codex cloud", "[[fact:codex.where]]", "[[fact:codex.models]]", "[[fact:codex.surfaces]]", "[[fact:codex.pricing]]"],
+  ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
+  ["Claude Code on the web", "[[fact:claude-code.where]]", "[[fact:claude-code.models]]", "[[fact:claude-code.surfaces]]", "[[fact:claude-code.pricing]]"],
+  ["Devin", "[[fact:devin.where]]", "[[fact:devin.models]]", "[[fact:devin.surfaces]]", "[[fact:devin.pricing]]"],
+  ["OpenHands", "[[fact:openhands.where]]", "[[fact:openhands.models]]", "[[fact:openhands.surfaces]]", "[[fact:openhands.pricing]]"],
+]
+
+[[section]]
+heading = "Copilot's agent after the rename"
+body = """
+[[fact:copilot.what]] Its guardrails are the best defaults in the category: [[fact:copilot.prs]]
+
+The constraints come from running on Actions. [[fact:copilot.where]] Billing also changed this year. [[fact:copilot.billing]] On models: [[fact:copilot.models]]
+"""
+
+[[section]]
+heading = "The alternatives, ranked"
+body = "Ranked for teams whose work does not always start as a GitHub issue."
+
+[[section]]
+level = 3
+heading = "1. Jiro: best when the work starts in Slack"
+body = """
+Mention Jiro in Slack or open the web chat, and it picks the work up in a cloud VM with your GitHub repos and setup script.
+
+It runs Claude Code or Codex on your own Claude or ChatGPT subscription or API key, or Cursor on your Cursor key, opens pull requests for review, and asks before merging to your main branch. Your branch protection rules still apply to its PRs.
+
+**Pick Jiro if** you want a teammate you can talk to, not only an issue assignee.
+"""
+
+[[section]]
+level = 3
+heading = "2. OpenAI Codex cloud: best for ChatGPT teams"
+body = """
+[[fact:codex.where]] [[fact:codex.pricing]]
+
+**Pick Codex cloud if** you want long-running cloud tasks on a ChatGPT plan.
+"""
+
+[[section]]
+level = 3
+heading = "3. Cursor cloud agents: best for editor-first teams"
+body = """
+[[fact:cursor.where]] [[fact:cursor.prs]]
+
+**Pick Cursor if** you need GitLab, Bitbucket or Azure DevOps support. [[fact:cursor.surfaces]]
+"""
+
+[[section]]
+level = 3
+heading = "4. Claude Code on the web: best for Claude subscribers"
+body = """
+[[fact:claude-code.where]] [[fact:claude-code.prs]]
+
+**Pick it if** you already pay for Claude Pro or Max and work mostly alone.
+"""
+
+[[section]]
+level = 3
+heading = "5. Devin: best for broad enterprise integrations"
+body = """
+[[fact:devin.surfaces]] [[fact:devin.pricing]]
+
+**Pick Devin if** you need Jira, Teams and multiple code hosts from a managed service.
+"""
+
+[[section]]
+level = 3
+heading = "6. OpenHands: best open-source option"
+body = """
+[[fact:openhands.what]] [[fact:openhands.trigger]]
+
+**Pick OpenHands if** you like Copilot's label-an-issue flow but want to self-host.
+"""
+
+[[section]]
+heading = "When to stay with Copilot"
+body = "Stay with Copilot if your organisation already pays for Copilot Business or Enterprise, tasks fit in one session, and you want the agent to live entirely inside GitHub. It can also hand tasks to Claude and Codex. [[fact:copilot.third-party]]"
+
+[[faq]]
+q = "Is GitHub Copilot coding agent the same as Copilot cloud agent?"
+a = "Yes. [[fact:copilot.what]]"
+
+[[faq]]
+q = "When should I pick Copilot over Jiro?"
+a = "When your organisation already pays for Copilot, work starts as GitHub issues, and tasks fit in one Actions session. Pick Jiro when work starts in Slack or you want to use your own Claude or ChatGPT subscription."
+
+[[faq]]
+q = "Can I use my own model subscription instead of Copilot credits?"
+a = "Yes with Jiro, which runs Claude Code or Codex on your own Claude or ChatGPT subscription, an API key or OpenRouter, or Cursor with a Cursor API key."
+
+[[faq]]
+q = "Does Jiro work with GitHub branch protection?"
+a = "Yes. Jiro works through pull requests on your GitHub repos, so your branch protection and required checks apply to its changes."

@@ -1,0 +1,104 @@
+slug = "alternatives/warp"
+family = "alternatives"
+title = "Warp alternatives (2026): terminals vs cloud coding agents"
+description = "Warp alternatives for both kinds of Warp user: terminal replacements, and alternatives to Warp's cloud agents (Jiro, Cursor cloud agents, Tembo, OpenHands, Copilot cloud agent)."
+question = "What are the best Warp alternatives?"
+answer = "It depends which Warp you mean: if you want a terminal, Ghostty, WezTerm or iTerm2 replace Warp Terminal; if you want Warp's cloud agents, Jiro is the best alternative for teams, running Claude Code or Codex in cloud VMs on your own Claude or ChatGPT subscription and working from Slack. Jiro is a background coding agent by Nori. Cursor cloud agents, Tembo, OpenHands and GitHub Copilot cloud agent are the other agent options."
+
+[table]
+heading = "Warp's cloud agents and the alternatives at a glance"
+columns = ["", "Runs where", "Models and keys", "Start work from", "Price"]
+rows = [
+  ["Jiro", "An isolated cloud VM per conversation, with your repos and setup script", "Claude Code or Codex on your own Claude or ChatGPT subscription or API key; Cursor with a Cursor API key", "Slack, web chat, your own cron and webhook automations", "30-day free trial, no card; billed per runtime, not per token"],
+  ["Warp cloud agents", "[[fact:warp.where]]", "[[fact:warp.models]]", "[[fact:warp.surfaces]]", "[[fact:warp.pricing]]"],
+  ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
+  ["Tembo", "[[fact:tembo.where]]", "[[fact:tembo.models]]", "[[fact:tembo.surfaces]]", "[[fact:tembo.pricing]]"],
+  ["OpenHands", "[[fact:openhands.where]]", "[[fact:openhands.models]]", "[[fact:openhands.surfaces]]", "[[fact:openhands.pricing]]"],
+  ["Copilot cloud agent", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.surfaces]]", "[[fact:copilot.pricing]]"],
+]
+
+[[section]]
+heading = "Two products called Warp"
+body = """
+[[fact:warp.what]] Many people searching for Warp alternatives want a terminal. If that is you, the usual picks are:
+
+- [[fact:terminals.ghostty]]
+- [[fact:terminals.wezterm]]
+- [[fact:terminals.iterm2]]
+- [[fact:terminals.alacritty]]
+
+Warp's own client is open source too. [[fact:warp.terminal]]
+
+The rest of this page is for the other group: teams using, or evaluating, Warp's cloud agents. [[fact:warp.where]] [[fact:warp.models]] [[fact:warp.billing]]
+"""
+
+[[section]]
+heading = "Alternatives to Warp's cloud agents, ranked"
+body = "Ranked for a small team that wants agents working in the background on its repos."
+
+[[section]]
+level = 3
+heading = "1. Jiro: best for your own subscription in the cloud"
+body = """
+Warp runs Claude Code or Codex in the cloud too, but personal keys don't work for cloud runs. Jiro runs Claude Code or Codex in an isolated cloud VM on your own Claude or ChatGPT subscription, an API key or OpenRouter (or Cursor with a Cursor API key), and bills for the runtime rather than inference.
+
+Your team asks for work in Slack or the web chat, schedules recurring work with cron or webhook automations, and gets pull requests back for review. Jiro asks before merging to your main branch.
+
+**Pick Jiro if** you want cloud agents billed against the model plans you already pay for.
+"""
+
+[[section]]
+level = 3
+heading = "2. Cursor cloud agents: best for Cursor shops"
+body = """
+[[fact:cursor.where]] [[fact:cursor.surfaces]]
+
+**Pick Cursor if** your team works in the Cursor editor.
+"""
+
+[[section]]
+level = 3
+heading = "3. Tembo: closest to Warp's multi-harness, many-trigger model"
+body = """
+[[fact:tembo.models]] [[fact:tembo.surfaces]]
+
+**Pick Tembo if** you want a similar orchestration platform with subscription support.
+"""
+
+[[section]]
+level = 3
+heading = "4. OpenHands: best open-source option"
+body = """
+[[fact:openhands.what]] [[fact:openhands.where]]
+
+**Pick OpenHands if** you liked Warp's self-hosted workers and want the whole stack open.
+"""
+
+[[section]]
+level = 3
+heading = "5. GitHub Copilot cloud agent: best for GitHub-only teams"
+body = """
+[[fact:copilot.what]] [[fact:copilot.pricing]]
+
+**Pick Copilot if** your organisation already pays for it.
+"""
+
+[[section]]
+heading = "When to stay with Warp"
+body = "Stay with Warp if you want one vendor for both your terminal and your cloud agents, need Azure DevOps or Jira triggers, or want to run agent workers on your own infrastructure. [[fact:warp.surfaces]]"
+
+[[faq]]
+q = "What is the best free alternative to Warp terminal?"
+a = "Ghostty, WezTerm and Alacritty are free, open-source terminals, and iTerm2 is free on macOS. Warp's own client is also open source now."
+
+[[faq]]
+q = "What is the best alternative to Warp's cloud agents?"
+a = "For teams that want to use their own Claude or ChatGPT subscription, Jiro. For a similar multi-harness orchestration platform, Tembo."
+
+[[faq]]
+q = "Can Warp cloud agents use my own API key?"
+a = "Not personal keys. [[fact:warp.models]]"
+
+[[faq]]
+q = "Is Jiro a terminal?"
+a = "No. Jiro is a background coding agent by Nori. It works in cloud VMs, takes requests in Slack and the web, and returns pull requests."

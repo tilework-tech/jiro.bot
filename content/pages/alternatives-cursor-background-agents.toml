@@ -1,0 +1,109 @@
+slug = "alternatives/cursor-background-agents"
+family = "alternatives"
+title = "Cursor background agents alternatives (2026): now called Cloud Agents"
+description = "Alternatives to Cursor's background agents (renamed Cloud Agents): Jiro, Codex cloud, Copilot cloud agent, Claude Code on the web, Devin and Amp, compared with sources."
+question = "What are the best alternatives to Cursor background agents?"
+answer = "The best alternatives to Cursor background agents are Jiro, OpenAI Codex cloud, GitHub Copilot cloud agent, Claude Code on the web, Devin and Amp, and Jiro is the top pick if you want Claude Code or Codex in the cloud on the Claude or ChatGPT subscription you already pay for, with Cursor's own agent available on your Cursor API key. Jiro is a background coding agent by Nori."
+
+[table]
+heading = "Cursor cloud agents and the alternatives at a glance"
+columns = ["", "Runs where", "Models and keys", "Start work from", "Price"]
+rows = [
+  ["Jiro", "An isolated cloud VM per conversation, with your repos and setup script", "Claude Code or Codex on your own Claude or ChatGPT subscription or API key; Cursor with a Cursor API key", "Slack, web chat, your own cron and webhook automations", "30-day free trial, no card; billed per runtime, not per token"],
+  ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
+  ["Codex cloud", "[[fact:codex.where]]", "[[fact:codex.models]]", "[[fact:codex.surfaces]]", "[[fact:codex.pricing]]"],
+  ["Copilot cloud agent", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.surfaces]]", "[[fact:copilot.pricing]]"],
+  ["Claude Code on the web", "[[fact:claude-code.where]]", "[[fact:claude-code.models]]", "[[fact:claude-code.surfaces]]", "[[fact:claude-code.pricing]]"],
+  ["Devin", "[[fact:devin.where]]", "[[fact:devin.models]]", "[[fact:devin.surfaces]]", "[[fact:devin.pricing]]"],
+  ["Amp", "[[fact:amp.where]]", "[[fact:amp.models]]", "[[fact:amp.surfaces]]", "[[fact:amp.pricing]]"],
+]
+
+[[section]]
+heading = "What changed with Cursor's background agents"
+body = """
+[[fact:cursor.rename]] [[fact:cursor.where]] The product is strong: [[fact:cursor.prs]]
+
+Pricing has changed: [[fact:cursor.pricing]] [[fact:cursor.legacy]] On usage, Cursor's docs say: [[fact:cursor.models]]
+"""
+
+[[section]]
+heading = "The alternatives, ranked"
+body = "Ranked for teams that liked Cursor's background agents but want a different billing model or a different home for the work."
+
+[[section]]
+level = 3
+heading = "1. Jiro: best if you want your own subscription in the cloud"
+body = """
+Jiro runs the agent harness you pick in an isolated cloud VM with your GitHub repos and setup script: Claude Code or Codex on your own Claude or ChatGPT subscription, an API key or OpenRouter, or Cursor's agent on your Cursor API key. Jiro bills for the runtime rather than the tokens.
+
+Your team works with it in Slack or the web chat, and it opens pull requests for review. It asks before merging anything to your main branch.
+
+**Pick Jiro if** you want cloud agents on the Claude or ChatGPT plan you already have.
+"""
+
+[[section]]
+level = 3
+heading = "2. OpenAI Codex cloud: best for ChatGPT teams"
+body = """
+[[fact:codex.where]] [[fact:codex.pricing]]
+
+**Pick Codex cloud if** OpenAI models are all you need.
+"""
+
+[[section]]
+level = 3
+heading = "3. GitHub Copilot cloud agent: best for GitHub-centred teams"
+body = """
+[[fact:copilot.what]] [[fact:copilot.prs]]
+
+**Pick Copilot if** your work starts as GitHub issues. [[fact:copilot.billing]]
+"""
+
+[[section]]
+level = 3
+heading = "4. Claude Code on the web: best for individual Claude subscribers"
+body = """
+[[fact:claude-code.where]] [[fact:claude-code.pricing]]
+
+**Pick Claude Code on the web if** you work alone or mostly from your own laptop and phone. For team Slack use, Anthropic is moving to Claude Tag. [[fact:claude-code.slack]]
+"""
+
+[[section]]
+level = 3
+heading = "5. Devin: best managed, broad-integration option"
+body = """
+[[fact:devin.what]] [[fact:devin.pricing]]
+
+**Pick Devin if** you want Teams, Jira and GitLab support from one vendor.
+"""
+
+[[section]]
+level = 3
+heading = "6. Amp: best for tinkerers who bring their own compute"
+body = """
+[[fact:amp.where]] [[fact:amp.models]]
+
+**Pick Amp if** you want per-minute cloud machines and a fully free path on your own hardware. Note that by default it pushes straight to your base branch. [[fact:amp.ship]]
+"""
+
+[[section]]
+heading = "When to stay with Cursor"
+body = """
+Stay with Cursor if your developers live in the editor, want the agent in the same tool, or your repos live on GitLab, Bitbucket or Azure DevOps. [[fact:cursor.surfaces]]
+"""
+
+[[faq]]
+q = "Are Cursor background agents and Cursor cloud agents the same thing?"
+a = "Yes. [[fact:cursor.rename]]"
+
+[[faq]]
+q = "Can Jiro run Cursor's agent?"
+a = "Yes. Cursor is one of the agents Jiro can run in its cloud VMs, alongside Claude Code and Codex. Cursor needs your Cursor API key; Claude Code and Codex use your Claude or ChatGPT credentials."
+
+[[faq]]
+q = "What is the best Cursor background agents alternative for Slack?"
+a = "Jiro is built around Slack: mention it in a channel and it replies in the thread and opens pull requests. Cursor, Codex and Copilot also take requests from Slack."
+
+[[faq]]
+q = "Is Jiro a code editor?"
+a = "No. Jiro is a background coding agent by Nori. It works in cloud VMs and returns pull requests; you keep your editor."

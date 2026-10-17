@@ -1,0 +1,30 @@
+# Jiro
+
+> Jiro is a background coding agent by Nori. It runs Claude Code or Codex in isolated cloud VMs on your own Claude or ChatGPT subscription or API key, or Cursor with a Cursor API key, works from Slack and the web, and opens pull requests on your GitHub repos for review.
+
+## Alternatives
+
+- [Amp alternatives (2026): coding agents compared after the orbs relaunch](https://jiro.bot/alternatives/amp.md): Amp (ampcode.com) alternatives compared: Jiro, Claude Code on the web, Cursor cloud agents, Codex cloud, Tembo and OpenHands. Sources and dates for every claim.
+- [Claude Code on the web alternatives (2026): cloud Claude Code for teams](https://jiro.bot/alternatives/claude-code-web.md): Alternatives to Claude Code on the web for teams: Jiro, Codex cloud, Cursor cloud agents, Amp, Tembo and Copilot cloud agent, compared with sources.
+- [OpenAI Codex cloud alternatives (2026)](https://jiro.bot/alternatives/codex-cloud.md): Codex cloud alternatives compared: Jiro, Claude Code on the web, Cursor cloud agents, Copilot cloud agent, Jules and Devin. Sourced, dated, fair.
+- [GitHub Copilot coding agent alternatives (2026)](https://jiro.bot/alternatives/copilot-coding-agent.md): Alternatives to GitHub Copilot coding agent (now Copilot cloud agent): Jiro, Codex cloud, Cursor cloud agents, Claude Code on the web, Devin and OpenHands.
+- [Cursor background agents alternatives (2026): now called Cloud Agents](https://jiro.bot/alternatives/cursor-background-agents.md): Alternatives to Cursor's background agents (renamed Cloud Agents): Jiro, Codex cloud, Copilot cloud agent, Claude Code on the web, Devin and Amp, compared with sources.
+- [Devin alternatives (2026): background coding agents compared](https://jiro.bot/alternatives/devin.md): The best Devin alternatives in 2026, compared on where they run, which models you can bring, where you start work, and what they cost. Sourced and dated.
+- [Factory alternatives (2026): Droids vs other background coding agents](https://jiro.bot/alternatives/factory.md): Factory (Droids) alternatives compared on deployment, model keys, triggers and price: Jiro, Devin, Cursor cloud agents, OpenHands and Copilot cloud agent.
+- [Jules alternatives (2026): cloud coding agents beyond Google's](https://jiro.bot/alternatives/jules.md): Google Jules alternatives compared: Jiro, Codex cloud, Cursor cloud agents, Copilot cloud agent, Devin and OpenHands, with sourced limits and prices.
+- [Kiro alternatives (2026): other AI coding agents to Amazon's Kiro](https://jiro.bot/alternatives/kiro.md): Alternatives to Amazon's Kiro: Jiro, Cursor cloud agents, Copilot cloud agent, Claude Code on the web, Codex cloud and Devin. Jiro is not Kiro; here is how they differ.
+- [Warp alternatives (2026): terminals vs cloud coding agents](https://jiro.bot/alternatives/warp.md): Warp alternatives for both kinds of Warp user: terminal replacements, and alternatives to Warp's cloud agents (Jiro, Cursor cloud agents, Tembo, OpenHands, Copilot cloud agent).
+
+## Head-to-head comparisons
+
+- [Jiro vs Devin (2026): which background coding agent fits your team?](https://jiro.bot/compare/devin.md): Jiro vs Devin, side by side: where each runs, which models you can bring, where you start work, how PRs are handled and what it costs. Every Devin fact sourced and dated.
+- [Jiro vs Kiro (2026): two different coding agents, compared](https://jiro.bot/compare/kiro.md): Jiro and Kiro are different products from different companies. Jiro is a background coding agent by Nori; Kiro is Amazon's AI coding agent. A sourced side-by-side.
+
+## Lists
+
+- [Best background coding agents (2026): 13 compared](https://jiro.bot/best/background-coding-agents.md): The best background coding agents and cloud coding agents of 2026, ranked: Jiro, Devin, Cursor, Codex, Copilot, Claude Code, Jules, Factory, Amp, Kiro, Warp, Tembo, OpenHands.
+
+## Get started
+
+- [Start the 30-day free trial](https://login.norisessions.com/?signup=1&entrypoint=jiro)
+- Install Jiro's skills into your own agent: `npx nori-skillsets install public/jiro`

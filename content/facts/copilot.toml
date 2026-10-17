@@ -1,0 +1,57 @@
+name = "GitHub Copilot cloud agent"
+
+[[fact]]
+id = "what"
+text = "GitHub's Copilot cloud agent, formerly the Copilot coding agent, researches a repository, plans changes and implements them in an ephemeral environment powered by GitHub Actions."
+short = "Copilot cloud agent (formerly coding agent)"
+source = "https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent"
+checked = "2026-10-16"
+
+[[fact]]
+id = "where"
+text = "Copilot cloud agent sessions run on GitHub Actions runners, for at most 59 minutes each, on GitHub-hosted repositories."
+short = "GitHub Actions runners, 59-minute sessions"
+source = "https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/customize-the-agent-environment"
+checked = "2026-10-16"
+
+[[fact]]
+id = "models"
+text = "The cloud agent offers Auto plus Claude, Gemini, GPT and Grok models; bring-your-own-key is documented for Copilot Chat, CLI and IDEs, not for the cloud agent."
+short = "Many models via GitHub; own keys not documented for it"
+source = "https://docs.github.com/en/copilot/concepts/models/bring-your-own-key"
+checked = "2026-10-16"
+
+[[fact]]
+id = "surfaces"
+text = "Copilot cloud agent sessions start from GitHub issues and pull requests, GitHub Mobile, IDEs, the GitHub CLI, Slack, Microsoft Teams, Linear, Jira and Azure Boards."
+short = "GitHub, IDEs, CLI, Slack, Teams, Linear, Jira"
+source = "https://docs.github.com/en/copilot/concepts/tools/about-copilot-integrations"
+checked = "2026-10-16"
+
+[[fact]]
+id = "pricing"
+text = "Copilot Pro is $10, Pro+ $39 and Max $100 a month, Business $19 and Enterprise $39 per user; Copilot Free does not include the cloud agent."
+short = "Pro $10; Pro+ $39; Max $100; Business $19/user"
+source = "https://docs.github.com/en/copilot/get-started/plans"
+checked = "2026-10-16"
+
+[[fact]]
+id = "billing"
+text = "Since 2026-06-01, Copilot usage is billed in GitHub AI Credits metered by tokens."
+short = "AI Credits since 2026-06-01"
+source = "https://github.blog/changelog/2026-06-01-updates-to-github-copilot-billing-and-plans/"
+checked = "2026-10-16"
+
+[[fact]]
+id = "prs"
+text = "Copilot cloud agent opens draft pull requests on its own branch and cannot approve or merge them."
+short = "Draft PRs; cannot merge"
+source = "https://docs.github.com/en/copilot/concepts/agents/cloud-agent/risks-and-mitigations"
+checked = "2026-10-16"
+
+[[fact]]
+id = "third-party"
+text = "On Pro+, Max, Business and Enterprise, Claude and Codex can be assigned GitHub tasks as third-party agents (public preview)."
+short = "Claude and Codex as third-party agents"
+source = "https://docs.github.com/en/copilot/concepts/agents/about-third-party-agents"
+checked = "2026-10-16"

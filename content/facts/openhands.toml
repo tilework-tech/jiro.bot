@@ -1,0 +1,43 @@
+name = "OpenHands"
+
+[[fact]]
+id = "what"
+text = "OpenHands is an MIT-licensed open-source platform for software engineering agents."
+short = "Open-source (MIT) agent platform"
+source = "https://github.com/OpenHands/OpenHands"
+checked = "2026-10-16"
+
+[[fact]]
+id = "where"
+text = "OpenHands runs locally for free, as a hosted cloud service, or self-hosted in your VPC on Enterprise."
+short = "Local, OpenHands cloud, or self-hosted"
+source = "https://openhands.dev/pricing"
+checked = "2026-10-16"
+
+[[fact]]
+id = "models"
+text = "OpenHands runs its own agent or Claude Code, Codex, Gemini CLI and OpenCode, on your own model keys or at-cost models."
+short = "Own agent or popular CLIs; your keys"
+source = "https://github.com/OpenHands/OpenHands"
+checked = "2026-10-16"
+
+[[fact]]
+id = "surfaces"
+text = "OpenHands works from its GUI, CLI, SDK and API, from GitHub, GitLab and Bitbucket, and from Slack and Jira."
+short = "GUI, CLI, API, GitHub, Slack, Jira"
+source = "https://openhands.dev/pricing"
+checked = "2026-10-16"
+
+[[fact]]
+id = "pricing"
+text = "OpenHands' hosted Individual tier is free for one user with 10 conversations a day; local use is free and Enterprise is custom."
+short = "Free (10 conversations/day hosted); Enterprise custom"
+source = "https://openhands.dev/pricing"
+checked = "2026-10-16"
+
+[[fact]]
+id = "trigger"
+text = "Labelling a GitHub issue openhands or commenting @openhands starts a run that opens a PR if it resolves the issue."
+short = "Label or @-mention on GitHub"
+source = "https://docs.openhands.dev/openhands/usage/cloud/github-installation"
+checked = "2026-10-16"

@@ -1,0 +1,50 @@
+name = "Anthropic"
+
+[[fact]]
+id = "opus-price"
+text = "Claude Opus 5.5 costs $4 per million input tokens and $20 per million output tokens on the Anthropic API."
+short = "$4 in / $20 out per million tokens"
+source = "https://platform.claude.com/docs/en/about-claude/pricing"
+checked = "2026-10-17"
+
+[[fact]]
+id = "sonnet-price"
+text = "Claude Sonnet 5.5 costs $2 per million input tokens and $10 per million output tokens on the Anthropic API."
+short = "$2 in / $10 out per million tokens"
+source = "https://platform.claude.com/docs/en/about-claude/pricing"
+checked = "2026-10-17"
+
+[[fact]]
+id = "dev-cost"
+text = "Anthropic reports that across enterprise deployments Claude Code averages about $13 per developer per active day and $150 to $250 per developer per month, staying below $30 per active day for 90% of users."
+short = "About $13 per active day; $150-250 a month"
+source = "https://code.claude.com/docs/en/costs"
+checked = "2026-10-17"
+
+[[fact]]
+id = "max"
+text = "Claude Max costs $100 a month for 5x the Pro plan's per-session usage or $200 a month for 20x, with limits that reset every five hours plus a weekly limit."
+short = "Max 5x $100/mo; Max 20x $200/mo"
+source = "https://support.claude.com/en/articles/11049741-what-is-the-max-plan"
+checked = "2026-10-17"
+
+[[fact]]
+id = "extra-usage"
+text = "Usage past a Pro or Max plan's limits can continue as extra usage billed at standard API rates."
+short = "Extra usage at API rates"
+source = "https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans"
+checked = "2026-10-17"
+
+[[fact]]
+id = "hosted"
+text = "Anthropic's Claude Code terms allow an end user to sign in to the unmodified Claude Code binary with their own Claude subscription, including where a platform hosts Claude Code."
+short = "Own subscription on hosted Claude Code allowed"
+source = "https://code.claude.com/docs/en/legal-and-compliance"
+checked = "2026-10-17"
+
+[[fact]]
+id = "setup-token"
+text = "The claude setup-token command generates a one-year token tied to a Pro, Max, Team or Enterprise plan for machines where browser login isn't available."
+short = "One-year subscription token"
+source = "https://code.claude.com/docs/en/authentication"
+checked = "2026-10-17"

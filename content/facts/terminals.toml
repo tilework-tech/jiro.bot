@@ -1,0 +1,29 @@
+name = "Terminal emulators"
+
+[[fact]]
+id = "ghostty"
+text = "Ghostty is an actively maintained, MIT-licensed open-source terminal."
+short = "Open source (MIT)"
+source = "https://github.com/ghostty-org/ghostty"
+checked = "2026-10-17"
+
+[[fact]]
+id = "wezterm"
+text = "WezTerm is an actively maintained open-source, cross-platform terminal."
+short = "Open source"
+source = "https://github.com/wezterm/wezterm"
+checked = "2026-10-17"
+
+[[fact]]
+id = "iterm2"
+text = "iTerm2 is free GPL-licensed software for macOS."
+short = "Free, GPL v2, macOS"
+source = "https://iterm2.com/"
+checked = "2026-10-17"
+
+[[fact]]
+id = "alacritty"
+text = "Alacritty is an actively maintained Apache-2.0 open-source terminal."
+short = "Open source (Apache-2.0)"
+source = "https://github.com/alacritty/alacritty"
+checked = "2026-10-17"

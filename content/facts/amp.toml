@@ -1,0 +1,71 @@
+name = "Amp"
+
+[[fact]]
+id = "where"
+text = "Amp runs cloud work in orbs, one remote machine per thread that keeps working while your laptop is closed, or on your own machines as runners."
+short = "Amp cloud orbs or your own runners"
+source = "https://ampcode.com/manual/orbs"
+checked = "2026-10-16"
+
+[[fact]]
+id = "models"
+text = "Amp accepts ChatGPT, Claude Pro or Max and other subscriptions as well as API keys, and charges no token fees on your own keys outside its Enterprise tier."
+short = "Own subscriptions and keys, no BYOK fee"
+source = "https://ampcode.com/news/free-agent"
+checked = "2026-10-16"
+
+[[fact]]
+id = "claude-plan"
+text = "Amp added Claude Pro and Max subscription support through the Claude Agent SDK on 2026-10-10."
+short = "Claude plans since 2026-10-10"
+source = "https://ampcode.com/news/use-your-claude-plan"
+checked = "2026-10-16"
+
+[[fact]]
+id = "surfaces"
+text = "Amp runs from its web app, macOS and iOS apps, the CLI, a GitHub App, SDKs and Slack via @Amp."
+short = "Web, macOS/iOS, CLI, GitHub, Slack"
+source = "https://ampcode.com/llms.txt"
+checked = "2026-10-16"
+
+[[fact]]
+id = "pricing"
+text = "Amp's Hobby tier is free with pay-as-you-go orbs or your own runners; Megawatt is $20 a month and Gigawatt $200 a month with included orb time and agent usage."
+short = "Hobby free; Megawatt $20/mo; Gigawatt $200/mo"
+source = "https://ampcode.com/pricing"
+checked = "2026-10-16"
+
+[[fact]]
+id = "orbs"
+text = "Orbs are billed per minute, from $0.08 an hour for the smallest size."
+short = "From $0.08/hour"
+source = "https://ampcode.com/docs/markdown/orbs/sizes-and-costs"
+checked = "2026-10-16"
+
+[[fact]]
+id = "ship"
+text = "Amp's default Ship pushes straight to the base branch after tests; the Push to Branch setting opens a pull request instead."
+short = "Pushes to trunk by default"
+source = "https://ampcode.com/docs/markdown/orbs/shipping"
+checked = "2026-10-16"
+
+[[fact]]
+id = "extensions"
+text = "Amp retired its VS Code and Cursor extensions in February 2026."
+short = "Editor extensions retired"
+source = "https://ampcode.com/news/the-coding-agent-is-dead"
+checked = "2026-10-16"
+
+[[fact]]
+id = "slack"
+text = "Amp's Slack integration launched on 2026-07-20 and needs a paid Slack plan."
+short = "Slack needs paid Slack plan"
+source = "https://ampcode.com/docs/markdown/puck/slack-integration"
+checked = "2026-10-16"
+
+[[fact]]
+id = "ads"
+text = "Amp removed ads from its free tier on 2026-03-30."
+short = "Ad-free since 2026-03-30"
+source = "https://ampcode.com/news/amp-free-is-ad-free"
+checked = "2026-10-16"

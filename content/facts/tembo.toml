@@ -1,0 +1,29 @@
+name = "Tembo"
+
+[[fact]]
+id = "where"
+text = "Tembo runs coding agents in isolated cloud sessions with code, terminal, files and a live desktop."
+short = "Tembo cloud sessions"
+source = "https://www.tembo.io/"
+checked = "2026-10-16"
+
+[[fact]]
+id = "models"
+text = "Tembo runs Claude Code, Codex, Cursor, Amp or OpenCode per task and accepts your own API keys or a Claude, ChatGPT or SuperGrok subscription."
+short = "Multiple harnesses; own keys or subscriptions"
+source = "https://www.tembo.io/"
+checked = "2026-10-16"
+
+[[fact]]
+id = "surfaces"
+text = "Tembo starts work from GitHub, GitLab, Bitbucket, Slack, Linear, Jira, Sentry, PagerDuty, webhooks and schedules."
+short = "GitHub, Slack, Linear, Jira, Sentry, schedules"
+source = "https://www.tembo.io/"
+checked = "2026-10-16"
+
+[[fact]]
+id = "pricing"
+text = "Tembo's Pro plan is $60 a month and Max $200 a month, each including a usage allowance, with compute billed per second from $0.1066 an hour."
+short = "Pro $60/mo; Max $200/mo; compute per second"
+source = "https://www.tembo.io/pricing"
+checked = "2026-10-16"
