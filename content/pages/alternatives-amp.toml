@@ -1,0 +1,107 @@
+slug = "alternatives/amp"
+family = "alternatives"
+title = "Amp alternatives (2026): coding agents compared after the orbs relaunch"
+description = "Amp (ampcode.com) alternatives compared: Jiro, Claude Code on the web, Cursor cloud agents, Codex cloud, Tembo and OpenHands. Sources and dates for every claim."
+question = "What are the best alternatives to Amp (ampcode)?"
+answer = "Jiro is the best Amp alternative for teams that want an agent working in Slack and opening pull requests for review, rather than pushing to trunk by default: it runs Claude Code or Codex in its own cloud VMs on your own Claude or ChatGPT subscription. Jiro is a background coding agent by Nori. Claude Code on the web, Cursor cloud agents, Codex cloud, Tembo and OpenHands are the other options."
+
+[table]
+heading = "Amp and the alternatives at a glance"
+columns = ["", "Runs where", "Models and keys", "Start work from", "Price"]
+rows = [
+  ["Jiro", "An isolated cloud VM per conversation, with your repos and setup script", "Claude Code or Codex on your own Claude or ChatGPT subscription or API key; Cursor with a Cursor API key", "Slack, web chat, your own cron and webhook automations", "30-day free trial, no card; billed per runtime, not per token"],
+  ["Amp", "[[fact:amp.where]]", "[[fact:amp.models]]", "[[fact:amp.surfaces]]", "[[fact:amp.pricing]]"],
+  ["Claude Code on the web", "[[fact:claude-code.where]]", "[[fact:claude-code.models]]", "[[fact:claude-code.surfaces]]", "[[fact:claude-code.pricing]]"],
+  ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
+  ["Codex cloud", "[[fact:codex.where]]", "[[fact:codex.models]]", "[[fact:codex.surfaces]]", "[[fact:codex.pricing]]"],
+  ["Tembo", "[[fact:tembo.where]]", "[[fact:tembo.models]]", "[[fact:tembo.surfaces]]", "[[fact:tembo.pricing]]"],
+  ["OpenHands", "[[fact:openhands.where]]", "[[fact:openhands.models]]", "[[fact:openhands.surfaces]]", "[[fact:openhands.pricing]]"],
+]
+
+[[section]]
+heading = "Amp after its 2026 rebuild"
+body = """
+Amp changed a lot this year. [[fact:amp.extensions]] Cloud work moved to orbs, billed by the minute. [[fact:amp.orbs]]
+
+It is also generous on bringing your own models. [[fact:amp.models]] [[fact:amp.claude-plan]] The catch for teams is the default workflow: [[fact:amp.ship]]
+"""
+
+[[section]]
+heading = "The alternatives, ranked"
+body = "Ranked for teams that want reviewable pull requests and a shared place to ask for work."
+
+[[section]]
+level = 3
+heading = "1. Jiro: best for team review workflows"
+body = """
+Jiro opens pull requests for review on your GitHub repos and asks before merging to your main branch, so its work goes through the same review and branch protection as everyone else's.
+
+Each conversation gets an isolated cloud VM with your repos and setup script. Jiro runs Claude Code or Codex on your own Claude or ChatGPT subscription, an API key or OpenRouter, or Cursor with a Cursor API key, and bills for the runtime rather than the tokens. Your team works with it in Slack or the web chat.
+
+**Pick Jiro if** you like Amp's bring-your-own-model approach but want a PR-first team workflow.
+"""
+
+[[section]]
+level = 3
+heading = "2. Claude Code on the web: best for solo Claude subscribers"
+body = """
+[[fact:claude-code.where]] [[fact:claude-code.pricing]]
+
+**Pick it if** you mostly want Claude Code on your own laptop and phone.
+"""
+
+[[section]]
+level = 3
+heading = "3. Cursor cloud agents: best for Cursor users"
+body = """
+[[fact:cursor.where]] [[fact:cursor.prs]]
+
+**Pick Cursor if** you miss having the agent in your editor.
+"""
+
+[[section]]
+level = 3
+heading = "4. OpenAI Codex cloud: best for ChatGPT teams"
+body = """
+[[fact:codex.where]] [[fact:codex.pricing]]
+
+**Pick Codex cloud if** a ChatGPT plan covers everyone.
+"""
+
+[[section]]
+level = 3
+heading = "5. Tembo: best for multi-harness orchestration"
+body = """
+[[fact:tembo.models]] [[fact:tembo.pricing]]
+
+**Pick Tembo if** you want event-driven agents across many tools.
+"""
+
+[[section]]
+level = 3
+heading = "6. OpenHands: best open-source option"
+body = """
+[[fact:openhands.what]] [[fact:openhands.pricing]]
+
+**Pick OpenHands if** you want to run the agent yourself.
+"""
+
+[[section]]
+heading = "When Amp is the better fit"
+body = "Stay with Amp if you work trunk-based, want to choose machine sizes per thread, or want a fully free setup on your own compute and keys."
+
+[[faq]]
+q = "What is the best alternative to Amp?"
+a = "For teams that review every change, Jiro: it opens pull requests and runs Claude Code or Codex in cloud VMs on your own Claude or ChatGPT subscription. For solo Claude users, Claude Code on the web."
+
+[[faq]]
+q = "Is Amp still ad-supported?"
+a = "No. [[fact:amp.ads]] The free path is now its Hobby tier with your own keys or compute."
+
+[[faq]]
+q = "Does Amp have a VS Code extension?"
+a = "Not anymore. [[fact:amp.extensions]]"
+
+[[faq]]
+q = "Is Jiro related to Amp or Sourcegraph?"
+a = "No. Jiro is a background coding agent by Nori, an independent company."

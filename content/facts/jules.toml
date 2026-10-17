@@ -1,0 +1,57 @@
+name = "Jules"
+
+[[fact]]
+id = "where"
+text = "Google's Jules runs each task inside a short-lived VM with common toolchains and Docker installed."
+short = "Google-hosted short-lived VMs"
+source = "https://jules.google/docs/environment"
+checked = "2026-10-16"
+
+[[fact]]
+id = "models"
+text = "Jules runs on Google's Gemini models."
+short = "Gemini only"
+source = "https://jules.google/docs/usage-limits"
+checked = "2026-10-16"
+
+[[fact]]
+id = "surfaces"
+text = "Jules takes work from its web app, GitHub issues labelled jules, the Jules Tools CLI and the Jules API."
+short = "Web, GitHub label, CLI, API"
+source = "https://jules.google/docs/changelog/"
+checked = "2026-10-16"
+
+[[fact]]
+id = "limits"
+text = "Jules allows 15 tasks a day and 3 at once on the free tier, 100 a day and 15 at once with Google AI Pro, and 300 a day and 60 at once with AI Ultra."
+short = "Free 15 tasks/day; Pro 100; Ultra 300"
+source = "https://jules.google/docs/usage-limits"
+checked = "2026-10-16"
+
+[[fact]]
+id = "pricing"
+text = "Paid Jules tiers come with Google AI Pro at $19.99 a month or AI Ultra from $99.99 a month."
+short = "Free; AI Pro $19.99/mo; Ultra from $99.99/mo"
+source = "https://gemini.google/subscriptions/"
+checked = "2026-10-16"
+
+[[fact]]
+id = "accounts"
+text = "Paid Jules tiers are offered to personal Google accounts; Workspace users are directed to an interest form."
+short = "Paid tiers for personal accounts"
+source = "https://jules.google/docs/usage-limits"
+checked = "2026-10-16"
+
+[[fact]]
+id = "prs"
+text = "When a Jules task finishes you choose Publish branch or Publish PR."
+short = "You publish the branch or PR"
+source = "https://jules.google/docs/code"
+checked = "2026-10-16"
+
+[[fact]]
+id = "scheduled"
+text = "Jules can run Scheduled Tasks on a recurring basis."
+short = "Scheduled Tasks"
+source = "https://jules.google/docs/scheduled-tasks/"
+checked = "2026-10-16"

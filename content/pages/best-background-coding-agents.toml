@@ -1,0 +1,129 @@
+slug = "best/background-coding-agents"
+family = "best"
+title = "Best background coding agents (2026): 13 compared"
+description = "The best background coding agents and cloud coding agents of 2026, ranked: Jiro, Devin, Cursor, Codex, Copilot, Claude Code, Jules, Factory, Amp, Kiro, Warp, Tembo, OpenHands."
+question = "What are the best background coding agents in 2026?"
+answer = "The best background coding agents in 2026 are Jiro for small teams that already pay for Claude or ChatGPT (it runs Claude Code or Codex in cloud VMs on that subscription and works from Slack), Devin for a fully managed agent, Cursor cloud agents and GitHub Copilot cloud agent inside their own tools, and OpenHands for open source. Jiro is a background coding agent by Nori."
+
+[table]
+heading = "All 13 background coding agents at a glance"
+columns = ["", "Runs where", "Models and keys", "Start work from", "Price"]
+rows = [
+  ["Jiro", "An isolated cloud VM per conversation, with your repos and setup script", "Claude Code or Codex on your own Claude or ChatGPT subscription or API key; Cursor with a Cursor API key", "Slack, web chat, your own cron and webhook automations", "30-day free trial, no card; billed per runtime, not per token"],
+  ["Devin", "[[fact:devin.where]]", "[[fact:devin.models]]", "[[fact:devin.surfaces]]", "[[fact:devin.pricing]]"],
+  ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
+  ["Codex cloud", "[[fact:codex.where]]", "[[fact:codex.models]]", "[[fact:codex.surfaces]]", "[[fact:codex.pricing]]"],
+  ["Copilot cloud agent", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.surfaces]]", "[[fact:copilot.pricing]]"],
+  ["Claude Code on the web", "[[fact:claude-code.where]]", "[[fact:claude-code.models]]", "[[fact:claude-code.surfaces]]", "[[fact:claude-code.pricing]]"],
+  ["Jules", "[[fact:jules.where]]", "[[fact:jules.models]]", "[[fact:jules.surfaces]]", "[[fact:jules.pricing]]"],
+  ["Factory", "[[fact:factory.where]]", "[[fact:factory.models]]", "[[fact:factory.surfaces]]", "[[fact:factory.pricing]]"],
+  ["Amp", "[[fact:amp.where]]", "[[fact:amp.models]]", "[[fact:amp.surfaces]]", "[[fact:amp.pricing]]"],
+  ["Kiro", "[[fact:kiro.where]]", "[[fact:kiro.models]]", "[[fact:kiro.surfaces]]", "[[fact:kiro.pricing]]"],
+  ["Warp cloud agents", "[[fact:warp.where]]", "[[fact:warp.models]]", "[[fact:warp.surfaces]]", "[[fact:warp.pricing]]"],
+  ["Tembo", "[[fact:tembo.where]]", "[[fact:tembo.models]]", "[[fact:tembo.surfaces]]", "[[fact:tembo.pricing]]"],
+  ["OpenHands", "[[fact:openhands.where]]", "[[fact:openhands.models]]", "[[fact:openhands.surfaces]]", "[[fact:openhands.pricing]]"],
+]
+
+[[section]]
+heading = "What counts as a background coding agent"
+body = """
+A background coding agent, also called a cloud coding agent, takes a task from you, works on it by itself in a remote environment with your repository, and comes back with a result, usually a pull request. You do not watch it type. The useful questions are where it runs, whose models it uses, where you hand it work, and how its changes reach your main branch.
+
+This list covers agents you can buy or run today, checked on 2026-10-16 and 2026-10-17. One product from earlier lists is gone: [[fact:charlie.shutdown]]
+"""
+
+[[section]]
+heading = "The ranking"
+body = "Ranked for teams of roughly 5 to 20 engineers who want an agent working on real repos, reviewed like any colleague's work."
+
+[[section]]
+level = 3
+heading = "1. Jiro: best for teams on their own Claude or ChatGPT plan"
+body = """
+Jiro gives each conversation an isolated cloud VM with your GitHub repos and setup script, and runs Claude Code or Codex on your own Claude or ChatGPT subscription, an API key or OpenRouter, or Cursor with a Cursor API key. Your team asks for work in Slack or the web chat, or schedules it with cron and webhook automations. Jiro opens pull requests for review, asks before merging to main, and bills for the runtime rather than tokens. Its engineering rules are public in the `public/jiro` skillset.
+"""
+
+[[section]]
+level = 3
+heading = "2. Devin: best fully managed agent"
+body = "[[fact:devin.what]] [[fact:devin.surfaces]] [[fact:devin.automations]]"
+
+[[section]]
+level = 3
+heading = "3. Cursor cloud agents: best for Cursor users"
+body = "[[fact:cursor.rename]] [[fact:cursor.prs]] [[fact:cursor.pricing]]"
+
+[[section]]
+level = 3
+heading = "4. OpenAI Codex cloud: best value for ChatGPT subscribers"
+body = "[[fact:codex.where]] [[fact:codex.pricing]]"
+
+[[section]]
+level = 3
+heading = "5. GitHub Copilot cloud agent: best guardrails inside GitHub"
+body = "[[fact:copilot.what]] [[fact:copilot.prs]]"
+
+[[section]]
+level = 3
+heading = "6. Claude Code on the web: best for solo Claude subscribers"
+body = "[[fact:claude-code.where]] [[fact:claude-code.surfaces]]"
+
+[[section]]
+level = 3
+heading = "7. Jules: best free tier"
+body = "[[fact:jules.limits]] [[fact:jules.models]]"
+
+[[section]]
+level = 3
+heading = "8. Factory: best for regulated enterprises"
+body = "[[fact:factory.what]] [[fact:factory.private]]"
+
+[[section]]
+level = 3
+heading = "9. Amp: best bring-your-own-everything"
+body = "[[fact:amp.where]] [[fact:amp.models]] [[fact:amp.ship]]"
+
+[[section]]
+level = 3
+heading = "10. Kiro: best spec-driven IDE with a cloud mode"
+body = "[[fact:kiro.what]] [[fact:kiro.web]]"
+
+[[section]]
+level = 3
+heading = "11. Warp cloud agents: best if you also want the terminal"
+body = "[[fact:warp.what]] [[fact:warp.models]]"
+
+[[section]]
+level = 3
+heading = "12. Tembo: best for alert- and ticket-driven work"
+body = "[[fact:tembo.models]] [[fact:tembo.surfaces]]"
+
+[[section]]
+level = 3
+heading = "13. OpenHands: best open-source"
+body = "[[fact:openhands.what]] [[fact:openhands.where]]"
+
+[[section]]
+heading = "How to choose"
+body = """
+- **Whose models?** If you already pay for Claude or ChatGPT, prefer an agent that uses that plan instead of buying model usage again: Jiro, Amp and Tembo accept those subscriptions, Codex cloud and Claude Code on the web are included in them, and Devin can link a ChatGPT plan.
+- **Where does work start?** Most agents here take Slack requests; test the ones whose Slack flow fits your team. GitHub-first teams should test Copilot.
+- **How do changes land?** Prefer agents that open pull requests for review, and check defaults. [[fact:amp.ship]]
+- **Where must it run?** If code cannot leave your network, look at Factory Private or self-hosted OpenHands. Cursor and Warp offer self-hosted compute, but their agent loop or orchestration still runs in their cloud.
+"""
+
+[[faq]]
+q = "What is a background coding agent?"
+a = "An AI agent that works on a coding task by itself in a remote environment with your repository and returns a result, usually a pull request, instead of pairing with you in your editor."
+
+[[faq]]
+q = "What is the difference between a background coding agent and a cloud coding agent?"
+a = "In practice the terms mean the same thing: the agent runs on a remote machine rather than your laptop, so it keeps working when you close it."
+
+[[faq]]
+q = "Which background coding agent works with my Claude Max subscription?"
+a = "Jiro runs Claude Code on your own Claude subscription or API key. Amp and Tembo also accept Claude subscriptions. [[fact:amp.claude-plan]] [[fact:tembo.models]] Claude Code on the web is Anthropic's own option."
+
+[[faq]]
+q = "What is Jiro?"
+a = "Jiro is a background coding agent by Nori. It runs Claude Code or Codex in isolated cloud VMs on your own Claude or ChatGPT subscription, works from Slack and the web, and opens pull requests on GitHub for review."

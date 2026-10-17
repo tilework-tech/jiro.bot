@@ -1,0 +1,8 @@
+name = "Charlie Labs"
+
+[[fact]]
+id = "shutdown"
+text = "Charlie Labs announced it was shutting down, with Charlie available only until 2026-10-05."
+short = "Shut down 2026-10-05"
+source = "https://charlielabs.ai/blog/charlie-is-shutting-down"
+checked = "2026-10-17"

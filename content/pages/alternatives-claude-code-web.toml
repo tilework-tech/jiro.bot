@@ -1,0 +1,107 @@
+slug = "alternatives/claude-code-web"
+family = "alternatives"
+title = "Claude Code on the web alternatives (2026): cloud Claude Code for teams"
+description = "Alternatives to Claude Code on the web for teams: Jiro, Codex cloud, Cursor cloud agents, Amp, Tembo and Copilot cloud agent, compared with sources."
+question = "What are the best alternatives to Claude Code on the web?"
+answer = "Jiro is the best alternative to Claude Code on the web for teams: it runs Anthropic's Claude Code in its own cloud VMs on your own Claude subscription or API key, and your team works with it in Slack. Jiro is a background coding agent by Nori. Codex cloud, Cursor cloud agents, Amp, Tembo and Copilot cloud agent are the other options."
+
+[table]
+heading = "Claude Code on the web and the alternatives at a glance"
+columns = ["", "Runs where", "Models and keys", "Start work from", "Price"]
+rows = [
+  ["Jiro", "An isolated cloud VM per conversation, with your repos and setup script", "Claude Code or Codex on your own Claude or ChatGPT subscription or API key; Cursor with a Cursor API key", "Slack, web chat, your own cron and webhook automations", "30-day free trial, no card; billed per runtime, not per token"],
+  ["Claude Code on the web", "[[fact:claude-code.where]]", "[[fact:claude-code.models]]", "[[fact:claude-code.surfaces]]", "[[fact:claude-code.pricing]]"],
+  ["Codex cloud", "[[fact:codex.where]]", "[[fact:codex.models]]", "[[fact:codex.surfaces]]", "[[fact:codex.pricing]]"],
+  ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
+  ["Amp", "[[fact:amp.where]]", "[[fact:amp.models]]", "[[fact:amp.surfaces]]", "[[fact:amp.pricing]]"],
+  ["Tembo", "[[fact:tembo.where]]", "[[fact:tembo.models]]", "[[fact:tembo.surfaces]]", "[[fact:tembo.pricing]]"],
+  ["Copilot cloud agent", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.surfaces]]", "[[fact:copilot.pricing]]"],
+]
+
+[[section]]
+heading = "What Claude Code on the web is good at"
+body = """
+[[fact:claude-code.where]] [[fact:claude-code.surfaces]] For a single developer on a Claude plan, it is the most direct way to run Claude Code in the cloud. [[fact:claude-code.pricing]]
+
+Teams hit two things. Slack is changing. [[fact:claude-code.slack]] [[fact:claude-code.tag-billing]] And it is Claude-only by design. [[fact:claude-code.models]]
+"""
+
+[[section]]
+heading = "The alternatives, ranked"
+body = "Ranked for teams that want Claude Code working in the background for everyone, not one laptop at a time."
+
+[[section]]
+level = 3
+heading = "1. Jiro: Claude Code in the cloud, for the whole team"
+body = """
+Jiro runs Anthropic's Claude Code in an isolated cloud VM with your GitHub repos and setup script, signed in with your own Claude subscription or an API key.
+
+Your team mentions Jiro in Slack or uses the web chat; Jiro replies in the thread and opens pull requests for review. When a task suits Codex or Cursor better, connect that provider and start a new conversation with it. It asks before merging to your main branch.
+
+**Pick Jiro if** you want Claude Code working in your team's Slack on credentials you control.
+"""
+
+[[section]]
+level = 3
+heading = "2. OpenAI Codex cloud: the OpenAI counterpart"
+body = """
+[[fact:codex.where]] [[fact:codex.pricing]]
+
+**Pick Codex cloud if** your team prefers OpenAI models.
+"""
+
+[[section]]
+level = 3
+heading = "3. Cursor cloud agents: best for Cursor users"
+body = """
+[[fact:cursor.prs]] [[fact:cursor.pricing]]
+
+**Pick Cursor if** your developers work in the Cursor editor.
+"""
+
+[[section]]
+level = 3
+heading = "4. Amp: best bring-your-own-everything option"
+body = """
+[[fact:amp.models]] [[fact:amp.claude-plan]] [[fact:amp.where]]
+
+**Pick Amp if** you want per-minute cloud machines or a free path on your own hardware.
+"""
+
+[[section]]
+level = 3
+heading = "5. Tembo: best for alert-driven work"
+body = """
+[[fact:tembo.models]] [[fact:tembo.surfaces]]
+
+**Pick Tembo if** most agent work should start from Sentry, PagerDuty or ticket events.
+"""
+
+[[section]]
+level = 3
+heading = "6. GitHub Copilot cloud agent: best inside GitHub"
+body = """
+[[fact:copilot.third-party]] [[fact:copilot.prs]]
+
+**Pick Copilot if** you want GitHub to run Claude as one of several agents.
+"""
+
+[[section]]
+heading = "When to stay with Claude Code on the web"
+body = "Stay with it if you work alone, want to move one session between web, phone, desktop and terminal, and only need Claude models. Anthropic does not charge extra for the cloud VM."
+
+[[faq]]
+q = "Can I run Claude Code in the cloud with my Claude Max subscription?"
+a = "Yes, with Claude Code on the web. Jiro also runs Claude Code in its cloud VMs on your own Claude subscription or API key."
+
+[[faq]]
+q = "How do I run Claude Code in Slack for my team?"
+a = "Connect Jiro to Slack, GitHub and a Claude subscription or Anthropic API key, then mention Jiro in a channel. It works in a cloud VM and replies in the thread with a pull request when code changes."
+
+[[faq]]
+q = "Is Jiro made by Anthropic?"
+a = "No. Jiro is a background coding agent by Nori. It runs Anthropic's Claude Code, as well as Codex and Cursor."
+
+[[faq]]
+q = "Is Claude Code on the web free?"
+a = "No. [[fact:claude-code.pricing]]"

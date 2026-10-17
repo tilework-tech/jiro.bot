@@ -1,0 +1,13 @@
+PASS alternatives/amp
+PASS alternatives/claude-code-web
+PASS alternatives/codex-cloud
+PASS alternatives/copilot-coding-agent
+PASS alternatives/cursor-background-agents
+PASS alternatives/devin
+PASS alternatives/factory
+PASS alternatives/jules
+PASS alternatives/kiro
+PASS alternatives/warp
+PASS best/background-coding-agents
+PASS compare/devin
+PASS compare/kiro

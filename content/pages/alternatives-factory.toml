@@ -1,0 +1,99 @@
+slug = "alternatives/factory"
+family = "alternatives"
+title = "Factory alternatives (2026): Droids vs other background coding agents"
+description = "Factory (Droids) alternatives compared on deployment, model keys, triggers and price: Jiro, Devin, Cursor cloud agents, OpenHands and Copilot cloud agent."
+question = "What are the best Factory AI alternatives?"
+answer = "Jiro is the simplest Factory alternative: connect GitHub, Slack and your Claude or ChatGPT subscription, then ask for work in Slack and get pull requests back from an agent running in its own cloud VM. Jiro is a background coding agent by Nori. Devin, Cursor cloud agents, OpenHands and GitHub Copilot cloud agent are the other main alternatives to Factory's Droids."
+
+[table]
+heading = "Factory and its alternatives at a glance"
+columns = ["", "Runs where", "Models and keys", "Start work from", "Price"]
+rows = [
+  ["Jiro", "An isolated cloud VM per conversation, with your repos and setup script", "Claude Code or Codex on your own Claude or ChatGPT subscription or API key; Cursor with a Cursor API key", "Slack, web chat, your own cron and webhook automations", "30-day free trial, no card; billed per runtime, not per token"],
+  ["Factory", "[[fact:factory.where]]", "[[fact:factory.models]]", "[[fact:factory.surfaces]]", "[[fact:factory.pricing]]"],
+  ["Devin", "[[fact:devin.where]]", "[[fact:devin.models]]", "[[fact:devin.surfaces]]", "[[fact:devin.pricing]]"],
+  ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
+  ["OpenHands", "[[fact:openhands.where]]", "[[fact:openhands.models]]", "[[fact:openhands.surfaces]]", "[[fact:openhands.pricing]]"],
+  ["Copilot cloud agent", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.surfaces]]", "[[fact:copilot.pricing]]"],
+]
+
+[[section]]
+heading = "Factory in October 2026"
+body = """
+[[fact:factory.what]] [[fact:factory.where]] It is built for large engineering organisations, and its deployment options show it. [[fact:factory.private]]
+
+That breadth is also why smaller teams look elsewhere: it is a platform to roll out. [[fact:factory.surfaces]] Its own-key support stops at the local tools. [[fact:factory.models]]
+"""
+
+[[section]]
+heading = "The alternatives, ranked"
+body = "Ranked for a team that wants delegation without running a platform rollout."
+
+[[section]]
+level = 3
+heading = "1. Jiro: best for small teams that want it working this week"
+body = """
+Setup is three connections: GitHub, Slack and a model provider (a Claude or ChatGPT subscription, an API key or OpenRouter). After that, each conversation gets its own cloud VM with your repos and setup script, running Claude Code or Codex (or Cursor, with a Cursor API key).
+
+Your own subscription works in the cloud agent too, not just locally. Jiro opens pull requests for review and asks before merging to your main branch.
+
+**Pick Jiro if** you want a coworker in Slack rather than a platform to roll out.
+"""
+
+[[section]]
+level = 3
+heading = "2. Devin: best for enterprise breadth without self-hosting"
+body = """
+[[fact:devin.what]] [[fact:devin.surfaces]]
+
+**Pick Devin if** you want Factory-level integrations from a managed service. [[fact:devin.enterprise]]
+"""
+
+[[section]]
+level = 3
+heading = "3. Cursor cloud agents: best for Cursor shops"
+body = """
+[[fact:cursor.where]] [[fact:cursor.surfaces]]
+
+**Pick Cursor if** your developers already live in the editor. [[fact:cursor.pricing]]
+"""
+
+[[section]]
+level = 3
+heading = "4. OpenHands: best open-source and air-gap-friendly option"
+body = """
+[[fact:openhands.what]] [[fact:openhands.where]]
+
+**Pick OpenHands if** you chose Factory for on-prem deployment but want to own the code.
+"""
+
+[[section]]
+level = 3
+heading = "5. GitHub Copilot cloud agent: best for GitHub-native guardrails"
+body = """
+[[fact:copilot.prs]] [[fact:copilot.pricing]]
+
+**Pick Copilot if** your org already pays for Copilot Business or Enterprise.
+"""
+
+[[section]]
+heading = "When Factory is the better choice"
+body = """
+Choose Factory if you need air-gapped or on-premises deployment or Jira and Linear delegation at enterprise scale. Jiro does not offer self-hosting today.
+"""
+
+[[faq]]
+q = "What is a simpler alternative to Factory AI?"
+a = "Jiro. You install its Slack and GitHub apps, connect your own Claude or ChatGPT subscription, and ask for work in Slack. There is nothing to install on developers' machines."
+
+[[faq]]
+q = "Does Factory let me use my own API keys?"
+a = "Partly. [[fact:factory.models]] Jiro uses your own subscription or key for all of its cloud work."
+
+[[faq]]
+q = "Is there an open-source alternative to Factory Droids?"
+a = "OpenHands. [[fact:openhands.what]] [[fact:openhands.where]]"
+
+[[faq]]
+q = "Can Jiro run on-premises like Factory Private?"
+a = "No. Jiro runs in Nori's cloud today. If on-premises deployment is a hard requirement, look at Factory Private or OpenHands."
