@@ -14,6 +14,7 @@ Path: @/prototypes/scroll-buddy
 - Porting to the real site: copy the CSS and JS next to the page, link the stylesheet in `<head>`, load the script with `defer` before `</body>`, and put `data-jiro-comment="..."` on each top-level section Jiro should comment on. Sections without the attribute are ignored, and a page with none (or only blank ones) renders no buddy. Loading the script more than once still renders a single buddy.
 - Host-page integration: the buddy sits at `z-index: var(--jiro-buddy-z, 50)`; set `--jiro-buddy-z` on `:root` or `.jiro-buddy` if site chrome (nav, modals) needs to stack differently. Its elements carry a light reset (margin, padding, radius, shadow, appearance, font, letter-spacing, text-transform, alignment, min sizes) so host `button`/`p` globals do not leak in.
 - Fonts: the bubble uses Inter and the mascot glyph uses IBM Plex Mono, each with system fallbacks. The buddy does not load fonts; the host page should already load them or the fallbacks show.
+- `moodboard/` is a live 5x5 board of animation variants (rows: speed and hover feel, position and looking around, face and blinking, shape and form, text and helpfulness) for picking the direction. `python3 moodboard/serve.py --port N` serves it; stars and notes are saved to an untracked `picks.json`.
 - Tests live in the repo-level [tests/test_scroll_buddy.py](../../tests/test_scroll_buddy.py), alongside the stdlib-only build and lint tests, but need Playwright (see Things to Know).
 
 ### Core Implementation

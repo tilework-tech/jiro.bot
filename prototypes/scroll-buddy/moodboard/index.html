@@ -1,0 +1,929 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jiro scroll buddy — moodboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --k: 1;
+  --ink: #173d2b; --salmon: #f2694f; --green: #3cf06e; --cream: #f8f6f0;
+  --bg: #efece4; --card: #fbfaf6; --text: #173d2b; --muted: #5d6f64;
+  --stage: #ffffff; --bar: #e3dfd3; --bar-strong: #c9c3b2; --line: #ddd8ca;
+  --shadow: #e4e0d4; --btn: #fbd9d1;
+}
+body.dark {
+  --bg: #0e1f17; --card: #163628; --text: #f8f6f0; --muted: #a9bdb0;
+  --stage: #1d4734; --bar: #2c5d45; --bar-strong: #3f7459; --line: #2a5340;
+  --shadow: rgba(0,0,0,.35); --btn: #6b3a31;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font: 14px/1.45 Inter, system-ui, sans-serif;
+  transition: background .25s, color .25s;
+}
+.wrap { max-width: 1420px; margin: 0 auto; padding: 22px 20px 60px; }
+header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 24px; margin-bottom: 18px; }
+h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -.01em; }
+.sub { margin: 0; color: var(--muted); }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.controls label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.controls input[type=range] { width: 120px; accent-color: var(--salmon); }
+.speed-val { font-family: "IBM Plex Mono", monospace; color: var(--text); min-width: 38px; }
+button.ctl {
+  font: 600 13px Inter, sans-serif; color: var(--text); background: var(--card);
+  border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer;
+}
+button.ctl:hover { border-color: var(--ink); }
+body.dark button.ctl:hover { border-color: var(--cream); }
+button.ctl[aria-pressed=true] { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+button.save { background: var(--salmon); border-color: var(--salmon); color: #fff; }
+.status { font-size: 13px; color: var(--muted); min-width: 110px; }
+.status.ok { color: #1f8a46; }
+body.dark .status.ok { color: var(--green); }
+
+.row { display: grid; grid-template-columns: 128px 1fr; gap: 14px; margin-bottom: 16px; }
+.row-label { padding-top: 6px; }
+.row-label .letter { font: 600 26px "IBM Plex Mono", monospace; color: var(--salmon); line-height: 1; }
+.row-label .name { font-weight: 700; font-size: 14px; margin-top: 6px; }
+.row-label .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 1180px) {
+  .row { grid-template-columns: 1fr; gap: 8px; }
+  .row-label { display: flex; align-items: baseline; gap: 10px; padding: 0; }
+  .row-label .name, .row-label .hint { margin: 0; }
+  .tiles { grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); }
+}
+
+.tile {
+  background: var(--card); border: 1.5px solid var(--line); border-radius: 12px;
+  padding: 8px; display: flex; flex-direction: column; gap: 7px; min-width: 0;
+  transition: border-color .2s, box-shadow .2s;
+}
+.tile.starred { border-color: var(--salmon); box-shadow: 0 0 0 2px rgba(242,105,79,.25); }
+.stage {
+  position: relative; height: 172px; border-radius: 8px; overflow: hidden;
+  background: var(--stage); border: 1px solid var(--line);
+}
+.meta { display: flex; align-items: flex-start; gap: 8px; }
+.code { font: 600 12px "IBM Plex Mono", monospace; background: var(--ink); color: var(--cream); border-radius: 5px; padding: 2px 6px; flex: none; margin-top: 1px; }
+body.dark .code { background: var(--cream); color: var(--ink); }
+.titles { flex: 1; min-width: 0; }
+.title { font-weight: 700; font-size: 13.5px; line-height: 1.3; }
+.desc { font-size: 12px; color: var(--muted); line-height: 1.35; margin-top: 2px; }
+.star {
+  flex: none; width: 30px; height: 30px; border-radius: 8px; border: 1.5px solid var(--line);
+  background: transparent; color: var(--muted); cursor: pointer; display: grid; place-items: center; padding: 0;
+}
+.star:hover { border-color: var(--salmon); color: var(--salmon); }
+.star[aria-pressed=true] { background: var(--salmon); border-color: var(--salmon); color: #fff; }
+.note {
+  width: 100%; resize: vertical; min-height: 34px; height: 34px; font: 12px/1.35 Inter, sans-serif;
+  color: var(--text); background: var(--stage); border: 1px solid var(--line); border-radius: 6px; padding: 6px 7px;
+}
+.note:focus { outline: 2px solid var(--salmon); outline-offset: -1px; }
+
+/* fake page */
+.pg { position: absolute; border-radius: 3px; background: var(--bar); transition: box-shadow .12s, background .12s; }
+.pg-h { background: var(--bar-strong); }
+.pg-btn { background: var(--btn); border-radius: 5px; }
+.pg-img { background: var(--bar); border-radius: 6px; }
+.pg-img::after { content: ""; position: absolute; left: 10px; bottom: 8px; width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 16px solid var(--bar-strong); }
+.pg.hl { box-shadow: 0 0 0 2px var(--salmon); background: rgba(242,105,79,.22); }
+.price { position: absolute; border: 1.5px solid var(--line); border-radius: 8px; background: var(--card); padding: 7px; transition: box-shadow .2s, border-color .2s; }
+.price .pl { font: 600 9.5px "IBM Plex Mono", monospace; color: var(--muted); }
+.price .pb { height: 7px; border-radius: 3px; background: var(--bar); margin-top: 5px; }
+.price .pb.main { background: var(--salmon); width: 70%; }
+.price.hl { border-color: var(--salmon); box-shadow: 0 0 0 3px rgba(242,105,79,.3); }
+.arrow { position: absolute; width: 2px; border-left: 2px dashed var(--ink); opacity: 0; transition: opacity .2s; }
+body.dark .arrow { border-color: var(--cream); }
+.arrow::before { content: ""; position: absolute; left: -7px; top: -6px; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 8px solid var(--ink); }
+body.dark .arrow::before { border-bottom-color: var(--cream); }
+.arrow.on { opacity: 1; }
+
+/* mascot */
+.m { position: absolute; left: 12px; bottom: 8px; width: 56px; height: 56px; }
+.m-pos, .m-j { position: absolute; inset: 0; }
+.m-a { position: absolute; left: 0; bottom: 5px; width: 56px; height: 48px; transform-origin: 50% 100%; }
+.m-b, .m-c, .m-d { width: 100%; height: 100%; transform-origin: 50% 100%; }
+.m-c { transition: transform .12s ease-out; }
+.m svg.art { display: block; width: 56px; height: 48px; overflow: visible; }
+.m-shadow { position: absolute; left: 0; bottom: 0; width: 56px; height: 4px; transform-origin: 50% 50%; }
+.m-shadow svg { display: block; width: 100%; height: 100%; }
+.m-shadow rect { fill: var(--shadow); }
+.face { transition: opacity .1s; }
+.cur { transition: transform .14s ease-out; }
+.glyph { transition: transform .12s ease-out, opacity .3s; }
+.blink .cur { animation: blink calc(1.06s * var(--k)) steps(1, end) infinite; }
+.eyes { transform-box: fill-box; transform-origin: 50% 50%; transition: transform 70ms; }
+.eyes.shut { transform: scaleY(.12); }
+.shell-sq, .shell-rd { transition: opacity .22s; }
+
+.say {
+  position: absolute; left: 54px; bottom: 40px; z-index: 3;
+  width: max-content; max-width: 150px; padding: 5px 8px;
+  background: var(--cream); color: var(--ink); border: 2px solid var(--ink); border-radius: 10px;
+  font: 500 11px/1.3 Inter, sans-serif; opacity: 0; transform: scale(.85); transform-origin: 0 100%;
+  transition: opacity .16s, transform .16s; pointer-events: none;
+}
+.say::after { content: ""; position: absolute; left: -7px; bottom: 6px; width: 8px; height: 8px; background: var(--cream); border-left: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: skewY(35deg); }
+.say.left { left: auto; right: 54px; transform-origin: 100% 100%; }
+.say.left::after { left: auto; right: -7px; border-left: 0; border-right: 2px solid var(--ink); transform: skewY(-35deg); }
+.say.on { opacity: 1; transform: scale(1); pointer-events: auto; }
+.say.narrow { max-width: 118px; }
+.say .acts { display: flex; gap: 5px; margin-top: 5px; }
+.say .acts button { font: 600 10.5px Inter, sans-serif; border-radius: 5px; padding: 2px 8px; cursor: pointer; border: 1.5px solid var(--ink); background: var(--cream); color: var(--ink); }
+.say .acts button.yes { background: var(--ink); color: var(--cream); animation: nudge calc(1.4s * var(--k)) ease-in-out infinite; }
+
+.zz { position: absolute; left: 44px; bottom: 44px; font: 600 11px "IBM Plex Mono", monospace; color: var(--ink); opacity: 0; }
+body.dark .zz { color: var(--cream); }
+.react { position: absolute; left: 12px; bottom: 54px; background: var(--cream); border: 2px solid var(--ink); border-radius: 9px; padding: 3px 5px; opacity: 0; transform: translateY(6px) scale(.6); transform-origin: 50% 100%; transition: opacity .14s, transform .2s cubic-bezier(.3,1.6,.5,1); }
+.react.on { opacity: 1; transform: translateY(0) scale(1); }
+.react svg { display: block; width: 26px; height: 20px; }
+.badge { position: absolute; left: 42px; bottom: 40px; width: 17px; height: 17px; border-radius: 50%; background: var(--salmon); color: #fff; font: 700 11px/17px "IBM Plex Mono", monospace; text-align: center; border: 2px solid var(--cream); animation: badge calc(2.2s * var(--k)) ease-in-out infinite; }
+.grow { position: absolute; left: 4px; bottom: 7px; width: 46px; height: 44px; border: 3px solid var(--ink); border-radius: 50%; background: var(--cream); opacity: 0; overflow: hidden; display: flex; align-items: center; gap: 6px; padding: 0 8px; white-space: nowrap; }
+.grow .gl { font: 600 13px "IBM Plex Mono", monospace; color: var(--salmon); flex: none; }
+.grow .gt { font: 500 11px Inter, sans-serif; color: var(--ink); }
+
+/* ---- shared idle ---- */
+.idle .m-a { animation: bob calc(2.6s * var(--k)) ease-in-out infinite; }
+.idle .m-shadow { animation: shadow calc(2.6s * var(--k)) ease-in-out infinite; }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes shadow { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.82); opacity: .6; } }
+@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@keyframes badge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+
+/* A1 calm float */
+.tA1 .m-a { animation: calm calc(3.5s * var(--k)) ease-in-out infinite; }
+.tA1 .m-shadow { animation: shadow calc(3.5s * var(--k)) ease-in-out infinite; }
+@keyframes calm { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+/* A2 game idle (current build) */
+.tA2 .m-a { animation: g-bob calc(2.6s * var(--k)) ease-in-out infinite; }
+.tA2 .m-b { animation: g-drift calc(3.7s * var(--k)) ease-in-out infinite; }
+.tA2 .m-c { animation: g-tilt calc(4.3s * var(--k)) ease-in-out infinite; transform-origin: 50% 60%; }
+.tA2 .m-d { animation: g-squash calc(2.6s * var(--k)) ease-in-out infinite; }
+.tA2 .m-shadow { animation: g-shadow calc(2.6s * var(--k)) ease-in-out infinite; }
+@keyframes g-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes g-drift { 0%, 100% { transform: translateX(-1.5px); } 50% { transform: translateX(1.5px); } }
+@keyframes g-tilt { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes g-squash { 0%, 100% { transform: scale(1.02, .97); } 25% { transform: scale(.985, 1.03); } 50% { transform: scale(1, 1); } 75% { transform: scale(.995, 1.01); } }
+@keyframes g-shadow { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.8); opacity: .55; } }
+
+/* A3 bouncy spring */
+.tA3 .m-a { animation: spring calc(1.3s * var(--k)) linear infinite; }
+.tA3 .m-shadow { animation: spring-sh calc(1.3s * var(--k)) linear infinite; }
+@keyframes spring {
+  0% { transform: translateY(0) scale(1.14, .84); }
+  12% { transform: translateY(0) scale(.94, 1.08); animation-timing-function: cubic-bezier(.2,.7,.4,1); }
+  42% { transform: translateY(-17px) scale(.97, 1.04); animation-timing-function: cubic-bezier(.6,0,.8,.4); }
+  72% { transform: translateY(0) scale(.95, 1.06); }
+  78% { transform: translateY(0) scale(1.16, .82); }
+  90% { transform: translateY(0) scale(.98, 1.03); }
+  100% { transform: translateY(0) scale(1.14, .84); }
+}
+@keyframes spring-sh { 0%, 12%, 72%, 100% { transform: scale(1); opacity: 1; } 42% { transform: scale(.6); opacity: .45; } }
+
+/* A4 eager jitter */
+.tA4 .m-a { animation: eager calc(.8s * var(--k)) ease-in-out infinite; }
+.tA4 .m-b { animation: jit calc(.37s * var(--k)) steps(2, end) infinite; }
+.tA4 .m-shadow { animation: shadow calc(.8s * var(--k)) ease-in-out infinite; }
+@keyframes eager { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@keyframes jit { 0% { transform: rotate(-2deg); } 100% { transform: rotate(2deg); } }
+
+/* A5 sleepy */
+.tA5 .m-a { animation: sink calc(6s * var(--k)) ease-in-out infinite; }
+.tA5 .glyph { opacity: .3; }
+.tA5 .cur { opacity: .5; }
+.tA5 .zz { animation: zz calc(3s * var(--k)) ease-out infinite; }
+.tA5 .zz.z2 { animation-delay: calc(1s * var(--k)); left: 50px; }
+.tA5 .zz.z3 { animation-delay: calc(2s * var(--k)); left: 47px; font-size: 9px; }
+.tA5.awake .glyph { opacity: 1; }
+.tA5.awake .cur { opacity: 1; }
+.tA5.awake .zz { animation: none; opacity: 0; }
+.tA5.awake .m-a { animation-play-state: paused; }
+@keyframes sink { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(3px) rotate(-5deg); } }
+@keyframes zz { 0% { opacity: 0; transform: translate(0, 0) scale(.7); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(10px, -26px) scale(1.2); } }
+
+/* B3 */
+.tB3 .m { left: 0; bottom: 46px; }
+/* C5 dots */
+.dot { animation: dot calc(.9s * var(--k)) ease-in-out infinite; transform-box: fill-box; }
+.dot.d2 { animation-delay: calc(.15s * var(--k)); }
+.dot.d3 { animation-delay: calc(.3s * var(--k)); }
+@keyframes dot { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+
+body.paused *, body.paused *::before, body.paused *::after { animation-play-state: paused !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Jiro scroll buddy — moodboard</h1>
+      <p class="sub">Star what you like, add notes, hit Save. Rows = dimension, columns = options.</p>
+    </div>
+    <div class="controls">
+      <label>Speed <input id="speed" type="range" min="0.5" max="2" step="0.1" value="1"><span class="speed-val" id="speedVal">1.0x</span></label>
+      <button class="ctl" id="pause" aria-pressed="false">Pause</button>
+      <button class="ctl" id="replay">Replay all</button>
+      <button class="ctl" id="theme" aria-pressed="false">Dark background</button>
+      <button class="ctl save" id="save">Save</button>
+      <span class="status" id="status"></span>
+    </div>
+  </header>
+  <main id="board"></main>
+</div>
+<script>
+(function () {
+  "use strict";
+  var NS = "http://www.w3.org/2000/svg";
+  var SHELL_STROKE = "M53.99 8.05A38 38 0 0 0 22.47 69.91L13.7 81.4L31.30 77.87A38 38 0 0 0 89.98 44.67";
+  var SHELL_FILL = SHELL_STROKE + "A38 38 0 0 0 53.99 8.05Z";
+  var SQ_STROKE = "M66 10H17Q12 10 12 15V71Q12 76 17 76H22L14 86L34 76H85Q90 76 90 71V30";
+  var SQ_FILL = "M17 10H85Q90 10 90 15V71Q90 76 85 76H34L14 86L22 76H17Q12 76 12 71V15Q12 10 17 10Z";
+  var PIXEL = 1.41;
+  var CHEVRON_ROWS = [[0, 2], [0, 3], [1, 3], [2, 3], [3, 3], [4, 3], [4, 3], [3, 3], [2, 3], [1, 3], [0, 3], [0, 2]];
+  var STOP = { stop: true };
+
+  var speed = 1, paused = false, live = new Set();
+
+  function sv(tag, attrs, parent) {
+    var n = document.createElementNS(NS, tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function h(tag, cls, parent, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function pix(g, rows, x0, y0, p, colors) {
+    rows.forEach(function (row, r) {
+      for (var c = 0; c < row.length; c++) {
+        var ch = row[c];
+        if (ch === "." || ch === " ") continue;
+        var a = { x: (x0 + c * p).toFixed(2), y: (y0 + r * p).toFixed(2), width: p.toFixed(2), height: p.toFixed(2) };
+        if (colors) a.fill = colors[ch];
+        sv("rect", a, g);
+      }
+    });
+  }
+
+  /* ---------- mascot art (geometry copied from jiro-buddy.js) ---------- */
+  function buildArt(o) {
+    var art = sv("svg", { "class": "art", viewBox: "0 3 100 86", focusable: "false" });
+    var shells = o.shells || ["round"];
+    var out = { svg: art, faces: {} };
+    if (shells.indexOf("round") >= 0) {
+      var rd = sv("g", { "class": "shell-rd" }, art);
+      sv("path", { d: SHELL_FILL, fill: "#f8f6f0" }, rd);
+      sv("path", { d: SHELL_STROKE, fill: "none", stroke: "#173d2b", "stroke-width": "5", "stroke-linecap": "round", "stroke-linejoin": "round" }, rd);
+      out.round = rd;
+    }
+    if (shells.indexOf("square") >= 0) {
+      var sq = sv("g", { "class": "shell-sq" }, art);
+      sv("path", { d: SQ_FILL, fill: "#f8f6f0" }, sq);
+      sv("path", { d: SQ_STROKE, fill: "none", stroke: "#173d2b", "stroke-width": "5", "stroke-linecap": "round", "stroke-linejoin": "round" }, sq);
+      out.square = sq;
+      if (out.round) sq.style.opacity = 0;
+    }
+    var glyph = sv("g", { "class": "glyph", fill: "#f2694f", "shape-rendering": "crispEdges" }, art);
+    out.glyph = glyph;
+    if (o.square && !o.shells) {}
+    (o.faces || ["chev"]).forEach(function (name) {
+      var f = sv("g", { "class": "face face-" + name }, glyph);
+      out.faces[name] = f;
+      if (name === "chev") {
+        CHEVRON_ROWS.forEach(function (run, row) {
+          sv("rect", { x: (29.3 + run[0] * PIXEL).toFixed(2), y: (40.4 + row * PIXEL).toFixed(2), width: (run[1] * PIXEL).toFixed(2), height: PIXEL.toFixed(2) }, f);
+        });
+        sv("rect", { x: "45", y: "53.2", width: "14.1", height: "4.1" }, f);
+        out.cur = sv("rect", { "class": "cur", x: "65.1", y: "41.9", width: "8.2", height: "12.4" }, f);
+      } else if (name === "eyes") {
+        var e = sv("g", { "class": "eyes" }, f);
+        sv("rect", { x: "35", y: "38", width: "8.4", height: "14" }, e);
+        sv("rect", { x: "59", y: "38", width: "8.4", height: "14" }, e);
+        out.eyes = e;
+      } else if (name === "happy") {
+        pix(f, ["..#..", ".#.#.", "#...#"], 28.5, 42, 3);
+        sv("rect", { x: "45", y: "53.2", width: "12", height: "4.1" }, f);
+        pix(f, ["..#..", ".#.#.", "#...#"], 59, 42, 3);
+      } else if (name === "oo") {
+        pix(f, [".##.", "#..#", "#..#", ".##."], 30, 40, 3.2);
+        sv("rect", { x: "45", y: "53.2", width: "12", height: "4.1" }, f);
+        pix(f, [".##.", "#..#", "#..#", ".##."], 59, 40, 3.2);
+      } else if (name === "flat") {
+        sv("rect", { x: "29", y: "45", width: "14", height: "3.6" }, f);
+        sv("rect", { x: "45", y: "53.2", width: "12", height: "4.1" }, f);
+        sv("rect", { x: "59", y: "45", width: "14", height: "3.6" }, f);
+      } else if (name === "dots") {
+        sv("rect", { "class": "dot d1", x: "32", y: "46", width: "7", height: "7" }, f);
+        sv("rect", { "class": "dot d2", x: "47.5", y: "46", width: "7", height: "7" }, f);
+        sv("rect", { "class": "dot d3", x: "63", y: "46", width: "7", height: "7" }, f);
+      }
+    });
+    if (o.square && o.shells && o.shells.length === 1) glyph.setAttribute("transform", "translate(0 -4)");
+    return out;
+  }
+
+  function shadowArt() {
+    var art = sv("svg", { viewBox: "0 0 100 5", preserveAspectRatio: "none", focusable: "false" });
+    sv("rect", { x: "26.6", y: "0", width: "51.4", height: "2.4" }, art);
+    sv("rect", { x: "33.9", y: "2.4", width: "37", height: "2.4" }, art);
+    return art;
+  }
+
+  function mascot(stage, o) {
+    o = o || {};
+    var root = h("div", "m", stage);
+    if (o.x != null) root.style.left = o.x + "px";
+    var pos = h("div", "m-pos", root);
+    var shadow = h("div", "m-shadow", pos);
+    shadow.appendChild(shadowArt());
+    var j = h("div", "m-j", pos);
+    var a = h("div", "m-a", j), b = h("div", "m-b", a), c = h("div", "m-c", b), d = h("div", "m-d", c);
+    var art = buildArt(o);
+    d.appendChild(art.svg);
+    var say = h("div", "say", j);
+    var sayText = h("span", "say-t", say);
+    var m = { root: root, pos: pos, j: j, a: a, b: b, c: c, d: d, shadow: shadow, say: say, sayText: sayText };
+    for (var key in art) m[key] = art[key];
+    var names = Object.keys(art.faces);
+    m.setFace = function (name) {
+      names.forEach(function (n) { art.faces[n].style.display = n === name ? "" : "none"; });
+    };
+    m.setFace(names[0]);
+    if (o.blink !== false && art.cur) art.svg.classList.add("blink");
+    return m;
+  }
+
+  /* ---------- timing, honoring speed + pause ---------- */
+  function sleep(ctx, ms) {
+    return new Promise(function (res, rej) {
+      var acc = 0, last = performance.now();
+      function tick(now) {
+        if (ctx.dead()) return rej(STOP);
+        if (!paused) acc += (now - last) * speed;
+        last = now;
+        if (acc >= ms) res(); else requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+  function play(ctx, el, frames, ms, opt) {
+    var o = { duration: ms, fill: "forwards", easing: "ease-in-out" };
+    for (var k in opt) o[k] = opt[k];
+    var an = el.animate(frames, o);
+    an.playbackRate = speed;
+    if (paused) an.pause();
+    live.add(an);
+    return an.finished.then(function () {
+      live.delete(an);
+      if (ctx.dead()) throw STOP;
+      return an;
+    }, function () { live.delete(an); throw STOP; });
+  }
+  async function type(ctx, el, text, per) {
+    el.textContent = "";
+    for (var i = 1; i <= text.length; i++) {
+      el.textContent = text.slice(0, i);
+      await sleep(ctx, per || 34);
+    }
+  }
+  function rand(a, b) { return a + Math.random() * (b - a); }
+
+  async function say(ctx, m, text, o) {
+    o = o || {};
+    m.say.classList.toggle("left", o.side === "left");
+    m.say.classList.toggle("narrow", !!o.narrow);
+    m.sayText.textContent = "";
+    m.say.classList.add("on");
+    await type(ctx, m.sayText, text, o.per);
+    if (o.after) o.after();
+    await sleep(ctx, o.hold || 2200);
+    m.say.classList.remove("on");
+    if (o.done) o.done();
+    await sleep(ctx, 220);
+  }
+  async function talkLoop(ctx, m, lines, o) {
+    o = o || {};
+    var i = 0;
+    for (;;) {
+      await sleep(ctx, o.pre || 1600);
+      await say(ctx, m, lines[i++ % lines.length], o);
+      await sleep(ctx, o.post || 800);
+    }
+  }
+  function hop(ctx, m, height, ms) {
+    return Promise.all([
+      play(ctx, m.j, [{ transform: "translateY(0)" }, { transform: "translateY(" + -height + "px)", offset: .45 }, { transform: "translateY(0)" }], ms || 360, { easing: "ease-out" }),
+      play(ctx, m.d, [{ transform: "scale(1,1)" }, { transform: "scale(.94,1.07)", offset: .3 }, { transform: "scale(1,1)", offset: .8 }, { transform: "scale(1.1,.9)", offset: .9 }, { transform: "scale(1,1)" }], ms || 360),
+      play(ctx, m.shadow, [{ transform: "scale(1)" }, { transform: "scale(.7)", opacity: .5, offset: .45 }, { transform: "scale(1)", opacity: 1 }], ms || 360)
+    ]);
+  }
+  function squish(ctx, m, ms) {
+    return play(ctx, m.d, [{ transform: "scale(1,1)" }, { transform: "scale(1.12,.88)" }, { transform: "scale(.96,1.05)" }, { transform: "scale(1,1)" }], ms || 260);
+  }
+
+  /* ---------- fake page ---------- */
+  function bar(st, cls, x, y, w, hgt, right) {
+    var n = h("div", "pg " + cls, st);
+    if (right) n.style.right = x + "px"; else n.style.left = x + "px";
+    n.style.top = y + "px";
+    n.style.width = typeof w === "number" ? w + "px" : w;
+    n.style.height = hgt + "px";
+    return n;
+  }
+  function page(st, o) {
+    o = o || {};
+    var w = o.narrow ? ["46%", "40%", "44%", "34%"] : ["84%", "70%", "78%", "56%"];
+    var E = {};
+    E.h = bar(st, "pg-h", 14, 14, o.narrow ? "40%" : "52%", 10);
+    E.t = [bar(st, "pg-t", 14, 33, w[0], 6), bar(st, "pg-t", 14, 44, w[1], 6), bar(st, "pg-t", 14, 55, w[2], 6), bar(st, "pg-t", 14, 66, w[3], 6)];
+    if (!o.noBtn) E.btn = bar(st, "pg-btn", 14, 82, 54, 15);
+    return E;
+  }
+
+  var REACTIONS = {
+    eyes: { rows: [".###..###.", "#www##www#", "#w##ww#w##", "#w##ww#w##", "#www##www#", ".###..###."], colors: { "#": "#173d2b", w: "#ffffff" } },
+    thumb: { rows: ["....s....", "...ss....", "...ss....", "#.ssssss.", "#.sssssss", "#.ssssss.", "#.sssssss", "#..sssss."], colors: { "#": "#173d2b", s: "#f2694f" } },
+    sparkle: { rows: ["....y.....", "....y.....", "...yyy....", "yyyyyyyyy.", "...yyy....", "....y..g..", "....y.ggg.", ".......g..", "..........",], colors: { y: "#e9b938", g: "#3cf06e" } }
+  };
+  function reactionSvg(key) {
+    var r = REACTIONS[key];
+    var svg = sv("svg", { viewBox: "-1 -1 12 10", "shape-rendering": "crispEdges" });
+    pix(svg, r.rows, 0, 0, 1, r.colors);
+    return svg;
+  }
+
+  /* ---------- the 25 variations ---------- */
+  var ROWS = [
+    { id: "A", name: "Speed & hover feel", hint: "How he idles while you read." },
+    { id: "B", name: "Position & looking around", hint: "Where he lives and how he moves." },
+    { id: "C", name: "Face & blinking", hint: "What the >_ face does." },
+    { id: "D", name: "Shape & form", hint: "The body itself." },
+    { id: "E", name: "Text & helpfulness", hint: "What he says, and how." }
+  ];
+
+  var TILES = [
+    { code: "A1", title: "Calm float", desc: "Slow 3.5s sine bob. Barely-there, relaxed.",
+      setup: function (st) { page(st); return { m: mascot(st) }; },
+      run: function (ctx, T) { return talkLoop(ctx, T.m, ["Take your time."], { pre: 2600, hold: 2000 }); } },
+    { code: "A2", title: "Game idle (current)", desc: "Layered bob + drift + tilt + squash; shadow shrinks.",
+      setup: function (st) { page(st); return { m: mascot(st) }; },
+      run: function (ctx, T) { return talkLoop(ctx, T.m, ["Scroll on. I'll keep up."], { pre: 2000, hold: 2200 }); } },
+    { code: "A3", title: "Bouncy spring", desc: "Little platformer hops, squash on every landing.",
+      setup: function (st) { page(st); return { m: mascot(st) }; },
+      run: function (ctx, T) { T.m.say.style.bottom = "56px"; return talkLoop(ctx, T.m, ["Boing. Still here."], { pre: 2200, hold: 2000 }); } },
+    { code: "A4", title: "Eager jitter", desc: "Fast twitchy bob and an impatient double-hop.",
+      setup: function (st) { page(st); return { m: mascot(st) }; },
+      run: function (ctx, T) {
+        var m = T.m;
+        return Promise.all([
+          (async function () { for (;;) { await sleep(ctx, rand(1800, 3000)); await hop(ctx, m, 10, 260); await hop(ctx, m, 7, 230); } })(),
+          talkLoop(ctx, m, ["Ooh, what's next?", "Next? Next?"], { pre: 2400, hold: 1700, per: 22 })
+        ]);
+      } },
+    { code: "A5", title: "Sleepy", desc: "Slow sink, dimmed face, z's drift up; wakes briefly.",
+      setup: function (st, tile) {
+        page(st);
+        var m = mascot(st, { blink: false });
+        ["z1", "z2", "z3"].forEach(function (z) { h("span", "zz " + z, m.j, "z"); });
+        return { m: m, tile: tile };
+      },
+      run: async function (ctx, T) {
+        var m = T.m, tile = T.tile;
+        for (;;) {
+          tile.classList.remove("awake");
+          await sleep(ctx, 4200);
+          tile.classList.add("awake");
+          await hop(ctx, m, 8, 320);
+          await say(ctx, m, "Hm? I'm up.", { hold: 1300 });
+          await sleep(ctx, 300);
+        }
+      } },
+
+    { code: "B1", title: "Corner anchor", desc: "Lives bottom-left. Only bobs, never travels.",
+      setup: function (st, tile) { tile.classList.add("idle"); page(st); return { m: mascot(st) }; },
+      run: function (ctx, T) { return talkLoop(ctx, T.m, ["Need a hand?"], { pre: 2200, hold: 2000 }); } },
+    { code: "B2", title: "Flit side to side", desc: "Arcs bottom-left to bottom-right like a bird, pauses.",
+      setup: function (st, tile) { tile.classList.add("idle"); page(st); return { m: mascot(st), st: st }; },
+      run: async function (ctx, T) {
+        var m = T.m;
+        for (;;) {
+          var dx = T.st.clientWidth - 24 - 56;
+          await sleep(ctx, 1200);
+          await play(ctx, m.pos, [{ transform: "translate(0,0)" }, { transform: "translate(" + dx * .5 + "px,-38px) rotate(8deg)" }, { transform: "translate(" + dx + "px,0)" }], 850);
+          await squish(ctx, m);
+          await say(ctx, m, "Over here now.", { side: "left", hold: 1200 });
+          await sleep(ctx, 500);
+          await play(ctx, m.pos, [{ transform: "translate(" + dx + "px,0)" }, { transform: "translate(" + dx * .5 + "px,-38px) rotate(-8deg)" }, { transform: "translate(0,0)" }], 850);
+          await squish(ctx, m);
+        }
+      } },
+    { code: "B3", title: "Peek from the edge", desc: "Slides in half-hidden from the left edge, peeks, retreats.",
+      setup: function (st) { page(st, { noBtn: true }); var m = mascot(st); m.pos.style.transform = "translateX(-64px)"; return { m: m }; },
+      run: async function (ctx, T) {
+        var m = T.m;
+        for (;;) {
+          await sleep(ctx, 900);
+          await play(ctx, m.pos, [{ transform: "translateX(-64px)" }, { transform: "translateX(-22px)" }], 520, { easing: "cubic-bezier(.2,.8,.3,1.2)" });
+          await play(ctx, m.c, [{ transform: "rotate(0)" }, { transform: "rotate(9deg)" }], 220);
+          await say(ctx, m, "Psst. Pricing's below.", { hold: 1600 });
+          await play(ctx, m.c, [{ transform: "rotate(9deg)" }, { transform: "rotate(0)" }], 160);
+          await play(ctx, m.pos, [{ transform: "translateX(-22px)" }, { transform: "translateX(-64px)" }], 380, { easing: "ease-in" });
+          await sleep(ctx, 900);
+        }
+      } },
+    { code: "B4", title: "Perch on a heading", desc: "Hops up, sits on top of a section heading, wobbles.",
+      setup: function (st, tile) {
+        tile.classList.add("idle");
+        bar(st, "pg-t", 14, 14, "80%", 6); bar(st, "pg-t", 14, 25, "64%", 6); bar(st, "pg-t", 14, 36, "72%", 6);
+        var head = bar(st, "pg-h", 96, 80, 110, 12);
+        bar(st, "pg-t", 96, 100, 100, 6); bar(st, "pg-t", 96, 111, 84, 6);
+        return { m: mascot(st), head: head, st: st };
+      },
+      run: async function (ctx, T) {
+        var m = T.m;
+        for (;;) {
+          var dx = T.head.offsetLeft + T.head.offsetWidth / 2 - (12 + 28);
+          var dy = (T.head.offsetTop + 2) - (T.st.clientHeight - 8);
+          await sleep(ctx, 1200);
+          await play(ctx, m.pos, [{ transform: "translate(0,0)" }, { transform: "translate(" + dx * .45 + "px," + (dy - 28) + "px)" }, { transform: "translate(" + dx + "px," + dy + "px)" }], 700, { easing: "ease-out" });
+          await play(ctx, m.c, [{ transform: "rotate(0)" }, { transform: "rotate(-7deg)" }, { transform: "rotate(5deg)" }, { transform: "rotate(-3deg)" }, { transform: "rotate(0)" }], 700);
+          await say(ctx, m, "Nice view up here.", { side: "left", narrow: true, hold: 1500 });
+          await play(ctx, m.pos, [{ transform: "translate(" + dx + "px," + dy + "px)" }, { transform: "translate(" + dx * .55 + "px," + (dy - 16) + "px)" }, { transform: "translate(0,0)" }], 650, { easing: "ease-in" });
+          await squish(ctx, m);
+        }
+      } },
+    { code: "B5", title: "Looks at stuff", desc: "Quick curious glances at things on the page; each lights up.",
+      setup: function (st, tile) {
+        tile.classList.add("idle");
+        var E = {};
+        E.h = bar(st, "pg-h", 14, 14, "44%", 10);
+        bar(st, "pg-t", 14, 32, "48%", 6); bar(st, "pg-t", 14, 43, "40%", 6); bar(st, "pg-t", 14, 54, "45%", 6);
+        E.img = bar(st, "pg-img", 14, 14, 66, 48, true);
+        E.btn = bar(st, "pg-btn", 14, 76, 54, 15);
+        return { m: mascot(st, { x: 96 }), E: E, st: st };
+      },
+      run: async function (ctx, T) {
+        var m = T.m, E = T.E;
+        var targets = [E.h, E.img, E.btn, E.img];
+        for (;;) {
+          for (var i = 0; i < targets.length; i++) {
+            var t = targets[i];
+            var mx = 96 + 28, my = T.st.clientHeight - 40;
+            var tx = t.offsetLeft + t.offsetWidth / 2, ty = t.offsetTop + t.offsetHeight / 2;
+            var dir = tx < mx ? -1 : 1, up = ty < my - 30;
+            m.c.style.transform = "translateX(" + dir * 4 + "px) rotate(" + dir * 9 + "deg)";
+            m.glyph.style.transform = "translate(" + dir * 5 + "px," + (up ? -4 : 0) + "px)";
+            t.classList.add("hl");
+            await sleep(ctx, 600);
+            t.classList.remove("hl");
+            if (i === 1) { await say(ctx, m, "Ooh, pricing.", { side: dir < 0 ? "right" : "left", narrow: true, hold: 900 }); }
+          }
+          m.c.style.transform = ""; m.glyph.style.transform = "";
+          await sleep(ctx, 1100);
+        }
+      } },
+
+    { code: "C1", title: "Blinking cursor (current)", desc: "The >_ with a steady terminal-cursor blink.",
+      setup: function (st, tile) { tile.classList.add("idle"); page(st); return { m: mascot(st) }; },
+      run: function (ctx, T) { return talkLoop(ctx, T.m, ["Ask me anything."], { pre: 2400, hold: 2000 }); } },
+    { code: "C2", title: "Eyes that blink", desc: "Two pixel eyes instead of >_. Blinks, sometimes twice.",
+      setup: function (st, tile) { tile.classList.add("idle"); page(st); return { m: mascot(st, { faces: ["eyes"] }) }; },
+      run: function (ctx, T) {
+        var m = T.m;
+        return Promise.all([
+          (async function () {
+            for (;;) {
+              await sleep(ctx, rand(1600, 3200));
+              m.eyes.classList.add("shut"); await sleep(ctx, 110); m.eyes.classList.remove("shut");
+              if (Math.random() < .35) { await sleep(ctx, 140); m.eyes.classList.add("shut"); await sleep(ctx, 100); m.eyes.classList.remove("shut"); }
+            }
+          })(),
+          talkLoop(ctx, m, ["I see you reading."], { pre: 2800, hold: 1900 })
+        ]);
+      } },
+    { code: "C3", title: "Glancing cursor", desc: "The cursor block roams like a pupil, looking around.",
+      setup: function (st, tile) { tile.classList.add("idle"); page(st); return { m: mascot(st, { blink: false }) }; },
+      run: function (ctx, T) {
+        var m = T.m;
+        var spots = [[0, 0, 700], [-7, 0, 500], [-7, -5, 650], [4, -5, 400], [4, 2, 700], [-3, 2, 450], [0, 0, 900]];
+        return Promise.all([
+          (async function () {
+            for (;;) {
+              for (var i = 0; i < spots.length; i++) {
+                m.cur.style.transform = "translate(" + spots[i][0] + "px," + spots[i][1] + "px)";
+                m.c.style.transform = "rotate(" + spots[i][0] * .5 + "deg)";
+                await sleep(ctx, spots[i][2]);
+              }
+            }
+          })(),
+          talkLoop(ctx, m, ["Just looking around."], { pre: 3200, hold: 1800 })
+        ]);
+      } },
+    { code: "C4", title: "Expressions", desc: "Cycles >_  ^_^  o_o  -_- with a tiny squash each change.",
+      setup: function (st, tile) { tile.classList.add("idle"); page(st); return { m: mascot(st, { faces: ["chev", "happy", "oo", "flat"] }) }; },
+      run: async function (ctx, T) {
+        var m = T.m, order = ["chev", "happy", "oo", "flat"];
+        for (var i = 0; ; i++) {
+          m.setFace(order[i % 4]);
+          squish(ctx, m, 240);
+          await sleep(ctx, 1300);
+        }
+      } },
+    { code: "C5", title: "Thinking dots", desc: ">_ turns into bouncing dots, then pops back and speaks.",
+      setup: function (st, tile) { tile.classList.add("idle"); page(st); return { m: mascot(st, { faces: ["chev", "dots"] }) }; },
+      run: async function (ctx, T) {
+        var m = T.m;
+        for (;;) {
+          m.setFace("chev");
+          await sleep(ctx, 1100);
+          m.setFace("dots");
+          await sleep(ctx, 2000);
+          m.setFace("chev");
+          await squish(ctx, m, 260);
+          await say(ctx, m, "Found it: Itamae.", { hold: 1700 });
+        }
+      } },
+
+    { code: "D1", title: "Round bubble", desc: "Reference form: round chat bubble, tail bottom-left.",
+      setup: function (st, tile) { tile.classList.add("idle"); page(st); return { m: mascot(st) }; },
+      run: function (ctx, T) { return talkLoop(ctx, T.m, ["Classic round."], { pre: 2400, hold: 1900 }); } },
+    { code: "D2", title: "Square terminal", desc: "The older square box with tail, same >_ glyph.",
+      setup: function (st, tile) { tile.classList.add("idle"); page(st); return { m: mascot(st, { shells: ["square"], square: true }) }; },
+      run: function (ctx, T) { return talkLoop(ctx, T.m, ["Old-school box."], { pre: 2400, hold: 1900 }); } },
+    { code: "D3", title: "Morph", desc: "Round while idle, snaps square when he starts talking.",
+      setup: function (st, tile) { tile.classList.add("idle"); page(st); return { m: mascot(st, { shells: ["round", "square"] }) }; },
+      run: async function (ctx, T) {
+        var m = T.m;
+        for (;;) {
+          await sleep(ctx, 1700);
+          squish(ctx, m, 300);
+          m.round.style.opacity = 0; m.square.style.opacity = 1; m.glyph.style.transform = "translateY(-3px)";
+          await sleep(ctx, 200);
+          await say(ctx, m, "Let me explain.", { hold: 1700 });
+          squish(ctx, m, 300);
+          m.round.style.opacity = 1; m.square.style.opacity = 0; m.glyph.style.transform = "";
+        }
+      } },
+    { code: "D4", title: "Grows into the bubble", desc: "His shell stretches into the speech bubble, then shrinks back.",
+      setup: function (st, tile) {
+        tile.classList.add("idle"); page(st);
+        var m = mascot(st);
+        var g = h("div", "grow", m.d);
+        h("span", "gl", g, ">_");
+        var gt = h("span", "gt", g);
+        return { m: m, g: g, gt: gt };
+      },
+      run: async function (ctx, T) {
+        var m = T.m, g = T.g;
+        var small = { width: "46px", height: "44px", borderRadius: "50%" };
+        var big = { width: "168px", height: "36px", borderRadius: "14px" };
+        for (;;) {
+          await sleep(ctx, 1600);
+          g.style.opacity = 1; m.svg.style.opacity = 0;
+          await play(ctx, g, [small, { width: "52px", height: "40px", borderRadius: "40%" }, big], 420, { easing: "cubic-bezier(.3,1.3,.5,1)" });
+          await type(ctx, T.gt, "Itamae fits solo devs.", 34);
+          await sleep(ctx, 1600);
+          T.gt.textContent = "";
+          await play(ctx, g, [big, small], 320, { easing: "ease-in" });
+          g.style.opacity = 0; m.svg.style.opacity = 1;
+          await squish(ctx, m, 220);
+        }
+      } },
+    { code: "D5", title: "Squishy blob", desc: "Jelly wobble on every landing and turn.",
+      setup: function (st) { page(st); return { m: mascot(st) }; },
+      run: async function (ctx, T) {
+        var m = T.m, jelly = [{ transform: "scale(1,1)" }, { transform: "scale(1.3,.7)" }, { transform: "scale(.84,1.18)" }, { transform: "scale(1.1,.9)" }, { transform: "scale(.96,1.04)" }, { transform: "scale(1,1)" }];
+        for (;;) {
+          await sleep(ctx, 700);
+          await play(ctx, m.d, [{ transform: "scale(1,1)" }, { transform: "scale(1.2,.8)" }], 140);
+          await Promise.all([
+            play(ctx, m.pos, [{ transform: "translate(0,0)" }, { transform: "translate(26px,-26px)" }, { transform: "translate(52px,0)" }], 460, { easing: "ease-out" }),
+            play(ctx, m.d, [{ transform: "scale(1.2,.8)" }, { transform: "scale(.82,1.2)" }, { transform: "scale(1,1)" }], 460)
+          ]);
+          await play(ctx, m.d, jelly, 650, { easing: "ease-out" });
+          await say(ctx, m, "Wheee.", { hold: 900 });
+          await play(ctx, m.d, [{ transform: "skewX(0) scaleX(1)" }, { transform: "skewX(-16deg) scaleX(.88)" }, { transform: "skewX(12deg) scaleX(1.06)" }, { transform: "skewX(-6deg) scaleX(.97)" }, { transform: "skewX(0) scaleX(1)" }], 620);
+          await play(ctx, m.d, [{ transform: "scale(1,1)" }, { transform: "scale(1.2,.8)" }], 140);
+          await Promise.all([
+            play(ctx, m.pos, [{ transform: "translate(52px,0)" }, { transform: "translate(26px,-26px)" }, { transform: "translate(0,0)" }], 460, { easing: "ease-out" }),
+            play(ctx, m.d, [{ transform: "scale(1.2,.8)" }, { transform: "scale(.82,1.2)" }, { transform: "scale(1,1)" }], 460)
+          ]);
+          await play(ctx, m.d, jelly, 650, { easing: "ease-out" });
+        }
+      } },
+
+    { code: "E1", title: "Dry quip", desc: "One short, typed, slightly self-aware line.",
+      setup: function (st, tile) { tile.classList.add("idle"); page(st); return { m: mascot(st) }; },
+      run: function (ctx, T) { return talkLoop(ctx, T.m, ["Itamae is the one I'd pick. I'm biased."], { pre: 1200, hold: 2600 }); } },
+    { code: "E2", title: "Helpful pointer", desc: "Short tip plus an arrow to the thing it's about.",
+      setup: function (st, tile) {
+        tile.classList.add("idle"); page(st, { narrow: true, noBtn: true });
+        var card = h("div", "price", st);
+        card.style.right = "12px"; card.style.top = "12px"; card.style.width = "82px";
+        h("div", "pl", card, "ITAMAE");
+        h("div", "pb main", card); h("div", "pb", card).style.width = "60%";
+        var arrow = h("div", "arrow", st);
+        var m = mascot(st);
+        m.say.classList.add("narrow");
+        return { m: m, card: card, arrow: arrow, st: st };
+      },
+      run: async function (ctx, T) {
+        var m = T.m, card = T.card, arrow = T.arrow;
+        var cx = card.offsetLeft + card.offsetWidth / 2, top = card.offsetTop + card.offsetHeight + 8;
+        arrow.style.left = cx + "px"; arrow.style.top = top + "px"; arrow.style.height = Math.max(10, 84 - top) + "px";
+        for (;;) {
+          await sleep(ctx, 1000);
+          await say(ctx, m, "Tip: Itamae covers one dev.", {
+            hold: 2400, narrow: true,
+            after: function () { card.classList.add("hl"); arrow.classList.add("on"); },
+            done: function () { card.classList.remove("hl"); arrow.classList.remove("on"); }
+          });
+          await sleep(ctx, 600);
+        }
+      } },
+    { code: "E3", title: "Asks + action", desc: "A question with real buttons. Try clicking Yes.",
+      setup: function (st, tile) {
+        tile.classList.add("idle"); page(st);
+        var m = mascot(st);
+        m.say.style.bottom = "38px";
+        var acts = h("div", "acts", m.say);
+        var yes = h("button", "yes", acts, "Yes");
+        h("button", "", acts, "Later");
+        acts.style.display = "none";
+        yes.addEventListener("click", function () { m.sayText.textContent = "Done. Check your inbox."; acts.style.display = "none"; });
+        return { m: m, acts: acts };
+      },
+      run: async function (ctx, T) {
+        var m = T.m, acts = T.acts;
+        for (;;) {
+          await sleep(ctx, 1000);
+          acts.style.display = "none";
+          await say(ctx, m, "Want 30 days on the house?", { hold: 3200, after: function () { acts.style.display = "flex"; } });
+          await sleep(ctx, 500);
+        }
+      } },
+    { code: "E4", title: "Reaction only", desc: "No words. Tiny pixel reactions pop above him.",
+      setup: function (st, tile) {
+        tile.classList.add("idle"); page(st);
+        var m = mascot(st);
+        var r = h("div", "react", m.j);
+        return { m: m, r: r };
+      },
+      run: async function (ctx, T) {
+        var m = T.m, r = T.r, keys = ["eyes", "thumb", "sparkle"];
+        for (var i = 0; ; i++) {
+          r.innerHTML = ""; r.appendChild(reactionSvg(keys[i % 3]));
+          await sleep(ctx, 500);
+          r.classList.add("on");
+          await hop(ctx, m, 6, 260);
+          await sleep(ctx, 1100);
+          r.classList.remove("on");
+          await sleep(ctx, 300);
+        }
+      } },
+    { code: "E5", title: "Speaks on hover only", desc: "Silent with a ? badge. Hover this tile to hear him.",
+      setup: function (st, tile) {
+        tile.classList.add("idle"); page(st);
+        var m = mascot(st);
+        h("div", "badge", m.j, "?");
+        return { m: m, tile: tile };
+      },
+      run: function (ctx, T) {
+        var m = T.m, tile = T.tile, token = 0;
+        tile.onmouseenter = function () {
+          var mine = ++token;
+          m.say.classList.add("on");
+          var sub = { dead: function () { return ctx.dead() || mine !== token; } };
+          type(sub, m.sayText, "Itamae is the solo-dev plan. Want the gist?", 26).catch(function () {});
+        };
+        tile.onmouseleave = function () { token++; m.say.classList.remove("on"); m.sayText.textContent = ""; };
+        return new Promise(function () {});
+      } }
+  ];
+
+  /* ---------- board ---------- */
+  var board = document.getElementById("board");
+  var tileEls = {};
+  var dirty = false;
+  var statusEl = document.getElementById("status");
+  function setStatus(text, ok) { statusEl.textContent = text; statusEl.classList.toggle("ok", !!ok); }
+  function markDirty() { dirty = true; setStatus("Unsaved changes"); }
+
+  ROWS.forEach(function (row) {
+    var r = h("section", "row", board);
+    var lab = h("div", "row-label", r);
+    h("div", "letter", lab, row.id);
+    h("div", "name", lab, row.name);
+    h("div", "hint", lab, row.hint);
+    var grid = h("div", "tiles", r);
+    TILES.filter(function (t) { return t.code[0] === row.id; }).forEach(function (t) {
+      var tile = h("article", "tile t" + t.code, grid);
+      tile.dataset.code = t.code;
+      t.el = tile;
+      t.stage = h("div", "stage", tile);
+      var meta = h("div", "meta", tile);
+      h("span", "code", meta, t.code);
+      var titles = h("div", "titles", meta);
+      h("div", "title", titles, t.title);
+      h("div", "desc", titles, t.desc);
+      var star = h("button", "star", meta);
+      star.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg>';
+      star.setAttribute("aria-pressed", "false");
+      star.title = "Star " + t.code;
+      star.addEventListener("click", function () { setStar(t.code, star.getAttribute("aria-pressed") !== "true"); markDirty(); });
+      var note = h("textarea", "note", tile);
+      note.placeholder = "Notes on " + t.code + "…";
+      note.addEventListener("input", markDirty);
+      t.star = star; t.note = note;
+      tileEls[t.code] = t;
+    });
+  });
+
+  function setStar(code, on) {
+    var t = tileEls[code];
+    if (!t) return;
+    t.star.setAttribute("aria-pressed", on ? "true" : "false");
+    t.el.classList.toggle("starred", on);
+  }
+
+  function start(t) {
+    t.gen = (t.gen || 0) + 1;
+    var gen = t.gen;
+    var keep = t.el.className.split(" ").filter(function (c) { return c === "tile" || c === "t" + t.code || c === "starred"; });
+    t.el.className = keep.join(" ");
+    t.stage.innerHTML = "";
+    var ctx = { dead: function () { return t.gen !== gen; } };
+    var T = t.setup(t.stage, t.el);
+    Promise.resolve(t.run(ctx, T)).catch(function (e) { if (e !== STOP) console.error(t.code, e); });
+  }
+  function startAll() {
+    live.forEach(function (a) { a.cancel(); });
+    live.clear();
+    TILES.forEach(start);
+  }
+
+  var speedEl = document.getElementById("speed");
+  speedEl.addEventListener("input", function () {
+    speed = parseFloat(speedEl.value);
+    document.getElementById("speedVal").textContent = speed.toFixed(1) + "x";
+    document.documentElement.style.setProperty("--k", (1 / speed).toFixed(3));
+    live.forEach(function (a) { a.playbackRate = speed; });
+  });
+  var pauseBtn = document.getElementById("pause");
+  pauseBtn.addEventListener("click", function () {
+    paused = !paused;
+    pauseBtn.setAttribute("aria-pressed", String(paused));
+    pauseBtn.textContent = paused ? "Resume" : "Pause";
+    document.body.classList.toggle("paused", paused);
+    live.forEach(function (a) { if (paused) a.pause(); else a.play(); });
+  });
+  document.getElementById("replay").addEventListener("click", startAll);
+  var themeBtn = document.getElementById("theme");
+  themeBtn.addEventListener("click", function () {
+    var dark = !document.body.classList.contains("dark");
+    document.body.classList.toggle("dark", dark);
+    themeBtn.setAttribute("aria-pressed", String(dark));
+    themeBtn.textContent = dark ? "Light background" : "Dark background";
+  });
+
+  document.getElementById("save").addEventListener("click", function () {
+    var stars = [], notes = {};
+    TILES.forEach(function (t) {
+      if (t.star.getAttribute("aria-pressed") === "true") stars.push(t.code);
+      if (t.note.value.trim()) notes[t.code] = t.note.value;
+    });
+    setStatus("Saving…");
+    fetch("picks.json", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ stars: stars, notes: notes, savedAt: new Date().toISOString() }) })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); dirty = false; setStatus("Saved ✓", true); })
+      .catch(function (e) { setStatus("Save failed: " + e.message); });
+  });
+
+  fetch("picks.json", { cache: "no-store" })
+    .then(function (r) { return r.ok ? r.json() : {}; })
+    .then(function (data) {
+      (data.stars || []).forEach(function (c) { setStar(c, true); });
+      Object.keys(data.notes || {}).forEach(function (c) { if (tileEls[c]) tileEls[c].note.value = data.notes[c]; });
+      if (data.savedAt) setStatus("Loaded save from " + new Date(data.savedAt).toLocaleString(), true);
+    })
+    .catch(function () {});
+
+  window.addEventListener("beforeunload", function (e) { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+  startAll();
+})();
+</script>
+</body>
+</html>
