@@ -1,0 +1,50 @@
+name = "Warp"
+
+[[fact]]
+id = "what"
+text = "Warp now describes itself as open infrastructure for cloud software factories, alongside the Warp Terminal and the Warp Agent CLI."
+short = "Terminal plus cloud agent platform"
+source = "https://www.warp.dev/"
+checked = "2026-10-16"
+
+[[fact]]
+id = "terminal"
+text = "Warp's terminal client is open source on GitHub."
+short = "Open-source terminal client"
+source = "https://github.com/warpdotdev/warp"
+checked = "2026-10-16"
+
+[[fact]]
+id = "where"
+text = "Warp cloud agents run on Warp-hosted compute or on your own infrastructure."
+short = "Warp cloud or your infrastructure"
+source = "https://docs.warp.dev/agent-platform/cloud-agents/overview"
+checked = "2026-10-16"
+
+[[fact]]
+id = "models"
+text = "Each Warp cloud run can use Warp Agent, Claude Code or Codex; personal API keys are not available for cloud runs, but Business and Enterprise can use team-managed inference."
+short = "Warp Agent, Claude Code or Codex; team keys on Business+"
+source = "https://docs.warp.dev/agent-platform/cloud-agents/overview"
+checked = "2026-10-16"
+
+[[fact]]
+id = "surfaces"
+text = "Warp cloud runs start from Slack, Linear, Jira, GitHub, Azure DevOps, schedules, the Oz CLI, the API or the web app."
+short = "Slack, Linear, Jira, GitHub, schedules, CLI, web"
+source = "https://docs.warp.dev/agent-platform/cloud-agents/overview"
+checked = "2026-10-16"
+
+[[fact]]
+id = "pricing"
+text = "Warp's Terminal and Agents plans are Free, Build at $20 a month, Max at $200 and Business at $50 per user; Warp Factories also offers pay-as-you-go usage at 20% above API rates."
+short = "Free; Build $20/mo; Max $200; Business $50/user"
+source = "https://www.warp.dev/pricing"
+checked = "2026-10-16"
+
+[[fact]]
+id = "billing"
+text = "Warp bills a cloud run for agent time, inference and Warp-hosted compute."
+short = "Agent time + inference + compute"
+source = "https://docs.warp.dev/agent-platform/cloud-agents/overview"
+checked = "2026-10-16"

@@ -1,0 +1,10 @@
+name = "Jiro"
+base_url = "https://jiro.bot"
+updated = "2026-10-17"
+max_fact_age_days = 30
+trial_url = "https://login.norisessions.com/?signup=1&entrypoint=jiro"
+install = "npx nori-skillsets install public/jiro"
+entity = "Jiro is a background coding agent by Nori."
+summary = "Jiro is a background coding agent by Nori that runs coding agents in isolated cloud VMs."
+deny = ["draft PRs only", "never merges"]
+footer = "Jiro is a background coding agent by Nori. It is not Amazon's Kiro or Atlassian's Jira."

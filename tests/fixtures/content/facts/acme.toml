@@ -1,0 +1,22 @@
+name = "Acme Agent"
+
+[[fact]]
+id = "pricing"
+text = "Acme Agent costs $20 per month."
+short = "$20/mo"
+source = "https://acme.example/pricing"
+checked = "2026-10-16"
+
+[[fact]]
+id = "surfaces"
+text = "Acme Agent works from Slack and the web."
+short = "Slack, web"
+source = "https://acme.example/docs/surfaces"
+checked = "2026-10-15"
+
+[[fact]]
+id = "cli"
+text = "Run `acme go` to start an Acme task."
+short = "`acme go`"
+source = "https://acme.example/docs/cli"
+checked = "2026-10-14"

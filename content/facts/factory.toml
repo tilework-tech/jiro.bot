@@ -1,0 +1,57 @@
+name = "Factory"
+
+[[fact]]
+id = "what"
+text = "Factory sells agent-native software development; its agents are called Droids."
+short = "Agent-native development platform (Droids)"
+source = "https://factory.com/"
+checked = "2026-10-16"
+
+[[fact]]
+id = "where"
+text = "Droids run locally in the Droid CLI and Factory App, on Factory-managed cloud Droid Computers, or on machines you register."
+short = "Local, Factory cloud, or your machines"
+source = "https://docs.factory.com/llms.txt"
+checked = "2026-10-16"
+
+[[fact]]
+id = "models"
+text = "Factory routes across Anthropic, OpenAI and other models and accepts your own keys or local models in the CLI and desktop app, but not in the hosted web or mobile apps."
+short = "Multi-model; own keys in CLI/desktop only"
+source = "https://docs.factory.com/model-independence/byok.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "surfaces"
+text = "Droids work in the Factory App, Droid CLI, headless Droid Exec and IDEs, and take delegations from Slack, Linear and Jira."
+short = "App, CLI, IDE, Slack, Linear, Jira"
+source = "https://docs.factory.com/delegations/index.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "pricing"
+text = "Factory's plans are Pro at $20 a month, Plus at $100, Max at $200, and Teams at $60 a month plus $40 per seat for up to 10 seats; Business and Enterprise are custom."
+short = "Pro $20/mo; Plus $100; Max $200; Teams $60 + $40/seat"
+source = "https://factory.com/pricing"
+checked = "2026-10-16"
+
+[[fact]]
+id = "private"
+text = "Factory Private, launched 2026-09-18, deploys Factory into a customer's VPC, on-premises or air-gapped network."
+short = "VPC, on-prem, air-gapped (Factory Private)"
+source = "https://factory.com/news/factory-private"
+checked = "2026-10-16"
+
+[[fact]]
+id = "prs"
+text = "When delegated a Linear issue, a Droid is instructed to open a pull request and return its URL."
+short = "Opens PRs from delegations"
+source = "https://docs.factory.com/delegations/linear.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "automations"
+text = "Factory automation templates such as Ticket to PR and Error Triage open pull requests without a prompt."
+short = "Automation templates"
+source = "https://docs.factory.com/software-factory/automations.md"
+checked = "2026-10-16"

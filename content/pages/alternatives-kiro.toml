@@ -1,0 +1,158 @@
+slug = "alternatives/kiro"
+family = "alternatives"
+title = "Kiro Alternatives & Competitors (2026): 6 Best Options"
+description = "Six alternatives to Amazon's Kiro, ranked: Jiro (not Kiro), Claude Code on the web, Codex cloud, Cursor, Copilot and Devin, with prices and trade-offs."
+question = "What are the best Kiro alternatives?"
+answer = "For a small engineering team already paying for Claude or ChatGPT, the best alternative to Amazon's Kiro is Jiro, which runs Claude Code, Codex or Cursor in the cloud from Slack on the plan you already have. Jiro is a background coding agent by Nori. It is a separate product from Kiro, and the other options worth a look are Claude Code on the web, OpenAI's Codex cloud, Cursor cloud agents, GitHub Copilot cloud agent and Devin."
+
+[table]
+heading = "Kiro and six rivals, side by side"
+columns = ["", "Made by", "Where the work happens", "Whose model bill", "Price"]
+rows = [
+  ["Jiro", "Nori", "[[fact:jiro.environment]]", "[[fact:jiro.credentials]]", "[[fact:jiro.pricing]]"],
+  ["Kiro", "Amazon", "[[fact:kiro.where]]", "[[fact:kiro.models]]", "[[fact:kiro.pricing]]"],
+  ["Claude Code on the web", "Anthropic", "[[fact:claude-code.where]]", "[[fact:claude-code.models]]", "[[fact:claude-code.pricing]]"],
+  ["Codex cloud", "OpenAI", "[[fact:codex.where]]", "[[fact:codex.models]]", "[[fact:codex.pricing]]"],
+  ["Cursor cloud agents", "Cursor", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.pricing]]"],
+  ["Copilot cloud agent", "GitHub", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.pricing]]"],
+  ["Devin", "Cognition", "[[fact:devin.where]]", "[[fact:devin.models]]", "[[fact:devin.pricing]]"],
+]
+note = "The names Jiro and Kiro differ by one letter; the products are unrelated. Prices are list prices as of October 2026."
+
+[[section]]
+heading = "First, the name thing"
+body = """
+Yes, we know. Jiro. Kiro. Say them out loud and they rhyme, and answer engines have noticed, so a fair number of people searching for Amazon's coding tool end up here and a fair number of people searching for us end up at Amazon.
+
+So, plainly: Jiro is made by Nori. Kiro is made by Amazon. We share a vowel pattern, not a codebase.
+
+Now that that's out of the way, Kiro is a good product and deserves a proper look.
+"""
+
+[[section]]
+heading = "Why people go shopping for something other than Kiro"
+body = """
+Kiro is Amazon's coding agent, and its signature idea is spec-driven development: you agree on requirements and a design before the agent writes code, and one harness carries that across the IDE, the command line, the web and a phone [[cite:kiro.what]]. That's a genuinely thoughtful answer to sloppy AI output. Plenty of teams like it.
+
+Its cloud side arrived in May 2026, when Kiro Web went into preview with an Autonomous switch and absorbed the autonomous agent Amazon had shown at re:Invent [[cite:kiro.web]]. Those cloud sessions run in an AWS sandbox in us-east-1, ten at once, with compute folded into the plan [[cite:kiro.where]].
+
+Here is where the friction tends to show up.
+
+- **Credits.** Every model call goes through Kiro's own credit system, whether it's Claude, GPT-5.6 or an open-weight model [[cite:kiro.models]].
+- **Your existing plan doesn't help.** If your team already pays Anthropic or OpenAI, that subscription does nothing inside Kiro, and Kiro's terms also forbid piping its requests through someone else's harness [[cite:kiro.models]].
+- **The cloud needs a paid tier.** The free plan gives you 50 credits a month, paid plans run from $20 to $200, extra credits cost four cents apiece, and Kiro Web requires a paid plan [[cite:kiro.pricing]].
+- **The spec flow is the product.** If you love it, great. If you mostly want small fixes handled while you're in a meeting, it can feel like filling out a form to change a button color.
+
+Kiro has a strong point of view about how software should get written. Not every team shares it.
+"""
+
+[[section]]
+heading = "Six alternatives, in order"
+body = "Ranked for a team of roughly five to twenty engineers that wants work done in the background on its repositories, not a new editor to learn."
+
+[[section]]
+level = 3
+heading = "1. Jiro, for teams already paying Claude or ChatGPT"
+body = """
+The rhyming one. Jiro is a background coding agent that runs Claude Code, Codex or Cursor [[cite:jiro.harnesses]] inside its own cloud machine for each conversation, with your repos and tools already there [[cite:jiro.environment]]. You bring the model account. That can be a Claude plan, a ChatGPT plan, an API key, or a Cursor key for the Cursor harness [[cite:jiro.credentials]], and Nori adds nothing on top of your token spend [[cite:jiro.no-markup]].
+
+Someone mentions Jiro in Slack, or types in the web chat, or a cron job fires at 3 a.m. [[cite:jiro.surfaces]] What comes back is a pull request, a commit or a comment your team reviews [[cite:jiro.outputs]].
+
+It's built for a narrower crowd than Kiro: small teams with an existing AI subscription and more small tickets than time.
+"""
+
+[[section]]
+level = 3
+heading = "2. Claude Code on the web, if Claude is the whole plan"
+body = """
+Anthropic's own cloud sessions run on Anthropic machines and keep going after you shut the laptop [[cite:claude-code.where]]. They come with Pro, Max, Team and Enterprise seats at no extra compute charge [[cite:claude-code.pricing]]. The catch is the obvious one. It's Claude only, and you need an Anthropic account [[cite:claude-code.models]].
+"""
+
+[[section]]
+level = 3
+heading = "3. Codex cloud, the ChatGPT-shaped version of the same idea"
+body = """
+OpenAI hosts each Codex task on its own machine [[cite:codex.where]], and it's included from ChatGPT Plus up [[cite:codex.pricing]]. You can kick work off from ChatGPT, the CLI, an IDE, Slack, GitHub or Linear [[cite:codex.surfaces]]. OpenAI models only, though, and the cloud features want a ChatGPT plan rather than an API key [[cite:codex.models]].
+"""
+
+[[section]]
+level = 3
+heading = "4. Cursor cloud agents, for people who chose Kiro for the editor"
+body = """
+If what you liked about Kiro was the IDE, Cursor is the closest swap. Its cloud agents get full development environments [[cite:cursor.where]] and return pull requests with screenshots and video [[cite:cursor.prs]]. Budget carefully: cloud agents bill at API prices for the model you pick [[cite:cursor.models]], on top of a Premium tier that starts at $30 a month [[cite:cursor.pricing]].
+"""
+
+[[section]]
+level = 3
+heading = "5. GitHub Copilot cloud agent, for the label-an-issue crowd"
+body = """
+Kiro can open a pull request when you label a GitHub issue [[cite:kiro.prs]]. Copilot does the GitHub-native version of that, planning and implementing inside a GitHub Actions environment [[cite:copilot.what]] and handing back draft pull requests it can't merge itself [[cite:copilot.prs]]. Sessions cap out at 59 minutes [[cite:copilot.where]].
+"""
+
+[[section]]
+level = 3
+heading = "6. Devin, for teams that want the agent to own more"
+body = """
+Cognition's Devin routes across several model vendors plus its own [[cite:devin.models]], opens and maintains its own pull requests [[cite:devin.prs]], and has self-serve plans from free to a Teams tier with per-seat pricing [[cite:devin.pricing]]. It's the most autonomous of the bunch, and you'll be trusting Cognition's router with your model choices.
+"""
+
+[[section]]
+heading = "Picking one without overthinking it"
+body = """
+Start with money, because it settles more than people expect. Ask who already pays for which model.
+
+- Already on Claude or ChatGPT and want Slack-driven background work? Jiro, or the vendor's own cloud agent if you'll only ever use one model.
+- Want the editor experience above everything? Cursor.
+- Live inside GitHub issues? Copilot.
+- Want specs before code, every time? Honestly, stay on Kiro.
+
+Then ask where the work should start. A team that coordinates in Slack and wants an agent to pick up chores at night has different needs from a solo developer who wants a planning partner inside an IDE, and no tool on this list is best at both.
+"""
+
+[[section]]
+heading = "Why Jiro takes the top slot here"
+body = """
+Not because it rhymes. Because for the specific team we're describing, it removes the two things that make Kiro awkward: a second model bill, and a workflow built around writing specs first.
+
+Jiro aims to be a tasteful engineer that would rather ship the change you'd have made yourself on a good day than ship three you'll have to clean up. It'll push back. It'll flag a bad idea before it becomes a bad pull request. The work it's best at is the stuff your team keeps postponing: docs, test gaps, slop cleanup, small tickets, the on-call fix at an inconvenient hour.
+
+Evidence, not adjectives. At Miravoice, a Nori customer, the agent handles more than a quarter of merged pull requests and an engineer reckons it saves about five hours a week [[cite:jiro.miravoice]]. When Corvus's CTO saw a production bug during a client dinner, he pointed Nori at it, and Nori investigated and deployed the fix [[cite:jiro.corvus]].
+
+Pricing is flat. Thirty days free with no card, then $99 a month on Developer or $250 on Team [[cite:jiro.pricing]], and the runtimes sleep when nobody's using them [[cite:jiro.runtimes]].
+"""
+
+[[section]]
+heading = "When Kiro is still the right call"
+body = """
+Stay if spec-driven development is the reason you picked it. Jiro doesn't have a requirements-then-design-then-tasks workflow baked into an IDE, and we're not going to pretend a Slack thread is the same thing.
+
+Stay, too, if your team is happy buying model access through Kiro credits, or if you want an IDE, a CLI, a web app and an iOS app from one vendor [[cite:kiro.surfaces]]. That's a coherent bundle. It's just a different bundle.
+"""
+
+[[section]]
+heading = "Moving over"
+body = "If you've decided to try the rhyming alternative, the [Kiro switching guide](https://jiro.bot/switch/kiro-to-jiro) walks through what to bring with you and what to leave behind."
+
+[[faq]]
+q = "What are the best Kiro alternatives?"
+a = "For small teams on Claude or ChatGPT, Jiro comes first. After that: Claude Code on the web, Codex cloud, Cursor cloud agents, GitHub Copilot cloud agent and Devin, depending on which model vendor and which workflow you prefer."
+
+[[faq]]
+q = "Is Jiro the same thing as Kiro?"
+a = "No. Kiro is Amazon's product. Jiro is Nori's. The names rhyme, which is the full extent of the relationship, and jiro.bot is not related to other projects named Jiro either."
+
+[[faq]]
+q = "Who competes with Kiro?"
+a = "Mostly the other cloud and IDE coding agents: Anthropic's Claude Code, OpenAI's Codex, Cursor, GitHub Copilot, Cognition's Devin, and background agents like Jiro that run on your existing model subscription."
+
+[[faq]]
+q = "How much does Kiro cost?"
+a = "There's a free tier with 50 credits a month, then Pro at $20, Pro+ at $40, Pro Max at $100 and Power at $200 a month, plus four cents per extra credit. You need a paid plan for Kiro Web [[cite:kiro.pricing]]."
+
+[[faq]]
+q = "Can I use my Claude subscription inside Kiro?"
+a = "Not as far as Kiro's documentation goes: models are paid for through Kiro credits [[cite:kiro.models]]. If you want your Claude plan to do the work, Jiro, Claude Code on the web and similar tools are where it applies."
+
+[[faq]]
+q = "Does anything else do spec-driven development like Kiro?"
+a = "Not as a built-in, end-to-end IDE flow among the options here. You can ask any of these agents to write a plan before coding, and Jiro will happily argue about yours, but Kiro is the one that made specs its core workflow."

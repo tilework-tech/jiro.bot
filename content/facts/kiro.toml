@@ -1,0 +1,50 @@
+name = "Kiro"
+
+[[fact]]
+id = "what"
+text = "Kiro is Amazon's AI coding agent, built around one agent harness across the IDE, CLI, web and mobile, with spec-driven development as its signature workflow."
+short = "Amazon's spec-driven coding agent"
+source = "https://kiro.dev/llms.txt"
+checked = "2026-10-16"
+
+[[fact]]
+id = "web"
+text = "Kiro Web launched in preview on 2026-05-18 with an Autonomous toggle, folding in the Kiro autonomous agent announced at re:Invent 2025."
+short = "Kiro Web (preview) replaced the autonomous agent"
+source = "https://kiro.dev/blog/introducing-kiro-web/"
+checked = "2026-10-16"
+
+[[fact]]
+id = "where"
+text = "Kiro cloud sessions run in an AWS-managed sandbox in us-east-1, up to 10 at a time, with no separate compute charge; the IDE and CLI also run locally."
+short = "AWS sandbox (us-east-1) or local"
+source = "https://kiro.dev/docs/cloud-sessions.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "models"
+text = "Kiro offers Claude, GPT-5.6 and open-weight models through its own credits, and its terms prohibit routing requests through third-party harnesses."
+short = "Claude, GPT and open models via Kiro credits"
+source = "https://kiro.dev/docs/models.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "surfaces"
+text = "Kiro runs in its IDE, the CLI, the web app, iOS and ACP-compatible editors, and Kiro Web works with GitHub and GitLab repositories."
+short = "IDE, CLI, web, iOS; GitHub and GitLab"
+source = "https://kiro.dev/docs/web.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "pricing"
+text = "Kiro's plans are Free (50 credits a month), Pro at $20, Pro+ at $40, Pro Max at $100 and Power at $200 a month, with extra credits at $0.04 each; Kiro Web needs a paid plan."
+short = "Free 50 credits; Pro $20; Pro+ $40; Pro Max $100; Power $200"
+source = "https://kiro.dev/pricing/"
+checked = "2026-10-16"
+
+[[fact]]
+id = "prs"
+text = "Kiro opens pull requests from a kiro label or /kiro comment on a GitHub issue and never merges changes automatically."
+short = "Opens PRs; never auto-merges"
+source = "https://kiro.dev/docs/web/github.md"
+checked = "2026-10-16"

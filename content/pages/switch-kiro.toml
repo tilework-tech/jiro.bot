@@ -1,0 +1,113 @@
+slug = "switch/kiro-to-jiro"
+family = "switch"
+title = "Switching from Kiro to Jiro (2026): Specs, Steering, Setup and Cost"
+description = "Moving from Amazon's Kiro to Jiro: what happens to your specs and steering docs, the setup steps, a first-week plan, costs, and what has no equivalent."
+question = "How do I switch from Kiro to Jiro?"
+answer = "To switch from Kiro to Jiro, start a free trial, install Nori's GitHub App on your repositories, connect Slack, sign in with your own Claude plan (via claude setup-token) or a ChatGPT or Cursor credential, then write a setup script and hand Jiro a first small task. Jiro is a background coding agent by Nori. It has no connection to Amazon's Kiro. Your committed specs and steering notes can be carried over as repository files and shared instructions, but Kiro's spec-driven IDE workflow has no direct Jiro equivalent."
+
+[[section]]
+heading = "Should I actually switch?"
+body = """
+Maybe not. Worth asking before anything else.
+
+Kiro is built around spec-driven development, with one agent harness running across its IDE, CLI, web app and phone [[cite:kiro.what]]. If your team plans every feature through Kiro's specs and loves it, moving to Jiro means giving that up.
+
+Switching makes sense when your team is roughly five to twenty engineers, already pays Anthropic or OpenAI, and the work piling up is small: bugs, docs, test gaps, on-call fixes. That's what Jiro is for.
+"""
+
+[[section]]
+heading = "Do my specs come with me?"
+body = """
+Partly. Here's the honest version.
+
+If your Kiro specs are committed to the repository, they're ordinary files, and they stay exactly where they are. Jiro works inside a cloud machine that has your repos checked out [[cite:jiro.environment]], so it can read a requirements or design doc the same way a new hire would. Point at one in your request: "implement task 4 from the checkout spec."
+
+What doesn't come with you is the workflow around those files. Jiro won't walk you through requirements, then design, then a task list, inside an IDE. There is no spec mode. You can ask Jiro to draft a plan before writing code, and it'll push back if the plan looks wrong, but that's a conversation, not a structured flow.
+"""
+
+[[section]]
+heading = "What about steering files and project rules?"
+body = """
+These move over by hand, and it's a short job.
+
+Nori uses skillsets for shared instructions. You write one, and Nori renders it into whatever file each agent looks for, so Claude Code finds a CLAUDE.md while Codex and most others find an AGENTS.md [[cite:jiro.translation]]. Copy the parts of your steering docs that still matter (coding conventions, test commands, "never touch the billing module without asking") into that skillset or into an AGENTS.md in the repo.
+
+Take the chance to prune. Steering files collect stale advice.
+
+You can also install Jiro's own engineering habits with `npx nori-skillsets install public/jiro`, which gives every session the same baseline on reviews, tests and documentation.
+"""
+
+[[section]]
+heading = "How do I set it up?"
+body = """
+Plan on an afternoon. Most of it is waiting for a first task to finish.
+
+1. **Open a trial account.** A month free, and nobody asks for a card [[cite:jiro.pricing]].
+2. **Install the GitHub App.** Pick every repo, or only the ones you're piloting [[cite:jiro.github]].
+3. **Connect Slack.** This is where most requests will start [[cite:jiro.surfaces]].
+4. **Connect a model account.** Claude users do one thing locally before touching Jiro: `claude setup-token`, from the Claude command line on their own computer. The token it issues is linked to the Claude subscription you pay for (Pro, Max, Team or Enterprise all qualify) and stays valid for a year [[cite:anthropic.setup-token]]. Paste that into Jiro. Prefer ChatGPT? Use Codex's sign-in or an OpenAI API key. Cursor needs a Cursor API key [[cite:jiro.credentials]].
+5. **Write the org setup script.** Install your toolchain, dependencies and anything else a fresh environment needs [[cite:jiro.setup-script]].
+6. **Send a first task.** Something you could review in five minutes.
+"""
+
+[[section]]
+heading = "What should we give it in week one?"
+body = """
+Small, checkable work. You're calibrating trust, not testing heroics.
+
+- Monday: "Find out-of-date sections in the README and fix them."
+- Tuesday: "Add tests for the date-parsing helper; it has none."
+- Wednesday: a real ticket from the backlog, one you'd estimate at an hour.
+- Thursday: "Look through the payments module and tell me what's sloppy." Read the answer before asking for changes.
+- Friday: the next on-call alert that's a known, boring fix.
+
+By Friday you'll know whether its pull requests match the change you'd have made yourself.
+"""
+
+[[section]]
+heading = "What am I giving up?"
+body = """
+Be clear-eyed about this list.
+
+- **The spec-driven IDE flow.** No equivalent. This is the big one.
+- **An IDE at all.** Jiro has no editor. You talk to it in Slack, the web chat, Discord or a terminal [[cite:jiro.surfaces]].
+- **One vendor for everything.** Kiro bundles models into its credits [[cite:kiro.models]]; with Jiro you manage a model account yourself.
+- **Issue-label triggers.** Kiro can open a pull request when someone labels a GitHub issue or comments /kiro [[cite:kiro.prs]]. Jiro starts from messages, schedules and webhooks instead [[cite:jiro.triggers]].
+- **GitLab.** Kiro Web takes GitLab repos [[cite:kiro.surfaces]]; Jiro connects through GitHub [[cite:jiro.github]].
+"""
+
+[[section]]
+heading = "Will it cost more or less?"
+body = """
+It depends on what you already pay for, so do the sum.
+
+Kiro runs from a free tier to $200 a month per plan, with extra credits at four cents each [[cite:kiro.pricing]]. Jiro is $99 a month on Developer or $250 a month on Team, which shares five runtimes across your people [[cite:jiro.pricing]], plus whatever model plan you bring. Claude Max, for reference, is $100 or $200 a month [[cite:anthropic.max]].
+
+For one person, Kiro Pro is cheaper. For a team that's already buying Claude seats, Jiro's flat fee can come out ahead, since nobody pays for model access twice.
+"""
+
+[[section]]
+heading = "Can we run both during a pilot?"
+body = """
+Yes, and we'd suggest it. They don't touch each other's accounts.
+
+Keep Kiro for anything that genuinely needs a spec. Send the small stuff to Jiro for two or three weeks. Then count: merged pull requests, review time, and how often you had to send work back. If the numbers aren't there, you've lost a trial and nothing else.
+
+Still comparing options? See the [Kiro alternatives](https://jiro.bot/alternatives/kiro) page.
+"""
+
+[[faq]]
+q = "Is Jiro a rebrand of Kiro?"
+a = "No. Kiro is Amazon's. Jiro is Nori's. And despite the crowded name, we're unconnected to any other tool called Jiro too."
+
+[[faq]]
+q = "Can I use my Kiro credits in Jiro?"
+a = "No. Kiro credits pay for usage inside Kiro, and Kiro's terms bar routing its requests through other harnesses [[cite:kiro.models]]. In Jiro, usage runs on your own Claude, ChatGPT or Cursor credential."
+
+[[faq]]
+q = "Do I have to rewrite my steering docs?"
+a = "You'll copy them rather than rewrite them. Put the rules you still want into a Nori skillset or the repo's AGENTS.md, and Nori renders the right file for each agent."
+
+[[faq]]
+q = "How long does switching take?"
+a = "Setup is an afternoon. Getting comfortable with Jiro's pull requests takes about a week of small tasks."

@@ -1,0 +1,202 @@
+slug = "alternatives/jules"
+family = "alternatives"
+title = "Jules Alternatives & Competitors (2026): 7 Best Options"
+description = "Seven Google Jules alternatives ranked: Jiro, Codex cloud, Claude Code on the web, Cursor, Copilot, Devin and OpenHands. Models, limits, Workspace caveats, prices."
+question = "What are the best Jules alternatives?"
+answer = "Jiro is the top Jules alternative for teams of about five to twenty engineers who already have a Claude or ChatGPT subscription, because it puts that subscription to work through Claude Code, Codex or Cursor, with tasks assigned in Slack. Jiro is a background coding agent by Nori. Other strong Jules alternatives are OpenAI's Codex cloud, Claude Code on the web, Cursor cloud agents, GitHub Copilot cloud agent, Devin and the open-source OpenHands."
+
+[table]
+heading = "Jules versus seven alternatives"
+columns = ["", "Models", "Runs on", "Kick off from", "Price"]
+rows = [
+  ["Jiro", "[[fact:jiro.harnesses]] on [[fact:jiro.credentials]]", "[[fact:jiro.environment]]", "[[fact:jiro.surfaces]]", "[[fact:jiro.pricing]]"],
+  ["Jules", "[[fact:jules.models]]", "[[fact:jules.where]]", "[[fact:jules.surfaces]]", "[[fact:jules.pricing]]"],
+  ["Codex cloud", "[[fact:codex.models]]", "[[fact:codex.where]]", "[[fact:codex.surfaces]]", "[[fact:codex.pricing]]"],
+  ["Claude Code on the web", "[[fact:claude-code.models]]", "[[fact:claude-code.where]]", "[[fact:claude-code.surfaces]]", "[[fact:claude-code.pricing]]"],
+  ["Cursor cloud agents", "[[fact:cursor.models]]", "[[fact:cursor.where]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
+  ["Copilot cloud agent", "[[fact:copilot.models]]", "[[fact:copilot.where]]", "[[fact:copilot.surfaces]]", "[[fact:copilot.pricing]]"],
+  ["Devin", "[[fact:devin.models]]", "[[fact:devin.where]]", "[[fact:devin.surfaces]]", "[[fact:devin.pricing]]"],
+  ["OpenHands", "[[fact:openhands.models]]", "[[fact:openhands.where]]", "[[fact:openhands.surfaces]]", "[[fact:openhands.pricing]]"],
+]
+
+[[section]]
+heading = "Why teams outgrow Jules"
+body = """
+Jules is good. Free tier, real VMs, decent limits. Start there.
+
+What it does well:
+
+- Every task gets a fresh, short-lived VM with Docker and the usual toolchains already in it [[cite:jules.where]].
+- Work can start in the web app, from a GitHub issue labelled jules, from its CLI or through an API [[cite:jules.surfaces]].
+- Recurring jobs are supported via Scheduled Tasks [[cite:jules.scheduled]].
+- You stay in control at the end: publish a branch, or publish a PR [[cite:jules.prs]].
+
+Where it pinches:
+
+- **One model family.** Gemini, full stop [[cite:jules.models]].
+- **Task caps.** Fifteen a day on free. A hundred on AI Pro. Three hundred on Ultra [[cite:jules.limits]].
+- **The Workspace problem.** Paid tiers go to personal Google accounts, while Workspace users get pointed at an interest form [[cite:jules.accounts]], which is awkward for any company whose engineers sign in with a work Google identity.
+- **Pricing comes bundled.** You get paid Jules by subscribing to Google AI Pro ($19.99) or AI Ultra ($99.99 and up) [[cite:jules.pricing]]. Fine for a person. Odd for a team budget.
+
+Short version. Great personal tool. Harder to run as team infrastructure.
+"""
+
+[[section]]
+heading = "The ranked list"
+body = "Ranked for small engineering teams that want background work on shared repos. Not for hobby projects."
+
+[[section]]
+level = 3
+heading = "1. Jiro: small teams already on Claude or ChatGPT"
+body = """
+- Runs Claude Code, Codex or Cursor [[cite:jiro.harnesses]].
+- Model usage lands on the Claude or ChatGPT account you already hold, or an API key. Cursor wants its own key [[cite:jiro.credentials]].
+- Zero markup on tokens [[cite:jiro.no-markup]].
+- Its own cloud machine per conversation, repos and tools included [[cite:jiro.environment]].
+- Kicks off from a Slack mention, the web app, Discord, your terminal, a cron schedule or an incoming webhook [[cite:jiro.surfaces]].
+- Returns pull requests, commits and comments for review [[cite:jiro.outputs]].
+
+Small-team pricing. Two plans, flat, no per-task meter.
+
+Google-friendly, too. Drive, Sheets and Gmail are in the integration list [[cite:jiro.integrations]], so leaving Jules doesn't mean leaving Google.
+"""
+
+[[section]]
+level = 3
+heading = "2. Codex cloud: the ChatGPT house option"
+body = """
+- OpenAI-hosted machine per task [[cite:codex.where]].
+- Bundled from ChatGPT Plus at $20 [[cite:codex.pricing]].
+- OpenAI models only; cloud needs a ChatGPT plan [[cite:codex.models]].
+"""
+
+[[section]]
+level = 3
+heading = "3. Claude Code on the web: Anthropic's own"
+body = """
+- Runs on Anthropic infrastructure, keeps going with the lid shut [[cite:claude-code.where]].
+- Comes with Pro, Max, Team and Enterprise [[cite:claude-code.pricing]].
+- Claude only. Anthropic account required [[cite:claude-code.models]].
+"""
+
+[[section]]
+level = 3
+heading = "4. Cursor cloud agents: editor first, cloud second"
+body = """
+- Full dev environments in Cursor's cloud, or self-hosted workers [[cite:cursor.where]].
+- PRs with screenshots and video [[cite:cursor.prs]].
+- Usage billed at API prices on top of a $30-plus tier [[cite:cursor.pricing]].
+"""
+
+[[section]]
+level = 3
+heading = "5. GitHub Copilot cloud agent: the label-an-issue equivalent"
+body = """
+- Like the jules label, but GitHub's own, planning and coding inside GitHub Actions [[cite:copilot.what]].
+- Draft PRs. It can't merge them [[cite:copilot.prs]].
+- Sessions stop at 59 minutes [[cite:copilot.where]].
+"""
+
+[[section]]
+level = 3
+heading = "6. Devin: maximum autonomy"
+body = """
+- Cognition routes across several vendors and its own models [[cite:devin.models]].
+- Maintains its own PRs, including stacked ones [[cite:devin.prs]].
+- Free to $200 a month, with team seats [[cite:devin.pricing]].
+"""
+
+[[section]]
+level = 3
+heading = "7. OpenHands: open source"
+body = """
+- MIT-licensed platform [[cite:openhands.what]].
+- Run it locally, hosted, or in your VPC on Enterprise [[cite:openhands.where]].
+- Hosted free tier gives one user 10 conversations a day [[cite:openhands.pricing]].
+"""
+
+[[section]]
+heading = "If your company lives in Google"
+body = """
+Plenty of teams pick Jules because everything else is Google already. Docs in Drive. Planning in Sheets. Mail in Gmail. Makes sense.
+
+But the agent and the office suite don't have to come from the same vendor.
+
+What matters for a Google-heavy team:
+
+- **Identity.** Check how your engineers sign in. Paid Jules is aimed at personal accounts for now [[cite:jules.accounts]].
+- **Data access.** Can the agent read the spreadsheet with the customer IDs? With Jiro, an admin connects Drive, Sheets and Gmail once [[cite:jiro.integrations]], and remote tools can be added from the MCP catalog [[cite:jiro.mcp]].
+- **Model choice.** Gemini lives inside Jules [[cite:jules.models]]. Everything else on this list runs Claude, GPT or a mix.
+- **Shared context.** A personal agent knows what you told it this morning; a team agent should know the house rules, which is why Nori keeps one org-wide set of skills and instructions that every session starts with [[cite:jiro.skillsets]].
+
+None of this argues against Google. It argues for picking the agent on its own merits.
+"""
+
+[[section]]
+heading = "Choosing: a quick checklist"
+body = """
+Answer these in order.
+
+- Must it be Gemini? Stay on Jules.
+- Does everyone sign in with Workspace? Check Jules' account rules before planning a rollout.
+- Already paying Claude or ChatGPT? Use that plan, through Jiro or the vendor's own cloud agent.
+- Want several harnesses behind one Slack handle? Jiro.
+- Live in GitHub issues? Copilot.
+- Need to self-host? OpenHands.
+
+One more. Count your tasks per day across the team, because a daily cap that feels generous for one developer can bite hard once ten people start delegating chores to the same agent.
+"""
+
+[[section]]
+heading = "Why Jiro ranks first"
+body = """
+It fixes the three Jules pinch points at once: model lock-in, per-person caps, and personal-account billing.
+
+- **Taste over volume.** Jiro is meant to produce the change you would have made yourself on a good day. It flags missteps early.
+- **Built for the backlog nobody loves.** Docs. Tests. Slop. Small tickets. On-call fixes.
+- **Proof.** Miravoice, a Nori customer, gets 25%+ of its merged PRs from the agent and saves around five hours a week [[cite:jiro.miravoice]].
+- **Flat team pricing.** Thirty-day free trial, then Developer at $99 or Team at $250 a month [[cite:jiro.pricing]]. Idle runtimes sleep [[cite:jiro.runtimes]].
+- **Single-tenant.** Each org gets its own broker [[cite:jiro.single-tenant]].
+- **Logged.** Every session and action is recorded and searchable [[cite:jiro.audit]].
+
+Also: a production bug caught Corvus's CTO mid client dinner, so he had Nori look into it, and Nori shipped the fix [[cite:jiro.corvus]]. That's the job. Work keeps moving when nobody is at a desk.
+"""
+
+[[section]]
+heading = "Reasons to stay on Jules"
+body = """
+- You want Gemini specifically.
+- You're one developer on a personal Google account.
+- The free tier covers you.
+- The jules issue label is your favorite feature.
+
+All good reasons. Keep it.
+"""
+
+[[section]]
+heading = "Moving off Jules"
+body = "Decided? The [Jules-to-Jiro quickstart](https://jiro.bot/switch/jules-to-jiro) covers setup, gotchas and a first week."
+
+[[faq]]
+q = "What are the best Jules alternatives?"
+a = "Jiro first, for small teams that already pay for Claude or ChatGPT. Behind it: OpenAI's Codex, Anthropic's hosted Claude Code sessions, Cursor's cloud agents, Copilot, Devin and OpenHands."
+
+[[faq]]
+q = "Who competes with Google Jules?"
+a = "The big labs and the dev-tool companies. OpenAI and Anthropic each host their own cloud agent; Cursor, GitHub and Cognition sell theirs; OpenHands is the open-source option; and multi-harness background agents such as Jiro sit across all of them."
+
+[[faq]]
+q = "How much does Jules cost?"
+a = "Free with daily limits. Paid tiers come through Google AI Pro at $19.99 a month or AI Ultra from $99.99 a month [[cite:jules.pricing]]."
+
+[[faq]]
+q = "Can Google Workspace accounts use paid Jules?"
+a = "Not directly, per Google's usage-limits page: paid tiers are for personal accounts, and Workspace users are sent to an interest form [[cite:jules.accounts]]."
+
+[[faq]]
+q = "Is there a Jules alternative that isn't Gemini-only?"
+a = "Most of them. Jiro runs Claude Code, Codex or Cursor; Devin and OpenHands also mix model vendors."
+
+[[faq]]
+q = "Does Jiro have task limits like Jules?"
+a = "Jiro's plans are sized by runtimes rather than a daily task count [[cite:jiro.runtimes]]. Your model provider's own usage limits still apply."

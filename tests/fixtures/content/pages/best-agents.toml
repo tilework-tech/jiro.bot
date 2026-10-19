@@ -1,0 +1,14 @@
+slug = "best/background-coding-agents"
+family = "best"
+title = "Best background coding agents (2026)"
+description = "A ranked list of background coding agents."
+question = "What are the best background coding agents?"
+answer = "Jiro is our pick for teams that want their own subscription. Jiro is a background coding agent by Nori."
+
+[[section]]
+heading = "The list"
+body = "Acme Agent is another option you can hand work to from chat. [[cite:acme.surfaces]] [[fact:acme.cli]]"
+
+[[faq]]
+q = "What is a background coding agent?"
+a = "An agent that works on its own in the cloud."

@@ -1,0 +1,134 @@
+slug = "switch/claude-tag-to-jiro"
+family = "switch"
+title = "Switching from Claude Tag to Jiro (2026): A Two-Week Side-by-Side Pilot"
+description = "A 14-day pilot plan for moving from Claude Tag to Jiro: what carries over, setup steps, starter tasks, metrics to record and an honest list of trade-offs."
+question = "How do I switch from Claude Tag to Jiro?"
+answer = "Do not cut over in one step. Keep Claude Tag in its current channels, stand Jiro up in a neighboring channel on the Claude or ChatGPT login the team already pays for, route comparable tasks to each for two weeks, and decide from recorded results. Jiro is a background coding agent by Nori. Its target is small teams of roughly 5 to 20 engineers on Claude or ChatGPT."
+
+[[section]]
+heading = "Pilot scope"
+body = """
+Duration: 14 calendar days. Participants: three to six engineers, one of whom acts as pilot lead. Channels: the existing Claude Tag channel stays untouched; one new channel is created for Jiro.
+
+Objective: establish, with numbers, whether Jiro produces mergeable work at a predictable cost for this team's repositories. Not whether it is impressive in a demo. Demos are cheap.
+
+Exit criteria are fixed before day one and written into the channel topic. A reasonable default: Jiro is adopted if its merge rate is at least equal to Claude Tag's on comparable tasks and the total monthly cost is lower or flat.
+"""
+
+[[section]]
+heading = "What carries over, and what has to be rebuilt"
+body = """
+Most of a Claude Tag setup lives in three places: the repository, Anthropic's admin console and Slack. Each moves differently.
+
+- **Repository CLAUDE.md files.** These travel with the code. Jiro runs Claude Code [[cite:jiro.harnesses]] against a clone of the repo, so committed instructions are present on the first task.
+- **Skills added in the Tag admin console.** Copy them by hand into an org skillset. Nori converts the skillset into the instruction-file format each harness expects [[cite:jiro.translation]].
+- **Connectors, plugins and remote MCP servers.** Reconnect each from Jiro's integrations page or MCP catalog [[cite:jiro.mcp]]. Linear, Jira, Notion and Google are among the listed integrations [[cite:jiro.integrations]].
+- **Scheduled routines.** Recreate them as cron triggers [[cite:jiro.triggers]].
+- **Channel watches and single-PR subscriptions.** No direct equivalent is documented. Where the intent was "react when something happens," a webhook usually fits. Where it was "keep an eye on this channel," expect a gap.
+- **GitHub access.** Install Jiro's GitHub App and select repositories [[cite:jiro.github]]. The Claude GitHub App stays installed for Tag during the pilot.
+- **Repo hooks and `.mcp.json`.** Tag skips these [[cite:claude-tag.fixed-harness]]. Teams that worked around that by moving setup elsewhere can now put it in the org setup script [[cite:jiro.setup-script]]. Verify behavior on a real task rather than assuming it.
+- **Spend limits.** Not carried over, and mostly unnecessary on a flat plan. The subscription's own usage limits still apply.
+
+Slack thread history is unaffected. Old Tag threads remain readable where they are.
+"""
+
+[[section]]
+heading = "Day 1: setup"
+body = """
+Plan for one sitting. Steps in order:
+
+- **1. Open a trial account.** It lasts a month and asks for no card [[cite:jiro.pricing]].
+- **2. Connect GitHub.** Install the GitHub App; choose all repositories or a selected set. For the pilot, select only the repos in scope.
+- **3. Connect Slack.** Add Jiro to the workspace and invite it to the new pilot channel only.
+- **4. Connect a model login.** For Claude, run `claude setup-token` on a local machine first; it issues a one-year token linked to the Pro, Max, Team or Enterprise plan [[cite:anthropic.setup-token]]. Connect that token in Jiro. Other routes: Codex sign-in via OAuth, raw keys from OpenAI or Anthropic, or, for the Cursor harness only, a Cursor key [[cite:jiro.credentials]].
+- **5. Draft the org setup script.** Have it install the dependencies, CLIs and services every task needs [[cite:jiro.setup-script]]. Keep it short at first.
+- **6. Add shared context.** Move the copied Tag skills into a skillset. Optionally add Jiro's own engineering skills with `npx nori-skillsets install public/jiro`.
+- **7. Run a first task.** A small documentation fix in a familiar repo. Confirm a pull request arrives [[cite:jiro.outputs]] and that CI runs on it.
+
+If step 7 fails, fix the setup script before routing real work. Most early failures are missing dependencies.
+"""
+
+[[section]]
+heading = "Routing rule for the pilot"
+body = """
+Comparable tasks go to both tools, alternately. Odd-numbered tickets to Tag, even-numbered to Jiro, or any equally boring rule. Hand-picking which tool gets the "easy" ticket ruins the data.
+
+Once a week, give the same task to both. One paired comparison per week is enough. More than that wastes reviewer time.
+"""
+
+[[section]]
+heading = "Week one: low-risk work"
+body = """
+The first week tests setup and review flow, not raw capability.
+
+- Fill a documentation gap someone has complained about twice.
+- Add missing tests around a module with low coverage.
+- Clean up dead code or duplicated helpers flagged in a recent review.
+- Close two or three small tickets that have sat in the backlog for a month.
+- Take one on-call fix, ideally started from a webhook from your CI or alerting [[cite:jiro.triggers]].
+
+Expect friction in the first two days. Setup scripts rarely survive first contact with a real monorepo.
+"""
+
+[[section]]
+heading = "Week two: real work and measurement"
+body = """
+Move to tickets the team would have done anyway. Include at least one task that needs an integration such as Linear or Jira, and one scheduled job.
+
+Record the following per task, in a shared sheet, for both tools:
+
+- Time from request to first pull request.
+- Review rounds before merge, or "abandoned."
+- Whether the change matched what a teammate would have written, rated by the reviewer.
+- Model usage consumed, from the Claude Tag spend dashboard and from the subscription's usage page.
+
+Jiro is designed to question a weak plan and raise concerns early. Log those interruptions too. Some are useful; some are noise, and the ratio matters.
+"""
+
+[[section]]
+heading = "What the team gives up"
+body = """
+Leaving Tag has real costs. They should be written down before the decision, not after.
+
+- **Shared visibility.** Tag lets anyone in a channel tag @Claude and the whole channel sees the reply [[cite:claude-tag.what]]. Jiro also works in Slack threads [[cite:jiro.slack-threads]], but teams used to Tag's channel culture will need to rebuild the habit.
+- **Proactive watches.** Tag's channel watches and PR subscriptions [[cite:claude-tag.routines]] have no documented counterpart.
+- **GitLab.** Tag supports GitLab through a service-account token [[cite:claude-tag.prs]]. Jiro's documented path is GitHub.
+- **Self-hosted runners.** Tag can run inside the company network [[cite:claude-tag.self-hosted]]. Jiro runs in Nori's cloud, one tenant per org [[cite:jiro.single-tenant]].
+- **One fewer vendor.** Tag is part of the Anthropic contract. Jiro adds a second supplier.
+"""
+
+[[section]]
+heading = "Cost comparison"
+body = """
+Claude Tag charges channel work by usage against an organization balance [[cite:claude-tag.billing]], and Team plans must prepay before Claude responds [[cite:claude-tag.prefund]]. Record the two-week Tag spend directly from the admin dashboard.
+
+Jiro is flat: Developer $99 a month, Team $250 a month with five shared runtimes [[cite:jiro.pricing]]. Model tokens come from the team's own subscription with no added markup [[cite:jiro.no-markup]]. If a Max login hits its cap, overflow is billed as extra usage at standard API pricing [[cite:anthropic.extra-usage]], so record that line too.
+
+Compare like for like: Tag spend plus Claude seats, against Jiro plan plus the same seats plus any extra usage.
+"""
+
+[[section]]
+heading = "Day 14: the decision"
+body = """
+Three outcomes are acceptable. Adopt Jiro and retire the Tag channel. Keep Tag and let the Jiro trial lapse; there is no card on file, so nothing converts. Or keep both, with a written rule about which work goes where.
+
+The fourth outcome, "keep both indefinitely with no rule," is not acceptable. It doubles the review surface.
+
+For a wider view of the field before deciding, the [Claude Tag alternatives](https://jiro.bot/alternatives/claude-tag) list covers six other options.
+"""
+
+[[faq]]
+q = "Can Claude Tag and Jiro run in the same Slack workspace?"
+a = "Yes. Keep them in separate channels during the pilot so results stay attributable."
+
+[[faq]]
+q = "Do I need a Claude Team plan to use Jiro?"
+a = "No. Any Pro, Max, Team or Enterprise plan works through `claude setup-token` [[cite:anthropic.setup-token]], and ChatGPT logins or API keys work too [[cite:jiro.credentials]]."
+
+[[faq]]
+q = "Will our Claude Tag skills work in Jiro?"
+a = "Not automatically. Copy them into an org skillset; it is then translated into each agent's instruction file [[cite:jiro.translation]]."
+
+[[faq]]
+q = "What happens to the trial if we decide against Jiro?"
+a = "It ends after 30 days. No card was collected, so nothing is charged [[cite:jiro.pricing]]."

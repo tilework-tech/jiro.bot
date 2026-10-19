@@ -1,0 +1,50 @@
+name = "Cursor cloud agents"
+
+[[fact]]
+id = "rename"
+text = "Cursor now calls its background agents Cloud Agents."
+short = "Background agents renamed Cloud Agents"
+source = "https://cursor.com/help/ai-features/background-agents"
+checked = "2026-10-16"
+
+[[fact]]
+id = "where"
+text = "Cursor cloud agents run in isolated cloud VMs with full development environments, or on self-hosted workers while Cursor runs the agent loop."
+short = "Cursor cloud VMs or self-hosted workers"
+source = "https://cursor.com/docs/cloud-agent.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "models"
+text = "Cloud agents are charged at API pricing for the selected model, and Cursor's custom API keys only work with chat models."
+short = "Billed at API prices for the chosen model; own keys chat-only"
+source = "https://cursor.com/docs/settings/api-keys"
+checked = "2026-10-16"
+
+[[fact]]
+id = "surfaces"
+text = "Cloud agents start from the Cursor desktop app, the web, iOS, Slack, Microsoft Teams, GitHub and Bitbucket comments, Linear and an API, on GitHub, GitLab, Bitbucket or Azure DevOps repos."
+short = "Desktop, web, mobile, Slack, Teams, GitHub, Linear, API"
+source = "https://cursor.com/docs/cloud-agent.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "pricing"
+text = "Cursor is sold as part of The X Subscription; cloud agents need the Premium tier ($30 a month) or higher, and third-party models are billed from prepaid credit at API list price."
+short = "Premium $30/mo+ (X Subscription) plus API-priced usage"
+source = "https://cursor.com/docs/models-and-pricing.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "legacy"
+text = "Customers on Cursor's legacy Pro, Pro+ and Teams plans can keep them; switching to the new plans is optional but permanent."
+short = "Legacy plans still honoured"
+source = "https://cursor.com/docs/account/pricing/legacy-cursor-plans.md"
+checked = "2026-10-16"
+
+[[fact]]
+id = "prs"
+text = "Cursor cloud agents produce merge-ready PRs with screenshots, videos and logs, and open a PR in each repo they touch."
+short = "PRs with screenshots and video"
+source = "https://cursor.com/docs/cloud-agent.md"
+checked = "2026-10-16"

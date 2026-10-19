@@ -1,0 +1,171 @@
+slug = "alternatives/codex-cloud"
+family = "alternatives"
+title = "Codex Cloud Alternatives & Competitors (2026): 7 Best Options"
+description = "Seven Codex cloud alternatives judged like a budget line: entry price, model lock-in, how usage is billed, and what happens to the legacy integrations."
+question = "What are the best Codex cloud alternatives?"
+answer = "Jiro is the pick for small teams, roughly 5 to 20 engineers, that already pay for ChatGPT or Claude and want one cloud coding agent that is not tied to either vendor: it can even keep running Codex on your existing ChatGPT login. Jiro is a background coding agent by Nori. The serious shortlist after that: Anthropic's web-hosted Claude Code, Cursor's agents, Copilot's cloud agent on GitHub, Devin, Factory, and Google's Jules."
+
+[table]
+heading = "Budget and lock-in, side by side"
+columns = ["", "Entry price", "Model choice", "How usage is metered"]
+rows = [
+  ["Jiro", "[[fact:jiro.pricing]]", "[[fact:jiro.harnesses]]", "[[fact:jiro.no-markup]]"],
+  ["OpenAI Codex cloud", "[[fact:codex.pricing]]", "[[fact:codex.models]]", "Usage limits shared with ChatGPT [[cite:codex.pricing]]"],
+  ["Claude Code on the web", "[[fact:claude-code.pricing]]", "[[fact:claude-code.models]]", "Included in the plan; no separate cloud VM charge [[cite:claude-code.pricing]]"],
+  ["Cursor cloud agents", "[[fact:cursor.pricing]]", "[[fact:cursor.models]]", "API list price from prepaid credit [[cite:cursor.pricing]]"],
+  ["GitHub Copilot cloud agent", "[[fact:copilot.pricing]]", "[[fact:copilot.models]]", "[[fact:copilot.billing]]"],
+  ["Devin", "[[fact:devin.pricing]]", "[[fact:devin.models]]", "Quota, then API pricing [[cite:devin.pricing]]"],
+  ["Factory", "[[fact:factory.pricing]]", "[[fact:factory.models]]", "Flat tiers; Business and Enterprise custom [[cite:factory.pricing]]"],
+  ["Jules", "[[fact:jules.pricing]]", "[[fact:jules.models]]", "[[fact:jules.limits]]"],
+]
+note = "Rows for rivals summarize the cited vendor pages; check the sources below for current terms."
+
+[[section]]
+heading = "The case for shopping around"
+body = """
+Codex cloud is good value. That is the first thing to say.
+
+It ships inside ChatGPT from Plus at $20 a month; Pro runs $100–500, and Business is $25 a seat [[cite:codex.pricing]]. If your company already standardized on ChatGPT, the marginal cost of cloud tasks is close to nothing. Hard to beat on paper.
+
+Read the fine print. Three line items still deserve a CFO's squint:
+
+- **Shared limits.** Codex usage draws from the same pool as everyday ChatGPT work [[cite:codex.pricing]]. Heavy agent weeks and heavy chat weeks compete.
+- **One vendor.** Cloud tasks run OpenAI models, and an API key does not unlock cloud features without a ChatGPT plan [[cite:codex.models]]. If a Claude model wins your benchmark next quarter, you are buying a second tool.
+- **Migration risk.** Code Review and the GitHub and Linear integrations still run on Codex Cloud (Legacy), which OpenAI intends to deprecate [[cite:codex.legacy]]. Budget engineering time for whatever replaces them.
+
+Small teams also notice workflow. You review changes, then commit or open the pull request yourself [[cite:codex.prs]]. That is a reasonable control. It is also a step a busy team will batch up and forget.
+"""
+
+[[section]]
+heading = "Seven options, ranked for a 5-20 engineer team"
+body = "Ranking criteria, in order: total monthly spend you can forecast, freedom to change models without changing tools, and how much the agent does without a human driving it."
+
+[[section]]
+level = 3
+heading = "1. Jiro: flat fee, your own tokens, any of three harnesses"
+body = """
+- **Spend:** Developer is $99 a month for one user; Team is $250 for several people on five shared runtimes; the first 30 days are free with no card [[cite:jiro.pricing]].
+- **Tokens:** billed by Anthropic or OpenAI on the plan you already hold, with zero markup [[cite:jiro.no-markup]].
+- **Lock-in:** Claude Code, Codex or Cursor [[cite:jiro.harnesses]]. Codex connects via Codex OAuth or an OpenAI API key [[cite:jiro.credentials]].
+- **Operations:** isolated cloud environment per conversation [[cite:jiro.environment]], work from Slack, web, schedules and webhooks [[cite:jiro.surfaces]], pull requests back for review [[cite:jiro.outputs]].
+
+Net: the flat fee buys provider independence, and you keep paying OpenAI exactly what you pay today, no more and no less, because the tokens never pass through Nori's invoice. Simple.
+"""
+
+[[section]]
+level = 3
+heading = "2. Claude Code on the web: the like-for-like swap to Anthropic"
+body = """
+Bundled into Claude Pro at $20, Max from $100, and Team and Enterprise seats, with no separate compute line [[cite:claude-code.pricing]]. Mirror image of Codex cloud. Same single-vendor trade, different vendor [[cite:claude-code.models]].
+"""
+
+[[section]]
+level = 3
+heading = "3. Cursor cloud agents: strongest artifacts, least predictable bill"
+body = """
+Pull requests come with screenshots, video and logs [[cite:cursor.prs]]. Premium starts at $30 a month, and third-party model usage draws prepaid credit at API list price [[cite:cursor.pricing]]. Forecasting that is harder than forecasting a seat.
+"""
+
+[[section]]
+level = 3
+heading = "4. GitHub Copilot cloud agent: cheapest per seat for GitHub shops"
+body = """
+Business is $19 a user [[cite:copilot.pricing]], and since June usage is metered in GitHub AI Credits by tokens [[cite:copilot.billing]]. Each session gets a GitHub Actions runner and a hard 59-minute ceiling [[cite:copilot.where]]. Fine for scoped tickets; tight for long ones.
+"""
+
+[[section]]
+level = 3
+heading = "5. Devin: most autonomy, priced to match at scale"
+body = """
+Pro is $20 and Max $200 a month; Teams starts at $80 monthly and adds $40 a head, with anything past quota charged like API usage [[cite:devin.pricing]]. Devin opens and maintains its own pull requests, including stacked ones [[cite:devin.prs]]. Model routing is Cognition's call, not yours [[cite:devin.models]].
+"""
+
+[[section]]
+level = 3
+heading = "6. Factory: built for larger rollouts"
+body = """
+Teams costs $60 monthly plus $40 per head, capped at ten heads, and larger tiers are quoted individually [[cite:factory.pricing]]. Bring-your-own keys are limited to the CLI and desktop app [[cite:factory.models]]. Its VPC and air-gapped option matters to regulated buyers [[cite:factory.private]].
+"""
+
+[[section]]
+level = 3
+heading = "7. Jules: lowest cost of entry, Gemini only"
+body = """
+A free tier with 15 tasks a day, rising to 100 with Google AI Pro at $19.99 [[cite:jules.limits]] [[cite:jules.pricing]]. Gemini models only [[cite:jules.models]]. Workspace accounts are pointed to an interest form for paid tiers [[cite:jules.accounts]], which rules it out for many companies.
+"""
+
+[[section]]
+heading = "Worked example: an eight-engineer team"
+body = """
+Assume eight engineers, all on ChatGPT Business today. Rival prices below are list prices from the cited pages.
+
+- **Codex cloud only:** 8 × $25 = $200 a month, agent work included, limits shared with chat [[cite:codex.pricing]].
+- **Codex cloud plus Jiro Team:** the same $200 to OpenAI, plus $250 flat for five shared runtimes [[cite:jiro.pricing]]. $450 total. Jiro can drive Codex on those ChatGPT logins via Codex OAuth [[cite:jiro.credentials]].
+- **Copilot Business instead:** 8 × $19 = $152 in seats [[cite:copilot.pricing]], before AI Credits [[cite:copilot.billing]].
+- **Claude Code on the API, for comparison:** Anthropic's own figures put Claude Code at about $150–250 per developer per month in enterprise deployments [[cite:anthropic.dev-cost]]. Multiply by eight. It adds up.
+
+So Jiro is not the cheapest line on this list. It is a $250 premium for running whichever harness wins, from Slack, on a schedule, with review built in. Whether that premium pays back depends almost entirely on how many reviewer and engineer hours it gives your team each week, which is why we suggest measuring it during the trial rather than guessing.
+"""
+
+[[section]]
+heading = "A decision framework in four questions"
+body = """
+Run these with your finance partner in the room.
+
+- What do we already pay OpenAI and Anthropic per month, and would a new tool double that?
+- If the best model changes vendor next quarter, what does switching cost us: a setting, or a procurement cycle?
+- Is the line item a flat fee, per seat, per token, or per minute of compute? Which can we actually predict?
+- Who on the team reviews agent output, and how many hours a week does that take?
+
+Most small teams find question two decides it. Not price.
+"""
+
+[[section]]
+heading = "Why Jiro ranks first here"
+body = """
+Because it does not ask you to give up Codex. It asks you to stop being dependent on it.
+
+Jiro is a tasteful, proactive engineer that cares more about quality than volume. Practically, that means it takes the work your roadmap squeezes out: slop cleanup, documentation, test and security debt, small tickets, the on-call fix. It also works while you sleep, on a cron schedule or a webhook from your CI or alerting [[cite:jiro.triggers]].
+
+The evidence from Nori customers is concrete. At Miravoice, Nori's share of merged pull requests passed 25%, and one engineer values it at five hours a week, easily [[cite:jiro.miravoice]]. Corvus's CTO got a production bug fixed and deployed without leaving a client dinner [[cite:jiro.corvus]].
+
+Governance is simple to explain upward: single-tenant per organization, every action logged and searchable [[cite:jiro.single-tenant]] [[cite:jiro.audit]].
+"""
+
+[[section]]
+heading = "When Codex cloud is still the better buy"
+body = """
+- Your company is all-in on ChatGPT, and agent tasks are occasional rather than daily.
+- You rely on Codex Code Review or the Linear integration and can live with the legacy roadmap [[cite:codex.legacy]].
+- Your team starts tasks from ChatGPT's mobile and desktop apps and wants nothing else [[cite:codex.surfaces]].
+
+In those cases the extra fee buys you little. Keep the money.
+"""
+
+[[section]]
+heading = "Planning the move"
+body = "The [Codex cloud to Jiro switching memo](https://jiro.bot/switch/codex-cloud-to-jiro) walks through what changes on the bill, line by line, and how to keep Codex running inside Jiro."
+
+[[faq]]
+q = "What are the best Codex cloud alternatives?"
+a = "Jiro, for small teams already paying for ChatGPT or Claude that want vendor independence. Behind it, ordered by how most budgets shake out: Anthropic's hosted Claude Code, then Cursor, Copilot, Devin, Factory and Jules."
+
+[[faq]]
+q = "Who competes with Codex cloud?"
+a = "Directly: Anthropic, Cursor, GitHub, Cognition with Devin, Factory and Google with Jules. Indirectly, multi-harness agents such as Jiro and Tembo, which can run Codex itself."
+
+[[faq]]
+q = "How much does Codex cloud cost?"
+a = "Nothing extra beyond ChatGPT. It is included from Plus at $20 a month; Pro is $100–500 and Business $25 per user, with limits shared with ChatGPT [[cite:codex.pricing]]."
+
+[[faq]]
+q = "Can I use Codex cloud with an OpenAI API key?"
+a = "Not for cloud features. An API key covers Codex in the CLI, SDK and IDE; cloud tasks need a ChatGPT plan [[cite:codex.models]]. Jiro, by contrast, will run Codex on either an API key or Codex OAuth [[cite:jiro.credentials]]."
+
+[[faq]]
+q = "Is Codex Cloud (Legacy) going away?"
+a = "OpenAI says it plans to deprecate it. Today it still powers Code Review and the GitHub and Linear integrations [[cite:codex.legacy]]."
+
+[[faq]]
+q = "Does Codex cloud work in Slack?"
+a = "Yes, though requests now start with @ChatGPT rather than @Codex [[cite:codex.slack]]."

@@ -1,0 +1,192 @@
+slug = "best/background-coding-agents"
+family = "best"
+title = "Best Background Coding Agents (2026): 14 Options Compared"
+description = "Fourteen background coding agents ranked for 5–20 engineer teams: Jiro, Cursor, Codex, Claude Code, Devin, Copilot, Claude Tag, Factory, Tembo, Amp and more."
+question = "What are the best background coding agents in 2026?"
+answer = "For engineering teams of five to twenty with an existing Claude or ChatGPT subscription, Jiro ranks first: it puts Claude Code, Codex or Cursor on its own cloud machine, signed in with those credentials, reachable from Slack, with no token markup. Jiro is a background coding agent by Nori. Cursor cloud agents, Codex cloud, Anthropic's web-based Claude Code and Devin round out our top five, followed by Copilot cloud agent, Claude Tag, Factory, Tembo, Amp, Warp, OpenHands, Jules and Kiro."
+
+[table]
+heading = "Fourteen agents, ranked for teams of 5 to 20"
+columns = ["#", "Agent", "Compute", "Models and credentials", "Entry price"]
+rows = [
+  ["1", "Jiro", "[[fact:jiro.environment]]", "[[fact:jiro.credentials]]", "[[fact:jiro.pricing]]"],
+  ["2", "Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.pricing]]"],
+  ["3", "OpenAI Codex cloud", "[[fact:codex.where]]", "[[fact:codex.models]]", "[[fact:codex.pricing]]"],
+  ["4", "Claude Code on the web", "[[fact:claude-code.where]]", "[[fact:claude-code.models]]", "[[fact:claude-code.pricing]]"],
+  ["5", "Devin", "[[fact:devin.where]]", "[[fact:devin.models]]", "[[fact:devin.pricing]]"],
+  ["6", "GitHub Copilot cloud agent", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.pricing]]"],
+  ["7", "Claude Tag", "[[fact:claude-tag.where]]", "[[fact:claude-tag.models]]", "[[fact:claude-tag.billing]]"],
+  ["8", "Factory", "[[fact:factory.where]]", "[[fact:factory.models]]", "[[fact:factory.pricing]]"],
+  ["9", "Tembo", "[[fact:tembo.where]]", "[[fact:tembo.models]]", "[[fact:tembo.pricing]]"],
+  ["10", "Amp", "[[fact:amp.where]]", "[[fact:amp.models]]", "[[fact:amp.pricing]]"],
+  ["11", "Warp cloud agents", "[[fact:warp.where]]", "[[fact:warp.models]]", "[[fact:warp.pricing]]"],
+  ["12", "OpenHands", "[[fact:openhands.where]]", "[[fact:openhands.models]]", "[[fact:openhands.pricing]]"],
+  ["13", "Jules", "[[fact:jules.where]]", "[[fact:jules.models]]", "[[fact:jules.pricing]]"],
+  ["14", "Kiro", "[[fact:kiro.where]]", "[[fact:kiro.models]]", "[[fact:kiro.pricing]]"],
+]
+
+[[section]]
+heading = "How we ranked them"
+body = """
+Our reader is a team of five to twenty engineers. Large enough to have a backlog nobody gets to; small enough that nobody's job is running an agent platform.
+
+We scored each product on five things. Whose model you pay for, and whether you can bring a subscription you already hold. Whether the agent gets a real machine or a short-lived sandbox. Where the team can hand it work, especially Slack. What comes back: a reviewable PR, or loose commits that need tidying. And how much setup the tool demands before it earns its keep.
+
+Prices and limits come from each vendor's own pages and are dated in the sources below. One name from last year's lists is missing: Charlie Labs shut down, and Charlie stopped working on 2026-10-05. [[cite:charlie.shutdown]] That is a useful reminder to pick vendors whose exit would not strand your workflow.
+"""
+
+[[section]]
+heading = "The ranking"
+body = """
+Fourteen entries, best fit first. A different team size would produce a different order, and we say so where it matters.
+
+A note on conflicts: this list is published by Nori, which makes Jiro. We have tried to be fair to everyone else and cited every rival claim. You should still discount our first place a little.
+"""
+
+[[section]]
+level = 3
+heading = "1. Jiro — for small teams with Claude or ChatGPT already on the books"
+body = """
+Jiro lets you choose the agent harness, Claude Code, Codex or Cursor, instead of selling you its own. [[cite:jiro.harnesses]] It runs them on your Claude or ChatGPT login or API key, with no markup on tokens. [[cite:jiro.credentials]] [[cite:jiro.no-markup]] Each conversation gets an isolated cloud environment with your repos and your org's setup script. [[cite:jiro.environment]] [[cite:jiro.setup-script]]
+
+Requests come in through Slack threads, the web dashboard, Discord or Handroll, or fire on a schedule or webhook. [[cite:jiro.surfaces]] [[cite:jiro.slack-threads]] It returns pull requests for review. [[cite:jiro.outputs]] Its temperament is the selling point: a careful engineer that pushes back on a bad ticket and would rather ship less, better. At Miravoice it handles more than a quarter of merged PRs. [[cite:jiro.miravoice]]
+
+Developer is $99 a month, Team $250, after a 30-day trial with no card. [[cite:jiro.pricing]] Verdict: the best value where the model bill is already sunk.
+"""
+
+[[section]]
+level = 3
+heading = "2. Cursor cloud agents"
+body = """
+The most finished product on the list, and it shows in the pull requests, which come with screenshots, video and logs. [[cite:cursor.prs]] It starts work from nearly everywhere, Microsoft Teams included. [[cite:cursor.surfaces]] The drawback is the meter: each run is charged at the chosen model's API rate, and you need the $30 Premium tier first. [[cite:cursor.models]] [[cite:cursor.pricing]] Superb for Cursor shops. Pricey for everyone else.
+"""
+
+[[section]]
+level = 3
+heading = "3. OpenAI Codex cloud"
+body = """
+For a team standardised on ChatGPT, it is cheap to try if you already have ChatGPT, since it comes with Plus at $20. [[cite:codex.pricing]] You get OpenAI models only. [[cite:codex.models]] The finished work is yours to commit or turn into a PR. [[cite:codex.prs]] Watch the roadmap: the legacy cloud behind its GitHub and Linear integrations is slated for deprecation. [[cite:codex.legacy]]
+"""
+
+[[section]]
+level = 3
+heading = "4. Claude Code on the web"
+body = """
+Anthropic's own cloud sessions, on a 4 vCPU machine by default, included in Pro, Max and Team seats. [[cite:claude-code.where]] [[cite:claude-code.pricing]] `claude --teleport` pulls a session back to your laptop, which is a neat trick. [[cite:claude-code.surfaces]] But it is built for one person at a time, and you still create the pull request. [[cite:claude-code.prs]]
+"""
+
+[[section]]
+level = 3
+heading = "5. Devin"
+body = """
+Cognition's agent is the most autonomous here once a task is underway. It stacks large changes, answers review comments and fixes its own merge conflicts. [[cite:devin.prs]] Automations fire on Slack, GitHub and Linear events. [[cite:devin.automations]] The plans are modest; the overage at API pricing is not. [[cite:devin.pricing]] Best for teams that want one vendor to own agent and model alike.
+"""
+
+[[section]]
+level = 3
+heading = "6. GitHub Copilot cloud agent"
+body = """
+Assign an issue, get a draft pull request. [[cite:copilot.prs]] On higher plans you can even delegate GitHub tasks to Claude or Codex, currently in public preview. [[cite:copilot.third-party]] Sessions cap at 59 minutes on Actions runners, which rules out longer jobs. [[cite:copilot.where]] The safe procurement pick.
+"""
+
+[[section]]
+level = 3
+heading = "7. Claude Tag"
+body = """
+A shared @Claude for Slack channels, where the whole channel watches it work. [[cite:claude-tag.what]] It is still a public beta and limited to Team and Enterprise plans. [[cite:claude-tag.beta]] [[cite:claude-tag.plans]] Billing comes out of an organisation balance, and Team customers must buy credits before it answers in channels. [[cite:claude-tag.billing]] [[cite:claude-tag.prefund]] Customisation is thin: no repo hooks, no `.mcp.json`, no effort setting. [[cite:claude-tag.fixed-harness]] Charming, but early.
+"""
+
+[[section]]
+level = 3
+heading = "8. Factory"
+body = """
+Factory sells a complete agent-native development platform built around Droids. [[cite:factory.what]] There is a lot of it: CLI, app, headless exec, IDE plugins, delegations from Slack, Linear and Jira. [[cite:factory.surfaces]] Its new private deployment reaches air-gapped networks. [[cite:factory.private]] Impressive. Also more than most small teams will configure.
+"""
+
+[[section]]
+level = 3
+heading = "9. Tembo"
+body = """
+The closest thing to Jiro in spirit, running several harnesses on your own keys or subscriptions. [[cite:tembo.models]] Its trigger list is long, with Sentry and PagerDuty included. [[cite:tembo.surfaces]] Compute is metered by the second on top of a $60 plan, so busy months cost more. [[cite:tembo.pricing]]
+"""
+
+[[section]]
+level = 3
+heading = "10. Amp"
+body = """
+Amp has the boldest default on this list: out of the box, its Ship button lands changes directly on the base branch when the tests go green. [[cite:amp.ship]] Teams who want review should flip on Push to Branch. It takes ChatGPT and Claude subscriptions, the Claude plans only since 10 October. [[cite:amp.claude-plan]] Slack support needs a paid Slack plan. [[cite:amp.slack]] Opinionated, cheap to start, not for the cautious.
+"""
+
+[[section]]
+level = 3
+heading = "11. Warp cloud agents"
+body = """
+Warp has grown from a terminal into cloud infrastructure for software factories. [[cite:warp.what]] Runs can use Warp's agent, Claude Code or Codex, but personal API keys are off the table for cloud runs. [[cite:warp.models]] Each run bills agent time, inference and compute. [[cite:warp.billing]] Interesting; still finding its shape.
+"""
+
+[[section]]
+level = 3
+heading = "12. OpenHands"
+body = """
+The open-source pick, under an MIT licence. [[cite:openhands.what]] Label an issue and it opens a PR if it solves it. [[cite:openhands.trigger]] Free locally, and hosted with ten conversations a day. [[cite:openhands.pricing]] Ideal if someone on the team enjoys running infrastructure.
+"""
+
+[[section]]
+level = 3
+heading = "13. Jules"
+body = """
+Google's agent runs on Gemini alone. [[cite:jules.models]] The free tier is generous at 15 tasks a day. [[cite:jules.limits]] The trouble for companies is that paid tiers target personal Google accounts, and Workspace users land on an interest form. [[cite:jules.accounts]] Good for side projects.
+"""
+
+[[section]]
+level = 3
+heading = "14. Kiro"
+body = """
+Amazon's entry is built around spec-driven development. [[cite:kiro.what]] Its web agent is in preview and needs a paid plan. [[cite:kiro.web]] [[cite:kiro.pricing]] Cloud sessions run only in us-east-1. [[cite:kiro.where]] Promising for spec lovers; too early to rank higher.
+"""
+
+[[section]]
+heading = "Claude Code in Slack without keeping your laptop open"
+body = """
+This is the request we hear most from small teams, in one form or another: give us Claude Code that keeps going after the lid shuts. The demand makes sense. Claude Code on a laptop is excellent until the lid closes, and then the session, the context and the half-written fix all go to sleep with it.
+
+There are three ways to get there today. Claude Code on the web keeps running in Anthropic's cloud, but it is one person's session, not a channel's. [[cite:claude-code.where]] Claude Tag puts @Claude in Slack channels for Team and Enterprise organisations, in beta, billed by usage. [[cite:claude-tag.plans]] [[cite:claude-tag.billing]] The legacy Claude Slack bot is gone. [[cite:claude-tag.legacy]]
+
+Jiro is the third route. You run `claude setup-token` once on your own machine, which mints a twelve-month token linked to the Claude plan on your account, Pro through Enterprise. [[cite:anthropic.setup-token]] Connect it in Jiro. From then on, anyone in the channel mentions Jiro, Claude Code runs in a cloud machine with your repos and tools, and a pull request comes back in the thread. Your laptop can be in a bag on a train.
+"""
+
+[[section]]
+heading = "Picking from the list"
+body = """
+Start with money, because it decides more than features do. Anthropic's own figure for enterprise Claude Code use is roughly $13 per developer per active day. [[cite:anthropic.dev-cost]] Multiply that across a team and a month, and the question of who resells you tokens stops being academic. If your team already pays for Claude or ChatGPT seats, prefer an agent that uses them: Jiro, Tembo or Amp. If you are buying model access fresh, a bundled product like Devin, Cursor or Copilot saves a procurement cycle.
+
+Then think about the surface. Slack-first teams should test Jiro and Claude Tag side by side. IDE-first teams will be happier with Cursor. Teams that live in GitHub issues already own Copilot.
+
+Last, consider how much platform you want. Factory and Warp reward investment, while the Codex and Claude web sessions ask for almost none. Most five-to-twenty person teams sit closer to the second camp, which is roughly why our top four look the way they do.
+
+One more filter, and it is the one buyers skip. Run a pilot on boring work. A demo task flatters every agent on this list. A flaky test, a stale README or an alert from last Tuesday does not. Give two finalists the same three chores for a week, then ask the reviewers which pull requests they would happily merge without rewriting. That answer beats any table, including ours.
+"""
+
+[[faq]]
+q = "What is a background coding agent?"
+a = "An agent that takes a task, works on it unattended in a remote environment with your repository, and returns a result such as a pull request. Cloud coding agent means the same thing."
+
+[[faq]]
+q = "Which background coding agent is best for a small team?"
+a = "For a 5–20 person team with Claude or ChatGPT subscriptions in place, Jiro. Teams standardised on Cursor should look at Cursor cloud agents, and ChatGPT-only teams at Codex cloud."
+
+[[faq]]
+q = "Is there a free background coding agent?"
+a = "OpenHands is free to run locally, Jules has a free tier, and Jiro offers a 30-day trial with no card. [[cite:openhands.pricing]] [[cite:jules.limits]] [[cite:jiro.pricing]]"
+
+[[faq]]
+q = "What happened to Charlie?"
+a = "Charlie Labs shut down; Charlie was available only until 2026-10-05. [[cite:charlie.shutdown]]"
+
+[[faq]]
+q = "Can I run Claude Code in Slack on my own Claude plan?"
+a = "With Jiro, yes, after generating a subscription token via `claude setup-token`. [[cite:anthropic.setup-token]] [[cite:jiro.credentials]] Claude Tag also works in Slack but needs a Team or Enterprise plan. [[cite:claude-tag.plans]]"
+
+[[faq]]
+q = "Which agents merge code on their own?"
+a = "Amp's default Ship pushes to the base branch after tests. [[cite:amp.ship]] Copilot cloud agent cannot merge its own drafts. [[cite:copilot.prs]] Jiro returns pull requests for your team to review. [[cite:jiro.outputs]]"

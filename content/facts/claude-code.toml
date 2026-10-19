@@ -1,0 +1,50 @@
+name = "Claude Code on the web"
+
+[[fact]]
+id = "where"
+text = "A Claude Code cloud session runs on Anthropic-managed infrastructure (by default a 4 vCPU, 16 GB VM) and keeps running after you close your laptop."
+short = "Anthropic-managed VMs"
+source = "https://code.claude.com/docs/en/claude-code-on-the-web"
+checked = "2026-10-16"
+
+[[fact]]
+id = "models"
+text = "Cloud sessions run Claude models and require an Anthropic account; they are not available through Bedrock, Google Cloud or other third-party providers."
+short = "Claude models; Anthropic account required"
+source = "https://code.claude.com/docs/en/claude-code-on-the-web"
+checked = "2026-10-16"
+
+[[fact]]
+id = "surfaces"
+text = "Cloud sessions start from claude.ai/code, the Claude mobile and desktop apps, and `claude --cloud` in a terminal, and `claude --teleport` pulls a session back to your machine."
+short = "Web, mobile, desktop, terminal"
+source = "https://code.claude.com/docs/en/claude-code-on-the-web"
+checked = "2026-10-16"
+
+[[fact]]
+id = "pricing"
+text = "Claude Code is included in Claude Pro ($20 a month), Max (from $100 a month) and Team and Enterprise seats, with no separate charge for the cloud VM; the Free plan has no Claude Code."
+short = "In Pro $20/mo, Max $100+/mo, Team seats"
+source = "https://claude.com/pricing"
+checked = "2026-10-16"
+
+[[fact]]
+id = "slack"
+text = "For Team and Enterprise, Slack work moves to Claude Tag (public beta), and the legacy Claude Code Slack bot was retired on 2026-10-05 in workspaces connected to a Claude organization."
+short = "Slack via Claude Tag (beta) on Team/Enterprise"
+source = "https://code.claude.com/docs/en/slack"
+checked = "2026-10-16"
+
+[[fact]]
+id = "tag-billing"
+text = "Claude Tag bills Slack channel work by usage under an admin-set spend limit."
+short = "Usage-billed"
+source = "https://claude.com/docs/claude-tag/overview"
+checked = "2026-10-16"
+
+[[fact]]
+id = "prs"
+text = "Cloud sessions push a branch; you review the diff and create the pull request, and auto-fix can then push fixes for CI failures and review comments."
+short = "You create the PR; auto-fix follows up"
+source = "https://code.claude.com/docs/en/claude-code-on-the-web"
+checked = "2026-10-16"

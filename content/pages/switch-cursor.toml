@@ -1,0 +1,109 @@
+slug = "switch/cursor-to-jiro"
+family = "switch"
+title = "Switching from Cursor to Jiro (2026): Every Workflow, Before and After"
+description = "Moving cloud-agent work from Cursor to Jiro: before-and-after for each workflow, porting Cursor rules to AGENTS.md and skills, and keeping Cursor on an API key."
+question = "How do I switch from Cursor to Jiro?"
+answer = "Keep Cursor as your editor, move cloud-agent work to Jiro one workflow at a time, and copy your Cursor rules into AGENTS.md and skills by hand. Jiro is a background coding agent by Nori. Setup takes an afternoon: start the trial, install the GitHub App, connect Slack, connect a Claude token from `claude setup-token` (or Codex, or a Cursor API key if you want Cursor's agent inside Jiro), write an org setup script, then hand over one real ticket."
+
+[[section]]
+heading = "You don't have to leave Cursor"
+body = """
+Most people who switch keep the editor open all day. What moves is the background work, the tasks you used to fire off to Cursor's Cloud Agents [[cite:cursor.rename]]. And if you like Cursor's agent itself, Jiro can run it: Cursor is one of the three harnesses alongside Claude Code and Codex [[cite:jiro.harnesses]], on a Cursor API key you supply [[cite:jiro.credentials]].
+
+So this guide is less a migration than a rearrangement. Here's each workflow, before and after.
+"""
+
+[[section]]
+heading = "Workflow by workflow"
+body = """
+**Starting a task.** Before: you opened the Cursor app, the web or iOS, or tagged Cursor in Slack, and the agent went off on its own [[cite:cursor.surfaces]]. After: you mention Jiro in a Slack thread, the web chat, Discord or a terminal [[cite:jiro.surfaces]] [[cite:jiro.slack-threads]], your teammates see the thread, and Jiro may push back on the ticket first if something looks off.
+
+**Paying for models.** Before: Premium ($30 monthly) was the entry ticket for cloud agents, with third-party model usage draining prepaid credit at list API rates [[cite:cursor.pricing]], since custom keys only cover chat [[cite:cursor.models]]. After: Claude Code and Codex bill against an Anthropic or OpenAI plan that's already on the company card, and Nori adds zero markup on tokens [[cite:jiro.no-markup]].
+
+**Project rules.** Before: conventions lived in Cursor rules files. After: they live in AGENTS.md and skills, packaged as a skillset that Nori translates into CLAUDE.md, AGENTS.md or copilot-instructions.md depending on the agent [[cite:jiro.translation]]. Cursor's format is not in that list, so this part is a copy-and-edit job (details below).
+
+**The environment.** Before: Cursor provisioned a full dev environment in its cloud or on a self-hosted worker [[cite:cursor.where]]. After: every Jiro conversation gets its own cloud machine [[cite:jiro.one-session-per-machine]], prepared by one org setup script that installs your dependencies [[cite:jiro.setup-script]].
+
+**Recurring chores.** Before: you remembered to ask. After: a cron schedule or a webhook starts the job [[cite:jiro.triggers]], whether that's a Monday docs pass or the alert that fires at 2 a.m.
+
+**What comes back.** Before: a polished PR, often with a screen recording attached [[cite:cursor.prs]]. After: a reviewable PR, a commit or a comment, back in the thread [[cite:jiro.outputs]]. Fewer movies. More discussion in the thread.
+"""
+
+[[section]]
+heading = "Porting Cursor rules, without pretending"
+body = """
+There's no importer. Here is the manual route, which takes most teams under an hour.
+
+- Open each rules file and sort its content into two piles: rules that apply everywhere, and procedures that apply to one kind of task.
+- Put the everywhere rules in an AGENTS.md at the repository root.
+- Turn each procedure (how to add a migration, how to cut a release, which test runner to use) into its own skill.
+- Bundle the skills into a skillset so every Jiro session gets them. Add Jiro's own engineering skills too, via `npx nori-skillsets install public/jiro` in a terminal.
+- Leave your original rules files where they are. Your editor still reads them.
+
+Expect drift between the two copies for a while. Pick one as the source of truth and say so in the file.
+"""
+
+[[section]]
+heading = "Setup in six steps"
+body = """
+- **1. Trial.** Sign up; 30 days free, no card [[cite:jiro.pricing]].
+- **2. GitHub.** Install the GitHub App and choose which repositories Jiro can touch [[cite:jiro.github]].
+- **3. Slack.** Connect your workspace and invite Jiro into a channel.
+- **4. Models.** For Claude, run `claude setup-token` on your laptop, sign in when the browser opens, and copy the resulting token, which is tied to your paid Claude plan and lasts a year [[cite:anthropic.setup-token]]; paste it into Jiro. Codex users sign in through OAuth or paste an OpenAI key instead. For Cursor's agent, paste a Cursor API key.
+- **5. Setup script.** Write the org script that installs your toolchain, so each machine boots ready.
+- **6. First task.** Give it something small and real, then read the whole transcript.
+"""
+
+[[section]]
+heading = "Your first week"
+body = """
+Start with work Cursor's agent never got asked to do, because nobody had the time.
+
+- Day one: a docs refresh, starting with whatever the README gets wrong.
+- Day two: find untested branches in one important module and cover them.
+- Day three: a slop sweep, removing dead code and stale feature flags in one directory.
+- Day four: two small tickets you'd normally leave for a quiet Friday.
+- Day five: wire a webhook from your alerting and hand Jiro the next on-call fix.
+
+By Friday you'll know whether the push-back is useful or annoying. Usually it's both, at first.
+"""
+
+[[section]]
+heading = "What you give up"
+body = """
+Some real things. Cursor works with GitLab, Bitbucket and Azure DevOps repositories and takes requests from Microsoft Teams, Linear and an API [[cite:cursor.surfaces]]; Jiro connects to code through GitHub. The screenshot-and-video PRs are excellent, and Jiro doesn't produce them. Self-hosted workers are also a Cursor feature [[cite:cursor.where]].
+
+Where one of those matters to your team, leave that workflow with Cursor.
+"""
+
+[[section]]
+heading = "What it costs"
+body = """
+Before: at least $30 a month for Premium, plus model usage at API list price [[cite:cursor.pricing]]. After: $99 monthly on Developer buys a single user three persistent runtimes, or $250 monthly on Team buys five shared ones for everybody [[cite:jiro.pricing]]. Model costs go to Anthropic or OpenAI directly, often on a Claude Max plan at $100 or $200 a month you may already own [[cite:anthropic.max]].
+
+For a team of six with Claude plans already paid, the after column is one flat bill.
+"""
+
+[[section]]
+heading = "Running both during the pilot"
+body = """
+This is the easy part. Keep Cursor for editing, keep its cloud agents for anything on GitLab or with a video-heavy review, and send everything Slack-shaped to Jiro. If you want an apples-to-apples test, run the same ticket through Cursor's agent inside Jiro and through Claude Code inside Jiro, then compare the diffs.
+
+Still weighing options? The [Cursor background agents alternatives](https://jiro.bot/alternatives/cursor-background-agents) page ranks the rest of the field.
+"""
+
+[[faq]]
+q = "Can I keep using Cursor's agent after switching?"
+a = "Yes. Jiro runs the Cursor harness on your Cursor API key [[cite:jiro.credentials]]."
+
+[[faq]]
+q = "Do my Cursor rules carry over automatically?"
+a = "No. Copy them into AGENTS.md and skills by hand; Nori's translation covers CLAUDE.md, AGENTS.md and copilot-instructions.md, not Cursor's rule files [[cite:jiro.translation]]."
+
+[[faq]]
+q = "Do I need to cancel my Cursor plan?"
+a = "Not necessarily. Many teams keep it for the editor. If you're on a legacy Pro, Pro+ or Teams plan, note that moving to Cursor's new plans is optional but permanent [[cite:cursor.legacy]]."
+
+[[faq]]
+q = "How do I use my Claude subscription with Jiro?"
+a = "On your laptop, `claude setup-token` creates a token for your Pro, Max, Team or Enterprise plan [[cite:anthropic.setup-token]], then connect it in Jiro."

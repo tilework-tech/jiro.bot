@@ -1,0 +1,137 @@
+slug = "switch/factory-to-jiro"
+family = "switch"
+title = "Switching from Factory to Jiro (2026): Cutover and Rollback Runbook"
+description = "A runbook for moving a small team from Factory Droids to Jiro: pre-checks, cutover steps, a first-week task plan, cost check and a clean rollback path."
+question = "How do I switch from Factory to Jiro?"
+answer = "Run Jiro alongside Factory for one or two weeks: start the free trial, install the GitHub App on a few pilot repos, connect Slack, sign in with your Claude or ChatGPT plan, write an org setup script, then route small tickets to Jiro and compare. Jiro is a background coding agent by Nori. Keep Factory live until the pilot passes, so rollback is just turning Jiro off."
+
+[[section]]
+heading = "Scope"
+body = """
+This runbook covers a team of roughly 5 to 20 engineers moving delegated coding work from Factory's Droids to Jiro. It assumes GitHub, Slack, and an existing Claude or ChatGPT subscription.
+
+Out of scope: Factory Private installs. If you run Droids inside your VPC or an air-gapped network [[cite:factory.private]], stop here. Jiro is hosted and has no on-premises edition.
+
+Estimated effort: one afternoon to set up. Two weeks of parallel running.
+"""
+
+[[section]]
+heading = "Before you start"
+body = """
+Complete every item. Do not begin cutover with open questions.
+
+- **Inventory automations.** List each Factory automation you rely on, such as Ticket to PR or Error Triage [[cite:factory.automations]]. Note what fires it and where its output goes.
+- **Inventory intake.** Write down where Droid work starts today. Factory accepts delegations from Slack, Linear and Jira [[cite:factory.surfaces]]; Jiro's entry points are chat (Slack, Discord, the web), the terminal, cron and webhooks [[cite:jiro.surfaces]]. Anything that depends on assigning a Linear or Jira ticket to the agent needs a new path.
+- **Collect instructions.** Find every file of agent guidance: repo-level `AGENTS.md` or `CLAUDE.md`, plus any conventions you keep inside Factory. Repo files stay where they are. The rest gets copied by hand.
+- **Pick pilot repos.** Two or three. One should be boring.
+- **Confirm model access.** Every pilot user needs one of: a paid Claude seat, ChatGPT, an Anthropic or OpenAI key, or (Cursor harness only) a Cursor-issued key [[cite:jiro.credentials]].
+- **Name an owner.** One person writes the setup script and reads every pilot PR.
+"""
+
+[[section]]
+heading = "What carries over"
+body = """
+Instruction files committed to your repos come along untouched, because the harnesses Jiro runs read them natively: Claude Code reads `CLAUDE.md`, Codex reads `AGENTS.md`.
+
+Org-wide conventions should move into a Jiro skillset. Write it once; Nori renders the per-agent file for whichever harness runs, so Claude Code sees a `CLAUDE.md` while Codex sees an `AGENTS.md` [[cite:jiro.translation]]. Nothing imports from Factory automatically. Copy, then trim.
+
+Automations get rebuilt. A nightly Error Triage becomes a cron trigger; a Ticket to PR flow becomes a webhook from your tracker or alerting, or a person pasting the link into Slack [[cite:jiro.triggers]].
+"""
+
+[[section]]
+heading = "Cutover"
+body = """
+Execute in order. Each step lists its check.
+
+1. **Open a trial account.** No payment details required; the clock runs 30 days [[cite:jiro.pricing]]. Check: you can open web chat.
+2. **Install the GitHub App.** Select only the pilot repos, not all repositories [[cite:jiro.github]]. Check: in web chat, ask Jiro to list the files in one pilot repo.
+3. **Connect Slack.** Create a channel such as `#jiro-pilot` and invite the bot. Check: a hello message gets a reply.
+4. **Connect the model.** On your own laptop, run `claude setup-token`. Output: a token valid for twelve months, bound to the paid Claude plan you hold, whether that is Pro or Max or a Team or Enterprise seat [[cite:anthropic.setup-token]]. Paste it into Jiro's Claude connection. Codex alternative: Codex OAuth, else an OpenAI key. Cursor alternative: a Cursor-issued API key [[cite:jiro.credentials]]. Check: a one-line coding question in Slack gets a real answer.
+5. **Write the org setup script.** Install runtimes, package managers and anything your tests need [[cite:jiro.setup-script]]. Check: ask Jiro to run the test suite on a pilot repo and report results. It should pass the same way it passes in CI.
+6. **Write the skillset.** Move the conventions you collected into your org skillset [[cite:jiro.skillsets]]. Optional, for developers running agents locally as well: the command is `npx nori-skillsets install public/jiro`, run on their own laptops.
+7. **Connect trackers.** Add Linear or Jira, and any MCP servers you need from the catalog [[cite:jiro.integrations]] [[cite:jiro.mcp]]. Check: Jiro can read a ticket you link.
+8. **Send the first task.** Something small with an obvious right answer. Check: a pull request arrives for review [[cite:jiro.outputs]].
+
+Do not disable any Factory automation yet.
+"""
+
+[[section]]
+heading = "First week"
+body = """
+Feed the pilot real work, in rising order of risk.
+
+- **Day 1.** Docs. Ask Jiro to diff the README against reality and correct whatever drifted.
+- **Day 2.** Tests. Point it at a module with thin coverage and ask for the missing cases, not new features.
+- **Day 3.** Cleanup. Hand it a directory full of agent slop and ask for the diff a careful teammate would leave behind.
+- **Day 4.** Small tickets. Three of them, straight from the backlog, posted in the pilot channel.
+- **Day 5.** On-call. Wire a webhook from CI or alerting, or schedule a cron job that checks a known flaky area each morning [[cite:jiro.triggers]].
+
+Log for each task: time to first PR, review rounds, and whether a reviewer had to rewrite anything. Do the same for Factory on comparable tickets. You want numbers, not vibes.
+
+Expect pushback. Jiro will question tickets that look wrong. Record those too; they count.
+"""
+
+[[section]]
+heading = "What you give up"
+body = """
+Be honest about this before you commit.
+
+- On-premises and air-gapped deployment through Factory Private [[cite:factory.private]].
+- Delegating by assigning a Linear or Jira ticket directly to the agent [[cite:factory.surfaces]].
+- Packaged automation templates that open PRs with no prompt [[cite:factory.automations]]. You rebuild these yourself.
+- Factory's own model routing across vendors [[cite:factory.models]]. With Jiro you pick the harness and the plan.
+
+What you gain, briefly: your own Claude or ChatGPT plan working in the cloud, where Factory only accepts your own keys in its CLI and desktop app [[cite:factory.models]], plus no token markup [[cite:jiro.no-markup]].
+"""
+
+[[section]]
+heading = "Cost check"
+body = """
+Compare list prices for a five-person team.
+
+- Factory Teams: $60 a month plus $40 per seat, so $260 for five [[cite:factory.pricing]].
+- Jiro Team: $250 monthly, five runtimes shared across the whole team [[cite:jiro.pricing]].
+- Solo: Factory Pro is $20 a month and Plus $100 [[cite:factory.pricing]]; Jiro Developer is $99 with up to three persistent runtimes, before your own model plan.
+
+Jiro's price excludes model usage. You pay Anthropic or OpenAI directly, on plans many teams already hold. Heavy users may want Claude Max, at $100 or $200 a month [[cite:anthropic.max]]. Runtimes sleep when idle [[cite:jiro.runtimes]], so quiet weeks cost nothing extra.
+"""
+
+[[section]]
+heading = "Running both"
+body = """
+Keep Factory fully active during the pilot. Route by channel: Droid requests keep their current entry points, Jiro takes everything posted in the pilot channel. Never send the same ticket to both. Duplicate PRs waste reviewer time and spoil the comparison.
+
+At the end of week two, review the log with the team. Pass criteria are yours to set, but write them down on day one.
+"""
+
+[[section]]
+heading = "Rollback"
+body = """
+If the pilot fails, reverse the cutover. Nothing on the Factory side changed, so there is nothing to restore.
+
+1. Close or merge any open Jiro PRs.
+2. Remove the Slack app from the pilot channel.
+3. Uninstall the GitHub App or deselect the pilot repos.
+4. Delete the Claude, OpenAI or Cursor credential from Jiro.
+5. Let the trial lapse. No card was taken, so there is no charge.
+
+Every session and action stays logged [[cite:jiro.audit]], which is useful for the post-pilot writeup either way.
+
+Still comparing options? See the [Factory alternatives](https://jiro.bot/alternatives/factory) page.
+"""
+
+[[faq]]
+q = "How long does a Factory to Jiro switch take?"
+a = "Setup fits in an afternoon. Plan for two weeks of parallel running before you turn off any Factory automation."
+
+[[faq]]
+q = "Do my Factory automations move over automatically?"
+a = "No. Rebuild each one as a cron schedule or a webhook in Jiro [[cite:jiro.triggers]]. Ticket-assignment flows from Linear or Jira need a new entry point, usually Slack."
+
+[[faq]]
+q = "Can I use my Claude subscription instead of an API key?"
+a = "Yes. Generate one with `claude setup-token` on your own computer; it lasts a year and is linked to your paid Claude plan [[cite:anthropic.setup-token]]. Then paste it into Jiro."
+
+[[faq]]
+q = "Does Jiro have an equivalent of Factory Private?"
+a = "No. Jiro is hosted, with a single-tenant broker per organization [[cite:jiro.single-tenant]]. If you need air-gapped or on-premises deployment, stay on Factory Private [[cite:factory.private]]."

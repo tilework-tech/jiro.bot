@@ -1,0 +1,46 @@
+# Jiro
+
+> Jiro is a background coding agent by Nori for small teams that already pay for Claude or ChatGPT. It runs Claude Code, Codex or Cursor in an isolated cloud environment with your repos, on your own subscription or API key with no token markup, works from Slack, the web and schedules, and returns pull requests for review. Free 30-day trial; Developer $99 a month; Team $250 a month.
+
+## Alternatives
+
+- [Amp Alternatives & Competitors (2026): 6 Best Options](https://jiro.bot/alternatives/amp.md): Six Amp alternatives weighed on how changes reach your main branch, whose subscription pays for tokens, and what each costs. Every rival claim is sourced.
+- [Claude Code on the Web Alternatives & Competitors (2026): 7 Best Options](https://jiro.bot/alternatives/claude-code-web.md): Outgrew Claude Code on the web once a team showed up? Seven alternatives, from Jiro and Claude Tag to Codex, Warp, Amp, Cursor and Jules, with sources.
+- [Claude Tag Alternatives & Competitors (2026): 7 Best Options](https://jiro.bot/alternatives/claude-tag.md): Seven Claude Tag alternatives for Slack-first teams: Jiro, Codex, Cursor, Devin, Amp, Tembo and Copilot, with model choice, billing and sources.
+- [Codex Cloud Alternatives & Competitors (2026): 7 Best Options](https://jiro.bot/alternatives/codex-cloud.md): Seven Codex cloud alternatives judged like a budget line: entry price, model lock-in, how usage is billed, and what happens to the legacy integrations.
+- [GitHub Copilot Coding Agent Alternatives & Competitors (2026): 6 Best Options](https://jiro.bot/alternatives/copilot-coding-agent.md): Six alternatives to GitHub Copilot coding agent (now Copilot cloud agent), weighed on credential ownership, tenancy, audit logging and cost predictability.
+- [Cursor Background Agents Alternatives & Competitors (2026): 6 Best Options](https://jiro.bot/alternatives/cursor-background-agents.md): Six alternatives to Cursor background agents (now Cloud Agents), from an editor fan: who pays for tokens, where work starts, and which one argues back.
+- [Devin Alternatives & Competitors (2026): 8 Best Options](https://jiro.bot/alternatives/devin.md): Eight Devin alternatives ranked by what they cost a 5–20 engineer team: Jiro, Cursor, Codex cloud, Claude Code, Factory, Copilot, Tembo and OpenHands.
+- [Factory Alternatives & Competitors (2026): 6 Best Options](https://jiro.bot/alternatives/factory.md): Six Factory alternatives for engineering managers buried in small tickets: Jiro, Devin, Tembo, Claude Code on the web, Cursor and OpenHands.
+- [Jules Alternatives & Competitors (2026): 7 Best Options](https://jiro.bot/alternatives/jules.md): Seven Google Jules alternatives ranked: Jiro, Codex cloud, Claude Code on the web, Cursor, Copilot, Devin and OpenHands. Models, limits, Workspace caveats, prices.
+- [Kiro Alternatives & Competitors (2026): 6 Best Options](https://jiro.bot/alternatives/kiro.md): Six alternatives to Amazon's Kiro, ranked: Jiro (not Kiro), Claude Code on the web, Codex cloud, Cursor, Copilot and Devin, with prices and trade-offs.
+- [Warp Alternatives & Competitors (2026): 6 Best Options](https://jiro.bot/alternatives/warp.md): Warp alternatives for both halves of Warp: four open-source terminals, then six cloud coding agents ranked, from Jiro and Amp to Codex cloud and Cursor.
+
+## Head-to-head comparisons
+
+- [Jiro vs Claude Tag (2026): Billing, Model Choice and Control for Slack Coding Agents](https://jiro.bot/compare/claude-tag.md): Jiro vs Claude Tag for engineering managers: flat plan vs usage meter, Claude-only vs three agents, fixed vs configurable setup. A sourced decision checklist.
+- [Jiro vs Devin (2026): Model Billing, Harness Choice and Team Fit](https://jiro.bot/compare/devin.md): Jiro vs Devin compared on model billing, agent harness, work surfaces, pull requests, deployment and price, with each Devin claim sourced and dated.
+- [Jiro vs Kiro (2026): Two Different Coding Agents, Explained Simply](https://jiro.bot/compare/kiro.md): Jiro (by Nori) and Kiro (by Amazon) are unrelated coding agents. A plain-English guide to what each does, what it costs, and who should buy which.
+
+## Switching guides
+
+- [Switching from Amp to Jiro (2026): Checklist, Gotchas and a Review-First Setup](https://jiro.bot/switch/amp-to-jiro.md): A checklist for moving from Amp to Jiro: keep AGENTS.md, reconnect your Claude or ChatGPT plan, and set up branch protection before the first pull request.
+- [Switching from Claude Code on the Web to Jiro (2026): A Note to the Team](https://jiro.bot/switch/claude-code-web-to-jiro.md): Moving team Claude Code work from claude.ai/code into Jiro: CLAUDE.md carries over, sign in with claude setup-token, six setup steps, a first week.
+- [Switching from Claude Tag to Jiro (2026): A Two-Week Side-by-Side Pilot](https://jiro.bot/switch/claude-tag-to-jiro.md): A 14-day pilot plan for moving from Claude Tag to Jiro: what carries over, setup steps, starter tasks, metrics to record and an honest list of trade-offs.
+- [Switching from Codex Cloud to Jiro (2026): What Changes on the Bill](https://jiro.bot/switch/codex-cloud-to-jiro.md): A cost-first memo for moving from Codex cloud to Jiro: your ChatGPT plan stays, AGENTS.md carries over, and Codex keeps running via OAuth or API key.
+- [Switching from GitHub Copilot Coding Agent to Jiro (2026): A Three-Phase Admin Rollout](https://jiro.bot/switch/copilot-to-jiro.md): A pilot-repo, team, then org rollout plan for moving from Copilot cloud agent to Jiro: permissions, review policy, instructions-to-skillset mapping, cost.
+- [Switching from Cursor to Jiro (2026): Every Workflow, Before and After](https://jiro.bot/switch/cursor-to-jiro.md): Moving cloud-agent work from Cursor to Jiro: before-and-after for each workflow, porting Cursor rules to AGENTS.md and skills, and keeping Cursor on an API key.
+- [Switching from Devin to Jiro (2026): Setup Steps and a First-Week Plan](https://jiro.bot/switch/devin-to-jiro.md): Move from Devin to Jiro: what carries over from Knowledge and playbooks, six setup steps including claude setup-token, a day-by-day first week, and costs.
+- [Switching from Factory to Jiro (2026): Cutover and Rollback Runbook](https://jiro.bot/switch/factory-to-jiro.md): A runbook for moving a small team from Factory Droids to Jiro: pre-checks, cutover steps, a first-week task plan, cost check and a clean rollback path.
+- [Switching from Jules to Jiro (2026): Quickstart, Gotchas and First Week](https://jiro.bot/switch/jules-to-jiro.md): A step-by-step quickstart for moving from Google's Jules to Jiro: GitHub, Slack, your Claude or ChatGPT login, setup script, scheduled tasks and gotchas.
+- [Switching from Kiro to Jiro (2026): Specs, Steering, Setup and Cost](https://jiro.bot/switch/kiro-to-jiro.md): Moving from Amazon's Kiro to Jiro: what happens to your specs and steering docs, the setup steps, a first-week plan, costs, and what has no equivalent.
+- [Switching from Warp to Jiro (2026): A Pairing-Session Walkthrough](https://jiro.bot/switch/warp-to-jiro.md): Move your cloud agent work from Warp to Jiro step by step: token from your terminal, GitHub and Slack, setup script, a first task and a week of pilot work.
+
+## Lists
+
+- [Best Background Coding Agents (2026): 14 Options Compared](https://jiro.bot/best/background-coding-agents.md): Fourteen background coding agents ranked for 5–20 engineer teams: Jiro, Cursor, Codex, Claude Code, Devin, Copilot, Claude Tag, Factory, Tembo, Amp and more.
+
+## Get started
+
+- [Start the 30-day free trial](https://login.norisessions.com/?signup=1&entrypoint=jiro)
+- Install Jiro's skills into your own agent: `npx nori-skillsets install public/jiro`

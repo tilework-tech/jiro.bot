@@ -1,0 +1,41 @@
+# Site-wide settings for build.py and tools/lint.py.
+name = "Jiro"
+base_url = "https://jiro.bot"
+updated = "2026-10-19"
+max_fact_age_days = 30
+trial_url = "https://login.norisessions.com/?signup=1&entrypoint=jiro"
+install = "npx nori-skillsets install public/jiro"
+entity = "Jiro is a background coding agent by Nori."
+summary = "Jiro is a background coding agent by Nori for small teams that already pay for Claude or ChatGPT. It runs Claude Code, Codex or Cursor in an isolated cloud environment with your repos, on your own subscription or API key with no token markup, works from Slack, the web and schedules, and returns pull requests for review. Free 30-day trial; Developer $99 a month; Team $250 a month."
+footer = "Jiro is a background coding agent by Nori. It is not Amazon's Kiro or Atlassian's Jira."
+
+# Claims Jiro does not ship today (docs/specs/jiro-launch/PRD.md section D and the sessions code).
+# Page copy may not contain these; competitor facts are exempt.
+deny = [
+  "draft PRs only",
+  "draft-only",
+  "never merges",
+  "never merge",
+  "any ACP agent",
+  "Agent Client Protocol",
+  "Itamae",
+  "Omakase",
+  "gardening",
+  "built-in automations",
+  "dead-code automation",
+  "dependency-upgrade automation",
+  "nightly security",
+  "BYOC",
+  "self-host Jiro",
+  "Jiro CLI",
+  "Linear issues trigger Jiro",
+  "Gemini CLI",
+  "unmodified Claude Code",
+  "OpenCode",
+  "isolated VM",
+  "isolated cloud VM",
+  "asks before merging",
+  "OpenRouter",
+  "trained on thousands",
+  "AI software engineer",
+]
