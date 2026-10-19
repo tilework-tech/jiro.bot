@@ -22,7 +22,7 @@ SETTLE_MS = 600
 QUIET_MS = 1500
 
 
-def page_html(sections, scripts=1):
+def page_html(sections, scripts=1, style=""):
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -30,7 +30,7 @@ def page_html(sections, scripts=1):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scroll buddy fixture</title>
 <link rel="stylesheet" href="jiro-buddy.css">
-<style>body {{ margin: 0; }} section {{ height: 120vh; }}</style>
+<style>body {{ margin: 0; }} section {{ height: 120vh; }}{style}</style>
 </head>
 <body>
 <main>
@@ -56,6 +56,46 @@ DOUBLE_SCRIPT_PAGE = page_html("\n".join(
     f'<section id="s{i}" data-jiro-comment="{text}"><h2>Section {i}</h2></section>'
     for i, text in enumerate(COMMENTS, start=1)
 ), scripts=2)
+SIDE_COMMENTS = [
+    "Alpha side.", "Bravo side.", "Charlie side.", "Delta side.",
+    "Echo side.", "Foxtrot side.", "Golf side.",
+]
+TEXT_COLUMN_STYLE = """
+section { position: relative; }
+.col { position: absolute; top: 0; bottom: 0; width: 50%; overflow: hidden; font: 16px/1.4 sans-serif; }
+.col p { margin: 0; }
+.col.left { left: 0; }
+.col.right { right: 0; }
+.col.full { left: 0; right: 0; width: auto; }
+"""
+FILLER = "Rice, fish, and a steady hand make every piece worth the wait. " * 120
+
+
+def text_section(n, comment, column, side=None):
+    side_attr = f' data-jiro-side="{side}"' if side else ""
+    return (
+        f'<section id="s{n}" data-jiro-comment="{comment}"{side_attr}>'
+        f'<div class="col {column}"><p>{FILLER}</p></div></section>'
+    )
+
+
+PINNED_LEFT_PAGE = page_html("\n".join(
+    f'<section id="s{i}" data-jiro-comment="{text}" data-jiro-side="left"><h2>Section {i}</h2></section>'
+    for i, text in enumerate(COMMENTS, start=1)
+))
+SIDES_PAGE = page_html("\n".join([
+    text_section(1, SIDE_COMMENTS[0], "full", side="left"),
+    text_section(2, SIDE_COMMENTS[1], "left"),
+    text_section(3, SIDE_COMMENTS[2], "right"),
+]), style=TEXT_COLUMN_STYLE)
+OVERRIDE_PAGE = page_html("\n".join([
+    text_section(1, SIDE_COMMENTS[0], "full", side="right"),
+    text_section(2, SIDE_COMMENTS[1], "left", side="left"),
+]), style=TEXT_COLUMN_STYLE)
+ALTERNATING_PAGE = page_html("\n".join(
+    text_section(i, text, "left" if i % 2 else "right")
+    for i, text in enumerate(SIDE_COMMENTS, start=1)
+), style=TEXT_COLUMN_STYLE)
 PLAIN_PAGE = page_html("\n".join(
     f'<section id="s{i}"><h2>Section {i}</h2></section>' for i in range(1, 6)
 ))
@@ -70,6 +110,35 @@ new MutationObserver(() => {
     if (text && seen[seen.length - 1] !== text) seen.push(text);
   }
 }).observe(document, {subtree: true, childList: true, characterData: true, attributes: true});
+"""
+
+RECORD_TYPING_START = """
+window.__jiroTypeStartX = {};
+window.__jiroWatch = [];
+new MutationObserver(() => {
+  const bubble = document.querySelector('.jiro-buddy__bubble');
+  const mascot = document.querySelector('.jiro-buddy__mascot');
+  if (!bubble || !mascot || !bubble.checkVisibility()) return;
+  const text = bubble.textContent.trim();
+  if (!text) return;
+  for (const comment of window.__jiroWatch) {
+    if (!(comment in window.__jiroTypeStartX) && comment.startsWith(text)) {
+      window.__jiroTypeStartX[comment] = mascot.getBoundingClientRect().x;
+    }
+  }
+}).observe(document, {subtree: true, childList: true, characterData: true, attributes: true});
+"""
+SAMPLE_BUDDY_ANIMATIONS = """
+window.__jiroSampling = false;
+window.__jiroMaxAnimations = 0;
+(function sample() {
+  const aside = document.querySelector('.jiro-buddy');
+  if (window.__jiroSampling && aside) {
+    window.__jiroMaxAnimations = Math.max(
+      window.__jiroMaxAnimations, aside.getAnimations({subtree: true}).length);
+  }
+  requestAnimationFrame(sample);
+})();
 """
 
 
@@ -90,6 +159,10 @@ class ScrollBuddyTest(unittest.TestCase):
         (root / "blank.html").write_text(BLANK_COMMENT_PAGE)
         (root / "double.html").write_text(DOUBLE_SCRIPT_PAGE)
         (root / "plain.html").write_text(PLAIN_PAGE)
+        (root / "pinned-left.html").write_text(PINNED_LEFT_PAGE)
+        (root / "sides.html").write_text(SIDES_PAGE)
+        (root / "override.html").write_text(OVERRIDE_PAGE)
+        (root / "alternating.html").write_text(ALTERNATING_PAGE)
 
         handler = functools.partial(QuietHandler, directory=str(root))
         cls._server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
@@ -131,11 +204,23 @@ class ScrollBuddyTest(unittest.TestCase):
     def bubble(self, page):
         return page.locator(".jiro-buddy__bubble")
 
-    def open_recording(self, **options):
+    def open_recording(self, path="index.html", script=RECORD_TEXTS, **options):
         context = self.browser.new_context(viewport=DESKTOP, **options)
         self.addCleanup(context.close)
-        context.add_init_script(RECORD_TEXTS)
-        return self.open(context=context)
+        context.add_init_script(script)
+        return self.open(path, context=context)
+
+    def side(self, page):
+        box = self.mascot(page).bounding_box()
+        width = page.evaluate("document.documentElement.clientWidth")
+        return "left" if box["x"] + box["width"] / 2 < width / 2 else "right"
+
+    def assert_sits_right_with_bubble_opening_left(self, page):
+        mascot = self.mascot(page).bounding_box()
+        bubble = self.bubble(page).bounding_box()
+        width = page.evaluate("document.documentElement.clientWidth")
+        self.assertGreaterEqual(mascot["x"] + mascot["width"], width - 48)
+        self.assertLessEqual(bubble["x"] + bubble["width"], mascot["x"] + 8)
 
     def running_animations(self, page):
         return page.evaluate(
@@ -232,8 +317,8 @@ class ScrollBuddyTest(unittest.TestCase):
         )
         self.assertGreaterEqual(self.running_animations(page), 1)
 
-    def test_desktop_mascot_sits_fixed_lower_left_with_bubble_opening_right(self):
-        page = self.open(reduced_motion="reduce")
+    def test_desktop_mascot_starts_fixed_lower_left_with_bubble_opening_right(self):
+        page = self.open("pinned-left.html", reduced_motion="reduce")
         expect(self.bubble(page)).to_be_visible()
         expect(self.bubble(page)).to_contain_text(COMMENTS[0])
         mascot = self.mascot(page).bounding_box()
@@ -336,6 +421,86 @@ class ScrollBuddyTest(unittest.TestCase):
         expect(self.mascot(page)).to_be_visible()
         page.wait_for_timeout(SETTLE_MS)
         expect(page.locator(".jiro-buddy")).to_have_count(1, timeout=100)
+
+    def test_settling_on_a_left_heavy_section_moves_jiro_right_with_bubble_opening_left(self):
+        page = self.open("sides.html", reduced_motion="reduce")
+        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[0])
+        self.assertEqual(self.side(page), "left")
+        self.scroll_to_section(page, 2)
+        expect(self.bubble(page)).to_be_visible()
+        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[1])
+        expect(page.get_by_role("status")).to_have_text(SIDE_COMMENTS[1])
+        self.assert_sits_right_with_bubble_opening_left(page)
+
+    def test_data_jiro_side_overrides_the_automatic_side(self):
+        page = self.open("override.html", reduced_motion="reduce")
+        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[0])
+        self.assert_sits_right_with_bubble_opening_left(page)
+        self.scroll_to_section(page, 2)
+        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[1])
+        mascot = self.mascot(page).bounding_box()
+        bubble = self.bubble(page).bounding_box()
+        self.assertLessEqual(mascot["x"], 48)
+        self.assertGreaterEqual(bubble["x"], mascot["x"] + mascot["width"] - 8)
+
+    def test_jiro_changes_side_at_most_three_times_per_page_load(self):
+        page = self.open("alternating.html", reduced_motion="reduce")
+        sides = ["left"]
+        for n, comment in enumerate(SIDE_COMMENTS, start=1):
+            if n > 1:
+                self.scroll_to_section(page, n)
+            expect(self.bubble(page)).to_have_text(comment)
+            sides.append(self.side(page))
+        changes = sum(a != b for a, b in zip(sides, sides[1:]))
+        self.assertGreaterEqual(changes, 1, sides)
+        self.assertLessEqual(changes, 3, sides)
+        self.assertEqual(len(set(sides[-3:])), 1, f"kept moving after the cap: {sides}")
+
+    def test_comment_starts_typing_only_after_jiro_has_arrived(self):
+        page = self.open_recording("sides.html", script=RECORD_TYPING_START, reduced_motion="no-preference")
+        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[0])
+        page.evaluate("comment => { window.__jiroWatch.push(comment); }", SIDE_COMMENTS[1])
+        self.scroll_to_section(page, 2)
+        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[1])
+        page.wait_for_timeout(500)
+        self.assertEqual(self.side(page), "right")
+        start_x = page.evaluate("comment => window.__jiroTypeStartX[comment]", SIDE_COMMENTS[1])
+        self.assertIsNotNone(start_x, "never saw the comment start typing")
+        self.assertAlmostEqual(start_x, self.mascot(page).bounding_box()["x"], delta=2)
+
+    def test_reduced_motion_changes_side_instantly_without_animation(self):
+        page = self.open_recording("sides.html", script=SAMPLE_BUDDY_ANIMATIONS, reduced_motion="reduce")
+        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[0])
+        page.evaluate("window.__jiroSampling = true")
+        self.scroll_to_section(page, 2)
+        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[1])
+        self.assertEqual(self.side(page), "right")
+        page.wait_for_timeout(300)
+        self.assertEqual(page.evaluate("window.__jiroMaxAnimations"), 0)
+        self.assertEqual(self.running_animations(page), 0)
+
+    def test_narrow_screen_never_changes_side(self):
+        page = self.open("sides.html", viewport=NARROW, has_touch=True, is_mobile=True, reduced_motion="reduce")
+        expect(self.mascot(page)).to_be_visible()
+        self.scroll_to_section(page, 2)
+        page.wait_for_timeout(SETTLE_MS + 200)
+        self.mascot(page).tap()
+        expect(self.bubble(page)).to_contain_text(SIDE_COMMENTS[1])
+        page.wait_for_timeout(SETTLE_MS)
+        self.assertLessEqual(self.mascot(page).bounding_box()["x"], 48)
+
+    def test_idle_hover_layers_several_out_of_phase_motions(self):
+        page = self.open(reduced_motion="no-preference")
+        expect(self.mascot(page)).to_be_visible()
+        page.wait_for_timeout(SETTLE_MS + QUIET_MS)
+        durations = page.evaluate(
+            """() => document.querySelector('.jiro-buddy__mascot')
+                .getAnimations({subtree: true})
+                .filter(a => a.playState === 'running')
+                .map(a => a.effect.getTiming().duration)"""
+        )
+        self.assertGreaterEqual(len(durations), 3, durations)
+        self.assertGreaterEqual(len(set(durations)), 2, durations)
 
 
 if __name__ == "__main__":

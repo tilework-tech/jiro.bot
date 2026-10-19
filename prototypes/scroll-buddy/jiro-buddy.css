@@ -49,9 +49,9 @@
 
 .jiro-buddy__mascot {
   flex: none;
-  width: 84px;
-  height: 88px;
-  padding: 0 0 14px;
+  width: 92px;
+  height: 90px;
+  padding: 0;
   margin: 0;
   border: 0;
   background: none;
@@ -64,54 +64,67 @@
   outline-offset: 4px;
 }
 
+.jiro-buddy__figure {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
 .jiro-buddy__bob,
+.jiro-buddy__drift,
+.jiro-buddy__tilt,
+.jiro-buddy__squash,
 .jiro-buddy__hop {
   display: block;
   width: 100%;
+}
+
+.jiro-buddy__bob {
+  flex: none;
+  aspect-ratio: 100 / 86;
+}
+
+.jiro-buddy__drift,
+.jiro-buddy__tilt,
+.jiro-buddy__squash,
+.jiro-buddy__hop {
   height: 100%;
 }
 
-.jiro-buddy__body {
-  position: relative;
-  box-sizing: border-box;
-  display: grid;
-  place-items: center;
+.jiro-buddy__tilt {
+  transform-origin: 50% 60%;
+}
+
+.jiro-buddy__squash {
+  transform-origin: 50% 100%;
+}
+
+.jiro-buddy__art {
+  display: block;
   width: 100%;
   height: 100%;
-  background: #fff;
-  border: 3px solid #141414;
-  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  color: #f2694f;
+  overflow: visible;
 }
 
-.jiro-buddy__body::after {
-  content: "";
-  position: absolute;
-  right: -3px;
-  bottom: -14%;
-  width: 22%;
-  height: 16%;
-  background: #fff;
-  border: 3px solid #141414;
-  border-top: 0;
-  border-left: 0;
+.jiro-buddy__shell {
+  transform-box: view-box;
+  transform-origin: 50px 46px;
 }
 
-.jiro-buddy__glyph {
-  display: flex;
-  align-items: baseline;
-  font-size: 30px;
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: .02em;
+.jiro-buddy__shadow {
+  display: block;
+  flex: none;
+  width: 100%;
+  height: 5px;
+  margin-top: 1px;
+  transform-origin: 50% 50%;
 }
 
-.jiro-buddy__cursor {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-left: 5px;
-  background: #f2694f;
+.jiro-buddy__shadow-art {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .jiro-buddy__bubble {
@@ -119,11 +132,13 @@
   box-sizing: border-box;
   max-width: 340px;
   min-height: 48px;
-  margin-bottom: 26px;
+  margin-bottom: 34px;
   padding: 12px 16px;
-  background: #fff;
-  border: 3px solid #141414;
-  box-shadow: 4px 4px 0 #3cf06e;
+  background: #f8f6f0;
+  border: 3px solid #173d2b;
+  border-radius: 10px;
+  box-shadow: 0 3px 0 rgba(23, 61, 43, .12);
+  color: #173d2b;
   font-size: 15.5px;
   line-height: 1.4;
   overflow-wrap: break-word;
@@ -134,7 +149,6 @@
 .jiro-buddy__bubble::after {
   content: "";
   position: absolute;
-  bottom: 14px;
   width: 0;
   height: 0;
   border-style: solid;
@@ -142,15 +156,16 @@
 
 .jiro-buddy__bubble::before {
   left: -14px;
+  bottom: 12px;
   border-width: 8px 14px 8px 0;
-  border-color: transparent #141414 transparent transparent;
+  border-color: transparent #173d2b transparent transparent;
 }
 
 .jiro-buddy__bubble::after {
   left: -9px;
-  bottom: 17px;
+  bottom: 15px;
   border-width: 5px 9px 5px 0;
-  border-color: transparent #fff transparent transparent;
+  border-color: transparent #f8f6f0 transparent transparent;
 }
 
 .jiro-buddy__close {
@@ -162,10 +177,10 @@
   padding: 0;
   display: grid;
   place-items: center;
-  background: #fff;
-  border: 2px solid #141414;
+  background: #f8f6f0;
+  border: 2px solid #173d2b;
   border-radius: 50%;
-  color: #141414;
+  color: #173d2b;
   font: 600 14px/1 ui-sans-serif, system-ui, sans-serif;
   cursor: pointer;
   opacity: .7;
@@ -195,6 +210,41 @@
   border: 0;
 }
 
+@media (min-width: 768px) {
+  .jiro-buddy--right {
+    left: auto;
+    right: 24px;
+    flex-direction: row-reverse;
+  }
+
+  .jiro-buddy--right .jiro-buddy__shell {
+    transform: scaleX(-1);
+  }
+
+  .jiro-buddy--right .jiro-buddy__close {
+    left: auto;
+    right: -10px;
+  }
+
+  .jiro-buddy--right .jiro-buddy__bubble::before {
+    left: auto;
+    right: -14px;
+    border-width: 8px 0 8px 14px;
+    border-color: transparent transparent transparent #173d2b;
+  }
+
+  .jiro-buddy--right .jiro-buddy__bubble::after {
+    left: auto;
+    right: -9px;
+    border-width: 5px 0 5px 9px;
+    border-color: transparent transparent transparent #f8f6f0;
+  }
+
+  .jiro-buddy--right .jiro-buddy__bubble.jiro-buddy--pop {
+    transform-origin: right bottom;
+  }
+}
+
 @media (max-width: 767.98px) {
   .jiro-buddy {
     left: 16px;
@@ -203,33 +253,17 @@
   }
 
   .jiro-buddy__mascot {
-    width: 52px;
+    width: 56px;
     height: 55px;
-    padding-bottom: 9px;
   }
 
-  .jiro-buddy__body,
-  .jiro-buddy__body::after {
-    border-width: 2px;
-  }
-
-  .jiro-buddy__body::after {
-    right: -2px;
-  }
-
-  .jiro-buddy__glyph {
-    font-size: 19px;
-  }
-
-  .jiro-buddy__cursor {
-    width: 5px;
-    height: 5px;
-    margin-left: 3px;
+  .jiro-buddy__shadow {
+    height: 3px;
   }
 
   .jiro-buddy__bubble {
-    max-width: calc(100vw - 100px);
-    margin-bottom: 16px;
+    max-width: calc(100vw - 104px);
+    margin-bottom: 20px;
     padding: 10px 12px;
     font-size: 15px;
   }
@@ -241,7 +275,23 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .jiro-buddy__bob {
-    animation: jiro-buddy-bob 2.4s ease-in-out infinite;
+    animation: jiro-buddy-bob 2.6s ease-in-out infinite;
+  }
+
+  .jiro-buddy__drift {
+    animation: jiro-buddy-drift 3.7s ease-in-out infinite;
+  }
+
+  .jiro-buddy__tilt {
+    animation: jiro-buddy-tilt 4.3s ease-in-out infinite;
+  }
+
+  .jiro-buddy__squash {
+    animation: jiro-buddy-squash 2.6s ease-in-out infinite;
+  }
+
+  .jiro-buddy__shadow {
+    animation: jiro-buddy-shadow 2.6s ease-in-out infinite;
   }
 
   .jiro-buddy__hop.jiro-buddy--hopping {
@@ -260,7 +310,29 @@
 
 @keyframes jiro-buddy-bob {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes jiro-buddy-drift {
+  0%, 100% { transform: translateX(-1.5px); }
+  50% { transform: translateX(1.5px); }
+}
+
+@keyframes jiro-buddy-tilt {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes jiro-buddy-squash {
+  0%, 100% { transform: scale(1.02, .97); }
+  25% { transform: scale(.985, 1.03); }
+  50% { transform: scale(1, 1); }
+  75% { transform: scale(.995, 1.01); }
+}
+
+@keyframes jiro-buddy-shadow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(.8); opacity: .55; }
 }
 
 @keyframes jiro-buddy-hop {
