@@ -1,13 +1,13 @@
 # jiro.bot
 
-Static site for jiro.bot: a hand-written landing page (the 16x14 Jiro sprite on a pixel heatmap and a sign-up link) plus generated comparison pages for answer-engine optimization (AEO).
+Static site for jiro.bot: a hand-written landing page (the 16x14 Jiro sprite on a pixel heatmap and a sign-up link) plus generated comparison pages (alternatives, head-to-head comparisons, switching guides, best-of lists) for answer-engine optimization (AEO).
 The previous interactive site work is preserved on the
 `backup/jiro-site-2026-10-09` branch (and `jiro-site`, which open PRs target).
 
-- `site/` — static files published as-is. `index.html` and images are hand-written; `alternatives/`, `compare/`, `best/`, `assets/pages.css`, `llms*.txt`, `sitemap.xml` and `robots.txt` are generated and committed.
-- `content/` — TOML records the pages are built from: site settings, sourced and dated rival facts, one record per page. See [content/docs.md](content/docs.md).
-- `build.py` — stdlib-only generator, `content/` -> `site/`. It owns `site/alternatives`, `site/compare` and `site/best` and rebuilds them from scratch, so never put hand-written files there.
-- `tools/` — pre-publish lint, LLM grader, AEO prompt probe, overlap check, preview server. See [tools/docs.md](tools/docs.md).
+- `site/` — static files published as-is. `index.html` and images are hand-written; `alternatives/`, `compare/`, `switch/`, `best/`, `assets/pages.css`, `llms*.txt`, `sitemap.xml` and `robots.txt` are generated and committed.
+- `content/` — TOML records the pages are built from: site settings, sourced and dated facts (rivals and Jiro itself), one record per page, plus the content rules editors must follow. See [content/docs.md](content/docs.md).
+- `build.py` — stdlib-only generator, `content/` -> `site/`. It owns one directory per page family under `site/` and rebuilds them from scratch, so never put hand-written files there.
+- `tools/` — pre-publish lint (including cross-page overlap and sentence-variation gates), LLM grader, AEO prompt probe, overlap check, preview server. See [tools/docs.md](tools/docs.md).
 - `aeo/` — dated grader and probe results.
 - `tests/` — black-box tests of `build.py` and `tools/lint.py` against `tests/fixtures/content`.
 - `infra/site.cfn.yaml` — CloudFormation stack `jiro-bot-site` (S3, CloudFront, ACM, Route 53, deploy role)

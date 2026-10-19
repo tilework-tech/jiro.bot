@@ -1,0 +1,101 @@
+slug = "switch/devin-to-jiro"
+family = "switch"
+title = "Switching from Devin to Jiro (2026): Setup Steps and a First-Week Plan"
+description = "Move from Devin to Jiro: what carries over from Knowledge and playbooks, six setup steps including claude setup-token, a day-by-day first week, and costs."
+question = "How do I switch from Devin to Jiro?"
+answer = "Start Jiro's free 30-day trial, install the GitHub App on the repositories Devin was using, connect Slack, sign in with your Claude plan through `claude setup-token` (or connect Codex or Cursor), add an org setup script, and give it a first small task. Jiro is a background coding agent by Nori. Devin Knowledge and playbooks do not import automatically, so plan an hour to copy the useful ones into a skillset or AGENTS.md."
+
+[[section]]
+heading = "Before we start: what this page is"
+body = """
+This is an illustrative plan, written the way a small team would actually run the move. It is not a customer story. Think of it as the notes we would want in front of us if we were the ones leaving Devin on a Monday.
+
+The short version? Most of what matters lives in your repos, and that comes with you. The rest is a bit of copying.
+"""
+
+[[section]]
+heading = "What carries over, and what we copied by hand"
+body = """
+Repositories carry over trivially, since Jiro installs as a GitHub App and you pick all repos or a chosen set. [[cite:jiro.github]] Slack carries over too; it is the same workspace with a different bot to mention.
+
+Devin's Knowledge entries and playbooks are another matter. There is no importer. We would export the ones the team still trusts and paste them into a Nori skillset, which Jiro then writes out as CLAUDE.md for Claude Code or AGENTS.md for Codex and most others. [[cite:jiro.translation]] [[cite:jiro.skillsets]] If your repos already have a CLAUDE.md or AGENTS.md, the agent reads it as usual, so that part needs nothing.
+
+The usual advice for this kind of cleanup: do not copy everything. Half of any Knowledge base is notes about a bug fixed in March.
+
+Automations need rebuilding. Scheduled Devin sessions map onto Jiro cron triggers, and webhook ones onto Jiro webhooks. [[cite:devin.automations]] [[cite:jiro.triggers]] Sessions that Devin started from Linear or GitHub events have no direct equivalent in Jiro, so either point a webhook at Jiro or have someone mention it in Slack.
+"""
+
+[[section]]
+heading = "Setup, in six steps"
+body = """
+- **1. Open a trial account.** It lasts 30 days, asks for no card, and gives you five runtimes to play with. [[cite:jiro.pricing]] [[cite:jiro.runtimes]]
+- **2. Install the GitHub App** and select the repositories Devin had. [[cite:jiro.github]]
+- **3. Connect Slack** so the team can mention Jiro in channels and threads. [[cite:jiro.surfaces]] [[cite:jiro.slack-threads]]
+- **4. Sign in to a model.** Claude subscribers do this on their own laptop: we installed the Claude command line, ran `claude setup-token`, and copied the year-long token it printed, which is bound to whichever Claude plan the account holds. [[cite:anthropic.setup-token]] Paste it into Jiro. On ChatGPT? Connect Codex OAuth or an OpenAI key. Cursor users bring their own Cursor key. [[cite:jiro.credentials]]
+- **5. Add an org setup script.** Install the toolchain, the package manager, the database client, whatever a new hire would install on day one. [[cite:jiro.setup-script]]
+- **6. Hand it a first task** in Slack. Something small and checkable.
+
+Optional but useful: `npx nori-skillsets install public/jiro` puts Jiro's own engineering skills in place.
+"""
+
+[[section]]
+heading = "The first week, day by day"
+body = """
+**Monday:** setup, then one job. We would ask Jiro to read the main repo and report the three places where docs and code disagree most. It is a cheap way to see how it reads your codebase, and the output is a pull request against the README, which nobody minds reviewing.
+
+**Tuesday:** test gaps. Pick a module everyone is slightly afraid of and ask for tests around its public behaviour, no refactors. Review hard. This is where you learn whether its taste matches yours.
+
+**Wednesday:** slop cleanup. Every codebase that has had agents in it has some: duplicate helpers, dead flags, comments narrating the obvious. Ask Jiro to find and remove one category of it, and to say what it chose not to touch.
+
+**Thursday:** small tickets. Three of them, from the bottom of the backlog, the kind that sit there for a quarter. Have three people each mention Jiro on one, so the team gets used to the thread workflow.
+
+**Friday:** an on-call fix. Wire a webhook from your CI or alerting to Jiro, or just paste the alert into Slack, and let it propose the fix as a pull request. [[cite:jiro.triggers]] [[cite:jiro.outputs]] Then sit down and compare the week's PRs with what Devin produced on similar work.
+
+By Friday you know. Either the reviews felt lighter or they did not.
+"""
+
+[[section]]
+heading = "What we would give up by leaving Devin"
+body = """
+Being honest about this is the whole point of a pilot. Devin covers Microsoft Teams, GitLab and Bitbucket, and Jiro does not today. [[cite:devin.surfaces]] Jira is not a gap; Jiro connects to it as an integration. [[cite:jiro.integrations]] Devin opens sessions directly from Linear and GitHub events. [[cite:devin.automations]] Its PR maintenance is strong: stacked PRs, conflict fixes, replies to review comments. [[cite:devin.prs]] And an Enterprise buyer can get a dedicated VPC, which Nori's hosting is not. [[cite:devin.enterprise]]
+
+If any of those is load-bearing for you, the move costs more than a week.
+"""
+
+[[section]]
+heading = "What it costs, side by side"
+body = """
+Jiro's Developer plan is $99 a month for one person and up to three persistent runtimes; Team is $250 a month for several people sharing five. [[cite:jiro.pricing]] Tokens come out of the Anthropic or OpenAI plans already on your card, and Nori adds nothing to them. [[cite:jiro.no-markup]]
+
+Devin's Teams plan has an $80 monthly minimum plus $40 a seat, and usage past the quota bills at API pricing. [[cite:devin.pricing]]
+
+For a team of eight that already pays for Claude, the comparison is one runtime fee against a seat bill plus overage. Without those subscriptions, add them to Jiro's side before you compare.
+"""
+
+[[section]]
+heading = "Running both during the pilot"
+body = """
+We would keep Devin on for the 30 days. Give each agent its own Slack channel so nobody tags the wrong bot, point both at the same repos, and split the week's tasks between them. Label the PRs. At the end, count merged versus closed, and ask reviewers which ones they would rather have read.
+
+Then cancel one. Both if neither was worth it, frankly.
+"""
+
+[[faq]]
+q = "Can Jiro import Devin Knowledge or playbooks?"
+a = "Not automatically. Copy the entries worth keeping into a Nori skillset or an AGENTS.md file, and Jiro translates the skillset into each agent's own instruction file. [[cite:jiro.translation]]"
+
+[[faq]]
+q = "Do I have to use a Claude subscription?"
+a = "No. Claude Code also takes an Anthropic API key, Codex takes an OpenAI key or Codex OAuth, and Cursor runs on a Cursor API key. [[cite:jiro.credentials]]"
+
+[[faq]]
+q = "Why do I need to run claude setup-token myself?"
+a = "Subscription sign-in happens on your own machine, where the command creates a long-lived token for your plan; Jiro's cloud machine then uses that token. [[cite:anthropic.setup-token]]"
+
+[[faq]]
+q = "Can I set this up from my phone?"
+a = "The setup lives in the cloud, and the Miravoice team did theirs from phones. [[cite:jiro.phone]] The `claude setup-token` step needs a computer with the Claude command line, though."
+
+[[faq]]
+q = "Where can I compare other options first?"
+a = "We ranked eight of them in our [Devin roundup](https://jiro.bot/alternatives/devin)."

@@ -1,0 +1,110 @@
+slug = "switch/amp-to-jiro"
+family = "switch"
+title = "Switching from Amp to Jiro (2026): Checklist, Gotchas and a Review-First Setup"
+description = "A checklist for moving from Amp to Jiro: keep AGENTS.md, reconnect your Claude or ChatGPT plan, and set up branch protection before the first pull request."
+question = "How do I switch from Amp to Jiro?"
+answer = "Keep your AGENTS.md in the repo, start a Jiro trial, install the GitHub App on the repos you want, connect Slack, then link your Claude plan with `claude setup-token` or your ChatGPT plan with Codex OAuth. Jiro is a background coding agent by Nori. Before the first task, turn on branch protection, because Jiro hands work back as pull requests for review rather than pushing to your base branch."
+
+[[section]]
+heading = "Before you touch anything"
+body = """
+Read this list once. Then start.
+
+- **Gotcha:** Out of the box, a green test run in Amp is followed by Ship landing the change on your base branch [[cite:amp.ship]]. Your team may have grown used to changes simply appearing on main. In Jiro they arrive as pull requests, so somebody has to own review from day one.
+- **Gotcha:** Claude plan access does not transfer between tools. Amp reaches your Claude Pro or Max plan through the Agent SDK [[cite:amp.claude-plan]]; Jiro needs its own token, generated on your laptop.
+- **Gotcha:** if any Amp threads are still running in orbs, let them finish or ship them first. They will not migrate.
+- Pick one or two repositories for the pilot. Not all of them.
+"""
+
+[[section]]
+heading = "What comes with you"
+body = """
+Your AGENTS.md comes along for free. It lives in the repository, not in Amp, so Jiro sees it on the first clone; Codex reads it as-is.
+
+Team-wide rules you want everywhere, across repos, belong in a Jiro skillset instead. You write a skillset one time; Jiro renders it into whatever file each harness expects: CLAUDE.md for Claude Code, AGENTS.md for most others [[cite:jiro.translation]]. Move anything that used to live only in someone's Amp thread history by hand. Nothing imports it automatically, and we would rather say so now.
+
+Want Jiro's engineering habits in your own repos too? `npx nori-skillsets install public/jiro` adds them.
+"""
+
+[[section]]
+heading = "Setup, step by step"
+body = """
+- **Step 1: Open a trial account.** It runs a month and asks for no payment details [[cite:jiro.pricing]].
+- **Step 2: Install the GitHub App.** Choose every repository or just the pilot set [[cite:jiro.github]]. Choose the pilot set.
+- **Step 3: Protect the branch.** In GitHub, require a pull request and at least one approving review on main for each pilot repo. Do this before step 6. Seriously.
+- **Step 4: Connect Slack.** Requests and replies then sit in threads your whole team can read [[cite:jiro.surfaces]] [[cite:jiro.slack-threads]].
+- **Step 5: Connect a model.** For Claude, open a terminal on your own machine and run `claude setup-token`. Out comes a token good for twelve months and bound to the Claude subscription you already pay for, be it Pro, Max, Team or Enterprise [[cite:anthropic.setup-token]]. Copy it into Jiro. For ChatGPT, sign in through Codex OAuth or add an OpenAI API key; Cursor takes a Cursor API key [[cite:jiro.credentials]].
+- **Step 6: Write the org setup script.** Install runtimes, dependencies and CLIs once, and every session's environment starts ready [[cite:jiro.setup-script]].
+- **Step 7: Hand over a first task.** Something small and verifiable, posted in a Slack thread.
+
+**Gotcha:** run step 5 on your own computer, not inside Jiro. The token exists for machines that cannot open a browser login, and Jiro's cloud environments are exactly that kind of machine.
+"""
+
+[[section]]
+heading = "Set up the review flow properly"
+body = """
+This is the part teams skip. Do not skip it.
+
+Decide who reviews agent pull requests, and say so in the repo's CODEOWNERS file if you use one. Agree on what earns an approve versus a request for changes. Then tell Jiro, in the skillset, what your reviewers care about: test coverage on touched code, naming, no drive-by refactors. It flags missteps early and will push back on a vague ticket, which works best when reviewers and agent share the same bar.
+
+One more thing. Reply to its pull requests the way you would reply to a colleague's. Specific comments get specific fixes.
+"""
+
+[[section]]
+heading = "A first week that tells you something"
+body = """
+- **Monday:** ask Jiro to read one pilot repo and propose three improvements it would make first. Judge its taste before its speed.
+- **Tuesday:** a documentation pass on the module nobody wants to explain.
+- **Wednesday:** fill test gaps around a recently changed file.
+- **Thursday:** clean up slop, such as dead flags, duplicated helpers or copy-pasted error handling.
+- **Friday:** one small ticket from the backlog, plus a scheduled job for next week [[cite:jiro.triggers]].
+
+If something breaks in production that week, try the on-call fix from Slack. That is where background agents earn their keep.
+"""
+
+[[section]]
+heading = "What you give up"
+body = """
+Be honest with yourself about these.
+
+- Native macOS and iOS apps and an SDK [[cite:amp.surfaces]]. In Jiro you work from Slack, Discord, the browser or a terminal, and timers or webhooks can kick things off too [[cite:jiro.surfaces]].
+- Choosing a machine size per thread and paying for it by the minute [[cite:amp.orbs]].
+- A free tier for keeps. Amp's Hobby plan stays free with your own runners [[cite:amp.pricing]]; Jiro's trial ends after thirty days.
+- Ship-to-main convenience. You traded it for review on purpose.
+"""
+
+[[section]]
+heading = "Cost check"
+body = """
+Amp: Hobby free, Megawatt $20 and Gigawatt $200 a month, plus orb minutes where the plan does not cover them [[cite:amp.pricing]] [[cite:amp.orbs]].
+
+Jiro: $99 a month on Developer for a single engineer and up to three persistent runtimes; $250 a month on Team for several people sharing five [[cite:jiro.pricing]]. Runtimes sleep when idle [[cite:jiro.runtimes]], and your Claude or ChatGPT bill is unchanged, because Jiro takes no cut of tokens [[cite:jiro.no-markup]].
+
+**Gotcha:** for a single developer on Megawatt, Jiro costs more. The case for paying it is shared runtimes, Slack threads the whole team sees and work that comes back as a pull request for review, not a lower invoice.
+"""
+
+[[section]]
+heading = "Running both during the pilot"
+body = """
+Nothing stops you keeping Amp for a few weeks. Split work by repository, never by task, so two agents are not editing the same branch. Turn on Push to Branch in Amp for the overlap period [[cite:amp.ship]], which puts both tools behind the same review gate and makes the comparison fair.
+
+Compare merged pull requests, review rounds per change and how often a reviewer had to rewrite something. Ignore raw volume.
+
+Still deciding? The [Amp alternatives comparison](https://jiro.bot/alternatives/amp) lays out the other options.
+"""
+
+[[faq]]
+q = "Will my AGENTS.md work in Jiro?"
+a = "Yes. It stays in the repository, so Jiro picks it up on clone. Rules shared across repos can go into a skillset, which Jiro translates into CLAUDE.md or AGENTS.md per harness [[cite:jiro.translation]]."
+
+[[faq]]
+q = "Can I use the same Claude Max plan I used with Amp?"
+a = "Yes, with a new token. Run `claude setup-token` locally [[cite:anthropic.setup-token]] and connect the result in Jiro."
+
+[[faq]]
+q = "Does Jiro land changes on main like Amp's Ship?"
+a = "Jiro's normal output is a pull request (sometimes a commit or comment) that your team reviews [[cite:jiro.outputs]]. Enforce that with GitHub branch protection on main, so changes only land through review."
+
+[[faq]]
+q = "Is our code kept apart from other Jiro customers?"
+a = "Each organization runs on its own single-tenant broker [[cite:jiro.single-tenant]], one machine serves one active session [[cite:jiro.one-session-per-machine]], and every action is logged [[cite:jiro.audit]]."

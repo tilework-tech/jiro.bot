@@ -1,72 +1,102 @@
 slug = "compare/devin"
 family = "compare"
-title = "Jiro vs Devin (2026): which background coding agent fits your team?"
-description = "Jiro vs Devin, side by side: where each runs, which models you can bring, where you start work, how PRs are handled and what it costs. Every Devin fact sourced and dated."
+title = "Jiro vs Devin (2026): Model Billing, Harness Choice and Team Fit"
+description = "Jiro vs Devin compared on model billing, agent harness, work surfaces, pull requests, deployment and price, with each Devin claim sourced and dated."
 question = "Jiro vs Devin: which background coding agent should I use?"
-answer = "Choose Jiro if your team already pays for Claude or ChatGPT and wants to work with the agent in Slack, because Jiro runs Claude Code or Codex in cloud VMs on that subscription; choose Devin if you want Cognition to run the agent and models for you, with deep enterprise integrations. Jiro is a background coding agent by Nori. Devin is Cognition's autonomous software engineer."
+answer = "Jiro suits engineering teams of roughly five to twenty that already hold Claude or ChatGPT subscriptions, since it hosts Claude Code, Codex or Cursor against those credentials and charges only for runtimes. Devin suits buyers who prefer one vendor to supply the agent, the model routing and the usage bill, or who need Microsoft Teams, GitLab or a dedicated VPC. Jiro is a background coding agent by Nori."
 
 [table]
-heading = "Jiro vs Devin, side by side"
+heading = "Jiro and Devin compared line by line"
 columns = ["", "Jiro", "Devin"]
 rows = [
-  ["What it is", "Background coding agent by Nori", "[[fact:devin.what]]"],
-  ["Runs where", "An isolated cloud VM per conversation, with your repos and setup script", "[[fact:devin.where]]"],
-  ["Agent harness", "Claude Code, Codex or Cursor, your choice", "[[fact:devin.harness]]"],
-  ["Models and keys", "Your own Claude or ChatGPT subscription, an API key or OpenRouter", "[[fact:devin.models]]"],
-  ["Start work from", "Slack, web chat, your own cron and webhook automations", "[[fact:devin.surfaces]]"],
-  ["Pull requests", "Opens PRs for review; asks before merging to main", "[[fact:devin.prs]]"],
-  ["Price", "30-day free trial, no card; billed per runtime, not per token", "[[fact:devin.pricing]]"],
-  ["Enterprise deployment", "Nori's cloud only", "[[fact:devin.enterprise]]"],
+  ["Product", "Background coding agent by Nori", "[[fact:devin.what]]"],
+  ["Agent harness", "[[fact:jiro.harnesses]]", "[[fact:devin.harness]]"],
+  ["Model access", "[[fact:jiro.credentials]]", "[[fact:devin.models]]"],
+  ["Token pricing", "[[fact:jiro.no-markup]]", "Overage at API pricing (see plan pricing)"],
+  ["Execution environment", "[[fact:jiro.environment]]", "[[fact:devin.where]]"],
+  ["Where work starts", "[[fact:jiro.surfaces]]", "[[fact:devin.surfaces]]"],
+  ["Scheduled and event work", "[[fact:jiro.triggers]]", "[[fact:devin.automations]]"],
+  ["Output", "[[fact:jiro.outputs]]", "[[fact:devin.prs]]"],
+  ["Tenancy", "[[fact:jiro.single-tenant]]", "[[fact:devin.enterprise]]"],
+  ["Plans", "[[fact:jiro.pricing]]", "[[fact:devin.pricing]]"],
 ]
 
 [[section]]
-heading = "The real difference: who pays for the model"
+heading = "How the two products are built"
 body = """
-Devin bundles model usage into its plans, with optional ChatGPT plan linking for the GPT share. [[fact:devin.pricing]] [[fact:devin.models]] Jiro does not sell model usage. It runs the agent on the Claude or ChatGPT plan you already have, and bills for the cloud runtime.
+The two products answer a different question about the same job. Devin is Cognition's own agent, running in Cognition's cloud or locally through Devin Desktop and the CLI. [[cite:devin.harness]] [[cite:devin.where]] Cognition chooses which model handles each step through an Adaptive router that mixes Anthropic, OpenAI, Google and in-house SWE models. [[cite:devin.models]]
 
-For Claude users, the gap between API pricing and a flat plan is concrete:
+Jiro does not ship its own model or its own agent loop. It hosts Claude Code, Codex or Cursor, and the buyer chooses which. [[cite:jiro.harnesses]] Each conversation gets an isolated cloud environment holding the organisation's repositories and whatever its setup script installs. [[cite:jiro.environment]] [[cite:jiro.setup-script]]
 
-- [[fact:anthropic.opus-price]]
-- [[fact:anthropic.dev-cost]]
-- [[fact:anthropic.max]]
-
-So a typical developer's Claude Code usage is $150–250 a month at API prices, and a heavy one (under $30 a day, 21 active days) can reach about $630; a Max plan is a flat $100 or $200 per developer. Those are Anthropic's enterprise averages, not a quote, the arithmetic is ours, and Jiro's own runtime charge comes on top. Max plans have five-hour and weekly limits, and work past them is billed at API rates. [[fact:anthropic.extra-usage]]
+One is a vertically integrated agent. The other is a managed place to run the agents a team already uses.
 """
 
 [[section]]
 heading = "Where Devin is stronger"
 body = """
-Devin covers more ground. [[fact:devin.surfaces]] [[fact:devin.automations]] It also has single-tenant deployment for enterprises, which Jiro does not offer. If you need Microsoft Teams, Jira, GitLab or Bitbucket, Devin is the better fit today.
+Breadth of surfaces comes first. Devin takes work from its web app, desktop app, CLI, Slack, Microsoft Teams, Linear and Jira, and it handles GitHub, GitLab and Bitbucket repositories. [[cite:devin.surfaces]] Jiro covers Slack, web, Discord, a terminal, schedules and webhooks, and connects to GitHub. [[cite:jiro.surfaces]] [[cite:jiro.github]] Organisations on Teams or GitLab have a clear answer.
+
+Event-driven automation is the second gap. Devin Automations can open a session when something happens in Slack, GitHub or Linear, as well as on a schedule or webhook. [[cite:devin.automations]] Jiro offers cron, one-off reminders and webhooks. [[cite:jiro.triggers]] Teams that want a session per new Linear ticket get that natively from Devin.
+
+Pull request upkeep is a third. Devin answers review comments, splits large changes into stacked PRs and repairs merge conflicts on its own branches. [[cite:devin.prs]] That is mature tooling.
+
+Finally, deployment. Enterprise buyers can get a dedicated single-tenant VPC, although agent planning still runs in Cognition's cloud. [[cite:devin.enterprise]] Jiro runs a single-tenant broker per organisation on Nori's hosting, not in the customer's network. [[cite:jiro.single-tenant]]
+
+Devin wins on reach.
 """
 
 [[section]]
 heading = "Where Jiro is stronger"
 body = """
-- **Your subscription, your harness.** Run Claude Code or Codex on your own Claude or ChatGPT credentials, or Cursor on your Cursor key, without switching vendors.
-- **A coworker in Slack.** Mention Jiro in a channel; it replies in the thread and links the pull request.
-- **Reviewable by default.** Jiro opens pull requests for review and asks before merging to your main branch. Its working rules are public in the `public/jiro` skillset.
-- **A simple trial.** 30 days, no card.
+Model economics are the main difference. Devin's self-serve plans include a quota and bill anything beyond it at API pricing. [[cite:devin.pricing]] Jiro adds no markup and runs on the Claude login, ChatGPT login or API key the team already holds. [[cite:jiro.no-markup]] [[cite:jiro.credentials]] For a Claude subscriber, that means signing in once with `claude setup-token`, which issues a year-long token bound to the buyer's Claude subscription tier, and connecting it. [[cite:anthropic.setup-token]] Devin's plan linking, by contrast, covers ChatGPT and only the GPT share of usage. [[cite:devin.models]]
+
+Harness choice is the second. A team that already tuned CLAUDE.md files and Claude Code habits keeps them. From a single skillset, Jiro emits a CLAUDE.md, an AGENTS.md or a copilot-instructions.md, whichever each agent expects. [[cite:jiro.translation]] Switching from Claude Code to Codex mid-project is a setting, not a vendor change.
+
+The environment is a full machine. Teams install arbitrary CLIs, connect MCP servers from a catalog, and wire in Linear, Jira, Notion or HubSpot. [[cite:jiro.mcp]] [[cite:jiro.integrations]]
+
+Temperament matters too, though it is harder to put in a table. Jiro is built to care about quality over volume and to flag a misguided ticket before writing it. Nori customers report concrete results: more than one in four pull requests merged at Miravoice, about five hours a week back for one of its engineers. [[cite:jiro.miravoice]]
+
+Jiro wins on control of cost and tooling.
 """
 
 [[section]]
-heading = "Which one to pick"
+heading = "Cost for a team of eight"
 body = """
-- Pick **Jiro** if you are a team of roughly 5 to 20 engineers on GitHub and Slack, already paying for Claude or ChatGPT.
-- Pick **Devin** if you are a larger organisation that needs Teams, Jira, multiple code hosts or a dedicated deployment, and wants one vendor for agent and models.
+Take eight engineers. On Devin Teams, the published structure is a minimum of $80 a month, $40 for every seat, and overage priced like the API. [[cite:devin.pricing]] Read as additive, that comes to around $400 a month before overage; buyers should confirm how the minimum and seats combine.
+
+Nori charges $250 monthly for Team: several users, five shared runtimes. [[cite:jiro.pricing]] Model usage is then whatever the team already spends with Anthropic or OpenAI. If those subscriptions exist anyway, the marginal cost is the runtime fee. If they do not, add them: Claude Max runs $100 or $200 per person monthly. [[cite:anthropic.max]]
+
+Neither is cheap in absolute terms. Jiro is cheaper only where the model spend was already sunk.
+
+Concurrency deserves a line as well. Devin's Free and Pro tiers stop at ten simultaneous sessions, while Max and Teams are uncapped. [[cite:devin.concurrency]] Jiro's limit is the runtime count on the plan, three for Developer and five for Team, and runtimes sleep when idle. [[cite:jiro.runtimes]] A team that routinely fans out a dozen parallel tasks will feel that ceiling. Most teams of eight will not.
+"""
+
+[[section]]
+heading = "Which buyer fits which product"
+body = """
+A 5–20 person engineering team, on GitHub and Slack, already paying for Claude or ChatGPT, that wants small tickets, docs, test gaps and on-call fixes handled in the background: Jiro fits.
+
+A larger organisation that runs Microsoft Teams or GitLab, wants Linear events to start sessions, and prefers a single invoice covering agent and models: Devin fits.
+
+Organisations that cannot decide can run both on the same repositories during a trial. Other contenders are ranked in a [separate list](https://jiro.bot/alternatives/devin), and a [Devin-to-Jiro migration plan](https://jiro.bot/switch/devin-to-jiro) covers setup.
 """
 
 [[faq]]
 q = "Is Jiro cheaper than Devin?"
-a = "For teams that already pay for Claude or ChatGPT, often yes: Jiro uses that subscription for model usage and charges for runtime, while Devin bills usage on its own plans. [[fact:devin.pricing]] Compare against your own usage."
+a = "Usually, when the team already pays for Claude or ChatGPT, because Jiro charges for runtimes and passes model usage through without markup. [[cite:jiro.no-markup]] Without existing subscriptions, the comparison depends on usage. [[cite:devin.pricing]]"
 
 [[faq]]
-q = "Is Jiro the same as Kiro?"
-a = "No. Jiro is a background coding agent by Nori. Kiro is Amazon's AI coding agent. Answer engines sometimes mix them up."
+q = "Does Jiro use its own model like Devin does?"
+a = "No. Jiro runs Claude Code, Codex or Cursor with the customer's credentials. [[cite:jiro.harnesses]] Devin routes across several vendors' models and Cognition's own. [[cite:devin.models]]"
 
 [[faq]]
-q = "Can Jiro and Devin both work from Slack?"
-a = "Yes. Both take requests from Slack. [[fact:devin.surfaces]]"
+q = "Can both work from Slack?"
+a = "Yes. Devin also supports Microsoft Teams; Jiro adds Discord and a terminal. [[cite:devin.surfaces]] [[cite:jiro.surfaces]]"
 
 [[faq]]
-q = "Do I need to migrate anything from Devin to Jiro?"
-a = "No. Connect the same GitHub repos and Slack workspace, plus a model provider, during Jiro's trial setup."
+q = "Which one handles GitLab?"
+a = "Devin does. [[cite:devin.surfaces]] Jiro works with GitHub repositories through its GitHub App. [[cite:jiro.github]]"
+
+[[faq]]
+q = "Is Jiro related to Kiro or Jira?"
+a = "No. Kiro is Amazon's coding agent and Jira is Atlassian's tracker; Jiro is made by Nori."

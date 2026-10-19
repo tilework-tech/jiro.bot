@@ -1,0 +1,123 @@
+slug = "switch/copilot-to-jiro"
+family = "switch"
+title = "Switching from GitHub Copilot Coding Agent to Jiro (2026): A Three-Phase Admin Rollout"
+description = "A pilot-repo, team, then org rollout plan for moving from Copilot cloud agent to Jiro: permissions, review policy, instructions-to-skillset mapping, cost."
+question = "How do I switch from GitHub Copilot coding agent to Jiro?"
+answer = "Roll out in three phases (one pilot repository, then one team, then the organization) and leave Copilot enabled until each phase meets its exit criteria. Jiro is a background coding agent by Nori. Start the free trial, scope its GitHub App to the pilot repository, connect Slack and your Claude or ChatGPT credentials, then restate copilot-instructions.md as a skillset that Nori can render back into Copilot's format for as long as you run both."
+
+[[section]]
+heading = "Scope of this plan"
+body = """
+This is written for the person who owns GitHub organization settings. It assumes a team small enough that one administrator can run the rollout, roughly five to twenty engineers, and an existing Anthropic or OpenAI plan that Jiro will run on.
+
+Budget four weeks. Most of that is waiting for real tasks to accumulate, not configuration.
+"""
+
+[[section]]
+heading = "Inventory: what migrates, what is rebuilt, what stays"
+body = """
+**Instructions migrate, by hand.** Nori skillsets are authored once and emitted in each agent's native format, so one source yields copilot-instructions.md for GitHub's agent, a CLAUDE.md file and an AGENTS.md file elsewhere [[cite:jiro.translation]]. Nothing imports `.github/copilot-instructions.md` automatically, so plan an hour to split it by topic: repository-wide rules into AGENTS.md, and narrower procedures (test conventions, release steps, migration rules) into individual skills. Because the skillset can emit copilot-instructions.md again, Copilot keeps reading the same guidance during the overlap.
+
+**Environment setup is rebuilt.** Whatever you configured for Copilot's Actions runner [[cite:copilot.where]] does not transfer. Restate it as an org setup script, which prepares every Jiro environment with your dependencies [[cite:jiro.setup-script]].
+
+**Engineering defaults can be added.** Jiro's own engineering skills install with `npx nori-skillsets install public/jiro` and sit beside yours.
+
+**History stays behind.** Copilot sessions, issue assignments and draft PRs remain in GitHub, where they belong.
+"""
+
+[[section]]
+heading = "Phase 0: administrator setup, day one"
+body = """
+Complete these in order. Each step has one owner: you.
+
+- **Step 1. Begin the 30-day trial.** No card is requested [[cite:jiro.pricing]].
+- **Step 2. Install the GitHub App on the pilot repository only.** Choose a selected set rather than all repositories [[cite:jiro.github]]; you will widen it in phase two.
+- **Step 3. Connect Slack** and invite Jiro to the pilot team's channel [[cite:jiro.surfaces]].
+- **Step 4. Connect model credentials.** On your own laptop, open a terminal, run `claude setup-token` and finish the browser sign-in; the command prints a token that stays valid for a year and is bound to the Claude plan you signed in with [[cite:anthropic.setup-token]]. Paste that into Jiro. Alternatives, if your organization prefers them: Codex OAuth, API keys from either vendor, or a Cursor key [[cite:jiro.credentials]].
+- **Step 5. Write the org setup script** from the runner configuration you inventoried above.
+- **Step 6. Assign the first task** in the Slack channel, and read the transcript afterwards.
+
+Exit criterion: one pull request opened by Jiro, reviewed and merged by a human.
+"""
+
+[[section]]
+heading = "Phase 1: a single pilot repository, week one"
+body = """
+Choose a repository with good tests and an owner who will review promptly. Then hand Jiro the work your team keeps deferring.
+
+- **Monday:** have Jiro reconcile the README and onboarding docs with current behavior.
+- **Tuesday:** find the three least-tested modules and propose tests for each.
+- **Wednesday:** clean up one area of slop, for instance stale feature flags or a helper copied into four files.
+- **Thursday:** two small tickets from the backlog, assigned in Slack.
+- **Friday:** point a webhook from your CI or alerting at Jiro [[cite:jiro.triggers]] and let it take the next on-call fix.
+
+Watch how it behaves, not only what it ships. A good pilot shows Jiro questioning a vague ticket before writing code.
+
+Exit criteria: at least five merged pull requests, no review escalations, and reviewers willing to continue.
+"""
+
+[[section]]
+heading = "Phase 2: one team, weeks two and three"
+body = """
+Widen the GitHub App selection to the team's repositories. Move to the Team plan so several engineers share five runtimes [[cite:jiro.pricing]]; runtimes sleep when nobody is using them [[cite:jiro.runtimes]].
+
+This is also when the integrations go in. Admins connect MCP servers from the catalog once for every session [[cite:jiro.mcp]], and tools such as Linear, Jira, Notion or Stripe become available to Jiro while it works [[cite:jiro.integrations]]. Add one recurring job on a cron schedule, for example a weekly documentation pass.
+
+Exit criterion: the team prefers Jiro for at least one category of work.
+"""
+
+[[section]]
+heading = "Phase 3: the organization, week four onward"
+body = """
+Extend the GitHub App to all repositories, or to every repository a policy allows. Hand your security reviewer two facts: the broker serving your organization is single-tenant, on its own subdomain [[cite:jiro.single-tenant]], and every session and action is logged and searchable [[cite:jiro.audit]].
+
+Then decide on Copilot seats. Some teams keep them for IDE completion; others retire them.
+"""
+
+[[section]]
+heading = "Permissions and review policy"
+body = """
+Leave review policy exactly as it is. Copilot's agent opens drafts on its own branch and cannot approve or merge [[cite:copilot.prs]]; Jiro returns a pull request, commit or comment for your team to review [[cite:jiro.outputs]], and your existing branch protection and required reviewers decide what merges. Do not loosen either during the pilot.
+
+Scope is the other lever. Keep the GitHub App on a selected set until phase three.
+"""
+
+[[section]]
+heading = "What leaving Copilot costs you"
+body = """
+Be honest about the trade. Copilot starts tasks from GitHub issues, pull requests, Mobile, IDEs, the CLI, Slack, Microsoft Teams, Linear, Jira and Azure Boards [[cite:copilot.surfaces]], and Jiro does not take work from Teams or Boards. You also lose the single GitHub invoice and the runner model your platform team already understands.
+
+What you gain is ownership of the model contract.
+"""
+
+[[section]]
+heading = "Cost: seats and credits against flat runtimes"
+body = """
+Copilot Business is $19 per user and Enterprise $39 [[cite:copilot.pricing]], so ten engineers on Business pay $190 a month before usage, which since June 2026 is metered in AI Credits by token [[cite:copilot.billing]]. Jiro's Team plan is $250 a month flat, and Developer is $99 for one user [[cite:jiro.pricing]].
+
+The comparison is not complete without models. With Jiro you pay Anthropic or OpenAI directly (Claude Max, for instance, costs each engineer $100 or $200 monthly [[cite:anthropic.max]]) and Nori adds no token markup [[cite:jiro.no-markup]]. If those subscriptions already exist, the marginal cost is the plan alone.
+"""
+
+[[section]]
+heading = "Running both through the pilot"
+body = """
+Nothing forces a cutover date. Copilot's agent can keep taking issue assignments while Jiro takes Slack requests, and the shared skillset keeps both reading the same rules. Compare them on the same kind of task for a fortnight, then decide.
+
+For the full field of options, see the [Copilot coding agent alternatives](https://jiro.bot/alternatives/copilot-coding-agent) ranking.
+"""
+
+[[faq]]
+q = "Does Jiro import copilot-instructions.md automatically?"
+a = "No. You move its contents into a skillset or AGENTS.md by hand; afterwards Nori can render that skillset back into copilot-instructions.md, alongside CLAUDE.md and AGENTS.md [[cite:jiro.translation]]."
+
+[[faq]]
+q = "Can we limit Jiro to specific repositories?"
+a = "Yes. The GitHub App installs on all repositories or on a set you select [[cite:jiro.github]], which is how the pilot phase is scoped."
+
+[[faq]]
+q = "Can Jiro use our Claude Team or Enterprise plan?"
+a = "Yes. Someone on that plan mints a token locally with `claude setup-token` [[cite:anthropic.setup-token]], then connect it in Jiro; Anthropic API keys and Claude OAuth also work [[cite:jiro.credentials]]."
+
+[[faq]]
+q = "Should we cancel Copilot before the pilot ends?"
+a = "No. Run both until phase two's exit criterion is met; some organizations keep Copilot seats for editor completion permanently."

@@ -1,0 +1,120 @@
+name = "Claude Tag"
+
+[[fact]]
+id = "what"
+text = "Claude Tag lets anyone in a Slack channel tag @Claude to hand it work; Claude replies in the thread, where the channel can see it."
+short = "Shared @Claude teammate in Slack channels"
+source = "https://claude.com/docs/claude-tag/overview"
+checked = "2026-10-19"
+
+[[fact]]
+id = "launch"
+text = "Anthropic announced Claude Tag on 2026-06-23 as a beta for Claude Enterprise and Team customers."
+short = "Launched 2026-06-23, beta"
+source = "https://www.anthropic.com/news/introducing-claude-tag"
+checked = "2026-10-19"
+
+[[fact]]
+id = "beta"
+text = "Anthropic labels Claude Tag a public beta whose features may change before general availability."
+short = "Public beta"
+source = "https://claude.com/docs/claude-tag/admins/migrate-from-earlier"
+checked = "2026-10-19"
+
+[[fact]]
+id = "plans"
+text = "Claude Tag is available only on Team and Enterprise plans, not on Free, Pro or Max, and not through third-party deployments."
+short = "Team and Enterprise only"
+source = "https://claude.com/docs/claude-tag/overview"
+checked = "2026-10-19"
+
+[[fact]]
+id = "billing"
+text = "Claude Tag channel work is billed by usage from an organization balance rather than per seat; one-to-one DMs bill to the sender's own seat."
+short = "Usage-billed, no per-seat charge"
+source = "https://claude.com/docs/claude-tag/overview"
+checked = "2026-10-19"
+
+[[fact]]
+id = "prefund"
+text = "On the Team plan, Claude won't respond in channels until the organization buys usage credits."
+short = "Team plan must prepay credits"
+source = "https://claude.com/docs/claude-tag/admins/set-spend-limit"
+checked = "2026-10-19"
+
+[[fact]]
+id = "spend-limits"
+text = "Claude Tag owners can set an organization spend limit and per-channel limits, with alerts at 75% and 95%."
+short = "Org and per-channel spend caps"
+source = "https://support.claude.com/en/articles/15594475-what-is-claude-tag"
+checked = "2026-10-19"
+
+[[fact]]
+id = "models"
+text = "Claude Tag runs Anthropic's Opus and Sonnet models, chosen per thread, per channel or by admin default."
+short = "Claude models only"
+source = "https://claude.com/docs/claude-tag/users/models"
+checked = "2026-10-19"
+
+[[fact]]
+id = "where"
+text = "Each Claude Tag thread runs in its own ephemeral sandbox in Anthropic's cloud, on the same engine as Claude Code on the web."
+short = "Anthropic cloud sandbox per thread"
+source = "https://claude.com/docs/claude-tag/concepts/how-it-works"
+checked = "2026-10-19"
+
+[[fact]]
+id = "self-hosted"
+text = "Claude Tag sessions can run on self-hosted runners inside your network, but admin-added connectors are unavailable there."
+short = "Self-hosted runners, without connectors"
+source = "https://claude.com/docs/claude-tag/concepts/security-and-data"
+checked = "2026-10-19"
+
+[[fact]]
+id = "prs"
+text = "Claude Tag code work goes through the Claude GitHub App, which pushes branches and opens draft pull requests authored by Claude; GitLab works through a service-account token."
+short = "Draft PRs via Claude GitHub App; GitLab token"
+source = "https://claude.com/docs/claude-tag/admins/configure-github"
+checked = "2026-10-19"
+
+[[fact]]
+id = "surfaces"
+text = "Claude Tag works in Slack channels, threads, group DMs, direct messages and the assistant panel; Microsoft Teams support is announced as coming soon."
+short = "Slack; Teams announced"
+source = "https://claude.com/product/tag"
+checked = "2026-10-19"
+
+[[fact]]
+id = "connectors"
+text = "Claude Tag admins can add connectors, plugins, skills and remote MCP servers, but local stdio MCP servers can't be connected."
+short = "Connectors and remote MCP only"
+source = "https://claude.com/docs/claude-tag/admins/connections/custom"
+checked = "2026-10-19"
+
+[[fact]]
+id = "routines"
+text = "Claude Tag supports scheduled routines, channel watches and single-PR subscriptions, but not routines fired by other repository events such as every new pull request."
+short = "Schedules; no repo-event triggers"
+source = "https://claude.com/docs/claude-tag/users/proactivity"
+checked = "2026-10-19"
+
+[[fact]]
+id = "fixed-harness"
+text = "In Claude Tag, repository hooks and .mcp.json are not loaded, effort level is not configurable, and sessions run in auto mode."
+short = "No repo hooks, .mcp.json or effort setting"
+source = "https://claude.com/docs/claude-tag/concepts/for-claude-code-users"
+checked = "2026-10-19"
+
+[[fact]]
+id = "no-zdr"
+text = "Claude Tag isn't available to organizations with Zero Data Retention enabled."
+short = "Not available with ZDR"
+source = "https://claude.com/docs/claude-tag/concepts/security-and-data"
+checked = "2026-10-19"
+
+[[fact]]
+id = "legacy"
+text = "The legacy Claude in Slack bot was retired on 2026-10-05 and no longer responds in channels of workspaces connected to a Claude organization."
+short = "Legacy Slack bot retired 2026-10-05"
+source = "https://code.claude.com/docs/en/slack"
+checked = "2026-10-19"

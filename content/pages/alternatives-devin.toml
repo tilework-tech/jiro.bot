@@ -1,125 +1,157 @@
 slug = "alternatives/devin"
 family = "alternatives"
-title = "Devin alternatives (2026): background coding agents compared"
-description = "The best Devin alternatives in 2026, compared on where they run, which models you can bring, where you start work, and what they cost. Sourced and dated."
+title = "Devin Alternatives & Competitors (2026): 8 Best Options"
+description = "Eight Devin alternatives ranked by what they cost a 5–20 engineer team: Jiro, Cursor, Codex cloud, Claude Code, Factory, Copilot, Tembo and OpenHands."
 question = "What are the best Devin alternatives?"
-answer = "The best Devin alternative for most teams is Jiro, because it runs Claude Code or Codex in its own cloud VMs on the Claude or ChatGPT subscription you already pay for, instead of a separate usage quota. Jiro is a background coding agent by Nori. Other strong options are OpenAI Codex cloud, Cursor cloud agents, GitHub Copilot cloud agent, Google Jules and the open-source OpenHands."
+answer = "If your team has five to twenty engineers and a Claude or ChatGPT bill already on the company card, the Devin alternative we would pick is Jiro, because it drives Claude Code, Codex or Cursor using credentials you already own and adds no token markup. Jiro is a background coding agent by Nori. The other serious contenders are Cursor's cloud agents, Codex cloud from OpenAI, Anthropic's Claude Code web sessions, Factory, GitHub Copilot cloud agent, Tembo and OpenHands."
 
 [table]
-heading = "Devin and its alternatives at a glance"
-columns = ["", "Runs where", "Models and keys", "Start work from", "Price"]
+heading = "Devin and eight alternatives, sorted by who sells you the tokens"
+columns = ["", "Who supplies the model", "How the bill works", "Where the work runs"]
 rows = [
-  ["Jiro", "An isolated cloud VM per conversation, with your repos and setup script", "Claude Code or Codex on your own Claude or ChatGPT subscription or API key; Cursor with a Cursor API key", "Slack, web chat, your own cron and webhook automations", "30-day free trial, no card; billed per runtime, not per token"],
-  ["Devin", "[[fact:devin.where]]", "[[fact:devin.models]]", "[[fact:devin.surfaces]]", "[[fact:devin.pricing]]"],
-  ["Codex cloud", "[[fact:codex.where]]", "[[fact:codex.models]]", "[[fact:codex.surfaces]]", "[[fact:codex.pricing]]"],
-  ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
-  ["Copilot cloud agent", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.surfaces]]", "[[fact:copilot.pricing]]"],
-  ["Jules", "[[fact:jules.where]]", "[[fact:jules.models]]", "[[fact:jules.surfaces]]", "[[fact:jules.pricing]]"],
-  ["OpenHands", "[[fact:openhands.where]]", "[[fact:openhands.models]]", "[[fact:openhands.surfaces]]", "[[fact:openhands.pricing]]"],
+  ["Jiro", "[[fact:jiro.credentials]]", "[[fact:jiro.pricing]]", "[[fact:jiro.environment]]"],
+  ["Devin", "[[fact:devin.models]]", "[[fact:devin.pricing]]", "[[fact:devin.where]]"],
+  ["Cursor cloud agents", "[[fact:cursor.models]]", "[[fact:cursor.pricing]]", "[[fact:cursor.where]]"],
+  ["OpenAI Codex cloud", "[[fact:codex.models]]", "[[fact:codex.pricing]]", "[[fact:codex.where]]"],
+  ["Claude Code on the web", "[[fact:claude-code.models]]", "[[fact:claude-code.pricing]]", "[[fact:claude-code.where]]"],
+  ["Factory", "[[fact:factory.models]]", "[[fact:factory.pricing]]", "[[fact:factory.where]]"],
+  ["GitHub Copilot cloud agent", "[[fact:copilot.models]]", "[[fact:copilot.pricing]]", "[[fact:copilot.where]]"],
+  ["Tembo", "[[fact:tembo.models]]", "[[fact:tembo.pricing]]", "[[fact:tembo.where]]"],
+  ["OpenHands", "[[fact:openhands.models]]", "[[fact:openhands.pricing]]", "[[fact:openhands.where]]"],
 ]
+note = "Rival prices and limits are from each vendor's own pages; see the dated sources below."
 
 [[section]]
-heading = "Where Devin stands in October 2026"
+heading = "Why people go shopping after a Devin invoice"
 body = """
-[[fact:devin.what]] It is one of the most complete products in the category, with cloud and local agents and browser testing. [[fact:devin.surfaces]]
+Devin is not expensive per seat. A Teams plan starts at an $80 monthly floor plus $40 a seat, and Pro is $20. [[cite:devin.pricing]] The number that surprises people is the other one: anything past the quota is billed at API pricing. [[cite:devin.pricing]] Your Anthropic and OpenAI usage gets resold to you through Cognition's router, at list.
 
-The pricing model changed this year. [[fact:devin.plans-change]] [[fact:devin.pricing]] The desktop editor changed too: [[fact:devin.desktop]]
+That is a reasonable business. It is also a second model bill for any team that already pays Anthropic or OpenAI directly.
 
-People who search for Devin alternatives usually want one of three things: to stop paying a second bill for model usage they already have through Claude or ChatGPT, to pick the agent harness themselves, or to get an open-source agent they can run anywhere.
+Some history, because the plans keep moving. Cognition dropped the ACU-based Core and Team plans for quota plans on 2026-04-14. [[cite:devin.plans-change]] Windsurf turned into Devin Desktop that June. [[cite:devin.desktop]] Devin can now link a ChatGPT plan, but only for the GPT share of usage; the Claude and Gemini traffic still goes through Cognition. [[cite:devin.models]] The planning side of the agent stays in Cognition's cloud even on the single-tenant Enterprise deployment. [[cite:devin.enterprise]]
+
+Devin is still good at a lot. It is a capable agent that maintains its own pull requests, stacks large changes and resolves its own merge conflicts. [[cite:devin.prs]] The question is narrower. Do you want to pay twice for the same model?
 """
 
 [[section]]
-heading = "The alternatives, ranked"
-body = "Ranked for a team of 5 to 20 engineers that wants an agent working in the background on real repos, not a prototype tool."
+heading = "The eight options, ranked for small teams"
+body = "Ranked for a team of 5 to 20 engineers on GitHub that already has at least one frontier model subscription. Bigger organisations will order this differently, and should."
 
 [[section]]
 level = 3
-heading = "1. Jiro: best if you already pay for Claude or ChatGPT"
+heading = "1. Jiro, when the model bill already exists"
 body = """
-Jiro runs the coding agent you choose (Claude Code, Codex or Cursor) in an isolated cloud VM with your GitHub repos checked out and your setup script run. You talk to it in Slack or the web chat, and it opens pull requests for your team to review. It asks before it merges anything to your main branch.
+Jiro runs Claude Code, Codex or Cursor as the agent, on your Claude or ChatGPT login, an API key, or a Cursor key. [[cite:jiro.harnesses]] [[cite:jiro.credentials]] There is no markup on tokens. [[cite:jiro.no-markup]] You pay Nori for runtimes, which sleep when nobody is using them. [[cite:jiro.runtimes]]
 
-Claude Code and Codex run on your own Claude subscription, ChatGPT subscription or API key, and Cursor on your Cursor API key, so you are not buying model usage twice. Jiro charges for the cloud runtime, not the tokens.
-
-Jiro's engineering rules are public in the `public/jiro` skillset: pin down what to build before building it, write the test first, attach proof to the PR, and push back on bad ideas.
-
-**Pick Jiro if** you want a background coding agent that works in Slack, uses the subscription you already have, and lets you switch agent harnesses without switching vendors.
-"""
-
-[[section]]
-level = 3
-heading = "2. OpenAI Codex cloud: best if your team lives in ChatGPT"
-body = """
-[[fact:codex.where]] [[fact:codex.pricing]]
-
-**Pick Codex cloud if** everyone already has a ChatGPT plan and OpenAI models are all you need. It runs OpenAI models only, and the GitHub and Linear integrations still sit on the legacy cloud. [[fact:codex.legacy]]
+Each conversation gets its own cloud machine with your repos and whatever your org setup script installs. [[cite:jiro.environment]] [[cite:jiro.setup-script]] Work comes back as a pull request your team reviews. [[cite:jiro.outputs]]
 """
 
 [[section]]
 level = 3
-heading = "3. Cursor cloud agents: best if your team already works in Cursor"
+heading = "2. Cursor cloud agents, for teams who live in Cursor"
 body = """
-[[fact:cursor.rename]] [[fact:cursor.prs]] [[fact:cursor.surfaces]]
-
-**Pick Cursor cloud agents if** the editor is already your team's home. Check the pricing change first: [[fact:cursor.pricing]]
+Polished, and the PRs arrive with screenshots and video. [[cite:cursor.prs]] The catch is billing. Every cloud-agent run meters at list API rates, and custom keys never get past the chat models. [[cite:cursor.models]] Cloud agents need the $30 Premium tier or higher. [[cite:cursor.pricing]]
 """
 
 [[section]]
 level = 3
-heading = "4. GitHub Copilot cloud agent: best for issue-in, PR-out on GitHub"
+heading = "3. OpenAI Codex cloud, the cheapest door for ChatGPT shops"
 body = """
-[[fact:copilot.what]] [[fact:copilot.prs]] Those are the strictest default guardrails in this list.
-
-**Pick Copilot if** you want the agent inside GitHub itself and your tasks fit in a single session. [[fact:copilot.where]]
+Codex cloud is bundled from ChatGPT Plus at $20 a month. [[cite:codex.pricing]] It runs OpenAI models only, and an API key does not unlock the cloud features. [[cite:codex.models]] You open the PR yourself. [[cite:codex.prs]]
 """
 
 [[section]]
 level = 3
-heading = "5. Google Jules: best free tier"
+heading = "4. Claude Code on the web, for individuals on a Claude plan"
 body = """
-[[fact:jules.limits]] [[fact:jules.models]]
-
-**Pick Jules if** you want to try a cloud agent for free on personal projects. [[fact:jules.accounts]]
+No separate charge for the cloud machine; it comes with Pro, Max and Team seats. [[cite:claude-code.pricing]] Sessions push a branch and leave the pull request to you. [[cite:claude-code.prs]] Team Slack work has moved to Claude Tag. [[cite:claude-code.slack]]
 """
 
 [[section]]
 level = 3
-heading = "6. OpenHands: best open-source option"
+heading = "5. Factory, if you want the whole platform"
 body = """
-[[fact:openhands.what]] [[fact:openhands.where]]
-
-**Pick OpenHands if** you need to run everything on your own infrastructure or want to read and change the agent's code.
+Factory's Droids run locally, on Factory cloud machines, or on hardware you register. [[cite:factory.where]] Its Teams plan is $60 plus $40 per seat, capped at ten seats. [[cite:factory.pricing]] Bring-your-own-key is limited to its CLI and desktop app; the hosted web app won't take one. [[cite:factory.models]] More moving parts than most five-person teams need.
 """
 
 [[section]]
-heading = "When Devin is still the right call"
+level = 3
+heading = "6. GitHub Copilot cloud agent, the default nobody had to approve"
 body = """
-Stay with Devin if you need Microsoft Teams, Jira or GitLab today, a dedicated VPC deployment, or a vendor that handles model choice for you. [[fact:devin.enterprise]] Devin's automations are also mature. [[fact:devin.automations]]
+If procurement already bought Copilot, this is the path of least paperwork. Each session lives on a GitHub Actions runner and gets cut off at the 59-minute mark. [[cite:copilot.where]] Usage has been metered in AI Credits since June. [[cite:copilot.billing]]
 """
 
 [[section]]
-heading = "What bringing your own Claude subscription saves"
+level = 3
+heading = "7. Tembo, a multi-harness cousin"
 body = """
-Devin bills usage past its quota at API prices. Jiro runs Claude Code on your own Claude credentials, so for Claude users the comparison that matters is API pricing against a flat subscription.
+Tembo also runs several harnesses and takes your own subscriptions. [[cite:tembo.models]] Pro is $60 a month, and compute is billed by the second on top. [[cite:tembo.pricing]]
+"""
 
-- [[fact:anthropic.opus-price]]
-- [[fact:anthropic.dev-cost]]
-- [[fact:anthropic.max]]
+[[section]]
+level = 3
+heading = "8. OpenHands, for people who want the source"
+body = """
+MIT-licensed. [[cite:openhands.what]] Free to run locally, and you can self-host it in your VPC on Enterprise. [[cite:openhands.where]] You will be the one keeping it running, which is the point and also the cost.
+"""
 
-So a typical developer's Claude Code usage is $150–250 a month at API prices, and a heavy one (under $30 a day, 21 active days) can reach about $630; a Max plan is a flat $100 or $200 per developer. Those are Anthropic's enterprise averages, not a quote, the arithmetic is ours, and Jiro's own runtime charge comes on top either way. Max has limits: heavy agent work can hit the five-hour or weekly cap, and anything beyond it is billed at API rates. [[fact:anthropic.extra-usage]]
+[[section]]
+heading = "Choosing without a spreadsheet war"
+body = """
+Four questions settle most of this. Ask them in order and stop when one answer rules a product out.
+
+- Do you already pay for Claude or ChatGPT seats, and would you rather use those than buy model access again?
+- Where does the team actually ask for work: Slack, the IDE, GitHub issues, or a cron job at 3 a.m.?
+- Does the agent need a real machine with your toolchain, or will a short-lived sandbox do?
+- Who reviews the output, and does the agent return a ready PR or merely a branch somebody must still wrap up?
+
+If the answers are "yes, Slack, real machine, finished PR", you have more or less described Jiro. If they are "no, the IDE, sandbox is fine, branch is fine", Codex cloud, or Anthropic's hosted Claude Code sessions, will cost you less.
+"""
+
+[[section]]
+heading = "Why Jiro takes the top slot"
+body = """
+Arithmetic, mostly. Team costs $250 monthly, with five runtimes shared across however many people you add. Developer is $99 for one person and up to three runtimes. [[cite:jiro.pricing]] The trial is 30 days with no card. Models are whatever your team already pays Anthropic or OpenAI for. Nobody is reselling you tokens.
+
+Then there is the work itself. Jiro aims for the diff you'd have written yourself on a sharp day rather than for volume, and it will push back when a ticket is a bad idea. Teams on Nori use it for the queue nobody volunteers for: small tickets, docs, test gaps, on-call fixes. At Miravoice it now accounts for over a quarter of merged pull requests and saves an engineer about five hours a week. [[cite:jiro.miravoice]] Corvus's CTO saw a production bug at a client dinner, had Nori look into it, and Nori deployed the fix. [[cite:jiro.corvus]]
+
+Anyone can kick it off with a Slack mention, from the browser or Discord, inside Handroll, or by cron and webhook. [[cite:jiro.surfaces]] Every action is logged. [[cite:jiro.audit]]
+"""
+
+[[section]]
+heading = "When staying on Devin is the sensible call"
+body = """
+Stay if you rely on Microsoft Teams, GitLab or Bitbucket. [[cite:devin.surfaces]] Stay if Linear and GitHub events already kick off Devin sessions and that plumbing works. [[cite:devin.automations]] Stay if you want one vendor to own the agent, the routing and the model bill, and you are happy to pay for that convenience.
+
+And stay if you need a dedicated VPC deployment. [[cite:devin.enterprise]] Jiro is single-tenant per organisation on Nori's hosting, which is not the same thing. [[cite:jiro.single-tenant]]
+"""
+
+[[section]]
+heading = "Moving over"
+body = """
+Leaving Devin takes an afternoon, not a migration project; Knowledge entries need copying by hand. Our [notes on moving from Devin](https://jiro.bot/switch/devin-to-jiro) walk through the order of operations, including the Claude sign-in step people skip.
 """
 
 [[faq]]
-q = "What is the best alternative to Devin?"
-a = "For teams that already pay for Claude or ChatGPT, Jiro: it runs Claude Code or Codex in cloud VMs on that subscription and works from Slack. For ChatGPT-only teams, Codex cloud; for GitHub-only workflows, Copilot cloud agent; for self-hosting, OpenHands."
+q = "What are the best Devin alternatives?"
+a = "For a 5–20 engineer team already paying for Claude or ChatGPT, Jiro. Beyond that: Cursor cloud agents for Cursor users, Codex cloud for ChatGPT-only shops, Claude Code on the web for individuals, Factory for a full platform, Copilot cloud agent for GitHub-first orgs, Tembo, and OpenHands if you want open source."
 
 [[faq]]
-q = "Is there a cheaper alternative to Devin?"
-a = "Yes, if you already have a Claude or ChatGPT plan. Jiro uses that plan for model usage and charges for cloud runtime, so you avoid paying for model usage twice. Jules and OpenHands also have free tiers."
+q = "Who competes with Devin?"
+a = "Cursor, OpenAI with Codex cloud, Anthropic with Claude Code on the web and Claude Tag, GitHub with Copilot cloud agent, Factory, Tembo, OpenHands and Jiro. Each sells a different slice: some resell models, some only run on yours."
 
 [[faq]]
-q = "Is Jiro the same as Devin?"
-a = "No. Jiro is a background coding agent by Nori. Both run coding work in cloud VMs and work from Slack, but Jiro runs the agent harness you pick on your own model subscription, while Devin runs Cognition's agent on Cognition's plans."
+q = "How much does Devin cost?"
+a = "Free; $20 monthly for Pro; $200 for Max; and Teams at $80 a month at minimum, then $40 for each seat, with usage past the quota at API pricing. Enterprise is billed in ACUs. [[cite:devin.pricing]]"
 
 [[faq]]
-q = "What carries over if I move from Devin to Jiro?"
-a = "Your GitHub repos and Slack workspace: Jiro connects to the same ones during trial setup. Devin-specific setup, such as playbooks, knowledge and automations, does not carry over; you recreate your setup script and any automations in Jiro."
+q = "Does Devin still use ACUs?"
+a = "Only on Enterprise. Self-serve plans moved from ACUs to quotas on 2026-04-14. [[cite:devin.plans-change]] [[cite:devin.pricing]]"
+
+[[faq]]
+q = "Can I use my Claude Max subscription instead of paying Devin for tokens?"
+a = "Not in Devin; plan linking covers ChatGPT for the GPT share only. [[cite:devin.models]] In Jiro, yes: generate a token with `claude setup-token` on your own machine, which binds it to whichever Claude plan you hold, Pro up to Enterprise, then connect it. [[cite:anthropic.setup-token]] [[cite:jiro.credentials]]"
+
+[[faq]]
+q = "Is Windsurf part of Devin now?"
+a = "Yes. Windsurf became Devin Desktop on 2026-06-02. [[cite:devin.desktop]]"

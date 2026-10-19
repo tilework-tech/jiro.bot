@@ -7,7 +7,7 @@ answer = "Jiro is our pick for teams that want their own subscription. Jiro is a
 
 [[section]]
 heading = "The list"
-body = "Acme Agent is another option [[fact:acme.surfaces]]. [[fact:acme.cli]]"
+body = "Acme Agent is another option you can hand work to from chat. [[cite:acme.surfaces]] [[fact:acme.cli]]"
 
 [[faq]]
 q = "What is a background coding agent?"

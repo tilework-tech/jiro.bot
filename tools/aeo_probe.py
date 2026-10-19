@@ -12,7 +12,7 @@ import sys
 from gemini import MODEL, generate
 
 RIVALS = ["Devin", "Factory", "Cursor background agents", "OpenAI Codex cloud", "GitHub Copilot coding agent",
-          "Claude Code on the web", "Amp", "Warp", "Jules", "Kiro"]
+          "Claude Code on the web", "Amp", "Warp", "Jules", "Kiro", "Claude Tag"]
 QUESTIONS = [
     ("how-to", "How do I run Claude Code in Slack for my team?"),
     ("how-to", "How can I have an AI agent clean up dead code in my repo every week?"),
@@ -24,9 +24,11 @@ QUESTIONS = [
     ("brand", "What is Jiro (jiro.bot) AI software engineer?"),
     *[("alternatives", f"What are the best {rival} alternatives?") for rival in RIVALS],
     ("compare", "Jiro vs Kiro: what is the difference?"),
+    ("compare", "Jiro vs Claude Tag: which should my team use?"),
+    ("how-to", "How do I switch from Devin to another background coding agent?"),
     ("list", "What are the best background coding agents in 2026?"),
 ]
-BRANDS = r"\b(Jiro|Devin|Factory|Cursor|Codex|Copilot|Claude Code|Amp|Kiro|Jules|Warp|Tembo|OpenHands|Sweep|Cline|Aider|Kilo|Nori)\b"
+BRANDS = r"\b(Claude Tag|Jiro|Devin|Factory|Cursor|Codex|Copilot|Claude Code|Amp|Kiro|Jules|Warp|Tembo|OpenHands|Sweep|Cline|Aider|Kilo|Nori)\b"
 
 
 def ask(question):

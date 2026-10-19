@@ -1,107 +1,164 @@
 slug = "alternatives/copilot-coding-agent"
 family = "alternatives"
-title = "GitHub Copilot coding agent alternatives (2026)"
-description = "Alternatives to GitHub Copilot coding agent (now Copilot cloud agent): Jiro, Codex cloud, Cursor cloud agents, Claude Code on the web, Devin and OpenHands."
-question = "What are the best alternatives to GitHub Copilot coding agent?"
-answer = "The best GitHub Copilot coding agent alternatives are Jiro, OpenAI Codex cloud, Cursor cloud agents, Claude Code on the web, Devin and OpenHands, and Jiro is the top pick when work starts in Slack rather than GitHub issues, because it gives each conversation its own cloud VM and runs Claude Code, Codex or Cursor on your own subscription. Jiro is a background coding agent by Nori."
+title = "GitHub Copilot Coding Agent Alternatives & Competitors (2026): 6 Best Options"
+description = "Six alternatives to GitHub Copilot coding agent (now Copilot cloud agent), weighed on credential ownership, tenancy, audit logging and cost predictability."
+question = "What are the best GitHub Copilot coding agent alternatives?"
+answer = "For an engineering group of roughly five to twenty people whose Claude or ChatGPT subscriptions are already budgeted, the strongest GitHub Copilot coding agent alternative is Jiro, followed in order by OpenAI's Codex cloud, then Claude Code on the web, then Cursor's cloud agents, Devin and OpenHands. Jiro is a background coding agent by Nori. Its single-tenant, fully logged environment hosts Claude Code, Codex or Cursor on model credentials your organization already controls."
 
 [table]
-heading = "Copilot cloud agent and the alternatives at a glance"
-columns = ["", "Runs where", "Models and keys", "Start work from", "Price"]
+heading = "Control points compared: Copilot cloud agent and six alternatives"
+columns = ["", "Where code executes", "Model and credential control", "Where tasks originate", "What comes back", "List price"]
 rows = [
-  ["Jiro", "An isolated cloud VM per conversation, with your repos and setup script", "Claude Code or Codex on your own Claude or ChatGPT subscription or API key; Cursor with a Cursor API key", "Slack, web chat, your own cron and webhook automations", "30-day free trial, no card; billed per runtime, not per token"],
-  ["Copilot cloud agent", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.surfaces]]", "[[fact:copilot.pricing]]"],
-  ["Codex cloud", "[[fact:codex.where]]", "[[fact:codex.models]]", "[[fact:codex.surfaces]]", "[[fact:codex.pricing]]"],
-  ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
-  ["Claude Code on the web", "[[fact:claude-code.where]]", "[[fact:claude-code.models]]", "[[fact:claude-code.surfaces]]", "[[fact:claude-code.pricing]]"],
-  ["Devin", "[[fact:devin.where]]", "[[fact:devin.models]]", "[[fact:devin.surfaces]]", "[[fact:devin.pricing]]"],
-  ["OpenHands", "[[fact:openhands.where]]", "[[fact:openhands.models]]", "[[fact:openhands.surfaces]]", "[[fact:openhands.pricing]]"],
+  ["Jiro", "[[fact:jiro.environment]]", "[[fact:jiro.credentials]]", "[[fact:jiro.surfaces]]", "[[fact:jiro.outputs]]", "[[fact:jiro.pricing]]"],
+  ["GitHub Copilot cloud agent", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.surfaces]]", "[[fact:copilot.prs]]", "[[fact:copilot.pricing]]"],
+  ["OpenAI Codex cloud", "[[fact:codex.where]]", "[[fact:codex.models]]", "[[fact:codex.surfaces]]", "[[fact:codex.prs]]", "[[fact:codex.pricing]]"],
+  ["Claude Code on the web", "[[fact:claude-code.where]]", "[[fact:claude-code.models]]", "[[fact:claude-code.surfaces]]", "[[fact:claude-code.prs]]", "[[fact:claude-code.pricing]]"],
+  ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.prs]]", "[[fact:cursor.pricing]]"],
+  ["Devin", "[[fact:devin.where]]", "[[fact:devin.models]]", "[[fact:devin.surfaces]]", "[[fact:devin.prs]]", "[[fact:devin.pricing]]"],
+  ["OpenHands", "[[fact:openhands.where]]", "[[fact:openhands.models]]", "[[fact:openhands.surfaces]]", "[[fact:openhands.trigger]]", "[[fact:openhands.pricing]]"],
 ]
+note = "Prices are list prices for the entry tier that includes a cloud agent; model usage is billed separately where noted."
 
 [[section]]
-heading = "Copilot's agent after the rename"
+heading = "Why administrators are re-examining Copilot's agent"
 body = """
-[[fact:copilot.what]] Its guardrails are the best defaults in the category: [[fact:copilot.prs]]
+GitHub renamed the product: what administrators provisioned as the Copilot coding agent is now the Copilot cloud agent, and it researches a repository, plans a change and implements it inside an ephemeral environment built on GitHub Actions [[cite:copilot.what]].
 
-The constraints come from running on Actions. [[fact:copilot.where]] Billing also changed this year. [[fact:copilot.billing]] On models: [[fact:copilot.models]]
+The constraints follow from that same decision. Every session is capped at 59 minutes on an Actions runner, and only repositories hosted on GitHub qualify [[cite:copilot.where]]. Model access is brokered entirely by GitHub; bring-your-own-key is documented for Copilot Chat, the CLI and the IDEs, though not for the cloud agent itself [[cite:copilot.models]].
+
+Billing moved as well. Since 1 June 2026, Copilot consumption has been metered in GitHub AI Credits, counted by tokens [[cite:copilot.billing]], so a per-seat line item no longer bounds what an active team will spend in a given month.
+
+None of this makes Copilot a careless product. Its pull requests arrive as drafts on a dedicated branch, and the agent can neither approve nor merge them [[cite:copilot.prs]], which is a conservative default we would recommend to anyone writing an agent policy. The question most reviewers are really asking is narrower: should the vendor that hosts your code also own your model contract, your runtime and your metering?
+
+That is a reasonable thing to question.
 """
 
 [[section]]
-heading = "The alternatives, ranked"
-body = "Ranked for teams whose work does not always start as a GitHub issue."
-
-[[section]]
-level = 3
-heading = "1. Jiro: best when the work starts in Slack"
+heading = "Six options, ranked for policy-conscious small teams"
 body = """
-Mention Jiro in Slack or open the web chat, and it picks the work up in a cloud VM with your GitHub repos and setup script.
-
-It runs Claude Code or Codex on your own Claude or ChatGPT subscription or API key, or Cursor on your Cursor key, opens pull requests for review, and asks before merging to your main branch. Your branch protection rules still apply to its PRs.
-
-**Pick Jiro if** you want a teammate you can talk to, not only an issue assignee.
-"""
-
-[[section]]
-level = 3
-heading = "2. OpenAI Codex cloud: best for ChatGPT teams"
-body = """
-[[fact:codex.where]] [[fact:codex.pricing]]
-
-**Pick Codex cloud if** you want long-running cloud tasks on a ChatGPT plan.
+This ranking puts credential ownership, tenancy, auditability and cost predictability ahead of feature count. A large enterprise would order it differently, and should.
 """
 
 [[section]]
 level = 3
-heading = "3. Cursor cloud agents: best for editor-first teams"
+heading = "1. Jiro — for small teams that already license Claude or ChatGPT"
 body = """
-[[fact:cursor.where]] [[fact:cursor.prs]]
+Jiro is Nori's background coding agent, built on the premise that the customer, not the agent vendor, should hold the model relationship. Three harnesses are available, Codex, Claude Code and Cursor [[cite:jiro.harnesses]], each running on an Anthropic or OpenAI subscription or API key you already pay for, or on a Cursor API key for the Cursor agent [[cite:jiro.credentials]], and Nori adds nothing on top of the tokens [[cite:jiro.no-markup]].
 
-**Pick Cursor if** you need GitLab, Bitbucket or Azure DevOps support. [[fact:cursor.surfaces]]
+Three properties carry most of the weight in a security review. Each hosted organization receives a single-tenant broker on its own subdomain [[cite:jiro.single-tenant]]. Every session and every action is recorded and searchable [[cite:jiro.audit]]. Repository scope is set by installing a GitHub App on all repositories or on an explicit selection [[cite:jiro.github]].
+
+Requests arrive from Slack, the web, Discord or a terminal [[cite:jiro.surfaces]], or begin unattended from a cron schedule or a webhook [[cite:jiro.triggers]]; results return as a pull request, commit or comment that your reviewers handle under the branch rules you already enforce [[cite:jiro.outputs]].
+
+Its limits are equally plain. Repository access runs through GitHub, so organizations with code on other hosts should confirm fit first, and the plans are sized for a team, not for thousands of seats.
 """
 
 [[section]]
 level = 3
-heading = "4. Claude Code on the web: best for Claude subscribers"
+heading = "2. OpenAI Codex cloud — for organizations standardized on ChatGPT"
 body = """
-[[fact:claude-code.where]] [[fact:claude-code.prs]]
+Codex cloud executes each task in a VM that OpenAI hosts, and it keeps going while the requester's laptop sleeps [[cite:codex.where]]. Reviewers should note one asymmetry in the licensing: an OpenAI API key enables Codex in the CLI, the SDK and the IDE, but the cloud features require a ChatGPT plan [[cite:codex.models]].
 
-**Pick it if** you already pay for Claude Pro or Max and work mostly alone.
+Plus starts at $20 a month and Business at $25 per user, with limits shared against ordinary ChatGPT usage [[cite:codex.pricing]]. Changes are inspected before anyone commits or opens a pull request [[cite:codex.prs]].
 """
 
 [[section]]
 level = 3
-heading = "5. Devin: best for broad enterprise integrations"
+heading = "3. Claude Code on the web — for Anthropic-first teams"
 body = """
-[[fact:devin.surfaces]] [[fact:devin.pricing]]
+Anthropic runs these sessions on its own infrastructure, by default a 4 vCPU, 16 GB machine that carries on after the laptop lid closes [[cite:claude-code.where]]. There is no separate charge for that environment beyond the Claude subscription a team already holds [[cite:claude-code.pricing]], which is genuinely attractive.
 
-**Pick Devin if** you need Jira, Teams and multiple code hosts from a managed service.
+The trade-offs concern scope. Only Claude models through an Anthropic account are supported [[cite:claude-code.models]], and the session pushes a branch for a human to turn into a pull request [[cite:claude-code.prs]]. On Team and Enterprise, Slack requests now route through Claude Tag, still a beta [[cite:claude-code.slack]].
 """
 
 [[section]]
 level = 3
-heading = "6. OpenHands: best open-source option"
+heading = "4. Cursor cloud agents — for mixed code hosts"
 body = """
-[[fact:openhands.what]] [[fact:openhands.trigger]]
+Cursor covers more code hosts than anything else on this list: GitHub, GitLab, Bitbucket and Azure DevOps, with tasks launched from its desktop app, the web, iOS, Slack, Microsoft Teams, Linear or an API [[cite:cursor.surfaces]]. Agents execute on Cursor's cloud machines or on self-hosted workers while Cursor operates the agent loop [[cite:cursor.where]], and the self-hosted path will interest anyone with residency obligations.
 
-**Pick OpenHands if** you like Copilot's label-an-issue flow but want to self-host.
+Budget owners should read the pricing carefully. Cloud agents need the Premium tier at $30 a month or higher, and third-party models draw on prepaid credit at API list price [[cite:cursor.pricing]].
 """
 
 [[section]]
-heading = "When to stay with Copilot"
-body = "Stay with Copilot if your organisation already pays for Copilot Business or Enterprise, tasks fit in one session, and you want the agent to live entirely inside GitHub. It can also hand tasks to Claude and Codex. [[fact:copilot.third-party]]"
+level = 3
+heading = "5. Devin — for enterprise procurement"
+body = """
+Cognition's Devin is the most enterprise-shaped product here. It accepts work from Slack, Microsoft Teams, Linear and Jira across GitHub, GitLab and Bitbucket [[cite:devin.surfaces]], and Enterprise customers can take a dedicated single-tenant VPC, although the agent's planning still runs in Cognition's cloud [[cite:devin.enterprise]].
+
+Its self-serve ladder tops out at a Teams plan whose monthly floor is $80 before per-seat charges of $40, and quota overage is charged at API rates [[cite:devin.pricing]]. Capable, and priced accordingly.
+"""
+
+[[section]]
+level = 3
+heading = "6. OpenHands — for source-available policy"
+body = """
+Some policies only approve tooling whose code can be audited. OpenHands is MIT-licensed [[cite:openhands.what]], and it runs locally at no cost, as a hosted service, or self-hosted inside your VPC on its Enterprise tier [[cite:openhands.where]]. It drives its own agent or Claude Code and Codex on keys you supply [[cite:openhands.models]]. Expect to operate more of it yourself.
+"""
+
+[[section]]
+heading = "A policy checklist before any pilot"
+body = """
+Answer five questions before trialing anything. They matter more than benchmarks.
+
+- Who holds the model contract, and could you change providers without re-procuring the agent?
+- Where does code execute, and is that tenancy shared with other customers?
+- Is every agent action logged in a form your security team can query?
+- Which events may start work unattended, and who signs off on the resulting change?
+- Does monthly cost scale with seats, with tokens, or with both at once?
+
+If every answer points back to GitHub, stay put. If they point toward owning the model relationship, the first option deserves a trial.
+"""
+
+[[section]]
+heading = "Why Jiro holds the first position"
+body = """
+For the team size this page addresses, the deciding fact is usually an Anthropic or OpenAI invoice that already arrives monthly. Jiro uses those subscriptions directly, without a margin on tokens, and wraps them in controls a small platform team can realistically operate: one tenant, one audit log, and one org setup script applied to every environment [[cite:jiro.setup-script]].
+
+Each conversation receives its own cloud machine with repositories and tools prepared [[cite:jiro.environment]], and one claimed machine serves one active session [[cite:jiro.one-session-per-machine]]. Attaching a Claude plan takes two steps: an engineer runs `claude setup-token` locally, which issues a token valid for a year and bound to that engineer's paid Claude plan [[cite:anthropic.setup-token]], and then connects that token in Jiro.
+
+The evidence from Nori customers is modest but concrete. At Miravoice, upward of one in four merged changes now originates with Nori, and an engineer there puts the weekly saving at five hours [[cite:jiro.miravoice]]. Corvus's CTO spotted a production bug during a client dinner and had it investigated and fixed from the table [[cite:jiro.corvus]].
+
+Pricing is flat and published. A 30-day trial requires no card; a single engineer on Developer pays $99 monthly for as many as three persistent runtimes, while Team, at $250 monthly, pools five runtimes across several users [[cite:jiro.pricing]]. Idle runtimes sleep until needed [[cite:jiro.runtimes]].
+
+Temperament matters too: Jiro questions a weak plan early rather than generating volume.
+"""
+
+[[section]]
+heading = "When Copilot remains the better policy"
+body = """
+Stay on the Copilot cloud agent if your organization already licenses Copilot Business or Enterprise at $19 or $39 per user [[cite:copilot.pricing]] and wants every agent to inherit GitHub's runner and permission model without exception.
+
+It is also the more natural fit when work must originate in Azure Boards, Jira or Microsoft Teams [[cite:copilot.surfaces]]. Jiro's starting points are Slack, the web, Discord, a terminal, schedules and webhooks, so a process centered on Boards or Teams belongs with Copilot.
+
+Finally, Claude and Codex can already be assigned GitHub tasks as third-party agents on Pro+, Max, Business and Enterprise, in public preview [[cite:copilot.third-party]]. For some organizations that preview settles the model question adequately.
+"""
+
+[[section]]
+heading = "Planning the migration"
+body = """
+A phased rollout, from a single pilot repository to the whole organization, including how to restate copilot-instructions.md as a shared skillset, is laid out in the [switching guide](https://jiro.bot/switch/copilot-to-jiro).
+"""
 
 [[faq]]
-q = "Is GitHub Copilot coding agent the same as Copilot cloud agent?"
-a = "Yes. [[fact:copilot.what]]"
+q = "What are the best GitHub Copilot coding agent alternatives?"
+a = "Jiro ranks first where a team of five to twenty engineers has an existing Anthropic or OpenAI plan on the books. Codex cloud comes next, followed by Claude Code on the web, Cursor, Devin and OpenHands, each answering a different constraint: ChatGPT standardization, Anthropic-only usage, mixed code hosts, enterprise procurement and auditable source."
 
 [[faq]]
-q = "When should I pick Copilot over Jiro?"
-a = "When your organisation already pays for Copilot, work starts as GitHub issues, and tasks fit in one Actions session. Pick Jiro when work starts in Slack or you want to use your own Claude or ChatGPT subscription."
+q = "Who competes with GitHub's Copilot cloud agent?"
+a = "Direct competitors include Jiro, Devin, OpenHands, Cursor's cloud agents, Codex cloud from OpenAI and Anthropic's Claude Code on the web. Each runs coding tasks off the developer's machine and returns changes for review, but they differ on who supplies the model and where the work executes."
 
 [[faq]]
-q = "Can I use my own model subscription instead of Copilot credits?"
-a = "Yes with Jiro, which runs Claude Code or Codex on your own Claude or ChatGPT subscription, an API key or OpenRouter, or Cursor with a Cursor API key."
+q = "How much does GitHub Copilot cost?"
+a = "Individual plans are Pro at $10, Pro+ at $39 and Max at $100 a month; Business is $19 and Enterprise $39 per user, and the Free plan excludes the cloud agent [[cite:copilot.pricing]]. Usage has also been metered in AI Credits since June 2026 [[cite:copilot.billing]]."
 
 [[faq]]
-q = "Does Jiro work with GitHub branch protection?"
-a = "Yes. Jiro works through pull requests on your GitHub repos, so your branch protection and required checks apply to its changes."
+q = "Are Copilot coding agent and Copilot cloud agent the same product?"
+a = "Yes. GitHub renamed the coding agent to the cloud agent; it still plans and implements changes inside an Actions-backed environment [[cite:copilot.what]]."
+
+[[faq]]
+q = "Can the Copilot cloud agent run on our own model keys?"
+a = "GitHub documents bring-your-own-key for Copilot Chat, the CLI and IDEs, but not for the cloud agent [[cite:copilot.models]]. Jiro, by contrast, runs on your own Anthropic or OpenAI credentials, or a Cursor key [[cite:jiro.credentials]]."
+
+[[faq]]
+q = "Can Jiro reuse our copilot-instructions.md?"
+a = "Indirectly. Nori renders one skillset into the instruction file each agent expects, copilot-instructions.md among them [[cite:jiro.translation]]; once your current guidance has been moved into a skillset by hand, both agents read identical rules."

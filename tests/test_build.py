@@ -61,6 +61,42 @@ class BuildTest(unittest.TestCase):
         html_head = self.ws.read("alternatives/acme.html").split("<h2")[0]
         self.assertIn("Jiro is the best Acme Agent alternative", html_head)
 
+    def test_cite_marker_numbers_a_source_without_inserting_the_fact_text(self):
+        self.ws.edit("pages/alternatives-acme.toml", "Acme is simple to buy. [[fact:acme.pricing]]", "Acme asks twenty dollars a month. [[cite:acme.pricing]]")
+        self.assertEqual(self.ws.build().returncode, 0)
+        md = self.ws.read("alternatives/acme.md")
+        prose, sources = md.split("## Sources")
+        self.assertIn("Acme asks twenty dollars a month. [1]", prose)
+        self.assertNotIn("Acme Agent costs $20 per month.", prose)
+        self.assertIn("1. Acme Agent costs $20 per month. Source: https://acme.example/pricing", sources)
+        html = self.ws.read("alternatives/acme.html")
+        self.assertIn('Acme asks twenty dollars a month. <sup><a href="#src-1">[1]</a></sup>', html)
+
+    def test_switching_guides_build_and_are_listed_in_llms_txt(self):
+        (self.ws.content / "pages" / "switch-acme.toml").write_text(
+            'slug = "switch/acme-to-jiro"\nfamily = "switch"\ntitle = "Switching from Acme to Jiro"\n'
+            'description = "How to move from Acme to Jiro."\nquestion = "How do I switch from Acme to Jiro?"\n'
+            'answer = "Connect GitHub and Slack, then sign in. Jiro is a background coding agent by Nori."\n')
+        self.assertEqual(self.ws.build().returncode, 0)
+        self.assertIn("<h1>Switching from Acme to Jiro</h1>", self.ws.read("switch/acme-to-jiro.html"))
+        llms = self.ws.read("llms.txt")
+        self.assertIn("## Switching guides", llms)
+        self.assertIn("(https://jiro.bot/switch/acme-to-jiro.md)", llms)
+
+    def test_numbered_lines_render_as_an_ordered_list(self):
+        self.ws.edit("pages/alternatives-acme.toml", "Acme is simple to buy. [[fact:acme.pricing]]",
+                     "Acme is simple to buy. [[fact:acme.pricing]]\n\n1. Start the trial.\n2. Connect **GitHub**.\n3. Ask for a first task.")
+        self.assertEqual(self.ws.build().returncode, 0)
+        html = self.ws.read("alternatives/acme.html")
+        self.assertIn("<ol><li>Start the trial.</li><li>Connect <strong>GitHub</strong>.</li><li>Ask for a first task.</li></ol>", html)
+        self.assertIn("1. Start the trial.\n2. Connect **GitHub**.\n3. Ask for a first task.", self.ws.read("alternatives/acme.md"))
+
+    def test_a_paragraph_starting_with_a_year_stays_a_paragraph(self):
+        self.ws.edit("pages/alternatives-acme.toml", "Acme is simple to buy. [[fact:acme.pricing]]",
+                     "Acme is simple to buy. [[fact:acme.pricing]]\n\n2026. That was the year Acme changed plans.")
+        self.assertEqual(self.ws.build().returncode, 0)
+        self.assertIn("<p>2026. That was the year Acme changed plans.</p>", self.ws.read("alternatives/acme.html"))
+
     def test_markdown_twin_carries_the_same_answer_table_and_faq_as_the_html(self):
         html = self.ws.read("alternatives/acme.html")
         md = self.ws.read("alternatives/acme.md")
@@ -184,23 +220,29 @@ class BuildErrorTest(unittest.TestCase):
         self.addCleanup(self.ws.cleanup)
 
     def test_reference_to_unknown_fact_fails_the_build(self):
-        self.ws.edit("pages/best-agents.toml", "[[fact:acme.surfaces]]", "[[fact:acme.missing]]")
+        self.ws.edit("pages/best-agents.toml", "[[fact:acme.cli]]", "[[fact:acme.missing]]")
         result = self.ws.build()
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("acme.missing", result.stderr)
 
+    def test_cite_of_unknown_fact_fails_the_build(self):
+        self.ws.edit("pages/best-agents.toml", "[[cite:acme.surfaces]]", "[[cite:acme.nothing]]")
+        result = self.ws.build()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("acme.nothing", result.stderr)
+
     def test_failed_build_leaves_the_previous_output_in_place(self):
         self.assertEqual(self.ws.build().returncode, 0)
-        self.ws.edit("pages/best-agents.toml", "[[fact:acme.surfaces]]", "[[fact:acme.missing]]")
+        self.ws.edit("pages/best-agents.toml", "[[fact:acme.cli]]", "[[fact:acme.missing]]")
         self.assertNotEqual(self.ws.build().returncode, 0)
         self.assertTrue((self.ws.site / "alternatives/acme.html").is_file())
         self.assertTrue((self.ws.site / "best/background-coding-agents.html").is_file())
 
     def test_reference_to_unknown_rival_fails_the_build(self):
-        self.ws.edit("pages/best-agents.toml", "[[fact:acme.surfaces]]", "[[fact:nosuch.surfaces]]")
+        self.ws.edit("pages/best-agents.toml", "[[fact:acme.cli]]", "[[fact:nosuch.cli]]")
         result = self.ws.build()
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("nosuch.surfaces", result.stderr)
+        self.assertIn("nosuch.cli", result.stderr)
 
 
 if __name__ == "__main__":

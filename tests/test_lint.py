@@ -65,6 +65,69 @@ class LintTest(unittest.TestCase):
         self.ws.edit("pages/best-agents.toml", 'a = "An agent that works on its own in the cloud."', 'a = "Jiro is a background coding agent by Nori."')
         self.assert_fails("FAIL best/background-coding-agents", "entity sentence")
 
+    def test_pages_sharing_an_eight_word_phrase_both_fail_as_overlap(self):
+        line = " We review every change before it lands on main."
+        self.ws.edit("pages/alternatives-acme.toml", "Acme is simple to buy.", "Acme is simple to buy." + line)
+        self.ws.edit("pages/best-agents.toml", 'a = "An agent that works on its own in the cloud."', 'a = "An agent that works on its own in the cloud.' + line + '"')
+        result = self.assert_fails("FAIL alternatives/acme", "FAIL best/background-coding-agents", "shared with best/background-coding-agents")
+        self.assertIn("before it lands on main", result.stdout)
+
+    def test_quoting_the_same_fact_in_prose_on_two_pages_fails_as_overlap(self):
+        self.ws.edit("pages/best-agents.toml", "[[cite:acme.surfaces]]", "[[fact:acme.surfaces]]")
+        self.assert_fails("FAIL alternatives/acme", "FAIL best/background-coding-agents", "acme agent works from slack and the web")
+
+    def test_shared_table_cells_are_not_overlap(self):
+        cell = "Bring your own Claude or ChatGPT subscription, no token markup"
+        self.ws.edit("pages/alternatives-acme.toml", '["Price", "30-day free trial"', f'["Price", "{cell}"')
+        self.ws.edit("pages/best-agents.toml", 'heading = "The list"',
+                     f'heading = "The list"\nbody = "Short list."\n\n[table]\ncolumns = ["", "Jiro"]\nrows = [["Price", "{cell}"]]\n\n[[section]]\nheading = "More"')
+        result = self.build_and_lint()
+        self.assertEqual(result.returncode, 0, result.stdout)
+
+    def test_page_with_uniform_sentence_lengths_fails(self):
+        flat = " ".join(f"Jiro opens a pull request {n}." for n in range(20))
+        self.ws.edit("pages/alternatives-acme.toml", "Acme is simple to buy.", "Acme is simple to buy. " + flat)
+        self.assert_fails("FAIL alternatives/acme", "sentence lengths too uniform", "PASS best/background-coding-agents")
+
+    def test_page_with_varied_sentence_lengths_passes(self):
+        words = ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india", "juliet", "kilo", "lima", "mike",
+                 "november", "oscar", "papa", "quebec", "romeo", "sierra", "tango", "uniform", "victor", "whiskey", "xray", "yankee"]
+        lengths = [3, 18, 7, 25, 4, 12, 30, 5, 9, 21, 2, 15, 6, 27, 10, 3, 19, 8, 24, 5]
+        sentences, i = [], 0
+        for n in lengths:
+            sentences.append(" ".join(words[(i + k) % len(words)] + str(i + k) for k in range(n)).capitalize() + ".")
+            i += n
+        self.ws.edit("pages/alternatives-acme.toml", "Acme is simple to buy.", "Acme is simple to buy. " + " ".join(sentences))
+        result = self.build_and_lint()
+        self.assertEqual(result.returncode, 0, result.stdout)
+
+    def test_pages_sharing_only_a_seven_word_phrase_pass(self):
+        line = " We review every change before it lands."
+        self.ws.edit("pages/alternatives-acme.toml", "Acme is simple to buy.", "Acme is simple to buy." + line)
+        self.ws.edit("pages/best-agents.toml", 'a = "An agent that works on its own in the cloud."', 'a = "An agent that works on its own in the cloud.' + line + '"')
+        result = self.build_and_lint()
+        self.assertEqual(result.returncode, 0, result.stdout)
+
+    def test_short_page_with_uniform_sentences_is_not_judged(self):
+        flat = " ".join(f"Jiro opens a pull request {n}." for n in range(6))
+        self.ws.edit("pages/alternatives-acme.toml", "Acme is simple to buy.", "Acme is simple to buy. " + flat)
+        result = self.build_and_lint()
+        self.assertEqual(result.returncode, 0, result.stdout)
+
+    def test_pages_linking_to_the_same_long_url_are_not_overlap(self):
+        link = " Read the [guide](https://jiro.bot/switch/acme-agent-to-jiro-for-small-teams)."
+        self.ws.edit("pages/alternatives-acme.toml", "Acme is simple to buy.", "Acme is simple to buy." + link)
+        self.ws.edit("pages/best-agents.toml", 'a = "An agent that works on its own in the cloud."', 'a = "An agent that works on its own in the cloud.' + link + '"')
+        result = self.build_and_lint()
+        self.assertEqual(result.returncode, 0, result.stdout)
+
+    def test_pages_sharing_a_bare_url_are_not_overlap(self):
+        url = " See https://jiro.bot/switch/acme-agent-to-jiro-for-small-teams for details."
+        self.ws.edit("pages/alternatives-acme.toml", "Acme is simple to buy.", "Acme is simple to buy." + url)
+        self.ws.edit("pages/best-agents.toml", 'a = "An agent that works on its own in the cloud."', 'a = "An agent that works on its own in the cloud.' + url + '"')
+        result = self.build_and_lint()
+        self.assertEqual(result.returncode, 0, result.stdout)
+
     def test_unshipped_claim_in_page_copy_fails(self):
         self.ws.edit("pages/alternatives-acme.toml", "Yes. Both run", "Yes. Jiro opens Draft PRs only. Both run")
         self.assert_fails("FAIL alternatives/acme", "draft PRs only")

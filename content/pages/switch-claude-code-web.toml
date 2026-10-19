@@ -1,0 +1,107 @@
+slug = "switch/claude-code-web-to-jiro"
+family = "switch"
+title = "Switching from Claude Code on the Web to Jiro (2026): A Note to the Team"
+description = "Moving team Claude Code work from claude.ai/code into Jiro: CLAUDE.md carries over, sign in with claude setup-token, six setup steps, a first week."
+question = "How do I switch from Claude Code on the web to Jiro?"
+answer = "Keep your Claude plan and your repo's CLAUDE.md; both come with you. Run `claude setup-token` on your own machine, connect that token in Jiro, install the GitHub App, add Jiro to Slack and write a short setup script, then hand it a small task. Jiro is a background coding agent by Nori. It's meant for small teams whose Claude or ChatGPT plans are already paid for."
+
+[[section]]
+heading = "Hey, quick note before we move anything"
+body = """
+Hey all. Here's how we move our Claude Code work into Jiro, and why it shouldn't hurt.
+
+Short version: nothing we like about Claude Code goes away. Jiro runs Claude Code itself [[cite:jiro.harnesses]], on the same Claude subscriptions we already pay for. What changes is where the work lives. Instead of each of us kicking off cloud sessions from our own claude.ai account, the whole team asks Jiro in Slack, and the work happens on a cloud machine with our repos and tools already set up [[cite:jiro.environment]].
+
+Basically: our Claude Code, minus the open laptop. Anyone's laptop.
+"""
+
+[[section]]
+heading = "What comes with us"
+body = """
+More than you'd think.
+
+- **Our CLAUDE.md.** It's committed in the repo, so it's there on every task. No copying.
+- **Your personal CLAUDE.md** (the one in your home folder). That one stays on your laptop. If there's something in it the whole team should follow, paste it into our shared skillset. Nori turns one skillset into each agent's file, CLAUDE.md for Claude Code included [[cite:jiro.translation]].
+- **Your Claude plan.** Pro, Max, Team or Enterprise all work through a setup token [[cite:anthropic.setup-token]]. More on that below.
+- **The repos.** Same GitHub org. We just install a different GitHub App and pick which repos it sees [[cite:jiro.github]].
+- **The environment setup** we each fiddled with for cloud sessions. That becomes one org setup script that every session runs [[cite:jiro.setup-script]]. Write it once, done.
+- **Tools we already wired up.** Linear, Jira, Notion and friends connect through the integrations page [[cite:jiro.integrations]]; MCP servers come from the catalog [[cite:jiro.mcp]].
+"""
+
+[[section]]
+heading = "Setting it up"
+body = """
+I'll do steps 1 to 3 and 5. Everyone does step 4 for themselves, with their own token. No shared logins.
+
+- **1. Start the trial.** It's free for a month, and nobody asks for a card [[cite:jiro.pricing]].
+- **2. Hook up GitHub.** Install Jiro's GitHub App and tick the repos. I'll start with the API and the web app, nothing else.
+- **3. Add Jiro to Slack.** It'll join the eng channel first.
+- **4. Sign in with Claude.** Open a terminal on your laptop and type `claude setup-token`. You get back a token that's good for a year on your plan [[cite:anthropic.setup-token]]. Paste it into Jiro's Claude connection. Prefer Codex? OAuth or an OpenAI key works too; Cursor wants its own Cursor key [[cite:jiro.credentials]].
+- **5. Write the setup script.** Node, our Postgres fixtures, the CLI we keep forgetting to install.
+- **6. Try one small thing.** Ask Jiro to fix a typo in the README. If a pull request shows up and CI goes green [[cite:jiro.outputs]], we're live.
+
+Bonus round: want Jiro's engineering habits inside the Claude Code on your laptop? Paste `npx nori-skillsets install public/jiro` into a terminal.
+"""
+
+[[section]]
+heading = "What I'd like us to try in week one"
+body = """
+Boring stuff first. On purpose.
+
+- The docs nobody has updated since the auth rewrite.
+- Tests for the billing module, which has none. Yes, none.
+- That pile of AI-generated helpers from last quarter that sort of duplicate each other. Let's clean them up.
+- Three or four small tickets from the backlog that keep getting bumped.
+- One on-call fix. If something pages us this week, let's ask Jiro first and see what it does.
+- A weekly cron job that checks for stale TODOs and opens a PR [[cite:jiro.triggers]].
+
+Jiro is pretty opinionated. It'll push back if a plan looks off, and it'll flag stuff early. Don't take it personally. It does it to me too.
+"""
+
+[[section]]
+heading = "What we give up"
+body = """
+I want to be honest about this part.
+
+- **Teleport.** Pulling a cloud session back to your terminal with `--teleport` is a Claude Code on the web thing [[cite:claude-code.surfaces]]. Jiro work comes back as a PR instead.
+- **The Claude apps.** Starting a cloud session from the Claude mobile or desktop app goes away for team work. Jiro's web chat and Slack work fine on a phone; Miravoice set their whole agent up that way [[cite:jiro.phone]].
+- **Free cloud machines.** Anthropic includes the cloud VM in our plans [[cite:claude-code.pricing]]. Jiro's plan is a separate line.
+- **Auto-fix after the PR.** Cloud sessions can push fixes for CI failures and review comments on their own [[cite:claude-code.prs]]. With Jiro, we ask in the thread [[cite:jiro.slack-threads]].
+- **One vendor.** Now there are two.
+
+If any of those is a dealbreaker for you personally, keep using claude.ai/code for your solo stuff. Nobody's taking it away.
+"""
+
+[[section]]
+heading = "What it costs us"
+body = """
+Our Claude plans stay as they are: Pro is $20 a month and Max starts at $100 [[cite:claude-code.pricing]]. Jiro sits on top. For the team, that's the Team plan at $250 a month, five runtimes we all share; Developer is $99 if it's just one person [[cite:jiro.pricing]]. The runtimes sleep when nobody's using them [[cite:jiro.runtimes]].
+
+Nori doesn't mark up tokens [[cite:jiro.no-markup]], so the model bill is still just our Claude bill. If someone burns through their Max limit, extra usage bills at API rates, same as today [[cite:anthropic.extra-usage]].
+
+So yes, it's an extra $250. What we're buying is that the PM, the on-call person and the new hire can all start real work without a laptop session of their own.
+"""
+
+[[section]]
+heading = "Running both for a bit"
+body = """
+For the first two weeks, nothing gets switched off. Use Jiro for team work in Slack, keep claude.ai/code for whatever you do alone. At the end we'll look at what got merged and decide.
+
+If you want to see how Jiro stacks up against the other options first, the [list of Claude Code on the web alternatives](https://jiro.bot/alternatives/claude-code-web) is a decent read. Questions? Reply in the thread.
+"""
+
+[[faq]]
+q = "Does my CLAUDE.md work in Jiro?"
+a = "Yes. A CLAUDE.md committed to the repo is part of the code Jiro checks out, and Jiro runs Claude Code, which reads it."
+
+[[faq]]
+q = "Do I need an Anthropic API key, or can I use my Claude subscription?"
+a = "Your subscription is fine. From a terminal on your laptop, `claude setup-token` creates the token you connect [[cite:anthropic.setup-token]]. An API key also works [[cite:jiro.credentials]]."
+
+[[faq]]
+q = "Can I keep using Claude Code on the web after switching?"
+a = "Yes. Your Claude plan is unchanged, so claude.ai/code keeps working for solo sessions."
+
+[[faq]]
+q = "What happened to the Claude Code app for Slack?"
+a = "Anthropic shut the old bot down on October 5, 2026. For Team and Enterprise orgs, Slack requests are Claude Tag's job now [[cite:claude-code.slack]]."

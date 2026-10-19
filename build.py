@@ -14,8 +14,10 @@ import shutil
 import sys
 import tomllib
 
-FAMILIES = {"alternatives": "Alternatives", "compare": "Head-to-head comparisons", "best": "Lists"}
-FACT_REF = re.compile(r"\[\[fact:([a-z0-9-]+)\.([a-z0-9-]+)\]\]")
+FAMILIES = {"alternatives": "Alternatives", "compare": "Head-to-head comparisons", "switch": "Switching guides", "best": "Lists"}
+# [[fact:rival.id]] inserts the fact's claim with a citation; [[cite:rival.id]] adds only the citation to page-written prose.
+FACT_REF = re.compile(r"\[\[(fact|cite):([a-z0-9-]+)\.([a-z0-9-]+)\]\]")
+ORDERED = re.compile(r"^\d+\. ")
 
 CSS = """:root{--bg:#0b0d0c;--panel:#121614;--line:#2a312d;--text:#e8ece9;--muted:#9aa49e;--green:#3cf06e;--salmon:#f2694f}
 *{box-sizing:border-box}body{background:var(--bg);color:var(--text);font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif;margin:0}
@@ -52,7 +54,7 @@ def load(content):
 
 
 def fact_refs(text):
-    return [f"{rival}.{fid}" for rival, fid in FACT_REF.findall(text)]
+    return [f"{rival}.{fid}" for _, rival, fid in FACT_REF.findall(text)]
 
 
 def lookup(facts, key, slug):
@@ -79,10 +81,12 @@ class Renderer:
         out, pos = [], 0
         for m in FACT_REF.finditer(text):
             out.append(self.plain(text[pos:m.start()]))
-            key = f"{m.group(1)}.{m.group(2)}"
+            kind, key = m.group(1), f"{m.group(2)}.{m.group(3)}"
             fact = lookup(self.facts, key, self.slug)
             n = self.cite(key)
-            if self.fmt == "md":
+            if kind == "cite":
+                out.append(f"[{n}]" if self.fmt == "md" else f'<sup><a href="#src-{n}">[{n}]</a></sup>')
+            elif self.fmt == "md":
                 out.append(f"{fact[form]} [{n}]")
             else:
                 out.append(f'{self.plain(fact[form])} <sup><a href="#src-{n}">[{n}]</a></sup>')
@@ -99,7 +103,7 @@ class Renderer:
         return re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r'<a href="\2">\1</a>', text)
 
     def blocks(self, body):
-        """Paragraphs separated by blank lines; a block whose lines all start with '- ' is a list."""
+        """Paragraphs separated by blank lines; a block whose lines all start with '- ' is a list, two or more '1. '-style lines an ordered list."""
         out = []
         for block in re.split(r"\n\s*\n", body.strip()):
             lines = block.strip().splitlines()
@@ -107,14 +111,23 @@ class Renderer:
                 items = [self.inline(line[2:]) for line in lines]
                 out.append("\n".join(f"- {i}" for i in items) if self.fmt == "md"
                            else "<ul>" + "".join(f"<li>{i}</li>" for i in items) + "</ul>")
+            elif len(lines) > 1 and all(ORDERED.match(line) for line in lines):
+                items = [self.inline(ORDERED.sub("", line)) for line in lines]
+                out.append("\n".join(f"{n}. {i}" for n, i in enumerate(items, 1)) if self.fmt == "md"
+                           else "<ol>" + "".join(f"<li>{i}</li>" for i in items) + "</ol>")
             else:
                 text = self.inline(" ".join(line.strip() for line in lines))
                 out.append(text if self.fmt == "md" else f"<p>{text}</p>")
         return "\n\n".join(out) if self.fmt == "md" else "\n".join(out)
 
 
+def expand_facts(text, facts, slug):
+    """Page copy as a reader sees it: [[fact:]] becomes the claim, [[cite:]] disappears."""
+    return FACT_REF.sub(lambda m: "" if m.group(1) == "cite" else lookup(facts, f"{m.group(2)}.{m.group(3)}", slug)["text"], text)
+
+
 def strip_markup(text, facts, slug):
-    text = FACT_REF.sub(lambda m: lookup(facts, f"{m.group(1)}.{m.group(2)}", slug)["text"], text)
+    text = expand_facts(text, facts, slug)
     text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
     return re.sub(r"[`*]", "", " ".join(text.split()))
 

@@ -1,107 +1,152 @@
 slug = "alternatives/amp"
 family = "alternatives"
-title = "Amp alternatives (2026): coding agents compared after the orbs relaunch"
-description = "Amp (ampcode.com) alternatives compared: Jiro, Claude Code on the web, Cursor cloud agents, Codex cloud, Tembo and OpenHands. Sources and dates for every claim."
-question = "What are the best alternatives to Amp (ampcode)?"
-answer = "Jiro is the best Amp alternative for teams that want an agent working in Slack and opening pull requests for review, rather than pushing to trunk by default: it runs Claude Code or Codex in its own cloud VMs on your own Claude or ChatGPT subscription. Jiro is a background coding agent by Nori. Claude Code on the web, Cursor cloud agents, Codex cloud, Tembo and OpenHands are the other options."
+title = "Amp Alternatives & Competitors (2026): 6 Best Options"
+description = "Six Amp alternatives weighed on how changes reach your main branch, whose subscription pays for tokens, and what each costs. Every rival claim is sourced."
+question = "What are the best Amp alternatives?"
+answer = "If your team is small, somewhere between five and twenty engineers, already holds Claude or ChatGPT seats, and insists that every change arrive as a reviewable pull request, Jiro is the strongest Amp alternative. Jiro is a background coding agent by Nori. The other five worth your time are Tembo, Claude Code on the web, OpenAI Codex cloud, Cursor's cloud agents and OpenHands; each answers differently on who pays for tokens and how code reaches main."
 
 [table]
-heading = "Amp and the alternatives at a glance"
-columns = ["", "Runs where", "Models and keys", "Start work from", "Price"]
+heading = "How each option pays for tokens and lands code"
+columns = ["", "Your own plan or key", "Where the agent runs", "How changes land", "Price"]
 rows = [
-  ["Jiro", "An isolated cloud VM per conversation, with your repos and setup script", "Claude Code or Codex on your own Claude or ChatGPT subscription or API key; Cursor with a Cursor API key", "Slack, web chat, your own cron and webhook automations", "30-day free trial, no card; billed per runtime, not per token"],
-  ["Amp", "[[fact:amp.where]]", "[[fact:amp.models]]", "[[fact:amp.surfaces]]", "[[fact:amp.pricing]]"],
-  ["Claude Code on the web", "[[fact:claude-code.where]]", "[[fact:claude-code.models]]", "[[fact:claude-code.surfaces]]", "[[fact:claude-code.pricing]]"],
-  ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
-  ["Codex cloud", "[[fact:codex.where]]", "[[fact:codex.models]]", "[[fact:codex.surfaces]]", "[[fact:codex.pricing]]"],
-  ["Tembo", "[[fact:tembo.where]]", "[[fact:tembo.models]]", "[[fact:tembo.surfaces]]", "[[fact:tembo.pricing]]"],
-  ["OpenHands", "[[fact:openhands.where]]", "[[fact:openhands.models]]", "[[fact:openhands.surfaces]]", "[[fact:openhands.pricing]]"],
+  ["Jiro", "[[fact:jiro.credentials]]", "[[fact:jiro.environment]]", "[[fact:jiro.outputs]]", "[[fact:jiro.pricing]]"],
+  ["Amp", "[[fact:amp.models]]", "[[fact:amp.where]]", "[[fact:amp.ship]]", "[[fact:amp.pricing]]"],
+  ["Tembo", "[[fact:tembo.models]]", "[[fact:tembo.where]]", "Not stated in the sources we checked", "[[fact:tembo.pricing]]"],
+  ["Claude Code on the web", "[[fact:claude-code.models]]", "[[fact:claude-code.where]]", "[[fact:claude-code.prs]]", "[[fact:claude-code.pricing]]"],
+  ["OpenAI Codex cloud", "[[fact:codex.models]]", "[[fact:codex.where]]", "[[fact:codex.prs]]", "[[fact:codex.pricing]]"],
+  ["Cursor cloud agents", "[[fact:cursor.models]]", "[[fact:cursor.where]]", "[[fact:cursor.prs]]", "[[fact:cursor.pricing]]"],
+  ["OpenHands", "[[fact:openhands.models]]", "[[fact:openhands.where]]", "[[fact:openhands.trigger]]", "[[fact:openhands.pricing]]"],
 ]
+note = "Rival prices and behavior as published by each vendor on the checked dates in the sources below."
 
 [[section]]
-heading = "Amp after its 2026 rebuild"
+heading = "Why careful teams start looking past Amp"
 body = """
-Amp changed a lot this year. [[fact:amp.extensions]] Cloud work moved to orbs, billed by the minute. [[fact:amp.orbs]]
+Amp deserves its reputation. It talks openly about taste, it rebuilt itself around cloud work this year, and it treats your own subscription as a first-class way to pay. You can bring a ChatGPT or Claude Pro or Max plan, or plain API keys, and Amp adds no token fee on your own keys below its Enterprise tier [[cite:amp.models]]. Claude plan support arrived on October 10, through the Claude Agent SDK [[cite:amp.claude-plan]]. That is a stance we respect, because it is ours too.
 
-It is also generous on bringing your own models. [[fact:amp.models]] [[fact:amp.claude-plan]] The catch for teams is the default workflow: [[fact:amp.ship]]
+So the question is rarely about models. It is about the moment a change leaves the agent.
+
+Out of the box, Amp's Ship step runs the tests and then pushes to the base branch; you have to switch on Push to Branch if you want a pull request instead [[cite:amp.ship]]. For a two-person trunk-based shop with excellent tests, that default is efficient and probably fine. For a team that protects main, requires a second pair of eyes and treats review as the place where taste is actually enforced, a default that skips review is a setting someone will eventually forget to change.
+
+Other shifts matter too. The VS Code and Cursor extensions were retired in February [[cite:amp.extensions]]. Cloud threads now run in orbs, one remote machine per thread, billed by the minute from eight cents an hour at the smallest size [[cite:amp.where]] [[cite:amp.orbs]]. And the @Amp Slack integration, which launched in July, requires a paid Slack workspace [[cite:amp.slack]].
+
+None of that is a flaw. Each is a choice. Choices have consequences for review.
 """
 
 [[section]]
-heading = "The alternatives, ranked"
-body = "Ranked for teams that want reviewable pull requests and a shared place to ask for work."
+heading = "Six alternatives, ordered for teams that review every change"
+body = "The order below assumes a small team that already holds Claude or ChatGPT seats and wants an agent whose work passes through the same branch protection as a human's. Change that assumption and the order changes with it."
 
 [[section]]
 level = 3
-heading = "1. Jiro: best for team review workflows"
+heading = "1. Jiro, for small teams that want every change reviewed"
 body = """
-Jiro opens pull requests for review on your GitHub repos and asks before merging to your main branch, so its work goes through the same review and branch protection as everyone else's.
+Jiro is built for teams of roughly five to twenty engineers who already pay Anthropic or OpenAI and would rather not pay twice. Its harness can be Claude Code, Codex or Cursor [[cite:jiro.harnesses]], paid for by your own Claude or ChatGPT subscription or API key, with Cursor on a Cursor API key [[cite:jiro.credentials]], and adds zero token markup [[cite:jiro.no-markup]].
 
-Each conversation gets an isolated cloud VM with your repos and setup script. Jiro runs Claude Code or Codex on your own Claude or ChatGPT subscription, an API key or OpenRouter, or Cursor with a Cursor API key, and bills for the runtime rather than the tokens. Your team works with it in Slack or the web chat.
+Output returns for review: usually a pull request, occasionally a commit or a comment [[cite:jiro.outputs]]. That is the default path, with no setting to flip first; add branch protection on GitHub and it becomes the only path.
 
-**Pick Jiro if** you like Amp's bring-your-own-model approach but want a PR-first team workflow.
-"""
+Each conversation is given a cloud machine of its own, already holding your repositories and tools, with the org setup script applied [[cite:jiro.environment]] [[cite:jiro.setup-script]]. Requests arrive through Slack threads, the web chat, Discord or a terminal, and schedules or webhooks can start it with nobody online [[cite:jiro.slack-threads]] [[cite:jiro.surfaces]] [[cite:jiro.triggers]].
 
-[[section]]
-level = 3
-heading = "2. Claude Code on the web: best for solo Claude subscribers"
-body = """
-[[fact:claude-code.where]] [[fact:claude-code.pricing]]
-
-**Pick it if** you mostly want Claude Code on your own laptop and phone.
-"""
-
-[[section]]
-level = 3
-heading = "3. Cursor cloud agents: best for Cursor users"
-body = """
-[[fact:cursor.where]] [[fact:cursor.prs]]
-
-**Pick Cursor if** you miss having the agent in your editor.
+The design goal is narrow and deliberate. Write the diff a thoughtful colleague would have written on their best afternoon.
 """
 
 [[section]]
 level = 3
-heading = "4. OpenAI Codex cloud: best for ChatGPT teams"
+heading = "2. Tembo, the closest match on harness choice"
 body = """
-[[fact:codex.where]] [[fact:codex.pricing]]
+Tembo shares Amp's appetite for flexibility, and then some. It will run several harnesses per task, including Amp itself, on your keys or on a Claude, ChatGPT or SuperGrok subscription [[cite:tembo.models]]. Work can begin from GitHub, Slack, Linear, Jira, Sentry, PagerDuty, webhooks and schedules [[cite:tembo.surfaces]]. Pro is $60 a month and Max $200, with compute metered per second on top [[cite:tembo.pricing]].
 
-**Pick Codex cloud if** a ChatGPT plan covers everyone.
+Look closely at the event triggers. They are its strongest argument.
 """
 
 [[section]]
 level = 3
-heading = "5. Tembo: best for multi-harness orchestration"
+heading = "3. Claude Code on the web, for a single Claude subscriber"
 body = """
-[[fact:tembo.models]] [[fact:tembo.pricing]]
+If you are one engineer on a Claude plan, this is the obvious first stop. Cloud sessions are bundled into Pro, Max and Team seats without a separate compute charge [[cite:claude-code.pricing]]. Each session ends at a pushed branch, opening the pull request is your job, and auto-fix can then chase CI failures and review comments [[cite:claude-code.prs]].
 
-**Pick Tembo if** you want event-driven agents across many tools.
+It runs Claude models only, and needs an Anthropic account [[cite:claude-code.models]].
 """
 
 [[section]]
 level = 3
-heading = "6. OpenHands: best open-source option"
+heading = "4. OpenAI Codex cloud, for teams already living in ChatGPT"
 body = """
-[[fact:openhands.what]] [[fact:openhands.pricing]]
-
-**Pick OpenHands if** you want to run the agent yourself.
+Codex cloud comes with ChatGPT from the $20 Plus plan upward, sharing usage limits with ChatGPT itself [[cite:codex.pricing]]. You review the diff and decide when to commit or open a pull request [[cite:codex.prs]]. That keeps a human at the gate, which we like. The catch is a single model vendor. An API key alone will not unlock the cloud features; those want a ChatGPT subscription [[cite:codex.models]].
 """
 
 [[section]]
-heading = "When Amp is the better fit"
-body = "Stay with Amp if you work trunk-based, want to choose machine sizes per thread, or want a fully free setup on your own compute and keys."
+level = 3
+heading = "5. Cursor cloud agents, for editor-first teams"
+body = """
+Former Amp users who miss the editor will find it here. Cursor's agents open a pull request in each repository they touch, complete with screenshots, video and logs [[cite:cursor.prs]]. Budget carefully, though. The floor is Premium at $30 monthly, and usage is charged at API prices for whichever model you select [[cite:cursor.pricing]] [[cite:cursor.models]].
+"""
+
+[[section]]
+level = 3
+heading = "6. OpenHands, for teams that want to own the stack"
+body = """
+OpenHands is MIT-licensed [[cite:openhands.what]], free to run locally, and hosted for one user at ten conversations a day [[cite:openhands.pricing]]. Label an issue or mention @openhands on GitHub and it opens a pull request when it resolves the problem [[cite:openhands.trigger]]. You trade polish for control. Some teams want exactly that trade.
+"""
+
+[[section]]
+heading = "Questions to settle before you choose"
+body = """
+Start with the merge path, since it is the hardest thing to retrofit later.
+
+- Does the agent's work reach main only through a reviewed pull request, by default, without anyone remembering a toggle?
+- Whose subscription pays for tokens, and is there a markup on top?
+- Can one teammate pick up a thread another started, or is the agent tied to a single laptop and login?
+- Is compute billed per minute, per second or as a flat plan, and which of those can you forecast?
+- Will it run the harness your team already trusts, or ask you to adopt a new one?
+
+Get the first answer right. The rest tends to follow.
+"""
+
+[[section]]
+heading = "Why Jiro sits at the top of this list"
+body = """
+Because what it produces lands as a pull request for your reviewers [[cite:jiro.outputs]], and taste needs a checkpoint to mean anything. Pair it with GitHub branch protection so that checkpoint is enforced, not assumed. An agent that cares more about quality than volume should also be comfortable having its work read line by line before it ships.
+
+Jiro also pushes back. It flags missteps early, may question the ticket before it starts, and is happiest on the work small teams never reach: slop cleanup, thin tests, stale docs, the on-call fix at 2 a.m.
+
+Teams on Nori have the receipts. Miravoice now lets Nori author better than one in four of the pull requests it merges, and one of its engineers estimates the time saved at five hours weekly [[cite:jiro.miravoice]]. At Corvus, the CTO noticed a fault in production while dining with a client; Nori traced it and deployed the repair [[cite:jiro.corvus]].
+
+Pricing is flat. Thirty days of trial cost nothing and ask for no card. After that, one engineer with up to three persistent runtimes pays $99 monthly on Developer, while a group sharing five runtimes pays $250 monthly on Team [[cite:jiro.pricing]]. Runtimes sleep when idle [[cite:jiro.runtimes]]. Each organization gets its own single-tenant broker, and every action is logged [[cite:jiro.single-tenant]] [[cite:jiro.audit]].
+"""
+
+[[section]]
+heading = "When Amp remains the right call"
+body = """
+Stay with Amp if your team ships trunk-based with tests you genuinely trust, and a push to main after a green run is how you already work. Stay if you want to choose machine sizes per thread and pay by the minute, or run Amp's free Hobby tier on your own runners [[cite:amp.pricing]]. Its native macOS and iOS apps are another honest reason [[cite:amp.surfaces]].
+
+Those are good reasons. We would not argue you out of them.
+"""
+
+[[section]]
+heading = "Moving over"
+body = "If review-first is where you are headed, the [switching guide](https://jiro.bot/switch/amp-to-jiro) covers credentials, the Claude sign-in step, branch protection and a sensible first week, in that order."
 
 [[faq]]
-q = "What is the best alternative to Amp?"
-a = "For teams that review every change, Jiro: it opens pull requests and runs Claude Code or Codex in cloud VMs on your own Claude or ChatGPT subscription. For solo Claude users, Claude Code on the web."
+q = "What are the best Amp alternatives?"
+a = "Jiro comes first when a small team with existing Claude or ChatGPT seats wants every change reviewed. Tembo is closest on harness choice, Claude Code on the web suits a solo Claude subscriber, Codex cloud suits ChatGPT-heavy teams, Cursor suits editor-first teams and OpenHands suits teams that want open source."
+
+[[faq]]
+q = "Who competes with Amp?"
+a = "Among cloud coding agents: Jiro, Tembo, Claude Code on the web, OpenAI Codex cloud, Cursor cloud agents, OpenHands, Devin, Factory and Warp. They differ mostly on model choice, billing and how code reaches the main branch."
+
+[[faq]]
+q = "How much does Amp cost?"
+a = "Hobby costs nothing beyond pay-as-you-go orbs, or your own runners. The paid tiers, Megawatt at $20 and Gigawatt at $200 monthly, bundle orb time and agent usage [[cite:amp.pricing]]. Orbs bill per minute from $0.08 an hour [[cite:amp.orbs]]."
+
+[[faq]]
+q = "Does Amp push straight to main?"
+a = "By default, yes: Ship pushes to the base branch once tests pass. Turning on Push to Branch makes it open a pull request instead [[cite:amp.ship]]."
+
+[[faq]]
+q = "Can I keep using my Claude subscription if I leave Amp?"
+a = "In Jiro, yes. On your laptop, run `claude setup-token`; it mints a token, valid for a year, bound to whichever Claude plan you hold, Pro, Max, Team or Enterprise [[cite:anthropic.setup-token]]. Paste it into Jiro's credential settings."
 
 [[faq]]
 q = "Is Amp still ad-supported?"
-a = "No. [[fact:amp.ads]] The free path is now its Hobby tier with your own keys or compute."
-
-[[faq]]
-q = "Does Amp have a VS Code extension?"
-a = "Not anymore. [[fact:amp.extensions]]"
-
-[[faq]]
-q = "Is Jiro related to Amp or Sourcegraph?"
-a = "No. Jiro is a background coding agent by Nori, an independent company."
+a = "No. Ads came off the free tier on March 30, 2026 [[cite:amp.ads]]."

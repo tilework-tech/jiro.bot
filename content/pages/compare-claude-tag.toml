@@ -1,0 +1,130 @@
+slug = "compare/claude-tag"
+family = "compare"
+title = "Jiro vs Claude Tag (2026): Billing, Model Choice and Control for Slack Coding Agents"
+description = "Jiro vs Claude Tag for engineering managers: flat plan vs usage meter, Claude-only vs three agents, fixed vs configurable setup. A sourced decision checklist."
+question = "Should my team use Jiro or Claude Tag?"
+answer = "Choose Claude Tag if your organization is on Claude Team or Enterprise and is content with Claude models billed by usage. Choose Jiro if you run a small team, roughly 5 to 20 engineers, whose Claude or ChatGPT bill is already paid, and you want a flat price, a choice between Claude Code, Codex and Cursor, and control over the environment. Jiro is a background coding agent by Nori."
+
+[table]
+heading = "Jiro and Claude Tag, line by line"
+columns = ["", "Jiro", "Claude Tag"]
+rows = [
+  ["Models and agents", "[[fact:jiro.harnesses]]", "[[fact:claude-tag.models]]"],
+  ["Who can buy it", "Any team; sign in with a Claude Pro, Max, Team or Enterprise plan, a ChatGPT plan or an API key", "[[fact:claude-tag.plans]]"],
+  ["What you pay", "[[fact:jiro.pricing]]", "[[fact:claude-tag.billing]]"],
+  ["Token markup", "[[fact:jiro.no-markup]]", "[[fact:claude-tag.billing]]"],
+  ["Where a session runs", "[[fact:jiro.environment]]", "[[fact:claude-tag.where]]"],
+  ["Environment control", "[[fact:jiro.setup-script]]", "[[fact:claude-tag.fixed-harness]]"],
+  ["Tools and MCP", "[[fact:jiro.mcp]]", "[[fact:claude-tag.connectors]]"],
+  ["Start work from", "[[fact:jiro.surfaces]]", "[[fact:claude-tag.surfaces]]"],
+  ["Scheduled and event work", "[[fact:jiro.triggers]]", "[[fact:claude-tag.routines]]"],
+  ["What comes back", "[[fact:jiro.outputs]]", "[[fact:claude-tag.prs]]"],
+  ["Product status", "Paid plans after a free trial", "[[fact:claude-tag.beta]]"],
+]
+note = "Claude Tag details come from Anthropic's documentation as of the checked date on each source."
+
+[[section]]
+heading = "Verdict first"
+body = """
+Both are good. They are built on different assumptions about who pays and who decides.
+
+Claude Tag assumes Anthropic picks the model, the harness and the meter, and in exchange you get a polished teammate living in Slack with almost nothing to configure. Jiro assumes your team picks those three things, and in exchange you own a bit more of the setup.
+
+For a Claude Enterprise shop that wants zero decisions: Tag. For a team of a dozen that already funds Claude or ChatGPT seats and dreads a second usage bill: Jiro.
+"""
+
+[[section]]
+heading = "Billing: a meter or a flat line"
+body = """
+This is where most managers end up, so start here.
+
+Claude Tag has no seat charge for channel work. It draws from an organization balance as threads consume usage, while a one-to-one DM bills to the person who sent it [[cite:claude-tag.billing]]. On the Team plan, Claude stays silent in channels until someone buys credits [[cite:claude-tag.prefund]]. Owners can cap the whole org and individual channels, with alerts at 75% and 95% of the limit [[cite:claude-tag.spend-limits]]. Those controls are good. They are also a sign that spend is variable by design, and someone on your team will own watching it.
+
+We could not find a published per-thread price for Tag, so we will not invent one. If you want an anchor, Anthropic's own figure for Claude Code across enterprise deployments is about $13 per developer per active day [[cite:anthropic.dev-cost]]. Tag is a different product, so treat that as a sanity check, not a quote.
+
+Jiro is a fixed line item. The trial runs 30 days with no card; after that, a single seat on Developer is $99 a month and Team is $250 a month for a shared pool of five runtimes [[cite:jiro.pricing]]. Tokens are drawn from whatever Claude or ChatGPT subscription you hold today, and Nori takes no cut of them [[cite:jiro.no-markup]].
+
+That is not free usage. Your subscription's own ceilings still apply: Max, for instance, resets every five hours with a weekly limit on top [[cite:anthropic.max]], and anything past the limit can continue as extra usage at API rates [[cite:anthropic.extra-usage]]. The difference is that the variable part lives on a bill you already manage.
+
+**Budget verdict.** Predictability favors Jiro. Zero added vendors favors Tag.
+"""
+
+[[section]]
+heading = "Models and the harness"
+body = """
+Tag runs Opus or Sonnet, chosen per thread, per channel or by an admin default [[cite:claude-tag.models]]. If Claude is your answer for the next two years, that restriction costs nothing.
+
+If you are less sure, it matters. Jiro runs Claude Code, Codex or Cursor [[cite:jiro.harnesses]], so a team can keep Claude for most work and try Codex on a stubborn refactor without a procurement cycle.
+
+The harness is the quieter difference. In Tag, repository hooks and `.mcp.json` are not loaded, effort level can't be set, and every session runs in auto mode [[cite:claude-tag.fixed-harness]]. Admins can add connectors, plugins, skills and remote MCP servers, but not local stdio servers [[cite:claude-tag.connectors]]. In Jiro, an org setup script installs dependencies for every session [[cite:jiro.setup-script]], admins connect servers from an MCP catalog [[cite:jiro.mcp]], and a shared skillset is authored once and rendered into each agent's native instruction file [[cite:jiro.translation]].
+
+**Control verdict.** Jiro, clearly. Whether you need that control is the real question.
+"""
+
+[[section]]
+heading = "Where Claude Tag is the stronger product"
+body = """
+- **Visibility.** Anyone in the channel can tag @Claude and everyone watches the thread [[cite:claude-tag.what]]. It is an excellent teaching surface.
+- **Engine.** Each thread gets its own ephemeral sandbox on the same engine as Claude Code on the web [[cite:claude-tag.where]], maintained by the lab that trains the model.
+- **Proactivity.** Scheduled routines, channel watches and subscriptions to a single PR ship out of the box [[cite:claude-tag.routines]].
+- **Network placement.** Sessions can run on self-hosted runners inside your network, minus admin connectors [[cite:claude-tag.self-hosted]].
+- **Git hosts.** GitLab works through a service-account token [[cite:claude-tag.prs]]. Jiro connects GitHub repositories through its GitHub App [[cite:jiro.github]].
+"""
+
+[[section]]
+heading = "Where Jiro is the stronger product"
+body = """
+- **Eligibility.** Pro and Max users are shut out of Tag [[cite:claude-tag.plans]]; Jiro accepts their login, generated with `claude setup-token` [[cite:anthropic.setup-token]].
+- **Choice.** Three agents and two model labs instead of one.
+- **Cost shape.** Flat plan, idle runtimes asleep [[cite:jiro.runtimes]].
+- **Event triggers.** Webhooks react to outside events [[cite:jiro.triggers]], so a webhook from your CI or alerting can start work. Tag's routines don't fire on repository events like every new PR [[cite:claude-tag.routines]].
+- **Surfaces.** Slack plus web chat, Discord and a terminal [[cite:jiro.surfaces]].
+- **Isolation and audit.** A single-tenant broker per org [[cite:jiro.single-tenant]], with every session and action logged and searchable [[cite:jiro.audit]].
+- **Data retention.** Tag is unavailable to orgs with Zero Data Retention enabled [[cite:claude-tag.no-zdr]].
+"""
+
+[[section]]
+heading = "A checklist for the budget meeting"
+body = """
+Answer these in order. Stop at the first hard no.
+
+- Are we on Claude Team or Enterprise? If not, Tag is off the table today.
+- Is Zero Data Retention switched on for our Claude org? If yes, Tag is unavailable.
+- Will finance accept a variable usage line, or do they want a fixed number?
+- Does anyone on the team want Codex or Cursor in the mix within the next year?
+- Do our repos rely on hooks, `.mcp.json` or local MCP servers to behave?
+- Do we want CI or alerting webhooks to start agent work without a person typing?
+- Who will own spend alerts and channel caps?
+
+Mostly "Claude-only, variable is fine, no special config"? Tag. Mostly the opposite? Jiro. Split down the middle? Run both for two weeks; our switching guide for Claude Tag lays out that pilot step by step.
+"""
+
+[[section]]
+heading = "Who should pick which"
+body = """
+Claude Enterprise organization, Claude everywhere, platform team happy to manage caps. Tag.
+
+Eight engineers, half on Max, a couple who swear by Codex, a CI pipeline that already posts webhooks. Jiro.
+
+A team in between, on Claude Team but feeling the meter, gets the most from the side-by-side pilot, because the answer depends on usage numbers only your own repos can produce. Our Claude Tag alternatives list covers the wider field beyond these two.
+"""
+
+[[faq]]
+q = "Is Jiro cheaper than Claude Tag?"
+a = "It depends on volume. Tag bills channel work by usage from an org balance [[cite:claude-tag.billing]]; Jiro is $99 or $250 a month on top of a subscription you already pay [[cite:jiro.pricing]]. Heavy Tag usage tends to make the flat plan look better; light usage may not."
+
+[[faq]]
+q = "Can Jiro use my company's Claude Team plan?"
+a = "Yes. On a laptop already logged in to Claude, `claude setup-token` prints a year-long token bound to the plan, Team included [[cite:anthropic.setup-token]]. Paste that into Jiro's Claude connection."
+
+[[faq]]
+q = "Does Claude Tag support Codex or GPT models?"
+a = "No. It runs Anthropic's Opus and Sonnet only [[cite:claude-tag.models]]."
+
+[[faq]]
+q = "Do both open pull requests?"
+a = "Yes. Tag opens draft pull requests authored by Claude through the Claude GitHub App [[cite:claude-tag.prs]]. Jiro's work lands as a PR, a commit or a comment, and a human on your team decides what happens next [[cite:jiro.outputs]]."
+
+[[faq]]
+q = "Is Claude Tag generally available?"
+a = "Not yet. Anthropic still labels it a public beta [[cite:claude-tag.beta]]."

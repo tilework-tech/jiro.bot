@@ -1,0 +1,115 @@
+slug = "switch/warp-to-jiro"
+family = "switch"
+title = "Switching from Warp to Jiro (2026): A Pairing-Session Walkthrough"
+description = "Move your cloud agent work from Warp to Jiro step by step: token from your terminal, GitHub and Slack, setup script, a first task and a week of pilot work."
+question = "How do I switch from Warp to Jiro?"
+answer = "You keep the Warp terminal if you like it and move only the cloud agent work: start a Jiro trial, connect GitHub and Slack, generate a Claude token with claude setup-token (or use Codex or a Cursor key), add a setup script, and send a first small task while Warp keeps running. Jiro is a background coding agent by Nori."
+
+[[section]]
+heading = "Before we touch anything"
+body = """
+Pull up a chair. Here's the plan for the next hour.
+
+You're not giving up your terminal. Warp's client is open source [[cite:warp.terminal]], and nothing about Jiro cares which emulator you type into. What moves is the cloud side: the runs Warp bills you for in agent time, inference and hosted compute [[cite:warp.billing]]. Those become Jiro sessions running on the Claude or ChatGPT subscription sitting on your card statement anyway, and nobody marks up the tokens [[cite:jiro.no-markup]].
+
+Got a coffee? Good. Let's go.
+"""
+
+[[section]]
+heading = "Open a terminal"
+body = """
+First, `cd` into one of your repos and look around. Is there an `AGENTS.md`? A `CLAUDE.md`? If so, great news: those come with you for free. They live in git, and Claude Code and Codex both read their own file when Jiro runs them.
+
+Now think about everything else you've told Warp's agent over the months. Rules, saved prompts, the "please don't touch the migrations folder" note. None of that exports by itself. Open a scratch file and paste in the bits you still believe. Be ruthless; half of it is probably stale.
+
+That scratch file becomes your Jiro skillset later. You write it once, and Nori turns it into the right instruction file for whichever agent is running [[cite:jiro.translation]].
+"""
+
+[[section]]
+heading = "Get the token while you're here"
+body = """
+Still in the terminal, run this:
+
+`claude setup-token`
+
+Follow its prompts and you end up with a token that lasts a year, linked to whatever paid Claude plan you're on, from Pro upward, Team and Enterprise seats included [[cite:anthropic.setup-token]]. Copy it somewhere safe for the next two minutes. Treat it like a password, because it is one.
+
+On ChatGPT instead? Skip this; you'll use Codex OAuth or an OpenAI key in a moment. Running Cursor? Grab a Cursor API key [[cite:jiro.credentials]].
+"""
+
+[[section]]
+heading = "Now the browser"
+body = """
+Open the trial page and sign up. No card [[cite:jiro.pricing]]. Then, in order:
+
+1. **GitHub.** Install the GitHub App. When it asks, choose selected repositories and tick two or three, not your whole org [[cite:jiro.github]]. You can widen it later.
+2. **Slack.** Connect the workspace, make a channel like `#jiro`, and invite the bot. Say hi. It answers.
+3. **Model.** Paste the token you just made into the Claude connection. Or sign in with Codex OAuth, or drop in your OpenAI or Cursor key [[cite:jiro.credentials]].
+4. **Setup script.** This is the part people rush, so don't. Write out what a fresh machine needs to run your tests: language runtimes, package installs, a seed database, whatever. Jiro runs it to prepare every environment [[cite:jiro.setup-script]], and each conversation gets its own machine [[cite:jiro.one-session-per-machine]].
+5. **Skillset.** Take that scratch file from earlier and drop it into the org skillset [[cite:jiro.skillsets]].
+6. **Integrations, if you want them.** Linear, Jira, Notion and friends [[cite:jiro.integrations]], plus MCP servers from the catalog [[cite:jiro.mcp]].
+
+Want Jiro's engineering habits in your local agent too? Back in the terminal: `npx nori-skillsets install public/jiro`. Optional, but nice.
+"""
+
+[[section]]
+heading = "Send the first one"
+body = """
+Go to `#jiro` and ask for something tiny. "The README says to run `make dev` but the Makefile has no dev target. Fix whichever one is wrong."
+
+Watch what happens. It spins up, reads the repo, maybe asks you a question back. A few minutes later there's a pull request waiting for review [[cite:jiro.outputs]]. Read it like you'd read a colleague's. If it pushed back on your premise, that's a feature.
+
+Nice. You're switched, mostly.
+"""
+
+[[section]]
+heading = "The rest of your week"
+body = """
+Keep Warp's cloud runs going for anything already in flight, and send new stuff to Jiro. Something like:
+
+- **Monday.** The doc drift you've been ignoring.
+- **Tuesday.** Tests for the module everyone's scared of.
+- **Wednesday.** Slop cleanup. Point it at the files the last agent left messy and ask it to make them legible for the next one.
+- **Thursday.** Three small tickets from the backlog, posted straight into Slack.
+- **Friday.** Set a cron job for a morning check, or wire a webhook from CI or alerting so on-call breakage lands in a Jiro session before you do [[cite:jiro.triggers]].
+
+Jot down how many review rounds each one took. Do the same for Warp. At the end of the week you'll know.
+"""
+
+[[section]]
+heading = "What you're leaving behind"
+body = """
+Be clear-eyed about it.
+
+Warp's own agent harness, for one; in Jiro you pick Claude Code, Codex or Cursor [[cite:jiro.harnesses]]. Warp also starts runs from GitHub, Azure DevOps, Linear and Jira events [[cite:warp.surfaces]]. Jiro doesn't take tickets by assignment; you'll use Slack, a schedule or a webhook. And if you ran Warp's cloud agents on your own infrastructure [[cite:warp.where]], know that Jiro is hosted, single-tenant per org [[cite:jiro.single-tenant]].
+
+Your terminal, though? Untouched.
+"""
+
+[[section]]
+heading = "What it costs, side by side"
+body = """
+Say you're five people. Warp Business is $50 a user [[cite:warp.pricing]], so $250 a month before cloud runs, which are billed for agent time, inference and compute [[cite:warp.billing]].
+
+Jiro Team is also $250 a month, flat, and it covers the group with five shared runtimes [[cite:jiro.pricing]]. Inference goes on the Claude or ChatGPT plans you already hold. Solo? Developer is $99. Runtimes nap when idle [[cite:jiro.runtimes]].
+
+If someone on the team burns through Pro limits, the usual fix is a Max plan, either the $100 tier or the $200 one [[cite:anthropic.max]].
+
+Comparing more than these two? The [Warp alternatives](https://jiro.bot/alternatives/warp) page ranks the field.
+"""
+
+[[faq]]
+q = "Do I have to stop using the Warp terminal?"
+a = "No. Jiro replaces the cloud agent side only. Keep whatever terminal you like; Warp's client is open source [[cite:warp.terminal]]."
+
+[[faq]]
+q = "Will my Warp rules and prompts import into Jiro?"
+a = "Not automatically. Copy what you still want into your org skillset by hand. Repo files like AGENTS.md and CLAUDE.md need no copying, since they stay in git."
+
+[[faq]]
+q = "Can I run Warp and Jiro at the same time?"
+a = "Yes, and you should for a week or two. Leave in-flight Warp runs alone, send new work to Jiro, and never give the same ticket to both."
+
+[[faq]]
+q = "What if I don't have a Claude subscription?"
+a = "Use Codex with ChatGPT sign-in or an OpenAI key, an Anthropic API key, or Cursor with a Cursor API key [[cite:jiro.credentials]]."

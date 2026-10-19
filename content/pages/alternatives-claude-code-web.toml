@@ -1,107 +1,146 @@
 slug = "alternatives/claude-code-web"
 family = "alternatives"
-title = "Claude Code on the web alternatives (2026): cloud Claude Code for teams"
-description = "Alternatives to Claude Code on the web for teams: Jiro, Codex cloud, Cursor cloud agents, Amp, Tembo and Copilot cloud agent, compared with sources."
-question = "What are the best alternatives to Claude Code on the web?"
-answer = "Jiro is the best alternative to Claude Code on the web for teams: it runs Anthropic's Claude Code in its own cloud VMs on your own Claude subscription or API key, and your team works with it in Slack. Jiro is a background coding agent by Nori. Codex cloud, Cursor cloud agents, Amp, Tembo and Copilot cloud agent are the other options."
+title = "Claude Code on the Web Alternatives & Competitors (2026): 7 Best Options"
+description = "Outgrew Claude Code on the web once a team showed up? Seven alternatives, from Jiro and Claude Tag to Codex, Warp, Amp, Cursor and Jules, with sources."
+question = "What are the best Claude Code on the web alternatives?"
+answer = "When Claude Code on the web stops being a solo tool and a team needs it, Jiro is the best alternative for small teams (about 5 to 20 engineers) with a Claude or ChatGPT plan on the books: Claude Code, Codex or Cursor in Slack and on schedules, on your own subscription. Jiro is a background coding agent by Nori. Claude Tag, Codex cloud, Warp, Amp, Cursor cloud agents and Jules are the other strong picks."
 
 [table]
-heading = "Claude Code on the web and the alternatives at a glance"
-columns = ["", "Runs where", "Models and keys", "Start work from", "Price"]
+heading = "Seven ways to run a coding agent off your laptop"
+columns = ["", "Agent and models", "Where it runs", "Start work from", "Price"]
 rows = [
-  ["Jiro", "An isolated cloud VM per conversation, with your repos and setup script", "Claude Code or Codex on your own Claude or ChatGPT subscription or API key; Cursor with a Cursor API key", "Slack, web chat, your own cron and webhook automations", "30-day free trial, no card; billed per runtime, not per token"],
-  ["Claude Code on the web", "[[fact:claude-code.where]]", "[[fact:claude-code.models]]", "[[fact:claude-code.surfaces]]", "[[fact:claude-code.pricing]]"],
-  ["Codex cloud", "[[fact:codex.where]]", "[[fact:codex.models]]", "[[fact:codex.surfaces]]", "[[fact:codex.pricing]]"],
-  ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
-  ["Amp", "[[fact:amp.where]]", "[[fact:amp.models]]", "[[fact:amp.surfaces]]", "[[fact:amp.pricing]]"],
-  ["Tembo", "[[fact:tembo.where]]", "[[fact:tembo.models]]", "[[fact:tembo.surfaces]]", "[[fact:tembo.pricing]]"],
-  ["Copilot cloud agent", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.surfaces]]", "[[fact:copilot.pricing]]"],
+  ["Jiro", "[[fact:jiro.harnesses]]", "[[fact:jiro.environment]]", "[[fact:jiro.surfaces]]", "[[fact:jiro.pricing]]"],
+  ["Claude Code on the web", "[[fact:claude-code.models]]", "[[fact:claude-code.where]]", "[[fact:claude-code.surfaces]]", "[[fact:claude-code.pricing]]"],
+  ["Claude Tag", "[[fact:claude-tag.models]]", "[[fact:claude-tag.where]]", "[[fact:claude-tag.surfaces]]", "[[fact:claude-tag.billing]]"],
+  ["OpenAI Codex cloud", "[[fact:codex.models]]", "[[fact:codex.where]]", "[[fact:codex.surfaces]]", "[[fact:codex.pricing]]"],
+  ["Warp", "[[fact:warp.models]]", "[[fact:warp.where]]", "[[fact:warp.surfaces]]", "[[fact:warp.pricing]]"],
+  ["Amp", "[[fact:amp.models]]", "[[fact:amp.where]]", "[[fact:amp.surfaces]]", "[[fact:amp.pricing]]"],
+  ["Cursor cloud agents", "[[fact:cursor.models]]", "[[fact:cursor.where]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
+  ["Jules", "[[fact:jules.models]]", "[[fact:jules.where]]", "[[fact:jules.surfaces]]", "[[fact:jules.pricing]]"],
 ]
+note = "Rival cells are sourced and dated; follow the numbered links below the page."
 
 [[section]]
-heading = "What Claude Code on the web is good at"
+heading = "The day one laptop stopped being enough"
 body = """
-[[fact:claude-code.where]] [[fact:claude-code.surfaces]] For a single developer on a Claude plan, it is the most direct way to run Claude Code in the cloud. [[fact:claude-code.pricing]]
+Here is how it usually goes. You are a solo developer with a Max plan and a habit. You kick off a task on claude.ai/code before lunch, close the lid, and it keeps going on Anthropic's machines while you eat [[cite:claude-code.where]]. Later you check it from your phone, and in the evening you pull the session down to your terminal with `--teleport` [[cite:claude-code.surfaces]]. No extra charge for the cloud machine, either; it comes with Pro or Max [[cite:claude-code.pricing]]. Honestly? Great tool.
 
-Teams hit two things. Slack is changing. [[fact:claude-code.slack]] [[fact:claude-code.tag-billing]] And it is Claude-only by design. [[fact:claude-code.models]]
+Then you hire two people. Then four more.
+
+Now the questions change. Who else can start a task? Where do they ask? Whose subscription pays? And what happens when a teammate wants to try Codex on something Claude keeps fumbling?
+
+Claude Code on the web was built around one person and one Anthropic account, and it runs Claude models only [[cite:claude-code.models]]. The team story points to Slack, which on Team and Enterprise now means Claude Tag, still in public beta, with the old Claude Code Slack bot switched off on October 5 [[cite:claude-code.slack]]. Tag bills channel work by usage under a spend cap an admin sets [[cite:claude-code.tag-billing]].
+
+That shift is what sends people looking. What most of them want, in the words of one Nori customer, is "Claude Code, but you don't need your laptop open" for the whole team.
 """
 
 [[section]]
-heading = "The alternatives, ranked"
-body = "Ranked for teams that want Claude Code working in the background for everyone, not one laptop at a time."
+heading = "Seven alternatives, ranked for a growing team"
+body = "My ranking assumes a small team, a GitHub org, a Slack workspace, and at least one Claude or ChatGPT subscription already on the expense report."
 
 [[section]]
 level = 3
-heading = "1. Jiro: Claude Code in the cloud, for the whole team"
+heading = "1. Jiro: Claude Code for the team, not just the laptop"
 body = """
-Jiro runs Anthropic's Claude Code in an isolated cloud VM with your GitHub repos and setup script, signed in with your own Claude subscription or an API key.
+Jiro is the closest thing to "my cloud Claude Code, but everyone gets one." It runs Claude Code, and also Codex or Cursor when that suits a task better [[cite:jiro.harnesses]]. You sign in with your Claude login, a ChatGPT login, or an API key [[cite:jiro.credentials]].
 
-Your team mentions Jiro in Slack or uses the web chat; Jiro replies in the thread and opens pull requests for review. When a task suits Codex or Cursor better, connect that provider and start a new conversation with it. It asks before merging to your main branch.
-
-**Pick Jiro if** you want Claude Code working in your team's Slack on credentials you control.
-"""
-
-[[section]]
-level = 3
-heading = "2. OpenAI Codex cloud: the OpenAI counterpart"
-body = """
-[[fact:codex.where]] [[fact:codex.pricing]]
-
-**Pick Codex cloud if** your team prefers OpenAI models.
+Work arrives from Slack, the web, Discord, a terminal, cron schedules and webhooks [[cite:jiro.surfaces]], and every conversation spins up its own cloud machine with the repos and tools in place [[cite:jiro.environment]]. Built for small teams. If you are one person who never leaves the Claude app, stick with what you have.
 """
 
 [[section]]
 level = 3
-heading = "3. Cursor cloud agents: best for Cursor users"
+heading = "2. Claude Tag: Anthropic's own answer for teams"
 body = """
-[[fact:cursor.prs]] [[fact:cursor.pricing]]
-
-**Pick Cursor if** your developers work in the Cursor editor.
+If your company is on Claude Team or Enterprise, Tag is the official path. Under the hood, each thread is a throwaway sandbox powered by what is essentially your current cloud Claude Code [[cite:claude-tag.where]], and anyone in the channel can tag it in. Pro and Max users can't get it [[cite:claude-tag.plans]]. It's still a beta, too [[cite:claude-tag.beta]].
 """
 
 [[section]]
 level = 3
-heading = "4. Amp: best bring-your-own-everything option"
+heading = "3. OpenAI Codex cloud: the mirror image"
 body = """
-[[fact:amp.models]] [[fact:amp.claude-plan]] [[fact:amp.where]]
-
-**Pick Amp if** you want per-minute cloud machines or a free path on your own hardware.
+Same idea from the other lab. Each task gets an OpenAI-hosted machine that keeps going while your laptop sleeps [[cite:codex.where]], included from ChatGPT Plus at $20 [[cite:codex.pricing]]. Note that the cloud side wants a ChatGPT plan; an API key alone won't open it [[cite:codex.models]].
 """
 
 [[section]]
 level = 3
-heading = "5. Tembo: best for alert-driven work"
+heading = "4. Warp: Claude Code in someone else's cloud"
 body = """
-[[fact:tembo.models]] [[fact:tembo.surfaces]]
-
-**Pick Tembo if** most agent work should start from Sentry, PagerDuty or ticket events.
+Warp surprised me. A cloud run can use Claude Code, Codex or Warp's own agent [[cite:warp.models]], kicked off from Slack, Linear, schedules and more [[cite:warp.surfaces]]. The catch for subscription holders: personal API keys don't work for cloud runs [[cite:warp.models]], and runs bill for agent time, inference and compute [[cite:warp.billing]].
 """
 
 [[section]]
 level = 3
-heading = "6. GitHub Copilot cloud agent: best inside GitHub"
+heading = "5. Amp: bring the Max plan along"
 body = """
-[[fact:copilot.third-party]] [[fact:copilot.prs]]
-
-**Pick Copilot if** you want GitHub to run Claude as one of several agents.
+Amp started accepting Claude Pro and Max plans on October 10 via the Agent SDK [[cite:amp.claude-plan]]. Its orbs give each thread a remote machine that outlives your closed laptop [[cite:amp.where]], and the smallest orb costs about eight cents for a full hour, metered per minute [[cite:amp.orbs]]. Watch the default Ship behavior, which commits to trunk rather than opening a PR [[cite:amp.ship]].
 """
 
 [[section]]
-heading = "When to stay with Claude Code on the web"
-body = "Stay with it if you work alone, want to move one session between web, phone, desktop and terminal, and only need Claude models. Anthropic does not charge extra for the cloud VM."
+level = 3
+heading = "6. Cursor cloud agents: for editor loyalists"
+body = """
+The pull requests are polished, with screenshots, videos and logs [[cite:cursor.prs]]. Pricing is harder to forecast: cloud agents bill at API rates for whatever model you choose [[cite:cursor.models]], on top of a Premium plan or higher [[cite:cursor.pricing]].
+"""
+
+[[section]]
+level = 3
+heading = "7. Jules: if your team leans Google"
+body = """
+Jules runs Gemini [[cite:jules.models]] in short-lived Google machines with Docker preinstalled [[cite:jules.where]]. The free tier gives 15 tasks a day [[cite:jules.limits]]. Paid tiers are sold to personal Google accounts; Workspace customers are sent to an interest form [[cite:jules.accounts]], which is awkward for a company rollout.
+"""
+
+[[section]]
+heading = "How I would choose, knowing what I know now"
+body = """
+Start with the subscription you already pay for. That alone eliminates half the table.
+
+Then ask where your team actually talks. If it is Slack, cross off anything without a Slack front door. If half of your requests should start from a cron job or an alert, look hard at webhook and schedule support.
+
+Last, decide how attached you are to a single lab. Plenty of people are very attached to Claude, and fair enough. But the day Claude keeps circling one stubborn migration, being able to throw Codex at it matters more than you would expect.
+"""
+
+[[section]]
+heading = "Why Jiro comes first"
+body = """
+Because it solves the exact problem that made you search. Your team gets cloud Claude Code from Slack, on subscriptions you control, with Nori charging nothing on tokens [[cite:jiro.no-markup]].
+
+The price is boring in a good way. Thirty free days, card not required. After that, one person pays $99 monthly on Developer, or a whole team pays $250 monthly and shares five runtimes [[cite:jiro.pricing]]. Runtimes sleep while idle [[cite:jiro.runtimes]].
+
+The team-shaped parts are what you don't get from a solo tool. Shared org context travels with every session through skillsets [[cite:jiro.skillsets]]. An org setup script means nobody re-explains how to build the monorepo [[cite:jiro.setup-script]]. And Jiro is opinionated about craft: it tries to write what a careful senior teammate would, and it will say so when your plan looks wrong.
+
+Real teams use it. Miravoice routes more than a quarter of its merged PRs through Nori [[cite:jiro.miravoice]], and that team configured its agent from phones, start to finish [[cite:jiro.phone]].
+"""
+
+[[section]]
+heading = "When Claude Code on the web is still the right call"
+body = """
+If you are still a team of one, stay. Seriously. The handoff between web, phone, desktop and terminal is smooth, the cloud machine is included in your plan, and auto-fix will chase CI failures and review comments after you open the PR [[cite:claude-code.prs]]. Jiro earns its keep when other people need to start the work.
+"""
+
+[[section]]
+heading = "Bringing your Claude Code habits over"
+body = "Your CLAUDE.md and your Claude login both come along. The [switching guide](https://jiro.bot/switch/claude-code-web-to-jiro) walks through it like a note to a teammate."
 
 [[faq]]
-q = "Can I run Claude Code in the cloud with my Claude Max subscription?"
-a = "Yes, with Claude Code on the web. Jiro also runs Claude Code in its cloud VMs on your own Claude subscription or API key."
+q = "What are the best Claude Code on the web alternatives?"
+a = "For a small team on Claude or ChatGPT, Jiro. Then Claude Tag if you are on Claude Team or Enterprise, Codex cloud for ChatGPT shops, Warp, Amp, Cursor cloud agents and Jules."
 
 [[faq]]
-q = "How do I run Claude Code in Slack for my team?"
-a = "Connect Jiro to Slack, GitHub and a Claude subscription or Anthropic API key, then mention Jiro in a channel. It works in a cloud VM and replies in the thread with a pull request when code changes."
+q = "Who competes with Claude Code on the web?"
+a = "Google's Jules, Warp, Amp, Jiro, and both OpenAI's and Cursor's cloud agents put a coding agent on a remote machine. Claude Tag is Anthropic's own team product on that same engine [[cite:claude-tag.where]]."
 
 [[faq]]
-q = "Is Jiro made by Anthropic?"
-a = "No. Jiro is a background coding agent by Nori. It runs Anthropic's Claude Code, as well as Codex and Cursor."
+q = "How much does Claude Code on the web cost?"
+a = "No separate price. Pro ($20 a month), Max (starting at $100) and every Team or Enterprise seat include it, with the cloud machine thrown in, and the Free plan does not include Claude Code [[cite:claude-code.pricing]]."
 
 [[faq]]
-q = "Is Claude Code on the web free?"
-a = "No. [[fact:claude-code.pricing]]"
+q = "How do I get Claude Code in Slack without keeping my laptop open?"
+a = "On Claude Team or Enterprise, Claude Tag does it [[cite:claude-tag.plans]]. On a Pro, Max, Team or Enterprise plan, Jiro runs Claude Code in its own cloud machine and takes requests from Slack [[cite:jiro.surfaces]]."
+
+[[faq]]
+q = "What happened to the Claude Code Slack app?"
+a = "The legacy bot was retired on October 5, 2026 and stopped answering in workspaces tied to a Claude organization [[cite:claude-tag.legacy]]."
+
+[[faq]]
+q = "Can I use my Claude Max plan with Jiro?"
+a = "Yes. In your own terminal, `claude setup-token` mints a long-lived token for the Max plan [[cite:anthropic.setup-token]]; paste it into Jiro's Claude connection and you are done."

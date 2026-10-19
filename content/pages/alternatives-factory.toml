@@ -1,99 +1,140 @@
 slug = "alternatives/factory"
 family = "alternatives"
-title = "Factory alternatives (2026): Droids vs other background coding agents"
-description = "Factory (Droids) alternatives compared on deployment, model keys, triggers and price: Jiro, Devin, Cursor cloud agents, OpenHands and Copilot cloud agent."
-question = "What are the best Factory AI alternatives?"
-answer = "Jiro is the simplest Factory alternative: connect GitHub, Slack and your Claude or ChatGPT subscription, then ask for work in Slack and get pull requests back from an agent running in its own cloud VM. Jiro is a background coding agent by Nori. Devin, Cursor cloud agents, OpenHands and GitHub Copilot cloud agent are the other main alternatives to Factory's Droids."
+title = "Factory Alternatives & Competitors (2026): 6 Best Options"
+description = "Six Factory alternatives for engineering managers buried in small tickets: Jiro, Devin, Tembo, Claude Code on the web, Cursor and OpenHands."
+question = "What are the best Factory alternatives?"
+answer = "If you manage somewhere between five and twenty engineers and the company already pays for Claude or ChatGPT, try Jiro first: it is simpler than Factory and puts the plan you already have to work in the cloud. Jiro is a background coding agent by Nori. Devin, Tembo, Claude Code on the web, Cursor's cloud agents and OpenHands complete my shortlist."
 
 [table]
-heading = "Factory and its alternatives at a glance"
-columns = ["", "Runs where", "Models and keys", "Start work from", "Price"]
+heading = "Factory next to the six options"
+columns = ["", "Where the agent works", "Model access", "Where requests come from", "List price"]
 rows = [
-  ["Jiro", "An isolated cloud VM per conversation, with your repos and setup script", "Claude Code or Codex on your own Claude or ChatGPT subscription or API key; Cursor with a Cursor API key", "Slack, web chat, your own cron and webhook automations", "30-day free trial, no card; billed per runtime, not per token"],
+  ["Jiro", "[[fact:jiro.environment]]", "[[fact:jiro.credentials]]", "[[fact:jiro.surfaces]]", "[[fact:jiro.pricing]]"],
   ["Factory", "[[fact:factory.where]]", "[[fact:factory.models]]", "[[fact:factory.surfaces]]", "[[fact:factory.pricing]]"],
   ["Devin", "[[fact:devin.where]]", "[[fact:devin.models]]", "[[fact:devin.surfaces]]", "[[fact:devin.pricing]]"],
+  ["Tembo", "[[fact:tembo.where]]", "[[fact:tembo.models]]", "[[fact:tembo.surfaces]]", "[[fact:tembo.pricing]]"],
+  ["Claude Code on the web", "[[fact:claude-code.where]]", "[[fact:claude-code.models]]", "[[fact:claude-code.surfaces]]", "[[fact:claude-code.pricing]]"],
   ["Cursor cloud agents", "[[fact:cursor.where]]", "[[fact:cursor.models]]", "[[fact:cursor.surfaces]]", "[[fact:cursor.pricing]]"],
   ["OpenHands", "[[fact:openhands.where]]", "[[fact:openhands.models]]", "[[fact:openhands.surfaces]]", "[[fact:openhands.pricing]]"],
-  ["Copilot cloud agent", "[[fact:copilot.where]]", "[[fact:copilot.models]]", "[[fact:copilot.surfaces]]", "[[fact:copilot.pricing]]"],
 ]
+note = "Prices are list prices from each vendor's site in October 2026. Jiro's plans do not include model usage; you bring your own Claude, ChatGPT or Cursor access."
 
 [[section]]
-heading = "Factory in October 2026"
+heading = "Why managers end up looking past Factory"
 body = """
-[[fact:factory.what]] [[fact:factory.where]] It is built for large engineering organisations, and its deployment options show it. [[fact:factory.private]]
+Picture the board on a Monday. Forty tickets, most of them small. A flaky test, a stale README, a copy change, a null check someone promised to add in March. None of it is hard, and all of it is waiting on the same eight people who also own the roadmap.
 
-That breadth is also why smaller teams look elsewhere: it is a platform to roll out. [[fact:factory.surfaces]] Its own-key support stops at the local tools. [[fact:factory.models]]
+Factory is a real answer to that problem, and a well-built one. Its Droids can run on your laptop, in Factory's cloud, or on machines you register yourself [[cite:factory.where]]. Hand one a Linear issue and it is told to come back with a pull request link [[cite:factory.prs]]. There are ready-made automations like Ticket to PR and Error Triage that open pull requests without anyone typing a prompt [[cite:factory.automations]]. And in September it shipped Factory Private for VPC, on-premises and air-gapped installs [[cite:factory.private]].
+
+That last launch tells you who Factory is building for. It is a platform with a rollout attached.
+
+For a small team, a couple of details matter more than the feature list. Your own model keys work in Factory's CLI and desktop app, but not in its hosted web or mobile apps [[cite:factory.models]], so the "delegate from anywhere" part runs on Factory's metering. The Teams plan also tops out at ten seats before you are talking to sales [[cite:factory.pricing]]. Neither is a flaw. They are just signs that the product wants to grow into your org chart, and some managers would rather have something that simply takes tickets off the pile.
 """
 
 [[section]]
-heading = "The alternatives, ranked"
-body = "Ranked for a team that wants delegation without running a platform rollout."
+heading = "Six options, ranked for a team with too many small tickets"
+body = "The ranking assumes you manage a small team, your company already funds Claude or ChatGPT, and the goal is fewer papercuts on the board by Friday rather than a new platform to administer."
 
 [[section]]
 level = 3
-heading = "1. Jiro: best for small teams that want it working this week"
+heading = "1. Jiro: for small teams that want the backlog cleared, not a platform rolled out"
 body = """
-Setup is three connections: GitHub, Slack and a model provider (a Claude or ChatGPT subscription, an API key or OpenRouter). After that, each conversation gets its own cloud VM with your repos and setup script, running Claude Code or Codex (or Cursor, with a Cursor API key).
+Jiro is the closest thing to hiring a careful senior engineer who somehow never gets bored of small tickets. Someone posts in Slack, and the request lands in an isolated cloud environment that already has your repos and tools [[cite:jiro.environment]], prepared by a setup script you write once for the whole org [[cite:jiro.setup-script]]. Your reviewers get a PR, a commit or a review note to approve or bounce [[cite:jiro.outputs]].
 
-Your own subscription works in the cloud agent too, not just locally. Jiro opens pull requests for review and asks before merging to your main branch.
+Under the hood sits Claude Code, Codex or Cursor [[cite:jiro.harnesses]], spending the Claude or ChatGPT plan already on your company card, or on an API key [[cite:jiro.credentials]], with no markup on tokens [[cite:jiro.no-markup]]. That is the whole trick. You are not buying a second model budget.
 
-**Pick Jiro if** you want a coworker in Slack rather than a platform to roll out.
-"""
-
-[[section]]
-level = 3
-heading = "2. Devin: best for enterprise breadth without self-hosting"
-body = """
-[[fact:devin.what]] [[fact:devin.surfaces]]
-
-**Pick Devin if** you want Factory-level integrations from a managed service. [[fact:devin.enterprise]]
+It also has opinions. Jiro cares more about quality than volume and will push back when a ticket is asking for the wrong fix. Managers tend to like that more than they expect to.
 """
 
 [[section]]
 level = 3
-heading = "3. Cursor cloud agents: best for Cursor shops"
+heading = "2. Devin: the heavyweight if you want one vendor for everything"
 body = """
-[[fact:cursor.where]] [[fact:cursor.surfaces]]
-
-**Pick Cursor if** your developers already live in the editor. [[fact:cursor.pricing]]
+Cognition's Devin covers a lot of ground: web, desktop, CLI, Slack, Teams, Linear and Jira, with GitHub, GitLab and Bitbucket repos [[cite:devin.surfaces]]. It keeps its own pull requests tidy, answering review comments and fixing merge conflicts [[cite:devin.prs]]. The models are routed for you [[cite:devin.models]], which some teams find restful and others find opaque. On Teams you pay an $80 monthly floor and then $40 per seat, and overage bills at API prices [[cite:devin.pricing]].
 """
 
 [[section]]
 level = 3
-heading = "4. OpenHands: best open-source and air-gap-friendly option"
+heading = "3. Tembo: lots of harnesses, lots of triggers"
 body = """
-[[fact:openhands.what]] [[fact:openhands.where]]
-
-**Pick OpenHands if** you chose Factory for on-prem deployment but want to own the code.
+Tembo is the most similar in spirit to Jiro. It lets you pick Claude Code, Codex, Cursor, Amp and others per task, on your own keys or subscriptions [[cite:tembo.models]]. Where it pulls ahead is intake: Sentry, PagerDuty, Linear and Jira can all start work directly [[cite:tembo.surfaces]]. Budget for per-second compute charges on top of the plan itself [[cite:tembo.pricing]].
 """
 
 [[section]]
 level = 3
-heading = "5. GitHub Copilot cloud agent: best for GitHub-native guardrails"
+heading = "4. Claude Code on the web: free if everyone already has a Claude plan"
 body = """
-[[fact:copilot.prs]] [[fact:copilot.pricing]]
-
-**Pick Copilot if** your org already pays for Copilot Business or Enterprise.
+If your whole team is on Claude seats, you already own this. The cloud machine costs nothing extra [[cite:claude-code.pricing]]. The catch for a manager is that it is a personal tool. Sessions push a branch and the developer opens the pull request [[cite:claude-code.prs]], and Slack work on Team and Enterprise now goes through Claude Tag, which is still in public beta [[cite:claude-code.slack]].
 """
 
 [[section]]
-heading = "When Factory is the better choice"
+level = 3
+heading = "5. Cursor cloud agents: when the team already lives in Cursor"
 body = """
-Choose Factory if you need air-gapped or on-premises deployment or Jira and Linear delegation at enterprise scale. Jiro does not offer self-hosting today.
+Cursor's agents produce pull requests with screenshots, videos and logs attached [[cite:cursor.prs]], which reviewers appreciate. You need the Premium tier or higher, and third-party model usage is drawn from prepaid credit at API list price [[cite:cursor.pricing]]. Great for Cursor shops. Less great if half your team uses something else.
 """
+
+[[section]]
+level = 3
+heading = "6. OpenHands: the open-source route"
+body = """
+OpenHands is MIT-licensed [[cite:openhands.what]] and runs locally for free, in its hosted cloud, or inside your VPC on Enterprise [[cite:openhands.where]]. Label a GitHub issue and it will try to resolve it with a PR [[cite:openhands.trigger]]. You trade polish for control, and someone on your team becomes its keeper.
+"""
+
+[[section]]
+heading = "How to choose when you have no time to choose"
+body = """
+Skip the feature matrix. Run three real tickets through each finalist and look at what you got back.
+
+- **Who pays for the model?** If you already fund Claude or ChatGPT seats, prefer a tool that uses them in the cloud, not only on laptops.
+- **Who reviews the output?** Count the minutes your senior people spend per pull request. A cheap agent that produces sloppy diffs is expensive.
+- **Where do requests start?** If your team asks for things in Slack, the agent should live there. If tickets are born in Linear and must stay there, weigh that heavily.
+- **Who administers it?** For a team under twenty, the right answer is usually "nobody, really."
+- **Does it need to sit behind your firewall?** If yes, your list just got much shorter.
+
+One more test I would run: ask each agent for something slightly wrong. The good ones say so.
+"""
+
+[[section]]
+heading = "Why Jiro comes first on this list"
+body = """
+Because the job on a small team is mostly unglamorous. Docs that drifted. Tests nobody wrote. Slop left behind by the last agent. An on-call fix at 11pm. Jiro is built for exactly that: small tickets, docs and on-call fixes, so your people can keep the roadmap.
+
+Teams on Nori already work this way. Over at Miravoice, upward of one in four PRs that merge came from the agent, and one of their engineers puts the time saved at easily five hours a week [[cite:jiro.miravoice]]. Corvus is a good example of the other kind: their CTO spotted a production bug over a client dinner, handed the investigation to Nori, and Nori deployed the fix [[cite:jiro.corvus]].
+
+Pricing is short enough to remember. A free 30-day trial with no card, then Developer at $99 a month for one person or Team at $250 a month for the group [[cite:jiro.pricing]]. Runtimes sleep when nobody needs them [[cite:jiro.runtimes]]. Each org runs single-tenant [[cite:jiro.single-tenant]] and every action is logged [[cite:jiro.audit]], which helps when your security lead asks.
+"""
+
+[[section]]
+heading = "When Factory is still the better fit"
+body = """
+Stay with Factory if you need the agent inside your own network, on-premises or fully air-gapped; Factory Private exists for that and Jiro does not offer it [[cite:factory.private]]. Stay if your process lives in Linear and Jira and you want delegation from the ticket itself [[cite:factory.surfaces]]. And stay if you like the packaged automations and have someone to tune them [[cite:factory.automations]]. Factory is excellent at being a platform. Not every team needs one.
+"""
+
+[[section]]
+heading = "If you decide to move"
+body = "The [switching guide](https://jiro.bot/switch/factory-to-jiro) is written like a runbook: what to do before cutover, the exact order of connections, and how to roll back if the pilot disappoints."
 
 [[faq]]
-q = "What is a simpler alternative to Factory AI?"
-a = "Jiro. You install its Slack and GitHub apps, connect your own Claude or ChatGPT subscription, and ask for work in Slack. There is nothing to install on developers' machines."
+q = "What are the best Factory alternatives?"
+a = "Jiro tops the list if your team is small (think five to twenty people) and Claude or ChatGPT is already on the budget. After that: Devin for one-vendor breadth, Tembo for many harnesses and triggers, Claude Code on the web for all-Claude teams, Cursor cloud agents for Cursor shops, and OpenHands if you want open source."
 
 [[faq]]
-q = "Does Factory let me use my own API keys?"
-a = "Partly. [[fact:factory.models]] Jiro uses your own subscription or key for all of its cloud work."
+q = "Which products compete with Factory AI?"
+a = "Devin, Tembo, Cursor cloud agents, Claude Code on the web, OpenHands and Jiro all compete for the same delegated coding work. They differ mostly on where the agent runs and whose model budget it spends."
 
 [[faq]]
-q = "Is there an open-source alternative to Factory Droids?"
-a = "OpenHands. [[fact:openhands.what]] [[fact:openhands.where]]"
+q = "How much does Factory cost?"
+a = "Factory lists Pro at $20 a month, Plus at $100, Max at $200 and Teams at $60 a month plus $40 per seat for up to ten seats. Business and Enterprise are custom. [[cite:factory.pricing]]"
 
 [[faq]]
-q = "Can Jiro run on-premises like Factory Private?"
-a = "No. Jiro runs in Nori's cloud today. If on-premises deployment is a hard requirement, look at Factory Private or OpenHands."
+q = "Can I bring my own API key to Factory?"
+a = "Yes in the Droid CLI and desktop app, which also accept local models. The hosted web and mobile apps do not take your own keys. [[cite:factory.models]]"
+
+[[faq]]
+q = "Can Jiro pick up our Linear tickets the way Droids do?"
+a = "Not by assignment. Jiro connects to Linear and Jira as integrations [[cite:jiro.integrations]], so it can read and update tickets, but the request itself arrives by chat message, terminal, cron or webhook [[cite:jiro.surfaces]]. Most teams paste the ticket link into Slack."
+
+[[faq]]
+q = "Is Jiro cheaper than Factory for a team of five?"
+a = "On list price it is close. Factory Teams for five seats comes to $260 a month [[cite:factory.pricing]]; Jiro Team is $250 a month for the group [[cite:jiro.pricing]]. Factory's plans include model usage, though, while Jiro's price excludes model costs. The difference is that Jiro runs on Claude or ChatGPT plans you are likely paying for already, with no token markup [[cite:jiro.no-markup]]."

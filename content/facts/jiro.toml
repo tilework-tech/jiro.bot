@@ -1,0 +1,156 @@
+# Jiro is Nori's background coding agent; Nori's public site and docs are the source for Jiro's own claims.
+name = "Jiro"
+
+[[fact]]
+id = "pricing"
+text = "Nori's plans start with a free 30-day trial with no card; Developer is $99 a month for one user with up to three persistent runtimes, and Team is $250 a month for multiple users sharing five runtimes."
+short = "Free 30-day trial; Developer $99/mo; Team $250/mo"
+source = "https://noriagentic.com/#pricing"
+checked = "2026-10-19"
+
+[[fact]]
+id = "runtimes"
+text = "Nori sizes plans by runtimes, which sleep when idle and wake on demand; the trial runs five for 30 days."
+short = "Sized by runtimes; they sleep when idle"
+source = "https://noriagentic.com/#faq"
+checked = "2026-10-19"
+
+[[fact]]
+id = "environment"
+text = "Each Nori agent works in an isolated cloud environment with your repository, tools, dependencies and services ready to use."
+short = "Isolated cloud environment with your repos and tools"
+source = "https://noriagentic.com/#faq"
+checked = "2026-10-19"
+
+[[fact]]
+id = "setup-script"
+text = "A Nori organization can define a setup script that installs dependencies and prepares every session's environment."
+short = "Org setup script prepares each environment"
+source = "https://docs.noriagentic.com/start/what-can-nori-do#give-agents-a-real-working-environment"
+checked = "2026-10-19"
+
+[[fact]]
+id = "one-session-per-machine"
+text = "In Nori, one claimed machine serves one active session within the organization's fleet."
+short = "One machine per active session"
+source = "https://docs.noriagentic.com/resources/faq#is-each-session-isolated"
+checked = "2026-10-19"
+
+[[fact]]
+id = "harnesses"
+text = "Nori runs Claude Code, Codex and Cursor as first-class agents."
+short = "Claude Code, Codex, Cursor"
+source = "https://docs.noriagentic.com/sessions/reference/supported-agents-and-compute"
+checked = "2026-10-19"
+
+[[fact]]
+id = "credentials"
+text = "Claude Code in Nori accepts an Anthropic API key, a Claude OAuth login or a setup token; Codex accepts an OpenAI API key or Codex OAuth; Cursor needs a Cursor API key."
+short = "Your Claude/ChatGPT login or API key; Cursor key"
+source = "https://docs.noriagentic.com/sessions/reference/supported-agents-and-compute"
+checked = "2026-10-19"
+
+[[fact]]
+id = "no-markup"
+text = "Nori's comparison table lists any model on your own keys with flat pricing and zero token markup."
+short = "Your keys, zero token markup"
+source = "https://noriagentic.com/#compare"
+checked = "2026-10-19"
+
+[[fact]]
+id = "surfaces"
+text = "Nori work can start from Slack, the web dashboard, Discord, the Handroll terminal, schedules and webhooks, all reaching the same fleet."
+short = "Slack, web, Discord, terminal, schedules, webhooks"
+source = "https://docs.noriagentic.com/start/what-can-nori-do#start-agent-work-from-the-tools-your-team-already-uses"
+checked = "2026-10-19"
+
+[[fact]]
+id = "triggers"
+text = "Nori cron triggers run recurring jobs, reminders run once at a future time, and webhooks react to external events."
+short = "Cron, one-off reminders, webhooks"
+source = "https://docs.noriagentic.com/resources/faq#can-nori-run-tasks-without-a-person-online"
+checked = "2026-10-19"
+
+[[fact]]
+id = "outputs"
+text = "Nori agents can return a pull request, commit, comment or completed task for you to review, merge or send back."
+short = "PRs, commits, comments for review"
+source = "https://noriagentic.com/#faq"
+checked = "2026-10-19"
+
+[[fact]]
+id = "github"
+text = "Nori works with any GitHub repository you can access; you install the GitHub App and choose all repositories or a selected set."
+short = "GitHub App, all or selected repos"
+source = "https://docs.noriagentic.com/sessions/guides/integrations#github"
+checked = "2026-10-19"
+
+[[fact]]
+id = "integrations"
+text = "Nori connects to Salesforce, HubSpot, Google Sheets, Google Drive, Notion, Linear, Jira, Stripe and Gmail, plus hundreds more."
+short = "Linear, Jira, Notion, Google, HubSpot and more"
+source = "https://noriagentic.com/#faq"
+checked = "2026-10-19"
+
+[[fact]]
+id = "mcp"
+text = "Nori's dashboard exposes a catalog of MCP servers that admins can connect for every session."
+short = "MCP server catalog"
+source = "https://docs.noriagentic.com/sessions/guides/integrations#managed-mcp-servers"
+checked = "2026-10-19"
+
+[[fact]]
+id = "skillsets"
+text = "Nori provides the runtime around coding agents: machines, lifecycle, credentials, integrations, transcripts, checkpoints, team policy and portable skillsets."
+short = "Shared org context and portable skillsets"
+source = "https://docs.noriagentic.com/start/what-is-nori"
+checked = "2026-10-19"
+
+[[fact]]
+id = "translation"
+text = "A Nori skillset is written once and translated into each agent's own files: CLAUDE.md for Claude Code, copilot-instructions.md for GitHub Copilot and AGENTS.md for most others."
+short = "One skillset, translated per agent"
+source = "https://docs.noriagentic.com/skillsets/concepts/translation-and-agents"
+checked = "2026-10-19"
+
+[[fact]]
+id = "single-tenant"
+text = "Each hosted Nori organization gets a single-tenant broker on its own subdomain."
+short = "Single-tenant per organization"
+source = "https://docs.noriagentic.com/sessions/concepts/security-and-credentials#organization-isolation"
+checked = "2026-10-19"
+
+[[fact]]
+id = "audit"
+text = "Nori logs every session and every action, and makes them searchable."
+short = "Every session and action logged"
+source = "https://noriagentic.com/for-security-leaders.html"
+checked = "2026-10-19"
+
+[[fact]]
+id = "corvus"
+text = "Corvus's CTO saw a production bug at a client dinner, had Nori look into it and deploy a fix."
+short = "Corvus: prod fix from a dinner table"
+source = "https://noriagentic.com/newsletter/2026-05-19-corvus-case-study.html"
+checked = "2026-10-19"
+
+[[fact]]
+id = "miravoice"
+text = "Nori handles more than 25% of Miravoice's merged pull requests, and a Miravoice engineer says it easily saves five hours a week."
+short = "Miravoice: 25%+ of merged PRs"
+source = "https://noriagentic.com/newsletter/2026-09-18-miravoice-case-study.html"
+checked = "2026-10-19"
+
+[[fact]]
+id = "phone"
+text = "The Miravoice team set up an agent entirely in the cloud from their phones."
+short = "Set up from a phone"
+source = "https://noriagentic.com/#miravoice-story"
+checked = "2026-10-19"
+
+[[fact]]
+id = "slack-threads"
+text = "Mention Nori's bot in a Slack channel to start a session; it replies in a thread, and every reply in that thread continues the same session."
+short = "Mention in Slack; works in the thread"
+source = "https://docs.noriagentic.com/sessions/guides/slack"
+checked = "2026-10-19"

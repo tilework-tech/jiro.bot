@@ -1,0 +1,120 @@
+slug = "switch/codex-cloud-to-jiro"
+family = "switch"
+title = "Switching from Codex Cloud to Jiro (2026): What Changes on the Bill"
+description = "A cost-first memo for moving from Codex cloud to Jiro: your ChatGPT plan stays, AGENTS.md carries over, and Codex keeps running via OAuth or API key."
+question = "How do I switch from Codex cloud to Jiro?"
+answer = "You do not have to stop using Codex. Open a trial, add Jiro's GitHub App to your repos, connect Slack, then sign Jiro's Codex harness in with your existing ChatGPT login through Codex OAuth or with an OpenAI API key. Jiro is a background coding agent by Nori. Your AGENTS.md stays in the repo and Codex reads it as before; the bill gains one flat line, $99 or $250 a month, and nothing else."
+
+[[section]]
+heading = "Here's what changes on the bill"
+body = """
+Short version first.
+
+- **ChatGPT subscription:** unchanged. Codex cloud lives inside ChatGPT from Plus at $20, with Business at $25 per user [[cite:codex.pricing]]. Keep it. Jiro signs in to it.
+- **New line:** either $99 monthly (Developer: a single seat, three persistent runtimes at most) or $250 monthly (Team: several seats, five runtimes in common) [[cite:jiro.pricing]].
+- **Token markup:** zero [[cite:jiro.no-markup]]. If you use an OpenAI API key instead, OpenAI bills you directly at its rates.
+- **Idle cost:** runtimes go to sleep when nobody is using them and wake on demand [[cite:jiro.runtimes]].
+- **Trial:** thirty days, five runtimes, no card [[cite:jiro.runtimes]].
+
+That is the whole delta. The rest of this memo explains what you get for it, and what you lose.
+"""
+
+[[section]]
+heading = "Why the bill is worth changing"
+body = """
+Three reasons, in order of how often teams cite them to us.
+
+First, model independence. Codex cloud is an OpenAI-models product, and cloud tasks are reserved for ChatGPT plan holders, not bare API keys [[cite:codex.models]]. Inside Jiro, Codex accepts either Codex OAuth or an OpenAI API key, and the same environment can run Claude Code or Cursor tomorrow [[cite:jiro.credentials]] [[cite:jiro.harnesses]]. Switching models becomes a setting rather than a purchase order.
+
+Second, unattended work. Jiro takes cron schedules, one-off reminders and webhooks [[cite:jiro.triggers]], so a nightly test-gap sweep or a webhook from your alerting can start a task while everyone sleeps.
+
+Third, the review step. In Codex cloud a person reviews the diff and then commits or opens the pull request [[cite:codex.prs]]. Jiro hands back the pull request itself [[cite:jiro.outputs]]. Fewer clicks; same scrutiny.
+"""
+
+[[section]]
+heading = "Three sample bills"
+body = """
+Illustrative, using list prices from the cited pages.
+
+- **Solo engineer on ChatGPT Plus.** Before: $20 [[cite:codex.pricing]]. After: $20 plus $99 on Developer. Total $119.
+- **Five engineers on ChatGPT Business.** Before: $125. After: $125 plus $250 on Team. Total $375, for five shared runtimes the whole group can use from Slack.
+- **Twelve engineers, half on Claude, half on ChatGPT.** Before: two separate agent tools, likely. After: both subscriptions unchanged, one Jiro Team plan at $250 running Codex for some people and Claude Code for others.
+
+The third case is where the numbers usually work out best. Two tools become one, and the team stops arguing about which vendor to standardize on.
+
+One caveat. Five runtimes is a ceiling on concurrent sessions for Team, so a large group running many tasks at once will feel it.
+"""
+
+[[section]]
+heading = "What carries over"
+body = """
+AGENTS.md, entirely. It is a file in your repository, so Jiro's Codex harness reads it exactly as Codex cloud did. No export, no conversion.
+
+Rules you want across every repo, or for Claude Code too, go into a Jiro skillset; Jiro writes each skillset out in the format a given harness reads, so Claude Code receives a CLAUDE.md while Codex keeps getting AGENTS.md [[cite:jiro.translation]]. Codex cloud environment settings do not carry over automatically. Rewrite the install steps as Jiro's org setup script, which prepares every session's environment the same way [[cite:jiro.setup-script]].
+"""
+
+[[section]]
+heading = "Migration steps"
+body = """
+- **Step 1.** Open the Jiro trial. Free for 30 days.
+- **Step 2.** Add the GitHub App; grant it only the repositories in scope for now [[cite:jiro.github]].
+- **Step 3.** Connect your Slack workspace, so requests and replies live in team threads [[cite:jiro.surfaces]] [[cite:jiro.slack-threads]].
+- **Step 4.** Connect Codex. Sign in through Codex OAuth with the ChatGPT account you already pay for, or paste an OpenAI API key.
+- **Step 5.** Optional, for Claude Code as well: on your own computer, run `claude setup-token` to generate a twelve-month token linked to your Claude Pro, Max, Team or Enterprise plan [[cite:anthropic.setup-token]], then add it to Jiro. Cursor needs a Cursor API key instead [[cite:jiro.credentials]].
+- **Step 6.** Port your Codex environment setup into the org setup script.
+- **Step 7.** Post the first task in Slack. Keep it small.
+
+Optional but cheap: run `npx nori-skillsets install public/jiro` to add Jiro's engineering skills.
+"""
+
+[[section]]
+heading = "First-week budget of work"
+body = """
+Spend the trial on tasks whose value you can price.
+
+- Docs for one under-documented service. Cost of not doing it: every onboarding.
+- Test coverage on the three files with the most recent bug fixes.
+- A slop sweep: unused exports, duplicated utilities, stale TODOs.
+- Two small tickets from the backlog that nobody has picked up in a month.
+- One on-call fix, if production offers you one.
+
+Count merged pull requests and reviewer minutes per merge. Those two numbers justify the line item or they do not.
+"""
+
+[[section]]
+heading = "What you give up"
+body = """
+Leaving Codex cloud entirely costs you some things. Weigh them.
+
+- Starting tasks from ChatGPT's web, mobile and desktop apps, the IDE extension, and Linear [[cite:codex.surfaces]].
+- Codex Code Review, plus the Linear and GitHub hooks. All three sit on legacy infrastructure OpenAI means to retire, so this loss may arrive regardless [[cite:codex.legacy]].
+- An agent that costs nothing extra on top of ChatGPT. Jiro is a separate fee.
+
+Note the word "entirely". Most teams keep ChatGPT anyway.
+"""
+
+[[section]]
+heading = "Pilot: run both for a month"
+body = """
+Keep Codex cloud for anything started from ChatGPT; route Slack requests and scheduled work to Jiro. Assign each repository to one tool during the pilot to avoid conflicting branches. At month end, compare merged pull requests per dollar and how often reviewers sent work back.
+
+If the numbers do not justify $99 or $250, cancel. The trial asks for no card, so there is nothing to claw back.
+
+For the wider field, see the [Codex cloud alternatives ranking](https://jiro.bot/alternatives/codex-cloud).
+"""
+
+[[faq]]
+q = "Can I keep using Codex after switching to Jiro?"
+a = "Yes. Codex is one of Jiro's three harnesses, and it signs in with Codex OAuth or an OpenAI API key [[cite:jiro.credentials]]."
+
+[[faq]]
+q = "Will my AGENTS.md still work?"
+a = "Yes. It lives in the repository, and Codex in Jiro reads it unchanged."
+
+[[faq]]
+q = "Do I still need a ChatGPT plan?"
+a = "Only if you want Jiro's Codex to bill against it via Codex OAuth. With an OpenAI API key you pay OpenAI per token instead, at its standard rates, with no Jiro markup [[cite:jiro.no-markup]]."
+
+[[faq]]
+q = "Is Jiro cheaper than Codex cloud?"
+a = "No. Codex cloud comes bundled with ChatGPT [[cite:codex.pricing]], and Jiro adds $99 or $250 a month [[cite:jiro.pricing]]. The fee buys model choice, Slack and scheduled work, and pull requests returned for review."
