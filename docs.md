@@ -7,6 +7,7 @@ Path: @/
 - Static site for jiro.bot: a hand-written landing page plus generated comparison pages (alternatives, head-to-head, switching guides, best-of lists) whose purpose is answer-engine optimization (AEO) — getting LLM answer engines to mention and cite Jiro for "best X alternatives", "Jiro vs X" and "how do I switch from X" questions.
 - [build.py](build.py) is a stdlib-only Python generator that turns TOML records in [content/](content/docs.md) into HTML pages, markdown twins and machine-readable indexes in `site/`.
 - [tools/](tools/docs.md) holds the pre-publish gate ([tools/lint.py](tools/lint.py)) and AEO measurement scripts; [tests/](tests/) black-box `build.py` and `lint.py`.
+- `prototypes/` holds standalone UI experiments for the landing page, such as the [scroll buddy](prototypes/scroll-buddy/docs.md). They sit outside `site/`, so they are never built, linted or deployed; porting one means copying its files onto the real page.
 
 ### How it fits into the larger codebase
 
@@ -50,6 +51,6 @@ content/pages/*.toml ─┘                site/llms.txt, llms-full.txt, sitemap
 - Editing `content/` without rebuilding, or hand-editing generated files in `site/`, fails lint with "site/ is stale". Rerun `python3 build.py` and commit both.
 - `site.toml` `updated` drives every page's "Updated" date, Article `dateModified` and sitemap lastmod at once; there is no per-page modified date.
 - The site was rewritten after GTM review (2026-10-19) because pages pasted the same fact wording wherever it was cited and read like one template. The `[[cite:]]` marker and the lint overlap and sentence-variation gates exist to keep pages individual; see [content/docs.md](content/docs.md) for the editor rules.
-- Tests in [tests/](tests/) run the real `build.py` and `tools/lint.py` CLIs against a temp copy of `tests/fixtures/content`, so they never depend on the live `content/` records. Run them with `cd tests && python3 -m unittest`.
+- Tests in [tests/](tests/) run the real `build.py` and `tools/lint.py` CLIs against a temp copy of `tests/fixtures/content`, so they never depend on the live `content/` records. Run them with `cd tests && python3 -m unittest`. The exception is the scroll buddy browser test, which needs Playwright and the system Chrome and is skipped without them; run it from the repo root with `uv run --no-project --with playwright python -m unittest tests/test_scroll_buddy.py`.
 
 Created and maintained by Nori.
