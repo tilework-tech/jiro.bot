@@ -62,7 +62,7 @@ Jiro wins on control of cost and tooling.
 [[section]]
 heading = "Cost for a team of eight"
 body = """
-Take eight engineers. On Devin Teams, the published structure is a minimum of $80 a month, $40 for every seat, and overage priced like the API. [[cite:devin.pricing]] Read as additive, that comes to around $400 a month before overage; buyers should confirm how the minimum and seats combine.
+Take eight engineers. On Devin Teams, the published structure is a minimum of $80 a month, $40 for every seat, and overage priced like the API. [[cite:devin.pricing]] Read as additive, the seats come to about $400 a month. That is the floor, not the bill. In Nori's own experience, a team of eight using Devin heavily ends up nearer $4,000 a month once overage at API prices kicks in.
 
 Nori charges $250 monthly for Team: several users, five shared runtimes. [[cite:jiro.pricing]] Model usage is then whatever the team already spends with Anthropic or OpenAI. If those subscriptions exist anyway, the marginal cost is the runtime fee. If they do not, add them: Claude Max runs $100 or $200 per person monthly. [[cite:anthropic.max]]
 

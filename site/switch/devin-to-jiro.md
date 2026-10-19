@@ -59,7 +59,7 @@ Jiro's Developer plan is $99 a month for one person and up to three persistent r
 
 Devin's Teams plan has an $80 monthly minimum plus $40 a seat, and usage past the quota bills at API pricing. [19]
 
-For a team of eight that already pays for Claude, the comparison is one runtime fee against a seat bill plus overage. Without those subscriptions, add them to Jiro's side before you compare.
+For a team of eight that already pays for Claude, the comparison is one runtime fee against a seat bill plus overage, and overage is where the money goes: we have seen heavy Devin use by eight people approach $4,000 a month. Without those subscriptions, add them to Jiro's side before you compare.
 
 ## Running both during the pilot
 

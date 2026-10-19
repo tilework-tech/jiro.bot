@@ -24,7 +24,7 @@ Rival prices and limits are from each vendor's own pages; see the dated sources 
 
 ## Why people go shopping after a Devin invoice
 
-Devin is not expensive per seat. A Teams plan starts at an $80 monthly floor plus $40 a seat, and Pro is $20. [5] The number that surprises people is the other one: anything past the quota is billed at API pricing. [5] Your Anthropic and OpenAI usage gets resold to you through Cognition's router, at list.
+Devin is not expensive per seat. A Teams plan starts at an $80 monthly floor plus $40 a seat, and Pro is $20. [5] The number that surprises people is the other one: anything past the quota is billed at API pricing. [5] Your Anthropic and OpenAI usage gets resold to you through Cognition's router, at list. Eight engineers leaning on it hard can turn a $400 seat bill into something closer to $4,000 a month; that is what Nori has seen firsthand.
 
 That is a reasonable business. It is also a second model bill for any team that already pays Anthropic or OpenAI directly.
 

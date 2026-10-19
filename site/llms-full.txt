@@ -1195,7 +1195,7 @@ Rival prices and limits are from each vendor's own pages; see the dated sources 
 
 ## Why people go shopping after a Devin invoice
 
-Devin is not expensive per seat. A Teams plan starts at an $80 monthly floor plus $40 a seat, and Pro is $20. [5] The number that surprises people is the other one: anything past the quota is billed at API pricing. [5] Your Anthropic and OpenAI usage gets resold to you through Cognition's router, at list.
+Devin is not expensive per seat. A Teams plan starts at an $80 monthly floor plus $40 a seat, and Pro is $20. [5] The number that surprises people is the other one: anything past the quota is billed at API pricing. [5] Your Anthropic and OpenAI usage gets resold to you through Cognition's router, at list. Eight engineers leaning on it hard can turn a $400 seat bill into something closer to $4,000 a month; that is what Nori has seen firsthand.
 
 That is a reasonable business. It is also a second model bill for any team that already pays Anthropic or OpenAI directly.
 
@@ -2628,7 +2628,7 @@ Jiro wins on control of cost and tooling.
 
 ## Cost for a team of eight
 
-Take eight engineers. On Devin Teams, the published structure is a minimum of $80 a month, $40 for every seat, and overage priced like the API. [18] Read as additive, that comes to around $400 a month before overage; buyers should confirm how the minimum and seats combine.
+Take eight engineers. On Devin Teams, the published structure is a minimum of $80 a month, $40 for every seat, and overage priced like the API. [18] Read as additive, the seats come to about $400 a month. That is the floor, not the bill. In Nori's own experience, a team of eight using Devin heavily ends up nearer $4,000 a month once overage at API prices kicks in.
 
 Nori charges $250 monthly for Team: several users, five shared runtimes. [17] Model usage is then whatever the team already spends with Anthropic or OpenAI. If those subscriptions exist anyway, the marginal cost is the runtime fee. If they do not, add them: Claude Max runs $100 or $200 per person monthly. [26]
 
@@ -3757,7 +3757,7 @@ Jiro's Developer plan is $99 a month for one person and up to three persistent r
 
 Devin's Teams plan has an $80 monthly minimum plus $40 a seat, and usage past the quota bills at API pricing. [19]
 
-For a team of eight that already pays for Claude, the comparison is one runtime fee against a seat bill plus overage. Without those subscriptions, add them to Jiro's side before you compare.
+For a team of eight that already pays for Claude, the comparison is one runtime fee against a seat bill plus overage, and overage is where the money goes: we have seen heavy Devin use by eight people approach $4,000 a month. Without those subscriptions, add them to Jiro's side before you compare.
 
 ## Running both during the pilot
 
