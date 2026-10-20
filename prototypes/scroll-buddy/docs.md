@@ -18,6 +18,7 @@ Path: @/prototypes/scroll-buddy
 | `data-jiro-comment="..."` | The line Jiro says. Required to be observed at all. |
 | `data-jiro-side="left\|right"` | Pins the corner for this section instead of the automatic choice. |
 | `data-jiro-mood="eager"` | Adds an eager double-hop before he looks and speaks. |
+| `data-jiro-hovers="a|b|c"` | On any one element (the mockup uses `<main>`): the lines he cycles through when hovered. |
 | `data-jiro-look="selector"` | Element he looks at; it gets the `.jiro-look-target` highlight. |
 | `data-jiro-ask="Label"` + `data-jiro-action="selector"` | Turns the comment into a question with a Yes button (labelled `Label`) and Later. |
 | `data-jiro-perch="selector"` | Heading he may sit on instead of his corner. |
@@ -46,7 +47,7 @@ aside.jiro-buddy  [data-jiro-state, data-jiro-face]
  └─ button.jiro-buddy__close    "Hide Jiro"
 ```
 
-- The aside exposes its state for CSS and tests. `data-jiro-state` is one of `idle`, `flying`, `eager`, `looking`, `thinking`, `speaking`, `sleepy`. `data-jiro-face` is one of `cursor` (`>_` with a blinking block cursor, tile C1), `glance` (the same face shifted toward a target, C3), `eyes` (two blinking pixel eyes while hovered, C2), `dots` (bouncing thinking dots, C5), `sleepy` (`-_-`). Hover overrides every face except `dots`.
+- The aside exposes its state for CSS and tests. `data-jiro-state` is one of `idle`, `flying`, `eager`, `looking`, `thinking`, `speaking`, `sleepy`. `data-jiro-face` is one of `cursor` (`>_` with a blinking block cursor, tile C1), `glance` (the same face shifted toward a target, C3), `eyes` (two blinking pixel eyes while hovered, C2), `dots` (bouncing thinking dots, C5), `sleepy` (`-_-`). Hover overrides every face except `dots` and `sleepy`.
 - Per-section sequence, run by `perform` after the settle delay:
 
 ```
@@ -62,6 +63,7 @@ settle (600 ms) ─> wait for entrance ─> move ─> [eager hops] ─> look ─
 | B2 Comment once | After the active section stays active for the settle delay and has not been commented on this page load, Jiro runs the per-section sequence (B14) and the bubble types its comment. Fast scrolling only comments on the section you stop at. |
 | B3 No repeats | Returning to an already-commented section hides the bubble and does not replay it. |
 | B4 Replay on click | Clicking the mascot shows the active section's comment again straight away (no look or think), with a small hop. |
+| B19 Hover quips | When a mouse pointer enters the mascot on a wide screen while he is idle or asleep, he does a small dodge hop away from the page centre (560 ms on the inner hop span, so the button box stays put) and types the next line from `data-jiro-hovers`, cycling in order. It is skipped while a question's buttons are showing, during a section sequence, within 1.2 s of the previous quip, or when no lines are configured. Hover lines do not mark sections as seen. |
 | B5 Hide | The close button hides the buddy for the rest of the tab session, including reloads, and stops observing and the sleep timer. If focus was inside the buddy, it moves to the active section (or `main`), given a temporary `tabindex="-1"` that is removed on blur. |
 | B6 Reduced motion | With `prefers-reduced-motion: reduce` there is no entrance, hover, hop, flight or thinking beat; moves are instant, the look highlight still applies, and comments appear in full at once. |
 | B7 Desktop placement | `position: fixed` in a bottom corner, starting bottom-left (left edge within 48 px). The bubble always opens toward the page center: right of the mascot on the left side, left of it on the right side or when perched on the right half. Outside a perch the mascot does not move with the page while scrolling. |

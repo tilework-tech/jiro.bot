@@ -268,9 +268,11 @@
     }
 
     function speak(section, token) {
-      var comment = attr(section, "comment");
-      var ask = attr(section, "ask");
       seen.add(section);
+      say(attr(section, "comment"), attr(section, "ask"), token);
+    }
+
+    function say(comment, ask, token) {
       if (!comment) return;
       spoken = comment;
       setState("speaking");
@@ -581,7 +583,39 @@
 
     sections.forEach(function (section) { observer.observe(section); });
 
-    mascot.addEventListener("pointerenter", function () { hovered = true; setFace(face); });
+    var quips = ((document.querySelector("[data-jiro-hovers]") || aside).getAttribute("data-jiro-hovers") || "")
+      .split("|").map(function (line) { return line.trim(); }).filter(Boolean);
+    var quipAt = 0;
+    var quipTime = -Infinity;
+
+    function dodge() {
+      var away = side === "right" || aside.classList.contains("jiro-buddy--flip") ? -1 : 1;
+      return play(hop, [
+        { transform: "translate(0,0) rotate(0)" },
+        { transform: "translate(" + 6 * away + "px,-10px) rotate(" + 6 * away + "deg)", offset: 0.3 },
+        { transform: "translate(" + 12 * away + "px,0) rotate(" + -3 * away + "deg)", offset: 0.6 },
+        { transform: "translate(0,0) rotate(0)" }
+      ], 560, "ease-in-out");
+    }
+
+    function quip() {
+      var state = aside.getAttribute("data-jiro-state");
+      var asking = !bubble.hidden && !acts.hidden;
+      var now = performance.now();
+      if (!quips.length || asking || !wide.matches || now - quipTime < 1200) return;
+      if (state !== "idle" && state !== "sleepy") return;
+      quipTime = now;
+      hideBubble();
+      dodge();
+      say(quips[quipAt % quips.length], "", run);
+      quipAt += 1;
+    }
+
+    mascot.addEventListener("pointerenter", function (event) {
+      hovered = true;
+      setFace(face);
+      if (event.pointerType === "mouse") quip();
+    });
     mascot.addEventListener("pointerleave", function () { hovered = false; setFace(face); });
 
     mascot.addEventListener("click", function () {

@@ -23,7 +23,7 @@ SETTLE_MS = 600
 QUIET_MS = 1500
 
 
-def page_html(sections, scripts=1, style=""):
+def page_html(sections, scripts=1, style="", main_attrs=""):
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -34,7 +34,7 @@ def page_html(sections, scripts=1, style=""):
 <style>body {{ margin: 0; }} section {{ height: 120vh; }}{style}</style>
 </head>
 <body>
-<main>
+<main{main_attrs}>
 {sections}
 </main>
 {'<script src="jiro-buddy.js" defer></script>' * scripts}
@@ -150,6 +150,7 @@ FLOW_STYLE = """
 section { display: flow-root; }
 .perch { margin: 40vh 0 0 30vw; width: 40vw; font: 700 40px/1.1 sans-serif; }
 """
+HOVER_LINES = ["Hover one.", "Hover two.", "Hover three."]
 FLOW_PAGE = page_html("\n".join([
     f'<section id="s1" data-jiro-comment="{FLOW[0]}" data-jiro-ask="Show me" data-jiro-action="#s3"><h2>Hero</h2></section>',
     f'<section id="s2" data-jiro-comment="{FLOW[1]}" data-jiro-mood="eager" data-jiro-look="#look2"><h2>Ditch <span id="look2">D*vin</span></h2></section>',
@@ -157,7 +158,7 @@ FLOW_PAGE = page_html("\n".join([
     f'<section id="s4" data-jiro-comment="{FLOW[3]}"><h2>How</h2></section>',
     f'<section id="s5" data-jiro-comment="{FLOW[4]}" data-jiro-perch="#perch5"><h2 class="perch" id="perch5">Second perch</h2></section>',
     f'<section id="s6" data-jiro-comment="{FLOW[5]}" data-jiro-ask="Yes please" data-jiro-action="#email"><h2>Reserve</h2><input id="email" type="email" aria-label="Work email"></section>',
-]), style=FLOW_STYLE)
+]), style=FLOW_STYLE, main_attrs=f' data-jiro-hovers="{"|".join(HOVER_LINES)}"')
 
 RECORD_FLOW = """
 window.__jiroLog = [];
@@ -666,6 +667,47 @@ class ScrollBuddyTest(unittest.TestCase):
         expect(buddy).to_have_attribute("data-jiro-face", "eyes")
         page.mouse.move(700, 100)
         expect(buddy).to_have_attribute("data-jiro-face", "cursor")
+
+    def hover_jiro(self, page):
+        page.mouse.move(700, 100)
+        self.mascot(page).hover()
+
+    def test_hovering_jiro_shows_a_new_line_each_time(self):
+        page = self.open("flow.html", reduced_motion="reduce")
+        expect(self.bubble(page)).to_contain_text(FLOW[0])
+        self.scroll_to_section(page, 4)
+        expect(self.bubble(page)).to_contain_text(FLOW[3])
+        shown = []
+        for _ in range(2):
+            self.hover_jiro(page)
+            expect(self.bubble(page)).not_to_contain_text(shown[-1] if shown else FLOW[3])
+            text = self.bubble(page).inner_text().strip()
+            self.assertIn(text, HOVER_LINES)
+            shown.append(text)
+            page.wait_for_timeout(1600)
+        self.assertNotEqual(shown[0], shown[1])
+
+    def test_hovering_jiro_makes_him_dodge_a_little(self):
+        page = self.open_recording("flow.html", script=RECORD_FLOW, reduced_motion="no-preference")
+        self.wait_for_text(page, FLOW[0])
+        self.scroll_to_section(page, 4)
+        self.wait_for_text(page, FLOW[3])
+        page.mouse.move(700, 100)
+        page.evaluate("""() => { const art = document.querySelector('.jiro-buddy__art');
+            window.__jiroArtX = art.getBoundingClientRect().x; window.__jiroDodge = 0;
+            (function sample() { window.__jiroDodge = Math.max(window.__jiroDodge,
+                Math.abs(art.getBoundingClientRect().x - window.__jiroArtX)); requestAnimationFrame(sample); })(); }""")
+        self.mascot(page).hover()
+        page.wait_for_timeout(700)
+        self.assertGreaterEqual(page.evaluate("window.__jiroDodge"), 6)
+
+    def test_hovering_jiro_leaves_an_open_question_alone(self):
+        page = self.open("flow.html", reduced_motion="reduce")
+        expect(page.get_by_role("button", name="Show me")).to_be_visible()
+        self.hover_jiro(page)
+        page.wait_for_timeout(600)
+        expect(self.bubble(page)).to_contain_text(FLOW[0])
+        expect(page.get_by_role("button", name="Show me")).to_be_visible()
 
     def test_jiro_falls_asleep_when_left_alone_and_wakes_on_scroll(self):
         context = self.browser.new_context(viewport=DESKTOP, reduced_motion="no-preference")
