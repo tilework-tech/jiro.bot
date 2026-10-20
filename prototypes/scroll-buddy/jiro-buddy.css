@@ -284,7 +284,7 @@
   color: #173d2b;
   font: 600 14px/1 ui-sans-serif, system-ui, sans-serif;
   cursor: pointer;
-  opacity: .7;
+  opacity: .35;
   transition: opacity .15s;
 }
 
