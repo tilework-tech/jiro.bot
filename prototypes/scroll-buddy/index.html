@@ -6,31 +6,34 @@
 <title>jiro.bot — The tasteful software engineer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="jiro-buddy.css">
 <style>
   :root {
-    --green: #3cf06e;
-    --salmon: #f2694f;
-    --ink: #141414;
-    --panel: #0e0e0e;
-    --term: #1c1c1c;
-    --line: #2b2b2b;
-    --muted: #8a8a8a;
-    --page-bg: #ececea;
-    --gap: 6px;
+    --green: #3cf56a;
+    --green-ink: #173d2b;
+    --salmon: #f35b45;
+    --ink: #111;
+    --slate: #232629;
+    --slate-2: #2c3034;
+    --slate-line: #3a3f44;
+    --cream: #f8f6f0;
+    --muted: #8b8f93;
+    --rule: 1.5px solid var(--ink);
+    --frame: 8px;
     --pad: 20px;
-    --pad-l: 20px;
-    --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-    --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --pad-x: 20px;
+    --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: "Inter Tight", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
-  @media (min-width: 768px) { :root { --pad: 32px; --pad-l: 32px; } }
-  @media (min-width: 1100px) { :root { --pad-l: 120px; } }
+  @media (min-width: 768px) { :root { --pad: 28px; --pad-x: 32px; } }
+  @media (min-width: 1100px) { :root { --pad-x: 32px; } }
 
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   html, body { margin: 0; }
   body {
-    background: var(--page-bg);
+    background: var(--cream);
     color: var(--ink);
     font-family: var(--sans);
     font-size: 16px;
@@ -39,657 +42,726 @@
   }
   a { color: inherit; text-decoration: none; }
   h1, h2, h3, p { margin: 0; }
+  button, input { font: inherit; }
 
-  .page {
-    max-width: 1280px;
-    margin: 24px auto 64px;
-    background: var(--green);
-    border: 3px solid var(--green);
-    padding: var(--gap);
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap);
-  }
-  @media (max-width: 767px) { .page { margin: 0; } }
+  .shell { max-width: 1280px; margin: 0 auto; padding: 0 0 48px; }
+  @media (min-width: 1100px) { .shell { padding: 24px 24px 64px; } }
 
-  .block {
-    border: 2px solid var(--ink);
-    background: #fff;
-  }
-
+  /* ---------- shared ---------- */
   .label {
     font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.16em;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink);
   }
   .label--salmon { color: var(--salmon); }
-  .label--light { color: #cfcfcf; }
-
-  .chip {
+  .label--light { color: #c9cccf; }
+  .tag {
     font-family: var(--mono);
+    font-weight: 600;
     background: var(--green);
-    color: var(--ink);
-    padding: 0 4px;
-    font-weight: 500;
+    color: var(--green-ink);
+    padding: 0 3px;
+    white-space: nowrap;
   }
-
   .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    padding: 12px 16px;
-    border: 2px solid var(--ink);
-    background: #fff;
-    color: var(--ink);
-    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: space-between; gap: 14px;
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 13px 16px;
+    border: var(--rule);
+    background: #fff; color: var(--ink);
+    cursor: pointer; border-radius: 0;
+    transition: transform .12s ease, box-shadow .12s ease;
   }
+  .btn:hover { transform: translate(-2px, -2px); box-shadow: 2px 2px 0 var(--ink); }
   .btn--salmon { background: var(--salmon); }
-  .btn--black { background: var(--panel); color: #fff; border-color: var(--panel); width: 100%; padding: 16px 18px; }
-
-  section { scroll-margin-top: 0; }
-
-  /* ---------- HERO ---------- */
-  #hero { display: flex; flex-direction: column; gap: var(--gap); min-height: 60vh; }
-  .nav {
-    display: flex;
-    align-items: stretch;
-    justify-content: space-between;
-    min-height: 56px;
+  .btn--ink { background: var(--ink); color: #fff; width: 100%; padding: 15px 18px; }
+  .btn--ink:hover { box-shadow: 2px 2px 0 var(--salmon); }
+  .h-sec {
+    font-size: clamp(36px, 4vw, 52px);
+    font-weight: 700; letter-spacing: -0.045em; line-height: 1.02;
   }
-  .nav__brand {
-    display: flex; align-items: center;
-    padding: 0 20px;
-    font-weight: 700; font-size: 18px; letter-spacing: -0.01em;
-  }
-  .nav__brand .dots { font-family: var(--mono); font-weight: 600; margin-left: 6px; letter-spacing: 0.05em; }
-  .nav__cta {
-    display: flex; align-items: center; justify-content: space-between; gap: 40px;
-    background: var(--salmon);
-    border-left: 2px solid var(--ink);
-    padding: 0 24px;
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
-    min-width: 0;
-  }
-  @media (min-width: 768px) { .nav__cta { min-width: 196px; } }
 
-  .hero__main {
+  /* ---------- header ---------- */
+  .site-head {
     display: grid;
-    grid-template-columns: 1fr;
-    flex: 1;
+    grid-template-columns: auto 1fr auto;
+    align-items: stretch;
+    background: #fff;
+    border-bottom: var(--rule);
+    min-height: 46px;
   }
-  @media (min-width: 900px) { .hero__main { grid-template-columns: 1.15fr 1fr; } }
+  .brand {
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 22px;
+    font-weight: 700; font-size: 17px; letter-spacing: -0.03em;
+  }
+  @media (min-width: 900px) { .brand { min-width: 190px; border-right: var(--rule); } }
+  .brand__mark { display: block; width: 32px; height: 14px; }
+  .nav { display: none; align-items: center; gap: 28px; padding: 0 20px; }
+  @media (min-width: 900px) { .nav { display: flex; } }
+  .nav a { font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+  .nav a:hover { color: var(--salmon); }
+  .head-cta {
+    display: flex; align-items: center; justify-content: space-between; gap: 18px;
+    background: var(--salmon);
+    border-left: var(--rule);
+    padding: 0 18px;
+    font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+    grid-column: 3;
+  }
+  @media (min-width: 900px) { .head-cta { min-width: 174px; } }
+  .head-cta .dots { letter-spacing: 0.3em; opacity: .75; }
+
+  /* ---------- frame ---------- */
+  .frame {
+    background: var(--green);
+    padding: var(--frame);
+    display: flex; flex-direction: column; gap: var(--frame);
+  }
+  .frame > main { display: flex; flex-direction: column; gap: var(--frame); }
+  main > section { border: var(--rule); background: #fff; scroll-margin-top: 12px; }
+
+  /* ---------- hero ---------- */
+  #hero { display: grid; grid-template-columns: 1fr; }
+  @media (min-width: 960px) { #hero { grid-template-columns: 45% 1fr; min-height: 530px; } }
   .hero__copy {
-    padding: 28px var(--pad) 40px var(--pad-l);
-    display: flex; flex-direction: column; gap: 20px;
+    padding: 40px var(--pad-x) 40px;
+    display: flex; flex-direction: column;
   }
+  .hero__copy .label { margin-bottom: 56px; }
+  @media (min-width: 960px) { .hero__copy .label { margin-bottom: auto; padding-bottom: 72px; } }
   #hero h1 {
-    font-size: clamp(46px, 4.4vw, 60px);
-    line-height: 1.04;
+    font-size: clamp(42px, 4.7vw, 58px);
+    line-height: 1.08;
     letter-spacing: -0.045em;
     font-weight: 700;
-    margin-top: 10px;
   }
-  .hl { background: var(--salmon); padding: 0 6px; margin-left: -6px; }
-  @media (min-width: 900px) { .hl-line { white-space: nowrap; } }
+  .hl { background: var(--salmon); padding: 0 5px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
   .caret {
-    display: inline-block; width: 24px; height: 0.95em;
-    background: var(--salmon); vertical-align: -0.12em; margin-left: 2px;
+    display: inline-block; width: 0.42em; height: 0.82em;
+    background: var(--salmon); vertical-align: -0.06em; margin-left: 0.1em;
+    animation: blink 1.1s steps(1) infinite;
   }
-  .hero__lede { max-width: 440px; font-size: 16px; line-height: 1.5; }
-  .hero__ctas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+  .nowrap { white-space: nowrap; }
+  @media (max-width: 420px) { #hero h1 { font-size: 38px; } }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .caret { animation: none; } }
+  .hero__lede { max-width: 380px; font-size: 13.5px; line-height: 1.55; margin-top: 16px; }
+  .hero__ctas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
 
-  .hero__thread {
-    background: var(--panel);
-    padding: 22px;
-    border-top: 2px solid var(--ink);
+  /* hero thread */
+  #hero-thread {
+    background: var(--slate);
+    color: #d9dcdf;
+    border-top: var(--rule);
+    padding: 28px;
+    display: flex; align-items: center; justify-content: center;
   }
-  @media (min-width: 900px) { .hero__thread { border-top: 0; border-left: 2px solid var(--ink); } }
-  .term {
-    background: var(--term);
-    border: 1px solid var(--line);
-    font-family: var(--mono);
+  @media (min-width: 960px) { #hero-thread { border-top: 0; border-left: var(--rule); padding: 40px 48px; } }
+  .slack {
+    width: 100%; max-width: 520px;
+    background: #1b1d20;
+    border: 1px solid var(--slate-line);
+    font-size: 13.5px;
+    line-height: 1.5;
+    box-shadow: 0 20px 50px rgba(0,0,0,.35);
+  }
+  .slack__head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--slate-line);
+    font-weight: 600; color: #fff; font-size: 14px;
+  }
+  .slack__head small { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+  .slack__body { padding: 14px 16px 6px; display: flex; flex-direction: column; gap: 16px; }
+  .smsg { display: grid; grid-template-columns: 34px 1fr; gap: 10px; }
+  .av {
+    width: 34px; height: 34px; border-radius: 6px;
+    display: grid; place-items: center;
+    font-weight: 700; font-size: 13px; color: #fff;
+    background: #6b5bd6;
+  }
+  .av--jiro { background: var(--cream); padding: 3px; }
+  .av--jiro img { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+  .smsg__who { display: flex; align-items: baseline; gap: 8px; }
+  .smsg__who b { color: #fff; font-weight: 700; font-size: 14px; }
+  .smsg__who time { color: var(--muted); font-size: 11.5px; }
+  .app { font-size: 9.5px; font-weight: 600; background: #3a3f44; color: #c9cccf; padding: 1px 4px; border-radius: 3px; letter-spacing: .04em; }
+  .mention { color: #1d9bd1; background: rgba(29,155,209,.12); padding: 0 2px; border-radius: 3px; font-weight: 500; }
+  .smsg ol { margin: 6px 0 0; padding-left: 18px; }
+  .smsg code { font-family: var(--mono); font-size: 12px; background: #2c3034; padding: 1px 4px; border-radius: 3px; color: #f2a093; }
+  .pr {
+    margin-top: 8px;
+    border-left: 3px solid var(--green);
+    background: #23262a;
+    padding: 8px 10px;
     font-size: 12.5px;
-    line-height: 1.45;
-    color: #e6e6e6;
   }
-  .term__head {
-    display: flex; justify-content: space-between;
-    padding: 10px 12px; color: var(--muted);
-    border-bottom: 1px solid var(--line);
+  .pr b { color: #fff; font-weight: 600; }
+  .pr .diff { font-family: var(--mono); font-size: 11.5px; }
+  .add { color: var(--green); } .del { color: #ff7a66; }
+  .slack__typing {
+    padding: 10px 16px 12px;
+    font-size: 11.5px; color: var(--muted);
+    display: flex; gap: 8px; align-items: center;
   }
-  .term__msgs { padding: 10px 12px 28px; display: flex; flex-direction: column; gap: 26px; }
-  .msg { display: grid; grid-template-columns: 22px 1fr; gap: 10px; }
-  .avatar { width: 22px; height: 22px; background: #555; margin-top: 2px; }
-  .avatar--jiro { background: var(--green); }
-  .msg__meta { font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
-  .msg__meta--jiro { color: var(--green); }
-  .mention { color: var(--salmon); }
-  .term__log {
-    border-top: 1px solid var(--line);
-    padding: 12px;
-    display: grid; grid-template-columns: 44px 1fr; row-gap: 1px;
-  }
-  .term__log dt { color: var(--muted); }
-  .term__log dt.risk { color: var(--salmon); }
-  .term__log dt.code { color: var(--green); }
-  .term__log dd { margin: 0; overflow-wrap: anywhere; }
-  .cursor { display: inline-block; width: 7px; height: 14px; background: #e6e6e6; vertical-align: -2px; }
+  .slack__typing i { width: 5px; height: 5px; background: var(--muted); display: inline-block; animation: dot 1.2s infinite; }
+  .slack__typing i:nth-child(2) { animation-delay: .15s; } .slack__typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes dot { 0%, 60%, 100% { opacity: .25; } 30% { opacity: 1; } }
 
-  /* ---------- QUALITY ---------- */
-  #quality {
-    display: grid; grid-template-columns: 1fr;
-    min-height: 60vh;
-    background: var(--salmon);
+  /* ---------- ditch ---------- */
+  #ditch { display: grid; grid-template-columns: 1fr; background: var(--salmon); }
+  @media (min-width: 960px) { #ditch { grid-template-columns: 1fr 294px; min-height: 414px; } }
+  .ditch__copy {
+    padding: 72px var(--pad-x) 32px;
+    display: flex; flex-direction: column; justify-content: flex-end;
   }
-  @media (min-width: 900px) { #quality { grid-template-columns: 1fr 300px; } }
-  .quality__title {
-    display: flex; align-items: center;
-    padding: 40px var(--pad) 40px var(--pad-l);
-    font-size: clamp(40px, 6vw, 58px);
-    font-weight: 700; letter-spacing: -0.045em; line-height: 1;
+  .ditch__copy h2 {
+    font-size: clamp(44px, 6.2vw, 80px);
+    font-weight: 700;
+    letter-spacing: -0.065em;
+    line-height: 1.02;
   }
-  .quality__call {
+  .ditch__copy h2 > span { display: block; }
+  .ditch__copy p { margin-top: 16px; max-width: 560px; font-size: clamp(16px, 1.6vw, 21px); letter-spacing: -0.025em; line-height: 1.22; }
+  .callin {
     background: #fff;
-    border-top: 2px solid var(--ink);
-    padding: 28px 22px;
-    display: flex; flex-direction: column; justify-content: center; gap: 18px;
+    border-top: var(--rule);
+    padding: 24px 22px 22px;
+    display: flex; flex-direction: column; gap: 18px;
   }
-  @media (min-width: 900px) { .quality__call { border-top: 0; border-left: 2px solid var(--ink); } }
-  .quality__call .chip { font-size: 22px; align-self: flex-start; padding: 2px 4px; }
+  @media (min-width: 960px) { .callin { border-top: 0; border-left: var(--rule); } }
+  .callin img { width: 100%; max-width: 220px; height: auto; display: block; image-rendering: pixelated; margin: auto 0; }
+  .callin .tag { font-size: clamp(30px, 3vw, 40px); align-self: flex-start; padding: 2px 4px; line-height: 1.15; letter-spacing: -0.02em; }
 
-  /* ---------- VIDEO ---------- */
-  #video {
-    background: var(--panel);
-    color: #fff;
-    padding: 48px var(--pad) 48px var(--pad-l);
-    min-height: 60vh;
+  /* ---------- video ---------- */
+  main > #video {
+    background: var(--ink); color: #fff;
+    padding: 56px var(--pad-x) 56px;
     display: flex; flex-direction: column; gap: 40px;
   }
   .video__quote {
-    font-size: clamp(22px, 2.6vw, 30px);
-    font-weight: 600; letter-spacing: -0.025em; line-height: 1.38;
-    max-width: 1060px;
+    font-size: clamp(22px, 2.5vw, 32px);
+    font-weight: 600; letter-spacing: -0.035em; line-height: 1.3;
+    max-width: 1000px;
   }
-  .video__ph {
+  .video__quote em { font-style: normal; color: var(--salmon); }
+  #video-frame {
+    position: relative;
     aspect-ratio: 16 / 9;
-    max-height: 70vh;
     width: 100%;
-    background: #d6d6d6;
-    border: 1px solid #9a9a9a;
-    color: var(--ink);
-    display: flex; align-items: center; justify-content: center; text-align: center;
-    padding: 16px;
-    font-size: 15px;
+    background: var(--slate);
+    border: 1px solid var(--slate-line);
+    display: grid; grid-template-rows: auto 1fr;
+    overflow: hidden;
   }
-  .video__ph .play { color: var(--salmon); margin-right: 4px; }
+  .vf__bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 18px; border-bottom: 1px solid var(--slate-line);
+  }
+  .vf__bar strong { font-size: clamp(15px, 1.6vw, 20px); font-weight: 600; letter-spacing: -0.02em; }
+  .vf__split { display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
+  .vf__side { padding: clamp(14px, 2vw, 28px); display: flex; flex-direction: column; gap: clamp(8px, 1.2vw, 16px); min-height: 0; overflow: hidden; }
+  .vf__side + .vf__side { border-left: 1px solid var(--slate-line); }
+  .vf__stat { font-family: var(--mono); font-size: clamp(18px, 2.6vw, 36px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; }
+  .vf__files { font-family: var(--mono); font-size: clamp(10px, 1vw, 12px); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+  .vf__rows { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
+  .vf__rows i { display: block; height: 6px; background: #3a3f44; }
+  .vf__rows i b { display: block; height: 100%; background: var(--green); }
+  .vf__rows i b.r { background: #ff7a66; }
+  .vf__side--jiro .vf__rows i { background: #2f3337; }
+  .vf__side { position: relative; }
+  .vf__side:not(.vf__side--jiro) .vf__rows { gap: clamp(3px, .4vw, 5px); }
+  .vf__side:not(.vf__side--jiro)::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 30%; background: linear-gradient(transparent, var(--slate)); }
+  .vf__note { margin-top: auto; border: 1px solid var(--slate-line); border-left: 3px solid var(--green); background: #1b1d20; padding: clamp(10px, 1.4vw, 18px); display: flex; flex-direction: column; gap: 6px; font-size: clamp(12px, 1.2vw, 15px); color: #e6e8ea; }
+  @media (max-width: 600px) { .vf__note { display: none; } }
+  .play {
+    position: absolute; left: 50%; top: 54%;
+    transform: translate(-50%, -50%);
+    width: 76px; height: 76px;
+    background: var(--salmon); border: var(--rule);
+    display: grid; place-items: center;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .play::before { content: ""; border-left: 22px solid var(--ink); border-top: 13px solid transparent; border-bottom: 13px solid transparent; margin-left: 6px; }
+  @media (max-width: 600px) { .play { width: 44px; height: 44px; top: auto; bottom: 10px; transform: translateX(-50%); box-shadow: 2px 2px 0 var(--ink); } .play::before { border-left-width: 15px; border-top-width: 9px; border-bottom-width: 9px; } }
 
-  /* ---------- PILLARS ---------- */
-  #pillars {
-    display: grid; grid-template-columns: 1fr;
-    min-height: 60vh;
-    background: var(--ink);
-    gap: 2px;
-  }
+  /* ---------- pillars ---------- */
+  #pillars { display: grid; grid-template-columns: 1fr; }
   @media (min-width: 900px) { #pillars { grid-template-columns: repeat(3, 1fr); } }
-  .pillar {
-    background: #fff;
-    padding: 28px var(--pad);
-    display: flex; flex-direction: column; justify-content: flex-start; gap: 10px;
-  }
-  .pillar:first-child { padding-left: var(--pad-l); }
-  @media (min-width: 900px) and (max-width: 1099px) { .pillar:first-child { padding-left: var(--pad); } }
-  .pillar__num { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; color: var(--salmon); margin-bottom: auto; padding-bottom: 24px; }
-  .pillar h3 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
-  .pillar p { font-size: 14px; line-height: 1.5; color: #333; max-width: 380px; }
+  .pillar { padding: 26px var(--pad-x) 30px; display: flex; flex-direction: column; gap: 10px; }
+  .pillar + .pillar { border-top: var(--rule); }
+  @media (min-width: 900px) { .pillar + .pillar { border-top: 0; border-left: var(--rule); } }
+  .pillar__n { font-family: var(--mono); font-size: 10.5px; color: var(--salmon); letter-spacing: .14em; margin-bottom: 28px; }
+  .pillar h3 { font-size: 22px; font-weight: 600; letter-spacing: -0.035em; }
+  .pillar p { font-size: 13.5px; line-height: 1.5; color: #333; max-width: 360px; }
 
-  /* ---------- HOW ---------- */
-  #how {
-    display: grid; grid-template-columns: 1fr;
-    min-height: 60vh;
-  }
-  @media (min-width: 900px) { #how { grid-template-columns: minmax(300px, 30%) 1fr; } }
+  /* ---------- how ---------- */
+  #how { display: grid; grid-template-columns: 1fr; }
+  @media (min-width: 900px) { #how { grid-template-columns: minmax(300px, 31%) 1fr; } }
   .how__panel {
-    background: var(--panel); color: #fff;
-    padding: 28px var(--pad) 28px var(--pad-l);
-    display: flex; flex-direction: column; justify-content: space-between; gap: 80px;
+    background: var(--ink); color: #fff;
+    padding: 28px var(--pad-x);
+    display: flex; flex-direction: column; justify-content: space-between; gap: 120px;
   }
-  @media (min-width: 900px) { .how__panel { padding-left: 28px; } }
-  @media (min-width: 1100px) { .how__panel { padding-left: var(--pad-l); } }
-  .how__panel h2 { font-size: clamp(28px, 3vw, 34px); font-weight: 700; letter-spacing: -0.04em; line-height: 1.12; }
+  .how__panel h2 { font-size: clamp(28px, 2.7vw, 36px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.1; }
   .how__rows { display: flex; flex-direction: column; }
   .how__row {
     flex: 1;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-    align-items: center;
-    padding: 28px var(--pad);
-    border-top: 2px solid var(--ink);
+    display: grid; grid-template-columns: 1fr; gap: 10px; align-items: center;
+    padding: 30px var(--pad-x);
+    border-top: var(--rule);
   }
   @media (min-width: 900px) {
-    .how__rows { border-left: 2px solid var(--ink); }
-    .how__row { grid-template-columns: 170px 1fr auto; padding: 32px 24px; }
+    .how__rows { border-left: var(--rule); }
+    .how__row { grid-template-columns: 160px 1fr auto; padding: 36px 32px; }
     .how__row:first-child { border-top: 0; }
   }
-  .how__row h3 { font-size: 23px; font-weight: 600; letter-spacing: -0.03em; }
-  .how__row h3 .chip { font-size: 22px; font-weight: 600; }
-  .how__row p { font-size: 13.5px; color: #333; margin-top: 6px; }
-  .watch { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; color: #777; }
+  .how__row h3 { font-size: 24px; font-weight: 600; letter-spacing: -0.035em; }
+  .how__row h3 .tag { font-size: 22px; letter-spacing: -0.02em; }
+  .how__row p { font-size: 13.5px; color: #333; margin-top: 4px; }
+  .watch { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #777; white-space: nowrap; }
+  .watch:hover { color: var(--salmon); }
 
-  /* ---------- PRICING ---------- */
-  #pricing { min-height: 60vh; display: flex; flex-direction: column; }
-  .sec-head {
-    padding: 28px var(--pad) 28px var(--pad-l);
-    border-bottom: 2px solid var(--ink);
+  /* ---------- section heads ---------- */
+  .sec-head { padding: 28px var(--pad-x) 26px; border-bottom: var(--rule); }
+  .sec-head .h-sec { margin-top: 10px; }
+  .sec-head p { margin-top: 12px; font-size: 15px; color: #333; }
+  .sec-head--perch {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 32px;
+    padding-top: 108px;
   }
-  @media (min-width: 1100px) { .sec-head { padding-left: var(--pad-l); } }
-  .sec-head h2 { font-size: clamp(34px, 3.4vw, 40px); font-weight: 700; letter-spacing: -0.045em; line-height: 1.1; margin-top: 6px; }
-  .sec-head p { margin-top: 14px; font-size: 15.5px; color: #333; }
-  .tiers {
-    flex: 1;
-    display: grid; grid-template-columns: 1fr;
-    background: var(--ink); gap: 2px;
-    border-bottom: 2px solid var(--ink);
-  }
+  .sec-head--perch .h-sec { margin-top: 0; }
+  @media (max-width: 640px) { .sec-head--perch { padding-top: 96px; } }
+
+  /* ---------- pricing ---------- */
+  .tiers { display: grid; grid-template-columns: 1fr; border-bottom: var(--rule); }
   @media (min-width: 900px) { .tiers { grid-template-columns: repeat(3, 1fr); } }
-  .tier { background: #fff; padding: 22px 22px 22px; display: flex; flex-direction: column; }
-  .tier:first-child { padding-left: var(--pad-l); }
-  @media (min-width: 900px) and (max-width: 1099px) { .tier:first-child { padding-left: 22px; } }
-  .pips { display: flex; gap: 4px; margin-bottom: 52px; }
-  .pip { width: 20px; height: 20px; border: 2px solid var(--ink); background: var(--salmon); }
+  .tier { padding: 22px var(--pad-x) 22px; display: flex; flex-direction: column; }
+  .tier + .tier { border-top: var(--rule); }
+  @media (min-width: 900px) { .tier { padding: 22px 24px; } .tier:first-child { padding-left: var(--pad-x); } .tier + .tier { border-top: 0; border-left: var(--rule); } }
+  .tier--feat { background: var(--cream); }
+  .pips { display: flex; gap: 4px; margin-bottom: 48px; }
+  .pip { width: 18px; height: 18px; border: var(--rule); background: var(--salmon); }
   .pip--g { background: var(--green); }
-  .tier h3 { font-size: 23px; font-weight: 600; letter-spacing: -0.03em; }
+  .tier h3 { font-size: 24px; font-weight: 600; letter-spacing: -0.035em; display: flex; align-items: center; gap: 10px; }
+  .tier h3 small { font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; background: var(--ink); color: #fff; padding: 3px 6px; }
   .price { display: flex; align-items: baseline; gap: 6px; margin-top: 4px; }
-  .price strong { font-size: 52px; font-weight: 700; letter-spacing: -0.05em; line-height: 1.05; }
-  .price span { font-size: 13.5px; }
-  .tier ul { margin: 6px 0 16px; padding-left: 18px; font-size: 13.5px; line-height: 1.45; }
-  .tier .btn--black { margin-top: auto; }
-  .footnote { padding: 14px var(--pad) 14px var(--pad-l); font-size: 12.5px; color: #333; }
-  @media (min-width: 1100px) { .footnote { padding-left: var(--pad-l); } }
+  .price strong { font-size: 56px; font-weight: 700; letter-spacing: -0.055em; line-height: 1.05; }
+  .price span { font-size: 13px; }
+  .tier ul { margin: 8px 0 22px; padding-left: 18px; font-size: 13.5px; line-height: 1.55; }
+  .tier .btn--ink { margin-top: auto; }
+  .footnote { padding: 14px var(--pad-x); font-size: 12.5px; color: #333; }
 
-  /* ---------- BAKEOFF ---------- */
-  #bakeoff { min-height: 60vh; }
-  .table-wrap { overflow-x: auto; border-bottom: 2px solid var(--ink); }
-  table.bake {
-    width: 100%; min-width: 860px;
-    border-collapse: collapse;
-    font-size: 13.5px;
-  }
-  .bake th, .bake td {
-    text-align: left; padding: 0 14px; height: 54px;
-    border-bottom: 2px solid var(--ink);
-  }
+  /* ---------- bakeoff ---------- */
+  .table-wrap { overflow-x: auto; border-bottom: var(--rule); }
+  table.bake { width: 100%; min-width: 900px; border-collapse: collapse; font-size: 13px; }
+  .bake th, .bake td { text-align: left; padding: 0 14px; height: 52px; border-bottom: var(--rule); }
   .bake tr:last-child td { border-bottom: 0; }
-  .bake thead th { font-weight: 600; font-size: 13.5px; }
-  .bake th:first-child, .bake td:first-child { padding-left: var(--pad-l); }
-  @media (min-width: 1100px) { .bake th:first-child, .bake td:first-child { padding-left: var(--pad-l); } }
-  .bake .menu-h { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; font-weight: 400; }
-  .bake td.course { width: 1%; white-space: nowrap; border-right: 2px solid var(--ink); }
-  .course__wrap { display: flex; align-items: center; justify-content: space-between; gap: 28px; }
-  .course__n { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: #777; }
+  .bake thead th { font-weight: 600; font-size: 14px; letter-spacing: -0.01em; }
+  .bake th:first-child, .bake td:first-child { padding-left: var(--pad-x); }
+  .bake .menu-h { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; font-weight: 500; text-transform: uppercase; }
+  .bake td.course { width: 1%; white-space: nowrap; border-right: var(--rule); }
+  .course__wrap { display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+  .course__n { display: block; font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em; color: #777; }
   .course__t { display: block; font-size: 13.5px; }
-  .ico { font-size: 13px; width: 16px; text-align: center; }
-  .bake .jiro {
-    background: var(--green);
-    border-left: 2px solid var(--ink); border-right: 2px solid var(--ink);
-    width: 23%;
-  }
-  .bake thead .jiro { font-size: 21px; font-weight: 600; letter-spacing: -0.03em; }
-  .bake .jiro .sq {
-    display: inline-block; width: 12px; height: 12px;
-    background: var(--salmon); border: 1.5px solid var(--ink);
-    margin-right: 8px; vertical-align: -1px;
-  }
+  .ico { width: 16px; height: 16px; display: block; shape-rendering: crispEdges; }
+  .bake .jiro { background: var(--green); border-left: var(--rule); border-right: var(--rule); width: 24%; color: var(--ink); }
+  .bake thead .jiro { font-size: 22px; font-weight: 700; letter-spacing: -0.04em; }
+  .bake .jiro .sq { display: inline-block; width: 11px; height: 11px; background: var(--salmon); border: 1.5px solid var(--ink); margin-right: 9px; vertical-align: -1px; }
   .bake td:not(.course):not(.jiro) { color: #333; }
+  .bake .tbd { color: #999 !important; font-family: var(--mono); font-size: 11.5px; }
 
-  /* ---------- FAQ ---------- */
-  #faq {
-    display: grid; grid-template-columns: 1fr;
-    min-height: 60vh;
-  }
-  @media (min-width: 900px) { #faq { grid-template-columns: 1fr 360px; } }
-  .faq__list { padding: 24px var(--pad) 24px var(--pad-l); }
-  @media (min-width: 1100px) { .faq__list { padding-right: 28px; } }
-  details { border-bottom: 1.5px solid var(--ink); }
+  /* ---------- faq ---------- */
+  #faq { display: grid; grid-template-columns: 1fr; }
+  @media (min-width: 900px) { #faq { grid-template-columns: 1fr 380px; } }
+  .faq__list { padding: 28px var(--pad-x) 40px; }
+  .faq__list > .label { display: block; margin-bottom: 8px; }
+  details { border-bottom: var(--rule); }
   summary {
     list-style: none; cursor: pointer;
     display: flex; justify-content: space-between; align-items: center;
     padding: 15px 0;
-    font-weight: 600; font-size: 15.5px; letter-spacing: -0.015em;
+    font-weight: 600; font-size: 16px; letter-spacing: -0.02em;
   }
   summary::-webkit-details-marker { display: none; }
-  summary::after { content: "+"; color: var(--salmon); font-weight: 400; font-size: 16px; }
+  summary::after { content: "+"; color: var(--salmon); font-family: var(--mono); font-weight: 400; font-size: 16px; }
   details[open] summary::after { content: "\2212"; }
-  details p { padding: 0 0 16px; font-size: 13.5px; color: #333; max-width: 540px; margin-top: -6px; }
-  .faq__list .label { display: block; margin-bottom: 6px; }
-
+  details p { padding: 0 0 16px; font-size: 13.5px; color: #333; max-width: 560px; margin-top: -6px; }
   .reserve {
-    background: var(--panel); color: #fff;
-    padding: 24px;
+    background: var(--ink); color: #fff;
+    padding: 28px 28px 32px;
     display: flex; flex-direction: column; gap: 14px;
-    border-top: 2px solid var(--ink);
+    border-top: var(--rule);
   }
-  @media (min-width: 900px) { .reserve { border-top: 0; border-left: 2px solid var(--ink); } }
-  @media (max-width: 899px) { .reserve { padding-left: var(--pad-l); } }
-  .reserve h2 { font-size: 31px; font-weight: 700; letter-spacing: -0.045em; line-height: 1.12; }
-  .reserve p { font-size: 13.5px; color: #cfcfcf; }
-  .reserve label { display: block; margin-top: 6px; }
+  @media (min-width: 900px) { .reserve { border-top: 0; border-left: var(--rule); } }
+  .reserve h2 { font-size: 34px; font-weight: 700; letter-spacing: -0.05em; line-height: 1.05; }
+  .reserve p { font-size: 13.5px; color: #c9cccf; }
+  .reserve form { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
   .reserve input {
-    width: 100%; padding: 10px; border: 0; border-radius: 0;
-    font-family: var(--mono); font-size: 12px; margin-top: 8px;
+    width: 100%; padding: 12px; border: 0; border-radius: 0;
+    font-family: var(--mono); font-size: 12px; background: #fff; color: var(--ink);
   }
-  .reserve .btn { width: 100%; border: 0; padding: 12px 10px; }
+  .reserve input:focus { outline: 2px solid var(--green); outline-offset: 0; }
+  .reserve .btn { width: 100%; border: 0; padding: 13px 12px; }
+  .reserve__seal { margin-top: auto; align-self: flex-end; width: 64px; height: 64px; background: var(--cream); border: var(--rule); padding: 8px; }
+  .reserve__seal img { width: 100%; height: 100%; display: block; }
+  @media (max-width: 899px) { .reserve__seal { display: none; } }
+  .reserve .btn:hover { box-shadow: 2px 2px 0 var(--green); }
 
-  /* ---------- FOOTER ---------- */
-  #footer {
-    background: var(--salmon);
-    min-height: 50vh;
-    display: flex; flex-direction: column;
-  }
-  .footer__bar {
+  /* ---------- footer ---------- */
+  .site-foot { background: var(--salmon); border: var(--rule); }
+  .foot__bar {
     display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 24px;
-    padding: 14px var(--pad) 14px var(--pad-l);
-    border-bottom: 2px solid var(--ink);
-    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase;
+    padding: 14px var(--pad-x);
+    border-bottom: var(--rule);
+    font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
   }
-  @media (min-width: 1100px) { .footer__bar { padding-left: var(--pad-l); } }
-  .footer__links { display: flex; gap: 28px; }
+  .foot__links { display: flex; gap: 28px; }
   .wordmark {
-    flex: 1;
-    display: flex; align-items: center; justify-content: center;
-    padding: 40px var(--pad);
+    display: flex; justify-content: center;
+    padding: 56px var(--pad) 64px;
     font-family: "Silkscreen", var(--mono);
-    font-weight: 400;
-    font-size: clamp(56px, 15vw, 196px);
-    line-height: 1;
-    letter-spacing: 0.06em;
-    color: var(--panel);
-    white-space: nowrap;
-    overflow: hidden;
+    font-size: clamp(54px, 15.4vw, 200px);
+    line-height: .9;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    white-space: nowrap; overflow: hidden;
   }
 </style>
 </head>
 <body>
-<main class="page">
+<div class="shell">
 
-  <section id="hero" data-jiro-comment="That's me. I'd rather ship one good PR than five you have to babysit.">
-    <nav class="nav block" aria-label="Main">
-      <a class="nav__brand" href="#hero">jiro.bot<span class="dots" aria-hidden="true">··</span></a>
-      <a class="nav__cta" href="#faq"><span>Reserve a seat</span><span aria-hidden="true">→</span></a>
+  <header class="site-head">
+    <a class="brand" href="#hero" aria-label="jiro.bot home">
+      <svg class="brand__mark" viewBox="0 0 16 7" aria-hidden="true" shape-rendering="crispEdges">
+        <path fill="#f35b45" d="M0 0h1v1h1v1h1v1h1v1H3v1H2v1H1v1H0V5h1V4h1V3H1V2H0z"/>
+        <rect fill="#f35b45" x="6" y="5" width="4" height="2"/>
+        <rect fill="#f35b45" x="12" y="1" width="3" height="6"/>
+      </svg>
+      jiro.bot
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#pillars">Why Jiro</a>
+      <a href="#how">How</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#bakeoff">Compare</a>
+      <a href="#faq">FAQ</a>
     </nav>
-    <div class="hero__main block">
+    <a class="head-cta" href="#faq"><span>Reserve a seat</span><span class="dots" aria-hidden="true">····</span></a>
+  </header>
+
+  <div class="frame">
+  <main>
+
+    <section id="hero" data-jiro-comment="Want to see me work?" data-jiro-ask="Show me" data-jiro-action="#video" data-jiro-look="#hero-thread" data-jiro-side="left">
       <div class="hero__copy">
-        <span class="label">/ Meet Jiro</span>
-        <h1>The<br><span class="hl-line"><span class="hl">tasteful</span> software</span> engineer<span class="caret" aria-hidden="true"></span></h1>
-        <p class="hero__lede">Jiro is a craftsperson: an expert engineer who cares more about quality than volume. Jiro will push back on your ideas and flag potential missteps early. Call him in with <span class="chip">@jirobot</span>.</p>
+        <span class="label">&gt;_ Meet Jiro</span>
+        <h1>The <span class="hl">tasteful</span><br>software <span class="nowrap">engineer<span class="caret" aria-hidden="true"></span></span></h1>
+        <p class="hero__lede">Jiro is a craftsperson: an expert engineer who cares more about quality than volume. Jiro will push back on your ideas and flag potential missteps early. Call him in with <span class="tag">@jirobot</span>.</p>
         <div class="hero__ctas">
-          <a class="btn btn--salmon" href="#faq">Reserve a seat →</a>
+          <a class="btn btn--salmon" href="#faq">Reserve a seat</a>
           <a class="btn" href="#pricing">See pricing</a>
         </div>
       </div>
-      <div class="hero__thread">
-        <div class="term" role="img" aria-label="Example Slack thread in #payments where Jiro flags a double-charge risk before adding retries">
-          <div class="term__head"><span># payments</span><span>thread</span></div>
-          <div class="term__msgs">
-            <div class="msg">
-              <span class="avatar"></span>
+      <div id="hero-thread">
+        <div class="slack" role="img" aria-label="Slack thread in #payments: a teammate asks Jiro to add retries, Jiro points out a double-charge risk and proposes idempotency first, the teammate agrees">
+          <div class="slack__head"><span># payments</span><small>Thread</small></div>
+          <div class="slack__body">
+            <div class="smsg">
+              <span class="av" aria-hidden="true">MK</span>
               <div>
-                <div class="msg__meta">YOU · 10:42</div>
-                <div><span class="mention">@jirobot</span> can you add retries to the payments webhook handler? we keep dropping events on timeouts.</div>
+                <div class="smsg__who"><b>Maya Kim</b><time>10:42 AM</time></div>
+                <div><span class="mention">@jirobot</span> can you add retries to the payments webhook handler? We keep dropping events on timeouts.</div>
               </div>
             </div>
-            <div class="msg">
-              <span class="avatar avatar--jiro"></span>
+            <div class="smsg">
+              <span class="av av--jiro" aria-hidden="true"><img src="jiro-v3.svg" alt=""></span>
               <div>
-                <div class="msg__meta msg__meta--jiro">JIRO · 10:43</div>
-                <div>I can, but one thing first. The handler charges the card before it records the event, so a retry after a timeout could charge a customer twice. Idempotency first, then retries with backoff. One PR, two commits?</div>
+                <div class="smsg__who"><b>Jiro</b><span class="app">APP</span><time>10:43 AM</time></div>
+                <div>I can, but one thing first. <code>handleWebhook</code> charges the card before it records the event, so a retry after a timeout could charge a customer twice.</div>
+                <ol><li>Key on <code>event.id</code> so replays are no-ops</li><li>Then retries with backoff</li></ol>
+                <div>One PR, two commits?</div>
               </div>
             </div>
-            <div class="msg">
-              <span class="avatar"></span>
+            <div class="smsg">
+              <span class="av" aria-hidden="true">MK</span>
               <div>
-                <div class="msg__meta">YOU · 10:45</div>
-                <div>good catch. go for it.</div>
+                <div class="smsg__who"><b>Maya Kim</b><time>10:45 AM</time></div>
+                <div>Good catch. Go for it.</div>
+              </div>
+            </div>
+            <div class="smsg">
+              <span class="av av--jiro" aria-hidden="true"><img src="jiro-v3.svg" alt=""></span>
+              <div>
+                <div class="smsg__who"><b>Jiro</b><span class="app">APP</span><time>11:08 AM</time></div>
+                <div class="pr"><b>#482 Make webhook handling idempotent, then retry</b><br><span class="diff"><span class="add">+86</span> <span class="del">−21</span> · 4 files · ready for review</span></div>
               </div>
             </div>
           </div>
-          <dl class="term__log">
-            <dt>read</dt><dd>handlers/webhook.ts</dd>
-            <dt class="risk">risk</dt><dd>charge runs before the event is recorded</dd>
-            <dt>plan</dt><dd>key on event id, retry with backoff</dd>
-            <dt>pr</dt><dd>draft open, waiting on your review</dd>
-            <dt class="code">code</dt><dd>if (seen(event.id)) return;<span class="cursor"></span></dd>
-          </dl>
+          <div class="slack__typing"><i></i><i></i><i></i> Jiro is reading handlers/webhook.test.ts</div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="quality" class="block" data-jiro-comment="Volume is easy. Ask any agent that opened forty PRs this morning.">
-    <h2 class="quality__title">Quality over volume.</h2>
-    <div class="quality__call">
-      <span class="label">/ Call him in</span>
-      <span class="chip">@jirobot</span>
-    </div>
-  </section>
-
-  <section id="video" class="block" data-jiro-side="left" data-jiro-comment="Same prompt, two agents. Watch which one asks a question first.">
-    <p class="video__quote">Most agents optimize for output, Jiro optimizes for the change you would have made yourself, on a good day.</p>
-    <div class="video__ph"><span><span class="play">&#9654;&#xFE0E;</span> Side-by-side video: same prompt, Jiro vs. a typical agent</span></div>
-  </section>
-
-  <section id="pillars" class="block" data-jiro-comment="Missteps are cheapest before the first line of code. That's when I look.">
-    <article class="pillar">
-      <span class="pillar__num">01</span>
-      <h3>Quality over volume</h3>
-      <p>Jiro is taking the broader picture into account, and makes the right changes to improve your codebase architecture</p>
-    </article>
-    <article class="pillar">
-      <span class="pillar__num">02</span>
-      <h3>Missteps, caught early</h3>
-      <p>He reads the code around the change and raises risks while they are cheap to fix.</p>
-    </article>
-    <article class="pillar">
-      <span class="pillar__num">03</span>
-      <h3>Called in, not always on</h3>
-      <p>Mention @jirobot where your team already works. He works the thread, then gets out of the way.</p>
-    </article>
-  </section>
-
-  <section id="how" class="block" data-jiro-comment="Mention me, I read, I ship. You review. That's the whole loop.">
-    <div class="how__panel">
-      <span class="label label--salmon">/ How he works</span>
-      <h2>Jiro is driven by a passion for high-quality work.</h2>
-    </div>
-    <div class="how__rows">
-      <div class="how__row">
-        <span class="label">/ Call him in</span>
-        <div>
-          <h3>Mention <span class="chip">@jirobot</span></h3>
-          <p>Say what you need, in plain words, where your team already works.</p>
-        </div>
-        <a class="watch" href="#video">WATCH →</a>
+    <section id="ditch" data-jiro-comment="I censored them myself. Professional courtesy." data-jiro-mood="eager" data-jiro-look="#censor-devin" data-jiro-side="left">
+      <div class="ditch__copy">
+        <h2><span>Ditch <span id="censor-devin">D*vin</span>.</span><span>Forget F*ctory.</span><span>Stop slopping around.</span></h2>
+        <p>Jiro is the AI engineer that knows your style and proactively provides feedback. No markup, no lock-in.</p>
       </div>
-      <div class="how__row">
-        <span class="label">/ He reads</span>
-        <div>
-          <h3>Context before code</h3>
-          <p>If something is unclear or risky, you hear about it now, not in review.</p>
-        </div>
-        <a class="watch" href="#video">WATCH →</a>
+      <div class="callin">
+        <span class="label">&gt;_ Call him in</span>
+        <img src="jiro-v3.svg" alt="Jiro, a pixel speech-bubble mascot with a terminal-prompt face" width="496" height="448">
+        <span class="tag">@jirobot</span>
       </div>
-      <div class="how__row">
-        <span class="label">/ He ships</span>
-        <div>
-          <h3>A focused pull request</h3>
-          <p>Explained, small, and waiting for your review.</p>
-        </div>
-        <a class="watch" href="#video">WATCH →</a>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <section id="pricing" class="block" data-jiro-comment="Itamae is the one I'd pick. I'm biased.">
-    <div class="sec-head">
-      <span class="label">/ Pricing</span>
-      <h2>Not market price</h2>
-    </div>
-    <div class="tiers">
-      <article class="tier">
-        <div class="pips" aria-hidden="true"><i class="pip pip--g"></i><i class="pip"></i></div>
-        <h3>Apprentice</h3>
-        <div class="price"><strong>$0</strong><span>free trial</span></div>
-        <ul><li>30 days</li><li>Up to 3 agents</li><li>Bring your own subscription</li></ul>
-        <a class="btn btn--black" href="#faq"><span>Start a trial</span><span aria-hidden="true">→</span></a>
+    <section id="video" data-jiro-comment="Same task. They touched 171 files. I touched 23." data-jiro-look="#video-frame" data-jiro-side="right">
+      <p class="video__quote">Most agents optimize for output, Jiro optimizes for the change you would have made yourself, <em>on a good day.</em></p>
+      <div id="video-frame" role="img" aria-label="Video placeholder: same task, a regular agent changed 171 files with 12,659 additions; Jiro changed 23 files with 1,412 additions">
+        <div class="vf__bar"><strong>Same task. A focused diff.</strong><span class="label label--light">Video · 1:12</span></div>
+        <div class="vf__split">
+          <div class="vf__side">
+            <span class="label label--light">Regular agent</span>
+            <div class="vf__stat"><span class="add">+12,659</span> <span class="del">−1,649</span></div>
+            <span class="vf__files">171 files changed</span>
+            <div class="vf__rows" aria-hidden="true">
+              <i><b style="width:76%"></b></i><i><b style="width:85%"></b></i><i><b style="width:44%"></b></i><i><b style="width:47%"></b></i><i><b style="width:42%"></b></i><i><b class="r" style="width:62%"></b></i><i><b style="width:90%"></b></i><i><b class="r" style="width:65%"></b></i><i><b class="r" style="width:89%"></b></i><i><b style="width:50%"></b></i><i><b style="width:42%"></b></i><i><b class="r" style="width:85%"></b></i><i><b class="r" style="width:63%"></b></i><i><b style="width:52%"></b></i><i><b style="width:53%"></b></i><i><b style="width:74%"></b></i><i><b class="r" style="width:58%"></b></i><i><b style="width:59%"></b></i><i><b style="width:43%"></b></i><i><b style="width:61%"></b></i><i><b style="width:89%"></b></i><i><b style="width:94%"></b></i><i><b style="width:93%"></b></i><i><b style="width:66%"></b></i><i><b class="r" style="width:66%"></b></i><i><b style="width:73%"></b></i><i><b style="width:78%"></b></i><i><b style="width:71%"></b></i><i><b class="r" style="width:44%"></b></i><i><b class="r" style="width:88%"></b></i><i><b class="r" style="width:78%"></b></i><i><b style="width:97%"></b></i><i><b style="width:44%"></b></i><i><b style="width:75%"></b></i><i><b style="width:79%"></b></i><i><b class="r" style="width:93%"></b></i><i><b style="width:46%"></b></i><i><b style="width:95%"></b></i><i><b class="r" style="width:43%"></b></i><i><b style="width:74%"></b></i>
+            </div>
+          </div>
+          <div class="vf__side vf__side--jiro">
+            <span class="label" style="color:var(--green)">Jiro</span>
+            <div class="vf__stat"><span class="add">+1,412</span> <span class="del">−318</span></div>
+            <span class="vf__files">23 files changed</span>
+            <div class="vf__rows" aria-hidden="true">
+              <i><b style="width:20%"></b></i><i><b style="width:18%"></b></i><i><b class="r" style="width:17%"></b></i><i><b style="width:20%"></b></i>
+            </div>
+            <div class="vf__note"><span class="label" style="color:var(--green)">PR #482</span><span>Idempotent webhook handling, then retries. Two commits, explained.</span><span class="label label--light">Ready for review</span></div>
+          </div>
+        </div>
+        <span class="play" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    <section id="pillars" data-jiro-comment="Missteps are cheapest before the PR. That's my whole thing." data-jiro-side="right">
+      <article class="pillar">
+        <span class="pillar__n">01</span>
+        <h3>Quality over volume</h3>
+        <p>Jiro takes the broader picture into account, and makes the right changes to improve your codebase architecture.</p>
       </article>
-      <article class="tier">
-        <div class="pips" aria-hidden="true"><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip pip--g"></i></div>
-        <h3>Itamae</h3>
-        <div class="price"><strong>$99</strong><span>/ month, per developer</span></div>
-        <ul><li>1 developer</li><li>Up to 3 agents</li><li>Bring your own subscription</li></ul>
-        <a class="btn btn--black" href="#faq"><span>Reserve a seat</span><span aria-hidden="true">→</span></a>
+      <article class="pillar">
+        <span class="pillar__n">02</span>
+        <h3>Missteps, caught early</h3>
+        <p>He reads the code around the change and raises risks while they are cheap to fix.</p>
       </article>
-      <article class="tier">
-        <div class="pips" aria-hidden="true"><i class="pip"></i><i class="pip pip--g"></i><i class="pip"></i><i class="pip pip--g"></i><i class="pip"></i><i class="pip pip--g"></i><i class="pip"></i></div>
-        <h3>Omakase</h3>
-        <div class="price"><strong>$250</strong><span>/ month, per team</span></div>
-        <ul><li>Unlimited seats</li><li>5 shared agents</li><li>Bring your own subscription</li></ul>
-        <a class="btn btn--black" href="#faq"><span>Reserve for your team</span><span aria-hidden="true">→</span></a>
+      <article class="pillar">
+        <span class="pillar__n">03</span>
+        <h3>Called in, not always on</h3>
+        <p>Mention @jirobot where your team already works. He works the thread, then gets out of the way.</p>
       </article>
-    </div>
-    <p class="footnote">Bring your own model subscription. No token markup. Agents sleep when idle. Need more? Talk to us about Enterprise.</p>
-  </section>
+    </section>
 
-  <section id="bakeoff" class="block" data-jiro-comment="I didn't write this table. I did check the sources.">
-    <div class="sec-head">
-      <span class="label">/ Compare</span>
-      <h2>Cloud Agent Bakeoff.</h2>
-      <p>Any model, any harness, any compute. Bring your own subscription with no token markup.</p>
-    </div>
-    <div class="table-wrap">
-      <table class="bake">
-        <thead>
-          <tr>
-            <th class="menu-h">ON THE MENU</th>
-            <th class="jiro">jiro.bot</th>
-            <th>Claude Tag</th>
-            <th>Devin</th>
-            <th>Factory</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 1</span><span class="course__t">free trial</span></span><span class="ico" aria-hidden="true">🍣</span></div></td>
-            <td class="jiro"><span class="sq"></span>yes, Apprentice ($0)</td>
-            <td>no, Team / Enterprise only</td><td>free plan, light quota</td><td>no</td>
-          </tr>
-          <tr>
-            <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 2</span><span class="course__t">single developer</span></span><span class="ico" aria-hidden="true">🍥</span></div></td>
-            <td class="jiro"><span class="sq"></span>$99/mo, Itamae</td>
-            <td>not available</td><td>$20 Pro · $200 Max</td><td>$20 / $100 / $200</td>
-          </tr>
-          <tr>
-            <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 3</span><span class="course__t">teams</span></span><span class="ico" aria-hidden="true">🍡</span></div></td>
-            <td class="jiro"><span class="sq"></span>$250/mo, unlimited seats, Omakase</td>
-            <td>usage-billed on Claude Team plan</td><td>$80/mo + $40/seat</td><td>$60/mo + $40/seat</td>
-          </tr>
-          <tr>
-            <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 4</span><span class="course__t">your model subscription</span></span><span class="ico" aria-hidden="true">🥢</span></div></td>
-            <td class="jiro"><span class="sq"></span>yes, no markup</td>
-            <td>no, Anthropic only</td><td>ChatGPT plan, GPT only</td><td>BYOK in CLI/desktop only</td>
-          </tr>
-          <tr>
-            <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 5</span><span class="course__t">how you start</span></span><span class="ico" aria-hidden="true">🍵</span></div></td>
-            <td class="jiro"><span class="sq"></span>mention @jirobot</td>
-            <td>tag @Claude in Slack</td><td>Slack, Linear, web, CLI</td><td>Slack, Linear, Jira, CLI</td>
-          </tr>
-          <tr>
-            <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 6</span><span class="course__t">a flawed request</span></span><span class="ico" aria-hidden="true">🐟</span></div></td>
-            <td class="jiro"><span class="sq"></span>says so before writing code</td>
-            <td>[from video]</td><td>[from video]</td><td>[from video]</td>
-          </tr>
-          <tr>
-            <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 7</span><span class="course__t">an unclear request</span></span><span class="ico" aria-hidden="true">🥬</span></div></td>
-            <td class="jiro"><span class="sq"></span>asks one good question</td>
-            <td>[from video]</td><td>[from video]</td><td>[from video]</td>
-          </tr>
-          <tr>
-            <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 8</span><span class="course__t">what you review</span></span><span class="ico" aria-hidden="true">🍱</span></div></td>
-            <td class="jiro"><span class="sq"></span>small, explained pull requests</td>
-            <td>[from video]</td><td>[from video]</td><td>[from video]</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="footnote">Competitor pricing from public pages, October 2026.</p>
-  </section>
+    <section id="how" data-jiro-comment="Mention me. I read first, then ship small." data-jiro-side="left">
+      <div class="how__panel">
+        <span class="label label--salmon">/ How he works</span>
+        <h2>Jiro is driven by a passion for high-quality work.</h2>
+      </div>
+      <div class="how__rows">
+        <div class="how__row">
+          <span class="label">/ Call him in</span>
+          <div>
+            <h3>Mention <span class="tag">@jirobot</span></h3>
+            <p>Say what you need, in plain words, where your team already works.</p>
+          </div>
+          <a class="watch" href="#video">Watch →</a>
+        </div>
+        <div class="how__row">
+          <span class="label">/ He reads</span>
+          <div>
+            <h3>Context before code</h3>
+            <p>If something is unclear or risky, you hear about it now, not in review.</p>
+          </div>
+          <a class="watch" href="#video">Watch →</a>
+        </div>
+        <div class="how__row">
+          <span class="label">/ He ships</span>
+          <div>
+            <h3>A focused pull request</h3>
+            <p>Explained, small, and waiting for your review.</p>
+          </div>
+          <a class="watch" href="#video">Watch →</a>
+        </div>
+      </div>
+    </section>
 
-  <section id="faq" class="block" data-jiro-comment="Thirty days on the house. I'll be in the thread.">
-    <div class="faq__list">
-      <span class="label">/ FAQ</span>
-      <details open>
-        <summary>What is Jiro</summary>
-        <p>An autonomous software engineer you call into a conversation. He takes on a task, raises concerns early, and hands back a pull request for review.</p>
-      </details>
-      <details>
-        <summary>How do I call him in</summary>
-        <p>Mention @jirobot in a Slack thread or Linear issue and describe what you need in plain words.</p>
-      </details>
-      <details>
-        <summary>Does he merge without review</summary>
-        <p>No. Jiro opens a pull request and waits for a human to review and merge it.</p>
-      </details>
-      <details>
-        <summary>What does he have access to</summary>
-        <p>Only the repositories and integrations your team connects, inside an isolated cloud session.</p>
-      </details>
-      <details>
-        <summary>Which coding agents can I run</summary>
-        <p>Claude Code, Codex, and Gemini CLI, on the model subscription you already pay for.</p>
-      </details>
-      <details>
-        <summary>How does billing work</summary>
-        <p>A flat monthly price per developer or per team; model usage stays on your own subscription with no markup.</p>
-      </details>
-      <details>
-        <summary>Why cloud agents</summary>
-        <p>A cloud session keeps working while your laptop is closed and gives every task a clean, reproducible machine.</p>
-      </details>
-      <details>
-        <summary>Who makes Jiro</summary>
-        <p>The Nori team, who build agent-first developer tooling.</p>
-      </details>
-    </div>
-    <aside class="reserve" aria-labelledby="reserve-title">
-      <span class="label label--salmon">/ Reserve a seat</span>
-      <h2 id="reserve-title">Pull up a stool at the counter.</h2>
-      <p>Your first 30 days are on the house. Connect GitHub, mention @jirobot, and see what he catches.</p>
-      <label class="label label--light" for="work-email">Work email
-        <input id="work-email" type="email" placeholder="you@company.com" autocomplete="email">
-      </label>
-      <button class="btn btn--salmon" type="button"><span>Reserve a seat</span><span aria-hidden="true">→</span></button>
-    </aside>
-  </section>
+    <section id="pricing" data-jiro-comment="Want 30 days on the house?" data-jiro-ask="Yes please" data-jiro-action="#email" data-jiro-perch="#pricing-title">
+      <div class="sec-head sec-head--perch">
+        <span class="label">/ Pricing</span>
+        <h2 class="h-sec" id="pricing-title">Not market price</h2>
+      </div>
+      <div class="tiers">
+        <article class="tier">
+          <div class="pips" aria-hidden="true"><i class="pip pip--g"></i><i class="pip"></i></div>
+          <h3>Apprentice</h3>
+          <div class="price"><strong>$0</strong><span>free trial</span></div>
+          <ul><li>30 days</li><li>Up to 3 agents</li><li>Bring your own subscription</li></ul>
+          <a class="btn btn--ink" href="#faq"><span>Start a trial</span><span aria-hidden="true">→</span></a>
+        </article>
+        <article class="tier tier--feat">
+          <div class="pips" aria-hidden="true"><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip pip--g"></i></div>
+          <h3>Itamae <small>Most picked</small></h3>
+          <div class="price"><strong>$99</strong><span>/ month, per developer</span></div>
+          <ul><li>1 developer</li><li>Up to 3 agents</li><li>Bring your own subscription</li></ul>
+          <a class="btn btn--ink" href="#faq"><span>Reserve a seat</span><span aria-hidden="true">→</span></a>
+        </article>
+        <article class="tier">
+          <div class="pips" aria-hidden="true"><i class="pip"></i><i class="pip pip--g"></i><i class="pip"></i><i class="pip pip--g"></i><i class="pip"></i><i class="pip pip--g"></i><i class="pip"></i></div>
+          <h3>Omakase</h3>
+          <div class="price"><strong>$250</strong><span>/ month, per team</span></div>
+          <ul><li>Unlimited seats</li><li>5 shared agents</li><li>Bring your own subscription</li></ul>
+          <a class="btn btn--ink" href="#faq"><span>Reserve for your team</span><span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+      <p class="footnote">Bring your own model subscription. No token markup. Agents sleep when idle. Need more? Talk to us about Enterprise.</p>
+    </section>
 
-  <section id="footer" class="block" data-jiro-comment="You made it to the bottom. Most reviewers don't.">
-    <div class="footer__bar">
+    <section id="bakeoff" data-jiro-comment="I didn't write this table. I did check the sources." data-jiro-look="#col-jiro" data-jiro-side="right">
+      <div class="sec-head">
+        <span class="label">/ Compare</span>
+        <h2 class="h-sec">Cloud Agent Bakeoff.</h2>
+        <p>Any model, any harness, any compute. Bring your own subscription with no token markup.</p>
+      </div>
+      <div class="table-wrap">
+        <table class="bake">
+          <thead>
+            <tr>
+              <th class="menu-h">On the menu</th>
+              <th class="jiro" id="col-jiro">jiro.bot</th>
+              <th>Claude Tag</th>
+              <th>D*vin</th>
+              <th>F*ctory</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 1</span><span class="course__t">free trial</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><rect x="1" y="3" width="6" height="3" fill="#f8f6f0" stroke="#111" stroke-width=".8"/><rect x="1.5" y="2" width="5" height="1.6" fill="#f35b45"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>yes, Apprentice ($0)</td>
+              <td>no, Team / Enterprise only</td><td>free plan, light quota</td><td>no</td>
+            </tr>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 2</span><span class="course__t">single developer</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><rect x="1" y="1" width="6" height="6" fill="#f8f6f0" stroke="#111" stroke-width=".8"/><rect x="3" y="3" width="2" height="2" fill="#f35b45"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>$99/mo, Itamae</td>
+              <td>not available</td><td>$20 Pro · $200 Max</td><td>$20 / $100 / $200</td>
+            </tr>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 3</span><span class="course__t">teams</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><rect x="0.5" y="4" width="3" height="3" fill="#f35b45"/><rect x="4.5" y="4" width="3" height="3" fill="#3cf56a"/><rect x="2.5" y="1" width="3" height="3" fill="#111"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>$250/mo, unlimited seats, Omakase</td>
+              <td>usage-billed on Claude Team plan</td><td>$80/mo + $40/seat</td><td>$60/mo + $40/seat</td>
+            </tr>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 4</span><span class="course__t">your model subscription</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><path d="M1 7 L6 1" stroke="#111" stroke-width="1"/><path d="M3 7 L7.5 2" stroke="#111" stroke-width="1"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>yes, no markup</td>
+              <td>no, Anthropic only</td><td>ChatGPT plan, GPT only</td><td>BYOK in CLI/desktop only</td>
+            </tr>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 5</span><span class="course__t">how you start</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><rect x="1" y="3" width="6" height="4" fill="#3cf56a" stroke="#111" stroke-width=".8"/><rect x="2" y="1" width="4" height="1" fill="#111"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>mention @jirobot</td>
+              <td>tag @Claude in Slack</td><td>Slack, Linear, web, CLI</td><td>Slack, Linear, Jira, CLI</td>
+            </tr>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 6</span><span class="course__t">a flawed request</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><path d="M1 4 L4 2 L6 4 L4 6 Z" fill="#111"/><path d="M6 4 L7.5 2.5 L7.5 5.5 Z" fill="#111"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>says so before writing code</td>
+              <td class="tbd">[from video]</td><td class="tbd">[from video]</td><td class="tbd">[from video]</td>
+            </tr>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 7</span><span class="course__t">an unclear request</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><path d="M1 7 L4 2 L7 7 Z" fill="#3cf56a"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>asks one good question</td>
+              <td class="tbd">[from video]</td><td class="tbd">[from video]</td><td class="tbd">[from video]</td>
+            </tr>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 8</span><span class="course__t">what you review</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><rect x="0.5" y="1" width="7" height="6" fill="#111"/><rect x="1.5" y="2" width="2" height="2" fill="#f35b45"/><rect x="4.5" y="2" width="2" height="2" fill="#f8f6f0"/><rect x="1.5" y="5" width="5" height="1" fill="#3cf56a"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>small, explained pull requests</td>
+              <td class="tbd">[from video]</td><td class="tbd">[from video]</td><td class="tbd">[from video]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">Competitor pricing from public pages, October 2026.</p>
+    </section>
+
+    <section id="faq" data-jiro-comment="Ask me anything. Except the rice recipe." data-jiro-side="right">
+      <div class="faq__list">
+        <span class="label">/ FAQ</span>
+        <details open>
+          <summary>What is Jiro</summary>
+          <p>An autonomous software engineer you call into a conversation. He takes on a task, raises concerns early, and hands back a pull request for review.</p>
+        </details>
+        <details>
+          <summary>How do I call him in</summary>
+          <p>Mention @jirobot in a Slack thread or Linear issue and describe what you need in plain words.</p>
+        </details>
+        <details>
+          <summary>Does he merge without review</summary>
+          <p>No. Jiro opens a pull request and waits for a human to review and merge it.</p>
+        </details>
+        <details>
+          <summary>What does he have access to</summary>
+          <p>Only the repositories and integrations your team connects, inside an isolated cloud session.</p>
+        </details>
+        <details>
+          <summary>Which coding agents can I run</summary>
+          <p>Claude Code, Codex, and Gemini CLI, on the model subscription you already pay for.</p>
+        </details>
+        <details>
+          <summary>How does billing work</summary>
+          <p>A flat monthly price per developer or per team; model usage stays on your own subscription with no markup.</p>
+        </details>
+        <details>
+          <summary>Why cloud agents</summary>
+          <p>A cloud session keeps working while your laptop is closed and gives every task a clean, reproducible machine.</p>
+        </details>
+        <details>
+          <summary>Who makes Jiro</summary>
+          <p>The Nori team, who build agent-first developer tooling.</p>
+        </details>
+      </div>
+      <aside class="reserve" aria-labelledby="reserve-title">
+        <span class="label label--salmon">/ Reserve a seat</span>
+        <h2 id="reserve-title">Pull up a stool at the counter.</h2>
+        <p>Your first 30 days are on the house. Connect GitHub, mention @jirobot, and see what he catches.</p>
+        <form id="reserve-form">
+          <label class="label label--light" for="email">Work email</label>
+          <input id="email" type="email" placeholder="you@company.com" autocomplete="email">
+          <button class="btn btn--salmon" type="submit"><span>Reserve a seat</span><span aria-hidden="true">→</span></button>
+        </form>
+        <span class="reserve__seal" aria-hidden="true"><img src="jiro-v3.svg" alt=""></span>
+      </aside>
+    </section>
+
+  </main>
+
+  <footer class="site-foot">
+    <div class="foot__bar">
       <span>/ Built by the Nori team</span>
-      <nav class="footer__links" aria-label="Footer">
+      <nav class="foot__links" aria-label="Footer">
         <a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="#faq">Reserve a seat</a>
       </nav>
       <span>2026</span>
     </div>
     <div class="wordmark" aria-label="jiro.bot">JIRO.BOT</div>
-  </section>
+  </footer>
+  </div>
 
-</main>
+</div>
+<script>
+  document.getElementById("reserve-form").addEventListener("submit", function (e) { e.preventDefault(); });
+</script>
 <script src="jiro-buddy.js" defer></script>
 </body>
 </html>
