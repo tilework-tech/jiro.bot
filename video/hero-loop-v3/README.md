@@ -18,3 +18,7 @@ Render one (`p` or `n`): `node build.mjs template17p.html index17p.html && node 
 v16 (30s shot-based cut) with the 8:02 AM beat moved onto a phone: the mobile web app rotates in from the right showing the overnight alert thread and PR #418, you type "…oh nice.", and it rotates out before the loop cuts back to the hook. Lower third: "Same Jiro, on your phone". 31.4s loop.
 
 Render: `node build.mjs template18.html index18.html && node render18.mjs --w=1200 --h=960 --fps=60`, then `node render18.mjs --w=1200 --h=960 --cues=1 && node sfx.mjs` and mux `video.mp4` with `sfx.wav`. Needs `bash brand/fonts.sh` (copied from the making-feature-showcases brand kit) for General Sans.
+
+## v19: from 24s on, everything on a zoomed-in phone
+
+Same as v18 up to 24.3s. From the 4:21 AM alert onward, a single continuous phone shot replaces the alert card, Jiro's-screen fix, and morning shots: the phone rotates in, the camera pans down one "Checkout 500s" thread (alert, traced/test/214-passing rows, Jiro's fix message and draft PR #418, then "…oh nice." at 8:02), and it rotates out. The phone is laid out at native size (720px wide, roughly half visible) instead of being scaled, so text stays sharp; encoded at CRF 12. Render as v18 with `template19.html` / `render19.mjs`.
