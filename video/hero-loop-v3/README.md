@@ -26,3 +26,14 @@ Same as v18 up to 24.3s. From the 4:21 AM alert onward, a single continuous phon
 ## v20: "Get it done, Jiro."
 
 v19 with your Day 1 line changed from the cut-off "Do it all in one PR, tests to…" to "Get it done, Jiro." (typed in full, 9.0-9.75s; also the blurred bubble above Jiro's pushback). Render with `template20.html` / `render20.mjs`.
+
+## v21: structure, agent lanes, less code
+
+Rebuilds 4-24s around three claims; the phone ending (24.3s on) is unchanged from v20.
+
+- 5.6s Jiro: "No map, no docs, and your agents keep colliding in payments/. Fix that first?" → "Get it done, Jiro." → Slack and CLI chip in.
+- 11.6s Structure and docs: the old folders strike out, the new tree lands, and AGENTS.md writes itself line by line.
+- 15.6s Agent lanes: AGENTS.md › Lanes gives Claude Code, Codex, and Gemini one directory each; their tasks run in parallel without crossing.
+- 19.8s Less code: PR #412 diff is almost all red with two green lines, +38 −1,412.
+
+Render with `template21.html` / `render21.mjs`.
