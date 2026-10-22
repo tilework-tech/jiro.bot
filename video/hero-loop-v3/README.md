@@ -12,3 +12,9 @@ Both cuts open on Jiro already doing senior work, so the first 3-5 seconds show 
 - No-phone (`template17n.html`, 30s loop): replaces the text-only hook with three close-ups (Jiro typing an idempotency-key fix, the review comment "This double-charges on retry", tests green and ready to merge) under the "You just hired an engineer / a reviewer / Jiro." caption roll. The rest matches v16.
 
 Render one (`p` or `n`): `node build.mjs template17p.html index17p.html && node render17p.mjs --w=1200 --h=960 --fps=60`, then `node render17p.mjs --w=1200 --h=960 --cues=1 && node sfx.mjs` and mux `video.mp4` with `sfx.wav`.
+
+## v18: v16 plus a phone
+
+v16 (30s shot-based cut) with the 8:02 AM beat moved onto a phone: the mobile web app rotates in from the right showing the overnight alert thread and PR #418, you type "…oh nice.", and it rotates out before the loop cuts back to the hook. Lower third: "Same Jiro, on your phone". 31.4s loop.
+
+Render: `node build.mjs template18.html index18.html && node render18.mjs --w=1200 --h=960 --fps=60`, then `node render18.mjs --w=1200 --h=960 --cues=1 && node sfx.mjs` and mux `video.mp4` with `sfx.wav`. Needs `bash brand/fonts.sh` (copied from the making-feature-showcases brand kit) for General Sans.
