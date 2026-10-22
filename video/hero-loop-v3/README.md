@@ -22,3 +22,7 @@ Render: `node build.mjs template18.html index18.html && node render18.mjs --w=12
 ## v19: from 24s on, everything on a zoomed-in phone
 
 Same as v18 up to 24.3s. From the 4:21 AM alert onward, a single continuous phone shot replaces the alert card, Jiro's-screen fix, and morning shots: the phone rotates in, the camera pans down one "Checkout 500s" thread (alert, traced/test/214-passing rows, Jiro's fix message and draft PR #418, then "…oh nice." at 8:02), and it rotates out. The phone is laid out at native size (720px wide, roughly half visible) instead of being scaled, so text stays sharp; encoded at CRF 12. Render as v18 with `template19.html` / `render19.mjs`.
+
+## v20: "Get it done, Jiro."
+
+v19 with your Day 1 line changed from the cut-off "Do it all in one PR, tests to…" to "Get it done, Jiro." (typed in full, 9.0-9.75s; also the blurred bubble above Jiro's pushback). Render with `template20.html` / `render20.mjs`.
