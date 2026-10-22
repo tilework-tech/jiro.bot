@@ -743,5 +743,45 @@ class BuddyBudgetTest(unittest.TestCase):
         self.assertLess(total, 12 * 1024)
 
 
+@unittest.skipUnless(HAVE_PLAYWRIGHT, "playwright is not installed")
+class StitchedDesignTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        handler = functools.partial(QuietHandler, directory=str(BUDDY))
+        cls._server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+        threading.Thread(target=cls._server.serve_forever, daemon=True).start()
+        cls.base = f"http://127.0.0.1:{cls._server.server_address[1]}"
+        cls._pw = sync_playwright().start()
+        cls.browser = cls._pw.chromium.launch(channel="chrome", headless=True)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.browser.close()
+        cls._pw.stop()
+        cls._server.shutdown()
+        cls._server.server_close()
+
+    def test_design_screenshots_load_and_jiro_greets_on_the_hero(self):
+        context = self.browser.new_context(viewport=DESKTOP, reduced_motion="reduce")
+        self.addCleanup(context.close)
+        page = context.new_page()
+        page.goto(f"{self.base}/stitched/index.html")
+        page.wait_for_load_state("load")
+        self.assertTrue(page.evaluate(
+            "[...document.images].length > 0 && [...document.images].every(i => i.complete && i.naturalWidth > 0)"))
+        self.assertGreaterEqual(page.locator("section[data-jiro-comment]").count(), 8)
+        expect(page.locator(".jiro-buddy__bubble")).to_contain_text("Hi, I'm Jiro.")
+
+    def test_every_look_and_perch_selector_points_at_a_hotspot(self):
+        context = self.browser.new_context(viewport=DESKTOP)
+        self.addCleanup(context.close)
+        page = context.new_page()
+        page.goto(f"{self.base}/stitched/index.html")
+        missing = page.evaluate("""() => [...document.querySelectorAll('[data-jiro-look],[data-jiro-perch],[data-jiro-action]')]
+            .flatMap(s => ['jiroLook', 'jiroPerch', 'jiroAction'].map(k => s.dataset[k]).filter(Boolean))
+            .filter(sel => !document.querySelector(sel))""")
+        self.assertEqual(missing, [])
+
+
 if __name__ == "__main__":
     unittest.main()
