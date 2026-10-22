@@ -1,0 +1,1804 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jiro scroll buddy — interactions board</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Silkscreen&display=swap" rel="stylesheet">
+<style>
+:root {
+  --k: 1;
+  --ink: #173d2b; --salmon: #f2694f; --green: #3cf06e; --cream: #f8f6f0;
+  --bg: #efece4; --card: #fbfaf6; --text: #173d2b; --muted: #5d6f64;
+  --stage: #ffffff; --bar: #e3dfd3; --bar-strong: #c9c3b2; --line: #ddd8ca;
+  --shadow: #e4e0d4; --btn: #fbd9d1;
+  /* landing-page tokens for the mini scenes */
+  --p-green: #3cf56a; --p-gink: #173d2b; --p-salmon: #f35b45; --p-ink: #111; --p-slate: #232629;
+  --p-slate-2: #2c3034; --p-line: #3a3f44; --p-cream: #f8f6f0; --p-muted: #8b8f93;
+  --sans: "Inter Tight", Inter, system-ui, sans-serif;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+}
+body.dark {
+  --bg: #0e1f17; --card: #163628; --text: #f8f6f0; --muted: #a9bdb0;
+  --stage: #1d4734; --bar: #2c5d45; --bar-strong: #3f7459; --line: #2a5340;
+  --shadow: rgba(0,0,0,.35); --btn: #6b3a31;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font: 14px/1.45 Inter, system-ui, sans-serif;
+  transition: background .25s, color .25s;
+}
+.wrap { max-width: 1420px; margin: 0 auto; padding: 22px 20px 60px; }
+header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 24px; margin-bottom: 18px; }
+h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: -.01em; }
+.sub { margin: 0; color: var(--muted); }
+.xlink { display: inline-block; margin-top: 6px; font: 600 13px Inter, sans-serif; color: var(--salmon); text-decoration: none; }
+.xlink:hover { text-decoration: underline; }
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.controls label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.controls input[type=range] { width: 120px; accent-color: var(--salmon); }
+.speed-val { font-family: "IBM Plex Mono", monospace; color: var(--text); min-width: 38px; }
+button.ctl {
+  font: 600 13px Inter, sans-serif; color: var(--text); background: var(--card);
+  border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer;
+}
+button.ctl:hover { border-color: var(--ink); }
+body.dark button.ctl:hover { border-color: var(--cream); }
+button.ctl[aria-pressed=true] { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+button.save { background: var(--salmon); border-color: var(--salmon); color: #fff; }
+.status { font-size: 13px; color: var(--muted); min-width: 110px; }
+.status.ok { color: #1f8a46; }
+body.dark .status.ok { color: var(--green); }
+
+.row { display: grid; grid-template-columns: 128px 1fr; gap: 14px; margin-bottom: 16px; }
+.row-label { padding-top: 6px; }
+.row-label .letter { font: 600 26px "IBM Plex Mono", monospace; color: var(--salmon); line-height: 1; }
+.row-label .name { font-weight: 700; font-size: 14px; margin-top: 6px; }
+.row-label .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 1180px) {
+  .row { grid-template-columns: 1fr; gap: 8px; }
+  .row-label { display: flex; align-items: baseline; gap: 10px; padding: 0; }
+  .row-label .name, .row-label .hint { margin: 0; }
+  .tiles { grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); }
+}
+
+.tile {
+  position: relative;
+  background: var(--card); border: 1.5px solid var(--line); border-radius: 12px;
+  padding: 8px; display: flex; flex-direction: column; gap: 7px; min-width: 0;
+  transition: border-color .2s, box-shadow .2s;
+}
+.tile.starred { border-color: var(--salmon); box-shadow: 0 0 0 2px rgba(242,105,79,.25); }
+.stage {
+  position: relative; height: 204px; border-radius: 8px; overflow: hidden;
+  background: var(--stage); border: 1px solid var(--line);
+  font-family: var(--sans); color: var(--p-ink);
+  user-select: none; -webkit-user-select: none;
+}
+.stage:focus { outline: none; }
+.stage:focus-visible, .stage.kfocus { box-shadow: 0 0 0 2px var(--salmon); }
+.meta { display: flex; align-items: flex-start; gap: 8px; }
+.code { font: 600 12px "IBM Plex Mono", monospace; background: var(--ink); color: var(--cream); border-radius: 5px; padding: 2px 6px; flex: none; margin-top: 1px; }
+body.dark .code { background: var(--cream); color: var(--ink); }
+.titles { flex: 1; min-width: 0; }
+.title { font-weight: 700; font-size: 13.5px; line-height: 1.3; }
+.desc { font-size: 12px; color: var(--muted); line-height: 1.35; margin-top: 2px; }
+.star {
+  flex: none; width: 30px; height: 30px; border-radius: 8px; border: 1.5px solid var(--line);
+  background: transparent; color: var(--muted); cursor: pointer; display: grid; place-items: center; padding: 0;
+}
+.star:hover { border-color: var(--salmon); color: var(--salmon); }
+.star[aria-pressed=true] { background: var(--salmon); border-color: var(--salmon); color: #fff; }
+.note {
+  width: 100%; resize: vertical; min-height: 34px; height: 34px; font: 12px/1.35 Inter, sans-serif;
+  color: var(--text); background: var(--stage); border: 1px solid var(--line); border-radius: 6px; padding: 6px 7px;
+}
+.note:focus { outline: 2px solid var(--salmon); outline-offset: -1px; }
+
+/* hint tab sits on the stage's bottom edge */
+.hint-tab {
+  position: absolute; z-index: 9; right: 16px; top: 204px;
+  font: 600 9.5px/1 "IBM Plex Mono", monospace; letter-spacing: .02em;
+  background: var(--ink); color: var(--cream); padding: 4px 7px 4px 6px; border-radius: 5px;
+  pointer-events: none; transition: opacity .3s, background .3s; white-space: nowrap;
+}
+.hint-tab::before { content: ""; display: inline-block; margin-right: 5px; vertical-align: 0; border-left: 5px solid var(--green); border-top: 3.5px solid transparent; border-bottom: 3.5px solid transparent; }
+body.dark .hint-tab { background: var(--cream); color: var(--ink); }
+body.dark .hint-tab::before { border-left-color: #1f8a46; }
+.hint-tab.used { opacity: .4; }
+
+/* ---------- mini scene primitives (landing-page look) ---------- */
+.s { position: absolute; }
+.s-card { background: #fff; border: 1.5px solid var(--p-ink); }
+.s-salmon { background: var(--p-salmon); }
+.s-ink { background: var(--p-ink); color: #fff; }
+.s-lab { font: 500 7px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+.s-lab.sal { color: var(--p-salmon); }
+.s-lab.lt { color: #c9cccf; }
+.s-h { font-weight: 700; letter-spacing: -.045em; line-height: 1.02; }
+.s-p { font-size: 9.5px; line-height: 1.45; color: #333; }
+.s-tag { font-family: var(--mono); font-weight: 600; background: var(--p-green); color: var(--p-gink); padding: 0 2px; white-space: nowrap; }
+.s-hl { background: var(--p-salmon); padding: 0 3px; }
+.s-btn {
+  display: inline-flex; align-items: center; justify-content: space-between; gap: 10px;
+  font: 500 7px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase;
+  border: 1.5px solid var(--p-ink); background: var(--p-salmon); color: var(--p-ink); padding: 6px 8px;
+}
+.s-bar { position: absolute; height: 5px; background: #e6e3da; border-radius: 1px; }
+.hot { cursor: pointer; transition: box-shadow .15s, background .15s, color .15s; }
+.hot:hover { box-shadow: 0 0 0 1.5px #fff, 0 0 0 3px var(--p-salmon); }
+.lit, .lit:hover { box-shadow: 0 0 0 2px var(--p-green), 0 0 0 3.5px var(--p-ink) !important; }
+.ping { animation: ping calc(1.7s * var(--k)) ease-out infinite; }
+@keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(243,91,69,.6); } 70% { box-shadow: 0 0 0 8px rgba(243,91,69,0); } 100% { box-shadow: 0 0 0 0 rgba(243,91,69,0); } }
+
+/* ---------- mascot ---------- */
+.m { position: absolute; left: 0; top: 0; width: 46px; height: 42px; z-index: 4; cursor: pointer; touch-action: none; outline: none; }
+.m:focus-visible .m-d { filter: drop-shadow(0 0 0 var(--p-salmon)) drop-shadow(0 0 2px var(--p-salmon)); }
+.m.drag { cursor: grab; }
+.m.drag:active, .m.held { cursor: grabbing; }
+.m-j, .m-a, .m-t, .m-c, .m-d { position: absolute; inset: 0; transform-origin: 50% 100%; }
+.m-t { transform-origin: 50% 0; }
+.m-c { transform-origin: 50% 60%; }
+.m svg.art { display: block; width: 46px; height: 41.5px; overflow: visible; }
+.m-sh { position: absolute; left: 9px; bottom: -6px; width: 28px; height: 4px; background: rgba(17,17,17,.13); border-radius: 50%; transition: opacity .2s; }
+body.dark .m-sh { background: rgba(0,0,0,.35); }
+.m.idle .m-a { animation: bob calc(2.6s * var(--k)) ease-in-out infinite; }
+.m.idle .m-sh { animation: shadow calc(2.6s * var(--k)) ease-in-out infinite; }
+.m.ping::before {
+  content: ""; position: absolute; left: 3px; top: 0; width: 40px; height: 40px; border-radius: 50%;
+  animation: ring calc(1.7s * var(--k)) ease-out infinite; pointer-events: none;
+}
+@keyframes ring { 0% { box-shadow: 0 0 0 0 rgba(243,91,69,.55); } 70% { box-shadow: 0 0 0 10px rgba(243,91,69,0); } 100% { box-shadow: 0 0 0 0 rgba(243,91,69,0); } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes shadow { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(.8); opacity: .6; } }
+.m .face { transition: transform .14s ease-out; }
+.m .cur { animation: blink calc(1.06s * var(--k)) steps(1, end) infinite; }
+.m.nocur .cur { visibility: hidden; }
+@keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } }
+.m-hat, .m-sweat, .m-hand { position: absolute; display: none; pointer-events: none; }
+.m-hat { left: 12px; top: -10px; width: 24px; height: 13px; }
+.m-sweat { left: 39px; top: 1px; width: 6px; height: 9px; }
+.m-hand { left: 39px; top: 13px; width: 11px; height: 11px; transform-origin: 10% 90%; }
+.m.sushi .m-hat, .m.held .m-sweat, .m.wave .m-hand { display: block; }
+.m.held .m-c { animation: dangle calc(.42s * var(--k)) ease-in-out infinite alternate; transform-origin: 50% 0; }
+.m.held .m-sh { opacity: .35; }
+@keyframes dangle { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
+.m-hat svg, .m-sweat svg, .m-hand svg { display: block; width: 100%; height: 100%; }
+
+/* speech bubble */
+.say {
+  position: absolute; left: 0; top: 0; z-index: 8;
+  width: max-content; max-width: 150px; padding: 5px 8px;
+  background: var(--p-cream); color: var(--p-gink); border: 2px solid var(--p-gink); border-radius: 10px;
+  font: 500 10.5px/1.3 var(--sans); letter-spacing: -.005em;
+  opacity: 0; transform: scale(.85); transition: opacity .16s, transform .16s; pointer-events: none;
+}
+.say.on { opacity: 1; transform: scale(1); pointer-events: auto; }
+.say-g { display: block; visibility: hidden; }
+.say-t { position: absolute; left: 8px; top: 5px; right: 8px; }
+.say-x { margin-top: 4px; }
+.say-x.wait { visibility: hidden; }
+.say-tail { position: absolute; width: 8px; height: 8px; background: var(--p-cream); border: 2px solid var(--p-gink); }
+.say.sl .say-tail { left: -6px; border-right: 0; border-top: 0; transform: rotate(45deg); }
+.say.sr .say-tail { right: -6px; border-left: 0; border-bottom: 0; transform: rotate(45deg); }
+.say.sb .say-tail { bottom: -6px; border-left: 0; border-top: 0; transform: rotate(45deg); }
+.say.st .say-tail { top: -6px; border-right: 0; border-bottom: 0; transform: rotate(45deg); }
+.say .src { display: block; font: 500 7.5px/1.3 var(--mono); color: #6a756e; letter-spacing: .02em; }
+.say .src::before { content: "src: "; color: var(--p-salmon); }
+.say .pips { display: flex; align-items: center; gap: 3px; font: 600 7.5px/1 var(--mono); color: #6a756e; letter-spacing: .06em; }
+.say .pips i { width: 6px; height: 6px; border: 1.2px solid var(--p-gink); background: transparent; }
+.say .pips i.on { background: var(--p-salmon); }
+.say .pips span { margin-left: 3px; }
+
+/* chips, tabs, misc */
+.chip {
+  position: absolute; z-index: 9; font: 600 9.5px/1 var(--sans); color: var(--p-ink); background: #fff;
+  border: 1.5px solid var(--p-ink); border-radius: 999px; padding: 4px 8px; box-shadow: 2px 2px 0 var(--p-ink);
+  cursor: pointer; white-space: nowrap; transition: background .12s, transform .12s, box-shadow .12s;
+}
+.chip:hover { background: var(--p-green); transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--p-ink); }
+.chip.dark { background: var(--p-ink); color: #fff; }
+.chip.dark:hover { background: var(--p-salmon); color: var(--p-ink); }
+.peek {
+  position: absolute; z-index: 6; bottom: -1px; font: 600 8px/1 var(--mono); letter-spacing: .12em;
+  background: var(--p-cream); color: var(--p-gink); border: 1.5px solid var(--p-gink); border-bottom: 0;
+  border-radius: 6px 6px 0 0; padding: 4px 8px 5px; cursor: pointer;
+}
+.peek:hover { background: var(--p-green); }
+.px { position: absolute; width: 4px; height: 4px; z-index: 7; pointer-events: none; }
+.dock { position: absolute; width: 46px; height: 42px; border: 1.5px dashed var(--bar-strong); border-radius: 10px; opacity: 0; transition: opacity .15s, border-color .15s, background .15s; }
+.dock.on { opacity: 1; }
+.dock.near { border-color: var(--p-salmon); background: rgba(243,91,69,.08); }
+.meter { position: absolute; display: flex; gap: 3px; align-items: center; font: 600 7.5px/1 var(--mono); color: var(--muted); letter-spacing: .08em; }
+.meter i { width: 7px; height: 7px; border: 1.5px solid var(--bar-strong); transition: background .12s, border-color .12s; }
+.meter i.on { background: var(--p-salmon); border-color: var(--p-ink); }
+.meter.angry i.on { background: var(--p-ink); }
+.arrow-dn { position: absolute; z-index: 5; width: 12px; height: 14px; display: none; }
+.arrow-dn.on { display: block; animation: adn calc(.6s * var(--k)) ease-in-out infinite alternate; }
+@keyframes adn { from { transform: translateY(0); } to { transform: translateY(4px); } }
+.flycur { position: absolute; z-index: 6; background: var(--p-salmon); pointer-events: none; }
+
+/* scene specifics */
+.tier3 { display: grid; grid-template-columns: repeat(3, 1fr); border: 1.5px solid var(--p-ink); background: #fff; }
+.tier3 > div { padding: 6px 6px 7px; position: relative; }
+.tier3 > div + div { border-left: 1.5px solid var(--p-ink); }
+.tier3 .feat { background: var(--p-cream); }
+.tier3 .pp { display: flex; gap: 2px; margin-bottom: 14px; }
+.tier3 .pp i { width: 6px; height: 6px; border: 1px solid var(--p-ink); background: var(--p-salmon); }
+.tier3 .pp i.g { background: var(--p-green); }
+.tier3 b { display: block; font-size: 10.5px; font-weight: 600; letter-spacing: -.03em; }
+.tier3 strong { display: block; font-size: 19px; font-weight: 700; letter-spacing: -.055em; line-height: 1.05; }
+.tier3 small { display: block; font-size: 6.5px; color: #333; }
+.tier3 .mp { position: absolute; right: 4px; top: 5px; font: 500 5.5px/1 var(--mono); letter-spacing: .1em; background: var(--p-ink); color: #fff; padding: 2px 3px; }
+.bake { display: grid; grid-template-columns: 34% 33% 33%; border: 1.5px solid var(--p-ink); background: #fff; font-size: 8.5px; }
+.bake > div { padding: 0 5px; height: 26px; display: flex; flex-direction: column; justify-content: center; border-bottom: 1.5px solid var(--p-ink); }
+.bake > div:nth-last-child(-n+3) { border-bottom: 0; }
+.bake .hd { height: 20px; font-weight: 600; }
+.bake .mh { font: 500 5.5px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+.bake .jc { background: var(--p-green); border-left: 1.5px solid var(--p-ink); border-right: 1.5px solid var(--p-ink); }
+.bake .hd.jc { font-size: 11px; font-weight: 700; letter-spacing: -.04em; }
+.bake .cn { font: 500 5.5px/1 var(--mono); letter-spacing: .14em; color: #777; display: block; }
+.bake .ct { font-size: 8.5px; }
+.bake .oc { color: #333; }
+.vf { background: var(--p-slate); border: 1px solid var(--p-line); color: #fff; display: grid; grid-template-rows: auto 1fr; overflow: hidden; }
+.vf-bar { display: flex; justify-content: space-between; align-items: center; padding: 5px 7px; border-bottom: 1px solid var(--p-line); font-size: 8.5px; font-weight: 600; letter-spacing: -.02em; }
+.vf-split { display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
+.vf-side { padding: 6px 7px; display: flex; flex-direction: column; gap: 3px; overflow: hidden; position: relative; transition: box-shadow .2s; }
+.vf-side + .vf-side { border-left: 1px solid var(--p-line); }
+.vf-side.lit { box-shadow: inset 0 0 0 2px var(--p-green) !important; }
+.vf-stat { font: 600 12px/1.1 var(--mono); letter-spacing: -.03em; }
+.vf-files { font: 500 6px/1 var(--mono); color: var(--p-muted); letter-spacing: .06em; text-transform: uppercase; }
+.vf-rows { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; }
+.vf-rows i { display: block; height: 3px; background: #3a3f44; }
+.vf-rows i b { display: block; height: 100%; background: var(--p-green); transform-origin: 0 50%; }
+.vf-rows i b.r { background: #ff7a66; }
+.vf .add { color: var(--p-green); } .vf .del { color: #ff7a66; }
+.vf-play { position: absolute; left: 50%; top: 56%; width: 30px; height: 30px; margin: -15px 0 0 -15px; background: var(--p-salmon); border: 1.5px solid var(--p-ink); box-shadow: 2px 2px 0 var(--p-ink); display: grid; place-items: center; transition: opacity .15s, transform .15s; }
+.vf-play::before { content: ""; border-left: 10px solid var(--p-ink); border-top: 6px solid transparent; border-bottom: 6px solid transparent; margin-left: 3px; }
+.vf-play.off { opacity: 0; transform: scale(.6); }
+.vf-prog { position: absolute; left: 0; bottom: 0; height: 2px; width: 0; background: var(--p-green); }
+.slack { background: #1b1d20; border: 1px solid var(--p-line); color: #d9dcdf; font-size: 8.5px; line-height: 1.4; }
+.slack-h { display: flex; justify-content: space-between; padding: 4px 7px; border-bottom: 1px solid var(--p-line); font-weight: 600; color: #fff; font-size: 9px; }
+.slack-h small { font: 400 6px/1.6 var(--mono); letter-spacing: .1em; color: var(--p-muted); }
+.smsg { display: grid; grid-template-columns: 14px 1fr; gap: 5px; padding: 3px 4px; margin: 2px 3px; border-radius: 3px; }
+.smsg.hot:hover { background: rgba(255,255,255,.05); }
+.av { width: 14px; height: 14px; border-radius: 3px; background: #6b5bd6; color: #fff; font: 700 6px/14px var(--sans); text-align: center; }
+.av.j { background: var(--p-cream); }
+.smsg b { color: #fff; font-size: 8px; }
+.mention { color: #1d9bd1; background: rgba(29,155,209,.12); padding: 0 1px; border-radius: 2px; }
+.smsg code { font: 500 7.5px var(--mono); background: #2c3034; padding: 0 2px; border-radius: 2px; color: #f2a093; }
+.faq .q { display: flex; justify-content: space-between; align-items: center; padding: 6px 2px; font-weight: 600; font-size: 9.5px; letter-spacing: -.02em; }
+.faq .q::after { content: "+"; color: var(--p-salmon); font: 400 10px/1 var(--mono); }
+.faq .row-q { border-bottom: 1.5px solid var(--p-ink); }
+.faq .row-q.open .q::after { content: "\2212"; }
+.faq .a { height: 0; overflow: hidden; font-size: 8.5px; line-height: 1.4; color: #333; }
+.faq .a p { margin: 0; padding: 0 2px 6px; }
+.wm { position: absolute; display: flex; justify-content: center; font-family: "Silkscreen", var(--mono); line-height: .9; letter-spacing: .02em; color: var(--p-ink); white-space: nowrap; }
+.wm span { display: inline-block; transform-origin: 50% 100%; cursor: pointer; transition: color .2s; }
+.wm span.got { color: var(--p-cream); }
+.wm span:hover { color: #fff; }
+.term { background: var(--p-ink); color: var(--p-green); font: 500 9px/1 var(--mono); padding: 5px 7px; display: flex; align-items: center; gap: 1px; white-space: pre; }
+.term i { width: 5px; height: 9px; background: var(--p-salmon); display: inline-block; margin-left: 1px; animation: blink calc(1.06s * var(--k)) steps(1, end) infinite; }
+.key { position: absolute; width: 19px; height: 19px; border: 1.5px solid var(--p-ink); background: #fff; box-shadow: 0 2px 0 var(--p-ink); font: 600 9px/16px var(--mono); text-align: center; cursor: pointer; transition: transform .06s, box-shadow .06s, background .1s; }
+.key.down { transform: translateY(2px); box-shadow: 0 0 0 var(--p-ink); background: var(--p-green); }
+.key.got { background: var(--p-salmon); }
+.rv input { width: 100%; border: 0; padding: 6px 7px; font: 9px var(--mono); background: #fff; color: var(--p-ink); outline: none; border-radius: 0; }
+.rv input.lit { outline: 2px solid var(--p-green); }
+.rv .s-btn { width: 100%; border: 0; padding: 7px 8px; cursor: pointer; }
+.rv .s-btn:hover { box-shadow: 2px 2px 0 var(--p-green); }
+.rv .s-btn.done { background: var(--p-green); }
+.sel { user-select: text; -webkit-user-select: text; cursor: text; }
+.sel::selection, .sel *::selection { background: rgba(60,245,106,.55); }
+.bowl { position: absolute; z-index: 5; width: 30px; height: 17px; pointer-events: none; }
+.bowl .grains { transform-box: fill-box; transform-origin: 50% 50%; animation: swirl calc(.7s * var(--k)) linear infinite; }
+@keyframes swirl { to { transform: rotate(360deg); } }
+.taps { position: absolute; display: flex; gap: 3px; }
+.taps i { width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid var(--bar-strong); transition: background .1s; }
+.taps i.on { background: var(--p-salmon); border-color: var(--p-ink); }
+.scroller { position: absolute; left: 0; right: 0; top: 0; }
+
+body.paused *, body.paused *::before, body.paused *::after { animation-play-state: paused !important; }
+@media (prefers-reduced-motion: reduce) {
+  .m.idle .m-a, .m.idle .m-sh, .ping, .m.ping::before, .arrow-dn.on, .m.held .m-c, .bowl .grains { animation: none !important; }
+  .say, .chip, .hot, .dock, .m .face { transition: none !important; }
+  .m.ping::before { box-shadow: 0 0 0 2px rgba(243,91,69,.6); }
+  .ping { box-shadow: 0 0 0 2px rgba(243,91,69,.6); }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Jiro scroll buddy — interactions board</h1>
+      <p class="sub">Every tile is live: click, drag, select or type to try it. Star the ones Jiro should get, add notes, hit Save.</p>
+      <a class="xlink" href="index.html">&larr; Animation board</a>
+    </div>
+    <div class="controls">
+      <label>Speed <input id="speed" type="range" min="0.5" max="2" step="0.1" value="1"><span class="speed-val" id="speedVal">1.0x</span></label>
+      <button class="ctl" id="pause" aria-pressed="false">Pause</button>
+      <button class="ctl" id="replay">Replay all</button>
+      <button class="ctl" id="theme" aria-pressed="false">Dark background</button>
+      <button class="ctl save" id="save">Save</button>
+      <span class="status" id="status"></span>
+    </div>
+  </header>
+  <main id="board"></main>
+</div>
+<script>
+(function () {
+  "use strict";
+  var NS = "http://www.w3.org/2000/svg";
+  var STOP = { stop: true };
+  var RM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var MW = 46, MH = 42, SCALE = 46 / 62;
+
+  /* geometry copied from ../jiro-buddy.js (V3 traced balloon pixel) */
+  var BODY_FILL = "M35 6L34 6L34 3L33 3L33 0.75L30.5 0.75L30.25 1L29 1L28.75 1.25L28 1.25L27.75 1.5L27 1.5L26.75 1.75L26 1.75L26 2L25.5 2L25.25 2.25L24.75 2.25L24.5 2.5L24 2.5L23.75 2.75L23.25 2.75L23 3L22.75 3L22.5 3.25L22.25 3.25L22 3.5L21.75 3.5L21.5 3.75L21.25 3.75L21 4L20.75 4L20.5 4.25L20.25 4.25L20 4.5L19.75 4.5L19.5 4.75L19.25 4.75L19.25 5L19 5L18.75 5.25L18.5 5.25L18.5 5.5L18 5.5L18 5.75L17.75 5.75L17 6.5L16.75 6.5L16.25 7L16 7L16 7.25L15.75 7.25L15.75 7.5L15.5 7.5L15.5 7.75L15.25 7.75L14 9L14 9.25L13.75 9.25L13.75 9.5L13.5 9.5L13.5 9.75L13.25 9.75L13.25 10L13 10L13 10.25L12.25 11L12.25 11.25L12 11.25L12 11.5L11.75 11.5L11.75 12L11.5 12L11.5 12.25L11.25 12.25L11.25 12.5L11 12.75L11 13L10.75 13L10.75 13.25L10.5 13.5L10.5 13.75L10 14.25L10 14.5L9.75 14.75L9.75 15L9.5 15.25L9.5 15.5L9.25 15.75L9.25 16L9 16.25L9 16.5L8.75 16.75L8.75 17.25L8.5 17.5L8.5 17.75L8.25 18L8.25 18.5L8 18.75L8 19.25L7.75 19.25L7.75 20L7.5 20.25L7.5 21L7.25 21L7.25 22L7 22.25L7 23.25L6.75 23.5L6.75 25.25L6.5 25.25L6.5 30.5L6.75 30.5L6.75 32.25L7 32.5L7 33.5L7.25 33.75L7.25 34.75L7.5 34.75L7.5 35.5L7.75 35.75L7.75 36.25L8 36.5L8 37L8.25 37.25L8.25 37.5L8.5 37.75L8.5 38.25L8.75 38.5L8.75 38.75L9 39L9 39.25L9.25 39.5L9.25 39.75L9 40L9 42L10 42L10 44L9 44L9 45L8 45L8 46L7 46L7 47L6 47L6 48L5 48L5 49L4 49L4 50L3 50L3 51L2.25 51L2 51.25L2 52L4 52L4.25 51.75L4.75 51.75L5 51.5L5 51L6.75 51L7 50.75L7 50L9 50L9 49L11 49L11 48L13 48L13 47L14 47L14 48L16 48L16 48.75L16.25 49L17 49L17 49.5L17.25 49.5L17.5 49.75L17.75 49.75L17.75 50L19 50L19 50.5L19.25 50.75L19.5 50.75L19.5 51L21 51L21 51.5L21.25 51.5L21.25 51.75L21.75 51.75L22 52L23 52L23 52.25L23.25 52.5L24 52.5L24.25 52.75L24.75 52.75L25 53L27 53L27 53.25L27.25 53.5L28.5 53.5L28.75 53.75L35.75 53.75L35.75 53.5L37 53.5L37 53L39.5 53L39.75 52.75L40.5 52.75L40.5 52.5L41 52.5L41 52L42.5 52L42.75 51.75L43 51.75L43 51L44.75 51L45 50.75L45 50L46.5 50L46.75 49.75L47 49.75L47 49L48 49L48 48L49.5 48L50 47.5L50 47L50.75 47L50.75 46.75L51 46.75L51 46L51.75 46L52 45.75L52 45L52.75 45L53 44.75L53 43L54 43L54 42L55 42L55 40L56 40L56 38L57 38L57 36L58 36L58 32L59 32L59 31L60 31L60 29L59 29L59 26L56 26L56 25L55 25L55 24L54 24L54 23L53 23L53 14L48 14L48 13L47 13L47 12L46 12L46 9L45 9L45 7L41 7L41 8L39 8L39 7L36 7L36 6Z";
+  var BODY_LINE = "M88 384L-24 424L42 317C-8 218 30 90 127 36C178 7 242-4 242 16C242 24 236 29 225 29C157 29 70 98 51 167C38 214 43 266 66 310L70 317L32 378L87.7 358.6A202.4 202.4 0 0 0 426.6 230.1C426 220 431 213 439 213C447 213 450.5 220 450.5 232.4A226.4 226.4 0 0 1 88 384Z";
+  var FACES = {
+    cursor: "M16 22h2v1h1v1h1v1h1v1h1v1h1v2h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h1v-1h1v-1h1v-1h1v-2h-1v-1h-1v-1h-1v-1h-1zM27 31h10v3h-10z",
+    eyes: "M19 23h5v7h-5zM38 23h5v7h-5z",
+    dots: "M18 28h4v4h-4zM29 28h4v4h-4zM40 28h4v4h-4z",
+    sleepy: "M17 29h8v2h-8zM37 29h8v2h-8zM29 34h4v1h-4z",
+    happy: "M20 22h2v2h-2zM18 24h2v2h-2zM22 24h2v2h-2zM16 26h2v2h-2zM24 26h2v2h-2zM40 22h2v2h-2zM38 24h2v2h-2zM42 24h2v2h-2zM36 26h2v2h-2zM44 26h2v2h-2zM27 31h8v2h-2v1h-4v-1h-2z",
+    oo: "M18 21h4v2h-4zM16 23h2v5h-2zM22 23h2v5h-2zM18 28h4v2h-4zM38 21h4v2h-4zM36 23h2v5h-2zM42 23h2v5h-2zM38 28h4v2h-4zM29 32h4v4h-4z",
+    dizzy: "M16 21h2v2h-2zM22 21h2v2h-2zM18 23h4v2h-4zM16 25h2v2h-2zM22 25h2v2h-2zM38 21h2v2h-2zM44 21h2v2h-2zM40 23h4v2h-4zM38 25h2v2h-2zM44 25h2v2h-2zM25 33h2v2h-2zM27 31h2v2h-2zM29 33h2v2h-2zM31 31h2v2h-2zM33 33h2v2h-2zM35 31h2v2h-2z",
+    flat: "M16 26h9v2h-9zM37 26h9v2h-9zM16 22h4v1h-4zM42 22h4v1h-4zM28 33h6v2h-6z"
+  };
+  var HAT = '<svg viewBox="0 0 12 7" shape-rendering="crispEdges"><rect x="0.6" y="3.4" width="10.8" height="3.1" fill="#faf8f2" stroke="#1d3b2a" stroke-width=".55"/><rect x="0.3" y="0.4" width="11.4" height="3.3" fill="#f35b45" stroke="#1d3b2a" stroke-width=".55"/><rect x="3" y="1" width=".7" height="2.2" fill="#ffd0c4"/><rect x="5.6" y="1" width=".7" height="2.2" fill="#ffd0c4"/><rect x="8.2" y="1" width=".7" height="2.2" fill="#ffd0c4"/><rect x="4.4" y="0" width="2.4" height="7" fill="#1d3b2a"/></svg>';
+  var SWEAT = '<svg viewBox="0 0 4 6"><path d="M2 .2L3.7 3.6Q4 5.8 2 5.8Q0 5.8.3 3.6Z" fill="#8fd3f5" stroke="#1d3b2a" stroke-width=".45"/></svg>';
+  var HAND = '<svg viewBox="0 0 7 7" shape-rendering="crispEdges"><path d="M1 3h1V1h1v2h1V0h1v3h1V2h1v4H1Z" fill="#faf8f2" stroke="#1d3b2a" stroke-width=".7"/></svg>';
+  var ARROW = '<svg viewBox="0 0 6 7" shape-rendering="crispEdges"><path d="M2 0h2v3h2v1H5v1H4v1H3v1V6H2V5H1V4H0V3h2Z" fill="#f35b45" stroke="#111" stroke-width=".5"/></svg>';
+
+  var speed = 1, paused = false, live = new Set();
+
+  /* ---------- dom helpers ---------- */
+  function sv(tag, attrs, parent) {
+    var n = document.createElementNS(NS, tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function h(tag, cls, parent, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function S(parent, cls, css, html) {
+    var n = document.createElement("div");
+    n.className = "s " + (cls || "");
+    if (css) n.style.cssText = css;
+    if (html != null) n.innerHTML = html;
+    parent.appendChild(n);
+    return n;
+  }
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  function pick(arr, i) { return arr[i % arr.length]; }
+  function rel(el, st) {
+    var r = el.getBoundingClientRect(), s = st.getBoundingClientRect();
+    var x = r.left - s.left - st.clientLeft, y = r.top - s.top - st.clientTop;
+    return { x: x, y: y, w: r.width, h: r.height, cx: x + r.width / 2, cy: y + r.height / 2, r: x + r.width, b: y + r.height };
+  }
+  function pt(e, st) {
+    var s = st.getBoundingClientRect();
+    return { x: e.clientX - s.left - st.clientLeft, y: e.clientY - s.top - st.clientTop };
+  }
+  function floorY(st) { return st.clientHeight - MH - 8; }
+  function bars(st, rows) {
+    rows.forEach(function (r) { var b = h("i", "s-bar", st); b.style.left = r[0] + "px"; b.style.top = r[1] + "px"; b.style.width = typeof r[2] === "number" ? r[2] + "px" : r[2]; if (r[3]) b.style.background = r[3]; });
+  }
+
+  /* ---------- timing honoring speed, pause, reduced motion ---------- */
+  function sleep(ctx, ms) {
+    return new Promise(function (res, rej) {
+      var acc = 0, last = performance.now();
+      function tick(now) {
+        if (ctx.dead()) return rej(STOP);
+        if (!paused) acc += (now - last) * speed;
+        last = now;
+        if (acc >= ms) res(); else requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+  function tween(ctx, ms, fn) {
+    return new Promise(function (res, rej) {
+      if (RM || ms <= 0) { fn(1); return res(); }
+      var acc = 0, last = performance.now();
+      function tick(now) {
+        if (ctx.dead()) return rej(STOP);
+        if (!paused) acc += (now - last) * speed;
+        last = now;
+        var p = Math.min(1, acc / ms);
+        fn(p);
+        if (p >= 1) res(); else requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+  var ease = {
+    io: function (p) { return p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2; },
+    out: function (p) { return 1 - Math.pow(1 - p, 3); },
+    in: function (p) { return p * p; },
+    back: function (p) { var c = 1.9; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); },
+    spring: function (p) { return p >= 1 ? 1 : 1 - Math.exp(-6.5 * p) * Math.cos(13 * p); }
+  };
+  function play(ctx, el, frames, ms, opt) {
+    opt = opt || {};
+    var an = el.animate(frames, { duration: RM ? 1 : ms, easing: opt.easing || "ease-in-out", fill: "forwards", iterations: RM ? 1 : (opt.iterations || 1), delay: opt.delay || 0 });
+    an.playbackRate = speed;
+    if (paused) an.pause();
+    live.add(an);
+    return an.finished.then(function () {
+      live.delete(an);
+      if (opt.keep && el.isConnected) an.commitStyles();
+      an.cancel();
+      if (ctx.dead()) throw STOP;
+    }, function () { live.delete(an); throw STOP; });
+  }
+  function quiet(p) { return p.catch(function (e) { if (e !== STOP) throw e; }); }
+  async function typeText(ctx, el, text, per) {
+    if (RM) { el.textContent = text; return; }
+    el.textContent = "";
+    for (var i = 1; i <= text.length; i++) {
+      el.textContent = text.slice(0, i);
+      await sleep(ctx, per || 24);
+    }
+  }
+  /* one running action per tile: a new action supersedes the old one */
+  function actor(ctx, m) {
+    var id = 0;
+    return function (fn) {
+      var mine = ++id;
+      var sub = { dead: function () { return ctx.dead() || mine !== id; } };
+      if (m) hush(m);
+      Promise.resolve().then(function () { return fn(sub); }).catch(function (e) { if (e !== STOP) console.error(e); });
+    };
+  }
+
+  /* ---------- mascot ---------- */
+  function mascot(st, o) {
+    o = o || {};
+    var root = h("div", "m idle", st);
+    root.setAttribute("role", "button");
+    root.tabIndex = 0;
+    root.setAttribute("aria-label", o.label || "Jiro");
+    var sh = h("div", "m-sh", root);
+    var j = h("div", "m-j", root), a = h("div", "m-a", j), t = h("div", "m-t", a), c = h("div", "m-c", t), d = h("div", "m-d", c);
+    var svg = sv("svg", { "class": "art", viewBox: "0 -1 62 56", focusable: "false", "aria-hidden": "true" });
+    d.appendChild(svg);
+    var shell = sv("g", { "class": "shell" }, svg);
+    sv("path", { d: BODY_FILL, fill: "#faf8f2", "shape-rendering": "crispEdges" }, shell);
+    sv("path", { d: BODY_LINE, transform: "translate(4 0) scale(.125)", fill: "#1d3b2a" }, shell);
+    var face = sv("g", { "class": "face", fill: "#fb5e45", "shape-rendering": "crispEdges" }, svg);
+    var faces = {};
+    Object.keys(FACES).forEach(function (n) { var g = sv("g", { "class": "f-" + n }, face); sv("path", { d: FACES[n] }, g); faces[n] = g; });
+    var cur = sv("rect", { "class": "cur", x: "41", y: "23", width: "6", height: "9" }, faces.cursor);
+    var hat = h("div", "m-hat", d); hat.innerHTML = HAT;
+    var sweat = h("div", "m-sweat", d); sweat.innerHTML = SWEAT;
+    var hand = h("div", "m-hand", d); hand.innerHTML = HAND;
+    var m = { root: root, j: j, a: a, t: t, c: c, d: d, svg: svg, face: face, cur: cur, sh: sh, hat: hat, hand: hand, st: st, x: 0, y: 0, W: MW, H: MH };
+    m.bub = bubble(st);
+    m.place = function (x, y) { m.x = x; m.y = y; root.style.transform = "translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px)"; };
+    m.setFace = function (n) { for (var k in faces) faces[k].style.display = k === n ? "" : "none"; m.faceName = n; };
+    m.look = function (dx, dy) { face.style.transform = dx || dy ? "translate(" + (dx || 0) + "px," + (dy || 0) + "px)" : ""; };
+    m.setFace("cursor");
+    m.place(o.x != null ? o.x : 10, o.y != null ? o.y : floorY(st));
+    root.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); root.click(); }
+    });
+    return m;
+  }
+  function lookAt(m, tx, ty, mag) {
+    var cx = m.x + MW / 2, cy = m.y + MH / 2, dx = tx - cx, dy = ty - cy, len = Math.hypot(dx, dy) || 1;
+    mag = mag || 3.2;
+    m.look(dx / len * mag, dy / len * mag);
+  }
+  function hop(ctx, m, height, ms) {
+    ms = ms || 340;
+    if (RM) return Promise.resolve();
+    return Promise.all([
+      play(ctx, m.j, [{ transform: "translateY(0)" }, { transform: "translateY(" + -height + "px)", offset: .45 }, { transform: "translateY(0)" }], ms, { easing: "ease-out" }),
+      play(ctx, m.d, [{ transform: "scale(1,1)" }, { transform: "scale(.93,1.08)", offset: .3 }, { transform: "scale(1,1)", offset: .8 }, { transform: "scale(1.12,.88)", offset: .9 }, { transform: "scale(1,1)" }], ms),
+      play(ctx, m.sh, [{ transform: "scale(1)" }, { transform: "scale(.65)", opacity: .45, offset: .45 }, { transform: "scale(1)", opacity: 1 }], ms)
+    ]);
+  }
+  function squish(ctx, m, amt, ms) {
+    if (RM) return Promise.resolve();
+    amt = amt || .12;
+    return play(ctx, m.d, [{ transform: "scale(1,1)" }, { transform: "scale(" + (1 + amt) + "," + (1 - amt) + ")" }, { transform: "scale(" + (1 - amt / 3) + "," + (1 + amt / 2.5) + ")" }, { transform: "scale(1,1)" }], ms || 280);
+  }
+  function moveTo(ctx, m, x, y, ms, o) {
+    o = o || {};
+    var x0 = m.x, y0 = m.y, arc = o.arc || 0, dir = x >= x0 ? 1 : -1;
+    var e = o.ease || ease.io;
+    m.root.classList.remove("idle");
+    hush(m);
+    function done() { m.c.style.transform = ""; m.root.classList.add("idle"); }
+    return tween(ctx, ms, function (p) {
+      var k = e(p);
+      m.place(x0 + (x - x0) * k, y0 + (y - y0) * k - arc * 4 * p * (1 - p));
+      if (arc) m.c.style.transform = "rotate(" + (dir * 11 * Math.sin(Math.PI * p)).toFixed(2) + "deg)";
+    }).then(done, function (err) { done(); throw err; });
+  }
+  async function wobble(ctx, m) {
+    await play(ctx, m.c, [{ transform: "rotate(0)" }, { transform: "rotate(-8deg)" }, { transform: "rotate(6deg)" }, { transform: "rotate(-3deg)" }, { transform: "rotate(0)" }], 620);
+  }
+  async function wave(ctx, m, times) {
+    m.root.classList.add("wave");
+    var fr = [{ transform: "rotate(-25deg)" }, { transform: "rotate(22deg)" }];
+    for (var i = 0; i < (times || 3); i++) await play(ctx, m.hand, i % 2 ? fr.slice().reverse() : fr, 170);
+    await play(ctx, m.hand, [{ transform: "rotate(-25deg)" }, { transform: "rotate(0)" }], 140);
+    m.root.classList.remove("wave");
+  }
+  function burst(ctx, st, x, y, o) {
+    if (RM) return;
+    o = o || {};
+    var colors = o.colors || ["#f35b45", "#3cf56a", "#111", "#f8f6f0"];
+    var n = o.n || 14;
+    for (var i = 0; i < n; i++) {
+      var p = h("i", "px", st);
+      var c = colors[i % colors.length];
+      p.style.left = x + "px"; p.style.top = y + "px"; p.style.background = c;
+      if (c === "#f8f6f0" || c === "#fff") p.style.boxShadow = "0 0 0 1px #1d3b2a";
+      var ang = (o.up ? -Math.PI / 2 : 0) + (Math.random() - .5) * (o.spread || Math.PI * 2);
+      var dist = 16 + Math.random() * (o.dist || 26);
+      var dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist;
+      (function (el) {
+        play(ctx, el, [
+          { transform: "translate(0,0) rotate(0)", opacity: 1 },
+          { transform: "translate(" + dx + "px," + dy + "px) rotate(90deg)", opacity: 1, offset: .55 },
+          { transform: "translate(" + dx * 1.1 + "px," + (dy + 22) + "px) rotate(200deg)", opacity: 0 }
+        ], 650 + Math.random() * 250, { easing: "cubic-bezier(.2,.7,.4,1)" }).then(function () { el.remove(); }, function () { el.remove(); });
+      })(p);
+    }
+  }
+
+  /* ---------- speech bubble ---------- */
+  function bubble(st) {
+    var b = h("div", "say", st);
+    b.ghost = h("span", "say-g", b);
+    b.typed = h("span", "say-t", b);
+    b.extra = h("div", "say-x", b);
+    b.tail = h("i", "say-tail", b);
+    b.setAttribute("aria-live", "polite");
+    return b;
+  }
+  function placeBubble(m, pref) {
+    var b = m.bub, st = m.st, SW = st.clientWidth, SH = st.clientHeight;
+    var bw = b.offsetWidth, bh = b.offsetHeight, side = "sl";
+    var x = m.x + MW + 4, y = m.y - bh + 18;
+    if (pref === "below") { x = SW + 1; }
+    if (x + bw > SW - 4 && pref !== "below") { x = m.x - bw - 4; side = "sr"; }
+    if (x < 4 || pref === "below") {
+      x = clamp(m.x + MW / 2 - bw / 2, 4, SW - bw - 4);
+      y = m.y - bh - 8; side = "sb";
+      if (y < 4 || pref === "below") { y = m.y + MH + 8; side = "st"; }
+    }
+    y = clamp(y, 4, SH - bh - 4);
+    b.classList.remove("sl", "sr", "sb", "st");
+    b.classList.add(side);
+    b.style.left = x + "px"; b.style.top = y + "px";
+    b.tail.style.left = b.tail.style.right = b.tail.style.top = b.tail.style.bottom = "";
+    if (side === "sl" || side === "sr") {
+      b.tail.style.top = clamp(m.y + 14 - y, 6, bh - 14) + "px";
+      b.style.transformOrigin = (side === "sl" ? "0 " : "100% ") + "100%";
+    } else {
+      b.tail.style.left = clamp(m.x + MW / 2 - x - 5, 8, bw - 18) + "px";
+      b.style.transformOrigin = "50% " + (side === "sb" ? "100%" : "0");
+    }
+  }
+  async function say(ctx, m, text, o) {
+    o = o || {};
+    var b = m.bub;
+    b.ghost.textContent = text;
+    b.typed.textContent = "";
+    b.extra.innerHTML = "";
+    b.extra.style.display = o.extra ? "" : "none";
+    if (o.extra) { o.extra(b.extra); b.extra.classList.add("wait"); }
+    b.style.maxWidth = (o.width || 150) + "px";
+    placeBubble(m, o.place);
+    b.classList.add("on");
+    await typeText(ctx, b.typed, text, o.per);
+    b.extra.classList.remove("wait");
+    if (o.after) o.after();
+    if (o.stay) return;
+    await sleep(ctx, o.hold || Math.max(1500, text.length * 48));
+    b.classList.remove("on");
+    await sleep(ctx, 180);
+  }
+  function hush(m) { m.bub.classList.remove("on"); }
+  function pipsHtml(n, total, label) {
+    var s = '<div class="pips">';
+    for (var i = 0; i < total; i++) s += '<i class="' + (i < n ? "on" : "") + '"></i>';
+    return s + "<span>" + label + "</span></div>";
+  }
+
+  /* ---------- pointer drag ---------- */
+  function dragger(m, st, hd) {
+    var g = null;
+    m.root.classList.add("drag");
+    m.root.addEventListener("pointerdown", function (e) {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      m.root.focus({ preventScroll: true });
+      var p = pt(e, st);
+      g = { ox: p.x - m.x, oy: p.y - m.y, sx: p.x, sy: p.y, moved: false, s: [{ x: p.x, y: p.y, t: performance.now() }], vx: 0, vy: 0 };
+      m.root.setPointerCapture(e.pointerId);
+      if (hd.down) hd.down(g);
+    });
+    m.root.addEventListener("pointermove", function (e) {
+      if (!g) return;
+      var p = pt(e, st), now = performance.now();
+      if (!g.moved && Math.hypot(p.x - g.sx, p.y - g.sy) < 4) return;
+      if (!g.moved) { g.moved = true; m.root.classList.remove("idle"); hush(m); if (hd.start) hd.start(g); }
+      g.s.push({ x: p.x, y: p.y, t: now });
+      while (g.s.length > 2 && now - g.s[0].t > 90) g.s.shift();
+      var a = g.s[0], z = g.s[g.s.length - 1], dt = Math.max(8, z.t - a.t);
+      g.vx = (z.x - a.x) / dt; g.vy = (z.y - a.y) / dt;
+      var SW = st.clientWidth, SH = st.clientHeight;
+      m.place(clamp(p.x - g.ox, 0, SW - MW), clamp(p.y - g.oy, 0, SH - MH - 4));
+      if (hd.move) hd.move(g);
+    });
+    function up() {
+      if (!g) return;
+      var gg = g; g = null;
+      if (performance.now() - gg.s[gg.s.length - 1].t > 90) { gg.vx = 0; gg.vy = 0; }
+      if (gg.moved) { if (hd.end) hd.end(gg); } else if (hd.tap) hd.tap(gg);
+    }
+    m.root.addEventListener("pointerup", up);
+    m.root.addEventListener("pointercancel", up);
+  }
+
+  /* ================================================================ */
+  /* the 25 interaction ideas                                          */
+  /* ================================================================ */
+  var ROWS = [
+    { id: "A", name: "Click Jiro himself", hint: "What a click on the mascot does." },
+    { id: "B", name: "Click parts of the page", hint: "He reacts to what you click." },
+    { id: "C", name: "Drag & place", hint: "Pick him up and put him down." },
+    { id: "D", name: "Easter eggs", hint: "Rewards for the curious." },
+    { id: "E", name: "Helpful actions", hint: "Clicks that move you forward." }
+  ];
+
+  var TILES = [
+    /* ---------------- A: click Jiro ---------------- */
+    { code: "A1", title: "Replay (current)", hint: "click Jiro",
+      desc: "Click repeats the current section's line. What ships today.",
+      setup: function (st, T) {
+        S(st, "s-card s-salmon", "left:8px;top:8px;right:8px;height:112px;padding:10px",
+          '<div class="s-lab">/ 02 &middot; Ditch</div><div class="s-h" style="font-size:21px;margin-top:12px">Ditch D*vin.<br>Forget F*ctory.</div>');
+        var m = mascot(st), A = actor(T.ctx, m), line = "I censored them myself. Professional courtesy.";
+        T.ping(m.root);
+        A(async function (c) { await sleep(c, 700); await say(c, m, line, { hold: 2400 }); });
+        m.root.addEventListener("click", function () {
+          T.used();
+          A(async function (c) { await hop(c, m, 9, 320); await say(c, m, line, { hold: 2600 }); });
+        });
+      } },
+    { code: "A2", title: "Poke escalation", hint: "poke Jiro (5x)",
+      desc: "1st poke a hop, 3rd he's dizzy, 5th: \"I'm working here.\"",
+      setup: function (st, T) {
+        var SW = st.clientWidth;
+        S(st, "s-card", "left:8px;top:8px;right:8px;height:100px;padding:10px",
+          '<div class="s-lab sal">03</div><div class="s-h" style="font-size:15px;margin-top:16px;font-weight:600">Flags it before the PR.</div>');
+        bars(st, [[19, 76, "55%"], [19, 86, "42%"]]);
+        var meter = S(st, "meter", "right:10px;bottom:12px", "<i></i><i></i><i></i><i></i><i></i>");
+        var pips = meter.querySelectorAll("i");
+        var m = mascot(st), A = actor(T.ctx, m), n = 0, last = 0;
+        T.ping(m.root);
+        var steps = [null,
+          { face: "cursor", text: "Hm?", hop: 8 },
+          { face: "eyes", text: "Yes? Can I help?", hop: 13 },
+          { face: "dizzy", text: "Whoa. Room's spinning.", spin: true },
+          { face: "flat", text: "That's four.", hop: 4 },
+          { face: "flat", text: "I'm working here.", shake: true }];
+        function paint() {
+          pips.forEach(function (p, i) { p.classList.toggle("on", i < n); });
+          meter.classList.toggle("angry", n >= 5);
+        }
+        m.root.addEventListener("click", function () {
+          T.used();
+          var now = performance.now();
+          if (now - last > 4500 / speed) n = 0;
+          last = now;
+          n = Math.min(n + 1, 6);
+          paint();
+          var s = n > 5 ? { face: "flat", text: "Still working.", shake: true } : steps[n];
+          A(async function (c) {
+            m.setFace(s.face);
+            if (s.spin) await play(c, m.c, [{ transform: "rotate(0)" }, { transform: "rotate(-16deg)" }, { transform: "rotate(13deg)" }, { transform: "rotate(-9deg)" }, { transform: "rotate(5deg)" }, { transform: "rotate(0)" }], 760);
+            else if (s.shake) await play(c, m.t, [{ transform: "translateX(0)" }, { transform: "translateX(-3px)" }, { transform: "translateX(3px)" }, { transform: "translateX(-3px)" }, { transform: "translateX(2px)" }, { transform: "translateX(0)" }], 300);
+            else await hop(c, m, s.hop, 320);
+            await say(c, m, s.text, { hold: 1700 });
+            await sleep(c, 2400);
+            m.setFace("cursor"); n = 0; paint();
+          });
+        });
+      } },
+    { code: "A3", title: "Mini menu", hint: "click Jiro",
+      desc: "Click opens three chips: Tell me more / Give me the tour / Hide.",
+      setup: function (st, T) {
+        var SW = st.clientWidth;
+        var card = S(st, "s-card", "left:8px;top:8px;right:8px;height:104px;padding:10px",
+          '<div class="s-lab">/ 05 &middot; How it works</div>');
+        var head = S(card, "s-h", "left:10px;top:28px;font-size:15px;font-weight:600", 'Mention <span class="s-tag">@jirobot</span>');
+        var btn = S(card, "s-btn", "left:10px;top:66px", "Watch <span>&rarr;</span>");
+        var m = mascot(st), A = actor(T.ctx, m), chips = [], tab = null, hidden = false;
+        T.ping(m.root);
+        var home = { x: 10, y: floorY(st) };
+        function close() { chips.forEach(function (c) { c.remove(); }); chips = []; }
+        function open() {
+          var labels = [["Tell me more", more], ["Give me the tour", tour], ["Hide", hide]];
+          labels.forEach(function (l, i) {
+            var c = h("button", "chip" + (i === 2 ? " dark" : ""), st, l[0]);
+            c.style.left = (m.x + MW + 6) + "px";
+            c.style.top = (m.y - 44 + i * 23) + "px";
+            c.addEventListener("click", function (e) { e.stopPropagation(); close(); l[1](); });
+            chips.push(c);
+            if (!RM) c.animate([{ transform: "translateX(-10px) scale(.6)", opacity: 0 }, { transform: "none", opacity: 1 }], { duration: 180 / speed, delay: i * 55 / speed, fill: "backwards", easing: "cubic-bezier(.3,1.5,.5,1)" });
+          });
+        }
+        function more() { A(async function (c) { m.setFace("eyes"); await hop(c, m, 6); await say(c, m, "Plain words are fine. I'll ask if it's unclear.", { hold: 2400 }); m.setFace("cursor"); }); }
+        function tour() {
+          A(async function (c) {
+            var hr = rel(head, st), br = rel(btn, st);
+            await moveTo(c, m, Math.min(hr.r - 14, st.clientWidth - MW - 4), hr.y - MH + 7, 560, { arc: 30 });
+            head.classList.add("lit"); await squish(c, m);
+            await say(c, m, "Step one: mention me.", { hold: 1300 });
+            head.classList.remove("lit");
+            await moveTo(c, m, br.r + 4, br.cy - MH / 2, 480, { arc: 16 });
+            btn.classList.add("lit"); await squish(c, m);
+            await say(c, m, "Step two: watch me work.", { hold: 1300 });
+            btn.classList.remove("lit");
+            await moveTo(c, m, home.x, home.y, 520, { arc: 22 });
+            await squish(c, m);
+            await say(c, m, "Tour over. Short, like my PRs.", { hold: 1800 });
+          });
+        }
+        function hide() {
+          A(async function (c) {
+            hidden = true;
+            m.setFace("flat");
+            await say(c, m, "Fine.", { hold: 600 });
+            await moveTo(c, m, m.x, st.clientHeight + 8, 320, { ease: ease.in });
+            tab = h("button", "peek", st, "JIRO ▴");
+            tab.style.left = "12px";
+            tab.addEventListener("click", function () {
+              tab.remove(); tab = null; hidden = false;
+              A(async function (c2) {
+                m.setFace("happy");
+                await moveTo(c2, m, home.x, home.y, 380, { ease: ease.back });
+                await say(c2, m, "Missed me?", { hold: 1400 });
+                m.setFace("cursor");
+              });
+            });
+          });
+        }
+        m.root.addEventListener("click", function (e) {
+          e.stopPropagation();
+          T.used();
+          if (hidden) return;
+          if (chips.length) { close(); return; }
+          A(async function (c) {
+            if (Math.abs(m.x - home.x) > 2 || Math.abs(m.y - home.y) > 2) await moveTo(c, m, home.x, home.y, 300);
+            await squish(c, m); open();
+          });
+        });
+        st.addEventListener("click", function () { if (chips.length) close(); });
+      } },
+    { code: "A4", title: "Tell me more", hint: "click Jiro again",
+      desc: "Each click goes one level deeper on the section, then wraps up.",
+      setup: function (st, T) {
+        S(st, "s-card", "left:8px;top:8px;right:8px;height:104px;padding:10px",
+          '<div class="s-lab">/ 06 &middot; Pricing</div><div class="s-h" style="font-size:20px;margin-top:14px">Not market price</div><div class="s-p" style="font-size:8px;margin-top:8px;max-width:170px">Bring your own model subscription. No token markup.</div>');
+        var m = mascot(st), A = actor(T.ctx, m), i = 0;
+        T.ping(m.root);
+        var lines = ["Thirty days on the house. Pull up a stool?", "Your own model subscription. I don't mark up tokens.", "Idle agents sleep, so you don't pay for naps."];
+        m.root.addEventListener("click", function () {
+          T.used();
+          var k = i++;
+          A(async function (c) {
+            if (k >= lines.length) {
+              i = 0; m.setFace("happy");
+              await hop(c, m, 8);
+              await say(c, m, "That's the whole menu.", { hold: 1700, extra: function (x) { x.innerHTML = pipsHtml(3, 3, "done"); } });
+              m.setFace("cursor"); return;
+            }
+            m.setFace(k ? "dots" : "cursor");
+            if (k) await sleep(c, 450);
+            m.setFace("cursor");
+            await hop(c, m, 6 + k * 3);
+            await say(c, m, lines[k], { hold: 2600, width: 160, extra: function (x) { x.innerHTML = pipsHtml(k + 1, 3, k < 2 ? "click for more" : "one more?"); } });
+          });
+        });
+      } },
+    { code: "A5", title: "Double-click spin", hint: "double-click Jiro",
+      desc: "Double-click: he spins and gets silly. Single click still replays.",
+      setup: function (st, T) {
+        var v = S(st, "s-ink", "left:8px;top:8px;right:8px;height:104px;padding:10px",
+          '<div class="s-lab lt">/ 04 &middot; Video</div><div style="font-size:12px;font-weight:600;letter-spacing:-.03em;margin-top:12px;line-height:1.3">Most agents optimize for output. Jiro optimizes for the change you\'d make <span style="color:var(--p-salmon)">on a good day.</span></div>');
+        var m = mascot(st), A = actor(T.ctx, m), timer = null, spins = 0;
+        T.ping(m.root);
+        var line = "Fewer lines. Same fix. You're welcome.";
+        var silly = ["Wheee. Okay, back to work.", "Again? I'm a professional.", "That one was for you."];
+        m.root.addEventListener("click", function (e) {
+          T.used();
+          if (e.detail >= 2) {
+            clearTimeout(timer); timer = null;
+            if (e.detail !== 2) return;
+            var k = spins++;
+            A(async function (c) {
+              m.setFace("happy");
+              await play(c, m.d, [{ transform: "scale(1,1)" }, { transform: "scale(1.18,.8)" }], 110);
+              await Promise.all([
+                play(c, m.c, [{ transform: "rotate(0)" }, { transform: "rotate(360deg)" }], 620, { easing: "cubic-bezier(.4,0,.2,1)" }),
+                play(c, m.j, [{ transform: "translateY(0)" }, { transform: "translateY(-20px)", offset: .45 }, { transform: "translateY(0)" }], 620, { easing: "ease-out" }),
+                play(c, m.d, [{ transform: "scale(1.18,.8)" }, { transform: "scale(.9,1.12)", offset: .3 }, { transform: "scale(1,1)" }], 620)
+              ]);
+              burst(c, st, m.x + MW / 2, m.y + 6, { n: 10, up: true, spread: 2.2 });
+              await squish(c, m, .16);
+              await say(c, m, pick(silly, k), { hold: 1800 });
+              m.setFace("cursor");
+            });
+            return;
+          }
+          clearTimeout(timer);
+          timer = setTimeout(function () {
+            timer = null;
+            if (T.ctx.dead()) return;
+            A(async function (c) { await hop(c, m, 7); await say(c, m, line, { hold: 2200 }); });
+          }, 260);
+        });
+      } },
+
+    /* ---------------- B: click the page ---------------- */
+    { code: "B1", title: "Perch on a heading", hint: "click a heading",
+      desc: "Click a heading: he flies over, sits on it and comments.",
+      setup: function (st, T) {
+        var SW = st.clientWidth;
+        S(st, "s-lab", "left:12px;top:14px", "/ 06 &middot; Pricing");
+        var h1 = S(st, "s-h hot", "left:12px;top:56px;font-size:17px;padding:1px 2px", "Not market price");
+        bars(st, [[14, 80, "62%"], [14, 89, "48%"]]);
+        S(st, "s-lab", "left:12px;top:110px", "/ 08 &middot; Bakeoff");
+        var h2 = S(st, "s-h hot", "left:12px;top:150px;font-size:15px;padding:1px 2px", "Cloud Agent Bakeoff.");
+        bars(st, [[14, 173, "54%"], [14, 182, "40%"]]);
+        var m = mascot(st, { x: SW - MW - 10 }), A = actor(T.ctx, m), at = null;
+        T.ping(h1); T.ping(h2);
+        var home = { x: SW - MW - 10, y: floorY(st) };
+        var lines = new Map([[h1, "Thirty days on the house. Pull up a stool?"], [h2, "The green column is mine. Biased, but sourced."]]);
+        [h1, h2].forEach(function (hd) {
+          hd.addEventListener("click", function () {
+            T.used();
+            A(async function (c) {
+              [h1, h2].forEach(function (x) { x.classList.toggle("lit", x === hd); });
+              var r = rel(hd, st);
+              if (at !== hd) {
+                m.setFace("eyes"); lookAt(m, r.cx, r.cy);
+                await sleep(c, 220);
+                m.look(0, 0); m.setFace("cursor");
+                await moveTo(c, m, clamp(r.r - MW + 4, 4, SW - MW - 4), r.y - MH + 7, 620, { arc: 34 });
+                at = hd;
+                await squish(c, m, .16); await wobble(c, m);
+              } else await hop(c, m, 6);
+              await say(c, m, lines.get(hd), { hold: 2400 });
+              hd.classList.remove("lit");
+            });
+          });
+        });
+        m.root.addEventListener("click", function () {
+          A(async function (c) {
+            if (!at) { await hop(c, m, 8); await say(c, m, "Click a heading. I'll sit on it.", { hold: 1800 }); return; }
+            at = null;
+            await moveTo(c, m, home.x, home.y, 560, { arc: 26 });
+            await squish(c, m);
+            await say(c, m, "Back to my corner.", { hold: 1300 });
+          });
+        });
+      } },
+    { code: "B2", title: "Comment on a pricing card", hint: "click a tier",
+      desc: "Click a tier and he trots under it with a one-liner on that plan.",
+      setup: function (st, T) {
+        var t = S(st, "tier3", "left:8px;top:8px;right:8px",
+          '<div class="hot"><div class="pp"><i class="g"></i><i></i></div><b>Apprentice</b><strong>$0</strong><small>free trial</small></div>' +
+          '<div class="hot feat"><span class="mp">Most picked</span><div class="pp"><i></i><i></i><i></i><i class="g"></i></div><b>Itamae</b><strong>$99</strong><small>/ mo, per dev</small></div>' +
+          '<div class="hot"><div class="pp"><i></i><i class="g"></i><i></i><i class="g"></i></div><b>Omakase</b><strong>$250</strong><small>/ mo, per team</small></div>');
+        var cards = Array.prototype.slice.call(t.children);
+        var lines = ["Thirty days. Three agents. Zero dollars.", "Itamae is the one I'd pick. I'm biased.", "Whole team, one price. Chef's choice."];
+        var m = mascot(st), A = actor(T.ctx, m);
+        cards.forEach(function (cd) { T.ping(cd); });
+        cards.forEach(function (cd, i) {
+          cd.addEventListener("click", function () {
+            T.used();
+            A(async function (c) {
+              cards.forEach(function (x) { x.classList.toggle("lit", x === cd); });
+              var r = rel(cd, st), tx = clamp(r.cx - MW / 2, 4, st.clientWidth - MW - 4);
+              m.setFace("cursor"); m.look(0, 0);
+              if (Math.abs(tx - m.x) > 3) {
+                var steps = Math.max(1, Math.round(Math.abs(tx - m.x) / 45)), x0 = m.x;
+                for (var s = 1; s <= steps; s++) await moveTo(c, m, x0 + (tx - x0) * s / steps, m.y, 200, { arc: 9, ease: ease.out });
+                await squish(c, m, .1, 200);
+              }
+              m.setFace(i === 1 ? "happy" : "eyes"); if (i !== 1) m.look(0, -3);
+              await say(c, m, lines[i], { hold: 2400 });
+              cd.classList.remove("lit"); m.look(0, 0); m.setFace("cursor");
+            });
+          });
+        });
+      } },
+    { code: "B3", title: "Fact-check a bakeoff cell", hint: "click a cell",
+      desc: "Click a table cell: he thinks, then backs it up with a source.",
+      setup: function (st, T) {
+        var tb = S(st, "bake", "left:8px;top:8px;right:8px",
+          '<div class="hd mh">On the menu</div><div class="hd jc hot" data-k="h">jiro.bot</div><div class="hd">D*vin</div>' +
+          '<div><span class="cn">Course 1</span><span class="ct">free trial</span></div><div class="jc hot" data-k="j1">yes, $0</div><div class="oc hot" data-k="o1">free plan, light quota</div>' +
+          '<div><span class="cn">Course 2</span><span class="ct">single dev</span></div><div class="jc hot" data-k="j2">$99/mo, Itamae</div><div class="oc hot" data-k="o2">$20 Pro &middot; $200 Max</div>' +
+          '<div><span class="cn">Course 4</span><span class="ct">your model sub</span></div><div class="jc hot" data-k="j4">yes, no markup</div><div class="oc hot" data-k="o4">GPT only</div>');
+        var facts = {
+          h: ["The green column is mine. Biased, but sourced.", "this table, every row"],
+          j1: ["Checked: Apprentice is $0 for 30 days.", "jiro.bot/#pricing"],
+          j2: ["Checked: Itamae, $99 a month, one dev.", "jiro.bot/#pricing"],
+          j4: ["Checked: your subscription, zero markup.", "jiro.bot/#faq"],
+          o1: ["A free plan exists. Light quota, their words.", "vendor pricing page, Oct 2026"],
+          o2: ["$20 and $200 tiers. Per their site.", "vendor pricing page, Oct 2026"],
+          o4: ["Their plan, their model. No choice.", "vendor docs, Oct 2026"]
+        };
+        var m = mascot(st), A = actor(T.ctx, m);
+        var cells = Array.prototype.slice.call(tb.querySelectorAll(".hot"));
+        T.ping(cells[1]);
+        cells.forEach(function (cell) {
+          cell.addEventListener("click", function () {
+            T.used();
+            var f = facts[cell.dataset.k];
+            A(async function (c) {
+              cells.forEach(function (x) { x.classList.toggle("lit", x === cell); });
+              var r = rel(cell, st);
+              m.setFace("eyes"); lookAt(m, r.cx, r.cy);
+              await sleep(c, 260);
+              m.look(0, 0); m.setFace("dots");
+              await sleep(c, 700);
+              m.setFace("cursor"); await squish(c, m);
+              await say(c, m, f[0], { hold: 2800, width: 160, extra: function (x) { x.innerHTML = '<span class="src"></span>'; x.firstChild.textContent = f[1]; } });
+              cell.classList.remove("lit");
+            });
+          });
+        });
+      } },
+    { code: "B4", title: "Narrate the video", hint: "click the video",
+      desc: "Click the video and he plays commentator: \"Watch the file count.\"",
+      setup: function (st, T) {
+        var SW = st.clientWidth;
+        function rows(n, seed) { var s = ""; for (var i = 0; i < n; i++) { var w = 40 + ((i * 37 + seed) % 55); s += '<i><b class="' + ((i * 7 + seed) % 3 === 0 ? "r" : "") + '" style="width:' + w + '%"></b></i>'; } return s; }
+        var vf = S(st, "vf hot", "left:8px;top:8px;right:8px;height:124px",
+          '<div class="vf-bar"><span>Same task. A focused diff.</span><span class="s-lab lt" style="font-size:5.5px">Video &middot; 1:12</span></div>' +
+          '<div class="vf-split"><div class="vf-side"><span class="s-lab lt" style="font-size:5.5px">Regular agent</span><div class="vf-stat"><span class="add">+12,659</span></div><span class="vf-files"><span class="cnt">171</span> files changed</span><div class="vf-rows">' + rows(9, 3) + '</div></div>' +
+          '<div class="vf-side"><span class="s-lab" style="font-size:5.5px;color:var(--p-green)">Jiro</span><div class="vf-stat"><span class="add">+1,412</span></div><span class="vf-files"><span class="cnt">23</span> files changed</span><div class="vf-rows">' + rows(3, 5) + '</div></div></div>' +
+          '<span class="vf-play"></span><span class="vf-prog"></span>');
+        var sides = vf.querySelectorAll(".vf-side"), cnt = vf.querySelectorAll(".cnt"), playBtn = vf.querySelector(".vf-play"), prog = vf.querySelector(".vf-prog");
+        var m = mascot(st), A = actor(T.ctx, m);
+        T.ping(playBtn);
+        function grow(c, side, ms) {
+          var bs = side.querySelectorAll("b");
+          return Promise.all(Array.prototype.map.call(bs, function (b, i) { return play(c, b, [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], ms, { delay: i * 40, easing: "ease-out" }); }));
+        }
+        function count(c, el, to, ms) { return tween(c, ms, function (p) { el.textContent = Math.round(to * ease.out(p)); }); }
+        vf.addEventListener("click", function () {
+          T.used();
+          A(async function (c) {
+            playBtn.classList.add("off");
+            sides.forEach(function (s) { s.classList.remove("lit"); });
+            cnt[0].textContent = "0"; cnt[1].textContent = "0";
+            prog.style.width = "0";
+            var total = 6200;
+            var bar = tween(c, total, function (p) { prog.style.width = (p * 100) + "%"; });
+            quiet(bar);
+            m.setFace("eyes"); lookAt(m, rel(sides[0], st).cx, rel(sides[0], st).cy);
+            sides[0].classList.add("lit");
+            quiet(grow(c, sides[0], 500));
+            quiet(count(c, cnt[0], 171, 1700));
+            await say(c, m, "Watch the file count.", { hold: 1300 });
+            await say(c, m, "171 files. For a retry.", { hold: 1200 });
+            sides[0].classList.remove("lit"); sides[1].classList.add("lit");
+            lookAt(m, rel(sides[1], st).cx, rel(sides[1], st).cy);
+            quiet(grow(c, sides[1], 400));
+            quiet(count(c, cnt[1], 23, 700));
+            await say(c, m, "Mine: 23. Same fix.", { hold: 1200 });
+            sides[1].classList.remove("lit");
+            m.look(0, 0); m.setFace("happy");
+            await bar;
+            await hop(c, m, 8);
+            await say(c, m, "Fewer lines. You're welcome.", { hold: 1600 });
+            m.setFace("cursor"); playBtn.classList.remove("off");
+          });
+        });
+      } },
+    { code: "B5", title: "Explain a Slack line", hint: "click a message",
+      desc: "Click a line in the thread: his eyes go to it and he explains it.",
+      setup: function (st, T) {
+        var sl = S(st, "slack", "left:8px;top:8px;right:8px",
+          '<div class="slack-h"><span># payments</span><small>THREAD</small></div>' +
+          '<div class="smsg hot"><span class="av">MK</span><div><b>Maya Kim</b><br><span class="mention">@jirobot</span> can you add retries to the payments webhook handler?</div></div>' +
+          '<div class="smsg hot"><span class="av j"></span><div><b>Jiro</b><br><code>handleWebhook</code> charges the card before it records the event.</div></div>' +
+          '<div class="smsg hot" style="margin-bottom:4px"><span class="av j"></span><div>1. Key on <code>event.id</code> &nbsp;2. Then retry</div></div>');
+        sl.querySelectorAll(".av.j").forEach(function (a) {
+          var s = sv("svg", { viewBox: "0 -1 62 56", width: "14", height: "14" });
+          sv("path", { d: BODY_FILL, fill: "#faf8f2" }, s); sv("path", { d: BODY_LINE, transform: "translate(4 0) scale(.125)", fill: "#1d3b2a" }, s);
+          sv("path", { d: FACES.cursor, fill: "#fb5e45" }, s);
+          a.appendChild(s);
+        });
+        var msgs = Array.prototype.slice.call(sl.querySelectorAll(".smsg"));
+        var lines = ["Maya wants retries. Fair ask, risky order.", "Charge first, record later: a retry charges twice.", "Same event.id twice? The second one is a no-op."];
+        var SW = st.clientWidth, m = mascot(st, { x: SW - MW - 10 }), A = actor(T.ctx, m);
+        T.ping(msgs[1]);
+        msgs.forEach(function (msg, i) {
+          msg.addEventListener("click", function () {
+            T.used();
+            A(async function (c) {
+              msgs.forEach(function (x) { x.classList.toggle("lit", x === msg); });
+              var r = rel(msg, st);
+              m.setFace("eyes");
+              lookAt(m, r.cx, r.cy, 3.6);
+              m.c.style.transform = "rotate(" + clamp((r.cx - m.x) / 20, -8, 8) + "deg)";
+              await hop(c, m, 5, 260);
+              await say(c, m, lines[i], { hold: 2600 });
+              msg.classList.remove("lit"); m.look(0, 0); m.c.style.transform = ""; m.setFace("cursor");
+            });
+          });
+        });
+      } },
+
+    /* ---------------- C: drag & place ---------------- */
+    { code: "C1", title: "Snap to a corner", hint: "drag Jiro",
+      desc: "Drag him anywhere; let go and he springs to the nearest lower corner.",
+      setup: function (st, T) {
+        var SW = st.clientWidth, F = floorY(st);
+        S(st, "s-lab", "left:12px;top:14px", "/ FAQ");
+        bars(st, [[12, 32, "70%", "#d9d5ca"], [12, 52, "84%"], [12, 62, "60%"], [12, 82, "70%", "#d9d5ca"], [12, 102, "78%"], [12, 112, "52%"]]);
+        var docks = [S(st, "dock", "left:10px;top:" + F + "px"), S(st, "dock", "left:" + (SW - MW - 10) + "px;top:" + F + "px")];
+        var m = mascot(st), A = actor(T.ctx, m), k = 0;
+        T.ping(m.root);
+        function nearest() { return m.x + MW / 2 < SW / 2 ? 0 : 1; }
+        dragger(m, st, {
+          start: function () { T.used(); A(async function () {}); m.setFace("oo"); docks.forEach(function (d) { d.classList.add("on"); }); },
+          move: function () { var n = nearest(); docks.forEach(function (d, i) { d.classList.toggle("near", i === n); }); },
+          end: function () {
+            var n = nearest(), tx = n ? SW - MW - 10 : 10;
+            A(async function (c) {
+              m.setFace("cursor");
+              var x0 = m.x, y0 = m.y;
+              m.root.classList.remove("idle");
+              await tween(c, 620, function (p) { var e = ease.spring(p); m.place(x0 + (tx - x0) * e, y0 + (F - y0) * e); });
+              m.root.classList.add("idle");
+              docks.forEach(function (d) { d.classList.remove("on", "near"); });
+              await squish(c, m, .14);
+              await say(c, m, pick(["Corner's mine.", "Back where I belong.", "Quiet corner. Good light."], k++), { hold: 1500 });
+            });
+          },
+          tap: function () { T.used(); A(async function (c) { await hop(c, m, 8); await say(c, m, "Drag me. I'll come back.", { hold: 1500 }); }); }
+        });
+      } },
+    { code: "C2", title: "Free placement", hint: "drag Jiro",
+      desc: "He stays wherever you drop him. Your page, your call.",
+      setup: function (st, T) {
+        S(st, "s-card", "left:8px;top:8px;right:8px;height:82px;padding:10px",
+          '<div class="s-lab">/ 07 &middot; Bakeoff</div><div class="s-h" style="font-size:16px;margin-top:12px">Cloud Agent Bakeoff.</div>');
+        bars(st, [[12, 102, "80%"], [12, 112, "64%"], [12, 122, "72%"]]);
+        var m = mascot(st), A = actor(T.ctx, m), k = 0;
+        T.ping(m.root);
+        dragger(m, st, {
+          start: function () { T.used(); A(async function () {}); m.setFace("happy"); },
+          end: function () {
+            A(async function (c) {
+              m.setFace("cursor"); m.root.classList.add("idle");
+              await squish(c, m, .14);
+              await say(c, m, pick(["Here? Bold. I like it.", "Fine. I'll live here.", "Decent view of the table."], k++), { hold: 1500 });
+            });
+          },
+          tap: function () { T.used(); A(async function (c) { await hop(c, m, 8); await say(c, m, "Put me somewhere nice.", { hold: 1500 }); }); }
+        });
+      } },
+    { code: "C3", title: "Toss", hint: "flick Jiro",
+      desc: "Throw him: momentum, wall bounces, a roll, then he settles.",
+      setup: function (st, T) {
+        var SW = st.clientWidth, SH = st.clientHeight, F = floorY(st);
+        bars(st, [[12, 14, "40%", "#d9d5ca"], [12, 30, "76%"], [12, 40, "58%"], [12, 50, "66%"]]);
+        S(st, "", "left:0;right:0;bottom:0;height:8px;background:repeating-linear-gradient(90deg,#e6e3da 0 6px,transparent 6px 12px)");
+        var m = mascot(st), A = actor(T.ctx, m), k = 0;
+        T.ping(m.root);
+        function impact(c, amt) { quiet(squish(c, m, amt, 200)); }
+        dragger(m, st, {
+          start: function () { T.used(); A(async function () {}); m.setFace("oo"); m.c.style.transform = ""; },
+          end: function (g) {
+            A(async function (c) {
+              var vx = clamp(g.vx * 1000, -2600, 2600), vy = clamp(g.vy * 1000, -2600, 2600);
+              var x = m.x, y = m.y, ang = 0, peak = Math.hypot(vx, vy), e = .62, G = 2000;
+              m.root.classList.remove("idle");
+              if (RM) { m.place(x, F); }
+              else await new Promise(function (res, rej) {
+                var last = null;
+                function tick(now) {
+                  if (c.dead()) return rej(STOP);
+                  var dt = last == null ? 0 : Math.min(.034, (now - last) / 1000) * (paused ? 0 : speed);
+                  last = now;
+                  vy += G * dt; x += vx * dt; y += vy * dt; ang += vx * dt * 1.6;
+                  if (x < 0) { x = 0; if (Math.abs(vx) > 250) impact(c, .1); vx = -vx * e; }
+                  if (x > SW - MW) { x = SW - MW; if (Math.abs(vx) > 250) impact(c, .1); vx = -vx * e; }
+                  if (y < 0) { y = 0; vy = -vy * e; }
+                  if (y > F) {
+                    y = F;
+                    if (vy > 260) impact(c, Math.min(.22, vy / 6000));
+                    vy = vy > 140 ? -vy * e : 0;
+                    vx *= .86;
+                  }
+                  if (y >= F && vy === 0) { vx *= Math.exp(-5 * dt); ang *= Math.exp(-6 * dt); }
+                  m.place(x, y);
+                  m.c.style.transform = "rotate(" + ang.toFixed(1) + "deg)";
+                  if (y >= F && vy === 0 && Math.abs(vx) < 12) res(); else requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+              });
+              var a0 = ((ang % 360) + 540) % 360 - 180;
+              await tween(c, 220, function (p) { m.c.style.transform = "rotate(" + (a0 * (1 - p)).toFixed(1) + "deg)"; });
+              m.c.style.transform = ""; m.root.classList.add("idle");
+              var big = peak > 1100;
+              m.setFace(big ? "dizzy" : "cursor");
+              await squish(c, m, .14);
+              await say(c, m, big ? pick(["Again? Please don't.", "I've seen the ceiling. Twice."], k++) : pick(["Nice arc. 7 out of 10.", "Gentle. Thank you."], k++), { hold: 1700 });
+              m.setFace("cursor");
+            });
+          },
+          tap: function () { T.used(); A(async function (c) { await hop(c, m, 8); await say(c, m, "Flick me. Gently.", { hold: 1400 }); }); }
+        });
+      } },
+    { code: "C4", title: "Drop on a section", hint: "drag Jiro onto a card",
+      desc: "Drop him on a block and he sits on it and talks about that block.",
+      setup: function (st, T) {
+        var SW = st.clientWidth, w = (SW - 16 - 12) / 3;
+        S(st, "s-lab", "left:12px;top:12px", "/ Pick a course");
+        var defs = [["Pricing", '<div class="s-h" style="font-size:18px">$99</div><small style="font-size:6.5px">/ mo, Itamae</small>', "Itamae. Final answer."],
+          ["FAQ", '<div class="s-h" style="font-size:18px;color:var(--p-salmon)">+ &minus;</div><small style="font-size:6.5px">8 questions</small>', "Ask me anything. Briefly."],
+          ["Bakeoff", '<div style="display:grid;grid-template-columns:repeat(3,7px);gap:2px;margin-top:3px"><i style="height:7px;background:#111"></i><i style="height:7px;background:var(--p-green)"></i><i style="height:7px;background:#ddd"></i><i style="height:7px;background:#111"></i><i style="height:7px;background:var(--p-green)"></i><i style="height:7px;background:#ddd"></i></div>', "The green column is mine. Sourced."]];
+        var blocks = defs.map(function (d, i) {
+          return S(st, "s-card", "left:" + (8 + i * (w + 6)) + "px;top:64px;width:" + w + "px;height:62px;padding:6px 6px",
+            '<div class="s-lab" style="font-size:6px;margin-bottom:6px">' + d[0] + "</div>" + d[1]);
+        });
+        var m = mascot(st), A = actor(T.ctx, m), home = { x: 10, y: floorY(st) };
+        T.ping(m.root);
+        function over() {
+          var cx = m.x + MW / 2, cy = m.y + MH / 2;
+          for (var i = 0; i < blocks.length; i++) { var r = rel(blocks[i], st); if (cx > r.x - 6 && cx < r.r + 6 && cy > r.y - 22 && cy < r.b + 6) return i; }
+          return -1;
+        }
+        dragger(m, st, {
+          start: function () { T.used(); A(async function () {}); m.setFace("eyes"); blocks.forEach(function (b) { b.classList.remove("lit"); }); },
+          move: function () { var o = over(); blocks.forEach(function (b, i) { b.classList.toggle("lit", i === o); }); },
+          end: function () {
+            var o = over();
+            A(async function (c) {
+              m.setFace("cursor");
+              if (o < 0) {
+                await moveTo(c, m, home.x, home.y, 480, { arc: 18 });
+                await squish(c, m);
+                await say(c, m, "Nothing there. Home it is.", { hold: 1400 }); return;
+              }
+              var r = rel(blocks[o], st);
+              await moveTo(c, m, clamp(r.cx - MW / 2, 2, SW - MW - 2), r.y - MH + 7, 220, { ease: ease.out });
+              await squish(c, m, .16);
+              m.setFace("happy");
+              await say(c, m, defs[o][2], { hold: 2200 });
+              blocks[o].classList.remove("lit"); m.setFace("cursor");
+            });
+          },
+          tap: function () { T.used(); A(async function (c) { await hop(c, m, 8); await say(c, m, "Drop me on a card.", { hold: 1400 }); }); }
+        });
+      } },
+    { code: "C5", title: "Picked-up reaction", hint: "grab and hold Jiro",
+      desc: "While held he panics, sweats and dangles; on drop, a big squash.",
+      setup: function (st, T) {
+        S(st, "s-card", "left:8px;top:8px;right:8px;height:70px;padding:10px",
+          '<div class="s-lab">/ 03 &middot; Pillars</div><div class="s-h" style="font-size:14px;font-weight:600;margin-top:12px">Small, explained PRs.</div>');
+        bars(st, [[12, 92, "70%"], [12, 102, "54%"]]);
+        var m = mascot(st), A = actor(T.ctx, m), F = floorY(st), k = 0;
+        T.ping(m.root);
+        function drop() {
+          m.root.classList.remove("held");
+          m.t.style.transform = "";
+          A(async function (c) {
+            var y0 = m.y, dist = F - y0;
+            if (dist > 1) await tween(c, Math.sqrt(dist) * 26, function (p) { m.place(m.x, y0 + dist * ease.in(p)); });
+            m.place(m.x, F);
+            if (!RM) burst(c, st, m.x + MW / 2, F + MH - 2, { n: 8, colors: ["#c9c3b2", "#e3dfd3"], spread: 1.2, up: true, dist: 10 });
+            m.setFace("flat");
+            if (!RM) await play(c, m.d, [{ transform: "scale(1,1)" }, { transform: "scale(1.38,.62)" }, { transform: "scale(.86,1.16)" }, { transform: "scale(1.06,.95)" }, { transform: "scale(1,1)" }], 520, { easing: "ease-out" });
+            m.root.classList.add("idle");
+            await say(c, m, dist > 30 ? pick(["Warn a guy next time.", "Floor. Rude."], k++) : "Oh. That's it?", { hold: 1600 });
+            m.setFace("cursor");
+          });
+        }
+        dragger(m, st, {
+          down: function () {
+            T.used();
+            A(async function () {});
+            m.root.classList.remove("idle"); m.root.classList.add("held"); m.setFace("oo");
+            m.place(m.x, Math.max(0, m.y - 8));
+          },
+          move: function (g) { m.t.style.transform = "rotate(" + clamp(-g.vx * 22, -28, 28).toFixed(1) + "deg)"; },
+          end: drop,
+          tap: drop
+        });
+      } },
+
+    /* ---------------- D: easter eggs ---------------- */
+    { code: "D1", title: "@jirobot waves", hint: "click @jirobot",
+      desc: "Click the @jirobot tag anywhere: he waves. \"That's me.\"",
+      setup: function (st, T) {
+        var card = S(st, "s-card", "left:8px;top:8px;right:8px;height:118px;padding:10px",
+          '<div class="s-lab">/ 01 &middot; Hero</div><div class="s-h" style="font-size:17px;margin-top:12px">The <span class="s-hl">tasteful</span><br>software engineer</div>');
+        var p = h("div", "s-p", card); p.style.marginTop = "8px"; p.style.fontSize = "9px";
+        p.innerHTML = 'Call him in with <span class="s-tag hot">@jirobot</span>.';
+        var tag = p.querySelector(".s-tag");
+        var SW = st.clientWidth, m = mascot(st, { x: SW - MW - 12 }), A = actor(T.ctx, m), k = 0;
+        T.ping(tag);
+        tag.addEventListener("click", function () {
+          T.used();
+          A(async function (c) {
+            var r = rel(tag, st);
+            burst(c, st, r.cx, r.cy, { n: 8, colors: ["#3cf56a", "#173d2b"], dist: 12 });
+            m.setFace("happy");
+            await Promise.all([hop(c, m, 10), wave(c, m, 4)]);
+            await say(c, m, pick(["That's me. Hi.", "You rang?", "Still me."], k++), { hold: 1500 });
+            m.setFace("cursor");
+          });
+        });
+        m.root.addEventListener("click", function () { A(async function (c) { m.setFace("eyes"); lookAt(m, rel(tag, st).cx, rel(tag, st).cy); await say(c, m, "Try the green tag.", { hold: 1400 }); m.look(0, 0); m.setFace("cursor"); }); });
+      } },
+    { code: "D2", title: "Uncensor D*vin", hint: "click D*vin",
+      desc: "The name peeks uncensored; he flies his cursor over and fixes it.",
+      setup: function (st, T) {
+        var card = S(st, "s-card s-salmon", "left:8px;top:8px;right:8px;bottom:8px;padding:10px",
+          '<div class="s-lab">/ 02 &middot; Ditch</div>');
+        var hd = S(card, "s-h", "left:10px;top:30px;font-size:21px;letter-spacing:-.06em;line-height:1.05",
+          'Ditch <span class="hot w" data-to="e" data-line="Nope. Professional courtesy.">D<span class="sx">*</span>vin</span>.<br>Forget <span class="hot w" data-to="a" data-line="Them too. Courtesy is policy.">F<span class="sx">*</span>ctory</span>.<br><span style="font-size:14px">Stop slopping around.</span>');
+        var words = Array.prototype.slice.call(hd.querySelectorAll(".w"));
+        var SW = st.clientWidth, m = mascot(st, { x: SW - MW - 14 }), A = actor(T.ctx, m);
+        var fly = S(st, "flycur", "display:none");
+        T.ping(words[0]);
+        function flip(c, el, ch) {
+          var half = [{ transform: "scaleY(1)" }, { transform: "scaleY(0)" }];
+          return play(c, el, half, 90).then(function () { el.textContent = ch; return play(c, el, half.slice().reverse(), 90); });
+        }
+        words.forEach(function (w) {
+          var sx = w.querySelector(".sx");
+          sx.style.display = "inline-block";
+          w.addEventListener("click", function () {
+            T.used();
+            A(async function (c) {
+              sx.textContent = "*"; fly.style.display = "none"; m.root.classList.remove("nocur");
+              await flip(c, sx, w.dataset.to);
+              m.setFace("oo"); await hop(c, m, 10, 300);
+              await sleep(c, 450);
+              m.setFace("cursor");
+              var r = rel(sx, st);
+              var fx = m.x + 41 * SCALE, fy = m.y + 24 * SCALE, fw = 6 * SCALE, fh = 9 * SCALE;
+              m.root.classList.add("nocur");
+              fly.style.display = "block";
+              await tween(c, 380, function (p) {
+                var e = ease.io(p), arc = -26 * 4 * p * (1 - p);
+                fly.style.left = (fx + (r.x - 1 - fx) * e) + "px"; fly.style.top = (fy + (r.y - fy) * e + arc) + "px";
+                fly.style.width = (fw + (r.w + 2 - fw) * e) + "px"; fly.style.height = (fh + (r.h - fh) * e) + "px";
+                fly.style.background = p > .5 ? "#111" : "#f35b45";
+              });
+              for (var i = 0; i < 2; i++) { fly.style.opacity = 0; await sleep(c, 110); fly.style.opacity = 1; await sleep(c, 110); }
+              sx.textContent = "*";
+              await tween(c, 320, function (p) {
+                var e = ease.io(p);
+                fly.style.left = (r.x - 1 + (fx - r.x + 1) * e) + "px"; fly.style.top = (r.y + (fy - r.y) * e) + "px";
+                fly.style.width = (r.w + 2 + (fw - r.w - 2) * e) + "px"; fly.style.height = (r.h + (fh - r.h) * e) + "px";
+                fly.style.background = p > .5 ? "#f35b45" : "#111";
+              });
+              fly.style.display = "none"; m.root.classList.remove("nocur");
+              await squish(c, m);
+              await say(c, m, w.dataset.line, { hold: 1900 });
+            });
+          });
+        });
+      } },
+    { code: "D3", title: "Type \"jiro\": sushi mode", hint: "focus + type jiro",
+      desc: "With the tile focused, type j-i-r-o (or tap the keys): sushi hat.",
+      setup: function (st, T) {
+        var SW = st.clientWidth;
+        st.tabIndex = 0;
+        st.setAttribute("aria-label", "Type jiro to toggle sushi mode");
+        S(st, "s-card", "left:8px;top:8px;right:8px;height:92px;padding:10px",
+          '<div class="s-lab">/ 09 &middot; Reserve</div><div class="s-h" style="font-size:16px;margin-top:12px">Pull up a stool.</div>');
+        var term = S(st, "term", "left:18px;top:72px;right:18px", '&gt; <span class="buf"></span><i></i>');
+        var buf = term.querySelector(".buf");
+        var keys = {}, typed = "", on = false;
+        "jiro".split("").forEach(function (ch, i) {
+          var k = S(st, "key", "left:" + (SW - 8 - (4 - i) * 23) + "px;top:" + (st.clientHeight - 32) + "px", ch.toUpperCase());
+          k.addEventListener("pointerdown", function (e) { e.preventDefault(); st.focus({ preventScroll: true }); press(ch); });
+          keys[ch] = k;
+        });
+        var m = mascot(st), A = actor(T.ctx, m);
+        T.ping(keys.j);
+        function press(ch) {
+          T.used();
+          typed = (typed + ch).slice(-12);
+          buf.textContent = typed;
+          if (keys[ch]) { var k = keys[ch]; k.classList.add("down"); setTimeout(function () { k.classList.remove("down"); }, 110); }
+          var prog = 0;
+          for (var n = 4; n > 0; n--) if (typed.slice(-n) === "jiro".slice(0, n)) { prog = n; break; }
+          "jiro".split("").forEach(function (c2, i) { keys[c2].classList.toggle("got", i < prog); });
+          if (prog === 4) { typed = ""; toggle(); }
+        }
+        function toggle() {
+          on = !on;
+          A(async function (c) {
+            if (on) {
+              buf.textContent = "sushi mode: on";
+              m.root.classList.add("sushi"); m.setFace("happy");
+              quiet(play(c, m.hat, [{ transform: "translateY(-40px) rotate(-30deg)", opacity: 0 }, { transform: "translateY(2px) rotate(4deg)", opacity: 1, offset: .7 }, { transform: "translateY(0) rotate(0)" }], 420, { easing: "ease-out" }));
+              await sleep(c, 300);
+              burst(c, st, m.x + MW / 2, m.y, { n: 14, colors: ["#f8f6f0", "#f35b45", "#f8f6f0", "#173d2b"], up: true, spread: 2.4 });
+              await squish(c, m, .18);
+              await say(c, m, "Sushi mode. Obviously.", { hold: 2000 });
+              m.setFace("cursor");
+            } else {
+              buf.textContent = "sushi mode: off";
+              await play(c, m.hat, [{ transform: "none", opacity: 1 }, { transform: "translate(18px,-40px) rotate(60deg)", opacity: 0 }], 360, { easing: "ease-in" });
+              m.root.classList.remove("sushi");
+              await say(c, m, "Back to work.", { hold: 1400 });
+            }
+            "jiro".split("").forEach(function (c2) { keys[c2].classList.remove("got"); });
+          });
+        }
+        st.addEventListener("keydown", function (e) {
+          if (e.target !== st || e.metaKey || e.ctrlKey || e.altKey) return;
+          if (/^[a-z]$/i.test(e.key)) { e.preventDefault(); press(e.key.toLowerCase()); }
+        });
+        st.addEventListener("pointerdown", function (e) { if (e.target === st || !e.target.closest(".m")) st.focus({ preventScroll: true }); });
+        st.addEventListener("focus", function () { st.classList.add("kfocus"); });
+        st.addEventListener("blur", function () { st.classList.remove("kfocus"); });
+        m.root.addEventListener("click", function () { A(async function (c) { await hop(c, m, 7); await say(c, m, "Type my name. Go on.", { hold: 1500 }); }); });
+      } },
+    { code: "D4", title: "Bouncy wordmark", hint: "click the letters",
+      desc: "Click the pixel JIRO.BOT letters: each one bounces. Find all eight.",
+      setup: function (st, T) {
+        var SW = st.clientWidth, SH = st.clientHeight;
+        var foot = S(st, "", "left:8px;top:8px;right:8px;bottom:8px;background:var(--p-salmon);border:1.5px solid var(--p-ink)");
+        S(foot, "s-lab", "left:0;right:0;top:0;padding:7px 8px;border-bottom:1.5px solid var(--p-ink);display:flex;justify-content:space-between;font-size:6px",
+          '<span>/ Built by the Nori team</span><span class="ct">2026</span>');
+        var ct = foot.querySelector(".ct");
+        var fs = Math.floor((SW - 34) / 8 / 0.95);
+        var wm = S(foot, "wm", "left:0;right:0;bottom:14px;font-size:" + fs + "px");
+        var letters = "JIRO.BOT".split("").map(function (ch) { return h("span", "", wm, ch); });
+        var m = mascot(st, { x: 22 }), A = actor(T.ctx, m), got = 0;
+        T.ping(letters[0]);
+        requestAnimationFrame(function () { var r = rel(wm, st); m.place(22, r.y - MH + 4); });
+        letters.forEach(function (L, i) {
+          L.addEventListener("click", function () {
+            T.used();
+            if (!RM) L.animate([{ transform: "translateY(0) scale(1,1)" }, { transform: "translateY(0) scale(1.15,.85)", offset: .12 }, { transform: "translateY(-18px) scale(.9,1.12)", offset: .45 }, { transform: "translateY(0) scale(1.15,.85)", offset: .82 }, { transform: "translateY(0) scale(1,1)" }], { duration: 480 / speed, easing: "ease-out" });
+            if (!L.classList.contains("got")) { L.classList.add("got"); got++; ct.textContent = got + " / 8"; }
+            var r = rel(L, st);
+            A(async function (c) {
+              if (got === 8) {
+                got = 0;
+                burst(c, st, rel(wm, st).cx, rel(wm, st).y, { n: 22, up: true, spread: 2.6, dist: 40 });
+                m.setFace("happy");
+                await hop(c, m, 16, 420);
+                await say(c, m, "All eight. No prize. Just me.", { hold: 2200 });
+                letters.forEach(function (x) { x.classList.remove("got"); }); ct.textContent = "2026"; m.setFace("cursor");
+                return;
+              }
+              m.setFace("eyes"); lookAt(m, r.cx, r.cy, 3.4);
+              if (Math.abs(r.cx - (m.x + MW / 2)) < 30) await hop(c, m, 12, 380); else await sleep(c, 380);
+              await sleep(c, 500);
+              m.look(0, 0); m.setFace("cursor");
+            });
+          });
+        });
+        m.root.addEventListener("click", function () { A(async function (c) { await hop(c, m, 6); await say(c, m, "Hit the letters. They like it.", { hold: 1500 }); }); });
+      } },
+    { code: "D5", title: "Triple-click: rice washing", hint: "triple-click Jiro",
+      desc: "Triple-click: \"10 years washing rice.\" He shows you, badly.",
+      setup: function (st, T) {
+        S(st, "s-card", "left:8px;top:8px;right:8px;height:78px;padding:10px",
+          '<div class="s-lab">/ FAQ</div><div style="font-weight:600;font-size:11px;letter-spacing:-.02em;margin-top:12px">Who makes Jiro</div><div class="s-p" style="font-size:8px;margin-top:2px">The Nori team, who build agent-first tooling.</div>');
+        var taps = S(st, "taps", "left:" + (10 + MW + 8) + "px;top:" + (st.clientHeight - 20) + "px", "<i></i><i></i><i></i>");
+        var dots = taps.querySelectorAll("i"), clearT = null;
+        var m = mascot(st), A = actor(T.ctx, m);
+        var bowl = S(st, "bowl", "display:none");
+        bowl.innerHTML = '<svg viewBox="0 0 16 9" shape-rendering="crispEdges"><path d="M0 2.4H16Q15.4 9 8 9Q.6 9 0 2.4Z" fill="#173d2b"/><ellipse cx="8" cy="2.6" rx="7.2" ry="1.5" fill="#9fd6ee"/><g class="grains"><rect x="5" y="2" width="1.4" height=".9" fill="#fff"/><rect x="8" y="1.6" width="1.4" height=".9" fill="#fff"/><rect x="10" y="2.6" width="1.4" height=".9" fill="#fff"/><rect x="6.8" y="3" width="1.4" height=".9" fill="#fff"/></g></svg>';
+        T.ping(m.root);
+        function paint(n) { dots.forEach(function (d, i) { d.classList.toggle("on", i < n); }); clearTimeout(clearT); clearT = setTimeout(function () { dots.forEach(function (d) { d.classList.remove("on"); }); }, 700); }
+        m.root.addEventListener("click", function (e) {
+          T.used();
+          var n = Math.max(1, Math.min(3, e.detail || 1));
+          paint(n);
+          if (n === 1) { A(async function (c) { await squish(c, m, .1); }); return; }
+          if (n === 2) { A(async function (c) { await hop(c, m, 6); }); return; }
+          A(async function (c) {
+            bowl.style.left = (m.x + MW - 6) + "px"; bowl.style.top = (m.y + MH - 14) + "px"; bowl.style.display = "block";
+            await play(c, bowl, [{ transform: "translateY(10px) scale(.4)", opacity: 0 }, { transform: "none", opacity: 1 }], 220, { easing: "cubic-bezier(.3,1.5,.5,1)" });
+            m.setFace("sleepy");
+            m.root.classList.remove("idle");
+            var sway = play(c, m.t, [{ transform: "rotate(0)" }, { transform: "rotate(-7deg) translateX(-1px)" }, { transform: "rotate(7deg) translateX(1px)" }, { transform: "rotate(0)" }], 620, { iterations: 5 });
+            quiet(sway);
+            (async function () { for (var i = 0; i < 6 && !c.dead(); i++) { burst(c, st, m.x + MW + 9, m.y + MH - 12, { n: 3, colors: ["#9fd6ee", "#ffffff"], up: true, spread: 1, dist: 8 }); await sleep(c, 480); } })().catch(function () {});
+            await say(c, m, "10 years washing rice.", { hold: 1700 });
+            await say(c, m, "Still not perfect.", { hold: 1300 });
+            await sway;
+            m.root.classList.add("idle"); m.setFace("cursor");
+            await play(c, bowl, [{ opacity: 1 }, { opacity: 0, transform: "translateY(6px)" }], 200);
+            bowl.style.display = "none";
+          });
+        });
+      } },
+
+    /* ---------------- E: helpful actions ---------------- */
+    { code: "E1", title: "Cheer on Reserve", hint: "click Reserve a seat",
+      desc: "Click Reserve: he cheers and puts your cursor in the email field.",
+      setup: function (st, T) {
+        var rv = S(st, "rv s-ink", "left:8px;top:8px;right:8px;bottom:8px;padding:10px");
+        rv.innerHTML = '<div class="s-lab sal">/ Reserve a seat</div><div class="s-h" style="font-size:14px;margin-top:8px;color:#fff">Pull up a stool at the counter.</div>' +
+          '<div class="s-lab lt" style="margin-top:12px;font-size:6px">Work email</div><input type="email" placeholder="you@company.com" style="margin-top:4px" aria-label="Work email">' +
+          '<button class="s-btn" type="button" style="margin-top:6px">Reserve a seat <span>&rarr;</span></button>';
+        var input = rv.querySelector("input"), btn = rv.querySelector("button");
+        var SW = st.clientWidth, m = mascot(st, { x: SW - MW - 12 }), A = actor(T.ctx, m);
+        T.ping(btn);
+        function go() {
+          T.used();
+          var v = input.value.trim();
+          A(async function (c) {
+            var r = rel(btn, st);
+            if (!v) {
+              input.focus({ preventScroll: true }); input.classList.add("lit");
+              burst(c, st, r.cx, r.y, { n: 16, up: true, spread: 2.2 });
+              m.setFace("happy");
+              await Promise.all([hop(c, m, 16, 380).then(function () { return hop(c, m, 10, 300); }), wave(c, m, 4)]);
+              await say(c, m, "Yes! Email first, then sushi.", { hold: 2000 });
+              input.classList.remove("lit");
+            } else if (v.indexOf("@") < 1) {
+              m.setFace("flat"); input.focus({ preventScroll: true });
+              await say(c, m, "That's not an email. I checked.", { hold: 1800 });
+            } else {
+              btn.classList.add("done"); btn.innerHTML = "Reserved <span>&check;</span>";
+              burst(c, st, r.cx, r.y, { n: 24, up: true, spread: 2.6, dist: 36 });
+              m.setFace("happy");
+              await hop(c, m, 18, 420);
+              await say(c, m, "Seat's yours. See you at the counter.", { hold: 2200 });
+            }
+            m.setFace("cursor");
+          });
+        }
+        btn.addEventListener("click", go);
+        input.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); go(); } });
+      } },
+    { code: "E2", title: "Explain a selection", hint: "select some text",
+      desc: "Highlight any text and he offers an \"Explain this?\" chip.",
+      setup: function (st, T) {
+        var card = S(st, "s-card", "left:8px;top:8px;right:8px;height:126px;padding:10px",
+          '<div class="s-lab">/ 01 &middot; Hero</div>');
+        var p = S(card, "s-p sel", "left:10px;right:10px;top:26px;font-size:10px;line-height:1.5",
+          "Jiro is a craftsperson: an expert engineer who cares more about quality than volume. He will push back on your ideas and flag missteps early.");
+        var SW = st.clientWidth, m = mascot(st, { x: SW - MW - 12 }), A = actor(T.ctx, m);
+        var chip = h("button", "chip dark", st, "Explain this?");
+        chip.style.display = "none";
+        T.ping(p);
+        var current = "";
+        function explain(t) {
+          var s = t.toLowerCase();
+          if (/craft/.test(s)) return "Craftsperson: I'd rather ship less, better.";
+          if (/quality|volume/.test(s)) return "Quality over volume: 23 files, not 171.";
+          if (/push back/.test(s)) return "Push back: I say no before I write code.";
+          if (/misstep|early/.test(s)) return "Flag early: the cheapest bug never reaches the PR.";
+          if (/expert|engineer/.test(s)) return "Engineer: I read the code before I touch it.";
+          return "“" + (t.length > 26 ? t.slice(0, 24) + "…" : t) + "”: means I care. A lot.";
+        }
+        T.onSelection(function (sel) {
+          if (!sel.rangeCount || sel.isCollapsed) { chip.style.display = "none"; return; }
+          var range = sel.getRangeAt(0);
+          if (!p.contains(range.commonAncestorContainer)) { chip.style.display = "none"; return; }
+          var text = sel.toString().replace(/\s+/g, " ").trim();
+          if (text.length < 2) { chip.style.display = "none"; return; }
+          current = text;
+          T.used();
+          var rects = range.getClientRects(), lr = rects[rects.length - 1], s = st.getBoundingClientRect();
+          chip.style.display = "block";
+          chip.style.left = clamp(lr.right - s.left - chip.offsetWidth / 2, 4, st.clientWidth - chip.offsetWidth - 4) + "px";
+          chip.style.top = clamp(lr.bottom - s.top + 5, 4, st.clientHeight - 24) + "px";
+        });
+        chip.addEventListener("mousedown", function (e) { e.preventDefault(); });
+        chip.addEventListener("click", function () {
+          T.used();
+          var t = current;
+          chip.style.display = "none";
+          A(async function (c) {
+            var pr = rel(p, st);
+            m.setFace("dots"); await sleep(c, 450);
+            m.setFace("eyes"); lookAt(m, pr.cx, pr.cy);
+            await hop(c, m, 6);
+            await say(c, m, explain(t), { hold: 2800, width: 160 });
+            m.look(0, 0); m.setFace("cursor");
+          });
+        });
+      } },
+    { code: "E3", title: "Point to what's next", hint: "click Jiro",
+      desc: "Click: he points down, teases the next section and scrolls you there.",
+      setup: function (st, T) {
+        var SH = st.clientHeight, gap = SH - 22;
+        var sc = S(st, "scroller", "height:" + (gap + SH) + "px");
+        S(sc, "s-lab", "left:12px;top:14px", "/ 08 &middot; Bakeoff");
+        S(sc, "s-h", "left:12px;top:32px;font-size:17px", "Cloud Agent<br>Bakeoff.");
+        bars(sc, [[12, 76, "70%"], [12, 86, "56%"], [12, 96, "64%"]]);
+        var sec = S(sc, "", "left:0;right:0;top:" + gap + "px;height:" + SH + "px;border-top:1.5px solid var(--p-ink);background:#fff");
+        S(sec, "s-lab", "left:12px;top:10px", "/ 06 &middot; Pricing");
+        var ph = S(sec, "s-h", "left:12px;top:26px;font-size:17px;padding:1px 2px", "Not market price");
+        S(sec, "tier3", "left:8px;right:8px;top:54px", '<div><b>Apprentice</b><strong style="font-size:14px">$0</strong></div><div class="feat"><b>Itamae</b><strong style="font-size:14px">$99</strong></div><div><b>Omakase</b><strong style="font-size:14px">$250</strong></div>');
+        var m = mascot(st), A = actor(T.ctx, m), down = false, y = 0;
+        var arrow = S(st, "arrow-dn", "left:" + (m.x + MW + 4) + "px;top:" + (m.y + 16) + "px", ARROW);
+        T.ping(m.root);
+        function scrollTo(c, to, ms) { var y0 = y; return tween(c, ms, function (p) { y = y0 + (to - y0) * ease.io(p); sc.style.transform = "translateY(" + (-y) + "px)"; }); }
+        m.root.addEventListener("click", function () {
+          T.used();
+          A(async function (c) {
+            if (!down) {
+              m.setFace("eyes"); m.look(0, 3.5);
+              arrow.classList.add("on");
+              await play(c, m.c, [{ transform: "rotate(0)" }, { transform: "rotate(10deg)" }], 160, { keep: true });
+              await say(c, m, "Pricing's next. Spoiler: fair.", { hold: 1500 });
+              arrow.classList.remove("on");
+              m.c.style.transform = ""; m.look(0, 0); m.setFace("cursor");
+              await Promise.all([scrollTo(c, gap - 8, 800), hop(c, m, 10, 500)]);
+              down = true;
+              ph.classList.add("lit");
+              await say(c, m, "Told you. Fair.", { hold: 1500 });
+              ph.classList.remove("lit");
+            } else {
+              m.setFace("eyes"); m.look(0, -3.5);
+              await say(c, m, "Back to the top.", { hold: 900 });
+              m.look(0, 0); m.setFace("cursor");
+              await scrollTo(c, 0, 700);
+              down = false;
+            }
+          });
+        });
+      } },
+    { code: "E4", title: "Answer the FAQ first", hint: "click a question",
+      desc: "Click a question: he answers in one line, then the full answer opens.",
+      setup: function (st, T) {
+        var card = S(st, "s-card faq", "left:8px;top:8px;right:8px;padding:8px 10px 2px", '<div class="s-lab" style="margin-bottom:4px">/ FAQ</div>');
+        var qa = [["Does he merge without review", "No. Jiro opens a pull request and waits for a human to review and merge it.", "No. I open a PR and wait for you."],
+          ["What does he have access to", "Only the repositories and integrations your team connects, inside an isolated cloud session.", "Only what you connect. Nothing else."],
+          ["Which coding agents can I run", "Claude Code, Codex, and Gemini CLI, on the model subscription you already pay for.", "Claude Code, Codex, Gemini CLI. Your pick."]];
+        var rows = qa.map(function (x, i) {
+          var r = h("div", "row-q", card);
+          if (i === qa.length - 1) r.style.borderBottom = "0";
+          var q = h("div", "q hot", r, x[0]);
+          var a = h("div", "a", r); h("p", "", a, x[1]);
+          return { r: r, q: q, a: a };
+        });
+        var SW = st.clientWidth, m = mascot(st, { x: SW - MW - 10 }), A = actor(T.ctx, m);
+        T.ping(rows[0].q);
+        function setOpen(c, row, open) {
+          var from = row.a.offsetHeight, to = open ? row.a.scrollHeight : 0;
+          row.r.classList.toggle("open", open);
+          return tween(c, 260, function (p) { row.a.style.height = (from + (to - from) * ease.out(p)) + "px"; });
+        }
+        rows.forEach(function (row, i) {
+          row.q.addEventListener("click", function () {
+            T.used();
+            A(async function (c) {
+              if (row.r.classList.contains("open")) { await setOpen(c, row, false); return; }
+              rows.forEach(function (o) { o.q.classList.toggle("lit", o === row); });
+              await Promise.all(rows.filter(function (o) { return o !== row && o.r.classList.contains("open"); }).map(function (o) { return setOpen(c, o, false); }));
+              var r = rel(row.q, st);
+              m.setFace("eyes"); lookAt(m, r.cx, r.cy);
+              await hop(c, m, 7, 280);
+              m.look(0, 0); m.setFace("cursor");
+              await say(c, m, qa[i][2], { stay: true });
+              await sleep(c, 650);
+              hush(m);
+              row.q.classList.remove("lit");
+              await setOpen(c, row, true);
+            });
+          });
+        });
+      } },
+    { code: "E5", title: "Guided tour", hint: "click Jiro",
+      desc: "Click: he walks you through three stops, then gets out of the way.",
+      setup: function (st, T) {
+        var SW = st.clientWidth, col = SW - 74;
+        S(st, "s-lab", "left:12px;top:12px", "/ 01 &middot; Hero");
+        var hh = S(st, "s-h", "left:12px;top:26px;font-size:15px;width:" + col + "px;padding:1px 2px", "The tasteful software engineer");
+        var tiers = S(st, "tier3", "left:8px;top:74px;width:" + (col + 4) + "px", '<div><b>$0</b></div><div class="feat"><b>$99</b></div><div><b>$250</b></div>');
+        var rb = S(st, "s-btn", "left:12px;top:" + (st.clientHeight - 54) + "px", "Reserve a seat <span>&rarr;</span>");
+        var skip = h("button", "chip", st, "Skip tour ×");
+        skip.style.left = "12px"; skip.style.top = (st.clientHeight - 26) + "px"; skip.style.display = "none";
+        var home = { x: SW - MW - 10, y: floorY(st) };
+        var m = mascot(st, { x: home.x }), A = actor(T.ctx, m), touring = false;
+        T.ping(m.root);
+        var stops = [[hh, "This is me. Tasteful, allegedly."], [tiers, "Fair prices. Itamae's my pick."], [rb, "Then pull up a stool."]];
+        function end(msg) {
+          touring = false; skip.style.display = "none";
+          stops.forEach(function (s) { s[0].classList.remove("lit"); });
+          A(async function (c) {
+            await moveTo(c, m, home.x, home.y, 520, { arc: 20 });
+            await squish(c, m);
+            await say(c, m, msg, { hold: 1700 });
+          });
+        }
+        skip.addEventListener("click", function () { end("Skipped. I'll be here."); });
+        m.root.addEventListener("click", function () {
+          T.used();
+          if (touring) { end("Skipped. I'll be here."); return; }
+          touring = true; skip.style.display = "block";
+          A(async function (c) {
+            m.setFace("happy");
+            await hop(c, m, 10);
+            await say(c, m, "Tour. Three stops.", { hold: 1000 });
+            m.setFace("cursor");
+            for (var i = 0; i < stops.length; i++) {
+              var r = rel(stops[i][0], st);
+              await moveTo(c, m, clamp(r.r + 6, 4, SW - MW - 4), clamp(r.cy - MH / 2 - 4, 4, floorY(st)), 520, { arc: 18 });
+              stops[i][0].classList.add("lit");
+              await squish(c, m);
+              m.setFace("eyes"); lookAt(m, r.cx, r.cy);
+              await say(c, m, stops[i][1], { hold: 1700, place: i === 0 ? "below" : null, extra: (function (k) { return function (x) { x.innerHTML = pipsHtml(k + 1, 3, (k + 1) + " / 3"); }; })(i) });
+              m.look(0, 0); m.setFace("cursor");
+              stops[i][0].classList.remove("lit");
+            }
+            end("Tour over. Short, like my PRs.");
+          });
+        });
+      } }
+  ];
+
+  /* ---------- board ---------- */
+  var board = document.getElementById("board");
+  var tileEls = {};
+  var dirty = false;
+  var statusEl = document.getElementById("status");
+  var selHandlers = {};
+  function setStatus(text, ok) { statusEl.textContent = text; statusEl.classList.toggle("ok", !!ok); }
+  function markDirty() { dirty = true; setStatus("Unsaved changes"); }
+
+  ROWS.forEach(function (row) {
+    var r = h("section", "row", board);
+    var lab = h("div", "row-label", r);
+    h("div", "letter", lab, row.id);
+    h("div", "name", lab, row.name);
+    h("div", "hint", lab, row.hint);
+    var grid = h("div", "tiles", r);
+    TILES.filter(function (t) { return t.code[0] === row.id; }).forEach(function (t) {
+      var tile = h("article", "tile t" + t.code, grid);
+      tile.dataset.code = t.code;
+      t.el = tile;
+      t.stage = h("div", "stage", tile);
+      t.hintEl = h("div", "hint-tab", tile, t.hint);
+      var meta = h("div", "meta", tile);
+      h("span", "code", meta, t.code);
+      var titles = h("div", "titles", meta);
+      h("div", "title", titles, t.title);
+      h("div", "desc", titles, t.desc);
+      var star = h("button", "star", meta);
+      star.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/></svg>';
+      star.setAttribute("aria-pressed", "false");
+      star.title = "Star " + t.code;
+      star.addEventListener("click", function () { setStar(t.code, star.getAttribute("aria-pressed") !== "true"); markDirty(); });
+      var note = h("textarea", "note", tile);
+      note.placeholder = "Notes on " + t.code + "…";
+      note.addEventListener("input", markDirty);
+      t.star = star; t.note = note;
+      tileEls[t.code] = t;
+    });
+  });
+
+  function setStar(code, on) {
+    var t = tileEls[code];
+    if (!t) return;
+    t.star.setAttribute("aria-pressed", on ? "true" : "false");
+    t.el.classList.toggle("starred", on);
+  }
+
+  function start(t) {
+    t.gen = (t.gen || 0) + 1;
+    var gen = t.gen;
+    var fresh = t.stage.cloneNode(false);
+    fresh.removeAttribute("tabindex"); fresh.removeAttribute("aria-label"); fresh.className = "stage";
+    t.stage.replaceWith(fresh);
+    t.stage = fresh;
+    t.hintEl.classList.remove("used");
+    delete selHandlers[t.code];
+    t.width = fresh.clientWidth;
+    var pings = [];
+    var T = {
+      ctx: { dead: function () { return t.gen !== gen; } },
+      tile: t.el,
+      ping: function (el) { el.classList.add("ping"); pings.push(el); },
+      used: function () { t.hintEl.classList.add("used"); pings.forEach(function (el) { el.classList.remove("ping"); }); pings = []; },
+      onSelection: function (fn) { selHandlers[t.code] = fn; }
+    };
+    t.setup(fresh, T);
+  }
+  function startAll() {
+    live.forEach(function (a) { a.cancel(); });
+    live.clear();
+    TILES.forEach(start);
+  }
+
+  document.addEventListener("selectionchange", function () {
+    var sel = document.getSelection();
+    Object.keys(selHandlers).forEach(function (k) { selHandlers[k](sel); });
+  });
+
+  var speedEl = document.getElementById("speed");
+  speedEl.addEventListener("input", function () {
+    speed = parseFloat(speedEl.value);
+    document.getElementById("speedVal").textContent = speed.toFixed(1) + "x";
+    document.documentElement.style.setProperty("--k", (1 / speed).toFixed(3));
+    live.forEach(function (a) { a.playbackRate = speed; });
+  });
+  var pauseBtn = document.getElementById("pause");
+  pauseBtn.addEventListener("click", function () {
+    paused = !paused;
+    pauseBtn.setAttribute("aria-pressed", String(paused));
+    pauseBtn.textContent = paused ? "Resume" : "Pause";
+    document.body.classList.toggle("paused", paused);
+    live.forEach(function (a) { if (paused) a.pause(); else a.play(); });
+  });
+  document.getElementById("replay").addEventListener("click", startAll);
+  var themeBtn = document.getElementById("theme");
+  themeBtn.addEventListener("click", function () {
+    var dark = !document.body.classList.contains("dark");
+    document.body.classList.toggle("dark", dark);
+    themeBtn.setAttribute("aria-pressed", String(dark));
+    themeBtn.textContent = dark ? "Light background" : "Dark background";
+  });
+
+  var PICKS = "picks-interactions.json";
+  document.getElementById("save").addEventListener("click", function () {
+    var stars = [], notes = {};
+    TILES.forEach(function (t) {
+      if (t.star.getAttribute("aria-pressed") === "true") stars.push(t.code);
+      if (t.note.value.trim()) notes[t.code] = t.note.value;
+    });
+    setStatus("Saving…");
+    fetch(PICKS, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ stars: stars, notes: notes, savedAt: new Date().toISOString() }) })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); dirty = false; setStatus("Saved ✓", true); })
+      .catch(function (e) { setStatus("Save failed: " + e.message); });
+  });
+
+  fetch(PICKS, { cache: "no-store" })
+    .then(function (r) { return r.ok ? r.json() : {}; })
+    .then(function (data) {
+      (data.stars || []).forEach(function (c) { setStar(c, true); });
+      Object.keys(data.notes || {}).forEach(function (c) { if (tileEls[c]) tileEls[c].note.value = data.notes[c]; });
+      if (data.savedAt) setStatus("Loaded save from " + new Date(data.savedAt).toLocaleString(), true);
+    })
+    .catch(function () {});
+
+  var resizeT = null;
+  window.addEventListener("resize", function () {
+    clearTimeout(resizeT);
+    resizeT = setTimeout(function () {
+      TILES.forEach(function (t) { if (Math.abs(t.stage.clientWidth - t.width) > 16) start(t); });
+    }, 250);
+  });
+  window.addEventListener("beforeunload", function (e) { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(startAll);
+})();
+</script>
+</body>
+</html>

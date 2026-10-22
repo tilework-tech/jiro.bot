@@ -312,6 +312,19 @@
 }
 
 @media (min-width: 768px) {
+  .jiro-buddy__mascot {
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .jiro-buddy--held .jiro-buddy__mascot {
+    cursor: grabbing;
+  }
+
+  .jiro-buddy--held .jiro-buddy__shadow {
+    opacity: 0.25;
+  }
+
   .jiro-buddy--right {
     left: auto;
     right: 24px;

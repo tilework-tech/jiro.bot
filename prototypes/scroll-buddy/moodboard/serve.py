@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Serve the moodboard folder and persist picks to picks.json."""
+"""Serve the moodboard folder and persist picks to picks.json or picks-<name>.json."""
 import argparse
 import json
 import os
+import re
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-PICKS = os.path.join(HERE, "picks.json")
+PICKS_NAME = re.compile(r"^picks(-[a-z]+)?\.json$")
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -23,27 +24,30 @@ class Handler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def _is_picks(self):
-        return self.path.split("?", 1)[0].rstrip("/").endswith("/picks.json")
+    def _picks_file(self):
+        name = self.path.split("?", 1)[0].rstrip("/").rsplit("/", 1)[-1]
+        return os.path.join(HERE, name) if PICKS_NAME.match(name) else None
 
     def do_GET(self):
-        if self._is_picks():
+        picks = self._picks_file()
+        if picks:
             data = {}
-            if os.path.exists(PICKS):
-                with open(PICKS, encoding="utf-8") as fh:
+            if os.path.exists(picks):
+                with open(picks, encoding="utf-8") as fh:
                     data = json.load(fh)
             return self._json(200, data)
         return super().do_GET()
 
     def do_POST(self):
-        if not self._is_picks():
+        picks = self._picks_file()
+        if not picks:
             return self._json(404, {"error": "not found"})
         length = int(self.headers.get("Content-Length", "0"))
         try:
             data = json.loads(self.rfile.read(length) or b"{}")
         except json.JSONDecodeError as exc:
             return self._json(400, {"error": str(exc)})
-        with open(PICKS, "w", encoding="utf-8") as fh:
+        with open(picks, "w", encoding="utf-8") as fh:
             json.dump(data, fh, indent=2)
         return self._json(200, {"ok": True})
 

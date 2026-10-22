@@ -5,6 +5,8 @@
   window.__jiroBuddyLoaded = true;
 
   var STORAGE_KEY = "jiro-buddy-hidden";
+  var SIDE_KEY = "jiro-buddy-side";
+  var DRAG_SLOP = 6;
   var SETTLE_MS = 600;
   var TYPE_MS = 28;
   var ANNOUNCE_MS = 100;
@@ -121,6 +123,21 @@
     } catch (e) {}
   }
 
+  function storedSide() {
+    try {
+      var value = window.sessionStorage.getItem(SIDE_KEY);
+      return value === "left" || value === "right" ? value : "";
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function rememberSide(side) {
+    try {
+      window.sessionStorage.setItem(SIDE_KEY, side);
+    } catch (error) {}
+  }
+
   function attr(section, name) {
     return (section.getAttribute("data-jiro-" + name) || "").trim();
   }
@@ -180,7 +197,11 @@
     var timers = [];
     var looked = null;
     var spoken = "";
-    var side = "left";
+    var side = storedSide() || "left";
+    var placed = side === storedSide();
+    var drag = null;
+    var swallowClick = false;
+    aside.classList.toggle("jiro-buddy--right", side === "right");
     var sideChanges = 0;
     var perches = 0;
     var perched = null;
@@ -328,6 +349,7 @@
     }
 
     function chooseSide(section) {
+      if (placed) return side;
       var pinned = attr(section, "side");
       if (pinned === "left" || pinned === "right") return pinned;
       var other = side === "left" ? "right" : "left";
@@ -618,7 +640,89 @@
     });
     mascot.addEventListener("pointerleave", function () { hovered = false; setFace(face); });
 
+    function place(next) {
+      var from = aside.getBoundingClientRect();
+      landFlight();
+      if (perched) {
+        perched = null;
+        unplace();
+        aside.classList.remove("jiro-buddy--flip");
+      }
+      side = next;
+      placed = true;
+      rememberSide(side);
+      aside.classList.toggle("jiro-buddy--right", side === "right");
+      return arc(from).then(function () { setState("idle"); setFace("cursor"); });
+    }
+
+    mascot.addEventListener("pointerdown", function (event) {
+      if (!wide.matches || event.button !== 0) return;
+      drag = { id: event.pointerId, x: event.clientX, y: event.clientY, held: false, base: null, lastX: event.clientX };
+    });
+
+    window.addEventListener("pointermove", function (event) {
+      if (!drag || event.pointerId !== drag.id) return;
+      var dx = event.clientX - drag.x;
+      var dy = event.clientY - drag.y;
+      if (!drag.held) {
+        if (Math.abs(dx) < DRAG_SLOP && Math.abs(dy) < DRAG_SLOP) return;
+        drag.held = true;
+        run += 1;
+        hideBubble();
+        clearLook();
+        landFlight();
+        if (perched) {
+          var rect = aside.getBoundingClientRect();
+          perched = null;
+          unplace();
+          aside.classList.remove("jiro-buddy--flip");
+          var home = aside.getBoundingClientRect();
+          drag.x -= rect.left - home.left;
+          drag.y -= rect.top - home.top;
+          dx = event.clientX - drag.x;
+          dy = event.clientY - drag.y;
+        }
+        aside.classList.add("jiro-buddy--held");
+        setState("held");
+        setFace("eyes");
+      }
+      var tilt = Math.max(-14, Math.min(14, (event.clientX - drag.lastX) * 1.5));
+      drag.lastX = event.clientX;
+      aside.style.transform = "translate(" + dx + "px," + dy + "px) rotate(" + tilt + "deg)";
+    });
+
+    function release(event) {
+      if (!drag || event.pointerId !== drag.id) return;
+      var held = drag.held;
+      drag = null;
+      if (!held) return;
+      swallowClick = true;
+      setTimeout(function () { swallowClick = false; }, 0);
+      aside.classList.remove("jiro-buddy--held");
+      var next = event.clientX < document.documentElement.clientWidth / 2 ? "left" : "right";
+      var from = aside.getBoundingClientRect();
+      aside.style.transform = "";
+      side = next === side ? side : next;
+      placed = true;
+      rememberSide(side);
+      aside.classList.toggle("jiro-buddy--right", side === "right");
+      arc(from).then(function () { setState("idle"); setFace("cursor"); stir(); });
+    }
+
+    window.addEventListener("pointerup", release);
+    window.addEventListener("pointercancel", release);
+
+    mascot.addEventListener("keydown", function (event) {
+      if (!wide.matches) return;
+      var next = event.key === "ArrowLeft" ? "left" : event.key === "ArrowRight" ? "right" : "";
+      if (!next) return;
+      event.preventDefault();
+      hideBubble();
+      place(next);
+    });
+
     mascot.addEventListener("click", function () {
+      if (swallowClick) return;
       if (!active) return;
       hideBubble();
       speak(active, run);

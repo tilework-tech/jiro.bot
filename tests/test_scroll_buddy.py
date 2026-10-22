@@ -528,6 +528,95 @@ class ScrollBuddyTest(unittest.TestCase):
         self.assertEqual(page.evaluate("window.__jiroMaxAnimations"), 0)
         self.assertEqual(self.running_animations(page), 0)
 
+    def drag_mascot(self, page, to_x, to_y, steps=12):
+        box = self.mascot(page).bounding_box()
+        page.mouse.move(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
+        page.mouse.down()
+        page.mouse.move(to_x, to_y, steps=steps)
+        page.mouse.up()
+
+    def test_dragging_jiro_to_the_right_half_docks_him_in_the_lower_right_corner(self):
+        page = self.open("pinned-left.html", reduced_motion="reduce")
+        expect(self.bubble(page)).to_have_text(COMMENTS[0])
+        self.drag_mascot(page, DESKTOP["width"] - 300, 300)
+        expect(self.bubble(page)).to_be_hidden()
+        page.wait_for_timeout(300)
+        mascot = self.mascot(page).bounding_box()
+        self.assertEqual(self.side(page), "right")
+        self.assertGreater(mascot["y"] + mascot["height"] / 2, DESKTOP["height"] / 2)
+        self.mascot(page).click()
+        expect(self.bubble(page)).to_have_text(COMMENTS[0])
+        self.assert_sits_right_with_bubble_opening_left(page)
+
+    def test_jiro_follows_the_pointer_while_held(self):
+        page = self.open("pinned-left.html", reduced_motion="reduce")
+        expect(self.bubble(page)).to_have_text(COMMENTS[0])
+        box = self.mascot(page).bounding_box()
+        page.mouse.move(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
+        page.mouse.down()
+        page.mouse.move(700, 400, steps=10)
+        held = self.mascot(page).bounding_box()
+        self.assertAlmostEqual(held["x"] + held["width"] / 2, 700, delta=12)
+        self.assertAlmostEqual(held["y"] + held["height"] / 2, 400, delta=12)
+        page.mouse.up()
+
+    def test_a_tiny_wobble_on_press_still_counts_as_a_click(self):
+        page = self.open("pinned-left.html", reduced_motion="reduce")
+        expect(self.bubble(page)).to_have_text(COMMENTS[0])
+        self.drag_mascot(page, *self._center_plus(page, 3), steps=2)
+        expect(self.bubble(page)).to_have_text(COMMENTS[0])
+        self.assertEqual(self.side(page), "left")
+
+    def _center_plus(self, page, d):
+        box = self.mascot(page).bounding_box()
+        return box["x"] + box["width"] / 2 + d, box["y"] + box["height"] / 2 + d
+
+    def test_dropping_jiro_on_the_left_half_brings_him_back_to_the_lower_left(self):
+        page = self.open("pinned-left.html", reduced_motion="reduce")
+        expect(self.bubble(page)).to_have_text(COMMENTS[0])
+        self.drag_mascot(page, DESKTOP["width"] - 200, 600)
+        page.wait_for_timeout(200)
+        self.drag_mascot(page, 300, 200)
+        page.wait_for_timeout(300)
+        self.assertEqual(self.side(page), "left")
+        self.assertLessEqual(self.mascot(page).bounding_box()["x"], 48)
+
+    def test_the_corner_he_was_dropped_in_survives_a_reload_in_the_same_tab(self):
+        context = self.browser.new_context(viewport=DESKTOP, reduced_motion="reduce")
+        self.addCleanup(context.close)
+        page = self.open("pinned-left.html", context=context)
+        expect(self.bubble(page)).to_have_text(COMMENTS[0])
+        self.drag_mascot(page, DESKTOP["width"] - 300, 500)
+        page.wait_for_timeout(300)
+        page.reload()
+        expect(self.bubble(page)).to_have_text(COMMENTS[0])
+        self.assertEqual(self.side(page), "right")
+
+    def test_once_placed_by_hand_he_stays_in_that_corner_while_scrolling(self):
+        page = self.open("alternating.html", reduced_motion="reduce")
+        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[0])
+        start = self.side(page)
+        other_x = 300 if start == "right" else DESKTOP["width"] - 300
+        self.drag_mascot(page, other_x, 500)
+        page.wait_for_timeout(300)
+        placed = self.side(page)
+        self.assertNotEqual(placed, start)
+        for n, comment in enumerate(SIDE_COMMENTS[1:], start=2):
+            self.scroll_to_section(page, n)
+            expect(self.bubble(page)).to_have_text(comment)
+            self.assertEqual(self.side(page), placed)
+
+    def test_arrow_keys_on_the_focused_mascot_move_him_between_lower_corners(self):
+        page = self.open("pinned-left.html", reduced_motion="reduce")
+        expect(self.bubble(page)).to_have_text(COMMENTS[0])
+        self.mascot(page).focus()
+        page.keyboard.press("ArrowRight")
+        page.wait_for_timeout(300)
+        self.assertEqual(self.side(page), "right")
+        page.keyboard.press("ArrowLeft")
+        page.wait_for_timeout(300)
+        self.assertEqual(self.side(page), "left")
+
     def test_narrow_screen_never_changes_side(self):
         page = self.open("sides.html", viewport=NARROW, has_touch=True, is_mobile=True, reduced_motion="reduce")
         expect(self.mascot(page)).to_be_visible()
