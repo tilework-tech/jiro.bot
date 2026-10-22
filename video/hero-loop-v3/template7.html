@@ -1,0 +1,417 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/600.css">
+<link rel="stylesheet" href="node_modules/@fontsource/ibm-plex-mono/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/ibm-plex-mono/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/lato/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/lato/900.css">
+<link rel="stylesheet" href="brand/fonts/fonts.css">
+<style>
+:root {
+  --page: #121212; --app: #161616; --surface: #1c1c1c; --nested: #262626; --strong: #393939;
+  --comment: #8a8f98; --text: #dde1e6; --fg: #f2f4f8; --green: #42be65; --red: #f47067; --rowon: #2a3b2e;
+  --sans: 'Inter', system-ui, sans-serif; --mono: 'IBM Plex Mono', monospace; --gs: 'General Sans', 'Inter', sans-serif; --lato: 'Lato', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { overflow: hidden; background: var(--page); }
+body { font-family: var(--sans); color: var(--text); -webkit-font-smoothing: antialiased; }
+.ico { width: 16px; height: 16px; flex: none; }
+#stage { position: absolute; left: 0; top: 0; overflow: hidden; }
+#dots { position: absolute; inset: 0; background-image: radial-gradient(circle, #1f1f1f 1.2px, transparent 1.3px); background-size: 28px 28px; }
+#night { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 0%, #142040 0%, #0a0f1f 70%); opacity: 0; }
+
+/* everything below is laid out in a 1080x1080 design space and scaled to the output size */
+#design { position: absolute; left: 50%; top: 50%; width: 1080px; height: 1080px; transform-origin: 50% 50%; }
+#chip { position: absolute; left: 34px; top: 34px; height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 16px 0 14px; border: 1px solid #2b2d2c; border-radius: 999px; background: #161616;
+  font: 500 16px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #fff; transform-origin: 0 50%; }
+#chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+#chip .ico { color: #c9d3ff; display: none; }
+#chip.night .ico { display: block; } #chip.night .dot { display: none; }
+
+/* phone */
+#phone { position: absolute; left: 50%; top: 40px; width: 600px; margin-left: -300px; height: 1080px; border-radius: 78px; background: #050505; border: 2px solid #3a3a3a; padding: 16px; box-shadow: 0 40px 100px rgba(0,0,0,.6), inset 0 0 0 2px #1a1a1a; }
+#screenbox { position: relative; width: 564px; height: 1048px; border-radius: 62px; overflow: hidden; background: var(--app); }
+#island { position: absolute; top: 16px; left: 50%; width: 140px; height: 40px; margin-left: -70px; border-radius: 22px; background: #000; z-index: 9; }
+#sbar { position: absolute; left: 0; right: 0; top: 0; height: 66px; display: flex; align-items: center; justify-content: space-between; padding: 6px 44px 0; font: 600 21px var(--sans); color: #f2f4f8; z-index: 8; background: var(--app); }
+#sbar .bat { width: 34px; height: 16px; border: 2px solid #f2f4f8; border-radius: 5px; position: relative; opacity: .9; }
+#sbar .bat::after { content: ''; position: absolute; inset: 2px; right: 6px; background: #f2f4f8; border-radius: 2px; }
+#screen { position: absolute; left: 0; top: 66px; width: 390px; height: 680px; transform: scale(1.446); transform-origin: 0 0; }
+.view { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--app); }
+
+/* chat (broker UI, phone layout) */
+.mhead { height: 51px; flex: none; display: flex; align-items: center; gap: 18px; padding: 0 12px 6px; border-bottom: 1px solid #262626; color: var(--text); }
+.mhead .ttl { font: 600 15px var(--sans); color: var(--fg); flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: flex; gap: 4px; align-items: center; }
+.mhead .ico { width: 18px; height: 18px; color: var(--text); }
+#list { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 12px 10px; }
+.it { flex: none; overflow: hidden; }
+.it > .in { padding: 6px 0; }
+.jiro { font-size: 15.5px; line-height: 23px; color: var(--fg); }
+.user { display: flex; justify-content: flex-end; }
+.bubble { background: #262626; border-radius: 16px; padding: 10px 14px; font-size: 15px; line-height: 22px; color: var(--fg); max-width: 290px; }
+.work { font-size: 13px; line-height: 18px; color: var(--text); }
+.wr { display: flex; align-items: center; gap: 9px; height: 25px; padding: 0 4px; }
+.wr .ico { color: var(--comment); width: 15px; height: 15px; }
+.wr .t { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wr .st { width: 15px; height: 15px; display: grid; place-items: center; }
+.wr .st .ico { color: var(--text); }
+.wr .spin { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+.fold { font-size: 13px; color: var(--comment); padding: 0 4px 2px; }
+.li { display: flex; gap: 8px; font-size: 15.5px; line-height: 23px; color: var(--fg); padding-left: 2px; }
+.li b { font-weight: 600; }
+code { font: 400 13px var(--mono); background: #262626; border-radius: 4px; padding: 1px 4px; color: var(--fg); }
+.achip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #262626; background: #1c1c1c; border-radius: 8px; padding: 6px 10px; font: 400 13px var(--sans); color: var(--text); }
+.achip .k { font: 400 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--comment); }
+#comp { margin: 0 12px 12px; flex: none; border: 1px solid #393939; background: #1c1c1c; border-radius: 16px; padding: 12px 14px 9px; }
+#ctext { font-size: 16px; line-height: 24px; color: var(--fg); min-height: 24px; }
+#ctext.ph { color: #6f737a; }
+#caret { display: inline-block; width: 2px; height: 18px; background: var(--fg); vertical-align: -3px; margin-left: 1px; }
+.ctools { display: flex; align-items: center; gap: 12px; margin-top: 10px; color: var(--comment); font-size: 13px; }
+.ctools .sp { margin-left: auto; }
+.send { width: 30px; height: 30px; border-radius: 50%; background: #f2f4f8; display: grid; place-items: center; color: #161616; }
+
+
+/* speaker labels: subdued per-persona colors */
+.who { display: flex; align-items: center; gap: 7px; font: 600 12px/16px var(--sans); letter-spacing: .02em; margin: 4px 0 4px; }
+.who.r { justify-content: flex-end; }
+.who .av { width: 18px; height: 18px; border-radius: 5px; display: grid; place-items: center; flex: none; font: 700 9px var(--sans); color: #fff; }
+.who.j { color: #3cf06e; } .who.j .av { background: #3cf06e; display: flex; align-items: center; justify-content: center; } .who.j .av i { width: 4px; height: 4px; border-radius: 1px; background: #0e2a17; display: inline-block; margin: 0 1px; }
+.who.you { color: #f2694f; } .who.you .av { background: #f2694f; color: #2a110c; }
+.who.slack { color: #b79bc2; } .who.slack .av { background: #4a2f52; }
+.who.cli { color: #8fbf9c; } .who.cli .av { background: #2c4434; }
+.who.alert { color: #c99a8f; } .who.alert .av { background: #4a2c26; }
+.jiro .txt, .li, .work, .it .achip { border-left: 2px solid rgba(60,240,110,.55); }
+.jiro .txt, .li { padding-left: 10px; } .work { padding-left: 6px; } .it .achip { margin-left: 0; }
+.bubble.you { background: #3a221d; box-shadow: inset 0 0 0 1px rgba(242,105,79,.35); }
+.bubble.slack { background: #2f2534; }
+.bubble.cli { background: #22302a; }
+.bubble.alert { background: #33241f; }
+
+#lists { flex: 1; min-height: 0; position: relative; overflow: hidden; }
+.list { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 12px 10px; background: var(--app); }
+.list.incoming { box-shadow: -24px 0 40px rgba(0,0,0,.55); }
+/* PR view (generic code-host mock) */
+#pr { background: #0d1117; }
+.prh { padding: 14px 14px 10px; border-bottom: 1px solid #222; }
+.prh .rp { font: 400 12px var(--mono); color: var(--comment); }
+.prh h2 { font: 600 19px/25px var(--sans); color: var(--fg); margin-top: 4px; }
+.prh .meta { display: flex; align-items: center; gap: 8px; margin-top: 9px; font-size: 13px; color: var(--comment); }
+.badge { display: inline-flex; align-items: center; gap: 5px; border-radius: 999px; padding: 3px 10px; font: 500 12px var(--sans); background: #2d333b; color: #c9d1d9; }
+.badge .ico { width: 13px; height: 13px; }
+.stat { margin-left: auto; font: 500 13px var(--mono); } .stat .a { color: var(--green); } .stat .r { color: var(--red); }
+.cols { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 0; position: relative; }
+.col { padding: 12px 12px; border-right: 1px solid #1e242c; }
+.col:last-child { border-right: 0; }
+.col h4 { font: 500 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--comment); margin-bottom: 10px; }
+.tree { font: 400 14.5px/27px var(--mono); color: #c9d1d9; }
+.tree div { white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+.tree .ico { width: 15px; height: 15px; color: var(--comment); }
+.tree .bad { color: #c9d1d9; }
+.tree .x { text-decoration: line-through; text-decoration-color: var(--red); color: #8b5a57; }
+.tree .new { color: var(--green); }
+.tree .new .ico { color: var(--green); }
+.tree .nxa { color: var(--comment); font-style: normal; }
+.tree .nx.dim { opacity: .45; }
+.tree .ind { padding-left: 16px; }
+.prfoot { padding: 12px 14px 16px; border-top: 1px solid #222; font-size: 13.5px; line-height: 20px; color: var(--text); }
+.prfoot .ok { display: flex; align-items: center; gap: 8px; color: var(--fg); margin-top: 4px; }
+.prfoot .ok .ico { color: var(--green); width: 15px; height: 15px; }
+
+/* chip-in surfaces */
+.plabel { display: flex; align-items: center; gap: 8px; font: 500 16px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #fff; margin-bottom: 8px; }
+.plabel .ico { width: 17px; height: 17px; }
+#slack { position: absolute; left: 12px; top: 640px; width: 236px; transform-origin: 0 50%; }
+.sl { background: #fff; border-radius: 12px; overflow: hidden; font-family: var(--lato); color: #1d1c1d; box-shadow: 0 24px 60px rgba(0,0,0,.6); }
+.sl-h { background: #3f0e40; color: #fff; font: 900 15px var(--lato); padding: 9px 14px; }
+.sm { display: flex; gap: 10px; padding: 11px 14px; }
+.sav { width: 34px; height: 34px; border-radius: 6px; flex: none; display: grid; place-items: center; font: 700 14px var(--sans); color: #fff; background: #2b7a78; }
+.sb { font-size: 20px; line-height: 27px; } .sb .n { font-weight: 900; margin-right: 6px; } .sb .tm { color: #616061; font-size: 12px; }
+#cli { position: absolute; right: 12px; top: 470px; width: 236px; transform-origin: 100% 50%; }
+.term { background: #0b0b0b; border: 1px solid #393939; border-radius: 12px; overflow: hidden; font: 400 20px/28px var(--mono); color: #dde1e6; box-shadow: 0 24px 60px rgba(0,0,0,.6); }
+.term .tb { height: 28px; background: #1a1a1a; display: flex; align-items: center; gap: 7px; padding: 0 12px; }
+.term .tb i { width: 10px; height: 10px; border-radius: 50%; background: #393939; display: block; }
+.term .bd { padding: 10px 14px 12px; } .term .g { color: var(--green); } .term .dim { color: #6f737a; font-size: 13px; }
+#cliCaret { display: inline-block; width: 9px; height: 18px; background: #dde1e6; vertical-align: -3px; }
+
+#end { position: absolute; inset: 0; display: grid; place-items: center; opacity: 0; background: rgba(18,18,18,.94); backdrop-filter: blur(6px); }
+#end .t { text-align: center; }
+#end h1 { font: 600 96px/1 var(--gs); color: #fff; letter-spacing: -.02em; }
+#end p { font: 500 30px/1.3 var(--gs); color: rgba(255,255,255,.55); margin-top: 18px; }
+#end .url { font: 500 22px var(--mono); color: var(--green); margin-top: 28px; letter-spacing: .04em; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="dots"></div>
+  <div id="night"></div>
+  <div id="design">
+    <div id="phone"><div id="screenbox">
+      <div id="island"></div>
+      <div id="sbar"><span id="clock">10:02</span><span class="bat"></span></div>
+      <div id="screen">
+        <div class="view" id="chat">
+          <div class="mhead">{{i:menu}}<span class="ttl"><span id="title">Getting to know acme/shop</span>{{i:chevron-down}}</span>{{i:copy}}{{i:square-pen}}</div>
+          <div id="lists"></div>
+          <div id="comp"><div id="ctext" class="ph">Send a message…</div>
+            <div class="ctools">{{i:paperclip}}{{i:sliders-horizontal}}<span>Opus 4.8</span><span class="sp"></span>{{i:mic}}<span class="send">{{i:arrow-up:2.5}}</span></div></div>
+        </div>
+        <div class="view" id="pr">
+          <div class="prh"><div class="rp">acme/shop · #412</div><h2>Restructure payments, add AGENTS.md</h2>
+            <div class="meta"><span class="badge">{{i:git-pull-request}}Draft</span><span>by Jiro</span><span class="stat" id="stat"><span class="a">+412</span> <span class="r">−1,980</span></span></div></div>
+          <div class="cols">
+            <div class="col" id="before"><h4>Before</h4><div class="tree">
+              <div class="s">{{i:folder}}payments/</div><div class="s">{{i:folder}}billing/</div><div class="s">{{i:folder}}utils/</div><div class="s">{{i:folder}}utils2/</div><div class="s">{{i:folder}}helpers_old/</div>
+              <div class="s">{{i:file-text}}legacy_pay.ts</div><div class="nx">{{i:folder}}test/</div><div class="nx">{{i:folder}}tests/</div><div class="nx">{{i:folder}}__tests__/</div><div class="nx">{{i:folder}}spec/</div></div></div>
+            <div class="col" id="after"><h4>After</h4><div class="tree">
+              <div class="new">{{i:file-text}}AGENTS.md</div><div>{{i:folder}}core/</div><div class="ind">{{i:folder}}payments/</div><div class="ind">{{i:folder}}shared/</div><div class="new">{{i:file-text}}docs/map.md</div><div class="nxa">{{i:folder}}tests: next PR</div></div></div>
+          </div>
+          <div class="prfoot"><div class="ok">{{i:check:2.5}}Same behavior, 1,568 fewer lines</div><div class="ok">{{i:check:2.5}}Agents get a map of the codebase</div></div>
+        </div>
+      </div>
+    </div></div>
+
+    <div id="slack"><div class="plabel">{{slack}}Slack</div>
+      <div class="sl"><div class="sl-h"># eng</div><div class="sm"><div class="sav">SL</div><div class="sb"><span class="n">Sam</span><span class="tm">11:06</span><div id="slText"></div></div></div></div></div>
+    <div id="cli"><div class="plabel">{{i:terminal}}CLI</div>
+      <div class="term"><div class="tb"><i></i><i></i><i></i></div><div class="bd"><div class="dim">priya ~/shop</div><div><span class="g">›</span> <span id="cliText"></span><span id="cliCaret"></span></div></div></div></div>
+
+    <div id="chip"><span class="dot"></span>{{i:moon}}<span id="chipT">Day 1</span></div>
+    <div id="end"><div class="t"><h1>Jiro</h1><p>The tasteful, proactive<br>software engineer.</p><div class="url">jiro.bot</div></div></div>
+  </div>
+</div>
+
+<script>
+const Q = new URLSearchParams(location.search);
+const W = Number(Q.get('w') ?? 1080), H = Number(Q.get('h') ?? 1080);
+const D = 44 - 3.6;
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const prog = (t, a, d) => clamp((t - a) / d);
+const eo = (x) => 1 - Math.pow(1 - x, 3);
+const eio = (x) => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = (x) => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+
+// ---------- copy and timing ----------
+const CHIPS = [
+  { t: 0, txt: 'Day 1', clock: '10:02' },
+  { t: 3.6, txt: 'Day 1', clock: '11:04', silent: true },
+  { t: 26.0, txt: 'Day 3', clock: '14:20' },
+  { t: 30.6, txt: 'Day 5', clock: '16:45' },
+  { t: 34.2, txt: '3:12 AM', clock: '3:12', night: true },
+  { t: 39.6, txt: '8:02 AM', clock: '8:02' },
+  { t: 43.5, txt: 'Day 1', clock: '10:02', silent: true },
+];
+const ITEMS = [
+  // scan
+  { t: 0.35, k: 'jiro', d: .6, txt: 'Reading your codebase.' },
+  { t: 0.9, k: 'work', took: '52m', gap: .32, rows: [['book-open', 'Read 1,284 files'], ['folder', 'Mapped 9 modules'], ['git-pull-request', 'Read 6 months of PRs and reviews']] },
+  // how the team ships (asks, gets corrected)
+  { t: 3.8, k: 'jiro', d: .45, txt: "Here's how I think you ship:" },
+  { t: 4.3, k: 'li', html: '<b>1.</b><span>One approval, usually from Sam</span>' },
+  { t: 4.6, k: 'li', html: '<b>2.</b><span>Deploys go out on Tuesdays</span>' },
+  { t: 4.9, k: 'li', html: '<b>3.</b><span>CI runs the tests, not laptops</span>' },
+  { t: 5.3, k: 'jiro', d: .35, txt: 'Did I get that right?' },
+  { t: 6.55, k: 'user', txt: 'Thursdays, not Tuesdays.' },
+  { t: 7.0, k: 'jiro', d: .35, txt: 'Got it. Saved.' },
+  // findings, then asks before the first PR
+  { t: 8.3, k: 'jiro', d: .45, txt: "Here's what I'd fix first:" },
+  { t: 8.8, k: 'li', html: '<b>1.</b><span><code>payments/</code> and <code>billing/</code> do one job</span>' },
+  { t: 9.1, k: 'li', html: '<b>2.</b><span>No AGENTS.md, so agents guess</span>' },
+  { t: 9.4, k: 'li', html: '<b>3.</b><span>Tests live in four folders</span>' },
+  { t: 9.8, k: 'jiro', d: .5, txt: 'Want a draft PR for these?' },
+  // pushes back
+  { t: 11.2, k: 'user', txt: 'Do all three in one PR.' },
+  { t: 11.7, k: 'jiro', d: 1.1, txt: "I'd split it. Structure and AGENTS.md first, tests next. Easier to review." },
+  { t: 13.75, k: 'user', txt: 'agree, split it', src: 'slack' },
+  { t: 14.2, k: 'user', txt: '+1', src: 'cli' },
+  { t: 14.75, k: 'user', txt: 'OK, split it.' },
+  { t: 15.15, k: 'jiro', d: .3, txt: 'On it.' },
+  // after the PR cut
+  { t: 21.2, k: 'achip', html: '<span class="k">Pull request</span>#412 Restructure payments' },
+  // payoff for agents
+  { t: 22.6, k: 'user', txt: 'Where does refund logic live?' },
+  { t: 23.15, k: 'jiro', d: 1.0, txt: 'core/payments/refunds.ts. It\'s in the map now, so every agent finds it too.' },
+  // docs: prompts you
+  { t: 26.2, k: 'jiro', d: 1.2, txt: 'Your docs don\'t say why orders retry twice. Can you add a line? Agents keep "fixing" it.' },
+  { t: 28.6, k: 'user', txt: 'Card network flakes. Added.' },
+  { t: 29.1, k: 'achip', html: '<span class="k">File</span>docs/payments.md' },
+  { t: 30.85, k: 'jiro', d: 1.1, txt: 'Heads up: PR #430 from another agent removes that retry. I pointed it to the docs.' },
+  // 3 AM (its own automation session)
+  { t: 34.55, k: 'user', s2: 1, src: 'alert', txt: 'Checkout returns 500s' },
+  { t: 35.0, k: 'work', s2: 1, took: '9m', gap: .42, rows: [['search', 'Traced it to cart/total.ts'], ['file-text', 'Wrote a failing test'], ['pencil', 'Fixed the rounding'], ['terminal', 'Tests pass']] },
+  { t: 37.2, k: 'achip', s2: 1, html: '<span class="k">Pull request</span>#418 Fix discounted totals (draft)' },
+  { t: 41.5, k: 'user', s2: 1, txt: '…oh nice.' },
+];
+const WEB_TYPE = [[6.0, 6.5, 'Thursdays, not Tuesdays.'], [10.7, 11.15, 'Do all three in one PR.'], [14.45, 14.7, 'OK, split it.'], [22.1, 22.55, 'Where does refund logic live?'], [28.0, 28.55, 'Card network flakes. Added.'], [40.6, 41.45, '…oh nice.']];
+const SENDS = [6.55, 11.2, 14.75, 22.6, 28.6, 41.5];
+const SLACK = { show: [13.4, 16.3], type: [13.5, 13.75], txt: 'agree, split it' };
+const CLI = { show: [13.9, 16.3], type: [14.0, 14.15], txt: '+1' };
+const PR = { in: 16.0, out: 20.9 };
+const BEFORE_X = [17.3, 0.12];
+const AFTER_IN = [18.2, 0.2];
+const NIGHT = [[34.2, 34.6, 1], [39.6, 40.0, 0]];
+const SWITCH = 34.2;
+const SCENES = [{ t: 0, title: 'Getting to know acme/shop' }, { t: 26.0, title: 'Order retry docs' }, { t: 30.6, title: 'Review: PR #430' }, { t: 34.2, title: 'Checkout 500s' }, { t: 43.5, title: 'Getting to know acme/shop' }];
+const SWIPE = .5;
+const sceneAt = (t) => { let i = 0; SCENES.forEach((s, k) => { if (t >= s.t) i = k; }); return i; };
+const END = [99, 99, 99, 99];  // no end card: the loop swipes straight back to day 1
+const ZOOM = [[0, 1.0], [16.0, 1.06], [20.9, 1.0], [26.2, 1.04], [34.2, 1.0], [40.6, 1.06], [42.8, 1.0]];
+// cut the refund-lookup beat: drop it and pull everything after it earlier
+const CUT = [22.4, 26.0], CUTD = CUT[1] - CUT[0];
+const sh = (t) => (t >= CUT[1] ? t - CUTD : t);
+const inCut = (t) => t >= CUT[0] && t < CUT[1];
+for (let i = ITEMS.length - 1; i >= 0; i--) if (inCut(ITEMS[i].t)) ITEMS.splice(i, 1);
+ITEMS.forEach((it) => { it.t = sh(it.t); });
+CHIPS.forEach((c) => { c.t = sh(c.t); });
+for (let i = WEB_TYPE.length - 1; i >= 0; i--) if (inCut(WEB_TYPE[i][0])) { WEB_TYPE.splice(i, 1); SENDS.splice(i, 1); }
+WEB_TYPE.forEach((w) => { w[0] = sh(w[0]); w[1] = sh(w[1]); });
+SENDS.forEach((v, i) => { SENDS[i] = sh(v); });
+NIGHT.forEach((n) => { n[0] = sh(n[0]); n[1] = sh(n[1]); });
+SCENES.forEach((sc) => { sc.t = sh(sc.t); });
+ZOOM.forEach((z) => { z[0] = sh(z[0]); });
+const SWITCH2 = sh(SWITCH);
+
+// ---------- build ----------
+const ICONS = { 'git-pull-request': `{{i:git-pull-request}}`, 'book-open': `{{i:book-open}}`, folder: `{{i:folder}}`, 'file-text': `{{i:file-text}}`, search: `{{i:search}}`, pencil: `{{i:pencil}}`, terminal: `{{i:terminal}}`, check: `{{i:check:2.25}}` };
+const lists = SCENES.map(() => { const d = document.createElement('div'); d.className = 'list'; document.getElementById('lists').appendChild(d); return d; });
+const node = (it) => {
+  const el = document.createElement('div'); el.className = 'it';
+  const inn = document.createElement('div'); inn.className = 'in'; el.appendChild(inn);
+  const P = { you: ['You', 'Y'], slack: ['Sam · Slack', 'S'], cli: ['Priya · CLI', 'P'], alert: ['Alert automation', '!'] };
+  if (it.k === 'jiro') inn.innerHTML = (it.who ? `<div class="who j"><span class="av"><i></i><i></i></span>Jiro</div>` : '') + `<div class="jiro"><div class="txt"></div></div>`;
+  else if (it.k === 'user') { const src = it.src ?? 'you'; inn.innerHTML = (it.who ? `<div class="who r ${src}">${P[src][0]}<span class="av">${P[src][1]}</span></div>` : '') + `<div class="user"><div class="bubble ${src}">${it.txt}</div></div>`; }
+  else if (it.k === 'work') inn.innerHTML = (it.who ? `<div class="who j"><span class="av"><i></i><i></i></span>Jiro</div>` : '') + `<div class="work"><div class="fold">Working…</div>` + it.rows.map(([i, t]) => `<div class="wr">${ICONS[i]}<span class="t">${t}</span><span class="st"><span class="spin"></span>${ICONS.check}</span></div>`).join('') + `</div>`;
+  else if (it.k === 'li') { inn.innerHTML = `<div class="li">${it.html}</div>`; inn.style.padding = '1px 0'; }
+  else if (it.k === 'achip') inn.innerHTML = `<div class="achip">${it.html}</div>`;
+  lists[it.scene].appendChild(el); it.el = el;
+};
+
+window.__init = async () => {
+  document.body.style.width = W + 'px'; document.body.style.height = H + 'px';
+  const st = document.getElementById('stage'); st.style.width = W + 'px'; st.style.height = H + 'px';
+  await document.fonts.ready;
+  let prev = null, prevScene = -1;
+  for (const it of ITEMS) {
+    it.scene = sceneAt(it.t);
+    const sp = it.k === 'user' ? (it.src ?? 'you') : 'jiro';
+    it.who = sp !== prev || it.scene !== prevScene; prev = sp; prevScene = it.scene;
+  }
+  ITEMS.forEach(node);
+  for (const it of ITEMS) { it.el.style.display = 'block'; if (it.k === 'jiro') it.el.querySelector('.txt').textContent = it.txt; it.h = it.el.querySelector('.in').offsetHeight; it.el.style.display = 'none'; }
+  window.__seek(0);
+  return D;
+};
+
+const lastAt = (arr, t) => { let c = arr[0]; for (const a of arr) if (t >= a.t) c = a; return c; };
+const lerpKeys = (keys, t) => { for (let i = keys.length - 1; i >= 0; i--) if (t >= keys[i][0]) { const n = keys[i + 1]; const from = keys[i - 1] ? keys[i][1] : keys[i][1]; return n ? from : from; } return keys[0][1]; };
+
+window.__seek = (t) => {
+  const outA = 1 - prog(t, END[2], END[3] - END[2]);
+  // camera: fit the 1080 design space to the output, plus a gentle push-in on key beats
+  let z = 1, zPrev = 1;
+  for (let i = 0; i < ZOOM.length; i++) if (t >= ZOOM[i][0]) { zPrev = i ? ZOOM[i - 1][1] : ZOOM[i][1]; z = zPrev + (ZOOM[i][1] - zPrev) * eio(prog(t, ZOOM[i][0], .6)); }
+  const fit = Math.min(W, H) / 1080;
+  document.getElementById('design').style.transform = `translate(-50%, -50%) scale(${fit * z})`;
+
+  for (const it of ITEMS) {
+    const gone = 1;
+    if (t < it.t || outA <= 0 || gone <= 0) { it.el.style.display = 'none'; continue; }
+    it.el.style.display = 'block';
+    const p = eo(prog(t, it.t, .22));
+    it.el.style.maxHeight = p < 1 ? `${it.h * p}px` : 'none';
+    it.el.style.opacity = String(p * outA * gone);
+    if (it.k === 'li') it.el.style.transform = `scale(${.9 + .1 * back(prog(t, it.t, .28))})`, it.el.style.transformOrigin = '0 50%';
+    if (it.k === 'jiro') { const n = Math.round(it.txt.length * prog(t, it.t, it.d)); it.el.querySelector('.txt').textContent = it.txt.slice(0, n); }
+    if (it.k === 'work') {
+      const rows = it.el.querySelectorAll('.wr');
+      rows.forEach((r, i) => { const a = it.t + .1 + i * it.gap; const done = t >= a + it.gap * .8; r.style.display = t >= a ? 'flex' : 'none';
+        r.querySelector('.spin').style.display = done ? 'none' : 'block'; r.querySelector('.st .ico').style.display = done ? 'block' : 'none';
+        if (i === 0 && it.rows[0][1].startsWith('Read ')) r.querySelector('.t').textContent = `Read ${Math.round(1284 * eo(prog(t, a, it.gap * .8))).toLocaleString('en-US')} files`; });
+      const allDone = t >= it.t + .1 + (rows.length - 1) * it.gap + it.gap * .8;
+      it.el.querySelector('.fold').textContent = allDone ? `Worked for ${it.took} · ${rows.length} actions` : 'Working…';
+    }
+  }
+  // composer
+  const ct = document.getElementById('ctext'); let typed = null;
+  WEB_TYPE.forEach(([a, b, s], i) => { if (t >= a && t < SENDS[i]) typed = s.slice(0, Math.round(s.length * prog(t, a, b - a))); });
+  if (typed == null) { ct.className = 'ph'; ct.textContent = 'Send a message…'; } else { ct.className = ''; ct.innerHTML = typed + '<span id="caret"></span>'; }
+  // the 3 AM automation opens its own session
+  // each scene is its own conversation: the new one swipes in over the old one
+  const cur = outA > 0 ? sceneAt(t) : 0, sp = cur ? eio(prog(t, SCENES[cur].t, SWIPE)) : 1;
+  lists.forEach((l, i) => {
+    const show = i === cur || (i === cur - 1 && sp < 1);
+    l.style.display = show ? 'flex' : 'none';
+    l.classList.toggle('incoming', i === cur && sp < 1);
+    l.style.zIndex = i === cur ? 2 : 1;
+    l.style.transform = i === cur ? `translateX(${(1 - sp) * 100}%)` : `translateX(${-30 * sp}%)`;
+    l.style.opacity = i === cur ? '1' : String(1 - .7 * sp);
+  });
+  const ttl = document.getElementById('title');
+  ttl.textContent = SCENES[sp < .5 && cur ? cur - 1 : cur].title;
+  ttl.style.opacity = String(cur && sp < 1 ? Math.abs(sp - .5) * 2 : 1);
+
+  // PR cut
+  const prv = document.getElementById('pr'), chat = document.getElementById('chat');
+  const inP = eo(prog(t, PR.in, .3)), outP = eo(prog(t, PR.out, .3));
+  const prOn = t >= PR.in && t < PR.out + .3;
+  prv.style.display = prOn ? 'flex' : 'none';
+  prv.style.transform = `translateX(${(1 - inP) * 100 + outP * -0}%)`; prv.style.opacity = String(1 - outP);
+  chat.style.transform = `translateX(${prOn && outP < 1 ? -30 * (inP - outP) : 0}%)`;
+  document.querySelectorAll('#before .tree > .s').forEach((d, i) => d.classList.toggle('x', t >= BEFORE_X[0] + i * BEFORE_X[1]));
+  document.querySelectorAll('#before .tree > .nx').forEach((d) => d.classList.toggle('dim', t >= BEFORE_X[0] + 6 * BEFORE_X[1]));
+  document.querySelectorAll('#after .tree > div').forEach((d, i) => {
+    const p = prog(t, AFTER_IN[0] + i * AFTER_IN[1], .25); d.style.opacity = String(p); d.style.transform = `translateX(${(1 - eo(p)) * 14}px)`;
+  });
+  document.querySelector('#after h4').style.opacity = String(prog(t, AFTER_IN[0] - .2, .2));
+  const foot = prog(t, AFTER_IN[0] + 6 * AFTER_IN[1], .3); document.querySelector('.prfoot').style.opacity = String(foot);
+
+  // chip + clock
+  const c = lastAt(CHIPS, t); const chip = document.getElementById('chip');
+  document.getElementById('chipT').textContent = c.txt; chip.classList.toggle('night', !!c.night);
+  document.getElementById('clock').textContent = c.clock;
+  let pulse = 0; for (const x of CHIPS) if (x.t > 0 && !x.silent && t >= x.t) pulse = 1 - prog(t, x.t, .35);
+  chip.style.transform = `scale(${1 + .08 * pulse})`;
+  // night
+  let n = 0; for (const [a, b, v] of NIGHT) if (t >= a) n = v === 1 ? eio(prog(t, a, b - a)) : 1 - eio(prog(t, a, b - a));
+  document.getElementById('night').style.opacity = String(n);
+  // chip-in surfaces
+  const surf = (id, cfg, tid, caret) => {
+    const el = document.getElementById(id);
+    const a = Math.min(eo(prog(t, cfg.show[0], .25)), 1 - prog(t, cfg.show[1] - .25, .25));
+    el.style.display = a > 0 ? 'block' : 'none'; el.style.opacity = String(Math.max(0, a));
+    el.style.transform = `scale(${.85 + .15 * back(prog(t, cfg.show[0], .35))})`;
+    document.getElementById(tid).textContent = cfg.txt.slice(0, Math.round(cfg.txt.length * prog(t, cfg.type[0], cfg.type[1] - cfg.type[0])));
+    if (caret) document.getElementById(caret).style.opacity = t < cfg.type[1] + .1 ? '1' : '0';
+  };
+  surf('slack', SLACK, 'slText'); surf('cli', CLI, 'cliText', 'cliCaret');
+  // end
+  const e = Math.min(eio(prog(t, END[0], END[1] - END[0])), 1 - eio(prog(t, END[2], END[3] - END[2])));
+  const end = document.getElementById('end'); end.style.opacity = String(Math.max(0, e));
+  end.querySelector('.t').style.transform = `translateY(${(1 - eo(prog(t, END[0], .8))) * 14}px)`;
+};
+
+window.__cues = () => {
+  const out = [];
+  CHIPS.filter((c) => c.t > 0 && !c.silent).forEach((c) => out.push({ t: c.t, k: 'chip' }));
+  for (const it of ITEMS) {
+    if (it.k === 'jiro') out.push({ t: it.t, k: 'msg' });
+    if (it.k === 'li' || it.k === 'achip') out.push({ t: it.t, k: 'pop' });
+    if (it.k === 'work') it.rows.forEach((_, i) => out.push({ t: it.t + .1 + i * it.gap + it.gap * .8, k: 'tick' }));
+    if (it.k === 'achip' && it.s2) out.push({ t: it.t, k: 'chime' });
+  }
+  const typing = (a, b, s) => { const n = s.length; for (let i = 0; i < n; i += 2) out.push({ t: a + (b - a) * i / n, k: 'key' }); };
+  WEB_TYPE.forEach(([a, b, s]) => typing(a, b, s));
+  SENDS.forEach((s) => out.push({ t: s, k: 'send' }));
+  out.push({ t: SLACK.show[0], k: 'pop' }, { t: CLI.show[0], k: 'pop' }, { t: SLACK.type[1], k: 'enter' }, { t: CLI.type[1], k: 'enter' });
+  SCENES.slice(1).forEach((s) => out.push({ t: s.t, k: 'tap' }));
+  out.push({ t: PR.in, k: 'tap' }, { t: PR.out, k: 'tap' }, { t: SWITCH2 + .35, k: 'busy' });
+  document.querySelectorAll('#before .tree > .s').forEach((_, i) => out.push({ t: BEFORE_X[0] + i * BEFORE_X[1], k: 'tick' }));
+  document.querySelectorAll('#after .tree > div').forEach((_, i) => out.push({ t: AFTER_IN[0] + i * AFTER_IN[1], k: 'pop' }));
+  out.push({ t: AFTER_IN[0] + 6 * AFTER_IN[1], k: 'chime' });
+  return out.sort((a, b) => a.t - b.t);
+};
+</script>
+</body>
+</html>
