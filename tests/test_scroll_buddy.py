@@ -119,6 +119,19 @@ window.__jiroGliding = false;
 })();
 """
 
+RECORD_FIGURE = """
+window.__jiroFig = [];
+(function sample() {
+  const fig = document.querySelector('.jiro-buddy__figure');
+  const aside = document.querySelector('.jiro-buddy');
+  if (fig && aside && !aside.hidden) {
+    const r = fig.getBoundingClientRect();
+    window.__jiroFig.push([r.x, r.y, aside.dataset.jiroState]);
+  }
+  requestAnimationFrame(sample);
+})();
+"""
+
 RECORD_TEXTS = """
 window.__jiroTexts = [];
 new MutationObserver(() => {
@@ -857,6 +870,25 @@ class ScrollBuddyTest(unittest.TestCase):
                     if 0.1 < (a - start) / (end - start) < 0.9]
         self.assertTrue(cruising)
         self.assertGreater(min(cruising), peak * 0.25, f"slowed mid-air: {[round(x) for x in xs]}")
+
+    def test_jumping_onto_a_heading_while_the_page_scrolls_never_snaps(self):
+        page = self.open_recording("flow.html", script=RECORD_FIGURE, reduced_motion="no-preference")
+        expect(self.bubble(page)).to_contain_text(FLOW[0])
+        self.scroll_to_section(page, 3)
+        page.wait_for_function("document.querySelector('.jiro-buddy').dataset.jiroState === 'flying'", timeout=4000)
+        page.mouse.move(700, 300)
+        for _ in range(12):
+            page.mouse.wheel(0, 30)
+            page.wait_for_timeout(50)
+        expect(self.bubble(page)).to_contain_text(FLOW[2])
+        frames = page.evaluate("window.__jiroFig")
+        steps = [(b[0] - a[0], b[1] - a[1], b[2]) for a, b in zip(frames, frames[1:])]
+        snaps = [(round(v[0] - u[0]), round(v[1] - u[1]), v[2]) for u, v in zip(steps, steps[1:])
+                 if abs(v[0] - u[0]) > 90 or abs(v[1] - u[1]) > 90]
+        self.assertEqual(snaps, [], "velocity changed abruptly between frames")
+        heading = page.locator("#perch3").bounding_box()
+        figure = page.locator(".jiro-buddy__figure").bounding_box()
+        self.assertAlmostEqual(figure["y"] + figure["height"], heading["y"], delta=40)
 
     def open_clicks(self, **options):
         context = self.browser.new_context(viewport=DESKTOP, reduced_motion="reduce", **options)

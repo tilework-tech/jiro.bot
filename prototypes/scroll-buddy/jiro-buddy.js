@@ -367,6 +367,11 @@
       flight = null;
     }
 
+    function glide(t) {
+      var u = Math.min(Math.max((t - 0.1) / 0.74, 0), 1);
+      return (1 - Math.cos(Math.PI * u)) / 2;
+    }
+
     function arc(from, ahead) {
       var to = aside.getBoundingClientRect();
       var dx = from.left - to.left;
@@ -388,7 +393,7 @@
         var rest = (1 - u) * (1 - u);
         frames.push({
           offset: 0.1 + 0.74 * u,
-          transform: at((1 - Math.cos(Math.PI * u)) / 2, lift * Math.sin(Math.PI * u) + 6 * rest,
+          transform: at(glide(0.1 + 0.74 * u), lift * Math.sin(Math.PI * u) + 6 * rest,
             3 * rest - 8 * Math.sin(2 * Math.PI * u))
         });
       }
@@ -433,7 +438,16 @@
       placeOnPerch(heading);
       var landing = aside.getBoundingClientRect();
       unplace();
-      return arc(landing, true).then(function () {
+      var startY = window.scrollY;
+      var landed = arc(landing, true);
+      var animation = flight;
+      (function follow() {
+        if (!animation || flight !== animation) return;
+        aside.style.translate = "0 " + (startY - window.scrollY) * glide(animation.currentTime / FLIGHT_MS) + "px";
+        requestAnimationFrame(follow);
+      })();
+      return landed.then(function () {
+        aside.style.translate = "";
         if (perched !== heading) return;
         aside.getAnimations().forEach(function (animation) { animation.cancel(); });
         placeOnPerch(heading);
