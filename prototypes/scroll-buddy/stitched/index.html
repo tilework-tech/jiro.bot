@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jiro.bot · design screenshots + Jiro scroll buddy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../jiro-buddy.css">
+<style>
+  html, body { margin: 0; background: #f7f8f6; }
+  .page { max-width: 1190px; margin: 0 auto; padding: 24px 16px 48px; }
+  .note { font: 500 12px/1.4 "Geist Mono", ui-monospace, monospace; color: #6b6f6a; margin: 0 0 12px; }
+  main { background: #37fb67; }
+  .shot { position: relative; overflow: hidden; display: block; }
+  .shot img { display: block; max-width: none; user-select: none; -webkit-user-drag: none; }
+  .spot { position: absolute; border-radius: 2px; }
+  .spot[data-jiro-click] { cursor: pointer; }
+  .spot--anchor { pointer-events: none; }
+  .spot--input { box-sizing: border-box; border: 0; background: transparent; padding: 0 8px;
+                 font: 13px "Geist Mono", ui-monospace, monospace; color: #111; }
+  .spot--input:focus { outline: 2px solid #37fb67; background: #fff; }
+</style>
+</head>
+<body>
+<div class="page">
+  <p class="note">Top: Maddy's Figma, 2026-10-19 · below: review mock, 2026-10-14 · screenshots, not live HTML</p>
+  <main data-jiro-hovers="Yes, the bite mark is on purpose.|Still here. Still reviewing.|I read over your shoulder. Kindly.|No lorem ipsum on my watch.|Tickles. Back to work.">
+    <section id="nav" class="shot" aria-label="Navigation" style="aspect-ratio:1190/54">
+      <img src="figma-2026-10-19.png" alt="" style="width:107.5630%;margin-left:-2.6891%;margin-top:-3.4454%">
+      <a id="nav-why" class="spot" href="#ditch" aria-label="Why Jiro" style="left:17.3109%;top:24.0741%;width:4.7059%;height:37.0370%" data-jiro-click="Why me? Keep scrolling, I&#x27;ll make my case."></a>
+      <a id="nav-how" class="spot" href="#how" aria-label="How" style="left:22.8571%;top:24.0741%;width:2.1849%;height:37.0370%" data-jiro-click="Here&#x27;s how I work. Short version: carefully."></a>
+      <a id="nav-pricing" class="spot" href="#pricing" aria-label="Pricing" style="left:25.9664%;top:24.0741%;width:4.0336%;height:37.0370%" data-jiro-click="Straight to the bill. I respect that."></a>
+      <a id="nav-compare" class="spot" href="#bakeoff" aria-label="Compare" style="left:30.9244%;top:24.0741%;width:4.0336%;height:37.0370%" data-jiro-click="Comparison shopping. I checked the sources."></a>
+      <a id="nav-faq" class="spot" href="#faq" aria-label="FAQ" style="left:35.8824%;top:24.0741%;width:2.1849%;height:37.0370%" data-jiro-click="Questions first. Good instinct."></a>
+      <a id="nav-reserve" class="spot" href="#faq" aria-label="Reserve a seat" style="left:85.3782%;top:0.0000%;width:14.6218%;height:83.3333%" data-jiro-click="One stool at the counter, coming up."></a>
+    </section>
+    <section id="hero" class="shot" aria-label="The tasteful software engineer" style="aspect-ratio:1190/532" data-jiro-comment="Hi, I&#x27;m Jiro." data-jiro-anchor="#jiro-hero" data-jiro-click="Hi again. Still Jiro.">
+      <img src="figma-2026-10-19.png" alt="" style="width:107.5630%;margin-left:-2.6891%;margin-top:-7.9832%">
+      <div id="jiro-hero" class="spot spot--anchor" style="left:21.6807%;top:27.2556%;width:1.6807%;height:3.7594%"></div>
+      <a id="hero-reserve" class="spot" href="#faq" aria-label="Reserve a seat" style="left:3.3613%;top:77.6316%;width:9.4958%;height:6.5789%" data-jiro-click="Good call. I&#x27;ll save you a stool."></a>
+      <a id="hero-pricing" class="spot" href="#pricing" aria-label="See pricing" style="left:13.5294%;top:77.6316%;width:8.0672%;height:6.5789%" data-jiro-click="Spoiler: no token markup."></a>
+      <div id="hero-handle" class="spot" style="left:21.7647%;top:71.0526%;width:5.2101%;height:3.3835%" data-jiro-click="That&#x27;s my name. Say it in Slack."></div>
+    </section>
+    <section id="ditch" class="shot" aria-label="Ditch D*vin. Forget F*ctory. Stop slopping around." style="aspect-ratio:1190/424" data-jiro-comment="I censored them myself. Professional courtesy." data-jiro-mood="eager" data-jiro-look="#censor-devin" data-jiro-anchor="#jiro-ditch">
+      <img src="figma-2026-10-19.png" alt="" style="width:107.5630%;margin-left:-2.6891%;margin-top:-52.6891%">
+      <div id="jiro-ditch" class="spot spot--anchor" style="left:61.1765%;top:65.5660%;width:1.6807%;height:4.7170%"></div>
+      <div id="censor-devin" class="spot" style="left:17.1429%;top:21.4623%;width:15.4622%;height:16.9811%" data-jiro-click="Click all you want. The asterisk stays."></div>
+      <div id="censor-factory" class="spot" style="left:20.0000%;top:40.8019%;width:19.7479%;height:16.9811%" data-jiro-click="F*ctory gets one too. Fair&#x27;s fair."></div>
+      <div id="ditch-slop" class="spot" style="left:3.3613%;top:60.6132%;width:53.7815%;height:15.5660%" data-jiro-click="Slop is a choice. I don&#x27;t make it."></div>
+      <div id="call-jiro" class="spot" style="left:74.6218%;top:3.0660%;width:24.5378%;height:94.3396%" data-jiro-click="That&#x27;s me. Mention @jirobot and I&#x27;m in."></div>
+    </section>
+    <section id="video" class="shot" aria-label="Most agents optimize for output" style="aspect-ratio:1180/591" data-jiro-comment="Fewer lines. Same fix. You&#x27;re welcome." data-jiro-look="#video-frame" data-jiro-anchor="#jiro-video">
+      <img src="review-2026-10-14.png" alt="" style="width:108.8983%;margin-left:-5.0847%;margin-top:-58.1356%">
+      <div id="jiro-video" class="spot spot--anchor" style="left:49.1525%;top:34.1794%;width:1.6949%;height:3.3841%"></div>
+      <div id="video-frame" class="spot" style="left:3.5593%;top:35.8714%;width:93.1356%;height:57.6988%" data-jiro-click="Same prompt. Count the files.|Side by side. I&#x27;m the tidy one."></div>
+    </section>
+    <section id="pillars" class="shot" aria-label="Quality over volume, missteps caught early, called in" style="aspect-ratio:1180/131" data-jiro-comment="The cheapest bug is the one I flag before the PR." data-jiro-anchor="#jiro-pillars">
+      <img src="review-2026-10-14.png" alt="" style="width:108.8983%;margin-left:-5.0847%;margin-top:-108.2203%">
+      <div id="jiro-pillars" class="spot spot--anchor" style="left:49.1525%;top:-2.2901%;width:1.6949%;height:15.2672%"></div>
+      <div id="pillar-quality" class="spot" style="left:0.6780%;top:0.0000%;width:32.7966%;height:95.4198%" data-jiro-click="Big picture first, then the diff."></div>
+      <div id="pillar-missteps" class="spot" style="left:33.5593%;top:0.0000%;width:32.7966%;height:95.4198%" data-jiro-click="Cheaper now than in review."></div>
+      <div id="pillar-called" class="spot" style="left:66.4407%;top:0.0000%;width:32.8814%;height:95.4198%" data-jiro-click="I leave when the thread&#x27;s done."></div>
+    </section>
+    <section id="how" class="shot" aria-label="How he works" style="aspect-ratio:1180/479" data-jiro-comment="Plain words are fine. I&#x27;ll ask if it&#x27;s unclear." data-jiro-anchor="#jiro-how">
+      <img src="review-2026-10-14.png" alt="" style="width:108.8983%;margin-left:-5.0847%;margin-top:-119.3220%">
+      <div id="jiro-how" class="spot spot--anchor" style="left:66.9492%;top:10.8559%;width:1.6949%;height:4.1754%"></div>
+      <div id="how-call" class="spot" style="left:28.6441%;top:27.7662%;width:70.6780%;height:32.3591%" data-jiro-click="Mention me where your team already works."></div>
+      <div id="how-reads" class="spot" style="left:28.6441%;top:60.3340%;width:70.6780%;height:32.1503%" data-jiro-click="Context before code. Always."></div>
+      <div id="how-ships" class="spot" style="left:28.6441%;top:92.6931%;width:70.6780%;height:33.1942%" data-jiro-click="Small PRs. You review, I wait."></div>
+    </section>
+    <section id="pricing" class="shot" aria-label="Pricing: Not market price" style="aspect-ratio:1180/487" data-jiro-comment="Thirty days on the house. Pull up a stool?" data-jiro-ask="Yes please" data-jiro-action="#email" data-jiro-anchor="#jiro-pricing" data-jiro-click="Bring your own subscription. I don&#x27;t mark up the fish.">
+      <img src="review-2026-10-14.png" alt="" style="width:108.8983%;margin-left:-5.0847%;margin-top:-159.9153%">
+      <div id="jiro-pricing" class="spot spot--anchor" style="left:48.3051%;top:29.3634%;width:1.6949%;height:4.1068%"></div>
+      <div id="pricing-title" class="spot" style="left:2.3729%;top:9.6509%;width:24.7458%;height:11.0883%" data-jiro-click="Not market price. Fixed, and I&#x27;m proud of it."></div>
+      <div id="tier-apprentice" class="spot" style="left:0.6780%;top:24.6407%;width:32.7966%;height:65.0924%" data-jiro-click="Thirty days, three agents, zero dollars."></div>
+      <div id="tier-itamae" class="spot" style="left:33.5593%;top:24.6407%;width:32.7966%;height:65.0924%" data-jiro-click="The one I&#x27;d pick. I&#x27;m biased."></div>
+      <div id="tier-omakase" class="spot" style="left:66.4407%;top:24.6407%;width:32.8814%;height:65.0924%" data-jiro-click="Chef&#x27;s choice for the whole team."></div>
+    </section>
+    <section id="bakeoff" class="shot" aria-label="Cloud Agent Bakeoff" style="aspect-ratio:1180/661" data-jiro-comment="The green column is mine. Biased, but sourced." data-jiro-look="#col-jiro" data-jiro-anchor="#jiro-bakeoff" data-jiro-click="Pick a column. I&#x27;ll give you my take.">
+      <img src="review-2026-10-14.png" alt="" style="width:108.8983%;margin-left:-5.0847%;margin-top:-201.1864%">
+      <div id="jiro-bakeoff" class="spot spot--anchor" style="left:38.1356%;top:22.0877%;width:1.6949%;height:3.0257%"></div>
+      <div id="col-jiro" class="spot" style="left:19.3220%;top:21.1800%;width:25.2542%;height:72.9198%" data-jiro-click="Mine. Green suits me."></div>
+      <div id="col-claude" class="spot" style="left:44.5763%;top:20.7262%;width:21.5254%;height:72.6172%" data-jiro-click="Great model. Anthropic only, though."></div>
+      <div id="col-devin" class="spot" style="left:66.1864%;top:20.7262%;width:16.4407%;height:72.6172%" data-jiro-click="Free plan, light quota. Read the fine print."></div>
+      <div id="col-factory" class="spot" style="left:82.7119%;top:20.7262%;width:16.6102%;height:72.6172%" data-jiro-click="No free trial. Just saying."></div>
+    </section>
+    <section id="faq" class="shot" aria-label="FAQ and reserve a seat" style="aspect-ratio:1180/519" data-jiro-comment="Yes, you can bring your current subscription." data-jiro-anchor="#jiro-faq">
+      <img src="review-2026-10-14.png" alt="" style="width:108.8983%;margin-left:-5.0847%;margin-top:-257.2034%">
+      <div id="jiro-faq" class="spot spot--anchor" style="left:55.0847%;top:5.7803%;width:1.6949%;height:3.8536%"></div>
+      <div id="faq-list" class="spot" style="left:2.9661%;top:8.6705%;width:63.5593%;height:85.7418%" data-jiro-click="Ask away. Plain answers only."></div>
+      <input id="email" class="spot spot--input" type="email" aria-label="Work email" style="left:71.0169%;top:42.5819%;width:26.6949%;height:7.3218%" data-jiro-click="Work email. I&#x27;ll be in the thread.">
+      <div id="reserve-seat" class="spot" style="left:70.8475%;top:51.2524%;width:26.6102%;height:6.9364%" data-jiro-click="Thirty days on the house. Enjoy."></div>
+    </section>
+    <section id="footer" class="shot" aria-label="Built by the Nori team" style="aspect-ratio:1180/298">
+      <img src="review-2026-10-14.png" alt="" style="width:108.8983%;margin-left:-5.0847%;margin-top:-301.1864%">
+    </section>
+  </main>
+</div>
+<script src="../jiro-buddy.js" defer></script>
+</body>
+</html>

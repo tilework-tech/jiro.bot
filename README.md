@@ -9,6 +9,7 @@ The previous interactive site work is preserved on the
 - `build.py` — stdlib-only generator, `content/` -> `site/`. It owns one directory per page family under `site/` and rebuilds them from scratch, so never put hand-written files there.
 - `tools/` — pre-publish lint (including cross-page overlap and sentence-variation gates), LLM grader, AEO prompt probe, overlap check, preview server. See [tools/docs.md](tools/docs.md).
 - `aeo/` — dated grader and probe results.
+- `prototypes/` — standalone UI prototypes (e.g. the Jiro scroll buddy). Not deployed: they live outside `site/`. See [prototypes/scroll-buddy/docs.md](prototypes/scroll-buddy/docs.md).
 - `tests/` — black-box tests of `build.py` and `tools/lint.py` against `tests/fixtures/content`.
 - `infra/site.cfn.yaml` — CloudFormation stack `jiro-bot-site` (S3, CloudFront, ACM, Route 53, deploy role)
 - `.github/workflows/deploy.yml` — manual-dispatch deploy from `main`
@@ -19,6 +20,7 @@ Python 3.11+ (for `tomllib`), no dependencies.
 python3 build.py                     # regenerate site/ from content/
 python3 tools/lint.py                # must pass before publishing; also fails if site/ is stale
 cd tests && python3 -m unittest      # tests
+uv run --no-project --with playwright python -m unittest tests/test_scroll_buddy.py  # optional prototype browser tests
 python3 tools/serve.py               # preview on :4310 with extensionless URLs
 
 # Need GEMINI_API_KEY; write results into aeo/

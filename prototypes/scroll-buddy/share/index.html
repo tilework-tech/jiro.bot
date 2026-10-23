@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jiro scroll buddy: how he behaves on jiro.bot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root { --ink: #111; --cream: #f8f6f0; --salmon: #f35b45; --green: #3cf56a; --deep: #173d2b; --line: #111; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #efede6; color: var(--ink); font: 16px/1.5 "Inter Tight", system-ui, sans-serif; }
+.frame { max-width: 1180px; margin: 24px auto 64px; border: 8px solid var(--green); background: #fff; }
+.label { font: 500 12px/1 "Geist Mono", ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; }
+header { display: grid; grid-template-columns: 1.2fr 1fr; border-bottom: 2px solid var(--line); }
+header .copy { padding: 40px 40px 36px; }
+header h1 { margin: 18px 0 14px; font-size: 52px; line-height: 1; letter-spacing: -.035em; }
+header h1 mark { background: var(--salmon); color: var(--ink); padding: 0 6px; }
+header p { margin: 0; max-width: 46ch; }
+header .links { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.btn { display: inline-block; padding: 12px 18px; border: 2px solid var(--ink); color: var(--ink); text-decoration: none; }
+.btn.primary { background: var(--salmon); border-color: var(--salmon); color: #fff; }
+header .meta { background: var(--ink); color: var(--cream); padding: 40px; display: grid; gap: 18px; align-content: center; }
+header .meta div { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px solid #333; padding-bottom: 12px; }
+header .meta b { font-weight: 600; color: var(--green); font-family: "Geist Mono", monospace; }
+section { padding: 40px; border-bottom: 2px solid var(--line); }
+section h2 { margin: 12px 0 24px; font-size: 34px; letter-spacing: -.03em; line-height: 1.05; }
+video { display: block; width: 100%; border: 2px solid var(--ink); background: #000; }
+.beats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 2px solid var(--ink); }
+.beat { border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink); display: flex; flex-direction: column; }
+.beat:nth-child(3n) { border-right: 0; }
+.beat:nth-last-child(-n+3) { border-bottom: 0; }
+.beat img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-bottom: 2px solid var(--ink); }
+.beat .body { padding: 16px 18px 20px; display: grid; gap: 8px; }
+.beat h3 { margin: 0; font-size: 19px; letter-spacing: -.02em; }
+.beat p { margin: 0; font-size: 14.5px; }
+.beat q { display: block; font-style: normal; background: var(--cream); border: 2px solid var(--deep); border-radius: 8px; padding: 6px 10px; font-size: 14px; color: var(--deep); }
+.beat q::before, .beat q::after { content: ""; }
+.tiles { display: flex; gap: 6px; flex-wrap: wrap; }
+.tile { font: 500 11px/1 "Geist Mono", monospace; padding: 4px 6px; background: var(--green); }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid #ccc; }
+th { font: 500 11px/1.2 "Geist Mono", monospace; letter-spacing: .12em; text-transform: uppercase; border-bottom: 2px solid var(--ink); }
+td:first-child { width: 22%; font-weight: 600; }
+code { font: 13px "Geist Mono", ui-monospace, monospace; background: #f1efe8; padding: 1px 5px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.note { font-size: 14px; color: #555; }
+footer { padding: 18px 40px; background: var(--salmon); display: flex; justify-content: space-between; }
+@media (max-width: 860px) {
+  header, .two { grid-template-columns: 1fr; }
+  .beats { grid-template-columns: 1fr; }
+  .beat { border-right: 0; border-bottom: 2px solid var(--ink) !important; }
+  header h1 { font-size: 38px; }
+  section, header .copy, header .meta { padding: 24px; }
+}
+</style>
+</head>
+<body>
+<div class="frame">
+  <header>
+    <div class="copy">
+      <span class="label">&gt;_ Draft for the team</span>
+      <h1>Jiro, the <mark>little bubble</mark>, on jiro.bot</h1>
+      <p>Jiro lives in a corner of the page while you scroll. He hops between sides, perches on one heading, looks at what he's about to talk about, thinks, then says one line per section. He never repeats himself unless you click him.</p>
+      <div class="links">
+        <a class="btn primary" href="../index.html">Try the live demo</a>
+        <a class="btn" href="https://github.com/tilework-tech/jiro.bot/pull/22">PR #22</a>
+      </div>
+    </div>
+    <div class="meta">
+      <div><span>Weight</span><b>≈10 KB gzipped</b></div>
+      <div><span>Libraries</span><b>none</b></div>
+      <div><span>Starts</span><b>after page load</b></div>
+      <div><span>Layout shift</span><b>0 (tested)</b></div>
+      <div><span>Side changes</span><b>max 3 / page</b></div>
+      <div><span>Perches</span><b>max 1 / page</b></div>
+    </div>
+  </header>
+
+  <section>
+    <span class="label">/ Recording · 58s · desktop 1440×900</span>
+    <h2>One scroll, top to bottom</h2>
+    <video src="jiro-buddy-flow.mp4" controls muted playsinline loop preload="metadata" poster="stills/02-hero-ask.jpg"></video>
+    <p class="note">The 20-second idle before he falls asleep is sped up 9×. The recording is compressed; the live demo is the real thing.</p>
+  </section>
+
+  <section>
+    <span class="label">/ The flow</span>
+    <h2>What he does, section by section</h2>
+    <div class="beats">
+      <div class="beat"><img src="stills/01-peek.jpg" alt="Jiro peeking in from the left edge"><div class="body"><span class="label">On load</span><h3>Peeks in, then hops into his corner</h3><p>Slides half into view from the left edge, glances around, ducks back, then jumps in and lands with a little dust puff.</p><div class="tiles"><span class="tile">B3</span><span class="tile">C3</span><span class="tile">B1</span></div></div></div>
+      <div class="beat"><img src="stills/02-hero-ask.jpg" alt="Jiro asking a question in the hero"><div class="body"><span class="label">Hero</span><h3>Thinks for a beat, then says hi</h3><q>Hi, I'm Jiro.</q><p>The bubble grows out of his body and types.</p><div class="tiles"><span class="tile">C5</span><span class="tile">D4</span></div></div></div>
+      <div class="beat"><img src="stills/03-ditch-look.jpg" alt="Jiro looking at the censored D*vin"><div class="body"><span class="label">Ditch D*vin</span><h3>Eager double-hop, then stares at D*vin</h3><q>I censored them myself. Professional courtesy.</q><div class="tiles"><span class="tile">A4</span><span class="tile">B5</span></div></div></div>
+      <div class="beat"><img src="stills/05-video-flight.jpg" alt="Jiro flying to the right side"><div class="body"><span class="label">Video · side change 1</span><h3>Flits across to the right</h3><p>Crouches, arcs over the page with a tilt, lands with a squash.</p><q>Fewer lines. Same fix. You're welcome.</q><div class="tiles"><span class="tile">B2</span></div></div></div>
+      <div class="beat"><img src="stills/10-hover-eyes.jpg" alt="Jiro with eyes when hovered"><div class="body"><span class="label">How he works · side change 2</span><h3>Back left. Hover him and he dodges, then quips.</h3><p>He hops aside, his <code>&gt;_</code> becomes two pixel eyes, and he says a new line each time, e.g. “Yes, the bite mark is on purpose.” He won't interrupt an open question.</p><q>Plain words are fine. I'll ask if it's unclear.</q><div class="tiles"><span class="tile">B2</span><span class="tile">C2</span></div></div></div>
+      <div class="beat"><img src="stills/12-perched-ask.jpg" alt="Jiro perched on the pricing heading"><div class="body"><span class="label">Pricing · the perch</span><h3>Hops up onto “Not market price”</h3><p>Sits on the heading and scrolls with it. Only once per page.</p><q>Thirty days on the house. Pull up a stool?</q><p><b>Yes please</b> jumps to the email field.</p><div class="tiles"><span class="tile">B4</span><span class="tile">E3</span></div></div></div>
+      <div class="beat"><img src="stills/14-bakeoff-said.jpg" alt="Jiro commenting on the comparison table"><div class="body"><span class="label">Bakeoff · side change 3</span><h3>Highlights the jiro.bot column</h3><q>The green column is mine. Biased, but sourced.</q><p>After this he stays on the right for the rest of the page.</p><div class="tiles"><span class="tile">B2</span><span class="tile">B5</span></div></div></div>
+      <div class="beat"><img src="stills/06-video-said.jpg" alt="Jiro's speech bubble"><div class="body"><span class="label">Every comment</span><h3>Look → think → speak</h3><p>The thing he's talking about gets a green outline, his face turns into thinking dots, then his body stretches into the speech bubble and types.</p><div class="tiles"><span class="tile">B5</span><span class="tile">C5</span><span class="tile">D4</span></div></div></div>
+      <div class="beat"><img src="stills/16-sleepy.jpg" alt="Jiro asleep"><div class="body"><span class="label">Left alone 20s</span><h3>Dozes off</h3><p>Closes the bubble, eyes go <code>-_-</code>, z's drift up, slower bob. Any scroll, key or mouse movement wakes him with a hop.</p><div class="tiles"><span class="tile">A5</span></div></div></div>
+    </div>
+  </section>
+
+  <section class="two">
+    <div>
+      <span class="label">/ Always on</span>
+      <h2>The rules</h2>
+      <table>
+        <tr><th>What</th><th>Behaviour</th></tr>
+        <tr><td>Idle</td><td>Layered game-style hover: bob, drift, tilt and squash at different speeds, shadow shrinks as he rises. Cursor blinks. <span class="tile">A2</span> <span class="tile">C1</span></td></tr>
+        <tr><td>Once only</td><td>Each section gets one comment per visit. Scrolling back stays quiet. Clicking Jiro replays the current one.</td></tr>
+        <tr><td>Hover</td><td>A small dodge hop and a new line from a rotating list, never the same twice in a row.</td></tr>
+        <tr><td>Calm</td><td>One trick at a time, never stacked. At most 3 side changes and 1 perch per page.</td></tr>
+        <tr><td>Off switch</td><td>× hides him for the rest of the tab session.</td></tr>
+        <tr><td>Reduced motion</td><td>No hover, flights or typing. He moves instantly and text appears at once.</td></tr>
+        <tr><td>Phones</td><td>Smaller, stays bottom-left, only talks when tapped.</td></tr>
+      </table>
+    </div>
+    <div>
+      <span class="label">/ For whoever builds the real page</span>
+      <h2>Two files and some attributes</h2>
+      <p>Add <code>jiro-buddy.css</code> and <code>jiro-buddy.js</code> (deferred). Then tag sections:</p>
+      <table>
+        <tr><th>Attribute</th><th>Does</th></tr>
+        <tr><td><code>data-jiro-comment</code></td><td>His line for this section (required).</td></tr>
+        <tr><td><code>data-jiro-ask</code> + <code>data-jiro-action</code></td><td>Turns the line into a question with a Yes button that scrolls to or focuses the selector.</td></tr>
+        <tr><td><code>data-jiro-look</code></td><td>Selector he looks at and highlights before speaking.</td></tr>
+        <tr><td><code>data-jiro-perch</code></td><td>Heading he hops onto (first one wins).</td></tr>
+        <tr><td><code>data-jiro-side</code></td><td><code>left</code> / <code>right</code> corner for this section.</td></tr>
+        <tr><td><code>data-jiro-mood</code></td><td><code>eager</code> adds a double-hop before speaking.</td></tr>
+        <tr><td><code>data-jiro-hovers</code></td><td>On any one element (e.g. <code>main</code>): hover lines separated by <code>|</code>.</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <span class="label">/ Open questions</span>
+    <h2>For the team</h2>
+    <table>
+      <tr><td>Copy</td><td>Section lines picked by Martin on 2026-10-20. Hover lines are drafts. All live in the HTML.</td></tr>
+      <tr><td>Hero overlap</td><td>On a 1440 screen his “Hi” bubble touches the “Ditch D*vin” headline. A wider page margin would fix it.</td></tr>
+      <tr><td>Design source</td><td>The mockup follows Maddy's 10.19 Figma screenshot for the top and the earlier full-page mock below it. The Figma file itself wouldn't open in the agent's browser.</td></tr>
+    </table>
+  </section>
+
+  <footer><span class="label">/ Built by the Nori team</span><span class="label">Draft · 2026-10-20</span></footer>
+</div>
+</body>
+</html>

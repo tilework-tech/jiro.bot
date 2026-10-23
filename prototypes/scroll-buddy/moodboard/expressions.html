@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jiro — head and antenna expressions (learned from Reachy)</title>
+<style>
+:root { --k: 1; --ink: #173d2b; --salmon: #f2694f; --cream: #f8f6f0; --bg: #efece4; --card: #fbfaf6; --muted: #5d6f64; --line: #ddd8ca; --bar: #e3dfd3; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 Inter, system-ui, sans-serif; }
+.wrap { max-width: 1420px; margin: 0 auto; padding: 22px 20px 70px; }
+h1 { font-size: 22px; margin: 0 0 4px; }
+.sub { margin: 0 0 14px; color: var(--muted); max-width: 980px; }
+.ref { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 22px; }
+.ref img { width: 100%; border-radius: 8px; display: block; }
+.ref ul { margin: 6px 0 0; padding-left: 18px; } .ref li { margin: 4px 0; }
+.ref h2 { font-size: 15px; margin: 0; }
+.ref .note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+.controls { display: flex; gap: 10px; align-items: center; margin: 0 0 14px; flex-wrap: wrap; }
+.controls label { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+button.ctl { font: 600 13px Inter, sans-serif; color: var(--ink); background: var(--card); border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+button.save { background: var(--salmon); border-color: var(--salmon); color: #fff; }
+.status { font-size: 13px; color: var(--muted); }
+.row { display: grid; grid-template-columns: 128px 1fr; gap: 14px; margin-bottom: 16px; }
+.letter { font: 600 26px ui-monospace, monospace; color: var(--salmon); line-height: 1; }
+.rname { font-weight: 700; margin-top: 6px; } .rhint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.tiles { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 1180px) { .row { grid-template-columns: 1fr; } .tiles { grid-template-columns: repeat(auto-fill, minmax(236px, 1fr)); } .ref { grid-template-columns: 1fr; } }
+.tile { background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; padding: 8px; display: flex; flex-direction: column; gap: 7px; }
+.tile.starred { border-color: var(--salmon); box-shadow: 0 0 0 2px rgba(242,105,79,.25); }
+.stage { position: relative; height: 176px; border-radius: 8px; overflow: hidden; background: #fff; border: 1px solid var(--line); }
+.stage svg.jiro { position: absolute; left: 50%; top: 50%; width: 120px; height: 120px; margin: -54px 0 0 -60px; overflow: visible; }
+.meta { display: flex; gap: 8px; align-items: flex-start; }
+.code { font: 600 12px ui-monospace, monospace; background: var(--ink); color: var(--cream); border-radius: 5px; padding: 2px 6px; }
+.title { font-weight: 700; font-size: 13.5px; } .desc { font-size: 12px; color: var(--muted); }
+.star { margin-left: auto; background: none; border: 0; font-size: 20px; cursor: pointer; color: #c9c3b2; line-height: 1; }
+.tile.starred .star { color: var(--salmon); }
+textarea { width: 100%; min-height: 30px; font: 12px Inter, sans-serif; border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; resize: vertical; background: #fff; }
+.prop { position: absolute; background: var(--bar); border-radius: 3px; }
+.cursor-dot { position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--salmon); opacity: .0; }
+
+/* the character */
+.jiro .fill { fill: var(--cream); }
+.jiro .line { fill: none; stroke: var(--ink); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+.jiro .tail { fill: var(--ink); }
+.jiro .face rect { fill: var(--salmon); shape-rendering: crispEdges; }
+.jiro .shadow { fill: #000; opacity: .08; }
+.jiro .head, .jiro .face, .jiro .stubL, .jiro .stubR, .jiro .shadow, .jiro .body { transform-box: view-box; }
+.jiro .head { transform-origin: 60px 104px; }
+.jiro .body { transform-origin: 60px 104px; }
+.jiro .stubL { transform-origin: 23.6px 84.2px; }
+.jiro .stubR { transform-origin: 98.6px 70.4px; }
+.jiro .face { transform-origin: 60px 60px; }
+.jiro .shadow { transform-origin: 60px 112px; }
+.jiro .cur { animation: blink 1.06s steps(1, end) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.paused * { animation-play-state: paused !important; }
+
+/* A — antennas (outline ends) */
+.A1 .stubL { animation: a1l calc(3.2s / var(--k)) ease-in-out infinite; } .A1 .stubR { animation: a1r calc(2.7s / var(--k)) ease-in-out infinite; }
+@keyframes a1l { 50% { transform: rotate(-5deg); } } @keyframes a1r { 50% { transform: rotate(6deg); } }
+.A2 .stubL { animation: a2l calc(2.8s / var(--k)) cubic-bezier(.3,1.6,.5,1) infinite; } .A2 .stubR { animation: a2r calc(2.8s / var(--k)) cubic-bezier(.3,1.6,.5,1) infinite; }
+.A2 .head { animation: a2h calc(2.8s / var(--k)) ease-out infinite; }
+@keyframes a2l { 0%, 20%, 100% { transform: rotate(0); } 32%, 80% { transform: rotate(-26deg); } }
+@keyframes a2r { 0%, 20%, 100% { transform: rotate(0); } 32%, 80% { transform: rotate(24deg); } }
+@keyframes a2h { 0%, 20%, 100% { transform: translateY(0); } 32%, 80% { transform: translateY(-4px); } }
+.A3 .stubR { animation: a3r calc(3.4s / var(--k)) cubic-bezier(.3,1.5,.5,1) infinite; } .A3 .head { animation: a3h calc(3.4s / var(--k)) ease-in-out infinite; }
+@keyframes a3r { 0%, 15%, 100% { transform: rotate(0); } 28%, 78% { transform: rotate(30deg); } }
+@keyframes a3h { 0%, 15%, 100% { transform: rotate(0); } 28%, 78% { transform: rotate(8deg); } }
+.A4 .stubL { animation: a4l calc(3.4s / var(--k)) ease-in-out infinite; } .A4 .stubR { animation: a4r calc(3.4s / var(--k)) ease-in-out infinite; } .A4 .head { animation: a4h calc(3.4s / var(--k)) ease-in-out infinite; }
+@keyframes a4l { 0%, 15%, 100% { transform: rotate(0); } 35%, 80% { transform: rotate(34deg); } }
+@keyframes a4r { 0%, 15%, 100% { transform: rotate(0); } 35%, 80% { transform: rotate(-40deg); } }
+@keyframes a4h { 0%, 15%, 100% { transform: translateY(0) scale(1); } 35%, 80% { transform: translateY(5px) scale(1.03,.95); } }
+.A5 .head { animation: a5h calc(2.6s / var(--k)) ease-in-out infinite; } .A5 .stubL { animation: a5l calc(2.6s / var(--k)) linear infinite; } .A5 .stubR { animation: a5r calc(2.6s / var(--k)) linear infinite; }
+@keyframes a5h { 0%, 100% { transform: translateY(0); } 12% { transform: translateY(-18px); } 24% { transform: translateY(0) scale(1.06,.92); } 30% { transform: none; } }
+@keyframes a5l { 0%, 22%, 70%, 100% { transform: rotate(0); } 26% { transform: rotate(22deg); } 32% { transform: rotate(-14deg); } 38% { transform: rotate(9deg); } 45% { transform: rotate(-5deg); } 54% { transform: rotate(2deg); } }
+@keyframes a5r { 0%, 22%, 70%, 100% { transform: rotate(0); } 27% { transform: rotate(-24deg); } 33% { transform: rotate(15deg); } 40% { transform: rotate(-9deg); } 47% { transform: rotate(5deg); } 56% { transform: rotate(-2deg); } }
+
+/* B — head pose */
+.B1 .head { animation: b1 calc(3.6s / var(--k)) cubic-bezier(.4,0,.2,1) infinite; }
+@keyframes b1 { 0%, 10%, 100% { transform: rotate(0); } 22%, 42% { transform: rotate(-12deg); } 56%, 78% { transform: rotate(10deg); } 90% { transform: rotate(0); } }
+.B2 .face { animation: b2f calc(3.6s / var(--k)) cubic-bezier(.4,0,.2,1) infinite; } .B2 .body { animation: b2b calc(3.6s / var(--k)) cubic-bezier(.4,0,.2,1) infinite; }
+@keyframes b2f { 0%, 10%, 90%, 100% { transform: translateX(0) scaleX(1); } 25%, 42% { transform: translateX(-11px) scaleX(.82); } 58%, 76% { transform: translateX(11px) scaleX(.82); } }
+@keyframes b2b { 0%, 10%, 90%, 100% { transform: scaleX(1); } 25%, 42%, 58%, 76% { transform: scaleX(.95); } }
+.B3 .face { animation: b3f calc(3.4s / var(--k)) cubic-bezier(.4,0,.2,1) infinite; } .B3 .head { animation: b3h calc(3.4s / var(--k)) cubic-bezier(.4,0,.2,1) infinite; }
+@keyframes b3f { 0%, 10%, 100% { transform: translateY(0) scaleY(1); } 25%, 50% { transform: translateY(9px) scaleY(.8); } 65%, 85% { transform: translateY(-7px) scaleY(.85); } }
+@keyframes b3h { 0%, 10%, 100% { transform: rotate(0); } 25%, 50% { transform: rotate(3deg) scaleY(.97); } 65%, 85% { transform: rotate(-2deg); } }
+.B4 .head { animation: b4 calc(3s / var(--k)) cubic-bezier(.3,1.4,.5,1) infinite; } .B4 .shadow { animation: b4s calc(3s / var(--k)) ease-out infinite; }
+@keyframes b4 { 0%, 15%, 100% { transform: translateY(0) scale(1); } 30%, 75% { transform: translateY(-12px) scale(.97,1.07); } }
+@keyframes b4s { 0%, 15%, 100% { transform: scale(1); } 30%, 75% { transform: scale(.75); opacity: .05; } }
+.B5 .head { animation: b5 calc(3.2s / var(--k)) ease-in-out infinite; } .B5 .stubL { animation: b5l calc(3.2s / var(--k)) ease-in-out infinite; } .B5 .stubR { animation: b5r calc(3.2s / var(--k)) ease-in-out infinite; }
+@keyframes b5 { 0%, 15%, 100% { transform: none; } 32% { transform: translateY(6px) scale(1.08,.88); } 45%, 80% { transform: translateY(3px) scale(1.04,.94); } }
+@keyframes b5l { 0%, 15%, 100% { transform: rotate(0); } 32%, 80% { transform: rotate(14deg); } } @keyframes b5r { 0%, 15%, 100% { transform: rotate(0); } 32%, 80% { transform: rotate(-16deg); } }
+
+/* C — timing */
+.C1 .head { animation: c1h calc(4.1s / var(--k)) ease-in-out infinite; } .C1 .body { animation: c1b calc(3.3s / var(--k)) ease-in-out infinite; } .C1 .stubL { animation: a1l calc(2.9s / var(--k)) ease-in-out infinite; } .C1 .stubR { animation: a1r calc(3.7s / var(--k)) ease-in-out infinite; }
+@keyframes c1h { 50% { transform: rotate(2.5deg) translateY(-2px); } } @keyframes c1b { 50% { transform: scale(1.015,.985); } }
+.C2 .head { animation: c2h calc(3.2s / var(--k)) cubic-bezier(.4,0,.2,1) infinite; } .C2 .stubL { animation: c2l calc(3.2s / var(--k)) linear infinite; } .C2 .stubR { animation: c2r calc(3.2s / var(--k)) linear infinite; }
+@keyframes c2h { 0%, 100% { transform: rotate(0); } 15%, 45% { transform: rotate(-14deg); } 60%, 90% { transform: rotate(0); } }
+@keyframes c2l { 0%, 100% { transform: rotate(0); } 19% { transform: rotate(16deg); } 25% { transform: rotate(-8deg); } 31% { transform: rotate(4deg); } 37%, 60% { transform: rotate(0); } 64% { transform: rotate(-14deg); } 70% { transform: rotate(7deg); } 76% { transform: rotate(-3deg); } 82% { transform: rotate(0); } }
+@keyframes c2r { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(18deg); } 26% { transform: rotate(-9deg); } 32% { transform: rotate(4deg); } 38%, 61% { transform: rotate(0); } 65% { transform: rotate(-15deg); } 71% { transform: rotate(8deg); } 77% { transform: rotate(-3deg); } 83% { transform: rotate(0); } }
+.C3 .face { animation: c3f calc(3.6s / var(--k)) cubic-bezier(.4,0,.2,1) infinite; } .C3 .stubL { animation: c3l calc(3.6s / var(--k)) cubic-bezier(.3,1.6,.5,1) infinite; } .C3 .stubR { animation: c3r calc(3.6s / var(--k)) cubic-bezier(.3,1.6,.5,1) infinite; } .C3 .prop { animation: c3p calc(3.6s / var(--k)) ease infinite; }
+@keyframes c3f { 0%, 8%, 92%, 100% { transform: none; } 18%, 80% { transform: translate(12px,-8px) scale(.85); } }
+@keyframes c3l { 0%, 34%, 92%, 100% { transform: rotate(0); } 42%, 80% { transform: rotate(-24deg); } } @keyframes c3r { 0%, 34%, 92%, 100% { transform: rotate(0); } 42%, 80% { transform: rotate(24deg); } }
+@keyframes c3p { 0%, 8%, 92%, 100% { opacity: .5; } 18%, 80% { opacity: 1; background: #3cf06e; } }
+.C4 .face { animation: c4 calc(2.8s / var(--k)) steps(1, end) infinite; }
+@keyframes c4 { 0% { transform: none; } 18% { transform: translate(-4px,-1px); } 30% { transform: translate(3px,0); } 52% { transform: translate(5px,2px); } 64% { transform: translate(-2px,-2px); } 82% { transform: translate(0,1px); } }
+.C5 .head { animation: c5h calc(3.4s / var(--k)) infinite; } .C5 .stubL { animation: c5l calc(3.4s / var(--k)) infinite; } .C5 .stubR { animation: c5r calc(3.4s / var(--k)) infinite; } .C5 .cursor-dot { animation: c5d calc(3.4s / var(--k)) ease-in-out infinite; }
+@keyframes c5h { 0% { transform: rotate(3deg) translateY(-2px); animation-timing-function: ease-in-out; } 15% { transform: rotate(-3deg); } 30% { transform: rotate(2deg) translateY(-1px); } 34%, 62% { transform: rotate(2deg) translateY(-1px); animation-timing-function: cubic-bezier(.3,1.6,.5,1); } 70%, 90% { transform: translateY(-8px); } 100% { transform: rotate(3deg) translateY(-2px); } }
+@keyframes c5l { 0%, 62%, 100% { transform: rotate(0); } 70%, 90% { transform: rotate(-24deg); } } @keyframes c5r { 0%, 62%, 100% { transform: rotate(0); } 70%, 90% { transform: rotate(24deg); } }
+@keyframes c5d { 0% { opacity: 0; left: 90%; top: 80%; } 20% { opacity: 1; } 34%, 90% { opacity: 1; left: 66%; top: 34%; } 100% { opacity: 0; left: 66%; top: 34%; } }
+
+/* D — expressions, same face */
+.D1 .head { animation: b4 calc(3s / var(--k)) cubic-bezier(.3,1.4,.5,1) infinite; } .D1 .stubL { animation: a2l calc(3s / var(--k)) cubic-bezier(.3,1.6,.5,1) infinite; } .D1 .stubR { animation: a2r calc(3s / var(--k)) cubic-bezier(.3,1.6,.5,1) infinite; }
+.D2 .head { animation: d2h calc(3.6s / var(--k)) cubic-bezier(.4,0,.2,1) infinite; } .D2 .face { animation: d2f calc(3.6s / var(--k)) cubic-bezier(.4,0,.2,1) infinite; } .D2 .stubL { animation: d2l calc(3.6s / var(--k)) ease infinite; } .D2 .stubR { animation: a3r calc(3.6s / var(--k)) cubic-bezier(.3,1.5,.5,1) infinite; }
+@keyframes d2h { 0%, 12%, 100% { transform: none; } 28%, 80% { transform: rotate(-9deg) translateX(-3px); } }
+@keyframes d2f { 0%, 12%, 100% { transform: none; } 28%, 80% { transform: translate(9px,-2px) scaleX(.86); } }
+@keyframes d2l { 0%, 12%, 100% { transform: rotate(0); } 28%, 80% { transform: rotate(20deg); } }
+.D3 .head { animation: d3h calc(3.2s / var(--k)) cubic-bezier(.3,1.4,.5,1) infinite; } .D3 .stubL { animation: d3l calc(3.2s / var(--k)) cubic-bezier(.3,1.6,.5,1) infinite; } .D3 .stubR { animation: d3r calc(3.2s / var(--k)) cubic-bezier(.3,1.6,.5,1) infinite; }
+@keyframes d3h { 0%, 15%, 100% { transform: none; } 30%, 78% { transform: translateY(-9px) scale(1.06,1.04) rotate(-2deg); } }
+@keyframes d3l { 0%, 15%, 100% { transform: rotate(0); } 30%, 78% { transform: rotate(-38deg); } } @keyframes d3r { 0%, 15%, 100% { transform: rotate(0); } 30%, 78% { transform: rotate(36deg); } }
+.D4 .head { animation: d4h calc(3.6s / var(--k)) ease-in-out infinite; } .D4 .face { animation: d4f calc(3.6s / var(--k)) ease-in-out infinite; } .D4 .stubL { animation: a4l calc(3.6s / var(--k)) ease-in-out infinite; } .D4 .stubR { animation: a4r calc(3.6s / var(--k)) ease-in-out infinite; }
+@keyframes d4h { 0%, 12%, 100% { transform: none; } 32%, 82% { transform: translateY(6px) rotate(7deg) scale(1.03,.94); } }
+@keyframes d4f { 0%, 12%, 100% { transform: none; } 32%, 82% { transform: translate(-10px,7px) scale(.82); } }
+.D5 .face { animation: d5f calc(3.6s / var(--k)) cubic-bezier(.4,0,.2,1) infinite; } .D5 .head { animation: d5h calc(3.6s / var(--k)) cubic-bezier(.4,0,.2,1) infinite; } .D5 .stubL { animation: d5l calc(.9s / var(--k)) ease-in-out infinite; } .D5 .stubR { animation: d5r calc(.9s / var(--k)) ease-in-out infinite; } .D5 .cur { animation-duration: .45s; }
+@keyframes d5f { 0%, 10%, 100% { transform: none; } 24%, 86% { transform: translate(-9px,-8px) scale(.86); } }
+@keyframes d5h { 0%, 10%, 100% { transform: none; } 24%, 86% { transform: rotate(-6deg); } }
+@keyframes d5l { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-12deg); } 50% { transform: rotate(0); } }
+@keyframes d5r { 0%, 50%, 100% { transform: rotate(0); } 75% { transform: rotate(12deg); } }
+
+/* E — on the page */
+.E1 .face { animation: e1f calc(3.6s / var(--k)) cubic-bezier(.4,0,.2,1) infinite; } .E1 .head { animation: e1h calc(3.6s / var(--k)) cubic-bezier(.4,0,.2,1) infinite; } .E1 .stubL { animation: c3l calc(3.6s / var(--k)) cubic-bezier(.3,1.6,.5,1) infinite; } .E1 .stubR { animation: c3r calc(3.6s / var(--k)) cubic-bezier(.3,1.6,.5,1) infinite; } .E1 .prop.h { animation: e1p calc(3.6s / var(--k)) ease infinite; }
+@keyframes e1f { 0%, 10%, 92%, 100% { transform: none; } 22%, 82% { transform: translate(-11px,-9px) scale(.86); } }
+@keyframes e1h { 0%, 10%, 92%, 100% { transform: none; } 22%, 82% { transform: rotate(-7deg) translateY(-3px); } }
+@keyframes e1p { 0%, 8%, 100% { transform: translateY(-40px); opacity: 0; } 18%, 92% { transform: none; opacity: 1; } }
+.E3 .face { animation: e3f calc(4s / var(--k)) linear infinite; } .E3 .head { animation: e3h calc(4s / var(--k)) linear infinite; }
+@keyframes e3f { 0%, 8% { transform: translate(-12px,8px) scale(.85); } 70% { transform: translate(12px,8px) scale(.85); } 78% { transform: translate(12px,10px) scale(.85); } 90%, 100% { transform: none; } }
+@keyframes e3h { 0%, 8% { transform: rotate(-6deg); } 70% { transform: rotate(6deg); } 78% { transform: rotate(6deg) translateY(2px); } 90%, 100% { transform: none; } }
+.E5 .head { animation: e5h calc(2.8s / var(--k)) infinite; } .E5 .stubL { animation: e5l calc(2.8s / var(--k)) linear infinite; } .E5 .stubR { animation: e5r calc(2.8s / var(--k)) linear infinite; } .E5 .shadow { animation: e5s calc(2.8s / var(--k)) infinite; }
+@keyframes e5h { 0%, 100% { transform: none; } 18% { transform: translateY(4px) scale(1.1,.86); animation-timing-function: cubic-bezier(.2,.6,.4,1); } 40% { transform: translate(0,-34px) scale(.94,1.08); animation-timing-function: cubic-bezier(.6,0,.8,.4); } 58% { transform: translateY(3px) scale(1.12,.86); } 66% { transform: none; } }
+@keyframes e5l { 0%, 100% { transform: rotate(0); } 18% { transform: rotate(26deg); } 40% { transform: rotate(-10deg); } 58% { transform: rotate(-30deg); } 63% { transform: rotate(16deg); } 68% { transform: rotate(-8deg); } 74% { transform: rotate(3deg); } 80% { transform: rotate(0); } }
+@keyframes e5r { 0%, 100% { transform: rotate(0); } 18% { transform: rotate(-28deg); } 40% { transform: rotate(10deg); } 58% { transform: rotate(32deg); } 63% { transform: rotate(-17deg); } 68% { transform: rotate(8deg); } 74% { transform: rotate(-3deg); } 80% { transform: rotate(0); } }
+@keyframes e5s { 0%, 100% { transform: none; } 40% { transform: scale(.6); opacity: .04; } 58% { transform: scale(1.1); } }
+@media (prefers-reduced-motion: reduce) { .stage * { animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Head + antenna expressions: what Reachy teaches the bubble</h1>
+  <p class="sub">The 25 tiles are all the real V3 bubble with the <b>same face throughout</b>. Every expression comes from the head and the two free ends of the outline at the top gap, which act as Jiro's antennas. Star what you like, add notes, hit <b>Save</b>.</p>
+
+  <section class="ref">
+    <div><img src="reachy/key.png" alt="Reachy key frames"><div class="note">Key frames from Cliff's Reachy video (@darkseed, 32 s). Captured with Playwright, one frame every 0.5 s: <a href="reachy/sheet0.png">0–8 s</a> · <a href="reachy/sheet1.png">8–16 s</a> · <a href="reachy/sheet2.png">16–24 s</a> · <a href="reachy/sheet3.png">24–32 s</a></div></div>
+    <div>
+      <h2>What I see in the 65 frames</h2>
+      <ul>
+        <li><b>The face never changes.</b> Two fixed lens "eyes" for 32 s. Everything readable comes from pose.</li>
+        <li><b>The antennas move independently:</b> both straight up = attentive (2.0 s, 18 s), one tipped out = curious (1.5 s, 9 s), splayed into a V = open/relaxed (16.5 s, 28.5 s), both leaning the same way = following the head (21 s).</li>
+        <li><b>Head tilt (roll), about ±10°,</b> appears in nearly every frame. It's the "dog listening" read.</li>
+        <li><b>Head turn and nod</b> point the eyes at a person or thing. The body barely moves.</li>
+        <li><b>Rising up off the body</b> (6.5 s, neck visible) = perking up. It's the biggest single move in the clip.</li>
+        <li><b>It's never fully still.</b> Small, slow, continuous drift between poses.</li>
+      </ul>
+      <div class="note">Caveat: at 0.5 s per frame, fast whips are invisible. The springy overshoot of the antennas (row C2, A5) is inferred from the coil springs at their base, not seen frame by frame.</div>
+    </div>
+  </section>
+
+  <div class="controls">
+    <label>Speed <input id="speed" type="range" min="0.5" max="2" step="0.25" value="1"> <span id="sv">1×</span></label>
+    <button class="ctl" id="pause" aria-pressed="false">Pause</button>
+    <button class="ctl save" id="save">Save</button>
+    <span class="status" id="status"></span>
+  </div>
+  <div id="rows"></div>
+</div>
+
+<template id="jiro">
+<svg class="jiro" viewBox="0 0 120 120" aria-hidden="true">
+  <ellipse class="shadow" cx="60" cy="112" rx="30" ry="4"/>
+  <g class="head">
+    <g class="body">
+      <mask id="bite-MASK"><rect x="-20" y="-20" width="160" height="160" fill="#fff"/><circle cx="86" cy="22" r="9" fill="#000"/><circle cx="97" cy="35" r="7" fill="#000"/></mask>
+      <circle class="fill" cx="60" cy="60" r="40" mask="url(#bite-MASK)"/>
+      <path class="line" d="M98.6 70.4 A40 40 0 0 1 32 88.6"/>
+      <path class="line" d="M24.5 79 A40 40 0 0 1 46.3 22.4"/>
+      <path class="tail" d="M33 82 L15 104 L42 92 Z"/>
+    </g>
+    <path class="line stubL" d="M46.3 22.4 A40 40 0 0 1 66.9 20.6"/>
+    <path class="line stubR" d="M98.6 70.4 A40 40 0 0 0 99.4 53.1"/>
+    <g class="face">
+      <rect x="38" y="52" width="4" height="4"/><rect x="42" y="56" width="4" height="4"/><rect x="46" y="60" width="4" height="4"/><rect x="42" y="64" width="4" height="4"/><rect x="38" y="68" width="4" height="4"/>
+      <rect x="54" y="68" width="14" height="4"/>
+      <rect class="cur" x="74" y="54" width="8" height="18"/>
+    </g>
+  </g>
+</svg>
+</template>
+
+<script>
+(function () {
+  "use strict";
+  var ROWS = [
+    { k: "A", name: "Antennas", hint: "The outline's two free ends at the top gap, used like Reachy's antennas.", tiles: [
+      ["Breathing ends", "Both ends sway a few degrees on different rhythms. Alive even at rest."],
+      ["Perk up", "Both ends flick upright with a springy overshoot. \"Oh, hello.\""],
+      ["One-ear curious", "Only the right end lifts while the head tilts. Reachy at 1.5 s and 9 s."],
+      ["Droop", "Both ends curl down and the head sinks. Disappointed, or dozing."],
+      ["Spring wobble", "After a hop the ends wobble and settle. Overlapping action, inferred from Reachy's coil springs."] ] },
+    { k: "B", name: "Head pose", hint: "The whole bubble is the head, moving like Reachy's.", tiles: [
+      ["Dog tilt", "Rolls ±12° and holds. The single most common Reachy pose."],
+      ["Turn to look", "The face slides sideways and the body narrows, so the round bubble reads as a 3-D head turning."],
+      ["Nod: down, then up at you", "The face drops to read the page, then lifts to look at the visitor."],
+      ["Rise up", "Stretches up off his perch and his shadow shrinks. Reachy lifting its head at 6.5 s."],
+      ["Settle in", "Sinks and squashes onto the anchor, ends relaxing. Arrival."] ] },
+    { k: "C", name: "Timing", hint: "How it moves, not what it does.", tiles: [
+      ["Never fully still", "Head, body and both ends drift on four unrelated loops. No visible repeat."],
+      ["Head leads, ends follow", "The head turns first; the ends lag about 120 ms, overshoot and settle."],
+      ["Look, hold, react", "Turns to the thing, holds a beat, then perks. The pause reads as thinking."],
+      ["Micro-glances", "Tiny, quick face shifts with still gaps between them, like eyes reading."],
+      ["Freeze = attention", "When the cursor arrives everything stops, then a single perk."] ] },
+    { k: "D", name: "Expressions", hint: "The same >_ face throughout. Pose does all the work.", tiles: [
+      ["Attentive", "Rise up, both ends up. For when a section he cares about scrolls in."],
+      ["Skeptical", "Tilts away, one end up and one down, eyes slide sideways. For the competitor column."],
+      ["Proud", "Rises, puffs out, ends splay into a V. For his own pricing tier."],
+      ["Sheepish", "Sinks, droops, looks down and away. After the visitor closes him."],
+      ["Thinking", "Looks up and to the left, ends twitch in turn, cursor blinks fast. Replaces the dots."] ] },
+    { k: "E", name: "On the page", hint: "Applied to scrolling and clicking.", tiles: [
+      ["Spots a heading", "A heading scrolls in; he turns up toward it and perks."],
+      ["Follows your cursor", "Live: move your mouse over this tile. Head and face track it, within limits."],
+      ["Reads a line", "His face scans along a line of text, then gives a small nod at the end."],
+      ["Gets clicked", "Live: click him. Perk, springy ends, small hop."],
+      ["Hop with anticipation", "Crouches with ends tucked, hops, and the ends whip on landing. The anchor-to-anchor hop."] ] }
+  ];
+  var tpl = document.getElementById("jiro").innerHTML;
+  var rowsEl = document.getElementById("rows");
+  var tiles = {};
+  var dirty = false;
+  ROWS.forEach(function (row) {
+    var r = document.createElement("div"); r.className = "row";
+    r.innerHTML = '<div><div class="letter">' + row.k + '</div><div class="rname">' + row.name + '</div><div class="rhint">' + row.hint + '</div></div><div class="tiles"></div>';
+    var grid = r.querySelector(".tiles");
+    row.tiles.forEach(function (t, i) {
+      var code = row.k + (i + 1);
+      var tile = document.createElement("div"); tile.className = "tile";
+      var props = "";
+      if (code === "C3") props = '<div class="prop" style="left:68%;top:14%;width:24%;height:10px"></div>';
+      if (code === "E1") props = '<div class="prop h" style="left:8%;top:10%;width:46%;height:14px"></div>';
+      if (code === "E3") props = '<div class="prop" style="left:12%;top:84%;width:76%;height:6px"></div>';
+      if (code === "C5") props = '<div class="cursor-dot"></div>';
+      tile.innerHTML = '<div class="stage ' + code + '">' + props + tpl.replace(/MASK/g, code) + '</div>' +
+        '<div class="meta"><span class="code">' + code + '</span><div><div class="title">' + t[0] + '</div><div class="desc">' + t[1] + '</div></div><button class="star" aria-pressed="false" aria-label="Star ' + code + '">★</button></div>' +
+        '<textarea placeholder="note"></textarea>';
+      grid.appendChild(tile);
+      var star = tile.querySelector(".star");
+      star.addEventListener("click", function () { var on = star.getAttribute("aria-pressed") !== "true"; star.setAttribute("aria-pressed", String(on)); tile.classList.toggle("starred", on); dirty = true; });
+      tile.querySelector("textarea").addEventListener("input", function () { dirty = true; });
+      tiles[code] = { tile: tile, star: star, note: tile.querySelector("textarea") };
+    });
+    rowsEl.appendChild(r);
+  });
+
+  var follow = tiles.E2.tile.querySelector(".stage");
+  follow.addEventListener("pointermove", function (e) {
+    var b = follow.getBoundingClientRect();
+    var dx = (e.clientX - b.left) / b.width - 0.5, dy = (e.clientY - b.top) / b.height - 0.5;
+    follow.querySelector(".face").style.transform = "translate(" + (dx * 22).toFixed(1) + "px," + (dy * 16).toFixed(1) + "px) scale(" + (1 - Math.abs(dx) * 0.25).toFixed(2) + ")";
+    follow.querySelector(".head").style.transform = "rotate(" + (dx * 14).toFixed(1) + "deg)";
+    follow.querySelector(".stubL").style.transform = "rotate(" + (-8 - dy * 20).toFixed(1) + "deg)";
+    follow.querySelector(".stubR").style.transform = "rotate(" + (8 + dy * 20).toFixed(1) + "deg)";
+  });
+  follow.addEventListener("pointerleave", function () { follow.querySelectorAll(".face,.head,.stubL,.stubR").forEach(function (n) { n.style.transform = ""; }); });
+  [".face", ".head", ".stubL", ".stubR"].forEach(function (s) { follow.querySelector(s).style.transition = "transform .35s cubic-bezier(.3,1.4,.5,1)"; });
+
+  var clicky = tiles.E4.tile.querySelector(".stage");
+  clicky.style.cursor = "pointer";
+  clicky.addEventListener("click", function () {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    clicky.querySelector(".head").animate([{ transform: "none" }, { transform: "translateY(4px) scale(1.08,.9)", offset: .15 }, { transform: "translateY(-16px) scale(.95,1.06)", offset: .45 }, { transform: "translateY(2px) scale(1.06,.94)", offset: .7 }, { transform: "none" }], { duration: 620 });
+    [["stubL", -1], ["stubR", 1]].forEach(function (s) {
+      clicky.querySelector("." + s[0]).animate([0, 30, -16, 9, -4, 0].map(function (a) { return { transform: "rotate(" + a * s[1] + "deg)" }; }), { duration: 900, delay: 90 });
+    });
+  });
+
+  var speed = document.getElementById("speed");
+  speed.addEventListener("input", function () { document.documentElement.style.setProperty("--k", speed.value); document.getElementById("sv").textContent = speed.value + "×"; });
+  var pause = document.getElementById("pause");
+  pause.addEventListener("click", function () { var on = pause.getAttribute("aria-pressed") !== "true"; pause.setAttribute("aria-pressed", String(on)); pause.textContent = on ? "Play" : "Pause"; rowsEl.classList.toggle("paused", on); });
+  var status = document.getElementById("status");
+  document.getElementById("save").addEventListener("click", function () {
+    var stars = [], notes = {};
+    Object.keys(tiles).forEach(function (c) { if (tiles[c].star.getAttribute("aria-pressed") === "true") stars.push(c); if (tiles[c].note.value.trim()) notes[c] = tiles[c].note.value; });
+    status.textContent = "Saving…";
+    fetch("picks-expressions.json", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ stars: stars, notes: notes, savedAt: new Date().toISOString() }) })
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); dirty = false; status.textContent = "Saved ✓"; })
+      .catch(function (e) { status.textContent = "Save failed: " + e.message; });
+  });
+  fetch("picks-expressions.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : {}; }).then(function (d) {
+    (d.stars || []).forEach(function (c) { if (tiles[c]) { tiles[c].star.setAttribute("aria-pressed", "true"); tiles[c].tile.classList.add("starred"); } });
+    Object.keys(d.notes || {}).forEach(function (c) { if (tiles[c]) tiles[c].note.value = d.notes[c]; });
+  }).catch(function () {});
+  window.addEventListener("beforeunload", function (e) { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+})();
+</script>
+</body>
+</html>
