@@ -5,8 +5,6 @@
   window.__jiroBuddyLoaded = true;
 
   var STORAGE_KEY = "jiro-buddy-hidden";
-  var SIDE_KEY = "jiro-buddy-side";
-  var DRAG_SLOP = 6;
   var SETTLE_MS = 600;
   var TYPE_MS = 28;
   var ANNOUNCE_MS = 100;
@@ -17,10 +15,7 @@
   var LOOK_MS = 700;
   var LOOK_LINGER_MS = 1800;
   var SLEEP_AFTER_MS = 20000;
-  var MAX_SIDE_CHANGES = 3;
-  var MAX_PERCHES = 1;
-  var SWITCH_RATIO = 0.7;
-  var FOOTPRINT = { width: 420, height: 160, bottom: 32 };
+  var BAND = 0.17;
   var SVG_NS = "http://www.w3.org/2000/svg";
 
   var BODY_FILL = "M35 6L34 6L34 3L33 3L33 0.75L30.5 0.75L30.25 1L29 1L28.75 1.25L28 1.25L27.75 1.5L27 1.5L26.75 1.75L26 1.75L26 2L25.5 2L25.25 2.25L24.75 2.25L24.5 2.5L24 2.5L23.75 2.75L23.25 2.75L23 3L22.75 3L22.5 3.25L22.25 3.25L22 3.5L21.75 3.5L21.5 3.75L21.25 3.75L21 4L20.75 4L20.5 4.25L20.25 4.25L20 4.5L19.75 4.5L19.5 4.75L19.25 4.75L19.25 5L19 5L18.75 5.25L18.5 5.25L18.5 5.5L18 5.5L18 5.75L17.75 5.75L17 6.5L16.75 6.5L16.25 7L16 7L16 7.25L15.75 7.25L15.75 7.5L15.5 7.5L15.5 7.75L15.25 7.75L14 9L14 9.25L13.75 9.25L13.75 9.5L13.5 9.5L13.5 9.75L13.25 9.75L13.25 10L13 10L13 10.25L12.25 11L12.25 11.25L12 11.25L12 11.5L11.75 11.5L11.75 12L11.5 12L11.5 12.25L11.25 12.25L11.25 12.5L11 12.75L11 13L10.75 13L10.75 13.25L10.5 13.5L10.5 13.75L10 14.25L10 14.5L9.75 14.75L9.75 15L9.5 15.25L9.5 15.5L9.25 15.75L9.25 16L9 16.25L9 16.5L8.75 16.75L8.75 17.25L8.5 17.5L8.5 17.75L8.25 18L8.25 18.5L8 18.75L8 19.25L7.75 19.25L7.75 20L7.5 20.25L7.5 21L7.25 21L7.25 22L7 22.25L7 23.25L6.75 23.5L6.75 25.25L6.5 25.25L6.5 30.5L6.75 30.5L6.75 32.25L7 32.5L7 33.5L7.25 33.75L7.25 34.75L7.5 34.75L7.5 35.5L7.75 35.75L7.75 36.25L8 36.5L8 37L8.25 37.25L8.25 37.5L8.5 37.75L8.5 38.25L8.75 38.5L8.75 38.75L9 39L9 39.25L9.25 39.5L9.25 39.75L9 40L9 42L10 42L10 44L9 44L9 45L8 45L8 46L7 46L7 47L6 47L6 48L5 48L5 49L4 49L4 50L3 50L3 51L2.25 51L2 51.25L2 52L4 52L4.25 51.75L4.75 51.75L5 51.5L5 51L6.75 51L7 50.75L7 50L9 50L9 49L11 49L11 48L13 48L13 47L14 47L14 48L16 48L16 48.75L16.25 49L17 49L17 49.5L17.25 49.5L17.5 49.75L17.75 49.75L17.75 50L19 50L19 50.5L19.25 50.75L19.5 50.75L19.5 51L21 51L21 51.5L21.25 51.5L21.25 51.75L21.75 51.75L22 52L23 52L23 52.25L23.25 52.5L24 52.5L24.25 52.75L24.75 52.75L25 53L27 53L27 53.25L27.25 53.5L28.5 53.5L28.75 53.75L35.75 53.75L35.75 53.5L37 53.5L37 53L39.5 53L39.75 52.75L40.5 52.75L40.5 52.5L41 52.5L41 52L42.5 52L42.75 51.75L43 51.75L43 51L44.75 51L45 50.75L45 50L46.5 50L46.75 49.75L47 49.75L47 49L48 49L48 48L49.5 48L50 47.5L50 47L50.75 47L50.75 46.75L51 46.75L51 46L51.75 46L52 45.75L52 45L52.75 45L53 44.75L53 43L54 43L54 42L55 42L55 40L56 40L56 38L57 38L57 36L58 36L58 32L59 32L59 31L60 31L60 29L59 29L59 26L56 26L56 25L55 25L55 24L54 24L54 23L53 23L53 14L48 14L48 13L47 13L47 12L46 12L46 9L45 9L45 7L41 7L41 8L39 8L39 7L36 7L36 6Z";
@@ -57,60 +52,6 @@
     return art;
   }
 
-  function intersect(a, b) {
-    return {
-      left: Math.max(a.left, b.left), right: Math.min(a.right, b.right),
-      top: Math.max(a.top, b.top), bottom: Math.min(a.bottom, b.bottom)
-    };
-  }
-
-  function clipOf(element, cache) {
-    if (!element || element === document.documentElement) {
-      return { left: -Infinity, right: Infinity, top: -Infinity, bottom: Infinity };
-    }
-    if (cache.has(element)) return cache.get(element);
-    var clip = clipOf(element.parentElement, cache);
-    var style = window.getComputedStyle(element);
-    if (style.overflowX !== "visible" || style.overflowY !== "visible") {
-      clip = intersect(clip, element.getBoundingClientRect());
-    }
-    cache.set(element, clip);
-    return clip;
-  }
-
-  function textOverlap(box, skip) {
-    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
-      acceptNode: function (node) {
-        if (!/\S/.test(node.nodeValue) || skip.contains(node)) return NodeFilter.FILTER_REJECT;
-        return NodeFilter.FILTER_ACCEPT;
-      }
-    });
-    var range = document.createRange();
-    var clips = new Map();
-    var area = 0;
-    for (var node = walker.nextNode(); node; node = walker.nextNode()) {
-      range.selectNodeContents(node);
-      var rects = range.getClientRects();
-      if (!rects.length) continue;
-      var clip = intersect(box, clipOf(node.parentElement, clips));
-      for (var i = 0; i < rects.length; i += 1) {
-        var hit = intersect(clip, rects[i]);
-        if (hit.right > hit.left && hit.bottom > hit.top) {
-          area += (hit.right - hit.left) * (hit.bottom - hit.top);
-        }
-      }
-    }
-    range.detach();
-    return area;
-  }
-
-  function cornerBox(side) {
-    var width = document.documentElement.clientWidth;
-    var bottom = window.innerHeight - FOOTPRINT.bottom;
-    var left = side === "right" ? width - FOOTPRINT.width : 0;
-    return { left: left, right: left + FOOTPRINT.width, top: bottom - FOOTPRINT.height, bottom: bottom };
-  }
-
   function isHidden() {
     try {
       return window.sessionStorage.getItem(STORAGE_KEY) === "1";
@@ -123,21 +64,6 @@
     try {
       window.sessionStorage.setItem(STORAGE_KEY, "1");
     } catch (e) {}
-  }
-
-  function storedSide() {
-    try {
-      var value = window.sessionStorage.getItem(SIDE_KEY);
-      return value === "left" || value === "right" ? value : "";
-    } catch (error) {
-      return "";
-    }
-  }
-
-  function rememberSide(side) {
-    try {
-      window.sessionStorage.setItem(SIDE_KEY, side);
-    } catch (error) {}
   }
 
   function attr(section, name) {
@@ -190,6 +116,7 @@
     close.textContent = "×";
     bubble.hidden = true;
     acts.hidden = true;
+    aside.hidden = true;
     document.body.appendChild(aside);
 
     var visible = new Set();
@@ -199,14 +126,7 @@
     var timers = [];
     var looked = null;
     var spoken = "";
-    var side = storedSide() || "left";
-    var placed = side === storedSide();
-    var drag = null;
-    var swallowClick = false;
-    aside.classList.toggle("jiro-buddy--right", side === "right");
-    var sideChanges = 0;
-    var perches = 0;
-    var perched = null;
+    var placed = false;
     var flight = null;
     var hovered = false;
     var closed = false;
@@ -215,7 +135,6 @@
     var entered = Promise.resolve();
     var clickHold = 0;
     var clicks = new WeakMap();
-    var returning = Promise.resolve();
 
     function schedule(fn, ms) {
       var id = setTimeout(fn, ms);
@@ -292,6 +211,17 @@
       setFace("cursor");
     }
 
+    function fit() {
+      text.textContent = spoken;
+      bubble.style.setProperty("--jiro-dx", "0px");
+      aside.classList.remove("jiro-buddy--below");
+      var r = bubble.getBoundingClientRect();
+      var edge = document.documentElement.clientWidth - 8;
+      bubble.style.setProperty("--jiro-dx", (r.left < 8 ? 8 - r.left : r.right > edge ? edge - r.right : 0) + "px");
+      aside.classList.toggle("jiro-buddy--below", r.top < 8);
+      text.textContent = "";
+    }
+
     function speak(section, token) {
       seen.add(section);
       say(attr(section, "comment"), attr(section, "ask"), token);
@@ -308,6 +238,7 @@
       later.textContent = ask ? "Later" : "";
       acts.hidden = !ask;
       bubble.hidden = false;
+      fit();
       var finish = function () {
         text.removeAttribute("data-rest");
         acts.classList.remove("jiro-buddy--waiting");
@@ -323,7 +254,7 @@
       bubble.classList.remove("jiro-buddy--pop");
       void bubble.offsetWidth;
       bubble.classList.add("jiro-buddy--pop");
-      squash(side === "right" ? 0.9 : 1.12, 0.92, 300);
+      squash(0.9, 1.12, 300);
       var chars = Array.from(comment);
       var shown = 0;
       (function typeNext() {
@@ -352,16 +283,6 @@
       return best;
     }
 
-    function chooseSide(section) {
-      if (placed) return side;
-      var pinned = attr(section, "side");
-      if (pinned === "left" || pinned === "right") return pinned;
-      var other = side === "left" ? "right" : "left";
-      var here = textOverlap(cornerBox(side), aside);
-      var there = textOverlap(cornerBox(other), aside);
-      return there < here * SWITCH_RATIO ? other : side;
-    }
-
     function landFlight() {
       if (flight) flight.cancel();
       flight = null;
@@ -372,15 +293,15 @@
       return (1 - Math.cos(Math.PI * u)) / 2;
     }
 
-    function arc(from, ahead) {
+    function arc(from) {
       var to = aside.getBoundingClientRect();
       var dx = from.left - to.left;
       var dy = from.top - to.top;
       if (!motion() || (Math.abs(dx) < 1 && Math.abs(dy) < 1)) return Promise.resolve();
-      var dir = (dx < 0) === !ahead ? 1 : -1;
-      var lift = Math.min(ahead ? dy : 0, ahead ? 0 : dy) - 70;
+      var dir = dx < 0 ? 1 : -1;
+      var lift = Math.min(0, dy) - 70;
       var at = function (t, y, r) {
-        var k = ahead ? t : 1 - t;
+        var k = 1 - t;
         return "translate(" + dx * k + "px," + (dy * k + y) + "px) rotate(" + r * dir + "deg)";
       };
       setState("flying");
@@ -402,7 +323,7 @@
         { offset: 0.92, transform: at(1, 2, -2), easing: "ease-in-out" },
         { offset: 1, transform: at(1, 0, 0) }
       );
-      var animation = aside.animate(frames, { duration: FLIGHT_MS, fill: ahead ? "forwards" : "none" });
+      var animation = aside.animate(frames, { duration: FLIGHT_MS });
       flight = animation;
       schedule(function () { puff(); squash(1.16, 0.84, 240); }, FLIGHT_MS * 0.84);
       return animation.finished.then(function () {
@@ -410,92 +331,38 @@
       }, function () {});
     }
 
-    function placeOnPerch(heading) {
-      var rect = heading.getBoundingClientRect();
-      var width = mascot.offsetWidth;
-      var x = Math.min(rect.right - width - 12, document.documentElement.clientWidth - width - 24);
-      x = Math.max(x, rect.left);
-      var y = rect.top - mascot.offsetHeight + 4;
-      aside.classList.add("jiro-buddy--perched");
-      aside.classList.toggle("jiro-buddy--flip", x + width / 2 > document.documentElement.clientWidth / 2);
-      aside.style.left = "0px";
-      aside.style.top = "0px";
-      var origin = aside.getBoundingClientRect();
-      aside.style.left = x - origin.left + "px";
-      aside.style.top = y - origin.top + "px";
+    function spotFor(section) {
+      var box = (target(section, "anchor") || section).getBoundingClientRect();
+      var band = (document.querySelector("[data-jiro-band]") || document.querySelector("main") || document.body).getBoundingClientRect();
+      var x = Math.min(Math.max(box.left + box.width / 2, band.left + band.width * BAND), band.right - band.width * BAND);
+      return {
+        x: x + window.scrollX - mascot.offsetWidth / 2,
+        y: box.top + box.height / 2 + window.scrollY - mascot.offsetHeight / 2
+      };
     }
 
-    function unplace() {
-      aside.classList.remove("jiro-buddy--perched");
-      aside.style.left = "";
-      aside.style.top = "";
+    function place(section) {
+      var at = spotFor(section);
+      aside.style.translate = at.x.toFixed(1) + "px " + at.y.toFixed(1) + "px";
     }
 
-    function perchOn(heading) {
-      landFlight();
-      perched = heading;
-      perches += 1;
-      placeOnPerch(heading);
-      var landing = aside.getBoundingClientRect();
-      unplace();
-      var startY = window.scrollY;
-      var landed = arc(landing, true);
-      var animation = flight;
-      (function follow() {
-        if (!animation || flight !== animation) return;
-        aside.style.translate = "0 " + (startY - window.scrollY) * glide(animation.currentTime / FLIGHT_MS) + "px";
-        requestAnimationFrame(follow);
-      })();
-      return landed.then(function () {
-        aside.style.translate = "";
-        if (perched !== heading) return;
-        aside.getAnimations().forEach(function (animation) { animation.cancel(); });
-        placeOnPerch(heading);
-      });
-    }
-
-    function leavePerch() {
-      if (!perched) return Promise.resolve();
-      var from = aside.getBoundingClientRect();
-      var gone = from.bottom < 0 || from.top > window.innerHeight;
-      landFlight();
-      perched = null;
-      if (gone) aside.hidden = true;
-      unplace();
-      aside.classList.remove("jiro-buddy--flip");
-      if (!gone) return arc(from);
-      returning = new Promise(function (resolve) {
-        requestAnimationFrame(function () {
-          aside.hidden = closed;
-          play(aside, [
-            { transform: "translateY(140%)", easing: "ease-out" },
-            { transform: "translateY(-14%)", offset: 0.7, easing: "ease-in" },
-            { transform: "translateY(0)" }
-          ], 520).then(function () { puff(); return squash(1.14, 0.86, 240); }).then(resolve);
-        });
-      });
-      return returning;
-    }
-
-    function flyTo(next) {
+    function hopTo(section) {
       var from = aside.getBoundingClientRect();
       landFlight();
-      side = next;
-      sideChanges += 1;
-      aside.classList.toggle("jiro-buddy--right", side === "right");
-      return arc(from);
-    }
-
-    function move(section) {
-      var heading = target(section, "perch");
-      if (heading && perches < MAX_PERCHES) {
-        var rect = heading.getBoundingClientRect();
-        if (rect.top > 120 && rect.bottom < window.innerHeight) return perchOn(heading);
+      if (!placed) aside.hidden = closed;
+      place(section);
+      if (!placed) {
+        placed = true;
+        if (!motion()) return;
+        entered = play(aside, [
+          { transform: "translateY(24px) scale(.3)", opacity: 0, easing: "cubic-bezier(.3,1.5,.5,1)" },
+          { transform: "translateY(-10px) scale(1.06,.96)", opacity: 1, offset: 0.6 },
+          { transform: "none" }
+        ], 700).then(function () { puff(); return squash(1.16, 0.84, 240); });
+        return;
       }
-      if (perched) return leavePerch();
-      var next = chooseSide(section);
-      if (next !== side && sideChanges < MAX_SIDE_CHANGES) return flyTo(next);
-      return flight ? flight.finished.catch(function () {}) : Promise.resolve();
+      var top = Math.min(Math.max(from.top, -from.height), window.innerHeight);
+      arc({ left: from.left, top: top });
     }
 
     function look(section, token) {
@@ -518,9 +385,7 @@
 
     async function perform(section, token) {
       await entered;
-      await returning;
-      if (token !== run) return;
-      await move(section);
+      if (flight) await flight.finished.catch(function () {});
       if (token !== run) return;
       if (attr(section, "mood") === "eager" && motion()) {
         setState("eager");
@@ -551,10 +416,11 @@
       active = section;
       if (performance.now() < clickHold) {
         seen.add(section);
+        hopTo(section);
         return;
       }
       hideBubble();
-      if (perched && target(section, "perch") !== perched) leavePerch();
+      hopTo(section);
       settle(section);
     }
 
@@ -584,7 +450,7 @@
 
     onChange(wide, function () {
       landFlight();
-      leavePerch();
+      if (active) place(active);
       hideBubble();
       if (wide.matches && active) settle(active);
     });
@@ -598,7 +464,7 @@
     });
 
     window.addEventListener("resize", function () {
-      if (perched && !flight && wide.matches) placeOnPerch(perched);
+      if (active && !flight) place(active);
     });
 
     function focusContent() {
@@ -621,20 +487,6 @@
       setActive(nearestToCenter());
     }, { rootMargin: "-40% 0px -40% 0px" });
 
-    if (motion() && wide.matches) {
-      entered = aside.animate([
-        { transform: "translateX(-75%) rotate(14deg)", easing: "ease-out" },
-        { transform: "translateX(-45%) rotate(10deg)", offset: 0.25 },
-        { transform: "translateX(-45%) rotate(10deg)", offset: 0.5, easing: "ease-in" },
-        { transform: "translateX(-62%) rotate(12deg)", offset: 0.6, easing: "ease-out" },
-        { transform: "translateX(8%) translateY(-40px) rotate(-6deg)", offset: 0.85, easing: "ease-in" },
-        { transform: "translateX(0) rotate(0)" }
-      ], { duration: 1500 }).finished.then(function () { puff(); squash(1.16, 0.84, 240); }, function () {});
-      setFace("glance");
-      aside.style.setProperty("--jiro-gx", "2.5px");
-      entered.then(function () { if (face === "glance") setFace("cursor"); });
-    }
-
     sections.forEach(function (section) { observer.observe(section); });
 
     var quips = ((document.querySelector("[data-jiro-hovers]") || aside).getAttribute("data-jiro-hovers") || "")
@@ -643,7 +495,7 @@
     var quipTime = -Infinity;
 
     function dodge() {
-      var away = side === "right" || aside.classList.contains("jiro-buddy--flip") ? -1 : 1;
+      var away = quipAt % 2 ? -1 : 1;
       return play(hop, [
         { transform: "translate(0,0) rotate(0)" },
         { transform: "translate(" + 6 * away + "px,-10px) rotate(" + 6 * away + "deg)", offset: 0.3 },
@@ -672,89 +524,7 @@
     });
     mascot.addEventListener("pointerleave", function () { hovered = false; setFace(face); });
 
-    function place(next) {
-      var from = aside.getBoundingClientRect();
-      landFlight();
-      if (perched) {
-        perched = null;
-        unplace();
-        aside.classList.remove("jiro-buddy--flip");
-      }
-      side = next;
-      placed = true;
-      rememberSide(side);
-      aside.classList.toggle("jiro-buddy--right", side === "right");
-      return arc(from).then(function () { setState("idle"); setFace("cursor"); });
-    }
-
-    mascot.addEventListener("pointerdown", function (event) {
-      if (!wide.matches || event.button !== 0) return;
-      drag = { id: event.pointerId, x: event.clientX, y: event.clientY, held: false, base: null, lastX: event.clientX };
-    });
-
-    window.addEventListener("pointermove", function (event) {
-      if (!drag || event.pointerId !== drag.id) return;
-      var dx = event.clientX - drag.x;
-      var dy = event.clientY - drag.y;
-      if (!drag.held) {
-        if (Math.abs(dx) < DRAG_SLOP && Math.abs(dy) < DRAG_SLOP) return;
-        drag.held = true;
-        run += 1;
-        hideBubble();
-        clearLook();
-        landFlight();
-        if (perched) {
-          var rect = aside.getBoundingClientRect();
-          perched = null;
-          unplace();
-          aside.classList.remove("jiro-buddy--flip");
-          var home = aside.getBoundingClientRect();
-          drag.x -= rect.left - home.left;
-          drag.y -= rect.top - home.top;
-          dx = event.clientX - drag.x;
-          dy = event.clientY - drag.y;
-        }
-        aside.classList.add("jiro-buddy--held");
-        setState("held");
-        setFace("eyes");
-      }
-      var tilt = Math.max(-14, Math.min(14, (event.clientX - drag.lastX) * 1.5));
-      drag.lastX = event.clientX;
-      aside.style.transform = "translate(" + dx + "px," + dy + "px) rotate(" + tilt + "deg)";
-    });
-
-    function release(event) {
-      if (!drag || event.pointerId !== drag.id) return;
-      var held = drag.held;
-      drag = null;
-      if (!held) return;
-      swallowClick = true;
-      setTimeout(function () { swallowClick = false; }, 0);
-      aside.classList.remove("jiro-buddy--held");
-      var next = event.clientX < document.documentElement.clientWidth / 2 ? "left" : "right";
-      var from = aside.getBoundingClientRect();
-      aside.style.transform = "";
-      side = next === side ? side : next;
-      placed = true;
-      rememberSide(side);
-      aside.classList.toggle("jiro-buddy--right", side === "right");
-      arc(from).then(function () { setState("idle"); setFace("cursor"); stir(); });
-    }
-
-    window.addEventListener("pointerup", release);
-    window.addEventListener("pointercancel", release);
-
-    mascot.addEventListener("keydown", function (event) {
-      if (!wide.matches) return;
-      var next = event.key === "ArrowLeft" ? "left" : event.key === "ArrowRight" ? "right" : "";
-      if (!next) return;
-      event.preventDefault();
-      hideBubble();
-      place(next);
-    });
-
     mascot.addEventListener("click", function () {
-      if (swallowClick) return;
       if (!active) return;
       hideBubble();
       speak(active, run);

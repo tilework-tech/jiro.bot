@@ -11,7 +11,7 @@ REVIEW = ("review-2026-10-14.png", 1285, 3912, 60, 1180)
 
 HOVERS = "Yes, the bite mark is on purpose.|Still here. Still reviewing.|I read over your shoulder. Kindly.|No lorem ipsum on my watch.|Tickles. Back to work."
 
-# (id, image, y0, y1, label, attrs, hotspots[(id, x0, y0, x1, y1, tag or (href, label), click)])
+# (id, image, y0, y1, label, attrs, hotspots[(id, x0, y0, x1, y1, tag or (href, label), click)]); tag "anchor" marks where Jiro sits
 SECTIONS = [
     ("nav", FIGMA, 41, 95, "Navigation", {},
      [("nav-why", 238, 54, 294, 74, ("#ditch", "Why Jiro"), "Why me? Keep scrolling, I'll make my case."),
@@ -21,48 +21,56 @@ SECTIONS = [
       ("nav-faq", 459, 54, 485, 74, ("#faq", "FAQ"), "Questions first. Good instinct."),
       ("nav-reserve", 1048, 41, 1222, 86, ("#faq", "Reserve a seat"), "One stool at the counter, coming up.")]),
     ("hero", FIGMA, 95, 627, "The tasteful software engineer",
-     {"comment": "Hi, I'm Jiro.", "side": "left", "click": "Hi again. Still Jiro."},
-     [("hero-reserve", 72, 508, 185, 543, ("#faq", "Reserve a seat"), "Good call. I'll save you a stool."),
+     {"comment": "Hi, I'm Jiro.", "anchor": "#jiro-hero", "click": "Hi again. Still Jiro."},
+     [("jiro-hero", 290, 240, 310, 260, "anchor", ""),
+      ("hero-reserve", 72, 508, 185, 543, ("#faq", "Reserve a seat"), "Good call. I'll save you a stool."),
       ("hero-pricing", 193, 508, 289, 543, ("#pricing", "See pricing"), "Spoiler: no token markup."),
       ("hero-handle", 291, 473, 353, 491, "div", "That's my name. Say it in Slack.")]),
     ("ditch", FIGMA, 627, 1051, "Ditch D*vin. Forget F*ctory. Stop slopping around.",
      {"comment": "I censored them myself. Professional courtesy.", "mood": "eager",
-      "look": "#censor-devin", "side": "left"},
-     [("censor-devin", 236, 718, 420, 790, "div", "Click all you want. The asterisk stays."),
+      "look": "#censor-devin", "anchor": "#jiro-ditch"},
+     [("jiro-ditch", 760, 905, 780, 925, "anchor", ""),
+      ("censor-devin", 236, 718, 420, 790, "div", "Click all you want. The asterisk stays."),
       ("censor-factory", 270, 800, 505, 872, "div", "F*ctory gets one too. Fair's fair."),
       ("ditch-slop", 72, 884, 712, 950, "div", "Slop is a choice. I don't make it."),
       ("call-jiro", 920, 640, 1212, 1040, "div", "That's me. Mention @jirobot and I'm in.")]),
     ("video", REVIEW, 686, 1277, "Most agents optimize for output",
-     {"comment": "Fewer lines. Same fix. You're welcome.", "look": "#video-frame", "side": "right"},
-     [("video-frame", 102, 898, 1201, 1239, "div", "Same prompt. Count the files.|Side by side. I'm the tidy one.")]),
+     {"comment": "Fewer lines. Same fix. You're welcome.", "look": "#video-frame", "anchor": "#jiro-video"},
+     [("jiro-video", 640, 888, 660, 908, "anchor", ""),
+      ("video-frame", 102, 898, 1201, 1239, "div", "Same prompt. Count the files.|Side by side. I'm the tidy one.")]),
     ("pillars", REVIEW, 1277, 1408, "Quality over volume, missteps caught early, called in",
-     {"comment": "The cheapest bug is the one I flag before the PR.", "side": "right"},
-     [("pillar-quality", 68, 1277, 455, 1402, "div", "Big picture first, then the diff."),
+     {"comment": "The cheapest bug is the one I flag before the PR.", "anchor": "#jiro-pillars"},
+     [("jiro-pillars", 640, 1274, 660, 1294, "anchor", ""),
+      ("pillar-quality", 68, 1277, 455, 1402, "div", "Big picture first, then the diff."),
       ("pillar-missteps", 456, 1277, 843, 1402, "div", "Cheaper now than in review."),
       ("pillar-called", 844, 1277, 1232, 1402, "div", "I leave when the thread's done.")]),
     ("how", REVIEW, 1408, 1887, "How he works",
-     {"comment": "Plain words are fine. I'll ask if it's unclear.", "side": "left"},
-     [("how-call", 398, 1541, 1232, 1696, "div", "Mention me where your team already works."),
+     {"comment": "Plain words are fine. I'll ask if it's unclear.", "anchor": "#jiro-how"},
+     [("jiro-how", 850, 1460, 870, 1480, "anchor", ""),
+      ("how-call", 398, 1541, 1232, 1696, "div", "Mention me where your team already works."),
       ("how-reads", 398, 1697, 1232, 1851, "div", "Context before code. Always."),
       ("how-ships", 398, 1852, 1232, 2011, "div", "Small PRs. You review, I wait.")]),
     ("pricing", REVIEW, 1887, 2374, "Pricing: Not market price",
      {"comment": "Thirty days on the house. Pull up a stool?", "ask": "Yes please",
-      "action": "#email", "perch": "#pricing-title",
+      "action": "#email", "anchor": "#jiro-pricing",
       "click": "Bring your own subscription. I don't mark up the fish."},
-     [("pricing-title", 88, 1934, 380, 1988, "div", "Not market price. Fixed, and I'm proud of it."),
+     [("jiro-pricing", 630, 2030, 650, 2050, "anchor", ""),
+      ("pricing-title", 88, 1934, 380, 1988, "div", "Not market price. Fixed, and I'm proud of it."),
       ("tier-apprentice", 68, 2007, 455, 2324, "div", "Thirty days, three agents, zero dollars."),
       ("tier-itamae", 456, 2007, 843, 2324, "div", "The one I'd pick. I'm biased."),
       ("tier-omakase", 844, 2007, 1232, 2324, "div", "Chef's choice for the whole team.")]),
     ("bakeoff", REVIEW, 2374, 3035, "Cloud Agent Bakeoff",
-     {"comment": "The green column is mine. Biased, but sourced.", "look": "#col-jiro", "side": "right",
+     {"comment": "The green column is mine. Biased, but sourced.", "look": "#col-jiro", "anchor": "#jiro-bakeoff",
       "click": "Pick a column. I'll give you my take."},
-     [("col-jiro", 288, 2514, 586, 2996, "div", "Mine. Green suits me."),
+     [("jiro-bakeoff", 510, 2520, 530, 2540, "anchor", ""),
+      ("col-jiro", 288, 2514, 586, 2996, "div", "Mine. Green suits me."),
       ("col-claude", 586, 2511, 840, 2991, "div", "Great model. Anthropic only, though."),
       ("col-devin", 841, 2511, 1035, 2991, "div", "Free plan, light quota. Read the fine print."),
       ("col-factory", 1036, 2511, 1232, 2991, "div", "No free trial. Just saying.")]),
     ("faq", REVIEW, 3035, 3554, "FAQ and reserve a seat",
-     {"comment": "Yes, you can bring your current subscription.", "side": "right"},
-     [("faq-list", 95, 3080, 845, 3525, "div", "Ask away. Plain answers only."),
+     {"comment": "Yes, you can bring your current subscription.", "anchor": "#jiro-faq"},
+     [("jiro-faq", 710, 3065, 730, 3085, "anchor", ""),
+      ("faq-list", 95, 3080, 845, 3525, "div", "Ask away. Plain answers only."),
       ("email", 898, 3256, 1213, 3294, "input", "Work email. I'll be in the thread."),
       ("reserve-seat", 896, 3301, 1210, 3337, "div", "Thirty days on the house. Enjoy.")]),
     ("footer", REVIEW, 3554, 3852, "Built by the Nori team", {}, []),
@@ -81,8 +89,10 @@ def section(sid, image, y0, y1, label, attrs, hotspots):
     for hid, hx0, hy0, hx1, hy1, tag, click in hotspots:
         style = (f"left:{pct((hx0 - x0) / w * 100)};top:{pct((hy0 - y0) / h * 100)};"
                  f"width:{pct((hx1 - hx0) / w * 100)};height:{pct((hy1 - hy0) / h * 100)}")
-        talk = f' data-jiro-click="{html.escape(click)}"'
-        if tag == "input":
+        talk = f' data-jiro-click="{html.escape(click)}"' if click else ""
+        if tag == "anchor":
+            spots.append(f'<div id="{hid}" class="spot spot--anchor" style="{style}"></div>')
+        elif tag == "input":
             spots.append(f'<input id="{hid}" class="spot spot--input" type="email" aria-label="Work email" style="{style}"{talk}>')
         elif isinstance(tag, tuple):
             href, name = tag
@@ -116,6 +126,7 @@ PAGE = """<!doctype html>
   .shot img { display: block; max-width: none; user-select: none; -webkit-user-drag: none; }
   .spot { position: absolute; border-radius: 2px; }
   .spot[data-jiro-click] { cursor: pointer; }
+  .spot--anchor { pointer-events: none; }
   .spot--input { box-sizing: border-box; border: 0; background: transparent; padding: 0 8px;
                  font: 13px "Geist Mono", ui-monospace, monospace; color: #111; }
   .spot--input:focus { outline: 2px solid #37fb67; background: #fff; }

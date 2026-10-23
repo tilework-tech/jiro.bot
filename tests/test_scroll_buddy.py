@@ -57,46 +57,25 @@ DOUBLE_SCRIPT_PAGE = page_html("\n".join(
     f'<section id="s{i}" data-jiro-comment="{text}"><h2>Section {i}</h2></section>'
     for i, text in enumerate(COMMENTS, start=1)
 ), scripts=2)
-SIDE_COMMENTS = [
-    "Alpha side.", "Bravo side.", "Charlie side.", "Delta side.",
-    "Echo side.", "Foxtrot side.", "Golf side.",
-]
-TEXT_COLUMN_STYLE = """
+ANCHOR_COMMENTS = ["One anchor.", "Two anchor.", "Three anchor.", "Four anchor.", "Five anchor."]
+ANCHOR_STYLE = """
 section { position: relative; }
-.col { position: absolute; top: 0; bottom: 0; width: 50%; overflow: hidden; font: 16px/1.4 sans-serif; }
-.col p { margin: 0; }
-.col.left { left: 0; }
-.col.right { right: 0; }
-.col.full { left: 0; right: 0; width: auto; }
+.anchor { position: absolute; width: 20px; height: 20px; margin: -10px 0 0 -10px; }
 """
-FILLER = "Rice, fish, and a steady hand make every piece worth the wait. " * 120
+ANCHOR_SPOTS = [("50%", "40%"), ("2%", "45%"), ("98%", "45%"), None, ("40%", "50%")]
 
 
-def text_section(n, comment, column, side=None):
-    side_attr = f' data-jiro-side="{side}"' if side else ""
-    return (
-        f'<section id="s{n}" data-jiro-comment="{comment}"{side_attr}>'
-        f'<div class="col {column}"><p>{FILLER}</p></div></section>'
-    )
+def anchor_section(n, comment, spot):
+    if spot is None:
+        return f'<section id="s{n}" data-jiro-comment="{comment}"><h2>Section {n}</h2></section>'
+    left, top = spot
+    return (f'<section id="s{n}" data-jiro-comment="{comment}" data-jiro-anchor="#a{n}"><h2>Section {n}</h2>'
+            f'<div class="anchor" id="a{n}" style="left:{left};top:{top}"></div></section>')
 
 
-PINNED_LEFT_PAGE = page_html("\n".join(
-    f'<section id="s{i}" data-jiro-comment="{text}" data-jiro-side="left"><h2>Section {i}</h2></section>'
-    for i, text in enumerate(COMMENTS, start=1)
-))
-SIDES_PAGE = page_html("\n".join([
-    text_section(1, SIDE_COMMENTS[0], "full", side="left"),
-    text_section(2, SIDE_COMMENTS[1], "left"),
-    text_section(3, SIDE_COMMENTS[2], "right"),
-]), style=TEXT_COLUMN_STYLE)
-OVERRIDE_PAGE = page_html("\n".join([
-    text_section(1, SIDE_COMMENTS[0], "full", side="right"),
-    text_section(2, SIDE_COMMENTS[1], "left", side="left"),
-]), style=TEXT_COLUMN_STYLE)
-ALTERNATING_PAGE = page_html("\n".join(
-    text_section(i, text, "left" if i % 2 else "right")
-    for i, text in enumerate(SIDE_COMMENTS, start=1)
-), style=TEXT_COLUMN_STYLE)
+ANCHOR_PAGE = page_html("\n".join(
+    anchor_section(i, text, spot) for i, (text, spot) in enumerate(zip(ANCHOR_COMMENTS, ANCHOR_SPOTS), start=1)
+), style=ANCHOR_STYLE)
 PLAIN_PAGE = page_html("\n".join(
     f'<section id="s{i}"><h2>Section {i}</h2></section>' for i in range(1, 6)
 ))
@@ -185,9 +164,9 @@ HOVER_LINES = ["Hover one.", "Hover two.", "Hover three."]
 FLOW_PAGE = page_html("\n".join([
     f'<section id="s1" data-jiro-comment="{FLOW[0]}" data-jiro-ask="Show me" data-jiro-action="#s3"><h2>Hero</h2></section>',
     f'<section id="s2" data-jiro-comment="{FLOW[1]}" data-jiro-mood="eager" data-jiro-look="#look2"><h2>Ditch <span id="look2">D*vin</span></h2></section>',
-    f'<section id="s3" data-jiro-comment="{FLOW[2]}" data-jiro-perch="#perch3"><h2 class="perch" id="perch3">Not market price</h2></section>',
+    f'<section id="s3" data-jiro-comment="{FLOW[2]}" data-jiro-anchor="#perch3"><h2 class="perch" id="perch3">Not market price</h2></section>',
     f'<section id="s4" data-jiro-comment="{FLOW[3]}"><h2>How</h2></section>',
-    f'<section id="s5" data-jiro-comment="{FLOW[4]}" data-jiro-perch="#perch5"><h2 class="perch" id="perch5">Second perch</h2></section>',
+    f'<section id="s5" data-jiro-comment="{FLOW[4]}" data-jiro-anchor="#perch5"><h2 class="perch" id="perch5">Second perch</h2></section>',
     f'<section id="s6" data-jiro-comment="{FLOW[5]}" data-jiro-ask="Yes please" data-jiro-action="#email"><h2>Reserve</h2><input id="email" type="email" aria-label="Work email"></section>',
 ]), style=FLOW_STYLE, main_attrs=f' data-jiro-hovers="{"|".join(HOVER_LINES)}"')
 
@@ -238,10 +217,7 @@ class ScrollBuddyTest(unittest.TestCase):
         (root / "blank.html").write_text(BLANK_COMMENT_PAGE)
         (root / "double.html").write_text(DOUBLE_SCRIPT_PAGE)
         (root / "plain.html").write_text(PLAIN_PAGE)
-        (root / "pinned-left.html").write_text(PINNED_LEFT_PAGE)
-        (root / "sides.html").write_text(SIDES_PAGE)
-        (root / "override.html").write_text(OVERRIDE_PAGE)
-        (root / "alternating.html").write_text(ALTERNATING_PAGE)
+        (root / "anchors.html").write_text(ANCHOR_PAGE)
         (root / "flow.html").write_text(FLOW_PAGE)
 
         handler = functools.partial(QuietHandler, directory=str(root))
@@ -289,18 +265,6 @@ class ScrollBuddyTest(unittest.TestCase):
         self.addCleanup(context.close)
         context.add_init_script(script)
         return self.open(path, context=context)
-
-    def side(self, page):
-        box = self.mascot(page).bounding_box()
-        width = page.evaluate("document.documentElement.clientWidth")
-        return "left" if box["x"] + box["width"] / 2 < width / 2 else "right"
-
-    def assert_sits_right_with_bubble_opening_left(self, page):
-        mascot = self.mascot(page).bounding_box()
-        bubble = self.bubble(page).bounding_box()
-        width = page.evaluate("document.documentElement.clientWidth")
-        self.assertGreaterEqual(mascot["x"] + mascot["width"], width - 48)
-        self.assertLessEqual(bubble["x"] + bubble["width"], mascot["x"] + 8)
 
     def running_animations(self, page):
         return page.evaluate(
@@ -397,40 +361,11 @@ class ScrollBuddyTest(unittest.TestCase):
         )
         self.assertGreaterEqual(self.running_animations(page), 1)
 
-    def test_desktop_mascot_starts_fixed_lower_left_with_bubble_opening_right(self):
-        page = self.open("pinned-left.html", reduced_motion="reduce")
-        expect(self.bubble(page)).to_be_visible()
-        expect(self.bubble(page)).to_contain_text(COMMENTS[0])
-        mascot = self.mascot(page).bounding_box()
-        bubble = self.bubble(page).bounding_box()
-        self.assertIsNotNone(mascot)
-        self.assertLessEqual(mascot["x"], 48)
-        self.assertGreater(mascot["y"] + mascot["height"] / 2, DESKTOP["height"] / 2)
-        self.assertGreaterEqual(bubble["x"], mascot["x"] + mascot["width"] - 8)
-        page.evaluate("window.scrollTo({top: 2000, behavior: 'instant'})")
-        page.wait_for_function("window.scrollY >= 2000")
-        after = self.mascot(page).bounding_box()
-        for key in ("x", "y", "width", "height"):
-            self.assertAlmostEqual(after[key], mascot[key], delta=0.5, msg=key)
-
     def test_narrow_screen_never_auto_shows_a_comment(self):
         page = self.open(viewport=NARROW)
         expect(self.mascot(page)).to_be_visible()
         page.wait_for_timeout(SETTLE_MS + QUIET_MS)
         expect(self.bubble(page)).to_be_hidden(timeout=100)
-
-    def test_narrow_screen_mascot_is_smaller_and_docked_bottom_left(self):
-        desktop = self.mascot(self.open(reduced_motion="reduce"))
-        narrow_page = self.open(viewport=NARROW, reduced_motion="reduce")
-        narrow = self.mascot(narrow_page)
-        expect(desktop).to_be_visible()
-        expect(narrow).to_be_visible()
-        desktop_box, narrow_box = desktop.bounding_box(), narrow.bounding_box()
-        self.assertLess(narrow_box["width"], desktop_box["width"])
-        self.assertLessEqual(narrow_box["x"], 48)
-        bottom_gap = NARROW["height"] - (narrow_box["y"] + narrow_box["height"])
-        self.assertGreaterEqual(bottom_gap, 0)
-        self.assertLessEqual(bottom_gap, 48)
 
     def test_narrow_screen_tapping_the_mascot_shows_the_active_sections_comment(self):
         page = self.open(viewport=NARROW, has_touch=True, is_mobile=True)
@@ -502,161 +437,9 @@ class ScrollBuddyTest(unittest.TestCase):
         page.wait_for_timeout(SETTLE_MS)
         expect(page.locator(".jiro-buddy")).to_have_count(1, timeout=100)
 
-    def test_settling_on_a_left_heavy_section_moves_jiro_right_with_bubble_opening_left(self):
-        page = self.open("sides.html", reduced_motion="reduce")
-        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[0])
-        self.assertEqual(self.side(page), "left")
-        self.scroll_to_section(page, 2)
-        expect(self.bubble(page)).to_be_visible()
-        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[1])
-        expect(page.get_by_role("status")).to_have_text(SIDE_COMMENTS[1])
-        self.assert_sits_right_with_bubble_opening_left(page)
-
-    def test_data_jiro_side_overrides_the_automatic_side(self):
-        page = self.open("override.html", reduced_motion="reduce")
-        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[0])
-        self.assert_sits_right_with_bubble_opening_left(page)
-        self.scroll_to_section(page, 2)
-        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[1])
-        mascot = self.mascot(page).bounding_box()
-        bubble = self.bubble(page).bounding_box()
-        self.assertLessEqual(mascot["x"], 48)
-        self.assertGreaterEqual(bubble["x"], mascot["x"] + mascot["width"] - 8)
-
-    def test_jiro_changes_side_at_most_three_times_per_page_load(self):
-        page = self.open("alternating.html", reduced_motion="reduce")
-        sides = ["left"]
-        for n, comment in enumerate(SIDE_COMMENTS, start=1):
-            if n > 1:
-                self.scroll_to_section(page, n)
-            expect(self.bubble(page)).to_have_text(comment)
-            sides.append(self.side(page))
-        changes = sum(a != b for a, b in zip(sides, sides[1:]))
-        self.assertGreaterEqual(changes, 1, sides)
-        self.assertLessEqual(changes, 3, sides)
-        self.assertEqual(len(set(sides[-3:])), 1, f"kept moving after the cap: {sides}")
-
-    def test_comment_starts_typing_only_after_jiro_has_arrived(self):
-        page = self.open_recording("sides.html", script=RECORD_TYPING_START, reduced_motion="no-preference")
-        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[0])
-        page.evaluate("comment => { window.__jiroWatch.push(comment); }", SIDE_COMMENTS[1])
-        self.scroll_to_section(page, 2)
-        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[1])
-        page.wait_for_timeout(500)
-        self.assertEqual(self.side(page), "right")
-        start_x = page.evaluate("comment => window.__jiroTypeStartX[comment]", SIDE_COMMENTS[1])
-        self.assertIsNotNone(start_x, "never saw the comment start typing")
-        self.assertAlmostEqual(start_x, self.mascot(page).bounding_box()["x"], delta=2)
-
-    def test_reduced_motion_changes_side_instantly_without_animation(self):
-        page = self.open_recording("sides.html", script=SAMPLE_BUDDY_ANIMATIONS, reduced_motion="reduce")
-        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[0])
-        page.evaluate("window.__jiroSampling = true")
-        self.scroll_to_section(page, 2)
-        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[1])
-        self.assertEqual(self.side(page), "right")
-        page.wait_for_timeout(300)
-        self.assertEqual(page.evaluate("window.__jiroMaxAnimations"), 0)
-        self.assertEqual(self.running_animations(page), 0)
-
-    def drag_mascot(self, page, to_x, to_y, steps=12):
-        box = self.mascot(page).bounding_box()
-        page.mouse.move(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
-        page.mouse.down()
-        page.mouse.move(to_x, to_y, steps=steps)
-        page.mouse.up()
-
-    def test_dragging_jiro_to_the_right_half_docks_him_in_the_lower_right_corner(self):
-        page = self.open("pinned-left.html", reduced_motion="reduce")
-        expect(self.bubble(page)).to_have_text(COMMENTS[0])
-        self.drag_mascot(page, DESKTOP["width"] - 300, 300)
-        expect(self.bubble(page)).to_be_hidden()
-        page.wait_for_timeout(300)
-        mascot = self.mascot(page).bounding_box()
-        self.assertEqual(self.side(page), "right")
-        self.assertGreater(mascot["y"] + mascot["height"] / 2, DESKTOP["height"] / 2)
-        self.mascot(page).click()
-        expect(self.bubble(page)).to_have_text(COMMENTS[0])
-        self.assert_sits_right_with_bubble_opening_left(page)
-
-    def test_jiro_follows_the_pointer_while_held(self):
-        page = self.open("pinned-left.html", reduced_motion="reduce")
-        expect(self.bubble(page)).to_have_text(COMMENTS[0])
-        box = self.mascot(page).bounding_box()
-        page.mouse.move(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
-        page.mouse.down()
-        page.mouse.move(700, 400, steps=10)
-        held = self.mascot(page).bounding_box()
-        self.assertAlmostEqual(held["x"] + held["width"] / 2, 700, delta=12)
-        self.assertAlmostEqual(held["y"] + held["height"] / 2, 400, delta=12)
-        page.mouse.up()
-
-    def test_a_tiny_wobble_on_press_still_counts_as_a_click(self):
-        page = self.open("pinned-left.html", reduced_motion="reduce")
-        expect(self.bubble(page)).to_have_text(COMMENTS[0])
-        self.drag_mascot(page, *self._center_plus(page, 3), steps=2)
-        expect(self.bubble(page)).to_have_text(COMMENTS[0])
-        self.assertEqual(self.side(page), "left")
-
     def _center_plus(self, page, d):
         box = self.mascot(page).bounding_box()
         return box["x"] + box["width"] / 2 + d, box["y"] + box["height"] / 2 + d
-
-    def test_dropping_jiro_on_the_left_half_brings_him_back_to_the_lower_left(self):
-        page = self.open("pinned-left.html", reduced_motion="reduce")
-        expect(self.bubble(page)).to_have_text(COMMENTS[0])
-        self.drag_mascot(page, DESKTOP["width"] - 200, 600)
-        page.wait_for_timeout(200)
-        self.drag_mascot(page, 300, 200)
-        page.wait_for_timeout(300)
-        self.assertEqual(self.side(page), "left")
-        self.assertLessEqual(self.mascot(page).bounding_box()["x"], 48)
-
-    def test_the_corner_he_was_dropped_in_survives_a_reload_in_the_same_tab(self):
-        context = self.browser.new_context(viewport=DESKTOP, reduced_motion="reduce")
-        self.addCleanup(context.close)
-        page = self.open("pinned-left.html", context=context)
-        expect(self.bubble(page)).to_have_text(COMMENTS[0])
-        self.drag_mascot(page, DESKTOP["width"] - 300, 500)
-        page.wait_for_timeout(300)
-        page.reload()
-        expect(self.bubble(page)).to_have_text(COMMENTS[0])
-        self.assertEqual(self.side(page), "right")
-
-    def test_once_placed_by_hand_he_stays_in_that_corner_while_scrolling(self):
-        page = self.open("alternating.html", reduced_motion="reduce")
-        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[0])
-        start = self.side(page)
-        other_x = 300 if start == "right" else DESKTOP["width"] - 300
-        self.drag_mascot(page, other_x, 500)
-        page.wait_for_timeout(300)
-        placed = self.side(page)
-        self.assertNotEqual(placed, start)
-        for n, comment in enumerate(SIDE_COMMENTS[1:], start=2):
-            self.scroll_to_section(page, n)
-            expect(self.bubble(page)).to_have_text(comment)
-            self.assertEqual(self.side(page), placed)
-
-    def test_arrow_keys_on_the_focused_mascot_move_him_between_lower_corners(self):
-        page = self.open("pinned-left.html", reduced_motion="reduce")
-        expect(self.bubble(page)).to_have_text(COMMENTS[0])
-        self.mascot(page).focus()
-        page.keyboard.press("ArrowRight")
-        page.wait_for_timeout(300)
-        self.assertEqual(self.side(page), "right")
-        page.keyboard.press("ArrowLeft")
-        page.wait_for_timeout(300)
-        self.assertEqual(self.side(page), "left")
-
-    def test_narrow_screen_never_changes_side(self):
-        page = self.open("sides.html", viewport=NARROW, has_touch=True, is_mobile=True, reduced_motion="reduce")
-        expect(self.mascot(page)).to_be_visible()
-        self.scroll_to_section(page, 2)
-        page.wait_for_timeout(SETTLE_MS + 200)
-        self.mascot(page).tap()
-        expect(self.bubble(page)).to_contain_text(SIDE_COMMENTS[1])
-        page.wait_for_timeout(SETTLE_MS)
-        self.assertLessEqual(self.mascot(page).bounding_box()["x"], 48)
 
     def test_idle_hover_layers_several_out_of_phase_motions(self):
         page = self.open(reduced_motion="no-preference")
@@ -677,14 +460,6 @@ class ScrollBuddyTest(unittest.TestCase):
     def wait_for_text(self, page, text):
         page.wait_for_function(
             """text => window.__jiroLog.some(e => e.split('|')[2] === text)""", arg=text, timeout=8000)
-
-    def test_jiro_peeks_in_from_the_left_edge_then_settles_in_the_corner(self):
-        page = self.open_recording("flow.html", script=RECORD_FLOW, reduced_motion="no-preference")
-        self.wait_for_text(page, FLOW[0])
-        self.assertLess(page.evaluate("window.__jiroMinX"), 0)
-        box = self.mascot(page).bounding_box()
-        self.assertGreaterEqual(box["x"], 0)
-        self.assertLessEqual(box["x"], 48)
 
     def test_jiro_thinks_with_dots_before_every_comment(self):
         page = self.open_recording("flow.html", script=RECORD_FLOW, reduced_motion="no-preference")
@@ -740,43 +515,6 @@ class ScrollBuddyTest(unittest.TestCase):
         expect(self.bubble(page)).to_contain_text(FLOW[5])
         page.get_by_role("button", name="Yes please").click()
         expect(page.get_by_role("textbox", name="Work email")).to_be_focused()
-
-    def test_jiro_perches_on_a_heading_and_rides_along_with_it(self):
-        page = self.open("flow.html", reduced_motion="reduce")
-        expect(self.bubble(page)).to_contain_text(FLOW[0])
-        self.scroll_to_section(page, 3)
-        expect(self.bubble(page)).to_contain_text(FLOW[2])
-        boxes = """() => [document.querySelector('.jiro-buddy__mascot'), document.getElementById('perch3')]
-            .map(el => el.getBoundingClientRect().toJSON())"""
-        mascot, title = page.evaluate(boxes)
-        self.assertAlmostEqual(mascot["y"] + mascot["height"], title["y"], delta=16)
-        self.assertGreater(mascot["x"] + mascot["width"], title["x"])
-        self.assertLess(mascot["x"], title["x"] + title["width"])
-        page.evaluate("window.scrollBy({top: 120, behavior: 'instant'})")
-        page.evaluate("() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))")
-        moved, title2 = page.evaluate(boxes)
-        self.assertAlmostEqual(moved["y"] - mascot["y"], title2["y"] - title["y"], delta=2)
-        self.assertLess(title2["y"], title["y"])
-
-    def test_jiro_leaves_the_perch_for_his_corner_on_the_next_section(self):
-        page = self.open("flow.html", reduced_motion="reduce")
-        expect(self.bubble(page)).to_contain_text(FLOW[0])
-        self.scroll_to_section(page, 3)
-        expect(self.bubble(page)).to_contain_text(FLOW[2])
-        self.scroll_to_section(page, 4)
-        expect(self.bubble(page)).to_contain_text(FLOW[3])
-        box = self.mascot(page).bounding_box()
-        self.assertLessEqual(DESKTOP["height"] - (box["y"] + box["height"]), 64)
-
-    def test_jiro_perches_only_once_per_page(self):
-        page = self.open("flow.html", reduced_motion="reduce")
-        expect(self.bubble(page)).to_contain_text(FLOW[0])
-        self.scroll_to_section(page, 3)
-        expect(self.bubble(page)).to_contain_text(FLOW[2])
-        self.scroll_to_section(page, 5)
-        expect(self.bubble(page)).to_contain_text(FLOW[4])
-        box = self.mascot(page).bounding_box()
-        self.assertLessEqual(DESKTOP["height"] - (box["y"] + box["height"]), 64)
 
     def test_hovering_jiro_turns_his_cursor_into_eyes(self):
         page = self.open_recording("flow.html", script=RECORD_FLOW, reduced_motion="no-preference")
@@ -855,40 +593,139 @@ class ScrollBuddyTest(unittest.TestCase):
         self.assertEqual(page.evaluate("window.__jiroShifts"), 0)
 
 
-    def test_changing_sides_is_one_continuous_glide_without_mid_air_stops(self):
-        page = self.open_recording("sides.html", script=RECORD_GLIDE, reduced_motion="no-preference")
-        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[0])
-        page.evaluate("window.__jiroGliding = true")
+    def centre(self, box):
+        return box["x"] + box["width"] / 2, box["y"] + box["height"] / 2
+
+    def band(self, page):
+        width = page.evaluate("document.querySelector('main').getBoundingClientRect().width")
+        return width * 0.17, width * 0.83
+
+    def test_jiro_sits_on_the_active_sections_anchor(self):
+        page = self.open("anchors.html", reduced_motion="reduce")
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[0])
+        mx, my = self.centre(self.mascot(page).bounding_box())
+        ax, ay = self.centre(page.locator("#a1").bounding_box())
+        self.assertAlmostEqual(mx, ax, delta=3)
+        self.assertAlmostEqual(my, ay, delta=3)
+        self.scroll_to_section(page, 5)
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[4])
+        mx, my = self.centre(self.mascot(page).bounding_box())
+        ax, ay = self.centre(page.locator("#a5").bounding_box())
+        self.assertAlmostEqual(mx, ax, delta=3)
+        self.assertAlmostEqual(my, ay, delta=3)
+
+    def test_jiro_never_leaves_the_middle_two_thirds(self):
+        page = self.open("anchors.html", reduced_motion="reduce")
+        low, high = self.band(page)
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[0])
         self.scroll_to_section(page, 2)
-        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[1])
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[1])
+        mx, my = self.centre(self.mascot(page).bounding_box())
+        self.assertAlmostEqual(mx, low, delta=3)
+        self.assertAlmostEqual(my, self.centre(page.locator("#a2").bounding_box())[1], delta=3)
+        self.scroll_to_section(page, 3)
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[2])
+        self.assertAlmostEqual(self.centre(self.mascot(page).bounding_box())[0], high, delta=3)
+
+    def test_a_section_without_an_anchor_puts_him_at_its_centre(self):
+        page = self.open("anchors.html", reduced_motion="reduce")
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[0])
+        self.scroll_to_section(page, 4)
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[3])
+        mx, my = self.centre(self.mascot(page).bounding_box())
+        sx, sy = self.centre(page.locator("#s4").bounding_box())
+        self.assertAlmostEqual(mx, sx, delta=3)
+        self.assertAlmostEqual(my, sy, delta=3)
+
+    def test_jiro_scrolls_with_the_page_between_hops(self):
+        page = self.open("anchors.html", reduced_motion="reduce")
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[0])
+        before = self.mascot(page).bounding_box()
+        page.evaluate("window.scrollBy({top: 100, behavior: 'instant'})")
+        page.evaluate("() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))")
+        after = self.mascot(page).bounding_box()
+        self.assertAlmostEqual(after["y"], before["y"] - 100, delta=1)
+        self.assertAlmostEqual(after["x"], before["x"], delta=1)
+
+    def test_the_speech_bubble_opens_above_him(self):
+        page = self.open("anchors.html", reduced_motion="reduce")
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[0])
+        mascot = self.mascot(page).bounding_box()
+        bubble = self.bubble(page).bounding_box()
+        self.assertLessEqual(bubble["y"] + bubble["height"], mascot["y"] + 4)
+        self.assertAlmostEqual(self.centre(bubble)[0], self.centre(mascot)[0], delta=4)
+
+    def test_he_appears_on_the_first_anchor_never_at_a_page_edge(self):
+        page = self.open_recording("anchors.html", script=RECORD_FLOW, reduced_motion="no-preference")
+        page.wait_for_function(
+            """text => window.__jiroLog.some(e => e.split('|')[2] === text)""", arg=ANCHOR_COMMENTS[0], timeout=8000)
+        low, _ = self.band(page)
+        self.assertGreaterEqual(page.evaluate("window.__jiroMinX"), low - 92)
+
+    def test_reduced_motion_hops_instantly_without_animation(self):
+        page = self.open_recording("anchors.html", script=SAMPLE_BUDDY_ANIMATIONS, reduced_motion="reduce")
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[0])
+        page.evaluate("window.__jiroSampling = true")
+        self.scroll_to_section(page, 2)
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[1])
+        page.wait_for_timeout(300)
+        self.assertEqual(page.evaluate("window.__jiroMaxAnimations"), 0)
+
+    def test_comment_starts_typing_only_after_jiro_has_landed(self):
+        page = self.open_recording("anchors.html", script=RECORD_TYPING_START, reduced_motion="no-preference")
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[0])
+        page.evaluate("comment => { window.__jiroWatch.push(comment); }", ANCHOR_COMMENTS[1])
+        self.scroll_to_section(page, 2)
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[1])
+        page.wait_for_timeout(500)
+        start_x = page.evaluate("comment => window.__jiroTypeStartX[comment]", ANCHOR_COMMENTS[1])
+        self.assertIsNotNone(start_x, "never saw the comment start typing")
+        self.assertAlmostEqual(start_x, self.mascot(page).bounding_box()["x"], delta=2)
+
+    def test_hopping_between_anchors_is_one_continuous_glide(self):
+        page = self.open_recording("anchors.html", script=RECORD_GLIDE, reduced_motion="no-preference")
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[0])
+        page.evaluate("window.__jiroGliding = true")
+        self.scroll_to_section(page, 3)
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[2])
         xs = page.evaluate("window.__jiroXs")
         start, end = xs[0], xs[-1]
-        self.assertGreater(end - start, 600, "did not cross to the right side")
+        self.assertGreater(end - start, 300, "did not hop across")
         steps = [b - a for a, b in zip(xs, xs[1:])]
         peak = max(steps)
-        cruising = [step for a, step in zip(xs, steps)
-                    if 0.1 < (a - start) / (end - start) < 0.9]
+        cruising = [step for a, step in zip(xs, steps) if 0.1 < (a - start) / (end - start) < 0.9]
         self.assertTrue(cruising)
         self.assertGreater(min(cruising), peak * 0.25, f"slowed mid-air: {[round(x) for x in xs]}")
 
-    def test_jumping_onto_a_heading_while_the_page_scrolls_never_snaps(self):
-        page = self.open_recording("flow.html", script=RECORD_FIGURE, reduced_motion="no-preference")
-        expect(self.bubble(page)).to_contain_text(FLOW[0])
-        self.scroll_to_section(page, 3)
-        page.wait_for_function("document.querySelector('.jiro-buddy').dataset.jiroState === 'flying'", timeout=4000)
+    def test_scrolling_during_a_hop_never_snaps(self):
+        page = self.open_recording("anchors.html", script=RECORD_FIGURE, reduced_motion="no-preference")
+        expect(self.bubble(page)).to_have_text(ANCHOR_COMMENTS[0])
         page.mouse.move(700, 300)
-        for _ in range(12):
-            page.mouse.wheel(0, 30)
-            page.wait_for_timeout(50)
-        expect(self.bubble(page)).to_contain_text(FLOW[2])
+        for _ in range(150):
+            page.mouse.wheel(0, 20)
+            page.wait_for_timeout(40)
+        page.wait_for_timeout(2500)
         frames = page.evaluate("window.__jiroFig")
-        steps = [(b[0] - a[0], b[1] - a[1], b[2]) for a, b in zip(frames, frames[1:])]
-        snaps = [(round(v[0] - u[0]), round(v[1] - u[1]), v[2]) for u, v in zip(steps, steps[1:])
-                 if abs(v[0] - u[0]) > 90 or abs(v[1] - u[1]) > 90]
+        snaps = []
+        for a, b, c in zip(frames, frames[1:], frames[2:]):
+            if not all(-90 < f[1] < DESKTOP["height"] for f in (a, b, c)):
+                continue
+            ax, ay = (b[0] - a[0]) - (c[0] - b[0]), (b[1] - a[1]) - (c[1] - b[1])
+            if abs(ax) > 90 or abs(ay) > 90:
+                snaps.append((round(ax), round(ay), c[2]))
         self.assertEqual(snaps, [], "velocity changed abruptly between frames")
-        heading = page.locator("#perch3").bounding_box()
-        figure = page.locator(".jiro-buddy__figure").bounding_box()
-        self.assertAlmostEqual(figure["y"] + figure["height"], heading["y"], delta=40)
+
+    def test_narrow_screen_mascot_is_smaller_and_sits_on_the_anchor(self):
+        desktop = self.mascot(self.open("anchors.html", reduced_motion="reduce"))
+        narrow_page = self.open("anchors.html", viewport=NARROW, reduced_motion="reduce")
+        narrow = self.mascot(narrow_page)
+        expect(desktop).to_be_visible()
+        expect(narrow).to_be_visible()
+        self.assertLess(narrow.bounding_box()["width"], desktop.bounding_box()["width"])
+        mx, my = self.centre(narrow.bounding_box())
+        ax, ay = self.centre(narrow_page.locator("#a1").bounding_box())
+        self.assertAlmostEqual(mx, ax, delta=3)
+        self.assertAlmostEqual(my, ay, delta=3)
 
     def open_clicks(self, **options):
         context = self.browser.new_context(viewport=DESKTOP, reduced_motion="reduce", **options)
@@ -987,13 +824,13 @@ class StitchedDesignTest(unittest.TestCase):
         self.assertGreaterEqual(page.locator("section[data-jiro-comment]").count(), 8)
         expect(page.locator(".jiro-buddy__bubble")).to_contain_text("Hi, I'm Jiro.")
 
-    def test_every_look_and_perch_selector_points_at_a_hotspot(self):
+    def test_every_look_anchor_and_action_selector_points_at_a_hotspot(self):
         context = self.browser.new_context(viewport=DESKTOP)
         self.addCleanup(context.close)
         page = context.new_page()
         page.goto(f"{self.base}/stitched/index.html")
-        missing = page.evaluate("""() => [...document.querySelectorAll('[data-jiro-look],[data-jiro-perch],[data-jiro-action]')]
-            .flatMap(s => ['jiroLook', 'jiroPerch', 'jiroAction'].map(k => s.dataset[k]).filter(Boolean))
+        missing = page.evaluate("""() => [...document.querySelectorAll('[data-jiro-look],[data-jiro-anchor],[data-jiro-action]')]
+            .flatMap(s => ['jiroLook', 'jiroAnchor', 'jiroAction'].map(k => s.dataset[k]).filter(Boolean))
             .filter(sel => !document.querySelector(sel))""")
         self.assertEqual(missing, [])
 
@@ -1008,6 +845,24 @@ class StitchedDesignTest(unittest.TestCase):
                      "col-claude", "col-devin", "col-factory", "nav-pricing", "nav-compare"):
             self.assertTrue(lines.get(spot), f"no click line on #{spot}: {sorted(lines)}")
         self.assertEqual(len(set(lines.values())), len(lines), "click lines repeat across hotspots")
+
+    def test_every_commented_section_has_an_anchor_inside_the_middle_two_thirds(self):
+        context = self.browser.new_context(viewport=DESKTOP)
+        self.addCleanup(context.close)
+        page = context.new_page()
+        page.goto(f"{self.base}/stitched/index.html")
+        result = page.evaluate("""() => {
+            const band = document.querySelector('main').getBoundingClientRect();
+            return [...document.querySelectorAll('[data-jiro-comment]')].map(s => {
+                const a = document.querySelector(s.dataset.jiroAnchor || 'none');
+                if (!a) return [s.id, null];
+                const r = a.getBoundingClientRect();
+                return [s.id, ((r.left + r.width / 2) - band.left) / band.width];
+            });
+        }""")
+        for sid, at in result:
+            self.assertIsNotNone(at, f"#{sid} has no anchor")
+            self.assertTrue(0.17 <= at <= 0.83, f"#{sid} anchor at {at:.2f} of the width")
 
 
 if __name__ == "__main__":
