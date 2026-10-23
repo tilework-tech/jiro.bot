@@ -101,6 +101,24 @@ PLAIN_PAGE = page_html("\n".join(
     f'<section id="s{i}"><h2>Section {i}</h2></section>' for i in range(1, 6)
 ))
 
+CLICK_PAGE = page_html("\n".join([
+    '<section id="s1" data-jiro-comment="Alpha comment." data-jiro-click="Section one click.">'
+    '<h2>Section 1</h2><div id="card" data-jiro-click="Card one.|Card two.">Card</div><p id="plain1">Plain one</p></section>',
+    '<section id="s2" data-jiro-comment="Bravo comment."><h2>Section 2</h2><p id="plain2">Plain two</p>'
+    '<a id="jump" href="#s3" data-jiro-click="Off to three.">Go to three</a></section>',
+    '<section id="s3" data-jiro-comment="Charlie comment."><h2>Section 3</h2></section>',
+]))
+
+RECORD_GLIDE = """
+window.__jiroXs = [];
+window.__jiroGliding = false;
+(function sample() {
+  const mascot = document.querySelector('.jiro-buddy__mascot');
+  if (window.__jiroGliding && mascot) window.__jiroXs.push(mascot.getBoundingClientRect().x);
+  requestAnimationFrame(sample);
+})();
+"""
+
 RECORD_TEXTS = """
 window.__jiroTexts = [];
 new MutationObserver(() => {
@@ -824,6 +842,82 @@ class ScrollBuddyTest(unittest.TestCase):
         self.assertEqual(page.evaluate("window.__jiroShifts"), 0)
 
 
+    def test_changing_sides_is_one_continuous_glide_without_mid_air_stops(self):
+        page = self.open_recording("sides.html", script=RECORD_GLIDE, reduced_motion="no-preference")
+        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[0])
+        page.evaluate("window.__jiroGliding = true")
+        self.scroll_to_section(page, 2)
+        expect(self.bubble(page)).to_have_text(SIDE_COMMENTS[1])
+        xs = page.evaluate("window.__jiroXs")
+        start, end = xs[0], xs[-1]
+        self.assertGreater(end - start, 600, "did not cross to the right side")
+        steps = [b - a for a, b in zip(xs, xs[1:])]
+        peak = max(steps)
+        cruising = [step for a, step in zip(xs, steps)
+                    if 0.1 < (a - start) / (end - start) < 0.9]
+        self.assertTrue(cruising)
+        self.assertGreater(min(cruising), peak * 0.25, f"slowed mid-air: {[round(x) for x in xs]}")
+
+    def open_clicks(self, **options):
+        context = self.browser.new_context(viewport=DESKTOP, reduced_motion="reduce", **options)
+        self.addCleanup(context.close)
+        (pathlib.Path(self._tmp.name) / "clicks.html").write_text(CLICK_PAGE)
+        page = self.open("clicks.html", context=context)
+        expect(self.bubble(page)).to_have_text(COMMENTS[0])
+        return page
+
+    def test_clicking_an_element_comments_on_it_and_cycles_its_lines(self):
+        page = self.open_clicks()
+        for line in ("Card one.", "Card two.", "Card one."):
+            page.locator("#card").click()
+            expect(self.bubble(page)).to_have_text(line)
+
+    def test_clicked_element_is_highlighted_while_jiro_talks_about_it(self):
+        page = self.open_clicks()
+        page.locator("#card").click()
+        expect(page.locator("#card")).to_have_class("jiro-look-target")
+
+    def test_clicking_plain_content_uses_the_sections_click_line(self):
+        page = self.open_clicks()
+        page.locator("#plain1").click()
+        expect(self.bubble(page)).to_have_text("Section one click.")
+
+    def test_clicking_a_section_without_click_lines_repeats_its_comment(self):
+        page = self.open_clicks()
+        self.scroll_to_section(page, 2)
+        expect(self.bubble(page)).to_have_text("Bravo comment.")
+        self.scroll_to_section(page, 3)
+        expect(self.bubble(page)).to_have_text("Charlie comment.")
+        self.scroll_to_section(page, 2)
+        expect(self.bubble(page)).to_be_hidden()
+        page.locator("#plain2").click()
+        expect(self.bubble(page)).to_have_text("Bravo comment.")
+
+    def test_clicking_a_link_keeps_its_comment_after_the_page_jumps(self):
+        page = self.open_clicks()
+        self.scroll_to_section(page, 2)
+        expect(self.bubble(page)).to_have_text("Bravo comment.")
+        page.locator("#jump").click()
+        expect(self.bubble(page)).to_have_text("Off to three.")
+        page.wait_for_timeout(QUIET_MS)
+        expect(self.bubble(page)).to_have_text("Off to three.", timeout=100)
+
+    def test_clicking_jiro_still_replays_the_section_comment(self):
+        page = self.open_clicks()
+        page.locator("#card").click()
+        expect(self.bubble(page)).to_have_text("Card one.")
+        self.mascot(page).click()
+        expect(self.bubble(page)).to_have_text(COMMENTS[0])
+
+    def test_clicks_do_not_comment_on_phones(self):
+        context = self.browser.new_context(viewport=NARROW, reduced_motion="reduce")
+        self.addCleanup(context.close)
+        (pathlib.Path(self._tmp.name) / "clicks.html").write_text(CLICK_PAGE)
+        page = self.open("clicks.html", context=context)
+        page.locator("#card").click()
+        page.wait_for_timeout(QUIET_MS)
+        expect(self.bubble(page)).to_be_hidden(timeout=100)
+
 
 class BuddyBudgetTest(unittest.TestCase):
     def test_buddy_ships_in_under_twelve_kilobytes_compressed(self):
@@ -870,6 +964,18 @@ class StitchedDesignTest(unittest.TestCase):
             .flatMap(s => ['jiroLook', 'jiroPerch', 'jiroAction'].map(k => s.dataset[k]).filter(Boolean))
             .filter(sel => !document.querySelector(sel))""")
         self.assertEqual(missing, [])
+
+    def test_pricing_tiers_and_competitor_columns_have_their_own_click_lines(self):
+        context = self.browser.new_context(viewport=DESKTOP)
+        self.addCleanup(context.close)
+        page = context.new_page()
+        page.goto(f"{self.base}/stitched/index.html")
+        lines = page.evaluate("""() => Object.fromEntries([...document.querySelectorAll('[data-jiro-click]')]
+            .filter(el => el.id).map(el => [el.id, el.dataset.jiroClick]))""")
+        for spot in ("tier-apprentice", "tier-itamae", "tier-omakase",
+                     "col-claude", "col-devin", "col-factory", "nav-pricing", "nav-compare"):
+            self.assertTrue(lines.get(spot), f"no click line on #{spot}: {sorted(lines)}")
+        self.assertEqual(len(set(lines.values())), len(lines), "click lines repeat across hotspots")
 
 
 if __name__ == "__main__":

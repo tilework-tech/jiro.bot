@@ -10,7 +10,9 @@
   var SETTLE_MS = 600;
   var TYPE_MS = 28;
   var ANNOUNCE_MS = 100;
-  var FLIGHT_MS = 900;
+  var FLIGHT_MS = 1100;
+  var GLIDE_STEPS = 20;
+  var CLICK_HOLD_MS = 1200;
   var THINK_MS = 750;
   var LOOK_MS = 700;
   var LOOK_LINGER_MS = 1800;
@@ -211,6 +213,8 @@
     var face = "cursor";
     var sleepTimer = 0;
     var entered = Promise.resolve();
+    var clickHold = 0;
+    var clicks = new WeakMap();
     var returning = Promise.resolve();
 
     function schedule(fn, ms) {
@@ -375,15 +379,25 @@
         return "translate(" + dx * k + "px," + (dy * k + y) + "px) rotate(" + r * dir + "deg)";
       };
       setState("flying");
-      var animation = aside.animate([
+      var frames = [
         { offset: 0, transform: at(0, 0, 0), easing: "ease-out" },
-        { offset: 0.12, transform: at(0, 6, 4), easing: "ease-out" },
-        { offset: 0.4, transform: at(0.35, lift, -8), easing: "ease-in-out" },
-        { offset: 0.6, transform: at(0.65, lift * 0.9, 6), easing: "ease-in" },
-        { offset: 0.84, transform: at(1, 0, 4), easing: "ease-out" },
+        { offset: 0.1, transform: at(0, 6, 3) }
+      ];
+      for (var i = 1; i <= GLIDE_STEPS; i += 1) {
+        var u = i / GLIDE_STEPS;
+        var rest = (1 - u) * (1 - u);
+        frames.push({
+          offset: 0.1 + 0.74 * u,
+          transform: at((1 - Math.cos(Math.PI * u)) / 2, lift * Math.sin(Math.PI * u) + 6 * rest,
+            3 * rest - 8 * Math.sin(2 * Math.PI * u))
+        });
+      }
+      frames[frames.length - 1].easing = "ease-out";
+      frames.push(
         { offset: 0.92, transform: at(1, 2, -2), easing: "ease-in-out" },
         { offset: 1, transform: at(1, 0, 0) }
-      ], { duration: FLIGHT_MS, fill: ahead ? "forwards" : "none" });
+      );
+      var animation = aside.animate(frames, { duration: FLIGHT_MS, fill: ahead ? "forwards" : "none" });
       flight = animation;
       schedule(function () { puff(); squash(1.16, 0.84, 240); }, FLIGHT_MS * 0.84);
       return animation.finished.then(function () {
@@ -521,6 +535,10 @@
     function setActive(section) {
       if (!section || section === active) return;
       active = section;
+      if (performance.now() < clickHold) {
+        seen.add(section);
+        return;
+      }
       hideBubble();
       if (perched && target(section, "perch") !== perched) leavePerch();
       settle(section);
@@ -739,6 +757,36 @@
     });
 
     later.addEventListener("click", hideBubble);
+
+    document.addEventListener("click", function (event) {
+      var node = event.target;
+      if (closed || !wide.matches || !(node instanceof Element) || aside.contains(node)) return;
+      var section = sections.filter(function (s) { return s.contains(node); }).pop() || null;
+      var source = node.closest("[data-jiro-click]");
+      if (source && section && !section.contains(source)) source = null;
+      if (!source && !section) return;
+      var lines = (source ? source.getAttribute("data-jiro-click") : attr(section, "comment"))
+        .split("|").map(function (line) { return line.trim(); }).filter(Boolean);
+      if (!lines.length) return;
+      var key = source || section;
+      var count = clicks.get(key) || 0;
+      clicks.set(key, count + 1);
+      hideBubble();
+      if (section) seen.add(section);
+      clickHold = performance.now() + CLICK_HOLD_MS;
+      if (source && source !== section) {
+        looked = source;
+        source.classList.add("jiro-look-target");
+      }
+      var b = mascot.getBoundingClientRect();
+      var dx = event.clientX - (b.left + b.width / 2);
+      var dy = event.clientY - (b.top + b.height / 2);
+      var len = Math.max(Math.hypot(dx, dy), 1);
+      aside.style.setProperty("--jiro-gx", (dx / len * 2.5).toFixed(2) + "px");
+      aside.style.setProperty("--jiro-gy", (dy / len * 2.5).toFixed(2) + "px");
+      hopOnce(10, 320);
+      say(lines[count % lines.length], "", run);
+    });
 
     close.addEventListener("click", function () {
       var hadFocus = aside.contains(document.activeElement);
