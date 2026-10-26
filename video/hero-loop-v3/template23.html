@@ -1,0 +1,556 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/inter/600.css">
+<link rel="stylesheet" href="node_modules/@fontsource/ibm-plex-mono/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/ibm-plex-mono/500.css">
+<link rel="stylesheet" href="node_modules/@fontsource/lato/400.css">
+<link rel="stylesheet" href="node_modules/@fontsource/lato/900.css">
+<link rel="stylesheet" href="brand/fonts/fonts.css">
+<style>
+:root {
+  --ink: #141414; --muted: #6b6f75; --app: #161616; --card: #1c1c1c; --line: #2a2a2a; --fg: #f2f4f8; --text: #dde1e6; --comment: #8a8f98;
+  --jiro: #3cf06e; --salmon: #f2694f; --red: #f47067;
+  --sans: 'Inter', system-ui, sans-serif; --mono: 'IBM Plex Mono', monospace; --gs: 'General Sans', 'Inter', sans-serif; --lato: 'Lato', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1200px; height: 960px; overflow: hidden; background: #fff; }
+body { font-family: var(--sans); color: var(--ink); -webkit-font-smoothing: antialiased; }
+.ico { width: 22px; height: 22px; flex: none; }
+#stage { position: absolute; inset: 0; overflow: hidden; background: #fff; }
+#dots { position: absolute; inset: 0; background-image: radial-gradient(circle, #e6e6e6 1.3px, transparent 1.4px); background-size: 30px 30px; }
+#night { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 20%, #17264a 0%, #0a0f1f 75%); opacity: 0; }
+.shot { position: absolute; inset: 0; display: none; perspective: 1600px; }
+.cam { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.mimg { image-rendering: pixelated; display: block; flex: none; }
+
+/* screens filmed as objects: tilt, depth of field, glass */
+.screen { position: absolute; background: var(--app); border-radius: 22px; box-shadow: 0 40px 90px rgba(0,0,0,.30), 0 0 0 1px rgba(0,0,0,.08); overflow: hidden; transform-style: preserve-3d; }
+.screen::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,0) 38%, rgba(255,255,255,0) 70%, rgba(255,255,255,.04) 100%); }
+.blur { filter: blur(3.5px); opacity: .55; }
+.blur2 { filter: blur(6px); opacity: .4; }
+
+/* hook */
+#hook { display: flex; align-items: center; justify-content: center; }
+.hk { position: absolute; left: 110px; top: 380px; font: 600 92px/1.08 var(--gs); letter-spacing: -.03em; color: var(--ink); }
+.hk .roll { position: relative; display: inline-block; height: 100px; overflow: hidden; vertical-align: top; min-width: 700px; }
+.hk .roll span { position: absolute; left: 0; top: 0; white-space: nowrap; }
+.hk .strike { position: absolute; left: 0; top: 52%; height: 8px; background: var(--salmon); width: 0; }
+.hk .mm { position: absolute; left: 110px; top: 150px; }
+
+/* chat close-ups */
+.msg { display: flex; flex-direction: column; gap: 12px; }
+.who { display: flex; align-items: center; gap: 12px; font: 600 22px var(--sans); }
+.who.j { color: var(--jiro); } .who.y { color: var(--salmon); }
+.who .av { width: 34px; height: 34px; border-radius: 8px; background: var(--salmon); color: #2a110c; font: 700 17px var(--sans); display: grid; place-items: center; }
+.jtxt { font: 500 44px/1.22 var(--sans); color: var(--fg); letter-spacing: -.01em; border-left: 4px solid rgba(60,240,110,.6); padding-left: 22px; }
+.jtxt code, .doc code { font: 500 38px var(--mono); background: #262626; border-radius: 8px; padding: 2px 10px; }
+.bub { align-self: flex-end; background: #3a221d; box-shadow: inset 0 0 0 2px rgba(242,105,79,.4); border-radius: 26px; padding: 20px 30px; font: 500 40px/1.2 var(--sans); color: var(--fg); }
+.comp { border: 2px solid #393939; background: #1c1c1c; border-radius: 26px; padding: 26px 30px; font: 400 42px/1.2 var(--sans); color: var(--fg); }
+.caret { display: inline-block; width: 3px; height: 42px; background: var(--fg); vertical-align: -6px; margin-left: 2px; }
+.wr { display: flex; align-items: center; gap: 18px; font: 400 34px var(--sans); color: var(--text); height: 56px; }
+.wr .ico { width: 30px; height: 30px; color: var(--comment); }
+.wr .ok { margin-left: auto; color: var(--jiro); width: 32px; height: 32px; }
+.big { font: 600 74px/1 var(--sans); color: var(--fg); letter-spacing: -.02em; }
+
+/* slack and cli close-ups */
+.slk { background: #fff; color: #1d1c1d; font-family: var(--lato); border-radius: 22px; box-shadow: 0 40px 90px rgba(0,0,0,.25), 0 0 0 1px #ddd; overflow: hidden; position: absolute; }
+.slk .h { background: #3f0e40; color: #fff; font: 900 30px var(--lato); padding: 20px 34px; display: flex; align-items: center; gap: 14px; }
+.slk .m { display: flex; gap: 22px; padding: 30px 34px; }
+.slk .av { width: 70px; height: 70px; border-radius: 12px; background: #2b7a78; color: #fff; font: 700 28px var(--sans); display: grid; place-items: center; flex: none; }
+.slk .n { font: 900 32px var(--lato); } .slk .tm { font: 400 22px var(--lato); color: #616061; margin-left: 10px; }
+.slk .tx { font: 400 40px/1.3 var(--lato); margin-top: 6px; }
+.term { background: #0b0b0b; border: 4px solid #e9ecef; border-radius: 22px; overflow: hidden; position: absolute; box-shadow: 0 40px 90px rgba(0,0,0,.3); }
+.term .tb { height: 50px; background: #e9ecef; display: flex; align-items: center; gap: 12px; padding: 0 22px; }
+.term .tb i { width: 16px; height: 16px; border-radius: 50%; background: #9aa0a6; display: block; }
+.term .tb span { margin-left: 14px; font: 500 20px var(--mono); color: #555; }
+.term .bd { padding: 28px 34px; font: 400 36px/1.35 var(--mono); color: var(--fg); }
+.term .g { color: var(--jiro); } .term .dim { color: #6f737a; font-size: 26px; }
+.tag { position: absolute; display: flex; align-items: center; gap: 12px; font: 500 22px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+.tag .ico { width: 26px; height: 26px; }
+
+/* jiro's screen */
+.jframe { position: absolute; border-radius: 26px; background: var(--jiro); padding: 16px; box-shadow: 0 40px 90px rgba(0,0,0,.25); }
+.jframe .lbl { display: flex; align-items: center; gap: 12px; font: 600 24px var(--sans); color: #0b2a14; padding: 2px 8px 14px; }
+.jframe .in { background: #0d1117; border-radius: 16px; overflow: hidden; }
+.prh { padding: 26px 30px 20px; border-bottom: 1px solid #222; }
+.prh .rp { font: 400 20px var(--mono); color: var(--comment); }
+.prh h2 { font: 600 36px/1.2 var(--sans); color: var(--fg); margin-top: 6px; }
+.prh .meta { display: flex; align-items: center; gap: 14px; margin-top: 14px; font: 500 22px var(--sans); color: var(--comment); }
+.badge { border-radius: 999px; padding: 5px 16px; background: #2d333b; color: #c9d1d9; font: 500 20px var(--sans); }
+.stat { margin-left: auto; font: 600 30px var(--mono); } .stat .a { color: var(--jiro); } .stat .r { color: var(--red); }
+.cols { display: grid; grid-template-columns: 1fr 1fr; }
+.col { padding: 22px 30px; } .col:first-child { border-right: 1px solid #1e242c; }
+.col h4 { font: 500 18px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--comment); margin-bottom: 14px; }
+.tree div { font: 400 28px/46px var(--mono); color: #c9d1d9; white-space: nowrap; }
+.tree .x { text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 3px; color: #8b5a57; }
+.tree .new { color: var(--jiro); } .tree .ind { padding-left: 30px; }
+.cursor { position: absolute; width: 0; height: 0; z-index: 5; }
+.cursor svg { position: absolute; left: 0; top: 0; width: 46px; height: 46px; filter: drop-shadow(0 4px 6px rgba(0,0,0,.4)); }
+.cursor img { position: absolute; left: 30px; top: 30px; width: 64px; }
+.btn { display: inline-flex; align-items: center; gap: 10px; background: var(--jiro); color: #0b2a14; font: 600 26px var(--sans); border-radius: 12px; padding: 14px 24px; }
+.doc { padding: 34px 40px; font: 400 34px/1.5 var(--sans); color: var(--text); }
+.doc h3 { font: 600 40px var(--sans); color: var(--fg); margin-bottom: 18px; }
+.doc .newl { color: var(--fg); background: rgba(60,240,110,.14); border-left: 5px solid var(--jiro); padding: 4px 16px; margin: 6px 0; }
+.alert { position: absolute; background: #2a1b17; border: 2px solid rgba(242,105,79,.6); border-radius: 22px; padding: 34px 40px; color: var(--fg); box-shadow: 0 40px 90px rgba(0,0,0,.5); }
+.alert .k { font: 500 22px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--salmon); }
+.alert .t { font: 600 56px/1.15 var(--sans); margin-top: 14px; }
+.chk { position: absolute; width: 150px; height: 150px; border-radius: 50%; background: var(--jiro); display: grid; place-items: center; box-shadow: 0 0 0 12px rgba(60,240,110,.2), 0 24px 60px rgba(0,0,0,.35); opacity: 0; }
+.chk .ico { width: 86px; height: 86px; color: #0b1f11; }
+
+
+/* phone (mobile web app), drawn at full size so the zoomed shot stays sharp */
+#s-phone .cam { perspective: 2400px; }
+#ph { position: absolute; left: 430px; top: 60px; width: 720px; height: 1420px; border-radius: 104px; background: #050505; border: 3px solid #3a3a3a; padding: 20px; box-shadow: 0 60px 140px rgba(0,0,0,.35), inset 0 0 0 3px #1a1a1a; transform-origin: 50% 30%; }
+#ph .sbx { position: relative; width: 100%; height: 100%; border-radius: 84px; overflow: hidden; background: var(--app); display: flex; flex-direction: column; }
+#ph .isl { position: absolute; top: 24px; left: 50%; width: 190px; height: 56px; margin-left: -95px; border-radius: 30px; background: #000; z-index: 3; }
+#ph .sb { height: 100px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 10px 62px 0; font: 600 31px var(--sans); color: var(--fg); }
+#ph .bat { width: 50px; height: 24px; border: 3px solid var(--fg); border-radius: 7px; position: relative; opacity: .9; }
+#ph .bat::after { content: ''; position: absolute; inset: 3px; right: 9px; background: var(--fg); border-radius: 2px; }
+#ph .hd { height: 92px; flex: none; display: flex; align-items: center; gap: 22px; padding: 0 32px; border-bottom: 1px solid #262626; color: var(--text); font: 600 33px var(--sans); }
+#ph .hd .t { flex: 1; color: var(--fg); }
+#ph .ico { width: 34px; height: 34px; }
+#ph .ls { flex: 1; display: flex; flex-direction: column; justify-content: flex-start; gap: 34px; padding: 34px 38px; }
+#ph .msg { gap: 14px; }
+#ph .who { font-size: 28px; gap: 14px; }
+#ph .who .av { width: 48px; height: 48px; font-size: 22px; border-radius: 12px; }
+#ph .jt { font: 400 37px/1.36 var(--sans); color: var(--fg); border-left: 5px solid rgba(60,240,110,.6); padding-left: 24px; }
+#ph .rows { display: flex; flex-direction: column; gap: 6px; }
+#ph .row { display: flex; gap: 18px; align-items: center; height: 56px; font: 400 31px var(--sans); color: var(--text); }
+#ph .row .ico { color: var(--comment); } #ph .row .ok { margin-left: auto; color: var(--jiro); }
+#ph .row .ok .ico { color: var(--jiro); width: 38px; height: 38px; }
+#ph .prc { display: flex; align-items: center; gap: 16px; border: 2px solid #333; border-radius: 20px; padding: 22px 24px; font: 500 31px var(--sans); color: var(--fg); background: #1c1c1c; }
+#ph .prc .ico { color: var(--jiro); }
+#ph .prc .bd { margin-left: auto; font: 500 24px var(--sans); color: #c9d1d9; background: #2d333b; border-radius: 999px; padding: 5px 16px; }
+#ph .ub { align-self: flex-end; background: #3a221d; box-shadow: inset 0 0 0 3px rgba(242,105,79,.4); border-radius: 34px; padding: 20px 30px; font: 500 37px/1.2 var(--sans); color: var(--fg); }
+#ph .ub.al { background: #2a1b17; }
+#ph .cp { flex: none; margin: 0 26px 40px; border: 2px solid #393939; border-radius: 38px; padding: 20px 22px 20px 32px; font: 400 34px var(--sans); color: var(--fg); display: flex; align-items: center; min-height: 100px; }
+#ph .cp .phd { color: #6f737a; }
+#ph .cp .snd { margin-left: auto; width: 60px; height: 60px; border-radius: 50%; background: var(--fg); color: #111; display: grid; place-items: center; }
+#ph .cp .snd .ico { width: 30px; height: 30px; }
+#ph .glare { position: absolute; inset: 0; border-radius: 104px; pointer-events: none; background: linear-gradient(115deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0) 75%, rgba(255,255,255,.04) 100%); }
+#s-phone .chk { left: 250px; top: 560px; }
+
+
+/* structure + docs */
+.split { display: grid; grid-template-columns: 0.85fr 1.15fr; }
+.pane { padding: 26px 32px; position: relative; }
+.pane + .pane { border-left: 1px solid #1e242c; }
+.pane h4 { font: 500 18px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--comment); margin-bottom: 14px; }
+.stack { position: relative; height: 330px; }
+.stack .tree { position: absolute; left: 0; top: 0; }
+.md div { font: 400 27px/48px var(--mono); color: #c9d1d9; white-space: nowrap; }
+.md .h { color: var(--fg); font-weight: 500; }
+.md .nl { background: rgba(60,240,110,.10); border-left: 4px solid var(--jiro); padding-left: 14px; margin-left: -18px; }
+.md code { color: var(--jiro); }
+/* agent lanes */
+.lanes { padding: 20px 30px 30px; }
+.lane { position: relative; height: 128px; display: flex; align-items: center; border-bottom: 2px dashed #2a313a; }
+.lane:last-child { border-bottom: none; }
+.lane .ag { width: 230px; flex: none; display: flex; align-items: center; gap: 14px; font: 600 26px var(--sans); color: var(--fg); }
+.lane .dot { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font: 700 18px var(--sans); color: #111; }
+.lane .trk { position: relative; flex: 1; height: 84px; border-radius: 16px; background: #161b22; overflow: hidden; }
+.lane .dir { position: absolute; left: 18px; top: 8px; font: 500 20px var(--mono); color: var(--comment); }
+.lane .card { position: absolute; top: 34px; left: 18px; display: flex; align-items: center; gap: 10px; background: #222a33; border-radius: 10px; padding: 6px 14px; font: 500 22px var(--sans); color: var(--fg); white-space: nowrap; }
+.lane .card .ok { color: var(--jiro); display: flex; } .lane .card .ok .ico { width: 24px; height: 24px; }
+.lane .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; }
+/* diff */
+.dl { font: 400 25px/40px var(--mono); white-space: pre; padding: 0 26px; color: #c9d1d9; }
+.dl.r { background: rgba(244,112,103,.13); } .dl.r .s { color: var(--red); }
+.dl.g { background: rgba(60,240,110,.14); } .dl.g .s { color: var(--jiro); }
+.dl .s { display: inline-block; width: 30px; }
+.dl.more { color: #b36b66; font-style: italic; background: rgba(244,112,103,.07); }
+.fname { font: 500 20px var(--mono); color: var(--comment); padding: 14px 26px 8px; display: flex; gap: 14px; align-items: center; }
+.fname .del { color: var(--red); border: 1px solid rgba(244,112,103,.5); border-radius: 6px; padding: 1px 8px; font-size: 16px; }
+
+/* agent swarm control panel */
+.sw { position: relative; height: 580px; padding: 20px 24px; }
+.wires { position: absolute; left: 16px; top: 20px; width: 1068px; height: 600px; overflow: visible; }
+.wires path { fill: none; stroke: #3cf06e; stroke-width: 3; stroke-linecap: round; opacity: .55; }
+.lead { position: absolute; left: 34px; top: 156px; width: 270px; height: 220px; border-radius: 20px; background: #12251a; box-shadow: inset 0 0 0 2px rgba(60,240,110,.55), 0 0 40px rgba(60,240,110,.12); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.lead .lt1 { font: 600 32px var(--sans); color: var(--fg); margin-top: 8px; }
+.lead .lt2 { font: 500 19px var(--mono); color: var(--comment); }
+.lead .lt3 { font: 500 20px var(--sans); color: var(--jiro); margin-top: 6px; }
+.wks { position: absolute; left: 410px; top: 16px; width: 640px; display: flex; flex-direction: column; gap: 12px; }
+.wk { height: 116px; border-radius: 16px; background: #161b22; box-shadow: inset 0 0 0 2px #232a33; padding: 11px 20px; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto auto; column-gap: 16px; row-gap: 6px; }
+.wk .wt { display: flex; align-items: center; gap: 12px; grid-column: 1 / 3; }
+.wk .dot { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font: 700 15px var(--sans); color: #111; flex: none; }
+.wk .an { font: 600 24px var(--sans); color: var(--fg); }
+.wk .mdl { font: 500 18px var(--mono); color: #c9d1d9; background: #2d333b; border-radius: 999px; padding: 3px 12px; }
+.wk .ln { display: flex; align-items: center; gap: 8px; font: 500 19px var(--mono); color: var(--comment); }
+.wk .ln .ico { width: 20px; height: 20px; }
+.wk .tk { font: 500 21px var(--sans); color: var(--text); text-align: right; }
+.wk .wb { grid-column: 1 / 3; display: flex; align-items: center; gap: 14px; }
+.wk .bar { flex: 1; height: 8px; border-radius: 4px; background: #232a33; overflow: hidden; }
+.wk .bar i { display: block; height: 100%; width: 0; border-radius: 4px; }
+.wk .st { width: 120px; text-align: right; font: 600 18px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: #f5c26b; }
+.wk .st.done { color: var(--jiro); }
+.wk .wok { color: var(--jiro); display: flex; } .wk .wok .ico { width: 24px; height: 24px; }
+.wk .st { width: 90px; }
+.swf { position: absolute; left: 34px; bottom: 18px; display: flex; gap: 14px; font: 500 22px var(--mono); color: var(--comment); }
+.swf .g { color: var(--jiro); } .swf .sep { color: #3a414a; }
+/* diff stat callout */
+.stat { transform-origin: 100% 50%; border-radius: 12px; padding: 2px 10px; }
+/* lower third */
+#lt { position: absolute; left: 60px; bottom: 54px; opacity: 0; }
+#lt .a { display: flex; align-items: center; gap: 12px; font: 600 30px/1 var(--sans); color: var(--ink); }
+#lt .b { font: 500 30px/1.2 var(--sans); color: var(--muted); margin-top: 10px; }
+#lt.night .a { color: #fff; } #lt.night .b { color: #aab1bb; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="dots"></div>
+  <div id="night"></div>
+
+  <!-- 0 hook -->
+  <div class="shot" id="s-hook"><div class="cam">
+    <img class="mimg mm" id="hkM" src="jiro-mascot-pixel.png" style="position:absolute;left:104px;top:190px;width:180px">
+    <div class="hk"><div>You just hired</div><div class="roll" id="roll"><span id="r0"></span><span id="r1"></span><div class="strike" id="strk"></div></div></div>
+  </div></div>
+
+  <!-- 1a scan -->
+  <div class="shot" id="s-scan"><div class="cam">
+    <div class="screen" style="left:120px;top:250px;width:960px;transform:rotateY(-9deg) rotateX(4deg)">
+      <div style="padding:46px 56px" class="msg">
+        <div class="who j"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:44px">Jiro</div>
+        <div class="big" id="scanN">Read 0 files</div>
+        <div class="wr blur">{{i:folder}}<span>Mapped 9 modules</span>{{i:check:2.5}}</div>
+        <div class="wr blur2">{{i:git-pull-request}}<span>Read 6 months of PRs</span></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 1b finding -->
+  <div class="shot" id="s-find"><div class="cam">
+    <div class="screen" style="left:70px;top:280px;width:1080px;transform:rotateY(7deg) rotateX(3deg)">
+      <div style="padding:50px 60px" class="msg">
+        <div class="who j"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:44px">Jiro</div>
+        <div class="jtxt blur2" style="font-size:34px">Read 1,284 files across 9 modules.</div>
+        <div class="jtxt" id="findT"></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 2a you type -->
+  <div class="shot" id="s-type"><div class="cam">
+    <div class="screen" style="left:100px;top:340px;width:1000px;transform:rotateX(10deg) rotateY(-4deg)">
+      <div style="padding:40px 50px">
+        <div class="who y" style="margin-bottom:18px"><span class="av">Y</span>You</div>
+        <div class="comp"><span id="typeT"></span><span class="caret"></span></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 2c slack -->
+  <div class="shot" id="s-slack"><div class="cam">
+    <div class="tag" style="left:150px;top:250px">{{slack}}Slack</div>
+    <div class="slk" style="left:150px;top:300px;width:900px;transform:rotateY(8deg) rotateX(3deg)">
+      <div class="h"># eng <span style="font:400 22px var(--lato);opacity:.7">Thread</span></div>
+      <div class="m"><div class="av">SL</div><div><span class="n">Sam</span><span class="tm">11:06 AM</span><div class="tx">yes please, docs are overdue</div></div></div>
+    </div>
+  </div></div>
+
+  <!-- 2d cli -->
+  <div class="shot" id="s-cli"><div class="cam">
+    <div class="tag" style="left:110px;top:240px">{{i:terminal}}CLI</div>
+    <div class="term" style="left:110px;top:290px;width:980px;transform:rotateY(-8deg) rotateX(3deg)">
+      <div class="tb"><i></i><i></i><i></i><span>nori cloud · acme/shop</span></div>
+      <div class="bd"><div class="dim">priya ~/shop</div><div><span class="g">›</span> <span id="cliT"></span></div></div>
+    </div>
+  </div></div>
+
+  <!-- 3 structure + docs -->
+  <div class="shot" id="s-struct"><div class="cam">
+    <div class="jframe" style="left:60px;top:150px;width:1080px;transform:rotateY(5deg) rotateX(2deg)">
+      <div class="lbl"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:40px">Jiro's screen · acme/shop</div>
+      <div class="in split">
+        <div class="pane"><h4>Structure</h4><div class="stack">
+          <div class="tree" id="stOld"><div>{{i:folder}}payments/</div><div>{{i:folder}}billing/</div><div>{{i:folder}}utils2/</div><div>{{i:folder}}helpers_old/</div><div>{{i:file-text}}legacy_pay.ts</div><div>{{i:folder}}__tests__/</div></div>
+          <div class="tree" id="stNew"><div>{{i:folder}}core/payments/</div><div>{{i:folder}}core/shared/</div><div>{{i:folder}}web/checkout/</div><div>{{i:folder}}tests/</div><div class="new">{{i:file-text}}docs/map.md</div><div class="new">{{i:file-text}}AGENTS.md</div></div>
+        </div></div>
+        <div class="pane"><h4>AGENTS.md</h4><div class="md" id="md">
+          <div class="h"># acme/shop</div>
+          <div>Payments live in <code>core/payments</code></div>
+          <div>Checkout UI lives in <code>web/checkout</code></div>
+          <div>Run <code>make test</code> before every PR</div>
+          <div>Never edit <code>migrations/</code> alone</div>
+          <div class="h">## Lanes →</div>
+        </div></div>
+      </div>
+    </div>
+    <div class="chk" id="chk1" style="left:960px;top:640px">{{i:check:3}}</div>
+  </div></div>
+
+  <!-- 4 agent swarm control panel -->
+  <div class="shot" id="s-lanes"><div class="cam">
+    <div class="jframe" style="left:50px;top:96px;width:1100px;transform:rotateY(-5deg) rotateX(2deg)">
+      <div class="lbl"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:40px">Jiro's screen · Project acme/shop · Agents</div>
+      <div class="in sw">
+        <svg class="wires" id="wires" viewBox="0 0 1068 600"><path id="wp0" d="M288 246 C 350 246, 330 54, 394 54"/><path id="wp1" d="M288 246 C 350 246, 330 182, 394 182"/><path id="wp2" d="M288 246 C 350 246, 330 310, 394 310"/><path id="wp3" d="M288 246 C 350 246, 330 438, 394 438"/></svg>
+        <div class="lead" id="lead"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:84px"><div class="lt1">Jiro</div><div class="lt2">lead · plans the lanes</div><div class="lt3" id="leadS">Splitting work…</div></div>
+        <div class="wks"><div class="wk" id="w0"><div class="wt"><span class="dot" style="background:#b8a1ff">CC</span><span class="an">Claude Code</span><span class="mdl">Opus</span></div><div class="ln">{{i:folder}}core/payments/</div><div class="tk">Refund retries</div><div class="wb"><div class="bar"><i style="background:#b8a1ff"></i></div><span class="st"></span><span class="wok">{{i:check:3}}</span></div></div><div class="wk" id="w1"><div class="wt"><span class="dot" style="background:#7cb8ff">CX</span><span class="an">Codex</span><span class="mdl">GPT</span></div><div class="ln">{{i:folder}}web/checkout/</div><div class="tk">Promo code field</div><div class="wb"><div class="bar"><i style="background:#7cb8ff"></i></div><span class="st"></span><span class="wok">{{i:check:3}}</span></div></div><div class="wk" id="w2"><div class="wt"><span class="dot" style="background:#f5c26b">GM</span><span class="an">Gemini CLI</span><span class="mdl">Gemini</span></div><div class="ln">{{i:folder}}tests/</div><div class="tk">Flaky cart test</div><div class="wb"><div class="bar"><i style="background:#f5c26b"></i></div><span class="st"></span><span class="wok">{{i:check:3}}</span></div></div><div class="wk" id="w3"><div class="wt"><span class="dot" style="background:#5fd4c4">OC</span><span class="an">OpenCode</span><span class="mdl">GLM</span></div><div class="ln">{{i:folder}}docs/</div><div class="tk">API reference</div><div class="wb"><div class="bar"><i style="background:#5fd4c4"></i></div><span class="st"></span><span class="wok">{{i:check:3}}</span></div></div></div>
+        <div class="swf" id="swf"><span id="swA">0 of 4 done</span><span class="sep">·</span><span>4 models</span><span class="sep">·</span><span class="g" id="swC">0 collisions</span></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 5 less code: mostly red -->
+  <div class="shot" id="s-diff"><div class="cam">
+    <div class="jframe" style="left:60px;top:60px;width:1080px;transform:rotateY(5deg) rotateX(2deg)">
+      <div class="lbl"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:40px">Jiro's screen · PR #412</div>
+      <div class="in">
+        <div class="prh"><div class="rp">acme/shop · #412</div><h2>Merge billing/ into core/payments</h2>
+          <div class="meta"><span class="badge">Draft</span><span>by Jiro</span><span class="stat"><span class="a" id="plus">+0</span> <span class="r" id="minus">−0</span></span></div></div>
+        <div class="fname">billing/charge.ts <span class="del">deleted</span></div>
+        <div id="diff">
+          <div class="dl r"><span class="s">−</span>import { chargeCard } from '../payments/legacy_pay'</div>
+          <div class="dl r"><span class="s">−</span>import { calcTotal, applyPromo } from '../utils2'</div>
+          <div class="dl r"><span class="s">−</span>export async function processPayment(order) {</div>
+          <div class="dl r"><span class="s">−</span>  const total = applyPromo(calcTotal(order))</div>
+          <div class="dl r"><span class="s">−</span>  try { return await chargeCard(total) }</div>
+          <div class="dl r"><span class="s">−</span>  catch (e) { return await chargeCard(total) }</div>
+          <div class="dl r"><span class="s">−</span>}</div>
+          <div class="dl more">    @@ 1,398 more lines deleted @@</div>
+          <div class="dl g"><span class="s">+</span>import { charge } from '@core/payments'</div>
+          <div class="dl g"><span class="s">+</span>export const processPayment = charge</div>
+        </div>
+      </div>
+    </div>
+    </div></div>
+
+  <!-- 5 overnight alert to morning, all on the phone -->
+  <div class="shot" id="s-phone"><div class="cam">
+    <div id="ph"><div class="sbx">
+      <div class="isl"></div>
+      <div class="sb"><span id="phClock">4:21</span><span class="bat"></span></div>
+      <div class="hd">{{i:menu}}<span class="t">Checkout 500s</span>{{i:square-pen}}</div>
+      <div class="ls">
+        <div class="msg" id="pA">
+          <div class="who" style="color:var(--salmon);justify-content:flex-end">Automated alert · 4:21 AM</div>
+          <div class="ub al">Checkout returns 500s</div>
+        </div>
+        <div class="rows">
+          <div class="row" id="pr1">{{i:search}}<span>Traced it to cart/total.ts</span><span class="ok" id="f1">{{i:check:2.5}}</span></div>
+          <div class="row" id="pr2">{{i:file-text}}<span>Wrote a failing test</span><span class="ok" id="f2">{{i:check:2.5}}</span></div>
+          <div class="row" id="pr3">{{i:terminal}}<span id="testsN">0 tests passing</span><span class="ok" id="f3">{{i:check:2.5}}</span></div>
+        </div>
+        <div class="msg" id="pJ">
+          <div class="who j"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:52px">Jiro · 4:31 AM</div>
+          <div class="jt" id="pJt"></div>
+          <div class="prc" id="pPR">{{i:git-pull-request}}#418 Fix discounted totals<span class="bd">Draft</span></div>
+        </div>
+        <div class="msg" id="phU">
+          <div class="who y" style="justify-content:flex-end">You · 8:02 AM<span class="av">Y</span></div>
+          <div class="ub">…oh nice.</div>
+        </div>
+      </div>
+      <div class="cp"><span id="phC"></span><span class="snd">{{i:arrow-up:2.5}}</span></div>
+    </div><div class="glare"></div></div>
+    <div class="chk" id="chk3">{{i:check:3}}</div>
+  </div></div>
+
+  <div id="lt"><div class="a"><img class="mimg" src="jiro-mascot-pixel-noshadow.png" style="width:40px">Jiro</div><div class="b" id="ltB"></div></div>
+</div>
+
+<script>
+const D = 31.4;
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const prog = (t, a, d) => clamp((t - a) / d);
+const eo = (x) => 1 - Math.pow(1 - x, 3);
+const eio = (x) => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = (x) => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const $ = (id) => document.getElementById(id);
+const typeIn = (s, t, a, b) => s.slice(0, Math.round(s.length * prog(t, a, b - a)));
+
+// ---------- shots (hard cuts) ----------
+const SHOTS = [
+  { id: 's-hook', t: 0, push: [1.0, 1.03] },
+  { id: 's-scan', t: 4.0, push: [1.0, 1.08] },
+  { id: 's-find', t: 5.6, push: [1.0, 1.06] },
+  { id: 's-type', t: 8.0, push: [1.02, 1.08] },
+  { id: 's-slack', t: 9.2, push: [1.0, 1.05] },
+  { id: 's-cli', t: 10.3, push: [1.0, 1.05] },
+  { id: 's-struct', t: 11.6, push: [1.0, 1.04] },
+  { id: 's-lanes', t: 15.6, push: [1.0, 1.04] },
+  { id: 's-diff', t: 19.8, push: [1.0, 1.04] },
+  { id: 's-phone', t: 24.3, push: [1.0, 1.0] },
+];
+SHOTS.forEach((s, i) => { s.end = SHOTS[i + 1] ? SHOTS[i + 1].t : D; });
+const LT = [
+  { t: 4.4, end: 7.9, txt: 'Reads your whole codebase' },
+  { t: 8.3, end: 11.5, txt: 'Takes direction from web, Slack, or CLI' },
+  { t: 12.0, end: 15.5, txt: 'Builds structure and docs' },
+  { t: 16.0, end: 19.7, txt: 'Orchestrates agents across models' },
+  { t: 20.2, end: 24.2, txt: 'Deletes more code than it writes' },
+  { t: 24.9, end: 27.9, txt: 'Handles the 4:21 AM alert' },
+  { t: 28.35, end: 30.4, txt: 'Same Jiro, on your phone' },
+];
+const ROLL = ['an engineer.', 'a reviewer.', 'a doc writer.', 'an on-call.', 'Jiro.'];
+const ROLL_T = [0.25, 1.45, 1.95, 2.45, 2.95];
+const COPY = {
+  find: "No maps, no docs, and your agents keep double dipping work in payments/.\nLet me fix that first.",
+  type: 'Go for it, Jiro.',
+  push: "I'd split it. Structure first, tests next. Easier to review.",
+  cli: 'Jiro, but make sure you keep tests in the root folder.',
+  q: "Orders retry twice. Bug or on purpose? Your docs don't say.",
+  ans: 'On purpose. The card network fla',
+  doc: 'Orders retry twice on purpose: the card network flakes.',
+  nice: '…oh nice.',
+  fix: 'Traced the 500s to discounted totals. Test added, fix ready for review.',
+};
+const NIGHT = [24.3, 28.0];
+
+// v23 pacing: story time (all cues above/below) maps onto a slower real timeline.
+// Each [story, real] knot pair is linear in between; typing spans get the biggest stretch.
+const KNOTS = [
+  [0, 0], [4.0, 4.6], [5.6, 6.8],
+  [5.75, 7.1], [7.45, 9.6], [8.0, 11.0],
+  [8.1, 11.2], [8.8, 12.4], [9.2, 13.2], [10.3, 15.6],
+  [10.4, 15.8], [11.35, 17.8], [11.6, 18.6],
+  [15.6, 23.8], [19.8, 29.4], [24.3, 35.0],
+  [27.0, 38.5], [27.4, 40.5], [28.95, 42.6], [29.45, 43.4], [30.4, 44.7], [D, 46.0],
+];
+const RD = KNOTS[KNOTS.length - 1][1];
+const remap = (x, from, to) => {
+  for (let i = 1; i < KNOTS.length; i++) {
+    const [a, b] = [KNOTS[i - 1], KNOTS[i]];
+    if (x <= b[from] || i === KNOTS.length - 1) return a[to] + (b[to] - a[to]) * clamp((x - a[from]) / (b[from] - a[from]));
+  }
+};
+const toStory = (r) => remap(r, 1, 0), toReal = (t) => remap(t, 0, 1);
+
+window.__init = async () => { await document.fonts.ready; window.__seek(0); return RD; };
+
+window.__seek = (r) => {
+  const t = toStory(r);
+  // active shot + camera push-in
+  let cur = SHOTS[0]; for (const s of SHOTS) if (t >= s.t) cur = s;
+  for (const s of SHOTS) {
+    const el = $(s.id); el.style.display = s === cur ? 'block' : 'none';
+    if (s === cur) { const p = prog(t, s.t, s.end - s.t); el.querySelector('.cam').style.transform = `scale(${s.push[0] + (s.push[1] - s.push[0]) * p})`; }
+  }
+  // night
+  const nf = Math.min(prog(t, NIGHT[0], .5), 1 - prog(t, NIGHT[1] - .2, .6));
+  $('night').style.opacity = String(t >= NIGHT[0] && t < NIGHT[1] + .4 ? nf : 0);
+  const n = t >= NIGHT[0] && t < NIGHT[1];
+
+  // hook: word slot-roll, strike, land on "Jiro."
+  let k = 0; ROLL_T.forEach((rt, i) => { if (t >= rt) k = i; });
+  const rp = eio(prog(t, ROLL_T[k], .22));
+  $('r0').textContent = ROLL[k]; $('r1').textContent = k > 0 ? ROLL[k - 1] : '';
+  $('r0').style.transform = `translateY(${(1 - rp) * 100}px)`; $('r1').style.transform = `translateY(${-rp * 100}px)`;
+  $('r0').style.color = k === ROLL.length - 1 ? '#141414' : '#141414';
+  $('r0').style.opacity = String(t >= ROLL_T[0] ? 1 : 0);
+  $('strk').style.width = k < ROLL.length - 1 && k >= 0 ? `${eo(prog(t, ROLL_T[k] + .55, .3)) * ($('r0').offsetWidth)}px` : '0px';
+  const mm = prog(t, ROLL_T[4], .4); $('hkM').style.opacity = String(mm); $('hkM').style.transform = `scale(${.6 + .4 * back(mm)})`;
+
+  // scan counter
+  $('scanN').textContent = `Read ${Math.round(1284 * eo(prog(t, 4.1, 1.2))).toLocaleString('en-US')} files`;
+  // texts
+  $('findT').innerHTML = typeIn(COPY.find, t, 5.75, 7.45).replace('payments/', '<code>payments/</code>').replace('\n', '<br>');
+  $('typeT').textContent = typeIn(COPY.type, t, 8.1, 8.8);
+  $('cliT').textContent = typeIn(COPY.cli, t, 10.4, 11.35);
+
+  // structure: old folders strike and fade, new tree lands, AGENTS.md lines write in
+  document.querySelectorAll('#stOld div').forEach((d, i) => d.classList.toggle('x', t >= 11.8 + i * .1));
+  $('stOld').style.opacity = String(1 - prog(t, 12.6, .3));
+  document.querySelectorAll('#stNew div').forEach((d, i) => { const p = prog(t, 12.8 + i * .15, .25); d.style.opacity = String(p); d.style.transform = `translateX(${(1 - eo(p)) * 20}px)`; });
+  document.querySelectorAll('#md div').forEach((d, i) => { const a0 = 12.9 + i * .38; const p = prog(t, a0, .25); d.style.opacity = String(p); d.classList.toggle('nl', t >= a0 && t < a0 + .9); });
+
+  // swarm: Jiro wires each worker into its lane, they run in parallel on different models
+  const leadP = prog(t, 15.7, .35); $('lead').style.opacity = String(leadP); $('lead').style.transform = `scale(${.85 + .15 * back(leadP)})`;
+  const RUN = [[16.6, 1.6], [16.75, 2.0], [16.9, 1.35], [17.05, 1.8]];
+  let doneN = 0;
+  [0, 1, 2, 3].forEach((i) => {
+    const w = $('w' + i), wp = $('wp' + i); const a0 = 15.95 + i * .16;
+    const L = wp.getTotalLength(); const dp = eo(prog(t, a0, .35));
+    wp.style.strokeDasharray = `${L}`; wp.style.strokeDashoffset = `${L * (1 - dp)}`;
+    const p = prog(t, a0 + .2, .3); w.style.opacity = String(p); w.style.transform = `translateX(${(1 - eo(p)) * 24}px)`;
+    const [r0, rd] = RUN[i]; const r = prog(t, r0, rd);
+    w.querySelector('.bar i').style.width = `${eio(r) * 100}%`;
+    const st = w.querySelector('.st'); const done = r >= 1;
+    st.textContent = done ? 'Done' : (t >= r0 ? 'Running' : 'Queued'); st.classList.toggle('done', done);
+    w.style.boxShadow = done ? 'inset 0 0 0 2px rgba(60,240,110,.55)' : 'inset 0 0 0 2px #232a33';
+    w.querySelector('.wok').style.opacity = done ? '1' : '0';
+    if (done) doneN++;
+  });
+  $('leadS').textContent = t < 16.6 ? 'Splitting work…' : (doneN < 4 ? 'Orchestrating 4 agents' : 'All lanes merged');
+  $('swA').textContent = `${doneN} of 4 done`;
+  $('swf').style.opacity = String(prog(t, 16.6, .3));
+
+  // diff: mostly red, a little green
+  document.querySelectorAll('#diff .dl').forEach((d, i) => { const p = prog(t, 20.05 + i * .17, .15); d.style.opacity = String(p); });
+  const dp = eo(prog(t, 20.2, 1.8)); $('plus').textContent = `+${Math.round(38 * dp)}`; $('minus').textContent = `−${Math.round(1412 * dp).toLocaleString('en-US')}`;
+  const sb = prog(t, 22.15, .55), sh = prog(t, 22.15, .25);
+  const stEl = document.querySelector('#s-diff .stat');
+  stEl.style.transform = `scale(${1 + .62 * back(sb)})`;
+  stEl.style.background = `rgba(13,17,23,${.92 * sh})`;
+  stEl.style.boxShadow = `0 0 0 ${3 * sh}px rgba(244,112,103,${.65 * sh}), 0 18px 50px rgba(0,0,0,${.5 * sh})`;
+  document.querySelectorAll('#diff .dl').forEach((d) => { if (t >= 22.15) d.style.opacity = String(1 - .55 * sh); });
+
+  // phone: rotates in at the alert, camera pans down the thread, rotates out after your reply
+  const pin = eo(prog(t, 24.3, .7));
+  const ant = Math.sin(Math.PI * prog(t, 30.15, .35));
+  const go = prog(t, 30.4, .82), ge = go * go * (2.2 - 1.2 * go);
+  const lift = Math.sin(Math.PI * Math.min(go * 1.4, 1));
+  const ry = -88 * (1 - pin) - 6 * ant - 38 * ge;
+  const rx = 5 * ant + 34 * ge;
+  const rz = 5 * (1 - pin) - 2 * pin * (1 - ge) - 22 * ge;
+  const tx = 320 * (1 - pin) - 30 * ant + 1450 * ge;
+  const tz = 190 * lift + 80 * ge;
+  const py = 0 - 240 * eio(prog(t, 25.9, 1.0)) - 300 * eio(prog(t, 28.0, .8)) + 14 * ant + 60 * lift + 900 * ge + 400 * ge * ge;
+  const ph = $('ph');
+  ph.style.transform = `translate3d(${tx}px, ${py}px, ${tz}px) rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${rz}deg)`;
+  const vel = go > 0 && go < 1 ? Math.sin(Math.PI * go) : 0;
+  ph.style.filter = vel ? `blur(${(2.6 * vel).toFixed(2)}px)` : 'none';
+  ph.style.boxShadow = `0 ${60 + 160 * lift}px ${140 + 120 * lift}px rgba(0,0,0,${.35 - .15 * lift}), inset 0 0 0 3px #1a1a1a`;
+  ph.querySelector('.glare').style.background = `linear-gradient(${115 + 40 * ge}deg, rgba(255,255,255,0) ${-40 + 90 * ge}%, rgba(255,255,255,${.08 + .14 * lift}) ${-20 + 90 * ge}%, rgba(255,255,255,0) ${5 + 90 * ge}%), linear-gradient(115deg, rgba(255,255,255,.08) 0%, rgba(255,255,255,0) 30%, rgba(255,255,255,0) 75%, rgba(255,255,255,.04) 100%)`;
+  $('ph').style.opacity = String(t < 31.35 ? 1 : 0);
+  const pop = (id, a) => { const p = prog(t, a, .3); const e = $(id); e.style.opacity = String(t >= a ? 1 : 0); e.style.transform = `translateY(${(1 - eo(p)) * 30}px)`; };
+  pop('pA', 24.85); pop("pr1", 25.6); pop("pr2", 26.0); pop("pr3", 26.4); pop('pJ', 26.95); pop('pPR', 27.4);
+  $('pJt').textContent = typeIn(COPY.fix, t, 27.0, 27.4);
+  $('phClock').textContent = t >= 28.0 ? '8:02' : (t >= 26.9 ? '4:31' : '4:21');
+  const typed = typeIn(COPY.nice, t, 28.95, 29.45);
+  const sent = t >= 29.6;
+  $('phC').innerHTML = sent || !typed ? '<span class="phd">Message Jiro…</span>' : typed + '<span class="caret" style="height:36px;vertical-align:-6px"></span>';
+  const up = prog(t, 29.6, .3);
+  $('phU').style.opacity = String(sent ? 1 : 0);
+  $('phU').style.transform = `translateY(${(1 - eo(up)) * 30}px) scale(${.9 + .1 * back(up)})`;
+
+  const chk = (id, a) => { const p = prog(t, a, .35); $(id).style.opacity = String(Math.min(prog(t, a, .1), 1)); $(id).style.transform = `scale(${.4 + .6 * back(p)})`; };
+  chk('chk1', 15.0); chk('chk3', 27.55);
+  $('chk3').style.opacity = String(Math.min(prog(t, 27.55, .1), 1 - prog(t, 28.1, .25)));
+
+  ['f1', 'f2', 'f3'].forEach((id, i) => { $(id).style.opacity = String(t >= 25.85 + i * .4 ? 1 : 0); });
+  $('testsN').textContent = `${Math.round(214 * eo(prog(t, 26.4, .45)))} tests passing`;
+
+  // lower third
+  let lt = null; for (const l of LT) if (t >= l.t && t < l.end) lt = l;
+  const ltEl = $('lt');
+  if (lt) { $('ltB').textContent = lt.txt; const a = Math.min(prog(t, lt.t, .4), 1 - prog(t, lt.end - .3, .3)); ltEl.style.opacity = String(a); ltEl.style.transform = `translateY(${(1 - eo(prog(t, lt.t, .4))) * 12}px)`; }
+  else ltEl.style.opacity = '0';
+  ltEl.classList.toggle('night', !!n);
+};
+
+window.__cues = () => {
+  const out = [];
+  SHOTS.slice(1).forEach((s) => out.push({ t: s.t, k: 'tick' }));
+  ROLL_T.slice(1).forEach((r) => out.push({ t: r, k: 'tick' }));
+  out.push({ t: ROLL_T[4], k: 'pop' });
+  const typing = (s, a, b) => { const n = s.length; for (let i = 0; i < n; i += 2) out.push({ t: a + (b - a) * i / n, k: 'key' }); };
+  typing(COPY.type, 8.1, 8.8); typing(COPY.cli, 10.4, 11.35); typing(COPY.nice, 28.95, 29.45);
+  [5.75, 9.3].forEach((x) => out.push({ t: x, k: 'msg' }));
+  out.push({ t: 24.85, k: 'busy' }, { t: 29.6, k: 'send' }, { t: 24.3, k: 'swoosh' }, { t: 30.45, k: 'swoosh' }, { t: 26.95, k: 'msg' }, { t: 28.0, k: 'swipe' });
+  [15.0, 27.55].forEach((x) => out.push({ t: x, k: 'chime' })); out.push({ t: 22.15, k: 'pop' });
+  [0, 1, 2, 3, 4, 5].forEach((i) => out.push({ t: 11.8 + i * .1, k: 'tick' }, { t: 12.9 + i * .38, k: 'chip' }));
+  [[16.6, 1.6], [16.75, 2.0], [16.9, 1.35], [17.05, 1.8]].forEach(([a, d]) => out.push({ t: a + d, k: 'pop' })); [0, 1, 2, 3].forEach((i) => out.push({ t: 15.95 + i * .16, k: 'chip' }));
+  [0, 1, 2].forEach((i) => out.push({ t: 25.85 + i * .4, k: 'tick' }));
+  return out.map((c) => ({ ...c, t: toReal(c.t) })).sort((a, b) => a.t - b.t);
+};
+</script>
+</body>
+</html>

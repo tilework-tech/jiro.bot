@@ -43,3 +43,9 @@ Render with `template21.html` / `render21.mjs`.
 v21 with: Jiro's opener now reads "No maps, no docs, and your agents keep double dipping work in payments/." then "Let me fix that first." on its own line; "You" label on the left like Jiro's; your line is "Go for it, Jiro."; Priya's CLI line is "Jiro, but make sure you keep tests in the root folder."; the lanes beat (15.6s) is now an agent control panel where Jiro, as lead, wires four workers on different models (Claude Code · Opus, Codex · GPT, Gemini CLI · Gemini, OpenCode · GLM) into their own folders and they finish in parallel; the PR #412 beat drops the green check and instead bounces and highlights +38 −1,412; the phone leaves with a 3D lift, tilt and arc (with a moving highlight and light motion blur) instead of a flat turn. Still 31.4s at 1200×960.
 
 Render: `node build.mjs template22.html index22.html && OUT=v22-video.mp4 node render22.mjs --w=1200 --h=960 --fps=60`, then `node render22.mjs --w=1200 --h=960 --cues=1 && node sfx.mjs` and mux `v22-video.mp4` with `sfx.wav`. Needs `npm i playwright ffmpeg-static lucide-static @fontsource/ibm-plex-mono @fontsource/inter @fontsource/lato` and `bash brand/fonts.sh`.
+
+## v23: calmer pacing
+
+v22 with the same story, slowed down: `template23.html` maps the v22 story timeline onto a 46.0s real timeline through `KNOTS` (piecewise-linear story↔real pairs). Typing gets the biggest stretch (Jiro's opener ~30 chars/s, "Go for it, Jiro." ~13 chars/s, Priya's CLI line ~27 chars/s, the 4:31 AM fix message ~36 chars/s), and every shot holds roughly 1.3-2x longer so lines can be read before the cut. SFX cues are mapped through the same knots. 46.0s at 1200×960.
+
+Render: `node build.mjs template23.html index23.html && OUT=v23-video.mp4 node render23.mjs --w=1200 --h=960 --fps=60`, then `node render23.mjs --w=1200 --h=960 --cues=1 && node sfx.mjs` and mux `v23-video.mp4` with `sfx.wav`.
