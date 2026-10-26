@@ -74,6 +74,12 @@
   height: 100%;
 }
 
+.jiro-buddy[data-jiro-merged="true"] .jiro-buddy__figure {
+  transform: scale(var(--jiro-merge-scale, 2.2));
+  transform-origin: 50% 50%;
+  transition: transform 380ms ease-out;
+}
+
 .jiro-buddy__bob,
 .jiro-buddy__drift,
 .jiro-buddy__tilt,
@@ -355,23 +361,81 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .jiro-buddy__bob {
-    animation: jiro-buddy-bob 2.6s ease-in-out infinite;
+    animation: jiro-buddy-bob 4.1s ease-in-out infinite;
   }
 
   .jiro-buddy__drift {
-    animation: jiro-buddy-drift 3.7s ease-in-out infinite;
+    animation: jiro-buddy-drift 5.8s ease-in-out infinite;
   }
 
   .jiro-buddy__tilt {
-    animation: jiro-buddy-tilt 4.3s ease-in-out infinite;
+    animation: jiro-buddy-tilt 6.8s ease-in-out infinite;
   }
 
   .jiro-buddy__squash {
-    animation: jiro-buddy-squash 2.6s ease-in-out infinite;
+    animation: jiro-buddy-squash 4.1s ease-in-out infinite;
   }
 
   .jiro-buddy__shadow {
-    animation: jiro-buddy-shadow 2.6s ease-in-out infinite;
+    animation: jiro-buddy-shadow 4.1s ease-in-out infinite;
+  }
+
+  [data-jiro-motion="calm"] .jiro-buddy__bob {
+    animation: jiro-buddy-calm 5.3s ease-in-out infinite;
+  }
+
+  [data-jiro-motion="calm"] .jiro-buddy__drift,
+  [data-jiro-motion="calm"] .jiro-buddy__tilt,
+  [data-jiro-motion="calm"] .jiro-buddy__squash {
+    animation: none;
+  }
+
+  [data-jiro-motion="calm"] .jiro-buddy__shadow {
+    animation-duration: 5.3s;
+  }
+
+  [data-jiro-motion="spring"] .jiro-buddy__bob {
+    animation: jiro-buddy-spring 3.5s ease-in-out infinite;
+  }
+
+  [data-jiro-motion="spring"] .jiro-buddy__drift,
+  [data-jiro-motion="spring"] .jiro-buddy__tilt,
+  [data-jiro-motion="spring"] .jiro-buddy__squash {
+    animation: none;
+  }
+
+  [data-jiro-motion="spring"] .jiro-buddy__shadow {
+    animation-duration: 3.5s;
+  }
+
+  [data-jiro-motion="eager"] .jiro-buddy__bob {
+    animation: jiro-buddy-eager 2.7s ease-in-out infinite;
+  }
+
+  [data-jiro-motion="eager"] .jiro-buddy__drift {
+    animation-duration: 3.2s;
+  }
+
+  [data-jiro-motion="eager"] .jiro-buddy__tilt {
+    animation-duration: 3.8s;
+  }
+
+  [data-jiro-motion="eager"] .jiro-buddy__shadow {
+    animation-duration: 2.7s;
+  }
+
+  [data-jiro-motion="sleepy"] .jiro-buddy__bob {
+    animation: jiro-buddy-sleepy 7.3s ease-in-out infinite;
+  }
+
+  [data-jiro-motion="sleepy"] .jiro-buddy__drift,
+  [data-jiro-motion="sleepy"] .jiro-buddy__tilt,
+  [data-jiro-motion="sleepy"] .jiro-buddy__squash {
+    animation: none;
+  }
+
+  [data-jiro-motion="sleepy"] .jiro-buddy__shadow {
+    animation-duration: 7.3s;
   }
 
   .jiro-buddy__face-eyes {
@@ -419,29 +483,53 @@
 
 @keyframes jiro-buddy-bob {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-7px); }
+  50% { transform: translateY(-3.5px); }
+}
+
+@keyframes jiro-buddy-calm {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes jiro-buddy-spring {
+  0%, 100% { transform: translateY(0) scale(1.025, .98); }
+  18% { transform: translateY(0) scale(.99, 1.015); }
+  46% { transform: translateY(-6px) scale(1, 1); }
+  74% { transform: translateY(0) scale(1.02, .985); }
+}
+
+@keyframes jiro-buddy-eager {
+  0%, 100% { transform: translateY(0); }
+  38% { transform: translateY(-2.5px); }
+  55% { transform: translateY(0); }
+  70% { transform: translateY(-1.5px); }
+}
+
+@keyframes jiro-buddy-sleepy {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(2px) rotate(-1deg); }
 }
 
 @keyframes jiro-buddy-drift {
-  0%, 100% { transform: translateX(-1.5px); }
-  50% { transform: translateX(1.5px); }
+  0%, 100% { transform: translateX(-.75px); }
+  50% { transform: translateX(.75px); }
 }
 
 @keyframes jiro-buddy-tilt {
-  0%, 100% { transform: rotate(-3deg); }
-  50% { transform: rotate(3deg); }
+  0%, 100% { transform: rotate(-1.5deg); }
+  50% { transform: rotate(1.5deg); }
 }
 
 @keyframes jiro-buddy-squash {
-  0%, 100% { transform: scale(1.02, .97); }
-  25% { transform: scale(.985, 1.03); }
+  0%, 100% { transform: scale(1.01, .985); }
+  25% { transform: scale(.9925, 1.015); }
   50% { transform: scale(1, 1); }
-  75% { transform: scale(.995, 1.01); }
+  75% { transform: scale(.9975, 1.005); }
 }
 
 @keyframes jiro-buddy-shadow {
   0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(.8); opacity: .55; }
+  50% { transform: scale(.9); opacity: .78; }
 }
 
 @keyframes jiro-buddy-eyes {

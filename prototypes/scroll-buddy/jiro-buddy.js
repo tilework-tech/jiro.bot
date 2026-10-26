@@ -5,17 +5,15 @@
   window.__jiroBuddyLoaded = true;
 
   var STORAGE_KEY = "jiro-buddy-hidden";
-  var SETTLE_MS = 600;
+  var SETTLE_MS = 1200;
+  var FAST_SETTLE_MS = 450;
+  var MIN_DWELL_MS = 2000;
   var TYPE_MS = 28;
   var ANNOUNCE_MS = 100;
-  var FLIGHT_MS = 1100;
+  var FLIGHT_MS = 1300;
   var GLIDE_STEPS = 20;
-  var CLICK_HOLD_MS = 1200;
-  var THINK_MS = 750;
-  var LOOK_MS = 700;
-  var LOOK_LINGER_MS = 1800;
-  var SLEEP_AFTER_MS = 20000;
-  var BAND = 0.17;
+  var CENTER_EDGE = 0.35;
+  var MAX_PEEKS = 1;
   var SVG_NS = "http://www.w3.org/2000/svg";
 
   var BODY_FILL = "M35 6L34 6L34 3L33 3L33 0.75L30.5 0.75L30.25 1L29 1L28.75 1.25L28 1.25L27.75 1.5L27 1.5L26.75 1.75L26 1.75L26 2L25.5 2L25.25 2.25L24.75 2.25L24.5 2.5L24 2.5L23.75 2.75L23.25 2.75L23 3L22.75 3L22.5 3.25L22.25 3.25L22 3.5L21.75 3.5L21.5 3.75L21.25 3.75L21 4L20.75 4L20.5 4.25L20.25 4.25L20 4.5L19.75 4.5L19.5 4.75L19.25 4.75L19.25 5L19 5L18.75 5.25L18.5 5.25L18.5 5.5L18 5.5L18 5.75L17.75 5.75L17 6.5L16.75 6.5L16.25 7L16 7L16 7.25L15.75 7.25L15.75 7.5L15.5 7.5L15.5 7.75L15.25 7.75L14 9L14 9.25L13.75 9.25L13.75 9.5L13.5 9.5L13.5 9.75L13.25 9.75L13.25 10L13 10L13 10.25L12.25 11L12.25 11.25L12 11.25L12 11.5L11.75 11.5L11.75 12L11.5 12L11.5 12.25L11.25 12.25L11.25 12.5L11 12.75L11 13L10.75 13L10.75 13.25L10.5 13.5L10.5 13.75L10 14.25L10 14.5L9.75 14.75L9.75 15L9.5 15.25L9.5 15.5L9.25 15.75L9.25 16L9 16.25L9 16.5L8.75 16.75L8.75 17.25L8.5 17.5L8.5 17.75L8.25 18L8.25 18.5L8 18.75L8 19.25L7.75 19.25L7.75 20L7.5 20.25L7.5 21L7.25 21L7.25 22L7 22.25L7 23.25L6.75 23.5L6.75 25.25L6.5 25.25L6.5 30.5L6.75 30.5L6.75 32.25L7 32.5L7 33.5L7.25 33.75L7.25 34.75L7.5 34.75L7.5 35.5L7.75 35.75L7.75 36.25L8 36.5L8 37L8.25 37.25L8.25 37.5L8.5 37.75L8.5 38.25L8.75 38.5L8.75 38.75L9 39L9 39.25L9.25 39.5L9.25 39.75L9 40L9 42L10 42L10 44L9 44L9 45L8 45L8 46L7 46L7 47L6 47L6 48L5 48L5 49L4 49L4 50L3 50L3 51L2.25 51L2 51.25L2 52L4 52L4.25 51.75L4.75 51.75L5 51.5L5 51L6.75 51L7 50.75L7 50L9 50L9 49L11 49L11 48L13 48L13 47L14 47L14 48L16 48L16 48.75L16.25 49L17 49L17 49.5L17.25 49.5L17.5 49.75L17.75 49.75L17.75 50L19 50L19 50.5L19.25 50.75L19.5 50.75L19.5 51L21 51L21 51.5L21.25 51.5L21.25 51.75L21.75 51.75L22 52L23 52L23 52.25L23.25 52.5L24 52.5L24.25 52.75L24.75 52.75L25 53L27 53L27 53.25L27.25 53.5L28.5 53.5L28.75 53.75L35.75 53.75L35.75 53.5L37 53.5L37 53L39.5 53L39.75 52.75L40.5 52.75L40.5 52.5L41 52.5L41 52L42.5 52L42.75 51.75L43 51.75L43 51L44.75 51L45 50.75L45 50L46.5 50L46.75 49.75L47 49.75L47 49L48 49L48 48L49.5 48L50 47.5L50 47L50.75 47L50.75 46.75L51 46.75L51 46L51.75 46L52 45.75L52 45L52.75 45L53 44.75L53 43L54 43L54 42L55 42L55 40L56 40L56 38L57 38L57 36L58 36L58 32L59 32L59 31L60 31L60 29L59 29L59 26L56 26L56 25L55 25L55 24L54 24L54 23L53 23L53 14L48 14L48 13L47 13L47 12L46 12L46 9L45 9L45 7L41 7L41 8L39 8L39 7L36 7L36 6Z";
@@ -94,8 +92,8 @@
     var wide = window.matchMedia("(min-width: 768px)");
     var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    var aside = el("aside", "jiro-buddy", { "aria-label": "Jiro", "data-jiro-state": "idle", "data-jiro-face": "cursor" });
-    var mascot = el("button", "jiro-buddy__mascot", { type: "button", "aria-label": "Jiro: replay comment" }, aside);
+    var aside = el("aside", "jiro-buddy", { "aria-label": "Jiro", "data-jiro-state": "idle", "data-jiro-face": "cursor", "data-jiro-motion": "game" });
+    var mascot = el("button", "jiro-buddy__mascot", { type: "button", "aria-label": "Ask Jiro for a comment" }, aside);
     var figure = el("span", "jiro-buddy__figure", { "aria-hidden": "true" }, mascot);
     var layer = figure;
     ["bob", "drift", "tilt", "squash", "hop"].forEach(function (name) {
@@ -119,33 +117,34 @@
     aside.hidden = true;
     document.body.appendChild(aside);
 
-    var visible = new Set();
-    var seen = new Set();
     var active = null;
+    var restingSection = null;
+    var speakingSection = null;
     var run = 0;
     var timers = [];
-    var looked = null;
     var spoken = "";
     var placed = false;
     var flight = null;
     var hovered = false;
     var closed = false;
     var face = "cursor";
-    var sleepTimer = 0;
-    var entered = Promise.resolve();
-    var clickHold = 0;
-    var clicks = new WeakMap();
+    var moveId = 0;
+    var moving = false;
+    var landedAt = 0;
+    var peekAnimation = null;
+    var peeks = 0;
+    var mergedLogo = null;
+    var direction = 0;
+    var lastScrollY = window.scrollY;
+    var reverseDistance = 0;
+    var journey = { id: 0, large: 0, small: 0 };
+    var pendingKind = "quiet";
+    var pendingJourney = 0;
 
     function schedule(fn, ms) {
       var id = setTimeout(fn, ms);
       timers.push(id);
       return id;
-    }
-
-    function wait(ms, token) {
-      return new Promise(function (resolve, reject) {
-        schedule(function () { (token === run ? resolve : reject)(); }, ms);
-      });
     }
 
     function setState(state) {
@@ -174,25 +173,11 @@
       ], ms || 260);
     }
 
-    function hopOnce(height, ms) {
-      return play(hop, [
-        { transform: "translateY(0) scale(1.08,.9)" },
-        { transform: "translateY(" + -height + "px) scale(.94,1.08)", offset: 0.4, easing: "ease-in" },
-        { transform: "translateY(1px) scale(1.1,.88)", offset: 0.82 },
-        { transform: "translateY(0) scale(1,1)" }
-      ], ms);
-    }
-
     function puff() {
       if (!motion()) return;
       figure.classList.remove("jiro-buddy--puff");
       void figure.offsetWidth;
       figure.classList.add("jiro-buddy--puff");
-    }
-
-    function clearLook() {
-      if (looked) looked.classList.remove("jiro-look-target");
-      looked = null;
     }
 
     function hideBubble() {
@@ -206,7 +191,6 @@
       text.textContent = "";
       text.removeAttribute("data-rest");
       spoken = "";
-      clearLook();
       if (aside.getAttribute("data-jiro-state") !== "sleepy") setState("idle");
       setFace("cursor");
     }
@@ -223,7 +207,7 @@
     }
 
     function speak(section, token) {
-      seen.add(section);
+      speakingSection = section;
       say(attr(section, "comment"), attr(section, "ask"), token);
     }
 
@@ -243,7 +227,6 @@
         text.removeAttribute("data-rest");
         acts.classList.remove("jiro-buddy--waiting");
         setState("idle");
-        schedule(clearLook, LOOK_LINGER_MS);
       };
       if (!motion()) {
         text.textContent = comment;
@@ -271,10 +254,9 @@
       var center = window.innerHeight / 2;
       var best = null;
       var bestDistance = Infinity;
-      visible.forEach(function (section) {
+      sections.forEach(function (section) {
         var rect = section.getBoundingClientRect();
-        var distance = Math.abs((rect.top + rect.bottom) / 2 - center);
-        if (rect.top <= center && rect.bottom >= center) distance = -1;
+        var distance = center < rect.top ? rect.top - center : center > rect.bottom ? center - rect.bottom : 0;
         if (distance < bestDistance) {
           bestDistance = distance;
           best = section;
@@ -286,58 +268,150 @@
     function landFlight() {
       if (flight) flight.cancel();
       flight = null;
+      if (peekAnimation) peekAnimation.cancel();
+      peekAnimation = null;
+      hop.getAnimations().forEach(function (animation) { animation.cancel(); });
     }
 
-    function glide(t) {
-      var u = Math.min(Math.max((t - 0.1) / 0.74, 0), 1);
-      return (1 - Math.cos(Math.PI * u)) / 2;
+    function updateDirection() {
+      var now = window.scrollY;
+      var delta = now - lastScrollY;
+      lastScrollY = now;
+      if (Math.abs(delta) < 2) return;
+      var next = delta > 0 ? 1 : -1;
+      if (next === direction) { reverseDistance = 0; return; }
+      reverseDistance += Math.abs(delta);
+      if (direction !== 0 && reverseDistance < 60) return;
+      direction = next;
+      reverseDistance = 0;
+      journey = { id: journey.id + 1, large: 0, small: 0 };
+      aside.setAttribute("data-jiro-direction", direction > 0 ? "down" : "up");
     }
 
-    function arc(from) {
+    function smallGesture() {
+      var sideways = Math.random() < 0.5;
+      aside.setAttribute("data-jiro-move", sideways ? "small-scoot" : "small-hop");
+      return play(hop, sideways ? [
+        { transform: "translate(0,0) rotate(0)" },
+        { transform: "translate(7px,-3px) rotate(2deg)", offset: 0.48 },
+        { transform: "translate(0,0) rotate(0)" }
+      ] : [
+        { transform: "translateY(0) scale(1)" },
+        { transform: "translateY(-5px) scale(.99,1.01)", offset: 0.48 },
+        { transform: "translateY(0) scale(1)" }
+      ], 500, "ease-in-out");
+    }
+
+    function largeLanding() {
+      aside.setAttribute("data-jiro-move", "large-spring");
+      return play(hop, [
+        { transform: "translate(0,0) scale(1)" },
+        { transform: "translate(12px,-13px) scale(.97,1.03)", offset: 0.4 },
+        { transform: "translate(0,0) scale(1.02,.98)", offset: 0.8 },
+        { transform: "translate(0,0) scale(1)" }
+      ], 780, "ease-in-out");
+    }
+
+    function fillJourneyAtRest(section, id) {
+      if (!motion() || !direction || journey.large < 1 || journey.small >= 2) return;
+      var token = run;
+      var journeyId = journey.id;
+      schedule(function beat() {
+        if (closed || token !== run || id !== moveId || active !== section || moving || journey.id !== journeyId) return;
+        journey.small += 1;
+        smallGesture();
+        if (journey.small < 2) schedule(beat, MIN_DWELL_MS);
+      }, MIN_DWELL_MS);
+    }
+
+    function arc(from, duration) {
       var to = aside.getBoundingClientRect();
       var dx = from.left - to.left;
       var dy = from.top - to.top;
       if (!motion() || (Math.abs(dx) < 1 && Math.abs(dy) < 1)) return Promise.resolve();
       var dir = dx < 0 ? 1 : -1;
-      var lift = Math.min(0, dy) - 70;
-      var at = function (t, y, r) {
-        var k = 1 - t;
-        return "translate(" + dx * k + "px," + (dy * k + y) + "px) rotate(" + r * dir + "deg)";
-      };
+      var controlY = Math.min(from.top, to.top) - (to.top > from.top ? 6 : 18);
       setState("flying");
-      var frames = [
-        { offset: 0, transform: at(0, 0, 0), easing: "ease-out" },
-        { offset: 0.1, transform: at(0, 6, 3) }
-      ];
-      for (var i = 1; i <= GLIDE_STEPS; i += 1) {
+      var frames = [];
+      for (var i = 0; i <= GLIDE_STEPS; i += 1) {
         var u = i / GLIDE_STEPS;
-        var rest = (1 - u) * (1 - u);
+        var eased = (1 - Math.cos(Math.PI * u)) / 2;
+        var pathY = (1 - eased) * (1 - eased) * from.top + 2 * (1 - eased) * eased * controlY + eased * eased * to.top;
         frames.push({
-          offset: 0.1 + 0.74 * u,
-          transform: at(glide(0.1 + 0.74 * u), lift * Math.sin(Math.PI * u) + 6 * rest,
-            3 * rest - 8 * Math.sin(2 * Math.PI * u))
+          offset: u,
+          transform: "translate(" + (dx * (1 - eased)) + "px," + (pathY - to.top) + "px) rotate(" + (2 * Math.sin(Math.PI * u) * dir) + "deg)"
         });
       }
-      frames[frames.length - 1].easing = "ease-out";
-      frames.push(
-        { offset: 0.92, transform: at(1, 2, -2), easing: "ease-in-out" },
-        { offset: 1, transform: at(1, 0, 0) }
-      );
-      var animation = aside.animate(frames, { duration: FLIGHT_MS });
+      var travelMs = duration || FLIGHT_MS;
+      var animation = aside.animate(frames, { duration: travelMs });
       flight = animation;
-      schedule(function () { puff(); squash(1.16, 0.84, 240); }, FLIGHT_MS * 0.84);
+      schedule(function () { puff(); squash(1.04, 0.96, 180); }, travelMs * 0.9);
       return animation.finished.then(function () {
         if (flight === animation) flight = null;
       }, function () {});
     }
 
     function spotFor(section) {
-      var box = (target(section, "anchor") || section).getBoundingClientRect();
-      var band = (document.querySelector("[data-jiro-band]") || document.querySelector("main") || document.body).getBoundingClientRect();
-      var x = Math.min(Math.max(box.left + box.width / 2, band.left + band.width * BAND), band.right - band.width * BAND);
+      var anchor = target(section, "anchor");
+      var box = (anchor || section).getBoundingClientRect();
+      if (!box.width || !box.height) box = (target(section, "mobile-anchor") || section).getBoundingClientRect();
+      var x = box.left + box.width / 2;
+      if (wide.matches && x > window.innerWidth * CENTER_EDGE && x < window.innerWidth * (1 - CENTER_EDGE)) {
+        x = x < window.innerWidth / 2 ? window.innerWidth * CENTER_EDGE : window.innerWidth * (1 - CENTER_EDGE);
+      }
+      x = Math.min(Math.max(x, mascot.offsetWidth / 2 + 8), window.innerWidth - mascot.offsetWidth / 2 - 8);
+      var y = box.top + box.height / 2;
+      var sectionBox = section.getBoundingClientRect();
+      var halfWidth = mascot.offsetWidth / 2;
+      var halfHeight = mascot.offsetHeight / 2;
+      var protectedRects = [];
+      var headingRects = [];
+      section.querySelectorAll("h1,h2,h3,p,summary,.label,a,button,input,li,th,td").forEach(function (item) {
+        if (!item.getBoundingClientRect().width) return;
+        var range = document.createRange();
+        range.selectNodeContents(item);
+        var rects = item.matches("input") ? [item.getBoundingClientRect()] : Array.prototype.slice.call(range.getClientRects());
+        rects.forEach(function (rect) {
+          if (!rect.width || !rect.height) return;
+          protectedRects.push(rect);
+          if (item.matches("h1,h2,h3")) headingRects.push(rect);
+        });
+      });
+      function overlaps(cx, cy, rects) {
+        return rects.some(function (rect) {
+          return cx + halfWidth + 8 > rect.left && cx - halfWidth - 8 < rect.right &&
+            cy + halfHeight + 8 > rect.top && cy - halfHeight - 8 < rect.bottom;
+        });
+      }
+      if (overlaps(x, y, protectedRects) || y - halfHeight < 8 || y + halfHeight > window.innerHeight - 8) {
+        var xs = [x, sectionBox.left + halfWidth + 12, sectionBox.left + sectionBox.width * 0.23,
+          sectionBox.left + sectionBox.width * 0.77, sectionBox.right - halfWidth - 12];
+        var ys = [y, sectionBox.top + halfHeight + 12, sectionBox.bottom - halfHeight - 12,
+          (Math.max(0, sectionBox.top) + Math.min(window.innerHeight, sectionBox.bottom)) / 2];
+        [0.08, 0.18, 0.3, 0.45, 0.6, 0.75, 0.88].forEach(function (part) {
+          ys.push(sectionBox.top + sectionBox.height * part);
+        });
+        var best = null;
+        xs.forEach(function (candidateX) {
+          if (wide.matches && candidateX > window.innerWidth * CENTER_EDGE && candidateX < window.innerWidth * (1 - CENTER_EDGE)) {
+            candidateX = candidateX < window.innerWidth / 2 ? window.innerWidth * CENTER_EDGE : window.innerWidth * (1 - CENTER_EDGE);
+          }
+          candidateX = Math.min(Math.max(candidateX, halfWidth + 8), window.innerWidth - halfWidth - 8);
+          ys.forEach(function (candidateY) {
+            candidateY = Math.min(Math.max(candidateY, sectionBox.top + halfHeight + 8), sectionBox.bottom - halfHeight - 8);
+            if (candidateY < halfHeight + 8 || candidateY > window.innerHeight - halfHeight - 8) return;
+            var headings = overlaps(candidateX, candidateY, headingRects);
+            var text = overlaps(candidateX, candidateY, protectedRects);
+            var distance = Math.hypot(candidateX - x, candidateY - y);
+            var score = (headings ? 1000000 : 0) + (text ? 100000 : 0) + distance;
+            if (!best || score < best.score) best = { x: candidateX, y: candidateY, score: score };
+          });
+        });
+        if (best && best.score < 100000) { x = best.x; y = best.y; }
+      }
       return {
         x: x + window.scrollX - mascot.offsetWidth / 2,
-        y: box.top + box.height / 2 + window.scrollY - mascot.offsetHeight / 2
+        y: y + window.scrollY - mascot.offsetHeight / 2
       };
     }
 
@@ -346,117 +420,211 @@
       aside.style.translate = at.x.toFixed(1) + "px " + at.y.toFixed(1) + "px";
     }
 
-    function hopTo(section) {
+    function unmerge() {
+      if (mergedLogo) mergedLogo.style.visibility = "";
+      mergedLogo = null;
+      aside.removeAttribute("data-jiro-merged");
+    }
+
+    function merge(section) {
+      var logo = target(section, "merge");
+      if (!logo || !logo.getBoundingClientRect().width) return;
+      var logoBox = logo.getBoundingClientRect();
+      var mascotBox = mascot.getBoundingClientRect();
+      if (Math.abs(logoBox.left + logoBox.width / 2 - (mascotBox.left + mascotBox.width / 2)) > 12 ||
+        Math.abs(logoBox.top + logoBox.height / 2 - (mascotBox.top + mascotBox.height / 2)) > 12) return;
+      mergedLogo = logo;
+      aside.style.setProperty("--jiro-merge-scale", Math.min(logoBox.width / mascot.offsetWidth, 2.4).toFixed(2));
+      aside.setAttribute("data-jiro-merged", "true");
+      logo.style.visibility = "hidden";
+    }
+
+    function finishMove(section, id) {
+      if (id !== moveId) return;
+      moving = false;
+      landedAt = performance.now();
+      restingSection = section;
+      if (pendingJourney === journey.id) {
+        if (pendingKind === "large") journey.large += 1;
+        if (pendingKind === "small") journey.small += 1;
+      }
+      pendingKind = "quiet";
+      merge(section);
+      if (bubble.hidden) setState("idle");
+      fillJourneyAtRest(section, id);
+    }
+
+    async function peekThenFly(section, id) {
+      var to = aside.getBoundingClientRect();
+      var fromRight = to.left > window.innerWidth / 2;
+      var y = Math.min(Math.max(to.top, window.innerHeight * 0.22), window.innerHeight * 0.68);
+      var edge = fromRight ? window.innerWidth - mascot.offsetWidth * 0.28 : -mascot.offsetWidth * 0.72;
+      var out = fromRight ? window.innerWidth + mascot.offsetWidth : -mascot.offsetWidth * 1.4;
+      var transform = function (x) { return "translate(" + (x - to.left) + "px," + (y - to.top) + "px)"; };
+      setState("peeking");
+      peekAnimation = aside.animate([
+        { transform: transform(out), opacity: 0 },
+        { transform: transform(edge), opacity: 1, offset: 0.32 },
+        { transform: transform(edge), opacity: 1, offset: 0.75 },
+        { transform: transform(out), opacity: 0.7 }
+      ], { duration: 1700, easing: "ease-in-out" });
+      await peekAnimation.finished.catch(function () {});
+      peekAnimation = null;
+      if (id !== moveId) return;
+      await arc({ left: out, top: y }, 850);
+      if (id !== moveId) return;
+      await play(hop, [
+        { transform: "translateY(0)" },
+        { transform: "translateY(-8px)", offset: 0.45 },
+        { transform: "translateY(0)" }
+      ], 340);
+      finishMove(section, id);
+    }
+
+    function hopTo(section, mode, kind) {
       var from = aside.getBoundingClientRect();
+      var id = ++moveId;
+      pendingKind = kind || "quiet";
+      pendingJourney = journey.id;
       landFlight();
+      unmerge();
+      moving = true;
       if (!placed) aside.hidden = closed;
       place(section);
       if (!placed) {
         placed = true;
-        if (!motion()) return;
-        entered = play(aside, [
+        restingSection = section;
+        landedAt = performance.now();
+        if (!motion()) {
+          finishMove(section, id);
+          return;
+        }
+        play(aside, [
           { transform: "translateY(24px) scale(.3)", opacity: 0, easing: "cubic-bezier(.3,1.5,.5,1)" },
           { transform: "translateY(-10px) scale(1.06,.96)", opacity: 1, offset: 0.6 },
           { transform: "none" }
-        ], 700).then(function () { puff(); return squash(1.16, 0.84, 240); });
+        ], 700).then(function () {
+          if (id !== moveId) return;
+          puff();
+          return squash(1.04, 0.96, 180);
+        }).then(function () { finishMove(section, id); });
         return;
       }
-      var top = Math.min(Math.max(from.top, -from.height), window.innerHeight);
-      arc({ left: from.left, top: top });
-    }
-
-    function look(section, token) {
-      var thing = target(section, "look");
-      if (!thing) return Promise.resolve();
-      clearLook();
-      looked = thing;
-      thing.classList.add("jiro-look-target");
-      var a = thing.getBoundingClientRect();
-      var b = mascot.getBoundingClientRect();
-      var dx = (a.left + a.width / 2) - (b.left + b.width / 2);
-      var dy = (a.top + a.height / 2) - (b.top + b.height / 2);
-      var len = Math.max(Math.hypot(dx, dy), 1);
-      aside.style.setProperty("--jiro-gx", (dx / len * 2.5).toFixed(2) + "px");
-      aside.style.setProperty("--jiro-gy", (dy / len * 2.5).toFixed(2) + "px");
-      setState("looking");
-      setFace("glance");
-      return motion() ? wait(LOOK_MS, token) : Promise.resolve();
-    }
-
-    async function perform(section, token) {
-      await entered;
-      if (flight) await flight.finished.catch(function () {});
-      if (token !== run) return;
-      if (attr(section, "mood") === "eager" && motion()) {
-        setState("eager");
-        await hopOnce(14, 300);
-        await hopOnce(9, 260);
-        if (token !== run) return;
+      if (mode === "peek") {
+        peeks += 1;
+        peekThenFly(section, id);
+      } else {
+        var top = Math.min(Math.max(from.top, -from.height), window.innerHeight);
+        arc({ left: from.left, top: top }).then(function () { finishMove(section, id); });
       }
-      await look(section, token);
-      if (token !== run) return;
-      if (motion()) {
-        setState("thinking");
-        setFace("dots");
-        await wait(THINK_MS, token);
-      }
-      speak(section, token);
     }
 
-    function settle(section) {
+    function travelTo(section) {
+      var from = aside.getBoundingClientRect();
+      var offscreen = from.bottom < 0 || from.top > window.innerHeight;
+      if (wide.matches && motion() && offscreen && peeks < MAX_PEEKS) {
+        aside.setAttribute("data-jiro-move", "large-peek");
+        hopTo(section, "peek", "large");
+        return;
+      }
+      if (direction && journey.large === 0 && motion()) {
+        if (wide.matches && Math.random() < 0.5) {
+          aside.setAttribute("data-jiro-move", "large-glide");
+          hopTo(section, "hop", "large");
+        } else {
+          jumpToCurrent(section, "large");
+          largeLanding();
+        }
+        return;
+      }
+      if (direction && journey.small < 2 && motion()) {
+        jumpToCurrent(section, "small");
+        smallGesture();
+        return;
+      }
+      jumpToCurrent(section, "quiet");
+    }
+
+    function jumpToCurrent(section, kind) {
+      var id = ++moveId;
+      pendingKind = kind || "quiet";
+      pendingJourney = journey.id;
+      landFlight();
+      aside.getAnimations().forEach(function (animation) { animation.cancel(); });
+      unmerge();
+      aside.hidden = closed;
+      place(section);
+      if (pendingKind === "quiet") aside.setAttribute("data-jiro-move", "game-idle");
+      finishMove(section, id);
+      if (motion()) play(aside, [{ opacity: 0 }, { opacity: 1 }], 300);
+    }
+
+    function settle(section, move) {
+      if (!move) return;
       var token = run;
-      schedule(function () {
-        if (active !== section || seen.has(section) || !wide.matches) return;
-        perform(section, token).catch(function () {});
-      }, SETTLE_MS);
+      function follow() {
+        if (active !== section || token !== run) return;
+        var remaining = landedAt + MIN_DWELL_MS - performance.now();
+        if (moving || remaining > 0) {
+          schedule(follow, moving ? 200 : remaining);
+          return;
+        }
+        if (move) travelTo(section);
+      }
+      schedule(follow, SETTLE_MS);
     }
 
     function setActive(section) {
       if (!section || section === active) return;
       active = section;
-      if (performance.now() < clickHold) {
-        seen.add(section);
+      hideBubble();
+      var first = !placed;
+      if (first) {
         hopTo(section);
         return;
       }
-      hideBubble();
-      hopTo(section);
-      settle(section);
-    }
-
-    function sleep() {
-      if (aside.getAttribute("data-jiro-state") !== "idle" || aside.contains(document.activeElement)) {
-        sleepTimer = setTimeout(sleep, SLEEP_AFTER_MS);
-        return;
+      var far = restingSection && Math.abs(sections.indexOf(section) - sections.indexOf(restingSection)) >= 2;
+      if (far) {
+        var token = run;
+        schedule(function () {
+          if (token !== run || closed) return;
+          var current = nearestToCenter();
+          if (current !== active) {
+            setActive(current);
+            return;
+          }
+          travelTo(current);
+        }, FAST_SETTLE_MS);
+      } else if (section !== restingSection || moving) {
+        settle(section, true);
       }
-      hideBubble();
-      setState("sleepy");
-      setFace("sleepy");
     }
-
-    function stir() {
-      clearTimeout(sleepTimer);
-      sleepTimer = setTimeout(sleep, SLEEP_AFTER_MS);
-      if (aside.getAttribute("data-jiro-state") !== "sleepy") return;
-      setState("idle");
-      setFace("cursor");
-      hopOnce(8, 320);
-    }
-
-    ["scroll", "pointermove", "keydown", "touchstart", "wheel"].forEach(function (name) {
-      window.addEventListener(name, stir, { passive: true });
-    });
-    stir();
 
     onChange(wide, function () {
       landFlight();
+      moving = false;
+      unmerge();
       if (active) place(active);
+      if (active) {
+        restingSection = active;
+        landedAt = performance.now();
+        merge(active);
+      }
       hideBubble();
-      if (wide.matches && active) settle(active);
     });
 
     onChange(reduced, function () {
-      if (reduced.matches) landFlight();
+      if (reduced.matches) {
+        landFlight();
+        moving = false;
+        if (active) {
+          place(active);
+          unmerge();
+          restingSection = active;
+          landedAt = performance.now();
+          merge(active);
+        }
+      }
       if (!reduced.matches || bubble.hidden || !spoken) return;
       var section = active;
       hideBubble();
@@ -464,7 +632,12 @@
     });
 
     window.addEventListener("resize", function () {
-      if (active && !flight) place(active);
+      if (active && !flight && !peekAnimation) {
+        unmerge();
+        place(active);
+        restingSection = active;
+        merge(active);
+      }
     });
 
     function focusContent() {
@@ -479,60 +652,35 @@
       target.focus({ preventScroll: true });
     }
 
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) visible.add(entry.target);
-        else visible.delete(entry.target);
-      });
+    var observer = new IntersectionObserver(function () {
       setActive(nearestToCenter());
     }, { rootMargin: "-40% 0px -40% 0px" });
 
     sections.forEach(function (section) { observer.observe(section); });
+    var scrollFrame = 0;
+    window.addEventListener("scroll", function () {
+      updateDirection();
+      if (scrollFrame || closed) return;
+      scrollFrame = requestAnimationFrame(function () {
+        scrollFrame = 0;
+        setActive(nearestToCenter());
+      });
+    }, { passive: true });
 
-    var quips = ((document.querySelector("[data-jiro-hovers]") || aside).getAttribute("data-jiro-hovers") || "")
-      .split("|").map(function (line) { return line.trim(); }).filter(Boolean);
-    var quipAt = 0;
-    var quipTime = -Infinity;
-
-    function dodge() {
-      var away = quipAt % 2 ? -1 : 1;
-      return play(hop, [
-        { transform: "translate(0,0) rotate(0)" },
-        { transform: "translate(" + 6 * away + "px,-10px) rotate(" + 6 * away + "deg)", offset: 0.3 },
-        { transform: "translate(" + 12 * away + "px,0) rotate(" + -3 * away + "deg)", offset: 0.6 },
-        { transform: "translate(0,0) rotate(0)" }
-      ], 560, "ease-in-out");
-    }
-
-    function quip() {
-      var state = aside.getAttribute("data-jiro-state");
-      var asking = !bubble.hidden && !acts.hidden;
-      var now = performance.now();
-      if (!quips.length || asking || !wide.matches || now - quipTime < 1200) return;
-      if (state !== "idle" && state !== "sleepy") return;
-      quipTime = now;
-      hideBubble();
-      dodge();
-      say(quips[quipAt % quips.length], "", run);
-      quipAt += 1;
-    }
-
-    mascot.addEventListener("pointerenter", function (event) {
+    mascot.addEventListener("pointerenter", function () {
       hovered = true;
       setFace(face);
-      if (event.pointerType === "mouse") quip();
     });
     mascot.addEventListener("pointerleave", function () { hovered = false; setFace(face); });
 
     mascot.addEventListener("click", function () {
-      if (!active) return;
+      if (!restingSection) return;
       hideBubble();
-      speak(active, run);
-      hopOnce(10, 320);
+      speak(restingSection, run);
     });
 
     yes.addEventListener("click", function () {
-      var section = active;
+      var section = speakingSection;
       var goal = section && target(section, "action");
       hideBubble();
       if (!goal) return;
@@ -542,42 +690,12 @@
 
     later.addEventListener("click", hideBubble);
 
-    document.addEventListener("click", function (event) {
-      var node = event.target;
-      if (closed || !wide.matches || !(node instanceof Element) || aside.contains(node)) return;
-      var section = sections.filter(function (s) { return s.contains(node); }).pop() || null;
-      var source = node.closest("[data-jiro-click]");
-      if (source && section && !section.contains(source)) source = null;
-      if (!source && !section) return;
-      var lines = (source ? source.getAttribute("data-jiro-click") : attr(section, "comment"))
-        .split("|").map(function (line) { return line.trim(); }).filter(Boolean);
-      if (!lines.length) return;
-      var key = source || section;
-      var count = clicks.get(key) || 0;
-      clicks.set(key, count + 1);
-      hideBubble();
-      if (section) seen.add(section);
-      clickHold = performance.now() + CLICK_HOLD_MS;
-      if (source && source !== section) {
-        looked = source;
-        source.classList.add("jiro-look-target");
-      }
-      var b = mascot.getBoundingClientRect();
-      var dx = event.clientX - (b.left + b.width / 2);
-      var dy = event.clientY - (b.top + b.height / 2);
-      var len = Math.max(Math.hypot(dx, dy), 1);
-      aside.style.setProperty("--jiro-gx", (dx / len * 2.5).toFixed(2) + "px");
-      aside.style.setProperty("--jiro-gy", (dy / len * 2.5).toFixed(2) + "px");
-      hopOnce(10, 320);
-      say(lines[count % lines.length], "", run);
-    });
-
     close.addEventListener("click", function () {
       var hadFocus = aside.contains(document.activeElement);
       hideBubble();
       landFlight();
+      unmerge();
       observer.disconnect();
-      clearTimeout(sleepTimer);
       closed = true;
       aside.hidden = true;
       rememberHidden();

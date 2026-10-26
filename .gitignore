@@ -1,4 +1,5 @@
 __pycache__/
 prototypes/scroll-buddy/moodboard/picks.json
 prototypes/scroll-buddy/moodboard/picks-*.json
+!prototypes/scroll-buddy/moodboard/picks-motion.json
 prototypes/scroll-buddy/moodboard/reachy/

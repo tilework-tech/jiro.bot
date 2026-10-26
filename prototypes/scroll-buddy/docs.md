@@ -1,100 +1,105 @@
-# Noridoc: prototypes/scroll-buddy
+# Jiro scroll buddy prototype
 
-Path: @/prototypes/scroll-buddy
+Status on 2026-10-26: working, scrollable prototype on `feat/jiro-scroll-buddy` in `tilework-tech/jiro.bot`. This is not deployed to jiro.bot. The current landing page is a hand-built HTML reconstruction, not Maddy's final HTML or the ZIP mentioned in the Slack thread. The requested ZIP and `restore-copy-editor` bundle were not present in this workspace. Keep the mockup separate from the production site until the source page is available.
 
-### Overview
+## Open it in a future session
 
-- A standalone prototype of the Jiro "scroll buddy": the mascot lives inside the page, sitting on one planned spot (anchor) per section within the middle two thirds of the content column, riding along with the page as it scrolls, and hopping to the next section's anchor when that section takes over the middle of the viewport. Once the section settles he looks at what he is about to talk about, thinks, and types one short comment (sometimes a question with Yes/Later buttons) in a speech bubble. Requested by Martin Stübler for the jiro.bot landing page.
-- v3 (2026-10-20) is Martin's pick from the moodboard (tiles A2, A4, A5, B1-B5, C1-C3, C5, D4, E3, posted in Slack #growth-agent-work) combined into one scroll-driven flow: "playful like a computer game but high quality, easy on page load".
-- v4 (2026-10-23) moves him off the corners and into the page because the corner version "looks too much like Clippy": he must stay within the middle 66% (33% either side of the centre line). Tiles B1 (corner), B2 (side flits) and B3 (peek from the edge) were dropped; B4 (perch) became the default.
-- The buddy itself is two dependency-free files, [jiro-buddy.css](jiro-buddy.css) and [jiro-buddy.js](jiro-buddy.js), meant to be copied onto the real site unchanged. [index.html](index.html) is a mockup of the jiro.bot landing page that exists only to exercise them, and [share/](share/index.html) is the team-facing explainer.
+From the repository root, start both servers in the background:
 
-### How it fits into the larger codebase
+```bash
+setsid -f nohup python3 -m http.server 4320 --directory prototypes/scroll-buddy > /tmp/jiro-scroll-preview.log 2>&1 < /dev/null
+setsid -f nohup python3 prototypes/scroll-buddy/moodboard/serve.py --port 4330 > /tmp/jiro-motion-board.log 2>&1 < /dev/null
+```
 
-- Not deployed: it lives outside `site/`, so [build.py](../../build.py), [tools/lint.py](../../tools/lint.py) and the deploy workflow never see it. See the root [docs.md](../../docs.md).
-- Porting to the real site: copy the CSS and JS next to the page, link the stylesheet in `<head>`, load the script with `defer` before `</body>`, and annotate top-level sections with the `data-jiro-*` contract below. Sections without `data-jiro-comment` are ignored, and a page with none (or only blank ones) renders no buddy. Loading the script more than once still renders a single buddy.
+The scrollable page is on port 4320 at `/`; the new movement moodboard is on port 4330 at `/motion.html`. Use the current session's `NORI_SESSION_URL` and `/port/4320/` or `/port/4330/motion.html`, with a fresh `?t=<unix timestamp>` in links. Preview URLs from a previous session are not durable. The moodboard's Save button writes the tracked `moodboard/picks-motion.json` through `serve.py`; commit and push any new picks before ending a later session so they are durable beyond the current machine.
 
-| Section attribute | Effect |
+## Files
+
+| File | Purpose |
 |---|---|
-| `data-jiro-comment="..."` | The line Jiro says. Required to be observed at all. |
-| `data-jiro-anchor="selector"` | Where he sits for this section: he centres on the element's box (horizontally clamped into the band). Without one he centres on the section itself. Design a Jiro-sized empty spot and point at it. |
-| `data-jiro-mood="eager"` | Adds an eager double-hop before he looks and speaks. |
-| `data-jiro-hovers="a|b|c"` | On any one element (the mockup uses `<main>`): the lines he cycles through when hovered. |
-| `data-jiro-look="selector"` | Element he looks at; it gets the `.jiro-look-target` highlight. |
-| `data-jiro-ask="Label"` + `data-jiro-action="selector"` | Turns the comment into a question with a Yes button (labelled `Label`) and Later. |
-| `data-jiro-band` | Optional, on one element: the column whose middle 66% he stays in. Defaults to `<main>`, then `<body>`. |
-| `data-jiro-click="a|b"` | On any element (or a section): the lines he says when it is clicked, cycling per click. A section without one falls back to its comment. |
+| `index.html` | Scrollable landing-page reconstruction with section markers and safe resting points. |
+| `jiro-buddy.js`, `jiro-buddy.css` | Dependency-free runtime and isolated styling. These are the two files meant for transplanting to a real HTML site. |
+| `jiro-v3.svg` | Mascot art used by the mockup's existing likenesses. |
+| `moodboard/motion.html` | New three-level movement board, nine live examples, speed/pause/replay/theme controls, stars, notes, and a direction-pass preview. |
+| `moodboard/jiro-v3.svg` | Local art copy so the moodboard server can serve tiles independently. |
+| `moodboard/index.html` | Original 5 by 5 board, now linked to the new board. |
+| `moodboard/interactions.html`, `moodboard/expressions.html` | Earlier design boards, not a specification of current behavior. |
+| `qa/check_motion.py` | Browser regression check against the session's headed Chrome. |
+| `stitched/`, `share/` | Earlier screenshot demo and explainer. Their art and behavior are older than this version. |
 
-- Selectors are resolved with `document.querySelector` at use time; an invalid or unmatched selector is treated as absent.
-- Host-page integration: the buddy sits at `z-index: var(--jiro-buddy-z, 50)`; set `--jiro-buddy-z` on `:root` or `.jiro-buddy` if site chrome needs to stack differently. Its elements carry a light reset so host `button`/`p` globals do not leak in. `.jiro-look-target` is the one class the buddy puts on host elements (green outline plus a dark ring, pulsing when motion is allowed), so host styles can override it.
-- Fonts: the bubble asks for Inter and the Yes/Later buttons for Geist Mono, each with system fallbacks. The buddy does not load fonts; the host page should already load them or the fallbacks show.
-- The mockup [index.html](index.html) follows Maddy's 2026-10-19 Figma screenshot for the top of the page and the earlier 2026-10-14 review mock (`jiro-bot-review.png` in #jiro-bot-design) below it, with the `data-jiro-*` contract on each section. Only pricing names an anchor (its heading); the other sections use the section-centre fallback. [jiro-v3.svg](jiro-v3.svg) is the standalone mascot art used for the "CALL HIM IN" card and other in-page images.
-- `stitched/` is the buddy over the real designs instead of a rebuild: [stitched/make.py](stitched/make.py) cuts Maddy's 2026-10-19 Figma screenshot (nav, hero, ditch) and the 2026-10-14 review mock (video through footer) into `<section>` crops by source-pixel coordinates, adds the same `data-jiro-*` attributes as the mockup, and writes `stitched/index.html`. Look targets (`#censor-devin`, `#video-frame`, `#col-jiro`) and one anchor per commented section (`#jiro-hero` … `#jiro-faq`, 20 px source boxes marking where his centre goes, all inside the middle 66%) are invisible percentage-positioned hotspots over the image, and `#email` is a transparent real input over the drawn field. Text in the page is pixels, so it is desktop-only and reflects whatever the two screenshots show; rerun `make.py` after replacing an image or moving a cut.
-- `moodboard/` is the live 5x5 board of animation variants the v3 picks came from (rows A-E: speed and hover feel, position and looking around, face and blinking, shape and form, text and helpfulness). `python3 moodboard/serve.py --port N` serves it; stars and notes are saved to an untracked `picks.json`. `moodboard/interactions.html` is a second 5x5 board of click and drag ideas (rows A-E: clicking Jiro, clicking parts of the page, drag and place, easter eggs, helpful actions); every tile is a clickable or draggable mini-scene, and its picks save to the untracked `picks-interactions.json` (serve.py accepts any `picks-<name>.json`). `moodboard/expressions.html` is a third 5x5 board (rows A-E: antennas, head pose, timing, expressions, on the page) of head-and-antenna expressions learned from the Reachy robot video Cliff shared: the face stays `>_` and the two free ends of the outline at the top gap act as antennas. It is drawn with a simplified inline SVG of the V3 bubble (separate end strokes that can rotate), not the shipping art; picks save to `picks-expressions.json`. Its reference strip loads key frames from an untracked `moodboard/reachy/` folder (third-party video frames, not committed).
-- `share/` (still showing the v3 corner flow, not yet re-recorded for v4) is a static explainer for the team: [share/index.html](share/index.html) walks the flow section by section with stills from `share/stills/`, a rules table, and `share/jiro-buddy-flow.mp4`, a 56 s 1440x900 recording of one top-to-bottom scroll with the 20 s idle segment sped up 9x. It links back to `../index.html` as the live demo.
-- Tests live in the repo-level [tests/test_scroll_buddy.py](../../tests/test_scroll_buddy.py), alongside the stdlib-only build and lint tests (see Things to Know).
+## Design provenance and decisions
 
-### Core Implementation
+- The mockup's top follows Maddy's 2026-10-19 screenshot. Lower sections follow the 2026-10-14 review mock. The Slack-style hero thread, video graphic, pricing layout, and resting markers were created for this prototype. Later Figma copy edits are not available in this checkout.
+- Martin chose the newer Jiro balloon: smooth outline with a pixel `>_` face. The `jiro-v3.svg` image in the Ditch card and reserve seal is an existing likeness. The buddy hides the image and occupies its position when docked there.
+- The v4 branch tip placed Jiro near section centers and auto-commented. Martin found it too central, erratic, and high-jumping. The current version uses left or right blank areas, keeps his center out of the middle 35% to 65% of the viewport on wide screens, caps arc height, and waits for scrolling to settle.
+- Martin asked for a silent observer. Scroll, hover, and page clicks do not open speech bubbles. Clicking Jiro opens the current section's line; clicking again replays it. The close button hides him for the rest of the tab via `sessionStorage`.
+- Martin asked for the old video game hover, a slow edge peek at least once, occasional short hops, and no overlap with readable headings. The latest rule makes the layered game idle the default and budgets one large plus two small moves for each direction pass.
+- No production site code, external application, or live page has been changed.
 
-- Startup is deferred so the buddy never competes with page load: the script waits for `window` `load`, then `requestIdleCallback` (500 ms timeout, `setTimeout` fallback), then finds the commented sections, renders into an `<aside aria-label="Jiro">`, and observes the sections with an `IntersectionObserver`.
+## Runtime behavior
 
+### Section selection and pacing
+
+`nearestToCenter()` considers every section with `data-jiro-comment` and selects the one at the viewport's vertical center. An `IntersectionObserver` and passive scroll listener both feed it, so a fast jump from hero to footer targets FAQ directly. Initial placement pops in over 700 ms. A nearby section waits 1200 ms after selection and respects a minimum 2000 ms dwell at the current resting point. A jump across at least two section indices is handled after 450 ms, preserving fast-scroll catch-up. Pending callbacks check the active section and a run token before acting.
+
+### Directional motion budget
+
+A direction pass begins on the first scroll movement. At least 60 px of movement in the opposite direction starts a new pass; shorter reversals are ignored as jitter. Each pass budgets an initial large beat and two small beats. The first offscreen peek can add one extra large beat later in the same pass:
+
+1. The first eligible section change uses a large move. On wide screens, if the previous spot is offscreen and Jiro has not peeked yet, he peeks from the nearer side. The peek takes 1700 ms, followed by an 850 ms bounded flight and a 340 ms landing bounce. At most one such peek occurs per page load. Otherwise a large move randomly chooses a bounded arc flight or a 13 px spring arrival.
+2. The next two eligible section changes get small moves. Each randomly chooses a 5 px hop or a 7 px side scoot, each 500 ms.
+3. If the user stops after a large move, the remaining small beats play at the current safe spot, spaced by at least 2000 ms. A later section change cancels those local beats and uses the remaining budget there.
+4. Subsequent section changes reposition Jiro quietly. His resting animation is always layered game idle: 3.5 px bob, 0.75 px sideways drift, 1.5 degree tilt, slight squash, and shrinking shadow on different cycles. It is not randomly replaced at every landing.
+5. A direction reversal resets the budget. Motion interrupted by another scroll is canceled. A pass reversed or closed before its queued beats complete cannot display all three beats; the new direction takes priority.
+
+The board groups the repertoire by visual intensity. Low has game idle, calm float, and sleepy sway. Only game idle is the live default; the others remain design options. Medium has live small hop and side scoot, plus a curious-tilt option. High has live bounded glide, edge peek, and spring arrival. Board examples loop so differences are easy to compare; the page runtime schedules individual beats.
+
+### Placement and readable text
+
+Every mockup section has a `data-jiro-anchor` pointing at an image or a one-pixel `.jiro-rest` marker. Desktop anchors alternate left and right. Hero, video, pillars, How, pricing, and bakeoff use deliberately empty, mostly solid-color resting space. Ditch and FAQ point at existing Jiro images. Pricing's marker is left of the heading, not on it. Mobile overrides place markers in smaller blank areas; the reserve seal remains visible so Jiro can dock into it on phones.
+
+At placement time, `spotFor()` measures visible text in headings, paragraphs, labels, summary rows, links, buttons, list items, and table cells with DOM `Range.getClientRects()`. If an anchor overlaps readable text or is out of view, it samples nearby positions in the current section, favors a fully clear visible spot, and rejects candidates covering a heading. If no clear candidate exists, it keeps the planned anchor, which may be offscreen. This is still a prototype: inspect new layouts and translations in a browser. Flight paths may pass briefly near content; resting points are the protected targets.
+
+`data-jiro-merge` points at a likeness. The buddy merges only when its actual center matches the visible logo's center within 12 px. The logo becomes `visibility:hidden` while Jiro occupies it and is restored when he moves away or closes. Scale is capped at 2.4. There is no forced merge if a safe fallback moved him elsewhere.
+
+### Speech and accessibility
+
+Jiro is quiet on load and while scrolling. Clicking his button displays the section line. Speech typing uses a visible paragraph, while an `aria-live` status announces the complete sentence once. Questions can show Yes and Later; Yes scrolls and focuses the configured action target. A section change closes the bubble. `prefers-reduced-motion: reduce` turns off CSS hover and Web Animations API motion while preserving placement, comments, and logo docking. The close control is keyboard accessible. Jiro creates no layout shift because the `<aside>` is absolutely positioned and moved by `translate`.
+
+## Host-page attributes
+
+| Attribute | Current behavior |
+|---|---|
+| `data-jiro-comment="..."` | Required on sections to opt in and supplies the click comment. |
+| `data-jiro-anchor="selector"` | Preferred center. If absent, section center is the starting candidate. |
+| `data-jiro-mobile-anchor="selector"` | Fallback only when the main anchor has no rendered size. |
+| `data-jiro-merge="selector"` | Optional logo that Jiro can replace when he lands on its center. |
+| `data-jiro-ask="..."` | Optional affirmative button label in the speech bubble. |
+| `data-jiro-action="selector"` | Target scrolled into view and focused when the affirmative button is clicked. |
+
+Old `data-jiro-hovers`, `data-jiro-look`, `data-jiro-mood`, and `data-jiro-click` behavior from v4 is inactive. Dead instances were removed from the mockup. Earlier moodboards and the old explainer still show those concepts as design history.
+
+## Verification and limitations
+
+Start the port 4320 preview and the Nori session browser, then from `prototypes/scroll-buddy` run:
+
+```bash
+uv run --no-project --with playwright python qa/check_motion.py
+node --check jiro-buddy.js
+git diff --check
 ```
-aside.jiro-buddy  [data-jiro-state, data-jiro-face]
- ├─ button.jiro-buddy__mascot   "Jiro: replay comment"
- │    figure > bob > drift > tilt > squash > hop > SVG art + z's
- │    figure > ground shadow, dust puff
- ├─ div.jiro-buddy__bubble      absolutely positioned
- │    ├─ p.jiro-buddy__text     aria-hidden, typed text
- │    └─ div.jiro-buddy__acts   Yes / Later buttons (questions only)
- ├─ p.jiro-buddy__sr            role="status", aria-live="polite", full text
- └─ button.jiro-buddy__close    "Hide Jiro"
-```
 
-- The aside exposes its state for CSS and tests. `data-jiro-state` is one of `idle`, `flying`, `eager`, `looking`, `thinking`, `speaking`, `sleepy`. `data-jiro-face` is one of `cursor` (`>_` with a blinking block cursor, tile C1), `glance` (the same face shifted toward a target, C3), `eyes` (two blinking pixel eyes while hovered, C2), `dots` (bouncing thinking dots, C5), `sleepy` (`-_-`). Hover overrides every face except `dots` and `sleepy`.
-- Per-section sequence, run by `perform` after the settle delay:
+The browser check connects to the existing headed Chrome at CDP port 9222. It tests a fast down pass and fast up pass, verifies one large and two small moves per settled pass, game idle, silent speech, and heading clearance in hero, pricing, and bakeoff at 1440 px and 390 px. It does not launch a separate browser. On 2026-10-26 it passed with zero page errors. The buddy JS and CSS together compressed to about 10.5 KB, under the existing 12 KB budget.
 
-```
-active change ─> hop to anchor (starts at once)
-settle (600 ms) ─> wait for entrance + hop ─> [eager hops] ─> look ─> think ─> speak
-                                                               │       │        │
-                                                        glance face  dots   bubble grows,
-                                                        + highlight  750ms  text types
-```
+The repository's older `tests/test_scroll_buddy.py` still describes v4 automatic speech and center placement. Its behavior assertions need an intentional update before it can be used as a gate for this version. The standalone regression check above covers the new motion rule. The `share/` video and stills also show an older flow. There is no current production integration or complete Maddy source page in this branch.
 
-| Rule | Behavior |
-|------|----------|
-| B1 Active section | The section crossing the middle band of the viewport is active. The section active on load counts without scrolling. |
-| B2 Comment once | After the active section stays active for the settle delay and has not been commented on this page load, Jiro runs the per-section sequence (B14) and the bubble types its comment. Fast scrolling only comments on the section you stop at. |
-| B3 No repeats | Returning to an already-commented section hides the bubble and does not replay it. |
-| B4 Replay on click | Clicking the mascot shows the active section's comment again straight away (no look or think), with a small hop. |
-| B19 Hover quips | When a mouse pointer enters the mascot on a wide screen while he is idle or asleep, he does a small dodge hop away from the page centre (560 ms on the inner hop span, so the button box stays put) and types the next line from `data-jiro-hovers`, cycling in order. It is skipped while a question's buttons are showing, during a section sequence, within 1.2 s of the previous quip, or when no lines are configured. Hover lines do not mark sections as seen. |
-| B21 Click comments | On a wide screen, clicking anywhere on the page outside the buddy makes him comment on what was clicked: the nearest `data-jiro-click` element inside the clicked section (or anywhere, outside commented sections), else the section's own `data-jiro-click`, else its comment. Lines cycle per element and repeat on every click, unlike scroll comments. A clicked element other than the section itself gets `.jiro-look-target`; the glance points at the click. The click marks its section seen, and for 1.2 s afterwards section changes (e.g. a link jumping down the page) keep the click comment instead of replacing it. The click itself is never intercepted. Narrow screens ignore page clicks. |
-| B5 Hide | The close button hides the buddy for the rest of the tab session, including reloads, and stops observing and the sleep timer. If focus was inside the buddy, it moves to the active section (or `main`), given a temporary `tabindex="-1"` that is removed on blur. |
-| B6 Reduced motion | With `prefers-reduced-motion: reduce` there is no entrance, hover, hop, flight or thinking beat; moves are instant, the look highlight still applies, and comments appear in full at once. |
-| B7 Placement | The aside is `position: absolute` at the page origin and placed with the CSS `translate` property in page coordinates, so he is part of the page and scrolls with it; nothing about him is fixed to the viewport. His centre sits on the active section's anchor (or the section's centre), with the horizontal centre clamped to the middle 66% of the band (17% off-limits each side). The speech bubble opens above him, centred on him and nudged sideways only to stay 8 px inside the viewport (the tail keeps pointing at him); if there is no room above, it opens below. |
-| B8 Narrow screens (< 768 px) | Smaller mascot, same anchors and hops; comments never auto-show and page clicks are ignored, tapping the mascot shows the active comment. Resizing below 768 px lands any flight, re-places him on the active anchor, hides the bubble and cancels pending timers; resizing back above restarts the settle delay for the active section if it is still unseen. |
-| B9 Screen readers | Only the comment text is written, once, into the polite status region; the typed `p.jiro-buddy__text` is hidden from assistive tech, while the Yes/Later buttons in the bubble stay reachable. The region is cleared first and written 100 ms later so replays re-announce. |
-| B10 Blank comments | A section whose `data-jiro-comment` is empty after trimming can still become active (hiding any previous bubble) and still moves, hops and looks, but never shows a bubble or announces anything. |
-| B11 Hops | Every change of active section hops him to the new anchor at once (the comment still waits for the settle delay). A hop is one 1.1 s flight in page coordinates: a short crouch, then a single continuous glide (progress on one sine ease, height on one sine arc lifted 70 px above the straight line, sampled into 20 linear keyframes so speed never dips mid-air), ending with a dust puff and squash. Because both ends are page-attached, scrolling during a hop cannot make him snap. A hop started mid-flight begins from wherever he visibly is. If the previous anchor has scrolled out of view, the hop starts from just outside the nearest viewport edge, so he glides in from the top or bottom instead of crossing the whole page. |
-| B12 Idle hover | With motion allowed, the idle hover combines several out-of-phase motions (vertical bob, slight horizontal drift, small tilt, gentle squash and stretch) and a ground shadow that shrinks as he rises (tile A2). |
-| B13 Entrance | He first appears on the active section's anchor with a 700 ms pop (scale up from 0.3 with an overshoot), then a dust puff and squash; he never enters from a page edge. Before that first placement the aside is hidden. The first comment waits for the entrance. |
-| B14 Section sequence | Wait for the hop to land, then an eager double-hop for `data-jiro-mood="eager"` (A4), then look: the `data-jiro-look` element gets `.jiro-look-target` and the glance face points toward it for 700 ms (B5); the highlight is cleared about 1.8 s after he finishes speaking. Then think: `dots` face for 750 ms (C5). Then speak: the bubble grows out of the body with a squash (D4) and the text types. |
-| B15 Questions | With `data-jiro-ask` and `data-jiro-action`, Yes (labelled with the ask text) and Later appear once typing finishes (E3). Yes closes the bubble, scrolls the action target to the viewport center (smooth unless reduced motion), and focuses it if it is a form control, button or link. Later just closes the bubble. |
-| B17 Sleepy | After 20 s with no scroll, pointer, key, touch or wheel activity while idle, the bubble closes, the face goes `-_-`, z's drift up and the bob slows (A5). Any of those events wakes him with a hop. |
-| B18 Zero layout shift | The bubble and close button are absolutely positioned and all placement is `translate` (never `left`/`top`), so nothing he does moves page content or registers a layout shift. The close button always sits at the mascot's top-left. |
+## Next session
 
-### Things to Know
-
-- Rule numbers (B1-B21 above) are this doc's numbering, not moodboard tile IDs; tiles are always written as "tile X#".
-- The middle band is the observer's `rootMargin` of `-40%` top and bottom. When several sections intersect it, the one containing the viewport's vertical center wins.
-- Every change of active section (and every narrow/wide switch) calls `hideBubble`, which bumps a `run` token and clears all pending timers. Every awaited step in `perform` checks the token, so scrolling away mid-sequence abandons it cleanly; the settle callback still re-checks that its section is active, unseen, and the screen is wide.
-- Typing never resizes the bubble: the untyped remainder sits in `data-rest` and is rendered invisibly by `::after { content: attr(data-rest) }`, and the Yes/Later row is laid out but `visibility: hidden` until typing finishes. Typing advances by Unicode code points (`Array.from`). Switching to reduced motion mid-type shows the full comment at once.
-- Window resize re-places him on the active anchor (unless a hop is running). Anchors are measured at hop time, so an anchor whose layout changes later is only picked up on the next hop or resize.
-- The clamp is horizontal only; vertical position always follows the anchor. Speech bubbles can therefore cover page text for a few seconds; designing empty slots next to anchors is the clean fix.
-- Animation layering: idle hover is CSS keyframes on the nested spans; hops, squashes, flights and the entrance pop use the Web Animations API, and sequence steps await their `finished` promises. Motion runs on inner spans or the aside, never the mascot button's own box, so it stays reliably clickable and Playwright's stable-box click succeeds.
-- The mascot art is the official "V3 traced balloon pixel" asset from Maddy's 2026-10-19 lineup, inlined as SVG (viewBox `0 -1 62 56`): a cream body fill simplified to a stepped pixel path, the dark green traced outline path drawn at 1/8 scale, and salmon pixel-art faces with `crispEdges`. All faces are rendered once and toggled by `data-jiro-face` in CSS. The art is never mirrored.
-- State lifetimes differ: "already commented" is in memory and resets on every page load, while "hidden" (`jiro-buddy-hidden`) is stored in `sessionStorage` and lasts for the tab session.
-- Budget: the JS and CSS together are about 9.1 KB gzipped; `BuddyBudgetTest` fails if they reach 12 KB.
-- Tests: `uv run --no-project --with playwright python -m unittest tests/test_scroll_buddy.py` from the repo root. The browser tests copy the buddy CSS and JS into a temp directory with their own fixture pages (not [index.html](index.html)), serve them over local HTTP, and drive the system Chrome (`channel="chrome"`). `StitchedDesignTest` serves the prototype folder itself and checks that `stitched/index.html` loads its images, greets on the hero, that every look/anchor/action selector resolves, and that every commented section's anchor lies in the middle 66%. `ANCHOR_PAGE` covers placement (anchor, clamp to either side of the band, section-centre fallback, riding with the scroll, bubble above, glide and no-snap checks sampled per frame); `FLOW_PAGE` covers the sequence (question, eager look, heading anchors, form question); an init script records each state/face/text change per animation frame and sums layout shifts from a `PerformanceObserver`, and the sleepy test uses Playwright's fake clock. The browser tests are skipped without Playwright but fail hard if `jiro-buddy.js` or `jiro-buddy.css` is missing; `BuddyBudgetTest` is stdlib-only and always runs.
+1. Fetch `feat/jiro-scroll-buddy` and read this document plus `CONTINUE.md`.
+2. Start both preview servers in the background, verify the session host header for ports 4320 and 4330, and give Martin fresh session links.
+3. Read `moodboard/picks-motion.json` if Martin saved stars or notes. The file is tracked, but new picks are local until committed and pushed.
+4. Get Martin's visual feedback on the one-large, two-small pacing. Keep the silent observer behavior and heading clearance while adjusting.
+5. Once the actual Maddy HTML or ZIP is available, transplant the two buddy files and markers, then check every resting point at desktop and phone widths before any deployment.
+6. Update the old browser tests and old share video when the interaction is approved. Do not merge or deploy from this prototype without explicit approval.
 
 Created and maintained by Nori.

@@ -127,6 +127,23 @@
 
   /* ---------- hero ---------- */
   #hero { display: grid; grid-template-columns: 1fr; }
+  main > section { position: relative; }
+  .jiro-rest { position: absolute; width: 1px; height: 1px; pointer-events: none; }
+  #jiro-hero { left: 27%; top: 33%; }
+  #jiro-video { left: 93%; top: 9%; }
+  #jiro-pillars { left: 25%; top: 15%; }
+  #jiro-how { left: 21%; top: 20%; }
+  #jiro-pricing { left: 27%; top: 19%; }
+  #jiro-bakeoff { left: 84%; top: 5%; }
+  #jiro-faq { left: 77%; top: 72%; }
+  @media (max-width: 767px) {
+    #jiro-hero { left: 85%; top: 6%; }
+    #jiro-video { left: 85%; top: 6%; }
+    #jiro-pillars { left: 85%; top: 6%; }
+    #jiro-how { left: 85%; top: 11%; }
+    #jiro-pricing { left: 85%; top: 3%; }
+    #jiro-bakeoff { left: 85%; top: 3.5%; }
+  }
   @media (min-width: 960px) { #hero { grid-template-columns: 45% 1fr; min-height: 530px; } }
   .hero__copy {
     padding: 40px var(--pad-x) 40px;
@@ -411,7 +428,7 @@
   .reserve .btn { width: 100%; border: 0; padding: 13px 12px; }
   .reserve__seal { margin-top: auto; align-self: flex-end; width: 64px; height: 64px; background: var(--cream); border: var(--rule); padding: 8px; }
   .reserve__seal img { width: 100%; height: 100%; display: block; }
-  @media (max-width: 899px) { .reserve__seal { display: none; } }
+  @media (max-width: 899px) { .reserve__seal { margin-top: 8px; } }
   .reserve .btn:hover { box-shadow: 2px 2px 0 var(--green); }
 
   /* ---------- footer ---------- */
@@ -458,9 +475,10 @@
   </header>
 
   <div class="frame">
-  <main data-jiro-hovers="Yes, the bite mark is on purpose.|Still here. Still reviewing.|I read over your shoulder. Kindly.|No lorem ipsum on my watch.|Tickles. Back to work.">
+  <main>
 
-    <section id="hero" data-jiro-comment="Hi, I&#39;m Jiro.">
+    <section id="hero" data-jiro-comment="Hi, I&#39;m Jiro." data-jiro-anchor="#jiro-hero">
+      <span class="jiro-rest" id="jiro-hero" aria-hidden="true"></span>
       <div class="hero__copy">
         <span class="label">&gt;_ Meet Jiro</span>
         <h1>The <span class="hl">tasteful</span><br>software <span class="nowrap">engineer<span class="caret" aria-hidden="true"></span></span></h1>
@@ -510,19 +528,20 @@
       </div>
     </section>
 
-    <section id="ditch" data-jiro-comment="I censored them myself. Professional courtesy." data-jiro-mood="eager" data-jiro-look="#censor-devin">
+    <section id="ditch" data-jiro-comment="I censored them myself. Professional courtesy." data-jiro-anchor="#callin-logo" data-jiro-merge="#callin-logo">
       <div class="ditch__copy">
         <h2><span>Ditch <span id="censor-devin">D*vin</span>.</span><span>Forget F*ctory.</span><span>Stop slopping around.</span></h2>
         <p>Jiro is the AI engineer that knows your style and proactively provides feedback. No markup, no lock-in.</p>
       </div>
       <div class="callin">
         <span class="label">&gt;_ Call him in</span>
-        <img src="jiro-v3.svg" alt="Jiro, a pixel speech-bubble mascot with a terminal-prompt face" width="496" height="448">
+        <img id="callin-logo" src="jiro-v3.svg" alt="Jiro, a pixel speech-bubble mascot with a terminal-prompt face" width="496" height="448">
         <span class="tag">@jirobot</span>
       </div>
     </section>
 
-    <section id="video" data-jiro-comment="Fewer lines. Same fix. You&#39;re welcome." data-jiro-look="#video-frame">
+    <section id="video" data-jiro-comment="Fewer lines. Same fix. You&#39;re welcome." data-jiro-anchor="#jiro-video">
+      <span class="jiro-rest" id="jiro-video" aria-hidden="true"></span>
       <p class="video__quote">Most agents optimize for output, Jiro optimizes for the change you would have made yourself, <em>on a good day.</em></p>
       <div id="video-frame" role="img" aria-label="Video placeholder: same task, a regular agent changed 171 files with 12,659 additions; Jiro changed 23 files with 1,412 additions">
         <div class="vf__bar"><strong>Same task. A focused diff.</strong><span class="label label--light">Video · 1:12</span></div>
@@ -549,7 +568,8 @@
       </div>
     </section>
 
-    <section id="pillars" data-jiro-comment="The cheapest bug is the one I flag before the PR.">
+    <section id="pillars" data-jiro-comment="The cheapest bug is the one I flag before the PR." data-jiro-anchor="#jiro-pillars">
+      <span class="jiro-rest" id="jiro-pillars" aria-hidden="true"></span>
       <article class="pillar">
         <span class="pillar__n">01</span>
         <h3>Quality over volume</h3>
@@ -567,7 +587,8 @@
       </article>
     </section>
 
-    <section id="how" data-jiro-comment="Plain words are fine. I&#39;ll ask if it&#39;s unclear.">
+    <section id="how" data-jiro-comment="Plain words are fine. I&#39;ll ask if it&#39;s unclear." data-jiro-anchor="#jiro-how">
+      <span class="jiro-rest" id="jiro-how" aria-hidden="true"></span>
       <div class="how__panel">
         <span class="label label--salmon">/ How he works</span>
         <h2>Jiro is driven by a passion for high-quality work.</h2>
@@ -600,7 +621,8 @@
       </div>
     </section>
 
-    <section id="pricing" data-jiro-comment="Thirty days on the house. Pull up a stool?" data-jiro-ask="Yes please" data-jiro-action="#email" data-jiro-anchor="#pricing-title">
+    <section id="pricing" data-jiro-comment="Thirty days on the house. Pull up a stool?" data-jiro-ask="Yes please" data-jiro-action="#email" data-jiro-anchor="#jiro-pricing">
+      <span class="jiro-rest" id="jiro-pricing" aria-hidden="true"></span>
       <div class="sec-head sec-head--perch">
         <span class="label">/ Pricing</span>
         <h2 class="h-sec" id="pricing-title">Not market price</h2>
@@ -631,7 +653,8 @@
       <p class="footnote">Bring your own model subscription. No token markup. Agents sleep when idle. Need more? Talk to us about Enterprise.</p>
     </section>
 
-    <section id="bakeoff" data-jiro-comment="The green column is mine. Biased, but sourced." data-jiro-look="#col-jiro">
+    <section id="bakeoff" data-jiro-comment="The green column is mine. Biased, but sourced." data-jiro-anchor="#jiro-bakeoff">
+      <span class="jiro-rest" id="jiro-bakeoff" aria-hidden="true"></span>
       <div class="sec-head">
         <span class="label">/ Compare</span>
         <h2 class="h-sec">Cloud Agent Bakeoff.</h2>
@@ -695,7 +718,8 @@
       <p class="footnote">Competitor pricing from public pages, October 2026.</p>
     </section>
 
-    <section id="faq" data-jiro-comment="Yes, you can bring your current subscription.">
+    <section id="faq" data-jiro-comment="Yes, you can bring your current subscription." data-jiro-anchor="#reserve-jiro-logo" data-jiro-mobile-anchor="#jiro-faq" data-jiro-merge="#reserve-jiro-logo">
+      <span class="jiro-rest" id="jiro-faq" aria-hidden="true"></span>
       <div class="faq__list">
         <span class="label">/ FAQ</span>
         <details open>
@@ -740,7 +764,7 @@
           <input id="email" type="email" placeholder="you@company.com" autocomplete="email">
           <button class="btn btn--salmon" type="submit"><span>Reserve a seat</span><span aria-hidden="true">→</span></button>
         </form>
-        <span class="reserve__seal" aria-hidden="true"><img src="jiro-v3.svg" alt=""></span>
+        <span class="reserve__seal" aria-hidden="true"><img id="reserve-jiro-logo" src="jiro-v3.svg" alt=""></span>
       </aside>
     </section>
 
