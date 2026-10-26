@@ -37,3 +37,9 @@ Rebuilds 4-24s around three claims; the phone ending (24.3s on) is unchanged fro
 - 19.8s Less code: PR #412 diff is almost all red with two green lines, +38 −1,412.
 
 Render with `template21.html` / `render21.mjs`.
+
+## v22: Martin's launch edits
+
+v21 with: Jiro's opener now reads "No maps, no docs, and your agents keep double dipping work in payments/." then "Let me fix that first." on its own line; "You" label on the left like Jiro's; your line is "Go for it, Jiro."; Priya's CLI line is "Jiro, but make sure you keep tests in the root folder."; the lanes beat (15.6s) is now an agent control panel where Jiro, as lead, wires four workers on different models (Claude Code · Opus, Codex · GPT, Gemini CLI · Gemini, OpenCode · GLM) into their own folders and they finish in parallel; the PR #412 beat drops the green check and instead bounces and highlights +38 −1,412; the phone leaves with a 3D lift, tilt and arc (with a moving highlight and light motion blur) instead of a flat turn. Still 31.4s at 1200×960.
+
+Render: `node build.mjs template22.html index22.html && OUT=v22-video.mp4 node render22.mjs --w=1200 --h=960 --fps=60`, then `node render22.mjs --w=1200 --h=960 --cues=1 && node sfx.mjs` and mux `v22-video.mp4` with `sfx.wav`. Needs `npm i playwright ffmpeg-static lucide-static @fontsource/ibm-plex-mono @fontsource/inter @fontsource/lato` and `bash brand/fonts.sh`.
