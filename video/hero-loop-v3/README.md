@@ -49,3 +49,7 @@ Render: `node build.mjs template22.html index22.html && OUT=v22-video.mp4 node r
 v22 with the same story, slowed down: `template23.html` maps the v22 story timeline onto a 46.0s real timeline through `KNOTS` (piecewise-linear story↔real pairs). Typing gets the biggest stretch (Jiro's opener ~30 chars/s, "Go for it, Jiro." ~13 chars/s, Priya's CLI line ~27 chars/s, the 4:31 AM fix message ~36 chars/s), and every shot holds roughly 1.3-2x longer so lines can be read before the cut. SFX cues are mapped through the same knots. 46.0s at 1200×960.
 
 Render: `node build.mjs template23.html index23.html && OUT=v23-video.mp4 node render23.mjs --w=1200 --h=960 --fps=60`, then `node render23.mjs --w=1200 --h=960 --cues=1 && node sfx.mjs` and mux `v23-video.mp4` with `sfx.wav`.
+
+## v24: real text instead of blur
+
+v23 with the blurred placeholder lines replaced by sharp, readable ones. In the scan shot (about 4.6-6.8s), two rows land with checks as the file counter runs: "Mapped 9 modules and 41 cross-imports" and "Read 6 months of PRs: 37 touched `payments/`". In the finding shot, Jiro's earlier message is now a dimmed but sharp line: "Read 1,284 files and 6 months of PRs. 3 agent branches edited the same refund code." Still 46.0s. Render as v23 with `template24.html` / `render24.mjs`.
