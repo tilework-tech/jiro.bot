@@ -53,3 +53,13 @@ Render: `node build.mjs template23.html index23.html && OUT=v23-video.mp4 node r
 ## v24: real text instead of blur
 
 v23 with the blurred placeholder lines replaced by sharp, readable ones. In the scan shot (about 4.6-6.8s), two rows land with checks as the file counter runs: "Mapped 9 modules and 41 cross-imports" and "Read 6 months of PRs: 37 touched `payments/`". In the finding shot, Jiro's earlier message is now a dimmed but sharp line: "Read 1,284 files and 6 months of PRs. 3 agent branches edited the same refund code." Still 46.0s. Render as v23 with `template24.html` / `render24.mjs`.
+
+## v25: new Jiro art, Beauty-corp, moodboard moves
+
+v24 with:
+- Mascot: Maddy's `jiro-working_V4.png` (kept as `jiro-working_V4-source.png`) replaces the pixel bubble everywhere. `jiro-v4.png` is the keyed-out avatar (256px); `jiro-v4-body.png` is the same art with the face painted out (720px), and the face is redrawn as an inline SVG on the source art's 25px pixel grid so it can animate.
+- Repo name `acme/shop` is now `beauty-corp/shop`.
+- Moves from the scroll-buddy moodboards (jiro.bot PR #22, `prototypes/scroll-buddy/moodboard/`, Martin's picks A2, A4, C1, C3, C5): in the hook Jiro pops in, thinks with dots, glances down at the rolling words, then does an eager double-hop on "Jiro." with a blinking cursor; throughout he idles with the game-style hover (bob, tilt, squash, shrinking shadow). In the agent panel the lead Jiro shows thinking dots while "Splitting work…", then glances toward the workers.
+- Mascots on dark panels get a thin light rim (`.on-dark`) so the dark green outline stays visible.
+
+Render as v23 with `template25.html` / `render25.mjs`.
