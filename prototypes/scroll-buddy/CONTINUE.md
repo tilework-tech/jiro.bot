@@ -1,6 +1,8 @@
 # Continue the Jiro scroll buddy
 
-This is the handoff after the 2026-10-27 session (v6). Read `docs.md` for architecture and the current behavior contract. Work is in `tilework-tech/jiro.bot`, branch `feat/jiro-scroll-buddy`, based on `e4b830d`. The branch is a prototype and is not deployed.
+Start with `HANDOFF.md`: it is the primary entry point (links, how to run, movement catalogue, placement, comment spots, open items). This file holds the engineering notes from the 2026-10-27 session (v6); `docs.md` is the architecture and behavior contract.
+
+Also new in this session: `versions/v5/` and `versions/v6/` are frozen, self-contained snapshots (served at `/versions/v5/` and `/versions/v6/` on port 4320); the folder root stays the editable latest and is what the tests target. `moodboard/handoff.html` (served at `/moodboard/handoff.html`) is a generated board of every v6 movement with frequency, placement map and comment spots; it inlines the art and comment rows, so regenerate or hand-edit it when `jiro-buddy.js` or `index.html` change. Work is in `tilework-tech/jiro.bot`, branch `feat/jiro-scroll-buddy`, based on `e4b830d`. The branch is a prototype and is not deployed.
 
 ## What Martin asked for (v6, 2026-10-27)
 
@@ -22,7 +24,7 @@ setsid -f nohup python3 -m http.server 4320 --directory prototypes/scroll-buddy 
 setsid -f nohup python3 prototypes/scroll-buddy/moodboard/serve.py --port 4330 > /tmp/jiro-motion-board.log 2>&1 < /dev/null
 ```
 
-Verify both local ports using the hostname from `NORI_SESSION_URL` as the Host header. For example, set `preview_host=${NORI_SESSION_URL#https://}` and use `curl --connect-to "${preview_host}:80:127.0.0.1:4320" "http://${preview_host}/"`; repeat for port 4330 and `/motion.html`. Resolve a fresh timestamp with `date +%s` and give Martin session URLs for `/port/4320/?t=...` and `/port/4330/motion.html?t=...` (the original board is `/port/4330/index.html`). The old preview URLs die with their session. In Slack, wrap resolved URLs in short `<url|label>` links.
+Verify both local ports using the hostname from `NORI_SESSION_URL` as the Host header. For example, set `preview_host=${NORI_SESSION_URL#https://}` and use `curl --connect-to "${preview_host}:80:127.0.0.1:4320" "http://${preview_host}/"`; repeat for port 4330 and `/motion.html`. Resolve a fresh timestamp with `date +%s` and give Martin session URLs for `/port/4320/?t=...`, `/port/4320/moodboard/handoff.html?t=...` and, when comparing, `/port/4320/versions/v5/?t=...`. Boards that need Save (star/note picks) go through port 4330, e.g. `/port/4330/motion.html` or the original board `/port/4330/index.html`. The old preview URLs die with their session. In Slack, wrap resolved URLs in short `<url|label>` links.
 
 ## Verified in the 2026-10-27 session
 

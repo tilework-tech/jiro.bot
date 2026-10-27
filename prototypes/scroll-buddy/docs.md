@@ -6,7 +6,8 @@ Path: @/prototypes/scroll-buddy
 
 - A working, scrollable prototype of "Jiro the scroll buddy": a small mascot that rests in blank space beside landing-page sections, travels with the reader, makes one short remark per scroll pass, looks at nearby things while resting, and can be dragged and pinned anywhere on screen.
 - Status on 2026-10-27 (v6): on `feat/jiro-scroll-buddy` in `tilework-tech/jiro.bot`, not merged and not deployed. [index.html](index.html) is a hand-built reconstruction of the landing page, not Maddy's final HTML; her template ZIP and the `restore-copy-editor` bundle have not been received.
-- [jiro-buddy.js](jiro-buddy.js) and [jiro-buddy.css](jiro-buddy.css) are the dependency-free runtime meant to be transplanted onto the real page. Everything else here (mockup, moodboards, QA script, older demos) supports designing and checking it. [CONTINUE.md](CONTINUE.md) is the handoff for the next session.
+- [jiro-buddy.js](jiro-buddy.js) and [jiro-buddy.css](jiro-buddy.css) are the dependency-free runtime meant to be transplanted onto the real page. The folder root is the editable working copy (currently identical to v6); [versions/](versions/) holds frozen, self-contained snapshots of earlier versions. Everything else (moodboards, QA script, older demos) supports designing and checking it.
+- [HANDOFF.md](HANDOFF.md) is the primary entry point for anyone continuing the project (links, how to run, movement catalogue, open items); [CONTINUE.md](CONTINUE.md) holds session-to-session engineering notes.
 
 ### How it fits into the larger codebase
 
@@ -78,6 +79,16 @@ jiro-buddy.js ── IntersectionObserver + scroll ──> nearestToCenter() ─
 | `data-jiro-action` | Target scrolled to and focused on Yes. |
 
 - v4 attributes (`data-jiro-hovers`, `data-jiro-look`, `data-jiro-mood`, `data-jiro-click`) are inactive. [stitched/](stitched/) is a legacy screenshot demo that still uses them; its markup tests remain in the suite. [share/](share/) video and stills predate v6.
+- Layout and how to open things (serve the folder with `python3 -m http.server 4320 --directory prototypes/scroll-buddy` from the repo root):
+
+| Path | What it is | URL on port 4320 |
+|---|---|---|
+| root `index.html` + buddy files | Working copy, the only files the tests and QA script target | `/` |
+| [versions/v6/](versions/v6/), [versions/v5/](versions/v5/) | Frozen copies of `index.html`, `jiro-buddy.js`, `jiro-buddy.css`, `jiro-v3.svg` from commits `025ab6b` (v6) and `2b66db4` (v5). Never edited; add a new `versions/vN/` when a version ships to Martin | `/versions/v6/`, `/versions/v5/` |
+| [moodboard/handoff.html](moodboard/handoff.html) | Generated, self-contained board of every v6 movement (big, small, idle hovers, faces and looks, talking, clicks and controls) with frequency/where chips, a per-pass budget, a placement map and the comment-spot table | `/moodboard/handoff.html` |
+| other [moodboard/](moodboard/) pages | Design history boards (see below) | `/moodboard/<name>.html` |
+
+- [moodboard/handoff.html](moodboard/handoff.html) inlines the mascot art paths from [jiro-buddy.js](jiro-buddy.js) and the comment rows from [index.html](index.html) at generation time. It does not read them live, so it goes stale when either changes and must be regenerated or hand-edited.
 - Moodboards in [moodboard/](moodboard/) are design history: the original 5 by 5 board ([moodboard/index.html](moodboard/index.html), source of the v6 picks A2-A5, B3, B5, C4, D4), earlier interaction/expression boards, and the motion board [moodboard/motion.html](moodboard/motion.html) whose low/medium/high examples no longer match v6 exactly (glide and spring arrival are not live). Run them through [moodboard/serve.py](moodboard/serve.py) so Save works. Only `picks-motion.json` is tracked; picks for the other boards are gitignored.
 - Running the gates (from the repo root unless noted):
 
