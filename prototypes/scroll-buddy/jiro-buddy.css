@@ -58,8 +58,17 @@
   margin: 0;
   border: 0;
   background: none;
-  cursor: pointer;
+  cursor: grab;
+  touch-action: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+.jiro-buddy--pinned {
+  position: fixed;
+}
+
+.jiro-buddy--held .jiro-buddy__mascot {
+  cursor: grabbing;
 }
 
 .jiro-buddy__mascot:focus-visible {
@@ -114,6 +123,7 @@
   width: 100%;
   height: 100%;
   overflow: visible;
+  transform-origin: 50% 100%;
 }
 
 .jiro-buddy__shell {
@@ -133,6 +143,7 @@
 [data-jiro-face="glance"] .jiro-buddy__cursor,
 [data-jiro-face="eyes"] .jiro-buddy__face-eyes,
 [data-jiro-face="dots"] .jiro-buddy__face-dots,
+[data-jiro-face="happy"] .jiro-buddy__face-happy,
 [data-jiro-face="sleepy"] .jiro-buddy__face-sleepy {
   display: inline;
 }
@@ -141,7 +152,7 @@
   transform: translate(var(--jiro-gx, 0), var(--jiro-gy, 0));
 }
 
-[data-jiro-state="sleepy"] .jiro-buddy__art {
+[data-jiro-motion="sleepy"] .jiro-buddy__art {
   opacity: .82;
 }
 
@@ -155,7 +166,7 @@
   letter-spacing: 3px;
 }
 
-[data-jiro-state="sleepy"] .jiro-buddy__zzz {
+[data-jiro-motion="sleepy"] .jiro-buddy__zzz {
   display: block;
 }
 
@@ -173,9 +184,8 @@
 }
 
 .jiro-look-target {
-  outline: 3px solid #3cf06e;
+  outline: 2px dashed #fb5e45;
   outline-offset: 4px;
-  box-shadow: 0 0 0 4px #173d2b;
 }
 
 .jiro-buddy__shadow {
@@ -451,16 +461,20 @@
     transition: transform .22s cubic-bezier(.3, .7, .4, 1);
   }
 
-  [data-jiro-state="sleepy"] .jiro-buddy__bob {
-    animation-duration: 5.2s;
-  }
-
-  [data-jiro-state="sleepy"] .jiro-buddy__zzz {
+  [data-jiro-motion="sleepy"] .jiro-buddy__zzz {
     animation: jiro-buddy-zzz 2.8s ease-out infinite;
   }
 
-  [data-jiro-state="eager"] .jiro-buddy__bob {
-    animation-duration: 1.1s;
+  .jiro-buddy__art {
+    transition: transform .28s cubic-bezier(.3, 1.4, .5, 1);
+  }
+
+  [data-jiro-talking] .jiro-buddy__art {
+    transform: scale(1.05, 1.12);
+  }
+
+  .jiro-buddy--held .jiro-buddy__tilt {
+    animation: jiro-buddy-dangle .42s ease-in-out infinite alternate;
   }
 
   .jiro-buddy--puff .jiro-buddy__puff {
@@ -527,6 +541,11 @@
   75% { transform: scale(.9975, 1.005); }
 }
 
+@keyframes jiro-buddy-dangle {
+  0% { transform: rotate(-7deg); }
+  100% { transform: rotate(7deg); }
+}
+
 @keyframes jiro-buddy-shadow {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(.9); opacity: .78; }
@@ -554,8 +573,8 @@
 }
 
 @keyframes jiro-buddy-look {
-  0%, 100% { outline-color: #3cf06e; }
-  50% { outline-color: rgba(60, 240, 110, .35); }
+  0%, 100% { outline-color: #fb5e45; }
+  50% { outline-color: rgba(251, 94, 69, .3); }
 }
 
 @keyframes jiro-buddy-blink {

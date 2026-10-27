@@ -1,18 +1,17 @@
-# Continue the Jiro scroll buddy tomorrow
+# Continue the Jiro scroll buddy
 
-This is the handoff for the 2026-10-26 session. Read `docs.md` for architecture and the current behavior contract. Work is in `tilework-tech/jiro.bot`, branch `feat/jiro-scroll-buddy`, based on `e4b830d`. The branch is a prototype and is not deployed.
+This is the handoff after the 2026-10-27 session (v6). Read `docs.md` for architecture and the current behavior contract. Work is in `tilework-tech/jiro.bot`, branch `feat/jiro-scroll-buddy`, based on `e4b830d`. The branch is a prototype and is not deployed.
 
-## What Martin asked for, in order
+## What Martin asked for (v6, 2026-10-27)
 
-1. Restore the playful but calm hover and keep the avatar away from the center and readable headings.
-2. Use open monochrome space; sometimes dock into existing Jiro logos instead of standing beside them.
-3. Follow the section the reader actually reaches, including a fast jump to the bottom.
-4. Peek slowly from the left or right edge at least once, then land with a small joyful bounce.
-5. Draw a new board with low, medium, and high movement groups.
-6. Bake in a direction-pass rule: one bigger move, two smaller moves, then game idle as the default.
-7. Save the work in git so it can be resumed tomorrow.
+Martin picked A2-A5, B3, B5, C4 and D4 from the original moodboard (`moodboard/index.html`) and asked for:
 
-The resulting page is silent until Jiro is clicked. The original mockup layout remains intact apart from marker positions and making the FAQ reserve seal visible on narrow screens for docking. Motion remains restrained: the flight arc is capped, idle bob is 3.5 px, and local small gestures are 5 or 7 px.
+1. Speech back, but sparse: silent on load, exactly one line per scroll direction pass about the section Jiro sits on, never repeating a section, closing on its own. After 4 "up and down" passes he goes quiet until clicked; clicking always talks.
+2. Idle variety (A2-A5): game, sleepy, spring and eager idles picked at random per landing, with the bouncy ones rare.
+3. Calmer travel: no big glide or big spring. Keep the one slow edge peek (B3), made slower and longer at the edge, plus small scoots and hops.
+4. He looks at stuff (B5) and changes expression (C4) while resting.
+5. He grows into the speech bubble (D4).
+6. Drag and drop: "exactly where you drop it", on desktop and phone, and he stays there.
 
 ## Start and link the previews
 
@@ -23,35 +22,35 @@ setsid -f nohup python3 -m http.server 4320 --directory prototypes/scroll-buddy 
 setsid -f nohup python3 prototypes/scroll-buddy/moodboard/serve.py --port 4330 > /tmp/jiro-motion-board.log 2>&1 < /dev/null
 ```
 
-Verify both local ports using the hostname from `NORI_SESSION_URL` as the Host header. For example, set `preview_host=${NORI_SESSION_URL#https://}` and use `curl --connect-to "${preview_host}:80:127.0.0.1:4320" "http://${preview_host}/"`; repeat for port 4330 and `/motion.html`. Resolve a fresh timestamp with `date +%s` and give Martin session URLs for `/port/4320/?t=...` and `/port/4330/motion.html?t=...`. The old preview URLs die with their session. In Slack, wrap resolved URLs in short `<url|label>` links.
+Verify both local ports using the hostname from `NORI_SESSION_URL` as the Host header. For example, set `preview_host=${NORI_SESSION_URL#https://}` and use `curl --connect-to "${preview_host}:80:127.0.0.1:4320" "http://${preview_host}/"`; repeat for port 4330 and `/motion.html`. Resolve a fresh timestamp with `date +%s` and give Martin session URLs for `/port/4320/?t=...` and `/port/4330/motion.html?t=...` (the original board is `/port/4330/index.html`). The old preview URLs die with their session. In Slack, wrap resolved URLs in short `<url|label>` links.
 
-## Verified in the 2026-10-26 session
+## Verified in the 2026-10-27 session
 
-- `uv run --no-project --with playwright python qa/check_motion.py` passed against the session's headed Chrome with no page errors.
-- A fast down scroll produced `large-peek`, then `small-scoot`, then `small-hop`. A fast up scroll produced `large-spring`, then `small-scoot`, then `small-hop`. Both ended idle and silent.
-- The browser check found no mascot collision with heading glyphs in hero, pricing, or bakeoff at 1440 px and 390 px.
-- The new board rendered three groups and nine tiles with no broken mascot images. Star and note saving persisted through a reload via `serve.py`. The test pick was cleared afterward.
-- `node --check jiro-buddy.js` and `git diff --check` passed. The two buddy assets total about 10.5 KB gzip.
+- `uv run --no-project --with playwright python -m unittest tests/test_scroll_buddy.py` from the repo root: 31 tests, all pass (headless system Chrome, about 8 minutes). This replaced the v4 suite; it is now a valid gate.
+- `qa/check_motion.py` updated for v6: each fast pass shows only `large-peek`, `small-*` or `game-idle` moves, at least two small ones, ends in one of the four idle styles, and the bubble is closed again after 13 s. Heading clearance checks at 1440 px and 390 px are unchanged.
+- The two buddy files are 12,244 bytes gzip against the 12,288 budget.
 
 ## Specific implementation details to preserve
 
-- `nearestToCenter()` scans all commented sections. Do not restore the old visible-only selection, which lagged after fast jumps.
-- `setActive()` waits 450 ms for a jump of two or more section indices and 1200 ms for nearby transitions. `settle()` also honors the 2000 ms dwell. This keeps fast catch-up without making nearby movement erratic.
-- `updateDirection()` accumulates a 60 px reversal before resetting the large/small budget. `travelTo()` chooses the next beat. `fillJourneyAtRest()` completes the two small gestures if the user stops at the destination. Pending timers are canceled by `hideBubble()` when the section changes.
-- The one offscreen edge peek is an exception to the direction quota. It can produce a second large beat in a pass if the quota's first large move already happened. This preserves Martin's earlier request to see a peek at least once on the page.
-- `data-jiro-motion="game"` is constant in the live page. The calm, sleepy, and other low-motion examples in the board are options, not random live idle modes. High and small arrival variants are randomized.
-- `spotFor()` starts at each section marker, rejects text overlap when a clear visible alternate exists, and excludes the wide-screen center band. Ditch and FAQ use `data-jiro-merge`. `merge()` checks center alignment before hiding the original image.
-- CSS idle motion is layered on nested spans inside the mascot, while travel uses Web Animations API on the outer aside or inner hop span. Reduced motion has no CSS animation and `play()` resolves immediately.
-- The bubble only appears on mascot click. Do not reintroduce scroll-triggered or hover-triggered comments without Martin's explicit change of direction.
+- Speech: `passLine()` fires about 900 ms after a landing, once per pass (`journey.spoke`), skips sections in the `said` set, and does nothing while quiet, moving, dragging or already speaking. Auto-close is 4500 ms, or 9000 ms with an ask button. A pass is "long" when it travels at least 50% of the scrollable height; 4 long passes set quiet. Click resets quiet, the long-pass count and `said`, and speaks about `spotSection()`.
+- `hideBubble()` cancels timers then calls `closeBubble()`; `closeBubble()` only hides visuals. Auto-close must use `closeBubble()` so the pass's pending small gestures keep playing.
+- Motion: `travelTo()` only chooses the edge peek (once per page, wide screens, previous spot offscreen; 2400 ms with keyframes at 0.3 and 0.8), a small gesture (max two per pass, 7 px scoot or 5 px hop), or a quiet `game-idle` jump. `fillJourneyAtRest()` plays remaining small beats at rest and is skipped when pinned.
+- Idle: `pickIdle()` picks from game (x2), sleepy, spring, eager on every landing; spring/eager at most once per pass (`journey.bouncy`). Sleepy visuals are keyed on `data-jiro-motion="sleepy"`, not `data-jiro-state`. The existing subdued keyframes are reused (spring bob 6 px).
+- Rest loop: `rest()` has its own `restTimer`, 5 s beats alternating `glance()` (3 px face nudge toward a nearby element within 520 px, `.jiro-look-target` for 1.3 s, no layout change) and `express()` (`^_^` happy or `o_o` eyes with a small squash). Paused while moving, dragging or speaking; off under reduced motion. Landing shows `^_^` for 900 ms.
+- Talking: `data-jiro-talking` scales the art (1.05, 1.12) with `transform-origin` at the bottom. Reduced motion has no stretch.
+- Drag: Pointer Events with pointer capture, 5 px threshold, `touch-action: none` on the mascot only. `pin()` clamps to the viewport and switches to `.jiro-buddy--pinned` (`position: fixed`); the pin is stored in `sessionStorage["jiro-buddy-pin"]`. Pinned Jiro skips travel, peek, docking and rest-spot gestures but still gets one pass line about the section under his centre. Arrow keys (24 px, Shift 96 px) pin without scrolling.
+- Unchanged from v5 and still important: `nearestToCenter()` scans all sections (fast jumps target the right one), the 450 ms / 1200 ms / 2000 ms settle timing, `spotFor()` text and heading clearance with the wide-screen centre band excluded, and `merge()` only docking on centre alignment.
 
 ## Open items
 
-- The older `tests/test_scroll_buddy.py` assumes v4 automatic comments and center placement. It is not a valid gate for this version until updated. The new `qa/check_motion.py` tests the current rule.
-- The old share video and screenshots are from earlier flows. Re-record only after Martin signs off on the current motion.
-- The original Maddy ZIP and copy editor page were not available here. Porting to that real page remains undone.
-- The text clearance fallback samples candidate positions. If no clear visible position exists, it retains the planned anchor, potentially offscreen. Check new page widths, translated copy, and changed layouts visually.
-- A very short pass interrupted by a quick direction reversal may not have time to play all three beats. The new direction cancels pending moves, as requested for responsive scrolling.
-- Picks saved in `moodboard/picks-motion.json` are tracked by git. If Martin adds picks tomorrow, read them before changing the animation, then commit and push the updated file to make them durable across machines.
+- Maddy's template ZIP has still not been received; the page is still the hand-built mockup. Porting the two buddy files and section attributes to the real page remains undone, and every resting point needs checking at desktop and phone widths after the port.
+- "4 up and down" was interpreted as 4 long passes, each direction counting once (so two full round trips). Confirm with Martin.
+- There is no way to un-pin Jiro except clearing the tab session; dragging again just re-pins. Ask Martin whether he wants a reset (for example double-click or the close menu).
+- The gzip budget is nearly full (12,244 of 12,288 bytes). Any new behaviour needs trimming elsewhere or a deliberate budget change.
+- The `share/` video and screenshots are pre-v6. Re-record only after Martin signs off.
+- `moodboard/motion.html` still presents glide and spring arrival as live high-motion options; they are no longer in the runtime.
+- Moodboard picks for the index, interactions and expressions boards are gitignored (`picks*.json`); only `picks-motion.json` is tracked. If Martin saves picks on those boards, copy them into the handoff or commit them under a tracked name before the session ends.
+- The stitched page's auto-greeting test was dropped (`stitched/` is legacy); its three markup tests remain.
 
 ## Git and production boundary
 

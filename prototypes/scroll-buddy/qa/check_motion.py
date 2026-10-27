@@ -31,13 +31,13 @@ def check_pass(page, direction):
         "direction => window.scrollTo({top: direction === 'down' ? document.documentElement.scrollHeight : 0, behavior: 'instant'})",
         direction,
     )
-    page.wait_for_timeout(8300)
+    page.wait_for_timeout(13000)
     result = snapshot(page)
     labels = [event["move"] for event in result["moves"]]
     assert result["direction"] == direction, result
-    assert sum(label.startswith("large-") for label in labels) >= 1, result
+    assert all(label in ("large-peek", "game-idle") or label.startswith("small-") for label in labels), result
     assert sum(label.startswith("small-") for label in labels) >= 2, result
-    assert result["idle"] == "game" and result["state"] == "idle", result
+    assert result["idle"] in ("game", "spring", "eager", "sleepy") and result["state"] == "idle", result
     assert result["bubbleHidden"], result
     print(direction, json.dumps(result))
 
@@ -102,7 +102,7 @@ def main():
             check_heading_clearance(page, 1440)
             check_heading_clearance(page, 390)
             assert not errors, errors
-            print("PASS: motion quotas, game idle, silent comments, heading clearance, no page errors")
+            print("PASS: small moves only, idle styles, pass lines closed, heading clearance, no page errors")
         finally:
             page.close()
             browser.close()
