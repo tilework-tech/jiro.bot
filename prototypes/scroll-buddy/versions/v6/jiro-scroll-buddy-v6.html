@@ -1,0 +1,2323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jiro.bot — The tasteful software engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<style>
+.jiro-buddy,
+.jiro-buddy__mascot,
+.jiro-buddy__close,
+.jiro-buddy__bubble,
+.jiro-buddy__text,
+.jiro-buddy__acts button,
+.jiro-buddy__sr {
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  -webkit-appearance: none;
+  appearance: none;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+  text-align: left;
+  min-width: 0;
+  min-height: 0;
+}
+
+.jiro-buddy {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: var(--jiro-buddy-z, 50);
+  display: block;
+  width: max-content;
+  pointer-events: none;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: #141414;
+}
+
+.jiro-buddy[hidden],
+.jiro-buddy__bubble[hidden],
+.jiro-buddy__acts[hidden] {
+  display: none;
+}
+
+.jiro-buddy__mascot,
+.jiro-buddy__close,
+.jiro-buddy__bubble {
+  pointer-events: auto;
+}
+
+.jiro-buddy__mascot {
+  flex: none;
+  width: 92px;
+  height: 90px;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  cursor: grab;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.jiro-buddy--pinned {
+  position: fixed;
+}
+
+.jiro-buddy--held .jiro-buddy__mascot {
+  cursor: grabbing;
+}
+
+.jiro-buddy__mascot:focus-visible {
+  outline: 3px solid #3cf06e;
+  outline-offset: 4px;
+}
+
+.jiro-buddy__figure {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.jiro-buddy[data-jiro-merged="true"] .jiro-buddy__figure {
+  transform: scale(var(--jiro-merge-scale, 2.2));
+  transform-origin: 50% 50%;
+  transition: transform 380ms ease-out;
+}
+
+.jiro-buddy__bob,
+.jiro-buddy__drift,
+.jiro-buddy__tilt,
+.jiro-buddy__squash,
+.jiro-buddy__hop {
+  display: block;
+  width: 100%;
+}
+
+.jiro-buddy__bob {
+  flex: none;
+  aspect-ratio: 62 / 56;
+}
+
+.jiro-buddy__drift,
+.jiro-buddy__tilt,
+.jiro-buddy__squash,
+.jiro-buddy__hop {
+  height: 100%;
+}
+
+.jiro-buddy__tilt {
+  transform-origin: 50% 60%;
+}
+
+.jiro-buddy__squash {
+  transform-origin: 50% 100%;
+}
+
+.jiro-buddy__art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transform-origin: 50% 100%;
+}
+
+.jiro-buddy__shell {
+  transform-box: view-box;
+  transform-origin: 31px 27px;
+}
+
+.jiro-buddy__face > * {
+  display: none;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+[data-jiro-face="cursor"] .jiro-buddy__face-cursor,
+[data-jiro-face="cursor"] .jiro-buddy__cursor,
+[data-jiro-face="glance"] .jiro-buddy__face-cursor,
+[data-jiro-face="glance"] .jiro-buddy__cursor,
+[data-jiro-face="eyes"] .jiro-buddy__face-eyes,
+[data-jiro-face="dots"] .jiro-buddy__face-dots,
+[data-jiro-face="happy"] .jiro-buddy__face-happy,
+[data-jiro-face="sleepy"] .jiro-buddy__face-sleepy {
+  display: inline;
+}
+
+[data-jiro-face="glance"] .jiro-buddy__face > * {
+  transform: translate(var(--jiro-gx, 0), var(--jiro-gy, 0));
+}
+
+[data-jiro-motion="sleepy"] .jiro-buddy__art {
+  opacity: .82;
+}
+
+.jiro-buddy__zzz {
+  position: absolute;
+  right: -10px;
+  top: -20px;
+  display: none;
+  color: #173d2b;
+  font: 700 16px/1 ui-monospace, Menlo, monospace;
+  letter-spacing: 3px;
+}
+
+[data-jiro-motion="sleepy"] .jiro-buddy__zzz {
+  display: block;
+}
+
+.jiro-buddy__puff {
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  opacity: 0;
+  background: #d9d3c3;
+  box-shadow: -22px -2px 0 #d9d3c3, -14px -6px 0 1px #e4e0d4, 14px -6px 0 1px #e4e0d4, 22px -2px 0 #d9d3c3;
+  pointer-events: none;
+}
+
+.jiro-look-target {
+  outline: 2px dashed #fb5e45;
+  outline-offset: 4px;
+}
+
+.jiro-buddy__shadow {
+  display: block;
+  flex: none;
+  width: 56%;
+  height: 4px;
+  margin: 2px auto 0;
+  background: #e4e0d4;
+  transform-origin: 50% 50%;
+}
+
+.jiro-buddy__bubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 14px);
+  translate: calc(-50% + var(--jiro-dx, 0px)) 0;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: 340px;
+  min-height: 48px;
+  padding: 12px 16px;
+  background: #f8f6f0;
+  border: 3px solid #173d2b;
+  border-radius: 10px;
+  box-shadow: 0 3px 0 rgba(23, 61, 43, .12);
+  color: #173d2b;
+  font-size: 15.5px;
+  line-height: 1.4;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+.jiro-buddy__text::after {
+  content: attr(data-rest);
+  visibility: hidden;
+}
+
+.jiro-buddy__acts.jiro-buddy--waiting {
+  visibility: hidden;
+}
+
+.jiro-buddy__acts {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.jiro-buddy__acts button {
+  padding: 7px 12px;
+  border: 2px solid #173d2b;
+  background: transparent;
+  color: #173d2b;
+  font: 600 12px/1 ui-monospace, "Geist Mono", Menlo, monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform .12s ease-out, box-shadow .12s ease-out;
+}
+
+.jiro-buddy__acts .jiro-buddy__yes {
+  background: #f35b45;
+  border-color: #f35b45;
+  color: #fff;
+}
+
+.jiro-buddy__acts button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 #173d2b;
+}
+
+.jiro-buddy__acts button:focus-visible {
+  outline: 3px solid #3cf06e;
+  outline-offset: 2px;
+}
+
+.jiro-buddy__bubble::before,
+.jiro-buddy__bubble::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+
+.jiro-buddy__bubble::before {
+  left: calc(50% - var(--jiro-dx, 0px) - 9px);
+  bottom: -14px;
+  border-width: 14px 9px 0;
+  border-color: #173d2b transparent transparent;
+}
+
+.jiro-buddy__bubble::after {
+  left: calc(50% - var(--jiro-dx, 0px) - 5px);
+  bottom: -9px;
+  border-width: 9px 5px 0;
+  border-color: #f8f6f0 transparent transparent;
+}
+
+.jiro-buddy--below .jiro-buddy__bubble {
+  top: calc(100% + 14px);
+  bottom: auto;
+}
+
+.jiro-buddy--below .jiro-buddy__bubble::before {
+  top: -14px;
+  bottom: auto;
+  border-width: 0 9px 14px;
+  border-color: transparent transparent #173d2b;
+}
+
+.jiro-buddy--below .jiro-buddy__bubble::after {
+  top: -9px;
+  bottom: auto;
+  border-width: 0 5px 9px;
+  border-color: transparent transparent #f8f6f0;
+}
+
+.jiro-buddy__close {
+  position: absolute;
+  left: -10px;
+  bottom: 78px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  background: #f8f6f0;
+  border: 2px solid #173d2b;
+  border-radius: 50%;
+  color: #173d2b;
+  font: 600 14px/1 ui-sans-serif, system-ui, sans-serif;
+  cursor: pointer;
+  opacity: .35;
+  transition: opacity .15s;
+}
+
+.jiro-buddy:hover .jiro-buddy__close,
+.jiro-buddy__close:focus-visible {
+  opacity: 1;
+}
+
+.jiro-buddy__close:focus-visible {
+  outline: 3px solid #3cf06e;
+  outline-offset: 2px;
+}
+
+.jiro-buddy__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+@media (max-width: 767.98px) {
+  .jiro-buddy__mascot {
+    width: 56px;
+    height: 55px;
+  }
+
+  .jiro-buddy__shadow {
+    height: 3px;
+  }
+
+  .jiro-buddy__bubble {
+    max-width: calc(100vw - 32px);
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+
+  .jiro-buddy__close {
+    bottom: 44px;
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .jiro-buddy__bob {
+    animation: jiro-buddy-bob 4.1s ease-in-out infinite;
+  }
+
+  .jiro-buddy__drift {
+    animation: jiro-buddy-drift 5.8s ease-in-out infinite;
+  }
+
+  .jiro-buddy__tilt {
+    animation: jiro-buddy-tilt 6.8s ease-in-out infinite;
+  }
+
+  .jiro-buddy__squash {
+    animation: jiro-buddy-squash 4.1s ease-in-out infinite;
+  }
+
+  .jiro-buddy__shadow {
+    animation: jiro-buddy-shadow 4.1s ease-in-out infinite;
+  }
+
+  [data-jiro-motion="calm"] .jiro-buddy__bob {
+    animation: jiro-buddy-calm 5.3s ease-in-out infinite;
+  }
+
+  [data-jiro-motion="calm"] .jiro-buddy__drift,
+  [data-jiro-motion="calm"] .jiro-buddy__tilt,
+  [data-jiro-motion="calm"] .jiro-buddy__squash {
+    animation: none;
+  }
+
+  [data-jiro-motion="calm"] .jiro-buddy__shadow {
+    animation-duration: 5.3s;
+  }
+
+  [data-jiro-motion="spring"] .jiro-buddy__bob {
+    animation: jiro-buddy-spring 3.5s ease-in-out infinite;
+  }
+
+  [data-jiro-motion="spring"] .jiro-buddy__drift,
+  [data-jiro-motion="spring"] .jiro-buddy__tilt,
+  [data-jiro-motion="spring"] .jiro-buddy__squash {
+    animation: none;
+  }
+
+  [data-jiro-motion="spring"] .jiro-buddy__shadow {
+    animation-duration: 3.5s;
+  }
+
+  [data-jiro-motion="eager"] .jiro-buddy__bob {
+    animation: jiro-buddy-eager 2.7s ease-in-out infinite;
+  }
+
+  [data-jiro-motion="eager"] .jiro-buddy__drift {
+    animation-duration: 3.2s;
+  }
+
+  [data-jiro-motion="eager"] .jiro-buddy__tilt {
+    animation-duration: 3.8s;
+  }
+
+  [data-jiro-motion="eager"] .jiro-buddy__shadow {
+    animation-duration: 2.7s;
+  }
+
+  [data-jiro-motion="sleepy"] .jiro-buddy__bob {
+    animation: jiro-buddy-sleepy 7.3s ease-in-out infinite;
+  }
+
+  [data-jiro-motion="sleepy"] .jiro-buddy__drift,
+  [data-jiro-motion="sleepy"] .jiro-buddy__tilt,
+  [data-jiro-motion="sleepy"] .jiro-buddy__squash {
+    animation: none;
+  }
+
+  [data-jiro-motion="sleepy"] .jiro-buddy__shadow {
+    animation-duration: 7.3s;
+  }
+
+  .jiro-buddy__face-eyes {
+    animation: jiro-buddy-eyes 4.2s infinite;
+  }
+
+  .jiro-buddy__face-dots {
+    animation: jiro-buddy-dot 900ms ease-in-out infinite;
+    animation-delay: calc(var(--i) * 140ms);
+  }
+
+  .jiro-buddy__face > * {
+    transition: transform .22s cubic-bezier(.3, .7, .4, 1);
+  }
+
+  [data-jiro-motion="sleepy"] .jiro-buddy__zzz {
+    animation: jiro-buddy-zzz 2.8s ease-out infinite;
+  }
+
+  .jiro-buddy__art {
+    transition: transform .28s cubic-bezier(.3, 1.4, .5, 1);
+  }
+
+  [data-jiro-talking] .jiro-buddy__art {
+    transform: scale(1.05, 1.12);
+  }
+
+  .jiro-buddy--held .jiro-buddy__tilt {
+    animation: jiro-buddy-dangle .42s ease-in-out infinite alternate;
+  }
+
+  .jiro-buddy--puff .jiro-buddy__puff {
+    animation: jiro-buddy-puff 420ms ease-out;
+  }
+
+  .jiro-look-target {
+    animation: jiro-buddy-look 1.2s ease-in-out infinite;
+  }
+
+  .jiro-buddy__cursor {
+    animation: jiro-buddy-blink 1.06s steps(1, end) infinite;
+  }
+
+  .jiro-buddy__bubble.jiro-buddy--pop {
+    transform-origin: center bottom;
+    animation: jiro-buddy-pop 340ms cubic-bezier(.2, 1.4, .4, 1);
+  }
+}
+
+@keyframes jiro-buddy-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3.5px); }
+}
+
+@keyframes jiro-buddy-calm {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes jiro-buddy-spring {
+  0%, 100% { transform: translateY(0) scale(1.025, .98); }
+  18% { transform: translateY(0) scale(.99, 1.015); }
+  46% { transform: translateY(-6px) scale(1, 1); }
+  74% { transform: translateY(0) scale(1.02, .985); }
+}
+
+@keyframes jiro-buddy-eager {
+  0%, 100% { transform: translateY(0); }
+  38% { transform: translateY(-2.5px); }
+  55% { transform: translateY(0); }
+  70% { transform: translateY(-1.5px); }
+}
+
+@keyframes jiro-buddy-sleepy {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(2px) rotate(-1deg); }
+}
+
+@keyframes jiro-buddy-drift {
+  0%, 100% { transform: translateX(-.75px); }
+  50% { transform: translateX(.75px); }
+}
+
+@keyframes jiro-buddy-tilt {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50% { transform: rotate(1.5deg); }
+}
+
+@keyframes jiro-buddy-squash {
+  0%, 100% { transform: scale(1.01, .985); }
+  25% { transform: scale(.9925, 1.015); }
+  50% { transform: scale(1, 1); }
+  75% { transform: scale(.9975, 1.005); }
+}
+
+@keyframes jiro-buddy-dangle {
+  0% { transform: rotate(-7deg); }
+  100% { transform: rotate(7deg); }
+}
+
+@keyframes jiro-buddy-shadow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(.9); opacity: .78; }
+}
+
+@keyframes jiro-buddy-eyes {
+  0%, 88%, 92%, 95%, 100% { transform: scaleY(1); }
+  90%, 93.5% { transform: scaleY(.15); }
+}
+
+@keyframes jiro-buddy-dot {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-3px); }
+}
+
+@keyframes jiro-buddy-zzz {
+  0% { opacity: 0; transform: translate(0, 6px); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translate(8px, -14px); }
+}
+
+@keyframes jiro-buddy-puff {
+  0% { opacity: .9; transform: scale(.6); }
+  100% { opacity: 0; transform: scale(1.5, 1) translateY(-3px); }
+}
+
+@keyframes jiro-buddy-look {
+  0%, 100% { outline-color: #fb5e45; }
+  50% { outline-color: rgba(251, 94, 69, .3); }
+}
+
+@keyframes jiro-buddy-blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes jiro-buddy-pop {
+  0% { opacity: 0; transform: scale(.15, .3); border-radius: 40px; }
+  40% { opacity: 1; }
+  100% { opacity: 1; transform: scale(1); border-radius: 10px; }
+}
+
+</style>
+<style>
+  :root {
+    --green: #3cf56a;
+    --green-ink: #173d2b;
+    --salmon: #f35b45;
+    --ink: #111;
+    --slate: #232629;
+    --slate-2: #2c3034;
+    --slate-line: #3a3f44;
+    --cream: #f8f6f0;
+    --muted: #8b8f93;
+    --rule: 1.5px solid var(--ink);
+    --frame: 8px;
+    --pad: 20px;
+    --pad-x: 20px;
+    --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: "Inter Tight", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (min-width: 768px) { :root { --pad: 28px; --pad-x: 32px; } }
+  @media (min-width: 1100px) { :root { --pad-x: 32px; } }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3, p { margin: 0; }
+  button, input { font: inherit; }
+
+  .shell { max-width: 1280px; margin: 0 auto; padding: 0 0 48px; }
+  @media (min-width: 1100px) { .shell { padding: 24px 24px 64px; } }
+
+  /* ---------- shared ---------- */
+  .label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .label--salmon { color: var(--salmon); }
+  .label--light { color: #c9cccf; }
+  .tag {
+    font-family: var(--mono);
+    font-weight: 600;
+    background: var(--green);
+    color: var(--green-ink);
+    padding: 0 3px;
+    white-space: nowrap;
+  }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: space-between; gap: 14px;
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 13px 16px;
+    border: var(--rule);
+    background: #fff; color: var(--ink);
+    cursor: pointer; border-radius: 0;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:hover { transform: translate(-2px, -2px); box-shadow: 2px 2px 0 var(--ink); }
+  .btn--salmon { background: var(--salmon); }
+  .btn--ink { background: var(--ink); color: #fff; width: 100%; padding: 15px 18px; }
+  .btn--ink:hover { box-shadow: 2px 2px 0 var(--salmon); }
+  .h-sec {
+    font-size: clamp(36px, 4vw, 52px);
+    font-weight: 700; letter-spacing: -0.045em; line-height: 1.02;
+  }
+
+  /* ---------- header ---------- */
+  .site-head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: stretch;
+    background: #fff;
+    border-bottom: var(--rule);
+    min-height: 46px;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 22px;
+    font-weight: 700; font-size: 17px; letter-spacing: -0.03em;
+  }
+  @media (min-width: 900px) { .brand { min-width: 190px; border-right: var(--rule); } }
+  .brand__mark { display: block; width: 32px; height: 14px; }
+  .nav { display: none; align-items: center; gap: 28px; padding: 0 20px; }
+  @media (min-width: 900px) { .nav { display: flex; } }
+  .nav a { font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+  .nav a:hover { color: var(--salmon); }
+  .head-cta {
+    display: flex; align-items: center; justify-content: space-between; gap: 18px;
+    background: var(--salmon);
+    border-left: var(--rule);
+    padding: 0 18px;
+    font-family: var(--mono); font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+    grid-column: 3;
+  }
+  @media (min-width: 900px) { .head-cta { min-width: 174px; } }
+  .head-cta .dots { letter-spacing: 0.3em; opacity: .75; }
+
+  /* ---------- frame ---------- */
+  .frame {
+    background: var(--green);
+    padding: var(--frame);
+    display: flex; flex-direction: column; gap: var(--frame);
+  }
+  .frame > main { display: flex; flex-direction: column; gap: var(--frame); }
+  main > section { border: var(--rule); background: #fff; scroll-margin-top: 12px; }
+
+  /* ---------- hero ---------- */
+  #hero { display: grid; grid-template-columns: 1fr; }
+  main > section { position: relative; }
+  .jiro-rest { position: absolute; width: 1px; height: 1px; pointer-events: none; }
+  #jiro-hero { left: 27%; top: 33%; }
+  #jiro-video { left: 93%; top: 9%; }
+  #jiro-pillars { left: 25%; top: 15%; }
+  #jiro-how { left: 21%; top: 20%; }
+  #jiro-pricing { left: 27%; top: 19%; }
+  #jiro-bakeoff { left: 84%; top: 5%; }
+  #jiro-faq { left: 77%; top: 72%; }
+  @media (max-width: 767px) {
+    #jiro-hero { left: 85%; top: 6%; }
+    #jiro-video { left: 85%; top: 6%; }
+    #jiro-pillars { left: 85%; top: 6%; }
+    #jiro-how { left: 85%; top: 11%; }
+    #jiro-pricing { left: 85%; top: 3%; }
+    #jiro-bakeoff { left: 85%; top: 3.5%; }
+  }
+  @media (min-width: 960px) { #hero { grid-template-columns: 45% 1fr; min-height: 530px; } }
+  .hero__copy {
+    padding: 40px var(--pad-x) 40px;
+    display: flex; flex-direction: column;
+  }
+  .hero__copy .label { margin-bottom: 56px; }
+  @media (min-width: 960px) { .hero__copy .label { margin-bottom: auto; padding-bottom: 72px; } }
+  #hero h1 {
+    font-size: clamp(42px, 4.7vw, 58px);
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+    font-weight: 700;
+  }
+  .hl { background: var(--salmon); padding: 0 5px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  .caret {
+    display: inline-block; width: 0.42em; height: 0.82em;
+    background: var(--salmon); vertical-align: -0.06em; margin-left: 0.1em;
+    animation: blink 1.1s steps(1) infinite;
+  }
+  .nowrap { white-space: nowrap; }
+  @media (max-width: 420px) { #hero h1 { font-size: 38px; } }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .caret { animation: none; } }
+  .hero__lede { max-width: 380px; font-size: 13.5px; line-height: 1.55; margin-top: 16px; }
+  .hero__ctas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+
+  /* hero thread */
+  #hero-thread {
+    background: var(--slate);
+    color: #d9dcdf;
+    border-top: var(--rule);
+    padding: 28px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  @media (min-width: 960px) { #hero-thread { border-top: 0; border-left: var(--rule); padding: 40px 48px; } }
+  .slack {
+    width: 100%; max-width: 520px;
+    background: #1b1d20;
+    border: 1px solid var(--slate-line);
+    font-size: 13.5px;
+    line-height: 1.5;
+    box-shadow: 0 20px 50px rgba(0,0,0,.35);
+  }
+  .slack__head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--slate-line);
+    font-weight: 600; color: #fff; font-size: 14px;
+  }
+  .slack__head small { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
+  .slack__body { padding: 14px 16px 6px; display: flex; flex-direction: column; gap: 16px; }
+  .smsg { display: grid; grid-template-columns: 34px 1fr; gap: 10px; }
+  .av {
+    width: 34px; height: 34px; border-radius: 6px;
+    display: grid; place-items: center;
+    font-weight: 700; font-size: 13px; color: #fff;
+    background: #6b5bd6;
+  }
+  .av--jiro { background: var(--cream); padding: 3px; }
+  .av--jiro img { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
+  .smsg__who { display: flex; align-items: baseline; gap: 8px; }
+  .smsg__who b { color: #fff; font-weight: 700; font-size: 14px; }
+  .smsg__who time { color: var(--muted); font-size: 11.5px; }
+  .app { font-size: 9.5px; font-weight: 600; background: #3a3f44; color: #c9cccf; padding: 1px 4px; border-radius: 3px; letter-spacing: .04em; }
+  .mention { color: #1d9bd1; background: rgba(29,155,209,.12); padding: 0 2px; border-radius: 3px; font-weight: 500; }
+  .smsg ol { margin: 6px 0 0; padding-left: 18px; }
+  .smsg code { font-family: var(--mono); font-size: 12px; background: #2c3034; padding: 1px 4px; border-radius: 3px; color: #f2a093; }
+  .pr {
+    margin-top: 8px;
+    border-left: 3px solid var(--green);
+    background: #23262a;
+    padding: 8px 10px;
+    font-size: 12.5px;
+  }
+  .pr b { color: #fff; font-weight: 600; }
+  .pr .diff { font-family: var(--mono); font-size: 11.5px; }
+  .add { color: var(--green); } .del { color: #ff7a66; }
+  .slack__typing {
+    padding: 10px 16px 12px;
+    font-size: 11.5px; color: var(--muted);
+    display: flex; gap: 8px; align-items: center;
+  }
+  .slack__typing i { width: 5px; height: 5px; background: var(--muted); display: inline-block; animation: dot 1.2s infinite; }
+  .slack__typing i:nth-child(2) { animation-delay: .15s; } .slack__typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes dot { 0%, 60%, 100% { opacity: .25; } 30% { opacity: 1; } }
+
+  /* ---------- ditch ---------- */
+  #ditch { display: grid; grid-template-columns: 1fr; background: var(--salmon); }
+  @media (min-width: 960px) { #ditch { grid-template-columns: 1fr 294px; min-height: 414px; } }
+  .ditch__copy {
+    padding: 72px var(--pad-x) 32px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+  }
+  .ditch__copy h2 {
+    font-size: clamp(44px, 6.2vw, 80px);
+    font-weight: 700;
+    letter-spacing: -0.065em;
+    line-height: 1.02;
+  }
+  .ditch__copy h2 > span { display: block; }
+  .ditch__copy p { margin-top: 16px; max-width: 560px; font-size: clamp(16px, 1.6vw, 21px); letter-spacing: -0.025em; line-height: 1.22; }
+  .callin {
+    background: #fff;
+    border-top: var(--rule);
+    padding: 24px 22px 22px;
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  @media (min-width: 960px) { .callin { border-top: 0; border-left: var(--rule); } }
+  .callin img { width: 100%; max-width: 220px; height: auto; display: block; image-rendering: pixelated; margin: auto 0; }
+  .callin .tag { font-size: clamp(30px, 3vw, 40px); align-self: flex-start; padding: 2px 4px; line-height: 1.15; letter-spacing: -0.02em; }
+
+  /* ---------- video ---------- */
+  main > #video {
+    background: var(--ink); color: #fff;
+    padding: 56px var(--pad-x) 56px;
+    display: flex; flex-direction: column; gap: 40px;
+  }
+  .video__quote {
+    font-size: clamp(22px, 2.5vw, 32px);
+    font-weight: 600; letter-spacing: -0.035em; line-height: 1.3;
+    max-width: 1000px;
+  }
+  .video__quote em { font-style: normal; color: var(--salmon); }
+  #video-frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    background: var(--slate);
+    border: 1px solid var(--slate-line);
+    display: grid; grid-template-rows: auto 1fr;
+    overflow: hidden;
+  }
+  .vf__bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 18px; border-bottom: 1px solid var(--slate-line);
+  }
+  .vf__bar strong { font-size: clamp(15px, 1.6vw, 20px); font-weight: 600; letter-spacing: -0.02em; }
+  .vf__split { display: grid; grid-template-columns: 1fr 1fr; min-height: 0; }
+  .vf__side { padding: clamp(14px, 2vw, 28px); display: flex; flex-direction: column; gap: clamp(8px, 1.2vw, 16px); min-height: 0; overflow: hidden; }
+  .vf__side + .vf__side { border-left: 1px solid var(--slate-line); }
+  .vf__stat { font-family: var(--mono); font-size: clamp(18px, 2.6vw, 36px); font-weight: 600; letter-spacing: -0.03em; line-height: 1.1; }
+  .vf__files { font-family: var(--mono); font-size: clamp(10px, 1vw, 12px); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+  .vf__rows { display: flex; flex-direction: column; gap: 5px; margin-top: 4px; }
+  .vf__rows i { display: block; height: 6px; background: #3a3f44; }
+  .vf__rows i b { display: block; height: 100%; background: var(--green); }
+  .vf__rows i b.r { background: #ff7a66; }
+  .vf__side--jiro .vf__rows i { background: #2f3337; }
+  .vf__side { position: relative; }
+  .vf__side:not(.vf__side--jiro) .vf__rows { gap: clamp(3px, .4vw, 5px); }
+  .vf__side:not(.vf__side--jiro)::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 30%; background: linear-gradient(transparent, var(--slate)); }
+  .vf__note { margin-top: auto; border: 1px solid var(--slate-line); border-left: 3px solid var(--green); background: #1b1d20; padding: clamp(10px, 1.4vw, 18px); display: flex; flex-direction: column; gap: 6px; font-size: clamp(12px, 1.2vw, 15px); color: #e6e8ea; }
+  @media (max-width: 600px) { .vf__note { display: none; } }
+  .play {
+    position: absolute; left: 50%; top: 54%;
+    transform: translate(-50%, -50%);
+    width: 76px; height: 76px;
+    background: var(--salmon); border: var(--rule);
+    display: grid; place-items: center;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .play::before { content: ""; border-left: 22px solid var(--ink); border-top: 13px solid transparent; border-bottom: 13px solid transparent; margin-left: 6px; }
+  @media (max-width: 600px) { .play { width: 44px; height: 44px; top: auto; bottom: 10px; transform: translateX(-50%); box-shadow: 2px 2px 0 var(--ink); } .play::before { border-left-width: 15px; border-top-width: 9px; border-bottom-width: 9px; } }
+
+  /* ---------- pillars ---------- */
+  #pillars { display: grid; grid-template-columns: 1fr; }
+  @media (min-width: 900px) { #pillars { grid-template-columns: repeat(3, 1fr); } }
+  .pillar { padding: 26px var(--pad-x) 30px; display: flex; flex-direction: column; gap: 10px; }
+  .pillar + .pillar { border-top: var(--rule); }
+  @media (min-width: 900px) { .pillar + .pillar { border-top: 0; border-left: var(--rule); } }
+  .pillar__n { font-family: var(--mono); font-size: 10.5px; color: var(--salmon); letter-spacing: .14em; margin-bottom: 28px; }
+  .pillar h3 { font-size: 22px; font-weight: 600; letter-spacing: -0.035em; }
+  .pillar p { font-size: 13.5px; line-height: 1.5; color: #333; max-width: 360px; }
+
+  /* ---------- how ---------- */
+  #how { display: grid; grid-template-columns: 1fr; }
+  @media (min-width: 900px) { #how { grid-template-columns: minmax(300px, 31%) 1fr; } }
+  .how__panel {
+    background: var(--ink); color: #fff;
+    padding: 28px var(--pad-x);
+    display: flex; flex-direction: column; justify-content: space-between; gap: 120px;
+  }
+  .how__panel h2 { font-size: clamp(28px, 2.7vw, 36px); font-weight: 600; letter-spacing: -0.04em; line-height: 1.1; }
+  .how__rows { display: flex; flex-direction: column; }
+  .how__row {
+    flex: 1;
+    display: grid; grid-template-columns: 1fr; gap: 10px; align-items: center;
+    padding: 30px var(--pad-x);
+    border-top: var(--rule);
+  }
+  @media (min-width: 900px) {
+    .how__rows { border-left: var(--rule); }
+    .how__row { grid-template-columns: 160px 1fr auto; padding: 46px 32px; }
+    .how__row:first-child { border-top: 0; }
+  }
+  .how__row h3 { font-size: 24px; font-weight: 600; letter-spacing: -0.035em; }
+  .how__row h3 .tag { font-size: 22px; letter-spacing: -0.02em; }
+  .how__row p { font-size: 13.5px; color: #333; margin-top: 4px; }
+  .watch { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #777; white-space: nowrap; }
+  .watch:hover { color: var(--salmon); }
+
+  /* ---------- section heads ---------- */
+  .sec-head { padding: 28px var(--pad-x) 26px; border-bottom: var(--rule); }
+  .sec-head .h-sec { margin-top: 10px; }
+  .sec-head p { margin-top: 12px; font-size: 15px; color: #333; }
+  .sec-head--perch {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 32px;
+    padding-top: 108px;
+  }
+  .sec-head--perch .h-sec { margin-top: 0; }
+  @media (max-width: 640px) { .sec-head--perch { padding-top: 96px; } }
+
+  /* ---------- pricing ---------- */
+  .tiers { display: grid; grid-template-columns: 1fr; border-bottom: var(--rule); }
+  @media (min-width: 900px) { .tiers { grid-template-columns: repeat(3, 1fr); } }
+  .tier { padding: 22px var(--pad-x) 22px; display: flex; flex-direction: column; }
+  .tier + .tier { border-top: var(--rule); }
+  @media (min-width: 900px) { .tier { padding: 22px 24px; } .tier:first-child { padding-left: var(--pad-x); } .tier + .tier { border-top: 0; border-left: var(--rule); } }
+  .tier--feat { background: var(--cream); }
+  .pips { display: flex; gap: 4px; margin-bottom: 48px; }
+  .pip { width: 18px; height: 18px; border: var(--rule); background: var(--salmon); }
+  .pip--g { background: var(--green); }
+  .tier h3 { font-size: 24px; font-weight: 600; letter-spacing: -0.035em; display: flex; align-items: center; gap: 10px; }
+  .tier h3 small { font-family: var(--mono); font-size: 9.5px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; background: var(--ink); color: #fff; padding: 3px 6px; }
+  .price { display: flex; align-items: baseline; gap: 6px; margin-top: 4px; }
+  .price strong { font-size: 56px; font-weight: 700; letter-spacing: -0.055em; line-height: 1.05; }
+  .price span { font-size: 13px; }
+  .tier ul { margin: 8px 0 22px; padding-left: 18px; font-size: 13.5px; line-height: 1.55; }
+  .tier .btn--ink { margin-top: auto; }
+  .footnote { padding: 14px var(--pad-x); font-size: 12.5px; color: #333; }
+
+  /* ---------- bakeoff ---------- */
+  .table-wrap { overflow-x: auto; border-bottom: var(--rule); }
+  table.bake { width: 100%; min-width: 900px; border-collapse: collapse; font-size: 13px; }
+  .bake th, .bake td { text-align: left; padding: 0 14px; height: 52px; border-bottom: var(--rule); }
+  .bake tr:last-child td { border-bottom: 0; }
+  .bake thead th { font-weight: 600; font-size: 14px; letter-spacing: -0.01em; }
+  .bake th:first-child, .bake td:first-child { padding-left: var(--pad-x); }
+  .bake .menu-h { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; font-weight: 500; text-transform: uppercase; }
+  .bake td.course { width: 1%; white-space: nowrap; border-right: var(--rule); }
+  .course__wrap { display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+  .course__n { display: block; font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em; color: #777; }
+  .course__t { display: block; font-size: 13.5px; }
+  .ico { width: 16px; height: 16px; display: block; shape-rendering: crispEdges; }
+  .bake .jiro { background: var(--green); border-left: var(--rule); border-right: var(--rule); width: 24%; color: var(--ink); }
+  .bake thead .jiro { font-size: 22px; font-weight: 700; letter-spacing: -0.04em; }
+  .bake .jiro .sq { display: inline-block; width: 11px; height: 11px; background: var(--salmon); border: 1.5px solid var(--ink); margin-right: 9px; vertical-align: -1px; }
+  .bake td:not(.course):not(.jiro) { color: #333; }
+  .bake .tbd { color: #999 !important; font-family: var(--mono); font-size: 11.5px; }
+
+  /* ---------- faq ---------- */
+  #faq { display: grid; grid-template-columns: 1fr; }
+  @media (min-width: 900px) { #faq { grid-template-columns: 1fr 380px; } }
+  .faq__list { padding: 28px var(--pad-x) 40px; }
+  .faq__list > .label { display: block; margin-bottom: 8px; }
+  details { border-bottom: var(--rule); }
+  summary {
+    list-style: none; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 0;
+    font-weight: 600; font-size: 16px; letter-spacing: -0.02em;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--salmon); font-family: var(--mono); font-weight: 400; font-size: 16px; }
+  details[open] summary::after { content: "\2212"; }
+  details p { padding: 0 0 16px; font-size: 13.5px; color: #333; max-width: 560px; margin-top: -6px; }
+  .reserve {
+    background: var(--ink); color: #fff;
+    padding: 28px 28px 32px;
+    display: flex; flex-direction: column; gap: 14px;
+    border-top: var(--rule);
+  }
+  @media (min-width: 900px) { .reserve { border-top: 0; border-left: var(--rule); } }
+  .reserve h2 { font-size: 34px; font-weight: 700; letter-spacing: -0.05em; line-height: 1.05; }
+  .reserve p { font-size: 13.5px; color: #c9cccf; }
+  .reserve form { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+  .reserve input {
+    width: 100%; padding: 12px; border: 0; border-radius: 0;
+    font-family: var(--mono); font-size: 12px; background: #fff; color: var(--ink);
+  }
+  .reserve input:focus { outline: 2px solid var(--green); outline-offset: 0; }
+  .reserve .btn { width: 100%; border: 0; padding: 13px 12px; }
+  .reserve__seal { margin-top: auto; align-self: flex-end; width: 64px; height: 64px; background: var(--cream); border: var(--rule); padding: 8px; }
+  .reserve__seal img { width: 100%; height: 100%; display: block; }
+  @media (max-width: 899px) { .reserve__seal { margin-top: 8px; } }
+  .reserve .btn:hover { box-shadow: 2px 2px 0 var(--green); }
+
+  /* ---------- footer ---------- */
+  .site-foot { background: var(--salmon); border: var(--rule); }
+  .foot__bar {
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 24px;
+    padding: 14px var(--pad-x);
+    border-bottom: var(--rule);
+    font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  }
+  .foot__links { display: flex; gap: 28px; }
+  .wordmark {
+    display: flex; justify-content: center;
+    padding: 56px var(--pad) 64px;
+    font-family: "Silkscreen", var(--mono);
+    font-size: clamp(54px, 15.4vw, 200px);
+    line-height: .9;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    white-space: nowrap; overflow: hidden;
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="site-head">
+    <a class="brand" href="#hero" aria-label="jiro.bot home">
+      <svg class="brand__mark" viewBox="0 0 16 7" aria-hidden="true" shape-rendering="crispEdges">
+        <path fill="#f35b45" d="M0 0h1v1h1v1h1v1h1v1H3v1H2v1H1v1H0V5h1V4h1V3H1V2H0z"/>
+        <rect fill="#f35b45" x="6" y="5" width="4" height="2"/>
+        <rect fill="#f35b45" x="12" y="1" width="3" height="6"/>
+      </svg>
+      jiro.bot
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#pillars">Why Jiro</a>
+      <a href="#how">How</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#bakeoff">Compare</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="head-cta" href="#faq"><span>Reserve a seat</span><span class="dots" aria-hidden="true">····</span></a>
+  </header>
+
+  <div class="frame">
+  <main>
+
+    <section id="hero" data-jiro-comment="Hi, I&#39;m Jiro." data-jiro-anchor="#jiro-hero">
+      <span class="jiro-rest" id="jiro-hero" aria-hidden="true"></span>
+      <div class="hero__copy">
+        <span class="label">&gt;_ Meet Jiro</span>
+        <h1>The <span class="hl">tasteful</span><br>software <span class="nowrap">engineer<span class="caret" aria-hidden="true"></span></span></h1>
+        <p class="hero__lede">Jiro is a craftsperson: an expert engineer who cares more about quality than volume. Jiro will push back on your ideas and flag potential missteps early. Call him in with <span class="tag">@jirobot</span>.</p>
+        <div class="hero__ctas">
+          <a class="btn btn--salmon" href="#faq">Reserve a seat</a>
+          <a class="btn" href="#pricing">See pricing</a>
+        </div>
+      </div>
+      <div id="hero-thread">
+        <div class="slack" role="img" aria-label="Slack thread in #payments: a teammate asks Jiro to add retries, Jiro points out a double-charge risk and proposes idempotency first, the teammate agrees">
+          <div class="slack__head"><span># payments</span><small>Thread</small></div>
+          <div class="slack__body">
+            <div class="smsg">
+              <span class="av" aria-hidden="true">MK</span>
+              <div>
+                <div class="smsg__who"><b>Maya Kim</b><time>10:42 AM</time></div>
+                <div><span class="mention">@jirobot</span> can you add retries to the payments webhook handler? We keep dropping events on timeouts.</div>
+              </div>
+            </div>
+            <div class="smsg">
+              <span class="av av--jiro" aria-hidden="true"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTEgNjIgNTYiIHdpZHRoPSI0OTYiIGhlaWdodD0iNDQ4Ij4KPGcgaWQ9Imppcm8iIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyI+PGcgaWQ9ImJvZHkiPjxwYXRoIGQ9Ik0zNSA2IEwzNCA2IEwzNCA0IEwzNCAzIEwzMyAzIEwzMyAyIEwzMyAxIEwzMyAwLjgzIEwzMi45NCAwLjgyIEwzMi44MiAwLjgwIEwzMi42OCAwLjc5IEwzMi41NSAwLjc3IEwzMi40MSAwLjc2IEwzMi4yNiAwLjc2IEwzMi4xMSAwLjc1IEwzMS45NiAwLjc1IEwzMS44MCAwLjc1IEwzMS42NCAwLjc1IEwzMS40OCAwLjc2IEwzMS4zMSAwLjc3IEwzMS4xMyAwLjc4IEwzMC45NSAwLjgwIEwzMC43NyAwLjgyIEwzMC41OSAwLjg0IEwzMC40MCAwLjg2IEwzMC4yMSAwLjg4IEwzMC4wMiAwLjkxIEwyOS44MiAwLjk0IEwyOS42MiAwLjk4IEwyOS40MSAxLjAxIEwyOS4yMSAxLjA1IEwyOSAxLjA5IEwyOC43OSAxLjE0IEwyOC41OCAxLjE4IEwyOC4zNiAxLjIzIEwyOC4xNSAxLjI4IEwyNy45MyAxLjMzIEwyNy43MSAxLjM5IEwyNy40OCAxLjQ1IEwyNy4yNiAxLjUxIEwyNy4wMyAxLjU3IEwyNi44MCAxLjYzIEwyNi41OCAxLjcwIEwyNi4zNSAxLjc3IEwyNi4xMSAxLjg0IEwyNS44OCAxLjkxIEwyNS42NSAxLjk5IEwyNS40MiAyLjA3IEwyNS4xOCAyLjE1IEwyNC45NSAyLjIzIEwyNC43MSAyLjMxIEwyNC40OCAyLjQwIEwyNC4yNCAyLjQ4IEwyNCAyLjU3IEwyMy43NyAyLjY3IEwyMy41MyAyLjc2IEwyMy4zMCAyLjg1IEwyMy4wNiAyLjk1IEwyMi44MyAzLjA1IEwyMi41OSAzLjE1IEwyMi4zNiAzLjI2IEwyMi4xMyAzLjM2IEwyMS45MCAzLjQ3IEwyMS42NyAzLjU3IEwyMS40NCAzLjY4IEwyMS4yMSAzLjgwIEwyMC45OCAzLjkxIEwyMC43NiA0LjAyIEwyMC41MyA0LjE0IEwyMC4zMSA0LjI2IEwyMC4wOSA0LjM4IEwxOS44OCA0LjUwIEwxOS43MSA0LjU5IEwxOS41NCA0LjY5IEwxOS4zNyA0Ljc5IEwxOS4yMSA0Ljg5IEwxOS4wNCA0Ljk5IEwxOC44OCA1LjA5IEwxOC43MSA1LjE5IEwxOC41NSA1LjI5IEwxOC4zOSA1LjQwIEwxOC4yMyA1LjUwIEwxOC4wNyA1LjYxIEwxNy45MSA1LjcxIEwxNy43NiA1LjgyIEwxNy42MCA1LjkzIEwxNy40NSA2LjA0IEwxNy4yOSA2LjE2IEwxNy4xNCA2LjI3IEwxNi45OSA2LjM4IEwxNi44NCA2LjUwIEwxNi42OSA2LjYxIEwxNi41NCA2LjczIEwxNi4zOSA2Ljg1IEwxNi4yNCA2Ljk3IEwxNi4xMCA3LjA5IEwxNS45NSA3LjIxIEwxNS44MSA3LjMzIEwxNS42NiA3LjQ2IEwxNS41MiA3LjU4IEwxNS4zOCA3LjcwIEwxNS4yNCA3LjgzIEwxNS4xMCA3Ljk2IEwxNC45NiA4LjA5IEwxNC44MyA4LjIyIEwxNC42OSA4LjM1IEwxNC41NiA4LjQ4IEwxNC40MiA4LjYxIEwxNC4yOSA4Ljc0IEwxNC4xNiA4Ljg3IEwxNC4wMyA5LjAxIEwxMy45MCA5LjE1IEwxMy43NyA5LjI4IEwxMy42NCA5LjQyIEwxMy41MSA5LjU2IEwxMy4zOSA5LjcwIEwxMy4yNiA5Ljg0IEwxMy4xNCA5Ljk4IEwxMy4wMiAxMC4xMiBMMTIuOTAgMTAuMjYgTDEyLjc4IDEwLjQwIEwxMi42NiAxMC41NSBMMTIuNTQgMTAuNjkgTDEyLjQyIDEwLjg0IEwxMi4zMSAxMC45OSBMMTIuMTkgMTEuMTMgTDEyLjA4IDExLjI4IEwxMS45NyAxMS40MyBMMTEuODUgMTEuNTggTDExLjc0IDExLjczIEwxMS42MyAxMS44OCBMMTEuNTMgMTIuMDMgTDExLjQyIDEyLjE5IEwxMS4zMSAxMi4zNCBMMTEuMjEgMTIuNDkgTDExLjEwIDEyLjY1IEwxMSAxMi44MCBMMTAuOTAgMTIuOTYgTDEwLjgwIDEzLjEyIEwxMC43MCAxMy4yNyBMMTAuNjAgMTMuNDMgTDEwLjUwIDEzLjU5IEwxMC40MSAxMy43NSBMMTAuMzEgMTMuOTEgTDEwLjIyIDE0LjA3IEwxMC4xMiAxNC4yMyBMMTAuMDMgMTQuMzkgTDkuOTQgMTQuNTYgTDkuODUgMTQuNzIgTDkuNzYgMTQuODggTDkuNjggMTUuMDUgTDkuNTkgMTUuMjEgTDkuNTEgMTUuMzggTDkuNDIgMTUuNTUgTDkuMzQgMTUuNzEgTDkuMjYgMTUuODggTDkuMTggMTYuMDUgTDkuMTAgMTYuMjIgTDkuMDIgMTYuMzggTDguOTQgMTYuNTUgTDguODcgMTYuNzIgTDguNzkgMTYuODkgTDguNzIgMTcuMDcgTDguNjUgMTcuMjQgTDguNTcgMTcuNDEgTDguNTAgMTcuNTggTDguNDMgMTcuNzUgTDguMzcgMTcuOTMgTDguMzAgMTguMTAgTDguMjMgMTguMjggTDguMTcgMTguNDUgTDguMTEgMTguNjMgTDguMDUgMTguODAgTDcuOTggMTguOTggTDcuOTMgMTkuMTUgTDcuODcgMTkuMzMgTDcuODEgMTkuNTEgTDcuNzUgMTkuNjkgTDcuNzAgMTkuODYgTDcuNjUgMjAuMDQgTDcuNTkgMjAuMjIgTDcuNTQgMjAuNDAgTDcuNDkgMjAuNTggTDcuNDQgMjAuNzYgTDcuMzkgMjAuOTQgTDcuMzUgMjEuMTIgTDcuMzAgMjEuMzAgTDcuMjYgMjEuNDggTDcuMjIgMjEuNjYgTDcuMTcgMjEuODQgTDcuMTMgMjIuMDMgTDcuMTAgMjIuMjEgTDcuMDYgMjIuMzkgTDcuMDIgMjIuNTcgTDYuOTkgMjIuNzYgTDYuOTUgMjIuOTQgTDYuOTIgMjMuMTIgTDYuODkgMjMuMzEgTDYuODYgMjMuNDkgTDYuODMgMjMuNjcgTDYuODAgMjMuODYgTDYuNzcgMjQuMDQgTDYuNzUgMjQuMjMgTDYuNzIgMjQuNDEgTDYuNzAgMjQuNjAgTDYuNjggMjQuNzggTDYuNjYgMjQuOTcgTDYuNjQgMjUuMTUgTDYuNjIgMjUuMzQgTDYuNjAgMjUuNTMgTDYuNTkgMjUuNzEgTDYuNTcgMjUuOTAgTDYuNTYgMjYuMDggTDYuNTUgMjYuMjcgTDYuNTQgMjYuNDYgTDYuNTMgMjYuNjQgTDYuNTIgMjYuODMgTDYuNTEgMjcuMDIgTDYuNTEgMjcuMjAgTDYuNTAgMjcuMzkgTDYuNTAgMjcuNTggTDYuNTAgMjcuNzYgTDYuNTAgMjcuOTUgTDYuNTAgMjguMTQgTDYuNTAgMjguMzIgTDYuNTAgMjguNTEgTDYuNTEgMjguNzAgTDYuNTEgMjguODggTDYuNTIgMjkuMDcgTDYuNTMgMjkuMjYgTDYuNTQgMjkuNDQgTDYuNTUgMjkuNjMgTDYuNTYgMjkuODIgTDYuNTggMzAuMDEgTDYuNTkgMzAuMTkgTDYuNjEgMzAuMzggTDYuNjMgMzAuNTcgTDYuNjUgMzAuNzUgTDYuNjcgMzAuOTQgTDYuNjkgMzEuMTIgTDYuNzEgMzEuMzEgTDYuNzQgMzEuNTAgTDYuNzYgMzEuNjggTDYuNzkgMzEuODcgTDYuODIgMzIuMDUgTDYuODUgMzIuMjQgTDYuODggMzIuNDIgTDYuOTEgMzIuNjEgTDYuOTUgMzIuNzkgTDYuOTggMzIuOTggTDcuMDIgMzMuMTYgTDcuMDYgMzMuMzUgTDcuMTAgMzMuNTMgTDcuMTQgMzMuNzIgTDcuMTggMzMuOTAgTDcuMjIgMzQuMDggTDcuMjcgMzQuMjcgTDcuMzEgMzQuNDUgTDcuMzYgMzQuNjMgTDcuNDEgMzQuODIgTDcuNDYgMzUgTDcuNTEgMzUuMTggTDcuNTYgMzUuMzYgTDcuNjIgMzUuNTQgTDcuNjcgMzUuNzMgTDcuNzMgMzUuOTEgTDcuNzkgMzYuMDkgTDcuODUgMzYuMjcgTDcuOTEgMzYuNDUgTDcuOTcgMzYuNjMgTDguMDQgMzYuODEgTDguMTAgMzYuOTkgTDguMTcgMzcuMTcgTDguMjQgMzcuMzQgTDguMzEgMzcuNTIgTDguMzggMzcuNzAgTDguNDUgMzcuODggTDguNTIgMzguMDUgTDguNjAgMzguMjMgTDguNjcgMzguNDEgTDguNzUgMzguNTggTDguODMgMzguNzYgTDguOTEgMzguOTMgTDguOTkgMzkuMTAgTDkuMDggMzkuMjggTDkuMTYgMzkuNDUgTDkuMjUgMzkuNjIgTDkuMTUgMzkuNzkgTDkuMDUgMzkuOTUgTDkgNDAuMDMgTDkgNDEgTDkgNDIgTDEwIDQyIEwxMCA0MyBMMTAgNDQgTDkgNDQgTDkgNDUgTDggNDUgTDggNDYgTDcgNDYgTDcgNDcgTDYgNDcgTDYgNDggTDUgNDggTDUgNDkgTDQgNDkgTDQgNTAgTDMgNTAgTDMgNTEgTDIuMjMgNTEgTDIuMTkgNTEuMDcgTDIuMDkgNTEuMjMgTDIgNTEuMzggTDIgNTIgTDMgNTIgTDMuODAgNTIgTDMuODQgNTEuOTkgTDQuMDEgNTEuOTIgTDQuMTkgNTEuODYgTDQuMzcgNTEuODAgTDQuNTQgNTEuNzMgTDQuNzIgNTEuNjcgTDQuOTAgNTEuNjEgTDUgNTEuNTcgTDUgNTEgTDYgNTEgTDYuNjAgNTEgTDYuNjcgNTAuOTcgTDYuODUgNTAuOTEgTDcgNTAuODYgTDcgNTAgTDggNTAgTDkgNTAgTDkgNDkgTDEwIDQ5IEwxMSA0OSBMMTEgNDggTDEyIDQ4IEwxMyA0OCBMMTMgNDcgTDE0IDQ3IEwxNCA0OCBMMTUgNDggTDE2IDQ4IEwxNiA0OC43MyBMMTYuMDYgNDguNzggTDE2LjIxIDQ4Ljg4IEwxNi4zNyA0OC45OSBMMTYuMzkgNDkgTDE3IDQ5IEwxNyA0OS40MCBMMTcuMTUgNDkuNTAgTDE3LjMxIDQ5LjYwIEwxNy40NyA0OS43MCBMMTcuNjMgNDkuODAgTDE3Ljc5IDQ5Ljg5IEwxNy45NiA0OS45OSBMMTcuOTggNTAgTDE4IDUwIEwxOSA1MCBMMTkgNTAuNTcgTDE5LjExIDUwLjYyIEwxOS4yNyA1MC43MSBMMTkuNDQgNTAuNzkgTDE5LjYxIDUwLjg4IEwxOS43NyA1MC45NiBMMTkuODUgNTEgTDIwIDUxIEwyMSA1MSBMMjEgNTEuNTMgTDIxLjE0IDUxLjU5IEwyMS4zMSA1MS42NiBMMjEuNDkgNTEuNzMgTDIxLjY2IDUxLjgwIEwyMS44MyA1MS44NyBMMjIuMDEgNTEuOTQgTDIyLjE3IDUyIEwyMyA1MiBMMjMgNTIuMzAgTDIzLjA3IDUyLjMyIEwyMy4yNCA1Mi4zOCBMMjMuNDIgNTIuNDQgTDIzLjYwIDUyLjUwIEwyMy43OCA1Mi41NiBMMjMuOTYgNTIuNjEgTDI0LjE0IDUyLjY3IEwyNC4zMiA1Mi43MiBMMjQuNTAgNTIuNzcgTDI0LjY4IDUyLjgyIEwyNC44NiA1Mi44NyBMMjUuMDQgNTIuOTIgTDI1LjIyIDUyLjk3IEwyNS4zNSA1MyBMMjYgNTMgTDI3IDUzIEwyNyA1My4zNiBMMjcuMDUgNTMuMzcgTDI3LjI0IDUzLjQxIEwyNy40MiA1My40NCBMMjcuNjEgNTMuNDcgTDI3Ljc5IDUzLjUwIEwyNy45OCA1My41MyBMMjguMTYgNTMuNTYgTDI4LjM1IDUzLjU4IEwyOC41NCA1My42MSBMMjguNzIgNTMuNjMgTDI4LjkxIDUzLjY1IEwyOS4wOSA1My42OCBMMjkuMjggNTMuNzAgTDI5LjQ3IDUzLjcxIEwyOS42NSA1My43MyBMMjkuODQgNTMuNzUgTDMwLjAzIDUzLjc2IEwzMC4yMiA1My43OCBMMzAuNDAgNTMuNzkgTDMwLjU5IDUzLjgwIEwzMC43OCA1My44MSBMMzAuOTYgNTMuODIgTDMxLjE1IDUzLjgzIEwzMS4zNCA1My44NCBMMzEuNTMgNTMuODQgTDMxLjcxIDUzLjg0IEwzMS45MCA1My44NSBMMzIuMDkgNTMuODUgTDMyLjI4IDUzLjg1IEwzMi40NyA1My44NSBMMzIuNjUgNTMuODUgTDMyLjg0IDUzLjg0IEwzMy4wMyA1My44NCBMMzMuMjIgNTMuODMgTDMzLjQwIDUzLjgzIEwzMy41OSA1My44MiBMMzMuNzggNTMuODEgTDMzLjk2IDUzLjgwIEwzNC4xNSA1My43OCBMMzQuMzQgNTMuNzcgTDM0LjUzIDUzLjc2IEwzNC43MSA1My43NCBMMzQuOTAgNTMuNzIgTDM1LjA5IDUzLjcwIEwzNS4yNyA1My42OSBMMzUuNDYgNTMuNjYgTDM1LjY1IDUzLjY0IEwzNS44MyA1My42MiBMMzYuMDIgNTMuNTkgTDM2LjIwIDUzLjU3IEwzNi4zOSA1My41NCBMMzYuNTcgNTMuNTEgTDM2Ljc2IDUzLjQ4IEwzNi45NSA1My40NSBMMzcgNTMuNDQgTDM3IDUzIEwzOCA1MyBMMzkgNTMgTDM5LjExIDUzIEwzOS4xNSA1Mi45OSBMMzkuMzMgNTIuOTQgTDM5LjUxIDUyLjkwIEwzOS42OSA1Mi44NSBMMzkuODcgNTIuODAgTDQwLjA1IDUyLjc1IEw0MC4yMyA1Mi42OSBMNDAuNDEgNTIuNjQgTDQwLjU5IDUyLjU5IEw0MC43NyA1Mi41MyBMNDAuOTUgNTIuNDcgTDQxIDUyLjQ2IEw0MSA1MiBMNDIgNTIgTDQyLjI5IDUyIEw0Mi4zNyA1MS45NyBMNDIuNTQgNTEuOTAgTDQyLjcxIDUxLjg0IEw0Mi44OSA1MS43NyBMNDMgNTEuNzIgTDQzIDUxIEw0NCA1MSBMNDQuNjEgNTEgTDQ0Ljc3IDUwLjkyIEw0NC45NCA1MC44NCBMNDUgNTAuODAgTDQ1IDUwIEw0NiA1MCBMNDYuNDggNTAgTDQ2LjU5IDQ5Ljk0IEw0Ni43NSA0OS44NCBMNDYuOTEgNDkuNzUgTDQ3IDQ5LjY5IEw0NyA0OSBMNDggNDkgTDQ4IDQ4IEw0OSA0OCBMNDkuNDYgNDggTDQ5LjU0IDQ3Ljk0IEw0OS42OCA0Ny44MyBMNDkuODMgNDcuNzEgTDQ5Ljk4IDQ3LjU5IEw1MCA0Ny41NyBMNTAgNDcgTDUwLjY5IDQ3IEw1MC43MCA0Ni45OSBMNTAuODQgNDYuODcgTDUwLjk4IDQ2Ljc1IEw1MSA0Ni43MyBMNTEgNDYgTDUxLjc5IDQ2IEw1MS44MSA0NS45OCBMNTEuOTQgNDUuODUgTDUyIDQ1LjgwIEw1MiA0NSBMNTIuNzkgNDUgTDUyLjg2IDQ0LjkyIEw1Mi45OSA0NC43OCBMNTMgNDQuNzcgTDUzIDQ0IEw1MyA0MyBMNTQgNDMgTDU0IDQyIEw1NSA0MiBMNTUgNDEgTDU1IDQwIEw1NiA0MCBMNTYgMzkgTDU2IDM4IEw1NyAzOCBMNTcgMzcgTDU3IDM2IEw1OCAzNiBMNTggMzUgTDU4IDM0IEw1OCAzMyBMNTggMzIgTDU5IDMyIEw1OSAzMSBMNjAgMzEgTDYwIDMwIEw2MCAyOSBMNTkgMjkgTDU5IDI4IEw1OSAyNyBMNTkgMjYgTDU4IDI2IEw1NyAyNiBMNTYgMjYgTDU2IDI1IEw1NSAyNSBMNTUgMjQgTDU0IDI0IEw1NCAyMyBMNTMgMjMgTDUzIDIyIEw1MyAyMSBMNTMgMjAgTDUzIDE5IEw1MyAxOCBMNTMgMTcgTDUzIDE2IEw1MyAxNSBMNTMgMTQgTDUyIDE0IEw1MSAxNCBMNTAgMTQgTDQ5IDE0IEw0OCAxNCBMNDggMTMgTDQ3IDEzIEw0NyAxMiBMNDYgMTIgTDQ2IDExIEw0NiAxMCBMNDYgOSBMNDUgOSBMNDUgOCBMNDUgNyBMNDQgNyBMNDMgNyBMNDIgNyBMNDEgNyBMNDEgOCBMNDAgOCBMMzkgOCBMMzkgNyBMMzggNyBMMzcgNyBMMzYgNyBMMzYgNloiIGZpbGw9IiNGQUY4RjIiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PC9wYXRoPjxwYXRoIGQ9IiIgZmlsbD0iI0UyRERDRiIgZmlsbC1ydWxlPSJldmVub2RkIj48L3BhdGg+PHBhdGggdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNCAwKSBzY2FsZSgwLjEyNTApIiBkPSJNODggMzg0IEwtMjQgNDI0IEw0MiAzMTcgQy04IDIxOCAzMCA5MCAxMjcgMzYgQzE3OCA3IDI0MiAtNCAyNDIgMTYgQzI0MiAyNCAyMzYgMjkgMjI1IDI5IEMxNTcgMjkgNzAgOTggNTEgMTY3IEMzOCAyMTQgNDMgMjY2IDY2IDMxMCBMNzAgMzE3IEwzMiAzNzggTDg3LjcgMzU4LjYgQTIwMi40IDIwMi40IDAgMCAwIDQyNi42IDIzMC4xIEM0MjYgMjIwIDQzMSAyMTMgNDM5IDIxMyBDNDQ3IDIxMyA0NTAuNSAyMjAgNDUwLjUgMjMyLjQgQTIyNi40IDIyNi40IDAgMCAxIDg4IDM4NCBaIiBmaWxsPSIjMUQzQjJBIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjwvcGF0aD48L2c+PGcgaWQ9ImZhY2UiPjxwYXRoIGQ9Ik0xNiAyMmgydjFoLTJ6TTE2IDIzaDN2MWgtM3pNMTcgMjRoM3YxaC0zek0xOCAyNWgzdjFoLTN6TTE5IDI2aDN2MWgtM3pNMjAgMjdoM3YxaC0zek0yMCAyOGgzdjFoLTN6TTE5IDI5aDN2MWgtM3pNMTggMzBoM3YxaC0zek0xNyAzMWgzdjFoLTN6TTE2IDMyaDN2MWgtM3pNMTYgMzNoMnYxaC0yeiIgZmlsbD0iI0ZCNUU0NSI+PC9wYXRoPjxwYXRoIGQ9Ik0yNyAzMWgxMHYxaC0xMHpNMjcgMzJoMTB2MWgtMTB6TTI3IDMzaDEwdjFoLTEweiIgZmlsbD0iI0ZCNUU0NSI+PC9wYXRoPjxwYXRoIGQ9Ik00MSAyM2g2djFoLTZ6TTQxIDI0aDZ2MWgtNnpNNDEgMjVoNnYxaC02ek00MSAyNmg2djFoLTZ6TTQxIDI3aDZ2MWgtNnpNNDEgMjhoNnYxaC02ek00MSAyOWg2djFoLTZ6TTQxIDMwaDZ2MWgtNnpNNDEgMzFoNnYxaC02eiIgZmlsbD0iI0ZCNUU0NSI+PC9wYXRoPjwvZz48L2c+Cjwvc3ZnPgo=" alt=""></span>
+              <div>
+                <div class="smsg__who"><b>Jiro</b><span class="app">APP</span><time>10:43 AM</time></div>
+                <div>I can, but one thing first. <code>handleWebhook</code> charges the card before it records the event, so a retry after a timeout could charge a customer twice.</div>
+                <ol><li>Key on <code>event.id</code> so replays are no-ops</li><li>Then retries with backoff</li></ol>
+                <div>One PR, two commits?</div>
+              </div>
+            </div>
+            <div class="smsg">
+              <span class="av" aria-hidden="true">MK</span>
+              <div>
+                <div class="smsg__who"><b>Maya Kim</b><time>10:45 AM</time></div>
+                <div>Good catch. Go for it.</div>
+              </div>
+            </div>
+            <div class="smsg">
+              <span class="av av--jiro" aria-hidden="true"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTEgNjIgNTYiIHdpZHRoPSI0OTYiIGhlaWdodD0iNDQ4Ij4KPGcgaWQ9Imppcm8iIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyI+PGcgaWQ9ImJvZHkiPjxwYXRoIGQ9Ik0zNSA2IEwzNCA2IEwzNCA0IEwzNCAzIEwzMyAzIEwzMyAyIEwzMyAxIEwzMyAwLjgzIEwzMi45NCAwLjgyIEwzMi44MiAwLjgwIEwzMi42OCAwLjc5IEwzMi41NSAwLjc3IEwzMi40MSAwLjc2IEwzMi4yNiAwLjc2IEwzMi4xMSAwLjc1IEwzMS45NiAwLjc1IEwzMS44MCAwLjc1IEwzMS42NCAwLjc1IEwzMS40OCAwLjc2IEwzMS4zMSAwLjc3IEwzMS4xMyAwLjc4IEwzMC45NSAwLjgwIEwzMC43NyAwLjgyIEwzMC41OSAwLjg0IEwzMC40MCAwLjg2IEwzMC4yMSAwLjg4IEwzMC4wMiAwLjkxIEwyOS44MiAwLjk0IEwyOS42MiAwLjk4IEwyOS40MSAxLjAxIEwyOS4yMSAxLjA1IEwyOSAxLjA5IEwyOC43OSAxLjE0IEwyOC41OCAxLjE4IEwyOC4zNiAxLjIzIEwyOC4xNSAxLjI4IEwyNy45MyAxLjMzIEwyNy43MSAxLjM5IEwyNy40OCAxLjQ1IEwyNy4yNiAxLjUxIEwyNy4wMyAxLjU3IEwyNi44MCAxLjYzIEwyNi41OCAxLjcwIEwyNi4zNSAxLjc3IEwyNi4xMSAxLjg0IEwyNS44OCAxLjkxIEwyNS42NSAxLjk5IEwyNS40MiAyLjA3IEwyNS4xOCAyLjE1IEwyNC45NSAyLjIzIEwyNC43MSAyLjMxIEwyNC40OCAyLjQwIEwyNC4yNCAyLjQ4IEwyNCAyLjU3IEwyMy43NyAyLjY3IEwyMy41MyAyLjc2IEwyMy4zMCAyLjg1IEwyMy4wNiAyLjk1IEwyMi44MyAzLjA1IEwyMi41OSAzLjE1IEwyMi4zNiAzLjI2IEwyMi4xMyAzLjM2IEwyMS45MCAzLjQ3IEwyMS42NyAzLjU3IEwyMS40NCAzLjY4IEwyMS4yMSAzLjgwIEwyMC45OCAzLjkxIEwyMC43NiA0LjAyIEwyMC41MyA0LjE0IEwyMC4zMSA0LjI2IEwyMC4wOSA0LjM4IEwxOS44OCA0LjUwIEwxOS43MSA0LjU5IEwxOS41NCA0LjY5IEwxOS4zNyA0Ljc5IEwxOS4yMSA0Ljg5IEwxOS4wNCA0Ljk5IEwxOC44OCA1LjA5IEwxOC43MSA1LjE5IEwxOC41NSA1LjI5IEwxOC4zOSA1LjQwIEwxOC4yMyA1LjUwIEwxOC4wNyA1LjYxIEwxNy45MSA1LjcxIEwxNy43NiA1LjgyIEwxNy42MCA1LjkzIEwxNy40NSA2LjA0IEwxNy4yOSA2LjE2IEwxNy4xNCA2LjI3IEwxNi45OSA2LjM4IEwxNi44NCA2LjUwIEwxNi42OSA2LjYxIEwxNi41NCA2LjczIEwxNi4zOSA2Ljg1IEwxNi4yNCA2Ljk3IEwxNi4xMCA3LjA5IEwxNS45NSA3LjIxIEwxNS44MSA3LjMzIEwxNS42NiA3LjQ2IEwxNS41MiA3LjU4IEwxNS4zOCA3LjcwIEwxNS4yNCA3LjgzIEwxNS4xMCA3Ljk2IEwxNC45NiA4LjA5IEwxNC44MyA4LjIyIEwxNC42OSA4LjM1IEwxNC41NiA4LjQ4IEwxNC40MiA4LjYxIEwxNC4yOSA4Ljc0IEwxNC4xNiA4Ljg3IEwxNC4wMyA5LjAxIEwxMy45MCA5LjE1IEwxMy43NyA5LjI4IEwxMy42NCA5LjQyIEwxMy41MSA5LjU2IEwxMy4zOSA5LjcwIEwxMy4yNiA5Ljg0IEwxMy4xNCA5Ljk4IEwxMy4wMiAxMC4xMiBMMTIuOTAgMTAuMjYgTDEyLjc4IDEwLjQwIEwxMi42NiAxMC41NSBMMTIuNTQgMTAuNjkgTDEyLjQyIDEwLjg0IEwxMi4zMSAxMC45OSBMMTIuMTkgMTEuMTMgTDEyLjA4IDExLjI4IEwxMS45NyAxMS40MyBMMTEuODUgMTEuNTggTDExLjc0IDExLjczIEwxMS42MyAxMS44OCBMMTEuNTMgMTIuMDMgTDExLjQyIDEyLjE5IEwxMS4zMSAxMi4zNCBMMTEuMjEgMTIuNDkgTDExLjEwIDEyLjY1IEwxMSAxMi44MCBMMTAuOTAgMTIuOTYgTDEwLjgwIDEzLjEyIEwxMC43MCAxMy4yNyBMMTAuNjAgMTMuNDMgTDEwLjUwIDEzLjU5IEwxMC40MSAxMy43NSBMMTAuMzEgMTMuOTEgTDEwLjIyIDE0LjA3IEwxMC4xMiAxNC4yMyBMMTAuMDMgMTQuMzkgTDkuOTQgMTQuNTYgTDkuODUgMTQuNzIgTDkuNzYgMTQuODggTDkuNjggMTUuMDUgTDkuNTkgMTUuMjEgTDkuNTEgMTUuMzggTDkuNDIgMTUuNTUgTDkuMzQgMTUuNzEgTDkuMjYgMTUuODggTDkuMTggMTYuMDUgTDkuMTAgMTYuMjIgTDkuMDIgMTYuMzggTDguOTQgMTYuNTUgTDguODcgMTYuNzIgTDguNzkgMTYuODkgTDguNzIgMTcuMDcgTDguNjUgMTcuMjQgTDguNTcgMTcuNDEgTDguNTAgMTcuNTggTDguNDMgMTcuNzUgTDguMzcgMTcuOTMgTDguMzAgMTguMTAgTDguMjMgMTguMjggTDguMTcgMTguNDUgTDguMTEgMTguNjMgTDguMDUgMTguODAgTDcuOTggMTguOTggTDcuOTMgMTkuMTUgTDcuODcgMTkuMzMgTDcuODEgMTkuNTEgTDcuNzUgMTkuNjkgTDcuNzAgMTkuODYgTDcuNjUgMjAuMDQgTDcuNTkgMjAuMjIgTDcuNTQgMjAuNDAgTDcuNDkgMjAuNTggTDcuNDQgMjAuNzYgTDcuMzkgMjAuOTQgTDcuMzUgMjEuMTIgTDcuMzAgMjEuMzAgTDcuMjYgMjEuNDggTDcuMjIgMjEuNjYgTDcuMTcgMjEuODQgTDcuMTMgMjIuMDMgTDcuMTAgMjIuMjEgTDcuMDYgMjIuMzkgTDcuMDIgMjIuNTcgTDYuOTkgMjIuNzYgTDYuOTUgMjIuOTQgTDYuOTIgMjMuMTIgTDYuODkgMjMuMzEgTDYuODYgMjMuNDkgTDYuODMgMjMuNjcgTDYuODAgMjMuODYgTDYuNzcgMjQuMDQgTDYuNzUgMjQuMjMgTDYuNzIgMjQuNDEgTDYuNzAgMjQuNjAgTDYuNjggMjQuNzggTDYuNjYgMjQuOTcgTDYuNjQgMjUuMTUgTDYuNjIgMjUuMzQgTDYuNjAgMjUuNTMgTDYuNTkgMjUuNzEgTDYuNTcgMjUuOTAgTDYuNTYgMjYuMDggTDYuNTUgMjYuMjcgTDYuNTQgMjYuNDYgTDYuNTMgMjYuNjQgTDYuNTIgMjYuODMgTDYuNTEgMjcuMDIgTDYuNTEgMjcuMjAgTDYuNTAgMjcuMzkgTDYuNTAgMjcuNTggTDYuNTAgMjcuNzYgTDYuNTAgMjcuOTUgTDYuNTAgMjguMTQgTDYuNTAgMjguMzIgTDYuNTAgMjguNTEgTDYuNTEgMjguNzAgTDYuNTEgMjguODggTDYuNTIgMjkuMDcgTDYuNTMgMjkuMjYgTDYuNTQgMjkuNDQgTDYuNTUgMjkuNjMgTDYuNTYgMjkuODIgTDYuNTggMzAuMDEgTDYuNTkgMzAuMTkgTDYuNjEgMzAuMzggTDYuNjMgMzAuNTcgTDYuNjUgMzAuNzUgTDYuNjcgMzAuOTQgTDYuNjkgMzEuMTIgTDYuNzEgMzEuMzEgTDYuNzQgMzEuNTAgTDYuNzYgMzEuNjggTDYuNzkgMzEuODcgTDYuODIgMzIuMDUgTDYuODUgMzIuMjQgTDYuODggMzIuNDIgTDYuOTEgMzIuNjEgTDYuOTUgMzIuNzkgTDYuOTggMzIuOTggTDcuMDIgMzMuMTYgTDcuMDYgMzMuMzUgTDcuMTAgMzMuNTMgTDcuMTQgMzMuNzIgTDcuMTggMzMuOTAgTDcuMjIgMzQuMDggTDcuMjcgMzQuMjcgTDcuMzEgMzQuNDUgTDcuMzYgMzQuNjMgTDcuNDEgMzQuODIgTDcuNDYgMzUgTDcuNTEgMzUuMTggTDcuNTYgMzUuMzYgTDcuNjIgMzUuNTQgTDcuNjcgMzUuNzMgTDcuNzMgMzUuOTEgTDcuNzkgMzYuMDkgTDcuODUgMzYuMjcgTDcuOTEgMzYuNDUgTDcuOTcgMzYuNjMgTDguMDQgMzYuODEgTDguMTAgMzYuOTkgTDguMTcgMzcuMTcgTDguMjQgMzcuMzQgTDguMzEgMzcuNTIgTDguMzggMzcuNzAgTDguNDUgMzcuODggTDguNTIgMzguMDUgTDguNjAgMzguMjMgTDguNjcgMzguNDEgTDguNzUgMzguNTggTDguODMgMzguNzYgTDguOTEgMzguOTMgTDguOTkgMzkuMTAgTDkuMDggMzkuMjggTDkuMTYgMzkuNDUgTDkuMjUgMzkuNjIgTDkuMTUgMzkuNzkgTDkuMDUgMzkuOTUgTDkgNDAuMDMgTDkgNDEgTDkgNDIgTDEwIDQyIEwxMCA0MyBMMTAgNDQgTDkgNDQgTDkgNDUgTDggNDUgTDggNDYgTDcgNDYgTDcgNDcgTDYgNDcgTDYgNDggTDUgNDggTDUgNDkgTDQgNDkgTDQgNTAgTDMgNTAgTDMgNTEgTDIuMjMgNTEgTDIuMTkgNTEuMDcgTDIuMDkgNTEuMjMgTDIgNTEuMzggTDIgNTIgTDMgNTIgTDMuODAgNTIgTDMuODQgNTEuOTkgTDQuMDEgNTEuOTIgTDQuMTkgNTEuODYgTDQuMzcgNTEuODAgTDQuNTQgNTEuNzMgTDQuNzIgNTEuNjcgTDQuOTAgNTEuNjEgTDUgNTEuNTcgTDUgNTEgTDYgNTEgTDYuNjAgNTEgTDYuNjcgNTAuOTcgTDYuODUgNTAuOTEgTDcgNTAuODYgTDcgNTAgTDggNTAgTDkgNTAgTDkgNDkgTDEwIDQ5IEwxMSA0OSBMMTEgNDggTDEyIDQ4IEwxMyA0OCBMMTMgNDcgTDE0IDQ3IEwxNCA0OCBMMTUgNDggTDE2IDQ4IEwxNiA0OC43MyBMMTYuMDYgNDguNzggTDE2LjIxIDQ4Ljg4IEwxNi4zNyA0OC45OSBMMTYuMzkgNDkgTDE3IDQ5IEwxNyA0OS40MCBMMTcuMTUgNDkuNTAgTDE3LjMxIDQ5LjYwIEwxNy40NyA0OS43MCBMMTcuNjMgNDkuODAgTDE3Ljc5IDQ5Ljg5IEwxNy45NiA0OS45OSBMMTcuOTggNTAgTDE4IDUwIEwxOSA1MCBMMTkgNTAuNTcgTDE5LjExIDUwLjYyIEwxOS4yNyA1MC43MSBMMTkuNDQgNTAuNzkgTDE5LjYxIDUwLjg4IEwxOS43NyA1MC45NiBMMTkuODUgNTEgTDIwIDUxIEwyMSA1MSBMMjEgNTEuNTMgTDIxLjE0IDUxLjU5IEwyMS4zMSA1MS42NiBMMjEuNDkgNTEuNzMgTDIxLjY2IDUxLjgwIEwyMS44MyA1MS44NyBMMjIuMDEgNTEuOTQgTDIyLjE3IDUyIEwyMyA1MiBMMjMgNTIuMzAgTDIzLjA3IDUyLjMyIEwyMy4yNCA1Mi4zOCBMMjMuNDIgNTIuNDQgTDIzLjYwIDUyLjUwIEwyMy43OCA1Mi41NiBMMjMuOTYgNTIuNjEgTDI0LjE0IDUyLjY3IEwyNC4zMiA1Mi43MiBMMjQuNTAgNTIuNzcgTDI0LjY4IDUyLjgyIEwyNC44NiA1Mi44NyBMMjUuMDQgNTIuOTIgTDI1LjIyIDUyLjk3IEwyNS4zNSA1MyBMMjYgNTMgTDI3IDUzIEwyNyA1My4zNiBMMjcuMDUgNTMuMzcgTDI3LjI0IDUzLjQxIEwyNy40MiA1My40NCBMMjcuNjEgNTMuNDcgTDI3Ljc5IDUzLjUwIEwyNy45OCA1My41MyBMMjguMTYgNTMuNTYgTDI4LjM1IDUzLjU4IEwyOC41NCA1My42MSBMMjguNzIgNTMuNjMgTDI4LjkxIDUzLjY1IEwyOS4wOSA1My42OCBMMjkuMjggNTMuNzAgTDI5LjQ3IDUzLjcxIEwyOS42NSA1My43MyBMMjkuODQgNTMuNzUgTDMwLjAzIDUzLjc2IEwzMC4yMiA1My43OCBMMzAuNDAgNTMuNzkgTDMwLjU5IDUzLjgwIEwzMC43OCA1My44MSBMMzAuOTYgNTMuODIgTDMxLjE1IDUzLjgzIEwzMS4zNCA1My44NCBMMzEuNTMgNTMuODQgTDMxLjcxIDUzLjg0IEwzMS45MCA1My44NSBMMzIuMDkgNTMuODUgTDMyLjI4IDUzLjg1IEwzMi40NyA1My44NSBMMzIuNjUgNTMuODUgTDMyLjg0IDUzLjg0IEwzMy4wMyA1My44NCBMMzMuMjIgNTMuODMgTDMzLjQwIDUzLjgzIEwzMy41OSA1My44MiBMMzMuNzggNTMuODEgTDMzLjk2IDUzLjgwIEwzNC4xNSA1My43OCBMMzQuMzQgNTMuNzcgTDM0LjUzIDUzLjc2IEwzNC43MSA1My43NCBMMzQuOTAgNTMuNzIgTDM1LjA5IDUzLjcwIEwzNS4yNyA1My42OSBMMzUuNDYgNTMuNjYgTDM1LjY1IDUzLjY0IEwzNS44MyA1My42MiBMMzYuMDIgNTMuNTkgTDM2LjIwIDUzLjU3IEwzNi4zOSA1My41NCBMMzYuNTcgNTMuNTEgTDM2Ljc2IDUzLjQ4IEwzNi45NSA1My40NSBMMzcgNTMuNDQgTDM3IDUzIEwzOCA1MyBMMzkgNTMgTDM5LjExIDUzIEwzOS4xNSA1Mi45OSBMMzkuMzMgNTIuOTQgTDM5LjUxIDUyLjkwIEwzOS42OSA1Mi44NSBMMzkuODcgNTIuODAgTDQwLjA1IDUyLjc1IEw0MC4yMyA1Mi42OSBMNDAuNDEgNTIuNjQgTDQwLjU5IDUyLjU5IEw0MC43NyA1Mi41MyBMNDAuOTUgNTIuNDcgTDQxIDUyLjQ2IEw0MSA1MiBMNDIgNTIgTDQyLjI5IDUyIEw0Mi4zNyA1MS45NyBMNDIuNTQgNTEuOTAgTDQyLjcxIDUxLjg0IEw0Mi44OSA1MS43NyBMNDMgNTEuNzIgTDQzIDUxIEw0NCA1MSBMNDQuNjEgNTEgTDQ0Ljc3IDUwLjkyIEw0NC45NCA1MC44NCBMNDUgNTAuODAgTDQ1IDUwIEw0NiA1MCBMNDYuNDggNTAgTDQ2LjU5IDQ5Ljk0IEw0Ni43NSA0OS44NCBMNDYuOTEgNDkuNzUgTDQ3IDQ5LjY5IEw0NyA0OSBMNDggNDkgTDQ4IDQ4IEw0OSA0OCBMNDkuNDYgNDggTDQ5LjU0IDQ3Ljk0IEw0OS42OCA0Ny44MyBMNDkuODMgNDcuNzEgTDQ5Ljk4IDQ3LjU5IEw1MCA0Ny41NyBMNTAgNDcgTDUwLjY5IDQ3IEw1MC43MCA0Ni45OSBMNTAuODQgNDYuODcgTDUwLjk4IDQ2Ljc1IEw1MSA0Ni43MyBMNTEgNDYgTDUxLjc5IDQ2IEw1MS44MSA0NS45OCBMNTEuOTQgNDUuODUgTDUyIDQ1LjgwIEw1MiA0NSBMNTIuNzkgNDUgTDUyLjg2IDQ0LjkyIEw1Mi45OSA0NC43OCBMNTMgNDQuNzcgTDUzIDQ0IEw1MyA0MyBMNTQgNDMgTDU0IDQyIEw1NSA0MiBMNTUgNDEgTDU1IDQwIEw1NiA0MCBMNTYgMzkgTDU2IDM4IEw1NyAzOCBMNTcgMzcgTDU3IDM2IEw1OCAzNiBMNTggMzUgTDU4IDM0IEw1OCAzMyBMNTggMzIgTDU5IDMyIEw1OSAzMSBMNjAgMzEgTDYwIDMwIEw2MCAyOSBMNTkgMjkgTDU5IDI4IEw1OSAyNyBMNTkgMjYgTDU4IDI2IEw1NyAyNiBMNTYgMjYgTDU2IDI1IEw1NSAyNSBMNTUgMjQgTDU0IDI0IEw1NCAyMyBMNTMgMjMgTDUzIDIyIEw1MyAyMSBMNTMgMjAgTDUzIDE5IEw1MyAxOCBMNTMgMTcgTDUzIDE2IEw1MyAxNSBMNTMgMTQgTDUyIDE0IEw1MSAxNCBMNTAgMTQgTDQ5IDE0IEw0OCAxNCBMNDggMTMgTDQ3IDEzIEw0NyAxMiBMNDYgMTIgTDQ2IDExIEw0NiAxMCBMNDYgOSBMNDUgOSBMNDUgOCBMNDUgNyBMNDQgNyBMNDMgNyBMNDIgNyBMNDEgNyBMNDEgOCBMNDAgOCBMMzkgOCBMMzkgNyBMMzggNyBMMzcgNyBMMzYgNyBMMzYgNloiIGZpbGw9IiNGQUY4RjIiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PC9wYXRoPjxwYXRoIGQ9IiIgZmlsbD0iI0UyRERDRiIgZmlsbC1ydWxlPSJldmVub2RkIj48L3BhdGg+PHBhdGggdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNCAwKSBzY2FsZSgwLjEyNTApIiBkPSJNODggMzg0IEwtMjQgNDI0IEw0MiAzMTcgQy04IDIxOCAzMCA5MCAxMjcgMzYgQzE3OCA3IDI0MiAtNCAyNDIgMTYgQzI0MiAyNCAyMzYgMjkgMjI1IDI5IEMxNTcgMjkgNzAgOTggNTEgMTY3IEMzOCAyMTQgNDMgMjY2IDY2IDMxMCBMNzAgMzE3IEwzMiAzNzggTDg3LjcgMzU4LjYgQTIwMi40IDIwMi40IDAgMCAwIDQyNi42IDIzMC4xIEM0MjYgMjIwIDQzMSAyMTMgNDM5IDIxMyBDNDQ3IDIxMyA0NTAuNSAyMjAgNDUwLjUgMjMyLjQgQTIyNi40IDIyNi40IDAgMCAxIDg4IDM4NCBaIiBmaWxsPSIjMUQzQjJBIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjwvcGF0aD48L2c+PGcgaWQ9ImZhY2UiPjxwYXRoIGQ9Ik0xNiAyMmgydjFoLTJ6TTE2IDIzaDN2MWgtM3pNMTcgMjRoM3YxaC0zek0xOCAyNWgzdjFoLTN6TTE5IDI2aDN2MWgtM3pNMjAgMjdoM3YxaC0zek0yMCAyOGgzdjFoLTN6TTE5IDI5aDN2MWgtM3pNMTggMzBoM3YxaC0zek0xNyAzMWgzdjFoLTN6TTE2IDMyaDN2MWgtM3pNMTYgMzNoMnYxaC0yeiIgZmlsbD0iI0ZCNUU0NSI+PC9wYXRoPjxwYXRoIGQ9Ik0yNyAzMWgxMHYxaC0xMHpNMjcgMzJoMTB2MWgtMTB6TTI3IDMzaDEwdjFoLTEweiIgZmlsbD0iI0ZCNUU0NSI+PC9wYXRoPjxwYXRoIGQ9Ik00MSAyM2g2djFoLTZ6TTQxIDI0aDZ2MWgtNnpNNDEgMjVoNnYxaC02ek00MSAyNmg2djFoLTZ6TTQxIDI3aDZ2MWgtNnpNNDEgMjhoNnYxaC02ek00MSAyOWg2djFoLTZ6TTQxIDMwaDZ2MWgtNnpNNDEgMzFoNnYxaC02eiIgZmlsbD0iI0ZCNUU0NSI+PC9wYXRoPjwvZz48L2c+Cjwvc3ZnPgo=" alt=""></span>
+              <div>
+                <div class="smsg__who"><b>Jiro</b><span class="app">APP</span><time>11:08 AM</time></div>
+                <div class="pr"><b>#482 Make webhook handling idempotent, then retry</b><br><span class="diff"><span class="add">+86</span> <span class="del">−21</span> · 4 files · ready for review</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="slack__typing"><i></i><i></i><i></i> Jiro is reading handlers/webhook.test.ts</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ditch" data-jiro-comment="I censored them myself. Professional courtesy." data-jiro-anchor="#callin-logo" data-jiro-merge="#callin-logo">
+      <div class="ditch__copy">
+        <h2><span>Ditch <span id="censor-devin">D*vin</span>.</span><span>Forget F*ctory.</span><span>Stop slopping around.</span></h2>
+        <p>Jiro is the AI engineer that knows your style and proactively provides feedback. No markup, no lock-in.</p>
+      </div>
+      <div class="callin">
+        <span class="label">&gt;_ Call him in</span>
+        <img id="callin-logo" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTEgNjIgNTYiIHdpZHRoPSI0OTYiIGhlaWdodD0iNDQ4Ij4KPGcgaWQ9Imppcm8iIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyI+PGcgaWQ9ImJvZHkiPjxwYXRoIGQ9Ik0zNSA2IEwzNCA2IEwzNCA0IEwzNCAzIEwzMyAzIEwzMyAyIEwzMyAxIEwzMyAwLjgzIEwzMi45NCAwLjgyIEwzMi44MiAwLjgwIEwzMi42OCAwLjc5IEwzMi41NSAwLjc3IEwzMi40MSAwLjc2IEwzMi4yNiAwLjc2IEwzMi4xMSAwLjc1IEwzMS45NiAwLjc1IEwzMS44MCAwLjc1IEwzMS42NCAwLjc1IEwzMS40OCAwLjc2IEwzMS4zMSAwLjc3IEwzMS4xMyAwLjc4IEwzMC45NSAwLjgwIEwzMC43NyAwLjgyIEwzMC41OSAwLjg0IEwzMC40MCAwLjg2IEwzMC4yMSAwLjg4IEwzMC4wMiAwLjkxIEwyOS44MiAwLjk0IEwyOS42MiAwLjk4IEwyOS40MSAxLjAxIEwyOS4yMSAxLjA1IEwyOSAxLjA5IEwyOC43OSAxLjE0IEwyOC41OCAxLjE4IEwyOC4zNiAxLjIzIEwyOC4xNSAxLjI4IEwyNy45MyAxLjMzIEwyNy43MSAxLjM5IEwyNy40OCAxLjQ1IEwyNy4yNiAxLjUxIEwyNy4wMyAxLjU3IEwyNi44MCAxLjYzIEwyNi41OCAxLjcwIEwyNi4zNSAxLjc3IEwyNi4xMSAxLjg0IEwyNS44OCAxLjkxIEwyNS42NSAxLjk5IEwyNS40MiAyLjA3IEwyNS4xOCAyLjE1IEwyNC45NSAyLjIzIEwyNC43MSAyLjMxIEwyNC40OCAyLjQwIEwyNC4yNCAyLjQ4IEwyNCAyLjU3IEwyMy43NyAyLjY3IEwyMy41MyAyLjc2IEwyMy4zMCAyLjg1IEwyMy4wNiAyLjk1IEwyMi44MyAzLjA1IEwyMi41OSAzLjE1IEwyMi4zNiAzLjI2IEwyMi4xMyAzLjM2IEwyMS45MCAzLjQ3IEwyMS42NyAzLjU3IEwyMS40NCAzLjY4IEwyMS4yMSAzLjgwIEwyMC45OCAzLjkxIEwyMC43NiA0LjAyIEwyMC41MyA0LjE0IEwyMC4zMSA0LjI2IEwyMC4wOSA0LjM4IEwxOS44OCA0LjUwIEwxOS43MSA0LjU5IEwxOS41NCA0LjY5IEwxOS4zNyA0Ljc5IEwxOS4yMSA0Ljg5IEwxOS4wNCA0Ljk5IEwxOC44OCA1LjA5IEwxOC43MSA1LjE5IEwxOC41NSA1LjI5IEwxOC4zOSA1LjQwIEwxOC4yMyA1LjUwIEwxOC4wNyA1LjYxIEwxNy45MSA1LjcxIEwxNy43NiA1LjgyIEwxNy42MCA1LjkzIEwxNy40NSA2LjA0IEwxNy4yOSA2LjE2IEwxNy4xNCA2LjI3IEwxNi45OSA2LjM4IEwxNi44NCA2LjUwIEwxNi42OSA2LjYxIEwxNi41NCA2LjczIEwxNi4zOSA2Ljg1IEwxNi4yNCA2Ljk3IEwxNi4xMCA3LjA5IEwxNS45NSA3LjIxIEwxNS44MSA3LjMzIEwxNS42NiA3LjQ2IEwxNS41MiA3LjU4IEwxNS4zOCA3LjcwIEwxNS4yNCA3LjgzIEwxNS4xMCA3Ljk2IEwxNC45NiA4LjA5IEwxNC44MyA4LjIyIEwxNC42OSA4LjM1IEwxNC41NiA4LjQ4IEwxNC40MiA4LjYxIEwxNC4yOSA4Ljc0IEwxNC4xNiA4Ljg3IEwxNC4wMyA5LjAxIEwxMy45MCA5LjE1IEwxMy43NyA5LjI4IEwxMy42NCA5LjQyIEwxMy41MSA5LjU2IEwxMy4zOSA5LjcwIEwxMy4yNiA5Ljg0IEwxMy4xNCA5Ljk4IEwxMy4wMiAxMC4xMiBMMTIuOTAgMTAuMjYgTDEyLjc4IDEwLjQwIEwxMi42NiAxMC41NSBMMTIuNTQgMTAuNjkgTDEyLjQyIDEwLjg0IEwxMi4zMSAxMC45OSBMMTIuMTkgMTEuMTMgTDEyLjA4IDExLjI4IEwxMS45NyAxMS40MyBMMTEuODUgMTEuNTggTDExLjc0IDExLjczIEwxMS42MyAxMS44OCBMMTEuNTMgMTIuMDMgTDExLjQyIDEyLjE5IEwxMS4zMSAxMi4zNCBMMTEuMjEgMTIuNDkgTDExLjEwIDEyLjY1IEwxMSAxMi44MCBMMTAuOTAgMTIuOTYgTDEwLjgwIDEzLjEyIEwxMC43MCAxMy4yNyBMMTAuNjAgMTMuNDMgTDEwLjUwIDEzLjU5IEwxMC40MSAxMy43NSBMMTAuMzEgMTMuOTEgTDEwLjIyIDE0LjA3IEwxMC4xMiAxNC4yMyBMMTAuMDMgMTQuMzkgTDkuOTQgMTQuNTYgTDkuODUgMTQuNzIgTDkuNzYgMTQuODggTDkuNjggMTUuMDUgTDkuNTkgMTUuMjEgTDkuNTEgMTUuMzggTDkuNDIgMTUuNTUgTDkuMzQgMTUuNzEgTDkuMjYgMTUuODggTDkuMTggMTYuMDUgTDkuMTAgMTYuMjIgTDkuMDIgMTYuMzggTDguOTQgMTYuNTUgTDguODcgMTYuNzIgTDguNzkgMTYuODkgTDguNzIgMTcuMDcgTDguNjUgMTcuMjQgTDguNTcgMTcuNDEgTDguNTAgMTcuNTggTDguNDMgMTcuNzUgTDguMzcgMTcuOTMgTDguMzAgMTguMTAgTDguMjMgMTguMjggTDguMTcgMTguNDUgTDguMTEgMTguNjMgTDguMDUgMTguODAgTDcuOTggMTguOTggTDcuOTMgMTkuMTUgTDcuODcgMTkuMzMgTDcuODEgMTkuNTEgTDcuNzUgMTkuNjkgTDcuNzAgMTkuODYgTDcuNjUgMjAuMDQgTDcuNTkgMjAuMjIgTDcuNTQgMjAuNDAgTDcuNDkgMjAuNTggTDcuNDQgMjAuNzYgTDcuMzkgMjAuOTQgTDcuMzUgMjEuMTIgTDcuMzAgMjEuMzAgTDcuMjYgMjEuNDggTDcuMjIgMjEuNjYgTDcuMTcgMjEuODQgTDcuMTMgMjIuMDMgTDcuMTAgMjIuMjEgTDcuMDYgMjIuMzkgTDcuMDIgMjIuNTcgTDYuOTkgMjIuNzYgTDYuOTUgMjIuOTQgTDYuOTIgMjMuMTIgTDYuODkgMjMuMzEgTDYuODYgMjMuNDkgTDYuODMgMjMuNjcgTDYuODAgMjMuODYgTDYuNzcgMjQuMDQgTDYuNzUgMjQuMjMgTDYuNzIgMjQuNDEgTDYuNzAgMjQuNjAgTDYuNjggMjQuNzggTDYuNjYgMjQuOTcgTDYuNjQgMjUuMTUgTDYuNjIgMjUuMzQgTDYuNjAgMjUuNTMgTDYuNTkgMjUuNzEgTDYuNTcgMjUuOTAgTDYuNTYgMjYuMDggTDYuNTUgMjYuMjcgTDYuNTQgMjYuNDYgTDYuNTMgMjYuNjQgTDYuNTIgMjYuODMgTDYuNTEgMjcuMDIgTDYuNTEgMjcuMjAgTDYuNTAgMjcuMzkgTDYuNTAgMjcuNTggTDYuNTAgMjcuNzYgTDYuNTAgMjcuOTUgTDYuNTAgMjguMTQgTDYuNTAgMjguMzIgTDYuNTAgMjguNTEgTDYuNTEgMjguNzAgTDYuNTEgMjguODggTDYuNTIgMjkuMDcgTDYuNTMgMjkuMjYgTDYuNTQgMjkuNDQgTDYuNTUgMjkuNjMgTDYuNTYgMjkuODIgTDYuNTggMzAuMDEgTDYuNTkgMzAuMTkgTDYuNjEgMzAuMzggTDYuNjMgMzAuNTcgTDYuNjUgMzAuNzUgTDYuNjcgMzAuOTQgTDYuNjkgMzEuMTIgTDYuNzEgMzEuMzEgTDYuNzQgMzEuNTAgTDYuNzYgMzEuNjggTDYuNzkgMzEuODcgTDYuODIgMzIuMDUgTDYuODUgMzIuMjQgTDYuODggMzIuNDIgTDYuOTEgMzIuNjEgTDYuOTUgMzIuNzkgTDYuOTggMzIuOTggTDcuMDIgMzMuMTYgTDcuMDYgMzMuMzUgTDcuMTAgMzMuNTMgTDcuMTQgMzMuNzIgTDcuMTggMzMuOTAgTDcuMjIgMzQuMDggTDcuMjcgMzQuMjcgTDcuMzEgMzQuNDUgTDcuMzYgMzQuNjMgTDcuNDEgMzQuODIgTDcuNDYgMzUgTDcuNTEgMzUuMTggTDcuNTYgMzUuMzYgTDcuNjIgMzUuNTQgTDcuNjcgMzUuNzMgTDcuNzMgMzUuOTEgTDcuNzkgMzYuMDkgTDcuODUgMzYuMjcgTDcuOTEgMzYuNDUgTDcuOTcgMzYuNjMgTDguMDQgMzYuODEgTDguMTAgMzYuOTkgTDguMTcgMzcuMTcgTDguMjQgMzcuMzQgTDguMzEgMzcuNTIgTDguMzggMzcuNzAgTDguNDUgMzcuODggTDguNTIgMzguMDUgTDguNjAgMzguMjMgTDguNjcgMzguNDEgTDguNzUgMzguNTggTDguODMgMzguNzYgTDguOTEgMzguOTMgTDguOTkgMzkuMTAgTDkuMDggMzkuMjggTDkuMTYgMzkuNDUgTDkuMjUgMzkuNjIgTDkuMTUgMzkuNzkgTDkuMDUgMzkuOTUgTDkgNDAuMDMgTDkgNDEgTDkgNDIgTDEwIDQyIEwxMCA0MyBMMTAgNDQgTDkgNDQgTDkgNDUgTDggNDUgTDggNDYgTDcgNDYgTDcgNDcgTDYgNDcgTDYgNDggTDUgNDggTDUgNDkgTDQgNDkgTDQgNTAgTDMgNTAgTDMgNTEgTDIuMjMgNTEgTDIuMTkgNTEuMDcgTDIuMDkgNTEuMjMgTDIgNTEuMzggTDIgNTIgTDMgNTIgTDMuODAgNTIgTDMuODQgNTEuOTkgTDQuMDEgNTEuOTIgTDQuMTkgNTEuODYgTDQuMzcgNTEuODAgTDQuNTQgNTEuNzMgTDQuNzIgNTEuNjcgTDQuOTAgNTEuNjEgTDUgNTEuNTcgTDUgNTEgTDYgNTEgTDYuNjAgNTEgTDYuNjcgNTAuOTcgTDYuODUgNTAuOTEgTDcgNTAuODYgTDcgNTAgTDggNTAgTDkgNTAgTDkgNDkgTDEwIDQ5IEwxMSA0OSBMMTEgNDggTDEyIDQ4IEwxMyA0OCBMMTMgNDcgTDE0IDQ3IEwxNCA0OCBMMTUgNDggTDE2IDQ4IEwxNiA0OC43MyBMMTYuMDYgNDguNzggTDE2LjIxIDQ4Ljg4IEwxNi4zNyA0OC45OSBMMTYuMzkgNDkgTDE3IDQ5IEwxNyA0OS40MCBMMTcuMTUgNDkuNTAgTDE3LjMxIDQ5LjYwIEwxNy40NyA0OS43MCBMMTcuNjMgNDkuODAgTDE3Ljc5IDQ5Ljg5IEwxNy45NiA0OS45OSBMMTcuOTggNTAgTDE4IDUwIEwxOSA1MCBMMTkgNTAuNTcgTDE5LjExIDUwLjYyIEwxOS4yNyA1MC43MSBMMTkuNDQgNTAuNzkgTDE5LjYxIDUwLjg4IEwxOS43NyA1MC45NiBMMTkuODUgNTEgTDIwIDUxIEwyMSA1MSBMMjEgNTEuNTMgTDIxLjE0IDUxLjU5IEwyMS4zMSA1MS42NiBMMjEuNDkgNTEuNzMgTDIxLjY2IDUxLjgwIEwyMS44MyA1MS44NyBMMjIuMDEgNTEuOTQgTDIyLjE3IDUyIEwyMyA1MiBMMjMgNTIuMzAgTDIzLjA3IDUyLjMyIEwyMy4yNCA1Mi4zOCBMMjMuNDIgNTIuNDQgTDIzLjYwIDUyLjUwIEwyMy43OCA1Mi41NiBMMjMuOTYgNTIuNjEgTDI0LjE0IDUyLjY3IEwyNC4zMiA1Mi43MiBMMjQuNTAgNTIuNzcgTDI0LjY4IDUyLjgyIEwyNC44NiA1Mi44NyBMMjUuMDQgNTIuOTIgTDI1LjIyIDUyLjk3IEwyNS4zNSA1MyBMMjYgNTMgTDI3IDUzIEwyNyA1My4zNiBMMjcuMDUgNTMuMzcgTDI3LjI0IDUzLjQxIEwyNy40MiA1My40NCBMMjcuNjEgNTMuNDcgTDI3Ljc5IDUzLjUwIEwyNy45OCA1My41MyBMMjguMTYgNTMuNTYgTDI4LjM1IDUzLjU4IEwyOC41NCA1My42MSBMMjguNzIgNTMuNjMgTDI4LjkxIDUzLjY1IEwyOS4wOSA1My42OCBMMjkuMjggNTMuNzAgTDI5LjQ3IDUzLjcxIEwyOS42NSA1My43MyBMMjkuODQgNTMuNzUgTDMwLjAzIDUzLjc2IEwzMC4yMiA1My43OCBMMzAuNDAgNTMuNzkgTDMwLjU5IDUzLjgwIEwzMC43OCA1My44MSBMMzAuOTYgNTMuODIgTDMxLjE1IDUzLjgzIEwzMS4zNCA1My44NCBMMzEuNTMgNTMuODQgTDMxLjcxIDUzLjg0IEwzMS45MCA1My44NSBMMzIuMDkgNTMuODUgTDMyLjI4IDUzLjg1IEwzMi40NyA1My44NSBMMzIuNjUgNTMuODUgTDMyLjg0IDUzLjg0IEwzMy4wMyA1My44NCBMMzMuMjIgNTMuODMgTDMzLjQwIDUzLjgzIEwzMy41OSA1My44MiBMMzMuNzggNTMuODEgTDMzLjk2IDUzLjgwIEwzNC4xNSA1My43OCBMMzQuMzQgNTMuNzcgTDM0LjUzIDUzLjc2IEwzNC43MSA1My43NCBMMzQuOTAgNTMuNzIgTDM1LjA5IDUzLjcwIEwzNS4yNyA1My42OSBMMzUuNDYgNTMuNjYgTDM1LjY1IDUzLjY0IEwzNS44MyA1My42MiBMMzYuMDIgNTMuNTkgTDM2LjIwIDUzLjU3IEwzNi4zOSA1My41NCBMMzYuNTcgNTMuNTEgTDM2Ljc2IDUzLjQ4IEwzNi45NSA1My40NSBMMzcgNTMuNDQgTDM3IDUzIEwzOCA1MyBMMzkgNTMgTDM5LjExIDUzIEwzOS4xNSA1Mi45OSBMMzkuMzMgNTIuOTQgTDM5LjUxIDUyLjkwIEwzOS42OSA1Mi44NSBMMzkuODcgNTIuODAgTDQwLjA1IDUyLjc1IEw0MC4yMyA1Mi42OSBMNDAuNDEgNTIuNjQgTDQwLjU5IDUyLjU5IEw0MC43NyA1Mi41MyBMNDAuOTUgNTIuNDcgTDQxIDUyLjQ2IEw0MSA1MiBMNDIgNTIgTDQyLjI5IDUyIEw0Mi4zNyA1MS45NyBMNDIuNTQgNTEuOTAgTDQyLjcxIDUxLjg0IEw0Mi44OSA1MS43NyBMNDMgNTEuNzIgTDQzIDUxIEw0NCA1MSBMNDQuNjEgNTEgTDQ0Ljc3IDUwLjkyIEw0NC45NCA1MC44NCBMNDUgNTAuODAgTDQ1IDUwIEw0NiA1MCBMNDYuNDggNTAgTDQ2LjU5IDQ5Ljk0IEw0Ni43NSA0OS44NCBMNDYuOTEgNDkuNzUgTDQ3IDQ5LjY5IEw0NyA0OSBMNDggNDkgTDQ4IDQ4IEw0OSA0OCBMNDkuNDYgNDggTDQ5LjU0IDQ3Ljk0IEw0OS42OCA0Ny44MyBMNDkuODMgNDcuNzEgTDQ5Ljk4IDQ3LjU5IEw1MCA0Ny41NyBMNTAgNDcgTDUwLjY5IDQ3IEw1MC43MCA0Ni45OSBMNTAuODQgNDYuODcgTDUwLjk4IDQ2Ljc1IEw1MSA0Ni43MyBMNTEgNDYgTDUxLjc5IDQ2IEw1MS44MSA0NS45OCBMNTEuOTQgNDUuODUgTDUyIDQ1LjgwIEw1MiA0NSBMNTIuNzkgNDUgTDUyLjg2IDQ0LjkyIEw1Mi45OSA0NC43OCBMNTMgNDQuNzcgTDUzIDQ0IEw1MyA0MyBMNTQgNDMgTDU0IDQyIEw1NSA0MiBMNTUgNDEgTDU1IDQwIEw1NiA0MCBMNTYgMzkgTDU2IDM4IEw1NyAzOCBMNTcgMzcgTDU3IDM2IEw1OCAzNiBMNTggMzUgTDU4IDM0IEw1OCAzMyBMNTggMzIgTDU5IDMyIEw1OSAzMSBMNjAgMzEgTDYwIDMwIEw2MCAyOSBMNTkgMjkgTDU5IDI4IEw1OSAyNyBMNTkgMjYgTDU4IDI2IEw1NyAyNiBMNTYgMjYgTDU2IDI1IEw1NSAyNSBMNTUgMjQgTDU0IDI0IEw1NCAyMyBMNTMgMjMgTDUzIDIyIEw1MyAyMSBMNTMgMjAgTDUzIDE5IEw1MyAxOCBMNTMgMTcgTDUzIDE2IEw1MyAxNSBMNTMgMTQgTDUyIDE0IEw1MSAxNCBMNTAgMTQgTDQ5IDE0IEw0OCAxNCBMNDggMTMgTDQ3IDEzIEw0NyAxMiBMNDYgMTIgTDQ2IDExIEw0NiAxMCBMNDYgOSBMNDUgOSBMNDUgOCBMNDUgNyBMNDQgNyBMNDMgNyBMNDIgNyBMNDEgNyBMNDEgOCBMNDAgOCBMMzkgOCBMMzkgNyBMMzggNyBMMzcgNyBMMzYgNyBMMzYgNloiIGZpbGw9IiNGQUY4RjIiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PC9wYXRoPjxwYXRoIGQ9IiIgZmlsbD0iI0UyRERDRiIgZmlsbC1ydWxlPSJldmVub2RkIj48L3BhdGg+PHBhdGggdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNCAwKSBzY2FsZSgwLjEyNTApIiBkPSJNODggMzg0IEwtMjQgNDI0IEw0MiAzMTcgQy04IDIxOCAzMCA5MCAxMjcgMzYgQzE3OCA3IDI0MiAtNCAyNDIgMTYgQzI0MiAyNCAyMzYgMjkgMjI1IDI5IEMxNTcgMjkgNzAgOTggNTEgMTY3IEMzOCAyMTQgNDMgMjY2IDY2IDMxMCBMNzAgMzE3IEwzMiAzNzggTDg3LjcgMzU4LjYgQTIwMi40IDIwMi40IDAgMCAwIDQyNi42IDIzMC4xIEM0MjYgMjIwIDQzMSAyMTMgNDM5IDIxMyBDNDQ3IDIxMyA0NTAuNSAyMjAgNDUwLjUgMjMyLjQgQTIyNi40IDIyNi40IDAgMCAxIDg4IDM4NCBaIiBmaWxsPSIjMUQzQjJBIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjwvcGF0aD48L2c+PGcgaWQ9ImZhY2UiPjxwYXRoIGQ9Ik0xNiAyMmgydjFoLTJ6TTE2IDIzaDN2MWgtM3pNMTcgMjRoM3YxaC0zek0xOCAyNWgzdjFoLTN6TTE5IDI2aDN2MWgtM3pNMjAgMjdoM3YxaC0zek0yMCAyOGgzdjFoLTN6TTE5IDI5aDN2MWgtM3pNMTggMzBoM3YxaC0zek0xNyAzMWgzdjFoLTN6TTE2IDMyaDN2MWgtM3pNMTYgMzNoMnYxaC0yeiIgZmlsbD0iI0ZCNUU0NSI+PC9wYXRoPjxwYXRoIGQ9Ik0yNyAzMWgxMHYxaC0xMHpNMjcgMzJoMTB2MWgtMTB6TTI3IDMzaDEwdjFoLTEweiIgZmlsbD0iI0ZCNUU0NSI+PC9wYXRoPjxwYXRoIGQ9Ik00MSAyM2g2djFoLTZ6TTQxIDI0aDZ2MWgtNnpNNDEgMjVoNnYxaC02ek00MSAyNmg2djFoLTZ6TTQxIDI3aDZ2MWgtNnpNNDEgMjhoNnYxaC02ek00MSAyOWg2djFoLTZ6TTQxIDMwaDZ2MWgtNnpNNDEgMzFoNnYxaC02eiIgZmlsbD0iI0ZCNUU0NSI+PC9wYXRoPjwvZz48L2c+Cjwvc3ZnPgo=" alt="Jiro, a pixel speech-bubble mascot with a terminal-prompt face" width="496" height="448">
+        <span class="tag">@jirobot</span>
+      </div>
+    </section>
+
+    <section id="video" data-jiro-comment="Fewer lines. Same fix. You&#39;re welcome." data-jiro-anchor="#jiro-video">
+      <span class="jiro-rest" id="jiro-video" aria-hidden="true"></span>
+      <p class="video__quote">Most agents optimize for output, Jiro optimizes for the change you would have made yourself, <em>on a good day.</em></p>
+      <div id="video-frame" role="img" aria-label="Video placeholder: same task, a regular agent changed 171 files with 12,659 additions; Jiro changed 23 files with 1,412 additions">
+        <div class="vf__bar"><strong>Same task. A focused diff.</strong><span class="label label--light">Video · 1:12</span></div>
+        <div class="vf__split">
+          <div class="vf__side">
+            <span class="label label--light">Regular agent</span>
+            <div class="vf__stat"><span class="add">+12,659</span> <span class="del">−1,649</span></div>
+            <span class="vf__files">171 files changed</span>
+            <div class="vf__rows" aria-hidden="true">
+              <i><b style="width:76%"></b></i><i><b style="width:85%"></b></i><i><b style="width:44%"></b></i><i><b style="width:47%"></b></i><i><b style="width:42%"></b></i><i><b class="r" style="width:62%"></b></i><i><b style="width:90%"></b></i><i><b class="r" style="width:65%"></b></i><i><b class="r" style="width:89%"></b></i><i><b style="width:50%"></b></i><i><b style="width:42%"></b></i><i><b class="r" style="width:85%"></b></i><i><b class="r" style="width:63%"></b></i><i><b style="width:52%"></b></i><i><b style="width:53%"></b></i><i><b style="width:74%"></b></i><i><b class="r" style="width:58%"></b></i><i><b style="width:59%"></b></i><i><b style="width:43%"></b></i><i><b style="width:61%"></b></i><i><b style="width:89%"></b></i><i><b style="width:94%"></b></i><i><b style="width:93%"></b></i><i><b style="width:66%"></b></i><i><b class="r" style="width:66%"></b></i><i><b style="width:73%"></b></i><i><b style="width:78%"></b></i><i><b style="width:71%"></b></i><i><b class="r" style="width:44%"></b></i><i><b class="r" style="width:88%"></b></i><i><b class="r" style="width:78%"></b></i><i><b style="width:97%"></b></i><i><b style="width:44%"></b></i><i><b style="width:75%"></b></i><i><b style="width:79%"></b></i><i><b class="r" style="width:93%"></b></i><i><b style="width:46%"></b></i><i><b style="width:95%"></b></i><i><b class="r" style="width:43%"></b></i><i><b style="width:74%"></b></i>
+            </div>
+          </div>
+          <div class="vf__side vf__side--jiro">
+            <span class="label" style="color:var(--green)">Jiro</span>
+            <div class="vf__stat"><span class="add">+1,412</span> <span class="del">−318</span></div>
+            <span class="vf__files">23 files changed</span>
+            <div class="vf__rows" aria-hidden="true">
+              <i><b style="width:20%"></b></i><i><b style="width:18%"></b></i><i><b class="r" style="width:17%"></b></i><i><b style="width:20%"></b></i>
+            </div>
+            <div class="vf__note"><span class="label" style="color:var(--green)">PR #482</span><span>Idempotent webhook handling, then retries. Two commits, explained.</span><span class="label label--light">Ready for review</span></div>
+          </div>
+        </div>
+        <span class="play" aria-hidden="true"></span>
+      </div>
+    </section>
+
+    <section id="pillars" data-jiro-comment="The cheapest bug is the one I flag before the PR." data-jiro-anchor="#jiro-pillars">
+      <span class="jiro-rest" id="jiro-pillars" aria-hidden="true"></span>
+      <article class="pillar">
+        <span class="pillar__n">01</span>
+        <h3>Quality over volume</h3>
+        <p>Jiro takes the broader picture into account, and makes the right changes to improve your codebase architecture.</p>
+      </article>
+      <article class="pillar">
+        <span class="pillar__n">02</span>
+        <h3>Missteps, caught early</h3>
+        <p>He reads the code around the change and raises risks while they are cheap to fix.</p>
+      </article>
+      <article class="pillar">
+        <span class="pillar__n">03</span>
+        <h3>Called in, not always on</h3>
+        <p>Mention @jirobot where your team already works. He works the thread, then gets out of the way.</p>
+      </article>
+    </section>
+
+    <section id="how" data-jiro-comment="Plain words are fine. I&#39;ll ask if it&#39;s unclear." data-jiro-anchor="#jiro-how">
+      <span class="jiro-rest" id="jiro-how" aria-hidden="true"></span>
+      <div class="how__panel">
+        <span class="label label--salmon">/ How he works</span>
+        <h2>Jiro is driven by a passion for high-quality work.</h2>
+      </div>
+      <div class="how__rows">
+        <div class="how__row">
+          <span class="label">/ Call him in</span>
+          <div>
+            <h3>Mention <span class="tag">@jirobot</span></h3>
+            <p>Say what you need, in plain words, where your team already works.</p>
+          </div>
+          <a class="watch" href="#video">Watch →</a>
+        </div>
+        <div class="how__row">
+          <span class="label">/ He reads</span>
+          <div>
+            <h3>Context before code</h3>
+            <p>If something is unclear or risky, you hear about it now, not in review.</p>
+          </div>
+          <a class="watch" href="#video">Watch →</a>
+        </div>
+        <div class="how__row">
+          <span class="label">/ He ships</span>
+          <div>
+            <h3>A focused pull request</h3>
+            <p>Explained, small, and waiting for your review.</p>
+          </div>
+          <a class="watch" href="#video">Watch →</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" data-jiro-comment="Thirty days on the house. Pull up a stool?" data-jiro-ask="Yes please" data-jiro-action="#email" data-jiro-anchor="#jiro-pricing">
+      <span class="jiro-rest" id="jiro-pricing" aria-hidden="true"></span>
+      <div class="sec-head sec-head--perch">
+        <span class="label">/ Pricing</span>
+        <h2 class="h-sec" id="pricing-title">Not market price</h2>
+      </div>
+      <div class="tiers">
+        <article class="tier">
+          <div class="pips" aria-hidden="true"><i class="pip pip--g"></i><i class="pip"></i></div>
+          <h3>Apprentice</h3>
+          <div class="price"><strong>$0</strong><span>free trial</span></div>
+          <ul><li>30 days</li><li>Up to 3 agents</li><li>Bring your own subscription</li></ul>
+          <a class="btn btn--ink" href="#faq"><span>Start a trial</span><span aria-hidden="true">→</span></a>
+        </article>
+        <article class="tier tier--feat">
+          <div class="pips" aria-hidden="true"><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip pip--g"></i></div>
+          <h3>Itamae <small>Most picked</small></h3>
+          <div class="price"><strong>$99</strong><span>/ month, per developer</span></div>
+          <ul><li>1 developer</li><li>Up to 3 agents</li><li>Bring your own subscription</li></ul>
+          <a class="btn btn--ink" href="#faq"><span>Reserve a seat</span><span aria-hidden="true">→</span></a>
+        </article>
+        <article class="tier">
+          <div class="pips" aria-hidden="true"><i class="pip"></i><i class="pip pip--g"></i><i class="pip"></i><i class="pip pip--g"></i><i class="pip"></i><i class="pip pip--g"></i><i class="pip"></i></div>
+          <h3>Omakase</h3>
+          <div class="price"><strong>$250</strong><span>/ month, per team</span></div>
+          <ul><li>Unlimited seats</li><li>5 shared agents</li><li>Bring your own subscription</li></ul>
+          <a class="btn btn--ink" href="#faq"><span>Reserve for your team</span><span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+      <p class="footnote">Bring your own model subscription. No token markup. Agents sleep when idle. Need more? Talk to us about Enterprise.</p>
+    </section>
+
+    <section id="bakeoff" data-jiro-comment="The green column is mine. Biased, but sourced." data-jiro-anchor="#jiro-bakeoff">
+      <span class="jiro-rest" id="jiro-bakeoff" aria-hidden="true"></span>
+      <div class="sec-head">
+        <span class="label">/ Compare</span>
+        <h2 class="h-sec">Cloud Agent Bakeoff.</h2>
+        <p>Any model, any harness, any compute. Bring your own subscription with no token markup.</p>
+      </div>
+      <div class="table-wrap">
+        <table class="bake">
+          <thead>
+            <tr>
+              <th class="menu-h">On the menu</th>
+              <th class="jiro" id="col-jiro">jiro.bot</th>
+              <th>Claude Tag</th>
+              <th>D*vin</th>
+              <th>F*ctory</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 1</span><span class="course__t">free trial</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><rect x="1" y="3" width="6" height="3" fill="#f8f6f0" stroke="#111" stroke-width=".8"/><rect x="1.5" y="2" width="5" height="1.6" fill="#f35b45"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>yes, Apprentice ($0)</td>
+              <td>no, Team / Enterprise only</td><td>free plan, light quota</td><td>no</td>
+            </tr>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 2</span><span class="course__t">single developer</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><rect x="1" y="1" width="6" height="6" fill="#f8f6f0" stroke="#111" stroke-width=".8"/><rect x="3" y="3" width="2" height="2" fill="#f35b45"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>$99/mo, Itamae</td>
+              <td>not available</td><td>$20 Pro · $200 Max</td><td>$20 / $100 / $200</td>
+            </tr>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 3</span><span class="course__t">teams</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><rect x="0.5" y="4" width="3" height="3" fill="#f35b45"/><rect x="4.5" y="4" width="3" height="3" fill="#3cf56a"/><rect x="2.5" y="1" width="3" height="3" fill="#111"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>$250/mo, unlimited seats, Omakase</td>
+              <td>usage-billed on Claude Team plan</td><td>$80/mo + $40/seat</td><td>$60/mo + $40/seat</td>
+            </tr>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 4</span><span class="course__t">your model subscription</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><path d="M1 7 L6 1" stroke="#111" stroke-width="1"/><path d="M3 7 L7.5 2" stroke="#111" stroke-width="1"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>yes, no markup</td>
+              <td>no, Anthropic only</td><td>ChatGPT plan, GPT only</td><td>BYOK in CLI/desktop only</td>
+            </tr>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 5</span><span class="course__t">how you start</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><rect x="1" y="3" width="6" height="4" fill="#3cf56a" stroke="#111" stroke-width=".8"/><rect x="2" y="1" width="4" height="1" fill="#111"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>mention @jirobot</td>
+              <td>tag @Claude in Slack</td><td>Slack, Linear, web, CLI</td><td>Slack, Linear, Jira, CLI</td>
+            </tr>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 6</span><span class="course__t">a flawed request</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><path d="M1 4 L4 2 L6 4 L4 6 Z" fill="#111"/><path d="M6 4 L7.5 2.5 L7.5 5.5 Z" fill="#111"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>says so before writing code</td>
+              <td class="tbd">[from video]</td><td class="tbd">[from video]</td><td class="tbd">[from video]</td>
+            </tr>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 7</span><span class="course__t">an unclear request</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><path d="M1 7 L4 2 L7 7 Z" fill="#3cf56a"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>asks one good question</td>
+              <td class="tbd">[from video]</td><td class="tbd">[from video]</td><td class="tbd">[from video]</td>
+            </tr>
+            <tr>
+              <td class="course"><div class="course__wrap"><span><span class="course__n">COURSE 8</span><span class="course__t">what you review</span></span><svg class="ico" viewBox="0 0 8 8" aria-hidden="true"><rect x="0.5" y="1" width="7" height="6" fill="#111"/><rect x="1.5" y="2" width="2" height="2" fill="#f35b45"/><rect x="4.5" y="2" width="2" height="2" fill="#f8f6f0"/><rect x="1.5" y="5" width="5" height="1" fill="#3cf56a"/></svg></div></td>
+              <td class="jiro"><span class="sq"></span>small, explained pull requests</td>
+              <td class="tbd">[from video]</td><td class="tbd">[from video]</td><td class="tbd">[from video]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">Competitor pricing from public pages, October 2026.</p>
+    </section>
+
+    <section id="faq" data-jiro-comment="Yes, you can bring your current subscription." data-jiro-anchor="#reserve-jiro-logo" data-jiro-mobile-anchor="#jiro-faq" data-jiro-merge="#reserve-jiro-logo">
+      <span class="jiro-rest" id="jiro-faq" aria-hidden="true"></span>
+      <div class="faq__list">
+        <span class="label">/ FAQ</span>
+        <details open>
+          <summary>What is Jiro</summary>
+          <p>An autonomous software engineer you call into a conversation. He takes on a task, raises concerns early, and hands back a pull request for review.</p>
+        </details>
+        <details>
+          <summary>How do I call him in</summary>
+          <p>Mention @jirobot in a Slack thread or Linear issue and describe what you need in plain words.</p>
+        </details>
+        <details>
+          <summary>Does he merge without review</summary>
+          <p>No. Jiro opens a pull request and waits for a human to review and merge it.</p>
+        </details>
+        <details>
+          <summary>What does he have access to</summary>
+          <p>Only the repositories and integrations your team connects, inside an isolated cloud session.</p>
+        </details>
+        <details>
+          <summary>Which coding agents can I run</summary>
+          <p>Claude Code, Codex, and Gemini CLI, on the model subscription you already pay for.</p>
+        </details>
+        <details>
+          <summary>How does billing work</summary>
+          <p>A flat monthly price per developer or per team; model usage stays on your own subscription with no markup.</p>
+        </details>
+        <details>
+          <summary>Why cloud agents</summary>
+          <p>A cloud session keeps working while your laptop is closed and gives every task a clean, reproducible machine.</p>
+        </details>
+        <details>
+          <summary>Who makes Jiro</summary>
+          <p>The Nori team, who build agent-first developer tooling.</p>
+        </details>
+      </div>
+      <aside class="reserve" aria-labelledby="reserve-title">
+        <span class="label label--salmon">/ Reserve a seat</span>
+        <h2 id="reserve-title">Pull up a stool at the counter.</h2>
+        <p>Your first 30 days are on the house. Connect GitHub, mention @jirobot, and see what he catches.</p>
+        <form id="reserve-form">
+          <label class="label label--light" for="email">Work email</label>
+          <input id="email" type="email" placeholder="you@company.com" autocomplete="email">
+          <button class="btn btn--salmon" type="submit"><span>Reserve a seat</span><span aria-hidden="true">→</span></button>
+        </form>
+        <span class="reserve__seal" aria-hidden="true"><img id="reserve-jiro-logo" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgLTEgNjIgNTYiIHdpZHRoPSI0OTYiIGhlaWdodD0iNDQ4Ij4KPGcgaWQ9Imppcm8iIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyI+PGcgaWQ9ImJvZHkiPjxwYXRoIGQ9Ik0zNSA2IEwzNCA2IEwzNCA0IEwzNCAzIEwzMyAzIEwzMyAyIEwzMyAxIEwzMyAwLjgzIEwzMi45NCAwLjgyIEwzMi44MiAwLjgwIEwzMi42OCAwLjc5IEwzMi41NSAwLjc3IEwzMi40MSAwLjc2IEwzMi4yNiAwLjc2IEwzMi4xMSAwLjc1IEwzMS45NiAwLjc1IEwzMS44MCAwLjc1IEwzMS42NCAwLjc1IEwzMS40OCAwLjc2IEwzMS4zMSAwLjc3IEwzMS4xMyAwLjc4IEwzMC45NSAwLjgwIEwzMC43NyAwLjgyIEwzMC41OSAwLjg0IEwzMC40MCAwLjg2IEwzMC4yMSAwLjg4IEwzMC4wMiAwLjkxIEwyOS44MiAwLjk0IEwyOS42MiAwLjk4IEwyOS40MSAxLjAxIEwyOS4yMSAxLjA1IEwyOSAxLjA5IEwyOC43OSAxLjE0IEwyOC41OCAxLjE4IEwyOC4zNiAxLjIzIEwyOC4xNSAxLjI4IEwyNy45MyAxLjMzIEwyNy43MSAxLjM5IEwyNy40OCAxLjQ1IEwyNy4yNiAxLjUxIEwyNy4wMyAxLjU3IEwyNi44MCAxLjYzIEwyNi41OCAxLjcwIEwyNi4zNSAxLjc3IEwyNi4xMSAxLjg0IEwyNS44OCAxLjkxIEwyNS42NSAxLjk5IEwyNS40MiAyLjA3IEwyNS4xOCAyLjE1IEwyNC45NSAyLjIzIEwyNC43MSAyLjMxIEwyNC40OCAyLjQwIEwyNC4yNCAyLjQ4IEwyNCAyLjU3IEwyMy43NyAyLjY3IEwyMy41MyAyLjc2IEwyMy4zMCAyLjg1IEwyMy4wNiAyLjk1IEwyMi44MyAzLjA1IEwyMi41OSAzLjE1IEwyMi4zNiAzLjI2IEwyMi4xMyAzLjM2IEwyMS45MCAzLjQ3IEwyMS42NyAzLjU3IEwyMS40NCAzLjY4IEwyMS4yMSAzLjgwIEwyMC45OCAzLjkxIEwyMC43NiA0LjAyIEwyMC41MyA0LjE0IEwyMC4zMSA0LjI2IEwyMC4wOSA0LjM4IEwxOS44OCA0LjUwIEwxOS43MSA0LjU5IEwxOS41NCA0LjY5IEwxOS4zNyA0Ljc5IEwxOS4yMSA0Ljg5IEwxOS4wNCA0Ljk5IEwxOC44OCA1LjA5IEwxOC43MSA1LjE5IEwxOC41NSA1LjI5IEwxOC4zOSA1LjQwIEwxOC4yMyA1LjUwIEwxOC4wNyA1LjYxIEwxNy45MSA1LjcxIEwxNy43NiA1LjgyIEwxNy42MCA1LjkzIEwxNy40NSA2LjA0IEwxNy4yOSA2LjE2IEwxNy4xNCA2LjI3IEwxNi45OSA2LjM4IEwxNi44NCA2LjUwIEwxNi42OSA2LjYxIEwxNi41NCA2LjczIEwxNi4zOSA2Ljg1IEwxNi4yNCA2Ljk3IEwxNi4xMCA3LjA5IEwxNS45NSA3LjIxIEwxNS44MSA3LjMzIEwxNS42NiA3LjQ2IEwxNS41MiA3LjU4IEwxNS4zOCA3LjcwIEwxNS4yNCA3LjgzIEwxNS4xMCA3Ljk2IEwxNC45NiA4LjA5IEwxNC44MyA4LjIyIEwxNC42OSA4LjM1IEwxNC41NiA4LjQ4IEwxNC40MiA4LjYxIEwxNC4yOSA4Ljc0IEwxNC4xNiA4Ljg3IEwxNC4wMyA5LjAxIEwxMy45MCA5LjE1IEwxMy43NyA5LjI4IEwxMy42NCA5LjQyIEwxMy41MSA5LjU2IEwxMy4zOSA5LjcwIEwxMy4yNiA5Ljg0IEwxMy4xNCA5Ljk4IEwxMy4wMiAxMC4xMiBMMTIuOTAgMTAuMjYgTDEyLjc4IDEwLjQwIEwxMi42NiAxMC41NSBMMTIuNTQgMTAuNjkgTDEyLjQyIDEwLjg0IEwxMi4zMSAxMC45OSBMMTIuMTkgMTEuMTMgTDEyLjA4IDExLjI4IEwxMS45NyAxMS40MyBMMTEuODUgMTEuNTggTDExLjc0IDExLjczIEwxMS42MyAxMS44OCBMMTEuNTMgMTIuMDMgTDExLjQyIDEyLjE5IEwxMS4zMSAxMi4zNCBMMTEuMjEgMTIuNDkgTDExLjEwIDEyLjY1IEwxMSAxMi44MCBMMTAuOTAgMTIuOTYgTDEwLjgwIDEzLjEyIEwxMC43MCAxMy4yNyBMMTAuNjAgMTMuNDMgTDEwLjUwIDEzLjU5IEwxMC40MSAxMy43NSBMMTAuMzEgMTMuOTEgTDEwLjIyIDE0LjA3IEwxMC4xMiAxNC4yMyBMMTAuMDMgMTQuMzkgTDkuOTQgMTQuNTYgTDkuODUgMTQuNzIgTDkuNzYgMTQuODggTDkuNjggMTUuMDUgTDkuNTkgMTUuMjEgTDkuNTEgMTUuMzggTDkuNDIgMTUuNTUgTDkuMzQgMTUuNzEgTDkuMjYgMTUuODggTDkuMTggMTYuMDUgTDkuMTAgMTYuMjIgTDkuMDIgMTYuMzggTDguOTQgMTYuNTUgTDguODcgMTYuNzIgTDguNzkgMTYuODkgTDguNzIgMTcuMDcgTDguNjUgMTcuMjQgTDguNTcgMTcuNDEgTDguNTAgMTcuNTggTDguNDMgMTcuNzUgTDguMzcgMTcuOTMgTDguMzAgMTguMTAgTDguMjMgMTguMjggTDguMTcgMTguNDUgTDguMTEgMTguNjMgTDguMDUgMTguODAgTDcuOTggMTguOTggTDcuOTMgMTkuMTUgTDcuODcgMTkuMzMgTDcuODEgMTkuNTEgTDcuNzUgMTkuNjkgTDcuNzAgMTkuODYgTDcuNjUgMjAuMDQgTDcuNTkgMjAuMjIgTDcuNTQgMjAuNDAgTDcuNDkgMjAuNTggTDcuNDQgMjAuNzYgTDcuMzkgMjAuOTQgTDcuMzUgMjEuMTIgTDcuMzAgMjEuMzAgTDcuMjYgMjEuNDggTDcuMjIgMjEuNjYgTDcuMTcgMjEuODQgTDcuMTMgMjIuMDMgTDcuMTAgMjIuMjEgTDcuMDYgMjIuMzkgTDcuMDIgMjIuNTcgTDYuOTkgMjIuNzYgTDYuOTUgMjIuOTQgTDYuOTIgMjMuMTIgTDYuODkgMjMuMzEgTDYuODYgMjMuNDkgTDYuODMgMjMuNjcgTDYuODAgMjMuODYgTDYuNzcgMjQuMDQgTDYuNzUgMjQuMjMgTDYuNzIgMjQuNDEgTDYuNzAgMjQuNjAgTDYuNjggMjQuNzggTDYuNjYgMjQuOTcgTDYuNjQgMjUuMTUgTDYuNjIgMjUuMzQgTDYuNjAgMjUuNTMgTDYuNTkgMjUuNzEgTDYuNTcgMjUuOTAgTDYuNTYgMjYuMDggTDYuNTUgMjYuMjcgTDYuNTQgMjYuNDYgTDYuNTMgMjYuNjQgTDYuNTIgMjYuODMgTDYuNTEgMjcuMDIgTDYuNTEgMjcuMjAgTDYuNTAgMjcuMzkgTDYuNTAgMjcuNTggTDYuNTAgMjcuNzYgTDYuNTAgMjcuOTUgTDYuNTAgMjguMTQgTDYuNTAgMjguMzIgTDYuNTAgMjguNTEgTDYuNTEgMjguNzAgTDYuNTEgMjguODggTDYuNTIgMjkuMDcgTDYuNTMgMjkuMjYgTDYuNTQgMjkuNDQgTDYuNTUgMjkuNjMgTDYuNTYgMjkuODIgTDYuNTggMzAuMDEgTDYuNTkgMzAuMTkgTDYuNjEgMzAuMzggTDYuNjMgMzAuNTcgTDYuNjUgMzAuNzUgTDYuNjcgMzAuOTQgTDYuNjkgMzEuMTIgTDYuNzEgMzEuMzEgTDYuNzQgMzEuNTAgTDYuNzYgMzEuNjggTDYuNzkgMzEuODcgTDYuODIgMzIuMDUgTDYuODUgMzIuMjQgTDYuODggMzIuNDIgTDYuOTEgMzIuNjEgTDYuOTUgMzIuNzkgTDYuOTggMzIuOTggTDcuMDIgMzMuMTYgTDcuMDYgMzMuMzUgTDcuMTAgMzMuNTMgTDcuMTQgMzMuNzIgTDcuMTggMzMuOTAgTDcuMjIgMzQuMDggTDcuMjcgMzQuMjcgTDcuMzEgMzQuNDUgTDcuMzYgMzQuNjMgTDcuNDEgMzQuODIgTDcuNDYgMzUgTDcuNTEgMzUuMTggTDcuNTYgMzUuMzYgTDcuNjIgMzUuNTQgTDcuNjcgMzUuNzMgTDcuNzMgMzUuOTEgTDcuNzkgMzYuMDkgTDcuODUgMzYuMjcgTDcuOTEgMzYuNDUgTDcuOTcgMzYuNjMgTDguMDQgMzYuODEgTDguMTAgMzYuOTkgTDguMTcgMzcuMTcgTDguMjQgMzcuMzQgTDguMzEgMzcuNTIgTDguMzggMzcuNzAgTDguNDUgMzcuODggTDguNTIgMzguMDUgTDguNjAgMzguMjMgTDguNjcgMzguNDEgTDguNzUgMzguNTggTDguODMgMzguNzYgTDguOTEgMzguOTMgTDguOTkgMzkuMTAgTDkuMDggMzkuMjggTDkuMTYgMzkuNDUgTDkuMjUgMzkuNjIgTDkuMTUgMzkuNzkgTDkuMDUgMzkuOTUgTDkgNDAuMDMgTDkgNDEgTDkgNDIgTDEwIDQyIEwxMCA0MyBMMTAgNDQgTDkgNDQgTDkgNDUgTDggNDUgTDggNDYgTDcgNDYgTDcgNDcgTDYgNDcgTDYgNDggTDUgNDggTDUgNDkgTDQgNDkgTDQgNTAgTDMgNTAgTDMgNTEgTDIuMjMgNTEgTDIuMTkgNTEuMDcgTDIuMDkgNTEuMjMgTDIgNTEuMzggTDIgNTIgTDMgNTIgTDMuODAgNTIgTDMuODQgNTEuOTkgTDQuMDEgNTEuOTIgTDQuMTkgNTEuODYgTDQuMzcgNTEuODAgTDQuNTQgNTEuNzMgTDQuNzIgNTEuNjcgTDQuOTAgNTEuNjEgTDUgNTEuNTcgTDUgNTEgTDYgNTEgTDYuNjAgNTEgTDYuNjcgNTAuOTcgTDYuODUgNTAuOTEgTDcgNTAuODYgTDcgNTAgTDggNTAgTDkgNTAgTDkgNDkgTDEwIDQ5IEwxMSA0OSBMMTEgNDggTDEyIDQ4IEwxMyA0OCBMMTMgNDcgTDE0IDQ3IEwxNCA0OCBMMTUgNDggTDE2IDQ4IEwxNiA0OC43MyBMMTYuMDYgNDguNzggTDE2LjIxIDQ4Ljg4IEwxNi4zNyA0OC45OSBMMTYuMzkgNDkgTDE3IDQ5IEwxNyA0OS40MCBMMTcuMTUgNDkuNTAgTDE3LjMxIDQ5LjYwIEwxNy40NyA0OS43MCBMMTcuNjMgNDkuODAgTDE3Ljc5IDQ5Ljg5IEwxNy45NiA0OS45OSBMMTcuOTggNTAgTDE4IDUwIEwxOSA1MCBMMTkgNTAuNTcgTDE5LjExIDUwLjYyIEwxOS4yNyA1MC43MSBMMTkuNDQgNTAuNzkgTDE5LjYxIDUwLjg4IEwxOS43NyA1MC45NiBMMTkuODUgNTEgTDIwIDUxIEwyMSA1MSBMMjEgNTEuNTMgTDIxLjE0IDUxLjU5IEwyMS4zMSA1MS42NiBMMjEuNDkgNTEuNzMgTDIxLjY2IDUxLjgwIEwyMS44MyA1MS44NyBMMjIuMDEgNTEuOTQgTDIyLjE3IDUyIEwyMyA1MiBMMjMgNTIuMzAgTDIzLjA3IDUyLjMyIEwyMy4yNCA1Mi4zOCBMMjMuNDIgNTIuNDQgTDIzLjYwIDUyLjUwIEwyMy43OCA1Mi41NiBMMjMuOTYgNTIuNjEgTDI0LjE0IDUyLjY3IEwyNC4zMiA1Mi43MiBMMjQuNTAgNTIuNzcgTDI0LjY4IDUyLjgyIEwyNC44NiA1Mi44NyBMMjUuMDQgNTIuOTIgTDI1LjIyIDUyLjk3IEwyNS4zNSA1MyBMMjYgNTMgTDI3IDUzIEwyNyA1My4zNiBMMjcuMDUgNTMuMzcgTDI3LjI0IDUzLjQxIEwyNy40MiA1My40NCBMMjcuNjEgNTMuNDcgTDI3Ljc5IDUzLjUwIEwyNy45OCA1My41MyBMMjguMTYgNTMuNTYgTDI4LjM1IDUzLjU4IEwyOC41NCA1My42MSBMMjguNzIgNTMuNjMgTDI4LjkxIDUzLjY1IEwyOS4wOSA1My42OCBMMjkuMjggNTMuNzAgTDI5LjQ3IDUzLjcxIEwyOS42NSA1My43MyBMMjkuODQgNTMuNzUgTDMwLjAzIDUzLjc2IEwzMC4yMiA1My43OCBMMzAuNDAgNTMuNzkgTDMwLjU5IDUzLjgwIEwzMC43OCA1My44MSBMMzAuOTYgNTMuODIgTDMxLjE1IDUzLjgzIEwzMS4zNCA1My44NCBMMzEuNTMgNTMuODQgTDMxLjcxIDUzLjg0IEwzMS45MCA1My44NSBMMzIuMDkgNTMuODUgTDMyLjI4IDUzLjg1IEwzMi40NyA1My44NSBMMzIuNjUgNTMuODUgTDMyLjg0IDUzLjg0IEwzMy4wMyA1My44NCBMMzMuMjIgNTMuODMgTDMzLjQwIDUzLjgzIEwzMy41OSA1My44MiBMMzMuNzggNTMuODEgTDMzLjk2IDUzLjgwIEwzNC4xNSA1My43OCBMMzQuMzQgNTMuNzcgTDM0LjUzIDUzLjc2IEwzNC43MSA1My43NCBMMzQuOTAgNTMuNzIgTDM1LjA5IDUzLjcwIEwzNS4yNyA1My42OSBMMzUuNDYgNTMuNjYgTDM1LjY1IDUzLjY0IEwzNS44MyA1My42MiBMMzYuMDIgNTMuNTkgTDM2LjIwIDUzLjU3IEwzNi4zOSA1My41NCBMMzYuNTcgNTMuNTEgTDM2Ljc2IDUzLjQ4IEwzNi45NSA1My40NSBMMzcgNTMuNDQgTDM3IDUzIEwzOCA1MyBMMzkgNTMgTDM5LjExIDUzIEwzOS4xNSA1Mi45OSBMMzkuMzMgNTIuOTQgTDM5LjUxIDUyLjkwIEwzOS42OSA1Mi44NSBMMzkuODcgNTIuODAgTDQwLjA1IDUyLjc1IEw0MC4yMyA1Mi42OSBMNDAuNDEgNTIuNjQgTDQwLjU5IDUyLjU5IEw0MC43NyA1Mi41MyBMNDAuOTUgNTIuNDcgTDQxIDUyLjQ2IEw0MSA1MiBMNDIgNTIgTDQyLjI5IDUyIEw0Mi4zNyA1MS45NyBMNDIuNTQgNTEuOTAgTDQyLjcxIDUxLjg0IEw0Mi44OSA1MS43NyBMNDMgNTEuNzIgTDQzIDUxIEw0NCA1MSBMNDQuNjEgNTEgTDQ0Ljc3IDUwLjkyIEw0NC45NCA1MC44NCBMNDUgNTAuODAgTDQ1IDUwIEw0NiA1MCBMNDYuNDggNTAgTDQ2LjU5IDQ5Ljk0IEw0Ni43NSA0OS44NCBMNDYuOTEgNDkuNzUgTDQ3IDQ5LjY5IEw0NyA0OSBMNDggNDkgTDQ4IDQ4IEw0OSA0OCBMNDkuNDYgNDggTDQ5LjU0IDQ3Ljk0IEw0OS42OCA0Ny44MyBMNDkuODMgNDcuNzEgTDQ5Ljk4IDQ3LjU5IEw1MCA0Ny41NyBMNTAgNDcgTDUwLjY5IDQ3IEw1MC43MCA0Ni45OSBMNTAuODQgNDYuODcgTDUwLjk4IDQ2Ljc1IEw1MSA0Ni43MyBMNTEgNDYgTDUxLjc5IDQ2IEw1MS44MSA0NS45OCBMNTEuOTQgNDUuODUgTDUyIDQ1LjgwIEw1MiA0NSBMNTIuNzkgNDUgTDUyLjg2IDQ0LjkyIEw1Mi45OSA0NC43OCBMNTMgNDQuNzcgTDUzIDQ0IEw1MyA0MyBMNTQgNDMgTDU0IDQyIEw1NSA0MiBMNTUgNDEgTDU1IDQwIEw1NiA0MCBMNTYgMzkgTDU2IDM4IEw1NyAzOCBMNTcgMzcgTDU3IDM2IEw1OCAzNiBMNTggMzUgTDU4IDM0IEw1OCAzMyBMNTggMzIgTDU5IDMyIEw1OSAzMSBMNjAgMzEgTDYwIDMwIEw2MCAyOSBMNTkgMjkgTDU5IDI4IEw1OSAyNyBMNTkgMjYgTDU4IDI2IEw1NyAyNiBMNTYgMjYgTDU2IDI1IEw1NSAyNSBMNTUgMjQgTDU0IDI0IEw1NCAyMyBMNTMgMjMgTDUzIDIyIEw1MyAyMSBMNTMgMjAgTDUzIDE5IEw1MyAxOCBMNTMgMTcgTDUzIDE2IEw1MyAxNSBMNTMgMTQgTDUyIDE0IEw1MSAxNCBMNTAgMTQgTDQ5IDE0IEw0OCAxNCBMNDggMTMgTDQ3IDEzIEw0NyAxMiBMNDYgMTIgTDQ2IDExIEw0NiAxMCBMNDYgOSBMNDUgOSBMNDUgOCBMNDUgNyBMNDQgNyBMNDMgNyBMNDIgNyBMNDEgNyBMNDEgOCBMNDAgOCBMMzkgOCBMMzkgNyBMMzggNyBMMzcgNyBMMzYgNyBMMzYgNloiIGZpbGw9IiNGQUY4RjIiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PC9wYXRoPjxwYXRoIGQ9IiIgZmlsbD0iI0UyRERDRiIgZmlsbC1ydWxlPSJldmVub2RkIj48L3BhdGg+PHBhdGggdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNCAwKSBzY2FsZSgwLjEyNTApIiBkPSJNODggMzg0IEwtMjQgNDI0IEw0MiAzMTcgQy04IDIxOCAzMCA5MCAxMjcgMzYgQzE3OCA3IDI0MiAtNCAyNDIgMTYgQzI0MiAyNCAyMzYgMjkgMjI1IDI5IEMxNTcgMjkgNzAgOTggNTEgMTY3IEMzOCAyMTQgNDMgMjY2IDY2IDMxMCBMNzAgMzE3IEwzMiAzNzggTDg3LjcgMzU4LjYgQTIwMi40IDIwMi40IDAgMCAwIDQyNi42IDIzMC4xIEM0MjYgMjIwIDQzMSAyMTMgNDM5IDIxMyBDNDQ3IDIxMyA0NTAuNSAyMjAgNDUwLjUgMjMyLjQgQTIyNi40IDIyNi40IDAgMCAxIDg4IDM4NCBaIiBmaWxsPSIjMUQzQjJBIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjwvcGF0aD48L2c+PGcgaWQ9ImZhY2UiPjxwYXRoIGQ9Ik0xNiAyMmgydjFoLTJ6TTE2IDIzaDN2MWgtM3pNMTcgMjRoM3YxaC0zek0xOCAyNWgzdjFoLTN6TTE5IDI2aDN2MWgtM3pNMjAgMjdoM3YxaC0zek0yMCAyOGgzdjFoLTN6TTE5IDI5aDN2MWgtM3pNMTggMzBoM3YxaC0zek0xNyAzMWgzdjFoLTN6TTE2IDMyaDN2MWgtM3pNMTYgMzNoMnYxaC0yeiIgZmlsbD0iI0ZCNUU0NSI+PC9wYXRoPjxwYXRoIGQ9Ik0yNyAzMWgxMHYxaC0xMHpNMjcgMzJoMTB2MWgtMTB6TTI3IDMzaDEwdjFoLTEweiIgZmlsbD0iI0ZCNUU0NSI+PC9wYXRoPjxwYXRoIGQ9Ik00MSAyM2g2djFoLTZ6TTQxIDI0aDZ2MWgtNnpNNDEgMjVoNnYxaC02ek00MSAyNmg2djFoLTZ6TTQxIDI3aDZ2MWgtNnpNNDEgMjhoNnYxaC02ek00MSAyOWg2djFoLTZ6TTQxIDMwaDZ2MWgtNnpNNDEgMzFoNnYxaC02eiIgZmlsbD0iI0ZCNUU0NSI+PC9wYXRoPjwvZz48L2c+Cjwvc3ZnPgo=" alt=""></span>
+      </aside>
+    </section>
+
+  </main>
+
+  <footer class="site-foot">
+    <div class="foot__bar">
+      <span>/ Built by the Nori team</span>
+      <nav class="foot__links" aria-label="Footer">
+        <a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="#faq">Reserve a seat</a>
+      </nav>
+      <span>2026</span>
+    </div>
+    <div class="wordmark" aria-label="jiro.bot">JIRO.BOT</div>
+  </footer>
+  </div>
+
+</div>
+<script>
+  document.getElementById("reserve-form").addEventListener("submit", function (e) { e.preventDefault(); });
+</script>
+<script>
+(function () {
+  "use strict";
+
+  if (window.__jiroBuddyLoaded) return;
+  window.__jiroBuddyLoaded = true;
+
+  var STORAGE_KEY = "jiro-buddy-hidden";
+  var PIN_KEY = "jiro-buddy-pin";
+  var SETTLE_MS = 1200;
+  var FAST_SETTLE_MS = 450;
+  var MIN_DWELL_MS = 2000;
+  var TYPE_MS = 28;
+  var ANNOUNCE_MS = 100;
+  var FLIGHT_MS = 1300;
+  var GLIDE_STEPS = 20;
+  var CENTER_EDGE = 0.35;
+  var MAX_PEEKS = 1;
+  var PASS_LINE_MS = 900;
+  var LINE_HOLD_MS = 4500;
+  var ASK_HOLD_MS = 9000;
+  var QUIET_AFTER = 4;
+  var LONG_PASS = 0.5;
+  var REST_BEAT_MS = 5000;
+  var GLANCE_MS = 1300;
+  var DRAG_SLOP = 5;
+  var NUDGE = 24;
+  var SVG_NS = "http://www.w3.org/2000/svg";
+
+  var BODY_FILL = "M35 6L34 6L34 3L33 3L33 0.75L30.5 0.75L30.25 1L29 1L28.75 1.25L28 1.25L27.75 1.5L27 1.5L26.75 1.75L26 1.75L26 2L25.5 2L25.25 2.25L24.75 2.25L24.5 2.5L24 2.5L23.75 2.75L23.25 2.75L23 3L22.75 3L22.5 3.25L22.25 3.25L22 3.5L21.75 3.5L21.5 3.75L21.25 3.75L21 4L20.75 4L20.5 4.25L20.25 4.25L20 4.5L19.75 4.5L19.5 4.75L19.25 4.75L19.25 5L19 5L18.75 5.25L18.5 5.25L18.5 5.5L18 5.5L18 5.75L17.75 5.75L17 6.5L16.75 6.5L16.25 7L16 7L16 7.25L15.75 7.25L15.75 7.5L15.5 7.5L15.5 7.75L15.25 7.75L14 9L14 9.25L13.75 9.25L13.75 9.5L13.5 9.5L13.5 9.75L13.25 9.75L13.25 10L13 10L13 10.25L12.25 11L12.25 11.25L12 11.25L12 11.5L11.75 11.5L11.75 12L11.5 12L11.5 12.25L11.25 12.25L11.25 12.5L11 12.75L11 13L10.75 13L10.75 13.25L10.5 13.5L10.5 13.75L10 14.25L10 14.5L9.75 14.75L9.75 15L9.5 15.25L9.5 15.5L9.25 15.75L9.25 16L9 16.25L9 16.5L8.75 16.75L8.75 17.25L8.5 17.5L8.5 17.75L8.25 18L8.25 18.5L8 18.75L8 19.25L7.75 19.25L7.75 20L7.5 20.25L7.5 21L7.25 21L7.25 22L7 22.25L7 23.25L6.75 23.5L6.75 25.25L6.5 25.25L6.5 30.5L6.75 30.5L6.75 32.25L7 32.5L7 33.5L7.25 33.75L7.25 34.75L7.5 34.75L7.5 35.5L7.75 35.75L7.75 36.25L8 36.5L8 37L8.25 37.25L8.25 37.5L8.5 37.75L8.5 38.25L8.75 38.5L8.75 38.75L9 39L9 39.25L9.25 39.5L9.25 39.75L9 40L9 42L10 42L10 44L9 44L9 45L8 45L8 46L7 46L7 47L6 47L6 48L5 48L5 49L4 49L4 50L3 50L3 51L2.25 51L2 51.25L2 52L4 52L4.25 51.75L4.75 51.75L5 51.5L5 51L6.75 51L7 50.75L7 50L9 50L9 49L11 49L11 48L13 48L13 47L14 47L14 48L16 48L16 48.75L16.25 49L17 49L17 49.5L17.25 49.5L17.5 49.75L17.75 49.75L17.75 50L19 50L19 50.5L19.25 50.75L19.5 50.75L19.5 51L21 51L21 51.5L21.25 51.5L21.25 51.75L21.75 51.75L22 52L23 52L23 52.25L23.25 52.5L24 52.5L24.25 52.75L24.75 52.75L25 53L27 53L27 53.25L27.25 53.5L28.5 53.5L28.75 53.75L35.75 53.75L35.75 53.5L37 53.5L37 53L39.5 53L39.75 52.75L40.5 52.75L40.5 52.5L41 52.5L41 52L42.5 52L42.75 51.75L43 51.75L43 51L44.75 51L45 50.75L45 50L46.5 50L46.75 49.75L47 49.75L47 49L48 49L48 48L49.5 48L50 47.5L50 47L50.75 47L50.75 46.75L51 46.75L51 46L51.75 46L52 45.75L52 45L52.75 45L53 44.75L53 43L54 43L54 42L55 42L55 40L56 40L56 38L57 38L57 36L58 36L58 32L59 32L59 31L60 31L60 29L59 29L59 26L56 26L56 25L55 25L55 24L54 24L54 23L53 23L53 14L48 14L48 13L47 13L47 12L46 12L46 9L45 9L45 7L41 7L41 8L39 8L39 7L36 7L36 6Z";
+  var BODY_LINE = "M88 384L-24 424L42 317C-8 218 30 90 127 36C178 7 242-4 242 16C242 24 236 29 225 29C157 29 70 98 51 167C38 214 43 266 66 310L70 317L32 378L87.7 358.6A202.4 202.4 0 0 0 426.6 230.1C426 220 431 213 439 213C447 213 450.5 220 450.5 232.4A226.4 226.4 0 0 1 88 384Z";
+  var FACES = {
+    cursor: "M16 22h2v1h1v1h1v1h1v1h1v1h1v2h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h1v-1h1v-1h1v-1h1v-2h-1v-1h-1v-1h-1v-1h-1zM27 31h10v3h-10z",
+    eyes: "M19 23h5v7h-5zM38 23h5v7h-5z",
+    dots: "M18 28h4v4h-4zM29 28h4v4h-4zM40 28h4v4h-4z",
+    happy: "M16 28h4v4h-4zM20 24h4v4h-4zM24 28h4v4h-4zM35 28h4v4h-4zM39 24h4v4h-4zM43 28h4v4h-4z",
+    sleepy: "M17 29h8v2h-8zM37 29h8v2h-8zM29 34h4v1h-4z"
+  };
+
+  function el(tag, className, attrs, parent) {
+    var node = tag.indexOf("svg:") === 0
+      ? document.createElementNS(SVG_NS, tag.slice(4))
+      : document.createElement(tag);
+    if (className) node.setAttribute("class", className);
+    Object.keys(attrs || {}).forEach(function (name) { node.setAttribute(name, attrs[name]); });
+    if (parent) parent.appendChild(node);
+    return node;
+  }
+
+  function mascotArt() {
+    var art = el("svg:svg", "jiro-buddy__art", { viewBox: "0 -1 62 56", focusable: "false" });
+    var shell = el("svg:g", "jiro-buddy__shell", {}, art);
+    el("svg:path", "", { d: BODY_FILL, fill: "#faf8f2", "shape-rendering": "crispEdges" }, shell);
+    el("svg:path", "", { d: BODY_LINE, transform: "translate(4 0) scale(.125)", fill: "#1d3b2a" }, shell);
+    var face = el("svg:g", "jiro-buddy__face", { fill: "#fb5e45", "shape-rendering": "crispEdges" }, art);
+    Object.keys(FACES).forEach(function (name) {
+      FACES[name].split(/(?=M)/).forEach(function (d, i) {
+        el("svg:path", "jiro-buddy__face-" + name, { d: d, style: "--i:" + i }, face);
+      });
+    });
+    el("svg:rect", "jiro-buddy__cursor", { x: "41", y: "23", width: "6", height: "9" }, face);
+    return art;
+  }
+
+  function isHidden() {
+    try {
+      return window.sessionStorage.getItem(STORAGE_KEY) === "1";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function rememberHidden() {
+    try {
+      window.sessionStorage.setItem(STORAGE_KEY, "1");
+    } catch (e) {}
+  }
+
+  function savedPin() {
+    try {
+      var pin = JSON.parse(window.sessionStorage.getItem(PIN_KEY));
+      return pin && isFinite(pin.x) && isFinite(pin.y) ? pin : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function rememberPin(pin) {
+    try {
+      window.sessionStorage.setItem(PIN_KEY, JSON.stringify(pin));
+    } catch (e) {}
+  }
+
+  function attr(section, name) {
+    return (section.getAttribute("data-jiro-" + name) || "").trim();
+  }
+
+  function target(section, name) {
+    var selector = attr(section, name);
+    if (!selector) return null;
+    try {
+      return document.querySelector(selector);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function onChange(query, listener) {
+    if (query.addEventListener) query.addEventListener("change", listener);
+    else query.addListener(listener);
+  }
+
+  function init() {
+    var sections = Array.prototype.slice.call(document.querySelectorAll("[data-jiro-comment]"));
+    var commented = sections.some(function (section) { return attr(section, "comment") !== ""; });
+    if (!commented || isHidden() || !("IntersectionObserver" in window)) return;
+    if (document.querySelector(".jiro-buddy")) return;
+
+    var wide = window.matchMedia("(min-width: 768px)");
+    var reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    var aside = el("aside", "jiro-buddy", { "aria-label": "Jiro", "data-jiro-state": "idle", "data-jiro-face": "cursor", "data-jiro-motion": "game" });
+    var mascot = el("button", "jiro-buddy__mascot", { type: "button", "aria-label": "Ask Jiro for a comment" }, aside);
+    var figure = el("span", "jiro-buddy__figure", { "aria-hidden": "true" }, mascot);
+    var layer = figure;
+    ["bob", "drift", "tilt", "squash", "hop"].forEach(function (name) {
+      layer = el("span", "jiro-buddy__" + name, {}, layer);
+    });
+    var hop = layer;
+    hop.appendChild(mascotArt());
+    el("span", "jiro-buddy__zzz", {}, hop).textContent = "z z";
+    el("span", "jiro-buddy__shadow", {}, figure);
+    el("span", "jiro-buddy__puff", {}, figure);
+    var bubble = el("div", "jiro-buddy__bubble", {}, aside);
+    var text = el("p", "jiro-buddy__text", { "aria-hidden": "true" }, bubble);
+    var acts = el("div", "jiro-buddy__acts", {}, bubble);
+    var yes = el("button", "jiro-buddy__yes", { type: "button" }, acts);
+    var later = el("button", "jiro-buddy__later", { type: "button" }, acts);
+    var status = el("p", "jiro-buddy__sr", { role: "status", "aria-live": "polite" }, aside);
+    var close = el("button", "jiro-buddy__close", { type: "button", "aria-label": "Hide Jiro" }, aside);
+    close.textContent = "×";
+    bubble.hidden = true;
+    acts.hidden = true;
+    aside.hidden = true;
+    document.body.appendChild(aside);
+
+    var active = null;
+    var restingSection = null;
+    var speakingSection = null;
+    var run = 0;
+    var timers = [];
+    var spoken = "";
+    var placed = false;
+    var flight = null;
+    var hovered = false;
+    var closed = false;
+    var face = "cursor";
+    var moveId = 0;
+    var moving = false;
+    var landedAt = 0;
+    var peekAnimation = null;
+    var peeks = 0;
+    var mergedLogo = null;
+    var direction = 0;
+    var lastScrollY = window.scrollY;
+    var reverseDistance = 0;
+    var journey = { id: 0, small: 0, start: window.scrollY };
+    var said = new Set();
+    var longPasses = 0;
+    var quiet = false;
+    var pinned = savedPin();
+    var drag = null;
+    var swallowClick = false;
+    var restTimer = 0;
+    var restBeats = 0;
+    var looked = null;
+    var pendingKind = "quiet";
+    var pendingJourney = 0;
+
+    function schedule(fn, ms) {
+      var id = setTimeout(fn, ms);
+      timers.push(id);
+      return id;
+    }
+
+    function setState(state) {
+      aside.setAttribute("data-jiro-state", state);
+    }
+
+    function setFace(name) {
+      face = name;
+      aside.setAttribute("data-jiro-face", hovered && name !== "dots" && name !== "sleepy" ? "eyes" : name);
+    }
+
+    function motion() {
+      return !reduced.matches;
+    }
+
+    function play(node, frames, ms, easing) {
+      if (!motion()) return Promise.resolve();
+      return node.animate(frames, { duration: ms, easing: easing || "ease-out" }).finished.catch(function () {});
+    }
+
+    function squash(sx, sy, ms) {
+      return play(hop, [
+        { transform: "scale(1,1)" },
+        { transform: "scale(" + sx + "," + sy + ")", offset: 0.4 },
+        { transform: "scale(1,1)" }
+      ], ms || 260);
+    }
+
+    function puff() {
+      if (!motion()) return;
+      figure.classList.remove("jiro-buddy--puff");
+      void figure.offsetWidth;
+      figure.classList.add("jiro-buddy--puff");
+    }
+
+    function restFace() {
+      return aside.getAttribute("data-jiro-motion") === "sleepy" ? "sleepy" : "cursor";
+    }
+
+    function closeBubble() {
+      if (bubble.contains(document.activeElement)) mascot.focus({ preventScroll: true });
+      bubble.hidden = true;
+      acts.hidden = true;
+      bubble.classList.remove("jiro-buddy--pop");
+      aside.removeAttribute("data-jiro-talking");
+      text.textContent = "";
+      text.removeAttribute("data-rest");
+      spoken = "";
+      if (drag || moving) return;
+      setState("idle");
+      setFace(restFace());
+    }
+
+    function hideBubble() {
+      run += 1;
+      timers.forEach(clearTimeout);
+      timers = [];
+      closeBubble();
+    }
+
+    function fit() {
+      text.textContent = spoken;
+      bubble.style.setProperty("--jiro-dx", "0px");
+      aside.classList.remove("jiro-buddy--below");
+      var r = bubble.getBoundingClientRect();
+      var edge = document.documentElement.clientWidth - 8;
+      bubble.style.setProperty("--jiro-dx", (r.left < 8 ? 8 - r.left : r.right > edge ? edge - r.right : 0) + "px");
+      aside.classList.toggle("jiro-buddy--below", r.top < 8);
+      text.textContent = "";
+    }
+
+    function speak(section, token) {
+      speakingSection = section;
+      said.add(section);
+      say(attr(section, "comment"), attr(section, "ask"), token);
+    }
+
+    function say(comment, ask, token) {
+      if (!comment) return;
+      spoken = comment;
+      setState("speaking");
+      setFace("cursor");
+      status.textContent = "";
+      schedule(function () { status.textContent = comment; }, ANNOUNCE_MS);
+      yes.textContent = ask;
+      later.textContent = ask ? "Later" : "";
+      acts.hidden = !ask;
+      bubble.hidden = false;
+      aside.setAttribute("data-jiro-talking", "true");
+      fit();
+      var finish = function () {
+        text.removeAttribute("data-rest");
+        acts.classList.remove("jiro-buddy--waiting");
+        setState("idle");
+        schedule(function later() {
+          if (token !== run) return;
+          if (bubble.matches(":hover") || bubble.contains(document.activeElement)) schedule(later, 1500);
+          else closeBubble();
+        }, ask ? ASK_HOLD_MS : LINE_HOLD_MS);
+      };
+      if (!motion()) {
+        text.textContent = comment;
+        finish();
+        return;
+      }
+      acts.classList.add("jiro-buddy--waiting");
+      bubble.classList.remove("jiro-buddy--pop");
+      void bubble.offsetWidth;
+      bubble.classList.add("jiro-buddy--pop");
+      squash(0.9, 1.12, 300);
+      var chars = Array.from(comment);
+      var shown = 0;
+      (function typeNext() {
+        if (token !== run) return;
+        shown += 1;
+        text.textContent = chars.slice(0, shown).join("");
+        text.setAttribute("data-rest", chars.slice(shown).join(""));
+        if (shown < chars.length) schedule(typeNext, TYPE_MS);
+        else finish();
+      })();
+    }
+
+    function nearestToCenter() {
+      var center = window.innerHeight / 2;
+      var best = null;
+      var bestDistance = Infinity;
+      sections.forEach(function (section) {
+        var rect = section.getBoundingClientRect();
+        var distance = center < rect.top ? rect.top - center : center > rect.bottom ? center - rect.bottom : 0;
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = section;
+        }
+      });
+      return best;
+    }
+
+    function landFlight() {
+      if (flight) flight.cancel();
+      flight = null;
+      if (peekAnimation) peekAnimation.cancel();
+      peekAnimation = null;
+      hop.getAnimations().forEach(function (animation) { animation.cancel(); });
+    }
+
+    function updateDirection() {
+      var now = window.scrollY;
+      var delta = now - lastScrollY;
+      lastScrollY = now;
+      if (Math.abs(delta) < 2) return;
+      var next = delta > 0 ? 1 : -1;
+      if (next !== direction) {
+        reverseDistance += Math.abs(delta);
+        if (direction !== 0 && reverseDistance < 60) return;
+        direction = next;
+        journey = { id: journey.id + 1, small: 0, start: now - next * reverseDistance };
+        aside.setAttribute("data-jiro-direction", direction > 0 ? "down" : "up");
+      }
+      reverseDistance = 0;
+      var range = document.documentElement.scrollHeight - window.innerHeight;
+      if (!journey.long && range > 0 && Math.abs(now - journey.start) >= range * LONG_PASS) {
+        journey.long = true;
+        longPasses += 1;
+        quiet = longPasses >= QUIET_AFTER;
+      }
+    }
+
+    function spotSection() {
+      if (!pinned) return restingSection;
+      var box = mascot.getBoundingClientRect();
+      var y = box.top + box.height / 2;
+      return sections.reduce(function (best, section) {
+        var r = section.getBoundingClientRect();
+        var d = y < r.top ? r.top - y : y > r.bottom ? y - r.bottom : 0;
+        return !best || d < best.d ? { s: section, d: d } : best;
+      }, null).s;
+    }
+
+    function passLine() {
+      if (!direction || journey.spoke || quiet || closed) return;
+      var token = run;
+      var journeyId = journey.id;
+      schedule(function () {
+        if (token !== run || journeyId !== journey.id || journey.spoke || quiet || moving || drag || !bubble.hidden) return;
+        var section = spotSection();
+        if (!section || said.has(section) || !attr(section, "comment")) return;
+        journey.spoke = true;
+        speak(section, run);
+      }, PASS_LINE_MS);
+    }
+
+    function pickIdle() {
+      var styles = journey.bouncy ? ["game", "game", "sleepy"] : ["game", "game", "sleepy", "spring", "eager"];
+      var style = styles[Math.floor(Math.random() * styles.length)];
+      if (style === "spring" || style === "eager") journey.bouncy = true;
+      aside.setAttribute("data-jiro-motion", style);
+      if (bubble.hidden) setFace(restFace());
+    }
+
+    function express(name, ms) {
+      setFace(name);
+      squash(1.03, 0.97, 200);
+      clearTimeout(restTimer);
+      restTimer = setTimeout(function () {
+        if (face === name) setFace(restFace());
+        rest();
+      }, ms);
+    }
+
+    function unlook() {
+      if (looked) looked.classList.remove("jiro-look-target");
+      looked = null;
+    }
+
+    function glance() {
+      var box = mascot.getBoundingClientRect();
+      var cx = box.left + box.width / 2;
+      var cy = box.top + box.height / 2;
+      var near = Array.prototype.filter.call(document.querySelectorAll("main h2, main h3, main button, main a, main img, main td, main article"), function (item) {
+        var r = item.getBoundingClientRect();
+        return r.width && r.bottom > 0 && r.top < window.innerHeight &&
+          Math.hypot(r.left + r.width / 2 - cx, r.top + r.height / 2 - cy) < 520 && !item.contains(mascot);
+      });
+      if (!near.length) return;
+      looked = near[Math.floor(Math.random() * near.length)];
+      var r = looked.getBoundingClientRect();
+      var dx = r.left + r.width / 2 - cx;
+      var dy = r.top + r.height / 2 - cy;
+      var size = Math.hypot(dx, dy) || 1;
+      aside.style.setProperty("--jiro-gx", (3 * dx / size).toFixed(1) + "px");
+      aside.style.setProperty("--jiro-gy", (3 * dy / size).toFixed(1) + "px");
+      looked.classList.add("jiro-look-target");
+      setFace("glance");
+    }
+
+    function rest() {
+      clearTimeout(restTimer);
+      if (closed || !motion()) return;
+      restTimer = setTimeout(function beat() {
+        unlook();
+        if (closed || !motion()) return;
+        if (moving || drag || !bubble.hidden) {
+          rest();
+          return;
+        }
+        restBeats += 1;
+        if (restBeats % 2) {
+          glance();
+          restTimer = setTimeout(function () {
+            unlook();
+            setFace(restFace());
+            rest();
+          }, GLANCE_MS);
+        } else {
+          express(Math.random() < 0.5 ? "happy" : "eyes", 900);
+        }
+      }, REST_BEAT_MS);
+    }
+
+    function smallGesture() {
+      var sideways = Math.random() < 0.5;
+      aside.setAttribute("data-jiro-move", sideways ? "small-scoot" : "small-hop");
+      return play(hop, sideways ? [
+        { transform: "translate(0,0) rotate(0)" },
+        { transform: "translate(7px,-3px) rotate(2deg)", offset: 0.48 },
+        { transform: "translate(0,0) rotate(0)" }
+      ] : [
+        { transform: "translateY(0) scale(1)" },
+        { transform: "translateY(-5px) scale(.99,1.01)", offset: 0.48 },
+        { transform: "translateY(0) scale(1)" }
+      ], 500, "ease-in-out");
+    }
+
+    function fillJourneyAtRest(section, id) {
+      if (!motion() || !direction || pinned || journey.small >= 2) return;
+      var token = run;
+      var journeyId = journey.id;
+      schedule(function beat() {
+        if (closed || token !== run || id !== moveId || active !== section || moving || journey.id !== journeyId) return;
+        journey.small += 1;
+        smallGesture();
+        if (journey.small < 2) schedule(beat, MIN_DWELL_MS);
+      }, MIN_DWELL_MS);
+    }
+
+    function arc(from, duration) {
+      var to = aside.getBoundingClientRect();
+      var dx = from.left - to.left;
+      var dy = from.top - to.top;
+      if (!motion() || (Math.abs(dx) < 1 && Math.abs(dy) < 1)) return Promise.resolve();
+      var dir = dx < 0 ? 1 : -1;
+      var controlY = Math.min(from.top, to.top) - (to.top > from.top ? 6 : 18);
+      setState("flying");
+      var frames = [];
+      for (var i = 0; i <= GLIDE_STEPS; i += 1) {
+        var u = i / GLIDE_STEPS;
+        var eased = (1 - Math.cos(Math.PI * u)) / 2;
+        var pathY = (1 - eased) * (1 - eased) * from.top + 2 * (1 - eased) * eased * controlY + eased * eased * to.top;
+        frames.push({
+          offset: u,
+          transform: "translate(" + (dx * (1 - eased)) + "px," + (pathY - to.top) + "px) rotate(" + (2 * Math.sin(Math.PI * u) * dir) + "deg)"
+        });
+      }
+      var travelMs = duration || FLIGHT_MS;
+      var animation = aside.animate(frames, { duration: travelMs });
+      flight = animation;
+      schedule(function () { puff(); squash(1.04, 0.96, 180); }, travelMs * 0.9);
+      return animation.finished.then(function () {
+        if (flight === animation) flight = null;
+      }, function () {});
+    }
+
+    function spotFor(section) {
+      var anchor = target(section, "anchor");
+      var box = (anchor || section).getBoundingClientRect();
+      if (!box.width || !box.height) box = (target(section, "mobile-anchor") || section).getBoundingClientRect();
+      var x = box.left + box.width / 2;
+      if (wide.matches && x > window.innerWidth * CENTER_EDGE && x < window.innerWidth * (1 - CENTER_EDGE)) {
+        x = x < window.innerWidth / 2 ? window.innerWidth * CENTER_EDGE : window.innerWidth * (1 - CENTER_EDGE);
+      }
+      x = Math.min(Math.max(x, mascot.offsetWidth / 2 + 8), window.innerWidth - mascot.offsetWidth / 2 - 8);
+      var y = box.top + box.height / 2;
+      var sectionBox = section.getBoundingClientRect();
+      var halfWidth = mascot.offsetWidth / 2;
+      var halfHeight = mascot.offsetHeight / 2;
+      var protectedRects = [];
+      var headingRects = [];
+      section.querySelectorAll("h1,h2,h3,p,summary,.label,a,button,input,li,th,td").forEach(function (item) {
+        if (!item.getBoundingClientRect().width) return;
+        var range = document.createRange();
+        range.selectNodeContents(item);
+        var rects = item.matches("input") ? [item.getBoundingClientRect()] : Array.prototype.slice.call(range.getClientRects());
+        rects.forEach(function (rect) {
+          if (!rect.width || !rect.height) return;
+          protectedRects.push(rect);
+          if (item.matches("h1,h2,h3")) headingRects.push(rect);
+        });
+      });
+      function overlaps(cx, cy, rects) {
+        return rects.some(function (rect) {
+          return cx + halfWidth + 8 > rect.left && cx - halfWidth - 8 < rect.right &&
+            cy + halfHeight + 8 > rect.top && cy - halfHeight - 8 < rect.bottom;
+        });
+      }
+      if (overlaps(x, y, protectedRects) || y - halfHeight < 8 || y + halfHeight > window.innerHeight - 8) {
+        var xs = [x, sectionBox.left + halfWidth + 12, sectionBox.left + sectionBox.width * 0.23,
+          sectionBox.left + sectionBox.width * 0.77, sectionBox.right - halfWidth - 12];
+        var ys = [y, sectionBox.top + halfHeight + 12, sectionBox.bottom - halfHeight - 12,
+          (Math.max(0, sectionBox.top) + Math.min(window.innerHeight, sectionBox.bottom)) / 2];
+        [0.08, 0.18, 0.3, 0.45, 0.6, 0.75, 0.88].forEach(function (part) {
+          ys.push(sectionBox.top + sectionBox.height * part);
+        });
+        var best = null;
+        xs.forEach(function (candidateX) {
+          if (wide.matches && candidateX > window.innerWidth * CENTER_EDGE && candidateX < window.innerWidth * (1 - CENTER_EDGE)) {
+            candidateX = candidateX < window.innerWidth / 2 ? window.innerWidth * CENTER_EDGE : window.innerWidth * (1 - CENTER_EDGE);
+          }
+          candidateX = Math.min(Math.max(candidateX, halfWidth + 8), window.innerWidth - halfWidth - 8);
+          ys.forEach(function (candidateY) {
+            candidateY = Math.min(Math.max(candidateY, sectionBox.top + halfHeight + 8), sectionBox.bottom - halfHeight - 8);
+            if (candidateY < halfHeight + 8 || candidateY > window.innerHeight - halfHeight - 8) return;
+            var headings = overlaps(candidateX, candidateY, headingRects);
+            var text = overlaps(candidateX, candidateY, protectedRects);
+            var distance = Math.hypot(candidateX - x, candidateY - y);
+            var score = (headings ? 1000000 : 0) + (text ? 100000 : 0) + distance;
+            if (!best || score < best.score) best = { x: candidateX, y: candidateY, score: score };
+          });
+        });
+        if (best && best.score < 100000) { x = best.x; y = best.y; }
+      }
+      return {
+        x: x + window.scrollX - mascot.offsetWidth / 2,
+        y: y + window.scrollY - mascot.offsetHeight / 2
+      };
+    }
+
+    function pin(x, y) {
+      pinned = { x: x, y: y };
+      x = Math.min(Math.max(x, 0), document.documentElement.clientWidth - mascot.offsetWidth);
+      y = Math.min(Math.max(y, 0), document.documentElement.clientHeight - mascot.offsetHeight);
+      aside.classList.add("jiro-buddy--pinned");
+      aside.style.translate = x.toFixed(1) + "px " + y.toFixed(1) + "px";
+    }
+
+    function place(section) {
+      if (pinned) {
+        pin(pinned.x, pinned.y);
+        return;
+      }
+      var at = spotFor(section);
+      aside.style.translate = at.x.toFixed(1) + "px " + at.y.toFixed(1) + "px";
+    }
+
+    function unmerge() {
+      if (mergedLogo) mergedLogo.style.visibility = "";
+      mergedLogo = null;
+      aside.removeAttribute("data-jiro-merged");
+    }
+
+    function merge(section) {
+      if (pinned) return;
+      var logo = target(section, "merge");
+      if (!logo || !logo.getBoundingClientRect().width) return;
+      var logoBox = logo.getBoundingClientRect();
+      var mascotBox = mascot.getBoundingClientRect();
+      if (Math.abs(logoBox.left + logoBox.width / 2 - (mascotBox.left + mascotBox.width / 2)) > 12 ||
+        Math.abs(logoBox.top + logoBox.height / 2 - (mascotBox.top + mascotBox.height / 2)) > 12) return;
+      mergedLogo = logo;
+      aside.style.setProperty("--jiro-merge-scale", Math.min(logoBox.width / mascot.offsetWidth, 2.4).toFixed(2));
+      aside.setAttribute("data-jiro-merged", "true");
+      logo.style.visibility = "hidden";
+    }
+
+    function finishMove(section, id) {
+      if (id !== moveId) return;
+      moving = false;
+      landedAt = performance.now();
+      restingSection = section;
+      if (pendingJourney === journey.id && pendingKind === "small") journey.small += 1;
+      pendingKind = "quiet";
+      merge(section);
+      if (bubble.hidden) setState("idle");
+      pickIdle();
+      if (motion() && bubble.hidden) express("happy", 900);
+      else rest();
+      fillJourneyAtRest(section, id);
+      passLine();
+    }
+
+    async function peekThenFly(section, id) {
+      var to = aside.getBoundingClientRect();
+      var fromRight = to.left > window.innerWidth / 2;
+      var y = Math.min(Math.max(to.top, window.innerHeight * 0.22), window.innerHeight * 0.68);
+      var edge = fromRight ? window.innerWidth - mascot.offsetWidth * 0.28 : -mascot.offsetWidth * 0.72;
+      var out = fromRight ? window.innerWidth + mascot.offsetWidth : -mascot.offsetWidth * 1.4;
+      var transform = function (x) { return "translate(" + (x - to.left) + "px," + (y - to.top) + "px)"; };
+      setState("peeking");
+      peekAnimation = aside.animate([
+        { transform: transform(out), opacity: 0 },
+        { transform: transform(edge), opacity: 1, offset: 0.3 },
+        { transform: transform(edge), opacity: 1, offset: 0.8 },
+        { transform: transform(out), opacity: 0.7 }
+      ], { duration: 2400, easing: "ease-in-out" });
+      await peekAnimation.finished.catch(function () {});
+      peekAnimation = null;
+      if (id !== moveId) return;
+      await arc({ left: out, top: y }, 850);
+      if (id !== moveId) return;
+      await play(hop, [
+        { transform: "translateY(0)" },
+        { transform: "translateY(-8px)", offset: 0.45 },
+        { transform: "translateY(0)" }
+      ], 340);
+      finishMove(section, id);
+    }
+
+    function hopTo(section, kind) {
+      var id = ++moveId;
+      pendingKind = kind || "quiet";
+      pendingJourney = journey.id;
+      landFlight();
+      unmerge();
+      moving = true;
+      if (!placed) aside.hidden = closed;
+      place(section);
+      if (!placed) {
+        placed = true;
+        restingSection = section;
+        landedAt = performance.now();
+        if (!motion()) {
+          finishMove(section, id);
+          return;
+        }
+        play(aside, [
+          { transform: "translateY(24px) scale(.3)", opacity: 0, easing: "cubic-bezier(.3,1.5,.5,1)" },
+          { transform: "translateY(-10px) scale(1.06,.96)", opacity: 1, offset: 0.6 },
+          { transform: "none" }
+        ], 700).then(function () {
+          if (id !== moveId) return;
+          puff();
+          return squash(1.04, 0.96, 180);
+        }).then(function () { finishMove(section, id); });
+        return;
+      }
+      peeks += 1;
+      peekThenFly(section, id);
+    }
+
+    function travelTo(section) {
+      var from = aside.getBoundingClientRect();
+      var offscreen = from.bottom < 0 || from.top > window.innerHeight;
+      if (wide.matches && motion() && offscreen && peeks < MAX_PEEKS) {
+        aside.setAttribute("data-jiro-move", "large-peek");
+        hopTo(section, "large");
+        return;
+      }
+      if (direction && journey.small < 2 && motion()) {
+        jumpToCurrent(section, "small");
+        smallGesture();
+        return;
+      }
+      jumpToCurrent(section, "quiet");
+    }
+
+    function jumpToCurrent(section, kind) {
+      var id = ++moveId;
+      pendingKind = kind || "quiet";
+      pendingJourney = journey.id;
+      landFlight();
+      aside.getAnimations().forEach(function (animation) { animation.cancel(); });
+      unmerge();
+      aside.hidden = closed;
+      place(section);
+      if (pendingKind === "quiet") aside.setAttribute("data-jiro-move", "game-idle");
+      finishMove(section, id);
+      if (motion()) play(aside, [{ opacity: 0 }, { opacity: 1 }], 300);
+    }
+
+    function settle(section, move) {
+      if (!move) return;
+      var token = run;
+      function follow() {
+        if (active !== section || token !== run) return;
+        var remaining = landedAt + MIN_DWELL_MS - performance.now();
+        if (moving || remaining > 0) {
+          schedule(follow, moving ? 200 : remaining);
+          return;
+        }
+        if (move) travelTo(section);
+      }
+      schedule(follow, SETTLE_MS);
+    }
+
+    function setActive(section) {
+      if (!section || section === active) return;
+      active = section;
+      hideBubble();
+      if (!placed) {
+        hopTo(section);
+        return;
+      }
+      if (pinned) {
+        restingSection = section;
+        schedule(passLine, SETTLE_MS);
+        return;
+      }
+      var far = restingSection && Math.abs(sections.indexOf(section) - sections.indexOf(restingSection)) >= 2;
+      if (far) {
+        var token = run;
+        schedule(function () {
+          if (token !== run || closed) return;
+          var current = nearestToCenter();
+          if (current !== active) {
+            setActive(current);
+            return;
+          }
+          travelTo(current);
+        }, FAST_SETTLE_MS);
+      } else if (section !== restingSection || moving) {
+        settle(section, true);
+      }
+    }
+
+    onChange(wide, function () {
+      landFlight();
+      moving = false;
+      unmerge();
+      if (active) place(active);
+      if (active) {
+        restingSection = active;
+        landedAt = performance.now();
+        merge(active);
+      }
+      hideBubble();
+    });
+
+    onChange(reduced, function () {
+      rest();
+      if (reduced.matches) {
+        landFlight();
+        moving = false;
+        if (active) {
+          place(active);
+          unmerge();
+          restingSection = active;
+          landedAt = performance.now();
+          merge(active);
+        }
+      }
+      if (!reduced.matches || bubble.hidden || !spoken) return;
+      var section = active;
+      hideBubble();
+      if (section) speak(section, run);
+    });
+
+    window.addEventListener("resize", function () {
+      if (pinned) {
+        place(active);
+        return;
+      }
+      if (active && !flight && !peekAnimation) {
+        unmerge();
+        place(active);
+        restingSection = active;
+        merge(active);
+      }
+    });
+
+    function focusContent() {
+      var target = active || document.querySelector("main");
+      if (!target) return;
+      if (!target.hasAttribute("tabindex")) {
+        target.setAttribute("tabindex", "-1");
+        target.addEventListener("blur", function () {
+          target.removeAttribute("tabindex");
+        }, { once: true });
+      }
+      target.focus({ preventScroll: true });
+    }
+
+    var observer = new IntersectionObserver(function () {
+      setActive(nearestToCenter());
+    }, { rootMargin: "-40% 0px -40% 0px" });
+
+    sections.forEach(function (section) { observer.observe(section); });
+    var scrollFrame = 0;
+    window.addEventListener("scroll", function () {
+      updateDirection();
+      if (scrollFrame || closed) return;
+      scrollFrame = requestAnimationFrame(function () {
+        scrollFrame = 0;
+        setActive(nearestToCenter());
+      });
+    }, { passive: true });
+
+    mascot.addEventListener("pointerenter", function () {
+      hovered = true;
+      setFace(face);
+    });
+    mascot.addEventListener("pointerleave", function () { hovered = false; setFace(face); });
+
+    mascot.addEventListener("click", function () {
+      if (swallowClick) {
+        swallowClick = false;
+        return;
+      }
+      if (!restingSection) return;
+      quiet = false;
+      longPasses = 0;
+      said.clear();
+      hideBubble();
+      speak(spotSection(), run);
+    });
+
+    function grab() {
+      hideBubble();
+      landFlight();
+      aside.getAnimations().forEach(function (animation) { animation.cancel(); });
+      unmerge();
+      unlook();
+      clearTimeout(restTimer);
+      moving = false;
+      moveId += 1;
+      aside.classList.add("jiro-buddy--held");
+      setState("held");
+      setFace("eyes");
+    }
+
+    function drop() {
+      aside.classList.remove("jiro-buddy--held");
+      setState("idle");
+      rememberPin(pinned);
+      restingSection = spotSection();
+      landedAt = performance.now();
+      if (motion()) express("happy", 900);
+      else setFace(restFace());
+    }
+
+    mascot.addEventListener("pointerdown", function (event) {
+      swallowClick = false;
+      if (!event.isPrimary || event.button !== 0 || !placed) return;
+      var box = mascot.getBoundingClientRect();
+      drag = { id: event.pointerId, x: event.clientX, y: event.clientY, left: box.left, top: box.top, moved: false };
+      mascot.setPointerCapture(event.pointerId);
+    });
+
+    mascot.addEventListener("pointermove", function (event) {
+      if (!drag || event.pointerId !== drag.id) return;
+      var dx = event.clientX - drag.x;
+      var dy = event.clientY - drag.y;
+      if (!drag.moved) {
+        if (Math.hypot(dx, dy) < DRAG_SLOP) return;
+        drag.moved = true;
+        grab();
+      }
+      pin(drag.left + dx, drag.top + dy);
+    });
+
+    function endDrag(event) {
+      if (!drag || event.pointerId !== drag.id) return;
+      var moved = drag.moved;
+      drag = null;
+      if (!moved) return;
+      swallowClick = true;
+      setTimeout(function () { swallowClick = false; }, 0);
+      drop();
+    }
+
+    mascot.addEventListener("pointerup", endDrag);
+    mascot.addEventListener("pointercancel", endDrag);
+    mascot.addEventListener("lostpointercapture", endDrag);
+
+    mascot.addEventListener("keydown", function (event) {
+      var step = event.shiftKey ? NUDGE * 4 : NUDGE;
+      var move = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[event.key];
+      if (!move || !placed) return;
+      event.preventDefault();
+      var box = mascot.getBoundingClientRect();
+      grab();
+      pin(box.left + move[0], box.top + move[1]);
+      drop();
+    });
+
+    yes.addEventListener("click", function () {
+      var section = speakingSection;
+      var goal = section && target(section, "action");
+      hideBubble();
+      if (!goal) return;
+      goal.scrollIntoView({ behavior: motion() ? "smooth" : "auto", block: "center" });
+      if (goal.matches("input, textarea, select, button, a[href]")) goal.focus({ preventScroll: true });
+    });
+
+    later.addEventListener("click", hideBubble);
+
+    close.addEventListener("click", function () {
+      var hadFocus = aside.contains(document.activeElement);
+      hideBubble();
+      landFlight();
+      unmerge();
+      observer.disconnect();
+      closed = true;
+      clearTimeout(restTimer);
+      unlook();
+      aside.hidden = true;
+      rememberHidden();
+      if (hadFocus) focusContent();
+    });
+  }
+
+  function start() {
+    var idle = window.requestIdleCallback || function (fn) { return setTimeout(fn, 1); };
+    idle(init, { timeout: 500 });
+  }
+
+  if (document.readyState === "complete") start();
+  else window.addEventListener("load", start, { once: true });
+})();
+
+</script>
+</body>
+</html>
