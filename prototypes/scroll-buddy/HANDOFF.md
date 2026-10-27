@@ -44,7 +44,7 @@ Port 4330 serves the same boards with star and note saving (`serve.py`). In a No
 
 ## The two latest versions
 
-**v6 (2026-10-27, commit `025ab6b`, the current version).** Martin picked A2, A3, A4, A5, B3, B5, C4 and D4 from the original 5×5 moodboard (`moodboard/index.html`), plus click and drag:
+**v6 (2026-10-27, commit `025ab6b`, the current version; Martin approved it on 2026-10-27 as the version to keep).** Martin picked A2, A3, A4, A5, B3, B5, C4 and D4 from the original 5×5 moodboard (`moodboard/index.html`), plus click and drag:
 - speech returns, but sparse: one line per scroll pass, no repeats, quiet after 4 long passes
 - a random idle hover each landing (game, sleepy, spring, eager)
 - the big glide and spring jumps are removed; only the slow edge peek and small moves remain
