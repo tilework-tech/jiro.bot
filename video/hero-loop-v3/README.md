@@ -1,5 +1,7 @@
 # Jiro hero v3 (48s, phone)
 
+> **Current approved hero: v25** (`template25.html`, `jiro-hero-v25-46s-loop-1200x960.mp4`), approved by Martin on 2026-10-27. See [../hero-saved/README.md](../hero-saved/README.md) for files, where it is used, and rebuild steps. `brand/fonts.sh` fetches the fonts the templates need.
+
 Adds: Jiro checks how the team ships and gets corrected, asks before the first PR, pushes back on one big PR, the agent payoff (refund-logic lookup via the map), docs prompt plus a later catch on another agent PR, and a quiet 3 AM fix ending in "...oh nice."
 
 Render: `node build.mjs template3.html index3.html && node render3.mjs --fps=60 --w=1080 --h=1080`. All data is fake.
