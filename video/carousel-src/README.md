@@ -8,7 +8,7 @@ These are the sources of the three jiro.bot hero carousel videos. Each one shows
 | `multiplayer` | Priya builds with Jiro in desktop Slack and tags @Kira. Kira asks for a change from Slack on her phone. Sam adds a test from the CLI on a laptop. The same session runs throughout, and the camera tours the three devices. | Slack desktop, Slack mobile, CLI |
 | `rbac` | In one #incidents thread, Rae (ops admin) gets a root cause from `@jiro-ops`. Jordan (no ops access) gets the product's refusal, and then Rae gets the fix PR. | Slack |
 
-The RBAC story is an anonymised version of a real internal incident thread. The refusal is the broker's real string (`sessions/broker/server/src/core-services/agents/agent-access.ts`). The multiplayer CLI mirror (`Sam · via CLI` + quote) follows `surface-engine/observed-turn-copy.ts`. Everything else is invented: names, the Beauty Corp workspace, messages, PR numbers, terminal output and the `nori cloud` screen.
+The RBAC story is an anonymised version of a real internal incident thread. The refusal is the broker's real string (`sessions/broker/server/src/core-services/agents/agent-access.ts`). The multiplayer CLI mirror (`Sam · via CLI` + quote) follows `surface-engine/observed-turn-copy.ts`. Everything else is invented: names, the Sable workspace, messages, PR numbers, terminal output and the `nori cloud` screen.
 
 ## Outputs (`site/video/carousel/`)
 
