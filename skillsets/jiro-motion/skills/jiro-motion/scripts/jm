@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Runs the jiro-motion CLI in a cached virtualenv built from requirements.txt.
+#   jm render | check | tables | review | detect | test
+set -euo pipefail
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VENV="${JIRO_MOTION_VENV:-$HOME/.cache/jiro-motion/venv}"
+STAMP="$VENV/.requirements.sha"
+want="$(sha256sum "$HERE/requirements.txt" | cut -d' ' -f1)"
+if [ ! -x "$VENV/bin/python" ] || [ "$(cat "$STAMP" 2>/dev/null)" != "$want" ]; then
+  command -v uv >/dev/null || { echo "jm: needs uv (https://docs.astral.sh/uv/)" >&2; exit 1; }
+  uv venv -q --python 3.11 "$VENV" >&2
+  VIRTUAL_ENV="$VENV" uv pip install -q -r "$HERE/requirements.txt" >&2
+  echo "$want" > "$STAMP"
+fi
+if [ "${1:-}" = "test" ]; then
+  shift
+  cd "$HERE/../tests"
+  PYTHONPATH="$HERE" exec "$VENV/bin/python" -m unittest "$@"
+fi
+PYTHONPATH="$HERE" exec "$VENV/bin/python" -m jiro_motion "$@"

@@ -1,0 +1,1161 @@
+{
+  "name": "jiro-motion",
+  "version": "1.0.0",
+  "source": {
+    "repo": "tilework-tech/jiro.bot",
+    "branch": "feat/jiro-scroll-buddy",
+    "commit": "6af9118",
+    "files": [
+      "prototypes/scroll-buddy/HANDOFF.md",
+      "prototypes/scroll-buddy/docs.md",
+      "prototypes/scroll-buddy/jiro-buddy.js",
+      "prototypes/scroll-buddy/jiro-buddy.css",
+      "prototypes/scroll-buddy/moodboard/handoff.html"
+    ],
+    "approved": "v6, approved by Martin Stübler on 2026-10-27"
+  },
+  "units": {
+    "length": "px at the reference mascot size (92 x 90 box); multiplied by the render scale s = mascot height / 90",
+    "time": "ms",
+    "angle": "deg",
+    "scale": "factor (1 = no change)",
+    "offset": "fraction of the move's duration (0..1)"
+  },
+  "mascot": {
+    "ref_width": 92,
+    "ref_height": 90,
+    "default_height_fraction": 0.1,
+    "art": {
+      "view_box": [
+        0,
+        -1,
+        62,
+        56
+      ],
+      "art_height": 83.1,
+      "body_fill": "M35 6L34 6L34 3L33 3L33 0.75L30.5 0.75L30.25 1L29 1L28.75 1.25L28 1.25L27.75 1.5L27 1.5L26.75 1.75L26 1.75L26 2L25.5 2L25.25 2.25L24.75 2.25L24.5 2.5L24 2.5L23.75 2.75L23.25 2.75L23 3L22.75 3L22.5 3.25L22.25 3.25L22 3.5L21.75 3.5L21.5 3.75L21.25 3.75L21 4L20.75 4L20.5 4.25L20.25 4.25L20 4.5L19.75 4.5L19.5 4.75L19.25 4.75L19.25 5L19 5L18.75 5.25L18.5 5.25L18.5 5.5L18 5.5L18 5.75L17.75 5.75L17 6.5L16.75 6.5L16.25 7L16 7L16 7.25L15.75 7.25L15.75 7.5L15.5 7.5L15.5 7.75L15.25 7.75L14 9L14 9.25L13.75 9.25L13.75 9.5L13.5 9.5L13.5 9.75L13.25 9.75L13.25 10L13 10L13 10.25L12.25 11L12.25 11.25L12 11.25L12 11.5L11.75 11.5L11.75 12L11.5 12L11.5 12.25L11.25 12.25L11.25 12.5L11 12.75L11 13L10.75 13L10.75 13.25L10.5 13.5L10.5 13.75L10 14.25L10 14.5L9.75 14.75L9.75 15L9.5 15.25L9.5 15.5L9.25 15.75L9.25 16L9 16.25L9 16.5L8.75 16.75L8.75 17.25L8.5 17.5L8.5 17.75L8.25 18L8.25 18.5L8 18.75L8 19.25L7.75 19.25L7.75 20L7.5 20.25L7.5 21L7.25 21L7.25 22L7 22.25L7 23.25L6.75 23.5L6.75 25.25L6.5 25.25L6.5 30.5L6.75 30.5L6.75 32.25L7 32.5L7 33.5L7.25 33.75L7.25 34.75L7.5 34.75L7.5 35.5L7.75 35.75L7.75 36.25L8 36.5L8 37L8.25 37.25L8.25 37.5L8.5 37.75L8.5 38.25L8.75 38.5L8.75 38.75L9 39L9 39.25L9.25 39.5L9.25 39.75L9 40L9 42L10 42L10 44L9 44L9 45L8 45L8 46L7 46L7 47L6 47L6 48L5 48L5 49L4 49L4 50L3 50L3 51L2.25 51L2 51.25L2 52L4 52L4.25 51.75L4.75 51.75L5 51.5L5 51L6.75 51L7 50.75L7 50L9 50L9 49L11 49L11 48L13 48L13 47L14 47L14 48L16 48L16 48.75L16.25 49L17 49L17 49.5L17.25 49.5L17.5 49.75L17.75 49.75L17.75 50L19 50L19 50.5L19.25 50.75L19.5 50.75L19.5 51L21 51L21 51.5L21.25 51.5L21.25 51.75L21.75 51.75L22 52L23 52L23 52.25L23.25 52.5L24 52.5L24.25 52.75L24.75 52.75L25 53L27 53L27 53.25L27.25 53.5L28.5 53.5L28.75 53.75L35.75 53.75L35.75 53.5L37 53.5L37 53L39.5 53L39.75 52.75L40.5 52.75L40.5 52.5L41 52.5L41 52L42.5 52L42.75 51.75L43 51.75L43 51L44.75 51L45 50.75L45 50L46.5 50L46.75 49.75L47 49.75L47 49L48 49L48 48L49.5 48L50 47.5L50 47L50.75 47L50.75 46.75L51 46.75L51 46L51.75 46L52 45.75L52 45L52.75 45L53 44.75L53 43L54 43L54 42L55 42L55 40L56 40L56 38L57 38L57 36L58 36L58 32L59 32L59 31L60 31L60 29L59 29L59 26L56 26L56 25L55 25L55 24L54 24L54 23L53 23L53 14L48 14L48 13L47 13L47 12L46 12L46 9L45 9L45 7L41 7L41 8L39 8L39 7L36 7L36 6Z",
+      "body_line": "M88 384L-24 424L42 317C-8 218 30 90 127 36C178 7 242-4 242 16C242 24 236 29 225 29C157 29 70 98 51 167C38 214 43 266 66 310L70 317L32 378L87.7 358.6A202.4 202.4 0 0 0 426.6 230.1C426 220 431 213 439 213C447 213 450.5 220 450.5 232.4A226.4 226.4 0 0 1 88 384Z",
+      "body_line_transform": "translate(4 0) scale(.125)",
+      "faces": {
+        "cursor": "M16 22h2v1h1v1h1v1h1v1h1v1h1v2h-1v1h-1v1h-1v1h-1v1h-1v1h-2v-1h1v-1h1v-1h1v-1h1v-2h-1v-1h-1v-1h-1v-1h-1zM27 31h10v3h-10z",
+        "eyes": "M19 23h5v7h-5zM38 23h5v7h-5z",
+        "happy": "M16 28h4v4h-4zM20 24h4v4h-4zM24 28h4v4h-4zM35 28h4v4h-4zM39 24h4v4h-4zM43 28h4v4h-4z",
+        "sleepy": "M17 29h8v2h-8zM37 29h8v2h-8zM29 34h4v1h-4z"
+      },
+      "cursor_block": [
+        41,
+        23,
+        6,
+        9
+      ],
+      "colors": {
+        "body": "#faf8f2",
+        "line": "#1d3b2a",
+        "face": "#fb5e45",
+        "shadow": "#e4e0d4",
+        "puff": "#d9d3c3",
+        "puff_light": "#e4e0d4",
+        "zzz": "#173d2b",
+        "bubble_bg": "#f8f6f0",
+        "bubble_border": "#173d2b",
+        "bubble_text": "#173d2b",
+        "bubble_shadow": "rgba(23,61,43,.12)"
+      },
+      "shadow": {
+        "width_fraction": 0.56,
+        "height": 4,
+        "gap": 2
+      },
+      "sleepy_opacity": 0.82,
+      "zzz": {
+        "text": "z z",
+        "font_size": 16,
+        "letter_spacing": 3,
+        "right": -10,
+        "top": -20,
+        "width": 38
+      }
+    },
+    "bubble": {
+      "gap": 14,
+      "max_width": 340,
+      "min_height": 48,
+      "padding": [
+        12,
+        16
+      ],
+      "border": 3,
+      "radius": 10,
+      "font_family": "Inter",
+      "font_size": 15.5,
+      "line_height": 1.4,
+      "tail": {
+        "outer": [
+          9,
+          14
+        ],
+        "inner": [
+          5,
+          9
+        ]
+      },
+      "edge_margin": 8
+    }
+  },
+  "faces": {
+    "cursor": {
+      "glyph": ">_",
+      "when": "default, with the block cursor blinking every 1060 ms (steps)",
+      "blink_ms": 1060
+    },
+    "happy": {
+      "glyph": "^_^",
+      "when": "900 ms on every landing; also a resting expression",
+      "hold_ms": 900
+    },
+    "eyes": {
+      "glyph": "o_o",
+      "when": "resting expression (blinks: scaleY .15 at 90% and 93.5% of 4200 ms)",
+      "hold_ms": 900,
+      "blink": {
+        "period_ms": 4200,
+        "ease": "ease",
+        "keyframes": [
+          {
+            "o": 0,
+            "sy": 1
+          },
+          {
+            "o": 0.88,
+            "sy": 1
+          },
+          {
+            "o": 0.9,
+            "sy": 0.15
+          },
+          {
+            "o": 0.92,
+            "sy": 1
+          },
+          {
+            "o": 0.935,
+            "sy": 0.15
+          },
+          {
+            "o": 0.95,
+            "sy": 1
+          },
+          {
+            "o": 1,
+            "sy": 1
+          }
+        ]
+      }
+    },
+    "sleepy": {
+      "glyph": "-_-",
+      "when": "for as long as the sleepy hover runs"
+    }
+  },
+  "placement": {
+    "edge_margin": 8,
+    "text_padding": 8,
+    "centre_band": [
+      0.35,
+      0.65
+    ],
+    "centre_band_applies": "landscape frames (width >= height); the v6 rule applied on screens 768px and wider",
+    "prefer": "flat, low-edge-density areas in the outer bands; stay near the previous spot",
+    "chrome_edge_density": 0.18,
+    "peek_y_range": [
+      0.22,
+      0.68
+    ],
+    "peek_visible_fraction": 0.28,
+    "peek_out_left": 1.4,
+    "peek_out_right": 1.0
+  },
+  "budgets": {
+    "per_scene": {
+      "big": 1,
+      "small": 2,
+      "lines": 1,
+      "bouncy_hover": 1
+    },
+    "per_video": {
+      "pop_in": 1
+    },
+    "small_min_gap_ms": 2000,
+    "first_small_after_landing_ms": 2000,
+    "rest_before_relocate_ms": 2000,
+    "line_after_landing_ms": 900,
+    "min_stay_ms": 2500,
+    "big_moves": [
+      "pop_in",
+      "edge_peek",
+      "relocate"
+    ],
+    "small_moves": [
+      "side_scoot",
+      "small_hop"
+    ],
+    "bouncy_hovers": [
+      "idle_spring",
+      "idle_eager"
+    ]
+  },
+  "moves": {
+    "pop_in": {
+      "category": "big",
+      "label": "Pop-in",
+      "layer": "aside",
+      "duration_ms": 700,
+      "easing": "ease-out",
+      "keyframes": [
+        {
+          "o": 0,
+          "ty": 24,
+          "sx": 0.3,
+          "sy": 0.3,
+          "opacity": 0,
+          "ease": "cubic-bezier(.3,1.5,.5,1)"
+        },
+        {
+          "o": 0.6,
+          "ty": -10,
+          "sx": 1.06,
+          "sy": 0.96,
+          "opacity": 1
+        },
+        {
+          "o": 1,
+          "ty": 0,
+          "sx": 1,
+          "sy": 1,
+          "opacity": 1
+        }
+      ],
+      "then": [
+        "dust_puff",
+        "landing_squash"
+      ],
+      "notes": "Scales from 30% with an overshoot. First appearance only."
+    },
+    "edge_peek": {
+      "category": "big",
+      "label": "Edge peek",
+      "layer": "aside",
+      "duration_ms": 2400,
+      "easing": "ease-in-out",
+      "keyframes": [
+        {
+          "o": 0,
+          "x": "out",
+          "opacity": 0
+        },
+        {
+          "o": 0.3,
+          "x": "edge",
+          "opacity": 1
+        },
+        {
+          "o": 0.8,
+          "x": "edge",
+          "opacity": 1
+        },
+        {
+          "o": 1,
+          "x": "out",
+          "opacity": 0.7
+        }
+      ],
+      "then": [
+        "fly_in"
+      ],
+      "notes": "About 1.2 s visible with 28% of him showing at the nearer side edge. The only move allowed closer than 8px to the edge."
+    },
+    "fly_in": {
+      "category": "big",
+      "label": "Fly in (after the peek)",
+      "layer": "aside",
+      "duration_ms": 850,
+      "procedural": "arc",
+      "arc": {
+        "steps": 20,
+        "lift_up": 18,
+        "lift_down": 6,
+        "rot_peak": 2,
+        "path_easing": "cosine",
+        "land_at": 0.9
+      },
+      "then": [
+        "peek_landing_hop"
+      ],
+      "notes": "Low quadratic arc from the off-screen point to the spot, tilting up to 2 degrees; the landing squash and puff fire at 90% of the flight."
+    },
+    "peek_landing_hop": {
+      "category": "big",
+      "label": "Peek landing hop",
+      "layer": "hop",
+      "duration_ms": 340,
+      "easing": "ease-out",
+      "keyframes": [
+        {
+          "o": 0,
+          "ty": 0
+        },
+        {
+          "o": 0.45,
+          "ty": -8
+        },
+        {
+          "o": 1,
+          "ty": 0
+        }
+      ],
+      "notes": "8px, his largest in-place move. Only with the edge peek."
+    },
+    "relocate": {
+      "category": "big",
+      "label": "Relocate (follow to the next scene)",
+      "layer": "aside",
+      "duration_ms": 300,
+      "easing": "ease-out",
+      "keyframes": [
+        {
+          "o": 0,
+          "opacity": 0
+        },
+        {
+          "o": 1,
+          "opacity": 1
+        }
+      ],
+      "then": [
+        "dust_puff",
+        "landing_squash"
+      ],
+      "notes": "Vanishes from the old spot and fades in at the new one. Always after at least 2 s of rest."
+    },
+    "hide": {
+      "category": "safety",
+      "label": "Hide (no clear region)",
+      "layer": "aside",
+      "duration_ms": 300,
+      "easing": "ease-out",
+      "keyframes": [
+        {
+          "o": 0,
+          "opacity": 1
+        },
+        {
+          "o": 1,
+          "opacity": 0
+        }
+      ],
+      "notes": "Video-only: the mirror of the relocate fade. Used when text is about to reach his spot and there is no clear place to go. Not a big move; unlimited."
+    },
+    "landing_squash": {
+      "category": "landing",
+      "label": "Landing squash",
+      "layer": "hop",
+      "duration_ms": 180,
+      "easing": "ease-out",
+      "keyframes": [
+        {
+          "o": 0,
+          "sx": 1,
+          "sy": 1
+        },
+        {
+          "o": 0.4,
+          "sx": 1.04,
+          "sy": 0.96
+        },
+        {
+          "o": 1,
+          "sx": 1,
+          "sy": 1
+        }
+      ],
+      "notes": "A 4% squash on every landing, with the dust puff."
+    },
+    "dust_puff": {
+      "category": "landing",
+      "label": "Dust puff",
+      "layer": "puff",
+      "duration_ms": 420,
+      "easing": "linear",
+      "keyframes": [
+        {
+          "o": 0,
+          "opacity": 0.9,
+          "sx": 0.6,
+          "sy": 0.6,
+          "ty": 0,
+          "ease": "ease-out"
+        },
+        {
+          "o": 1,
+          "opacity": 0,
+          "sx": 1.5,
+          "sy": 1,
+          "ty": -3
+        }
+      ]
+    },
+    "side_scoot": {
+      "category": "small",
+      "label": "Side scoot",
+      "layer": "hop",
+      "duration_ms": 500,
+      "easing": "ease-in-out",
+      "keyframes": [
+        {
+          "o": 0,
+          "tx": 0,
+          "ty": 0,
+          "rot": 0
+        },
+        {
+          "o": 0.48,
+          "tx": 7,
+          "ty": -3,
+          "rot": 2
+        },
+        {
+          "o": 1,
+          "tx": 0,
+          "ty": 0,
+          "rot": 0
+        }
+      ],
+      "notes": "7px sideways with a 2 degree tilt."
+    },
+    "small_hop": {
+      "category": "small",
+      "label": "Small hop",
+      "layer": "hop",
+      "duration_ms": 500,
+      "easing": "ease-in-out",
+      "keyframes": [
+        {
+          "o": 0,
+          "ty": 0,
+          "sx": 1,
+          "sy": 1
+        },
+        {
+          "o": 0.48,
+          "ty": -5,
+          "sx": 0.99,
+          "sy": 1.01
+        },
+        {
+          "o": 1,
+          "ty": 0,
+          "sx": 1,
+          "sy": 1
+        }
+      ],
+      "notes": "5px up."
+    },
+    "express_squash": {
+      "category": "face",
+      "label": "Expression squash",
+      "layer": "hop",
+      "duration_ms": 200,
+      "easing": "ease-out",
+      "keyframes": [
+        {
+          "o": 0,
+          "sx": 1,
+          "sy": 1
+        },
+        {
+          "o": 0.4,
+          "sx": 1.03,
+          "sy": 0.97
+        },
+        {
+          "o": 1,
+          "sx": 1,
+          "sy": 1
+        }
+      ]
+    },
+    "glance": {
+      "category": "face",
+      "label": "Glance",
+      "layer": "face",
+      "duration_ms": 1300,
+      "shift": 3,
+      "reach": 520,
+      "transition": "220ms cubic-bezier(.3,.7,.4,1)",
+      "notes": "Face shifts 3 SVG units (about 4.5px at 92px) towards a random detected text box within 520px."
+    },
+    "talk_squash": {
+      "category": "talk",
+      "label": "Talk squash",
+      "layer": "hop",
+      "duration_ms": 300,
+      "easing": "ease-out",
+      "keyframes": [
+        {
+          "o": 0,
+          "sx": 1,
+          "sy": 1
+        },
+        {
+          "o": 0.4,
+          "sx": 0.9,
+          "sy": 1.12
+        },
+        {
+          "o": 1,
+          "sx": 1,
+          "sy": 1
+        }
+      ]
+    },
+    "talk_stretch": {
+      "category": "talk",
+      "label": "Shell grows into the bubble",
+      "layer": "art",
+      "transition_ms": 280,
+      "transition": "cubic-bezier(.3,1.4,.5,1)",
+      "to": {
+        "sx": 1.05,
+        "sy": 1.12
+      },
+      "notes": "Held while the bubble is open, then shrinks back with the same overshooting transition."
+    },
+    "bubble_pop": {
+      "category": "talk",
+      "label": "Bubble pop",
+      "layer": "bubble",
+      "duration_ms": 340,
+      "easing": "linear",
+      "keyframes": [
+        {
+          "o": 0,
+          "opacity": 0,
+          "sx": 0.15,
+          "sy": 0.3,
+          "ease": "cubic-bezier(.2,1.4,.4,1)"
+        },
+        {
+          "o": 0.4,
+          "opacity": 1,
+          "ease": "cubic-bezier(.2,1.4,.4,1)"
+        },
+        {
+          "o": 1,
+          "opacity": 1,
+          "sx": 1,
+          "sy": 1
+        }
+      ]
+    },
+    "talk": {
+      "category": "talk",
+      "label": "Typed line",
+      "type_ms_per_char": 28,
+      "hold_ms": 4500,
+      "notes": "Types out at 28 ms per character, holds 4.5 s, then closes."
+    }
+  },
+  "idles": {
+    "idle_game": {
+      "label": "Game idle (A2)",
+      "bouncy": false,
+      "layers": {
+        "bob": {
+          "period_ms": 4100,
+          "keyframes": [
+            {
+              "o": 0,
+              "ty": 0
+            },
+            {
+              "o": 0.5,
+              "ty": -3.5
+            },
+            {
+              "o": 1,
+              "ty": 0
+            }
+          ]
+        },
+        "drift": {
+          "period_ms": 5800,
+          "keyframes": [
+            {
+              "o": 0,
+              "tx": -0.75
+            },
+            {
+              "o": 0.5,
+              "tx": 0.75
+            },
+            {
+              "o": 1,
+              "tx": -0.75
+            }
+          ]
+        },
+        "tilt": {
+          "period_ms": 6800,
+          "keyframes": [
+            {
+              "o": 0,
+              "rot": -1.5
+            },
+            {
+              "o": 0.5,
+              "rot": 1.5
+            },
+            {
+              "o": 1,
+              "rot": -1.5
+            }
+          ]
+        },
+        "squash": {
+          "period_ms": 4100,
+          "keyframes": [
+            {
+              "o": 0,
+              "sx": 1.01,
+              "sy": 0.985
+            },
+            {
+              "o": 0.25,
+              "sx": 0.9925,
+              "sy": 1.015
+            },
+            {
+              "o": 0.5,
+              "sx": 1,
+              "sy": 1
+            },
+            {
+              "o": 0.75,
+              "sx": 0.9975,
+              "sy": 1.005
+            },
+            {
+              "o": 1,
+              "sx": 1.01,
+              "sy": 0.985
+            }
+          ]
+        },
+        "shadow": {
+          "period_ms": 4100,
+          "keyframes": [
+            {
+              "o": 0,
+              "sx": 1,
+              "sy": 1,
+              "opacity": 1
+            },
+            {
+              "o": 0.5,
+              "sx": 0.9,
+              "sy": 0.9,
+              "opacity": 0.78
+            },
+            {
+              "o": 1,
+              "sx": 1,
+              "sy": 1,
+              "opacity": 1
+            }
+          ]
+        }
+      },
+      "notes": "3.5px bob, ±0.75px drift, ±1.5° tilt, soft squash, 4.1 s."
+    },
+    "idle_sleepy": {
+      "label": "Sleepy (A5)",
+      "bouncy": false,
+      "face": "sleepy",
+      "dim": true,
+      "layers": {
+        "bob": {
+          "period_ms": 7300,
+          "keyframes": [
+            {
+              "o": 0,
+              "ty": 0,
+              "rot": 0
+            },
+            {
+              "o": 0.5,
+              "ty": 2,
+              "rot": -1
+            },
+            {
+              "o": 1,
+              "ty": 0,
+              "rot": 0
+            }
+          ]
+        },
+        "shadow": {
+          "period_ms": 7300,
+          "keyframes": [
+            {
+              "o": 0,
+              "sx": 1,
+              "sy": 1,
+              "opacity": 1
+            },
+            {
+              "o": 0.5,
+              "sx": 0.9,
+              "sy": 0.9,
+              "opacity": 0.78
+            },
+            {
+              "o": 1,
+              "sx": 1,
+              "sy": 1,
+              "opacity": 1
+            }
+          ]
+        },
+        "zzz": {
+          "period_ms": 2800,
+          "ease": "ease-out",
+          "keyframes": [
+            {
+              "o": 0,
+              "opacity": 0,
+              "tx": 0,
+              "ty": 6
+            },
+            {
+              "o": 0.3,
+              "opacity": 1
+            },
+            {
+              "o": 1,
+              "opacity": 0,
+              "tx": 8,
+              "ty": -14
+            }
+          ]
+        }
+      },
+      "notes": "2px sink over 7.3 s, dimmed to 82%, -_- face, z's."
+    },
+    "idle_spring": {
+      "label": "Bouncy spring (A3)",
+      "bouncy": true,
+      "layers": {
+        "bob": {
+          "period_ms": 3500,
+          "keyframes": [
+            {
+              "o": 0,
+              "ty": 0,
+              "sx": 1.025,
+              "sy": 0.98
+            },
+            {
+              "o": 0.18,
+              "ty": 0,
+              "sx": 0.99,
+              "sy": 1.015
+            },
+            {
+              "o": 0.46,
+              "ty": -6,
+              "sx": 1,
+              "sy": 1
+            },
+            {
+              "o": 0.74,
+              "ty": 0,
+              "sx": 1.02,
+              "sy": 0.985
+            },
+            {
+              "o": 1,
+              "ty": 0,
+              "sx": 1.025,
+              "sy": 0.98
+            }
+          ]
+        },
+        "shadow": {
+          "period_ms": 3500,
+          "keyframes": [
+            {
+              "o": 0,
+              "sx": 1,
+              "sy": 1,
+              "opacity": 1
+            },
+            {
+              "o": 0.5,
+              "sx": 0.9,
+              "sy": 0.9,
+              "opacity": 0.78
+            },
+            {
+              "o": 1,
+              "sx": 1,
+              "sy": 1,
+              "opacity": 1
+            }
+          ]
+        }
+      },
+      "notes": "6px hops with squash, 3.5 s."
+    },
+    "idle_eager": {
+      "label": "Eager jitter (A4)",
+      "bouncy": true,
+      "layers": {
+        "bob": {
+          "period_ms": 2700,
+          "keyframes": [
+            {
+              "o": 0,
+              "ty": 0
+            },
+            {
+              "o": 0.38,
+              "ty": -2.5
+            },
+            {
+              "o": 0.55,
+              "ty": 0
+            },
+            {
+              "o": 0.7,
+              "ty": -1.5
+            },
+            {
+              "o": 1,
+              "ty": 0
+            }
+          ]
+        },
+        "drift": {
+          "period_ms": 3200,
+          "keyframes": [
+            {
+              "o": 0,
+              "tx": -0.75
+            },
+            {
+              "o": 0.5,
+              "tx": 0.75
+            },
+            {
+              "o": 1,
+              "tx": -0.75
+            }
+          ]
+        },
+        "tilt": {
+          "period_ms": 3800,
+          "keyframes": [
+            {
+              "o": 0,
+              "rot": -1.5
+            },
+            {
+              "o": 0.5,
+              "rot": 1.5
+            },
+            {
+              "o": 1,
+              "rot": -1.5
+            }
+          ]
+        },
+        "squash": {
+          "period_ms": 4100,
+          "keyframes": [
+            {
+              "o": 0,
+              "sx": 1.01,
+              "sy": 0.985
+            },
+            {
+              "o": 0.25,
+              "sx": 0.9925,
+              "sy": 1.015
+            },
+            {
+              "o": 0.5,
+              "sx": 1,
+              "sy": 1
+            },
+            {
+              "o": 0.75,
+              "sx": 0.9975,
+              "sy": 1.005
+            },
+            {
+              "o": 1,
+              "sx": 1.01,
+              "sy": 0.985
+            }
+          ]
+        },
+        "shadow": {
+          "period_ms": 2700,
+          "keyframes": [
+            {
+              "o": 0,
+              "sx": 1,
+              "sy": 1,
+              "opacity": 1
+            },
+            {
+              "o": 0.5,
+              "sx": 0.9,
+              "sy": 0.9,
+              "opacity": 0.78
+            },
+            {
+              "o": 1,
+              "sx": 1,
+              "sy": 1,
+              "opacity": 1
+            }
+          ]
+        }
+      },
+      "notes": "2.5px double bob, 2.7 s."
+    }
+  },
+  "layers": {
+    "order": [
+      "aside",
+      "bob",
+      "drift",
+      "tilt",
+      "squash",
+      "hop",
+      "art"
+    ],
+    "origins": {
+      "aside": [
+        0.5,
+        0.5
+      ],
+      "bob": [
+        0.5,
+        0.5
+      ],
+      "drift": [
+        0.5,
+        0.5
+      ],
+      "tilt": [
+        0.5,
+        0.6
+      ],
+      "squash": [
+        0.5,
+        1.0
+      ],
+      "hop": [
+        0.5,
+        0.5
+      ],
+      "art": [
+        0.5,
+        1.0
+      ],
+      "bubble": [
+        0.5,
+        1.0
+      ],
+      "puff": [
+        0.5,
+        0.5
+      ],
+      "shadow": [
+        0.5,
+        0.5
+      ]
+    }
+  },
+  "rest": {
+    "beat_ms": 5000,
+    "pattern": "alternate glance, expression; paused while moving, talking or hidden",
+    "expression_faces": [
+      "happy",
+      "eyes"
+    ]
+  },
+  "tolerances": {
+    "amplitude_px": 0.35,
+    "angle_deg": 0.1,
+    "scale": 0.004,
+    "opacity": 0.01,
+    "duration_frames": 1,
+    "curve_px": 0.5,
+    "pixel_bbox_px": 3
+  },
+  "types": {
+    "product_demo": {
+      "label": "Product demo",
+      "status": "proposal — awaiting Martin's confirmation",
+      "description": "Screen recording of the product with UI text everywhere. Calm, closest to v6.",
+      "idle_odds": {
+        "idle_game": 0.4,
+        "idle_sleepy": 0.2,
+        "idle_spring": 0.2,
+        "idle_eager": 0.2
+      },
+      "relocate_policy": "when_needed",
+      "settle_after_cut_ms": 1200,
+      "edge_peek": {
+        "max_per_video": 1,
+        "chance": 0.6
+      },
+      "per_minute": {
+        "big": 4,
+        "small": 4,
+        "lines": 3
+      },
+      "small_per_scene": 2,
+      "quiet_after_lines": 4,
+      "rest_beat_ms": 5000
+    },
+    "release_showcase": {
+      "label": "Release / feature showcase",
+      "status": "proposal — awaiting Martin's confirmation",
+      "description": "Short high-production cut (making-feature-showcases). Livelier: follows every cut, peeks once.",
+      "idle_odds": {
+        "idle_game": 0.4,
+        "idle_sleepy": 0.1,
+        "idle_spring": 0.25,
+        "idle_eager": 0.25
+      },
+      "relocate_policy": "every_cut",
+      "settle_after_cut_ms": 1200,
+      "edge_peek": {
+        "max_per_video": 1,
+        "chance": 1.0
+      },
+      "per_minute": {
+        "big": 6,
+        "small": 6,
+        "lines": 3
+      },
+      "small_per_scene": 2,
+      "quiet_after_lines": 4,
+      "rest_beat_ms": 5000
+    },
+    "social_short": {
+      "label": "Short social clip",
+      "status": "proposal — awaiting Martin's confirmation",
+      "description": "Under 60 s, often vertical. Fast settle, most bouncy, fewest lines in total.",
+      "idle_odds": {
+        "idle_game": 0.3,
+        "idle_sleepy": 0.1,
+        "idle_spring": 0.3,
+        "idle_eager": 0.3
+      },
+      "relocate_policy": "every_cut",
+      "settle_after_cut_ms": 450,
+      "edge_peek": {
+        "max_per_video": 1,
+        "chance": 1.0
+      },
+      "per_minute": {
+        "big": 8,
+        "small": 8,
+        "lines": 4
+      },
+      "small_per_scene": 2,
+      "quiet_after_lines": 3,
+      "rest_beat_ms": 4000
+    },
+    "explainer": {
+      "label": "Talking head / explainer",
+      "status": "proposal — awaiting Martin's confirmation",
+      "description": "A person is speaking; Jiro is a quiet companion. Fewest moves, mostly game idle.",
+      "idle_odds": {
+        "idle_game": 0.6,
+        "idle_sleepy": 0.2,
+        "idle_spring": 0.1,
+        "idle_eager": 0.1
+      },
+      "relocate_policy": "when_needed",
+      "settle_after_cut_ms": 1200,
+      "edge_peek": {
+        "max_per_video": 1,
+        "chance": 0.3
+      },
+      "per_minute": {
+        "big": 2,
+        "small": 2,
+        "lines": 2
+      },
+      "small_per_scene": 1,
+      "quiet_after_lines": 3,
+      "rest_beat_ms": 6000
+    }
+  },
+  "dropped_from_v6": [
+    {
+      "what": "Drag and drop, held dangle, drop pinning",
+      "why": "Needs a pointer; a rendered video has no user input."
+    },
+    {
+      "what": "Arrow-key nudge",
+      "why": "Needs keyboard focus on a live page."
+    },
+    {
+      "what": "Logo docking (Ditch, FAQ)",
+      "why": "Depends on specific jiro.bot DOM logos; arbitrary footage has none to replace."
+    },
+    {
+      "what": "× close button and hide-for-tab",
+      "why": "Interactive control; the video equivalent is simply not rendering him."
+    },
+    {
+      "what": "Click-to-speak, ask line with Yes/Later buttons",
+      "why": "Needs clicks. Lines come from the --lines file instead."
+    },
+    {
+      "what": "Hover o_o face",
+      "why": "No pointer. o_o stays as a resting expression."
+    },
+    {
+      "what": "Dashed salmon outline on the glance target",
+      "why": "Would draw onto the footage, which is outside Jiro's overlay. The 3px face shift stays."
+    },
+    {
+      "what": "Screen-reader live region",
+      "why": "No DOM. Burn captions separately if needed."
+    },
+    {
+      "what": "Quiet mode reset by click; 'long pass' counter",
+      "why": "No clicks and no scrolling. Replaced by quiet_after_lines per video type."
+    },
+    {
+      "what": "Phone layout (56px mascot, phone anchors)",
+      "why": "Size is set by --mascot-height instead; portrait frames drop the centre-band rule, as phones did."
+    },
+    {
+      "what": "Reduced-motion variant",
+      "why": "A rendered clip has no user preference; render with --type explainer for the calmest result."
+    },
+    {
+      "what": "The small gesture played during a relocation",
+      "why": "A relocation in video is a fade with no travel, so the gesture would play at a spot he has just left. Small moves play at rest only."
+    }
+  ]
+}
