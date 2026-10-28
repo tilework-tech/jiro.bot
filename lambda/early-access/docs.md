@@ -54,7 +54,7 @@ POST /confirm (form-urlencoded token) ──> verify ──> Clarify ──> 303
 | Deploy access | An inline policy lets the existing deploy role `github-actions-jiro-bot-deploy` (from [infra/site.cfn.yaml](../../infra/site.cfn.yaml)) update and read this function's code |
 
 - Real code ships only through the installed [Deploy early access workflow](../../.github/workflows/deploy-early-access.yml), manually dispatched from `main` after approval. It runs the tests then [the deploy script](deploy.sh), which only updates function code and refuses to run outside a GitHub Actions `workflow_dispatch` run. The workflow must not set a GitHub `environment`, because the deploy role trusts only the OIDC subject `ref:refs/heads/main` and an environment changes the subject. Timeout, environment variables and throttling belong to the stack, not the deploy.
-- Until that workflow has run, the live function is the placeholder, so every sign-up from jiro.bot gets a 503 and the pop-up shows its try-again message.
+- The Lambda and static site were deployed independently through GitHub Actions from `main` at `9aa7db2`. On 2026-10-28 Martin tested the signup flow, and the confirmed contact was verified in Clarify. The live function runs the signup handler rather than the provisioning placeholder; later landing-page changes deploy separately from Lambda code.
 - `npm test` runs `node:test` with `aws-sdk-client-mock` for SES and an in-memory fake Clarify installed over `fetch`, so tests make no network calls.
 
 Created and maintained by Nori.

@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../node_modules/@fontsource/inter/400.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/inter/600.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/lato/400.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/lato/700.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/lato/900.css">
+<link rel="stylesheet" href="../lib/stage.css">
+<style>
+#clock { left: 20px; top: 14px; }
+.win { left: 20px; top: 76px; width: 960px; height: 704px; }
+.cut-mobile #clock { left: 16px; top: 14px; }
+.cut-mobile .win { left: 16px; top: 76px; width: 594px; height: 691px; }
+.cut-mobile .slack .side { display: none; }
+.cut-mobile .slack .top .search { width: 70%; }
+.cut-mobile .slack .hd .sub { display: none; }
+.cut-mobile .m { padding: 8px 16px; }
+.cut-mobile .term .tbody { padding: 16px 18px; font-size: 19px; }
+.cut-mobile .pr .head { padding: 18px 20px 14px; }
+.cut-mobile .pr h2 { font-size: 26px; }
+.cut-mobile .pr .meta { font-size: 15px; flex-wrap: wrap; gap: 8px; }
+.cut-mobile .pr .desc { padding: 16px 20px; font-size: 18px; }
+.cut-mobile .pr .checks, .cut-mobile .pr .rv { margin-left: 20px; margin-right: 20px; }
+.cut-mobile .pr .rv { font-size: 17px; }
+.m .av .ico { width: 24px; height: 24px; }
+.step { display: flex; gap: 14px; }
+.step .mk { width: 1.2em; flex: none; text-align: center; }
+.step .mk .ico { width: 22px; height: 22px; vertical-align: -4px; }
+#s-pr .pr { height: auto; top: 110px; }
+.cut-mobile #s-pr .pr { top: 76px; }
+#s-term .tbody { justify-content: flex-start; }
+#s-term .term { top: 130px; height: 560px; }
+.cut-mobile #s-term .term { top: 76px; height: 691px; }
+.term .hdr { color: #7d8590; margin-bottom: 14px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="dots"></div>
+  <div id="night"></div>
+  <div id="world">
+    <div class="chip" id="clock"><span id="clockI"></span><b id="clockT"></b><span class="dim" id="clockS"></span></div>
+    <!-- A: the one-time prompt in Slack -->
+    <div class="shot" id="s-slack">
+      <div class="slack win">
+        <div class="top"><i></i><i></i><i></i><div class="search">Search Beauty Corp</div></div>
+        <div class="body">
+          <div class="side">
+            <div class="ws">Beauty Corp</div>
+            <div class="sec">Channels</div>
+            <div class="ch"># general</div>
+            <div class="ch on"># checkout</div>
+            <div class="ch"># incidents</div>
+            <div class="ch"># deploys</div>
+            <div class="sec">Direct messages</div>
+            <div class="ch"><span class="dm" style="background:#9b5de5">D</span>Dana</div>
+            <div class="ch"><span class="dm" style="background:#e8912d">A</span>Alex</div>
+          </div>
+          <div class="main">
+            <div class="hd"># checkout<span class="sub">Cart, promos and payments</span></div>
+            <div class="msgs">
+              <div class="m"><div class="av" style="background:#6b6f75">{{i:rocket}}</div><div><div class="who">Deploys<span class="app">APP</span><span class="tm">11:20 AM</span></div><div class="tx">shop <code>v2.40</code> is live in production.</div></div></div>
+              <div class="m"><div class="av" style="background:#9b5de5">D</div><div><div class="who">Dana<span class="tm">11:31 AM</span></div><div class="tx">Checkout conversion is up 3% since the new cart. Thanks all.</div></div></div>
+              <div class="m"><div class="av" style="background:#e8912d">A</div><div><div class="who">Alex<span class="tm">3:12 PM</span></div><div class="tx">Promo codes and gift cards can now be combined. Shipping it today.</div></div></div>
+              <div class="m"><div class="av" style="background:#9b5de5">D</div><div><div class="who">Dana<span class="tm">3:14 PM</span></div><div class="tx">Nice. Nobody is on call tonight though.</div></div></div>
+              <div class="m" id="mD" data-grow><div class="av" style="background:#9b5de5">D</div><div><div class="who">Dana<span class="tm">3:40 PM</span></div><div class="tx" id="mDt"></div></div></div>
+              <div class="m" id="mJ" data-grow><div class="av"><img src="../brand/jiro-v4.png"></div><div><div class="who">Jiro<span class="app">APP</span><span class="tm">3:40 PM</span></div><div class="tx">On it. I'll watch checkout alerts every night, fix what breaks, and open a PR for you to review.</div></div></div>
+            </div>
+            <div class="comp"><span id="compT"></span><div class="tools">{{i:plus}}{{i:at-sign}}{{i:smile}}<span class="send" id="send">{{i:send-horizontal}}</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B: 4:12 AM, Jiro works the alert in its own terminal -->
+    <div class="shot" id="s-term">
+      <div class="term win">
+        <div class="tb"><i></i><i></i><i></i><span>jiro · on call · beauty-corp/shop</span></div>
+        <div class="tbody">
+          <div class="ln hdr"><span class="g">jiro</span> on call for <span class="w">checkout-api</span>, <span class="w">payments-api</span><br>3:40 PM  watching alerts until 9:00 AM<br>1:00 AM  all quiet<br>3:00 AM  all quiet</div>
+          <div class="ln step" id="k0"><span class="mk o">{{i:bell}}</span><span><span class="o">Alert</span> <span class="w">checkout-api</span> 500 errors at 14%</span></div>
+          <div class="ln step" id="k1"><span class="mk"></span><span>Read the last 30 minutes of checkout logs</span></div>
+          <div class="ln step" id="k2"><span class="mk"></span><span>Cause: the promo discount is applied twice when a gift card is used</span></div>
+          <div class="ln step" id="k3"><span class="mk"></span><span>Wrote a failing test for promo + gift card</span></div>
+          <div class="ln step" id="k4"><span class="mk"></span><span>Fixed <span class="w">cart/total.ts</span> · 214 tests passing</span></div>
+          <div class="ln step" id="k5"><span class="mk"></span><span>Opened <span class="g">PR #418</span> for review</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C: the PR explains what happened; approved in the morning -->
+    <div class="shot" id="s-pr">
+      <div class="pr win">
+        <div class="bar">{{i:git-pull-request}}beauty-corp / shop · Pull requests</div>
+        <div class="head">
+          <h2>Fix promo discount applied twice <span class="num">#418</span></h2>
+          <div class="meta"><span class="pill open" id="prOpen">{{i:git-pull-request}}Open</span><span class="pill ok" id="prOk">{{i:check:2.5}}Approved</span><span><b>Jiro</b> opened this at 4:31 AM</span></div>
+        </div>
+        <div class="desc">
+          <h3>What happened</h3>
+          <p>At 4:12 AM checkout started returning 500s for orders that used a promo code and a gift card. The discount was applied twice, so the total went negative and the payment was rejected.</p>
+          <h3>Fix</h3>
+          <p>Apply the discount once in <code>cart/total.ts</code> and add a regression test.</p>
+        </div>
+        <div class="checks"><div>{{i:circle-check}}All checks have passed · 214 tests</div></div>
+        <div class="rv" id="rv"><span class="av" style="background:#9b5de5">D</span><span><b>Dana</b> approved these changes · 8:02 AM</span><span class="ok" style="margin-left:auto">{{i:check:3}}</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<template id="ic-sun">{{i:sun}}</template><template id="ic-moon">{{i:moon}}</template>
+<template id="ic-spin">{{i:loader-circle}}</template><template id="ic-ok">{{i:check:2.5}}</template>
+<script type="module">
+import { $, CUT, fit, prog, eo, typed, typeEnd, fmt, caret, grow, reveal, show, camera, scene } from '../lib/core.js';
+
+const PROMPT = "@Jiro take on-call for checkout. If it breaks overnight, fix it and open a PR for me.";
+const TYPE_AT = 1.2, SENT = typeEnd(PROMPT, TYPE_AT, 15) + 0.5, REPLY = SENT + 1.2;
+const NIGHT = [12.0, 25.4];        // dissolve to the terminal at 4:12 AM, then morning
+const PR_AT = 21.6, APPROVE = 25.6;
+const STEPS = [13.0, 14.6, 16.2, 17.8, 19.4];
+const D = 33.0, BACK = D - 2.0;     // dissolve back to the opening frame
+const ICON = (id) => $(id).innerHTML;
+
+const CLOCK = [[0, 'sun', '3:40 PM', ''], [NIGHT[0], 'moon', '4:12 AM', 'Nobody awake'], [PR_AT, 'moon', '4:31 AM', 'PR ready'], [APPROVE, 'sun', '8:02 AM', 'Dana is in'], [BACK, 'sun', '3:40 PM', '']];
+
+scene({ duration: D, setup: () => { $('mDt').innerHTML = fmt(PROMPT); }, seek: (t) => {
+  // Each change of shot dips through the stage: out for 0.7 s, then in for 0.8 s.
+  const out = (a) => 1 - prog(t, a - 0.7, 0.7), inn = (a) => prog(t, a, 0.8);
+  const aOp = Math.max(out(NIGHT[0]), inn(BACK));
+  const bOp = Math.min(inn(NIGHT[0]), out(PR_AT));
+  const cOp = Math.min(inn(PR_AT), out(BACK));
+  [['s-slack', aOp], ['s-term', bOp], ['s-pr', cOp]].forEach(([id, o]) => { $(id).style.opacity = String(o); show($(id), o > 0); });
+  $('night').style.opacity = String(Math.min(prog(t, NIGHT[0] - 0.7, 1.4), 1 - prog(t, APPROVE, 1.4)));
+
+  // A: Slack. After the night it shows its opening state again.
+  const ta = t >= NIGHT[0] ? 0 : t;
+  const typing = ta >= TYPE_AT && ta < SENT;
+  $('compT').innerHTML = typing ? fmt(typed(PROMPT, ta, TYPE_AT, 15)) + caret : '<span class="ph">Message #checkout</span>';
+  $('send').classList.toggle('on', typing);
+  grow($('mD'), ta, SENT); grow($('mJ'), ta, REPLY);
+
+  // B: terminal steps land one at a time.
+  reveal($('k0'), t, NIGHT[0] + 0.4);
+  STEPS.forEach((at, i) => {
+    const el = $(`k${i + 1}`); reveal(el, t, at);
+    const done = t >= at + 1.0;
+    el.querySelector('.mk').innerHTML = done ? ICON('ic-ok') : ICON('ic-spin');
+    el.querySelector('.mk').className = `mk ${done ? 'g' : 'dim'}`;
+    const ico = el.querySelector('.mk .ico'); if (!done && ico) ico.style.transform = `rotate(${t * 240}deg)`;
+  });
+
+  // C: approval arrives at 8:02.
+  reveal($('rv'), t, APPROVE + 0.6, 0.9);
+  const ok = t >= APPROVE + 0.6;
+  show($('prOpen'), !ok); show($('prOk'), ok);
+
+  // Clock chip, cross-fading its label at each change.
+  let k = CLOCK[0]; let since = 0;
+  for (const c of CLOCK) if (t >= c[0]) { k = c; since = t - c[0]; }
+  $('clockI').innerHTML = ICON(`ic-${k[1]}`); $('clockT').textContent = k[2]; $('clockS').textContent = k[3] ? `· ${k[3]}` : '';
+  $('clock').style.opacity = String(k[0] === 0 ? 1 : 0.25 + 0.75 * eo(prog(since, 0, 0.8)));
+
+  camera(t, [[0, ...(CUT === 'desktop' ? fit(0, 0, 1000, 800) : fit(0, 0, 626, 783))]]);
+}});
+</script>
+</body>
+</html>

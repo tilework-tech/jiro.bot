@@ -11,8 +11,9 @@ The landing page, copy editor and sign-up Lambda were consolidated here from the
 | `tools/` | Pre-publish lint, LLM grader, AEO probe, overlap check, AEO preview server. See [tools/docs.md](tools/docs.md) |
 | `tools/copy-editor/` | Landing-page preview server with an optional inline copy editor. See [tools/copy-editor/docs.md](tools/copy-editor/docs.md) |
 | `lambda/early-access/` | Sign-up and confirm Lambda. See [lambda/early-access/docs.md](lambda/early-access/docs.md) |
+| `video/carousel-src/` | Sources and render scripts for the hero carousel videos in `site/video/carousel/`. See [video/carousel-src/README.md](video/carousel-src/README.md) |
 | `aeo/` | Dated grader and probe results |
-| `tests/` | Black-box tests of `build.py` and `tools/lint.py`; `tests/browser/` holds Playwright tests of the pop-up, hero and landing-page sections |
+| `tests/` | Black-box tests of `build.py`, `tools/lint.py` and the carousel video contract (`test_carousel_videos.py`, which needs ffmpeg); `tests/browser/` holds Playwright tests of the pop-up, hero and landing-page sections |
 | `infra/site.cfn.yaml` | CloudFormation stack `jiro-bot-site` (S3, CloudFront, ACM, Route 53, deploy role) |
 | `infra/early-access.cfn.yaml` | CloudFormation stack `jiro-bot-early-access` (SES identity, Lambda, HTTP API) |
 | `.github/workflows/deploy.yml` | Manual-dispatch site deploy from `main` |
@@ -23,7 +24,7 @@ Python 3.11+ (for `tomllib`) for the generator and tools; Node 22 for the Lambda
 ```bash
 python3 build.py                     # regenerate site/ from content/
 python3 tools/lint.py                # must pass before publishing; also fails if site/ is stale
-cd tests && python3 -m unittest      # generator and lint tests
+cd tests && python3 -m unittest      # generator, lint and carousel video tests (video tests need ffmpeg)
 python3 tools/serve.py               # preview all of site/ on :4310 with extensionless URLs
 python3 tools/copy-editor/server.py --port 4100          # preview the landing page
 python3 tools/copy-editor/server.py --port 4100 --edit   # ...with the inline copy editor
@@ -56,12 +57,14 @@ The hero is kept calm. Its right panel (`.hero-media`, carbon `#161616` with str
 - "You just hired …" shows "an engineer.", "a reviewer.", "a doc writer.", "an on-call." once, about 2.6s each with a 200ms fade, then rests on "Jiro." The HTML already says "Jiro.", so no-JS and reduced-motion visitors see the end state. It waits while the tab is hidden. The animated line is aria-hidden; screen readers get the full sentence from a `.sr-only` paragraph.
 - A three-example carousel (On-call, Multiplayer, RBAC) following the WAI-ARIA APG tabbed carousel: dots are labelled tabs, Left/Right/Home/End move between them, there is one tab stop and selection follows focus. It never auto-advances. The crossfade is 200ms (off under reduced motion), and a pause/play button satisfies WCAG 2.2.2.
 
-Carousel videos are dropped in without code changes: `site/video/carousel/{oncall,multiplayer,rbac}-{desktop,mobile}.mp4` plus `{name}-poster.jpg`. The script picks the mobile cut at 900px and below (re-picking when the breakpoint is crossed), loads only the active example, and under reduced motion loads nothing until play is pressed. The frame is 5:4 and at most 560px wide on desktop, full-width 4:5 on mobile, with `object-fit: cover`; posters are shared by both cuts, so keep their content center-safe. The posters in the repo are marked PLACEHOLDER stills, and until the mp4s land the browser gets a 404 and keeps the poster up.
+Carousel videos are dropped in without code changes: `site/video/carousel/{oncall,multiplayer,rbac}-{desktop,mobile}.mp4` plus `{name}-poster.jpg`. The script picks the mobile cut at 900px and below (re-picking when the breakpoint is crossed), loads only the active example, and under reduced motion loads nothing until play is pressed. The frame is 5:4 and at most 560px wide on desktop, full-width 4:5 on mobile, with `object-fit: cover`; posters are shared by both cuts, so keep their content center-safe. The committed clips are muted H.264 loops with shared posters, rendered from [video/carousel-src/](video/carousel-src/README.md). That source folder documents the scene stories, rendering pipeline and rebuild commands; it is outside `site/` so only the final assets are published.
 
 The retired looping hero video (Jiro hero v25) and its render scripts live on the `video/hero-loop-v1` branch.
 
 ## Early access
 
 Every "Get early access" link opens a pop-up asking for name and work email, which posts to the URL in `<meta name="early-access-endpoint">` (the live HTTP API). Visitors join the list only after clicking the emailed link and pressing "Confirm my spot" (opening the link alone does nothing, so mail scanners can't confirm); they land on `confirmed.html` or `link-expired.html`.
+
+The site and Lambda were deployed independently through GitHub Actions from `main` at `9aa7db2`. On 2026-10-28 Martin tested signup, and the confirmed contact was verified in Clarify. The carousel and landing-page changes in this branch require a separate site deployment.
 
 Deploy only by dispatching the GitHub Actions workflows from `main`, after approval: [site](.github/workflows/deploy.yml) and [early-access Lambda](.github/workflows/deploy-early-access.yml). The Lambda workflow updates code only; environment configuration belongs to the CloudFormation stack. Architecture and deployment state: [docs.md](docs.md) and [Lambda docs](lambda/early-access/docs.md).
