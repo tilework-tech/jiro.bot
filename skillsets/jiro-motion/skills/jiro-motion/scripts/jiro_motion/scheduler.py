@@ -24,9 +24,6 @@ import numpy as np
 
 from .geometry import Mascot, bubble_boxes, bubble_layout, scale_for
 
-ARRIVALS = ("pop_in", "relocate", "edge_peek")
-HOP_LAYER = ("landing_squash", "peek_landing_hop", "side_scoot", "small_hop", "express_squash", "talk_squash")
-
 
 class Timeline:
     def __init__(self, **fields):
@@ -191,7 +188,8 @@ class _Planner:
         a, b = self.scenes[i]
         ta = t
         if after_cut:
-            ta = max(ta, a + (self.kind["settle_after_cut_ms"] / 1000.0 if i > 0 else 0.5))
+            first = self.budgets["first_appearance_ms"] if i == 0 else self.kind["settle_after_cut_ms"]
+            ta = max(ta, a + first / 1000.0)
         if self.last_landed is not None:
             ta = max(ta, self.last_landed + self.budgets["rest_before_relocate_ms"] / 1000.0)
         return self.per_minute_next("big", ta)
@@ -223,9 +221,8 @@ class _Planner:
         g = self.peek_geometry(spot)
         m = self.m
         peek_end = ta + self.ms("edge_peek")
-        x0 = max(g["edge_x"], 0)
-        x1 = min(g["edge_x"] + m.w, self.W)
-        visible = (x0, g["y"] - m.envelope["up"], x1, g["y"] + m.h + m.envelope["down"])
+        cx0, cy0, cx1, cy1 = m.core(g["edge_x"], g["y"])
+        visible = (max(cx0, 0), cy0, min(cx1, self.W), cy1)
         if not self.tm.is_free(visible, ta, peek_end, m.pad):
             return None
         fly = self.ms("fly_in")
@@ -255,17 +252,20 @@ class _Planner:
                         self.peek_roll = self.rng.random() < peek["chance"]
                     if self.peek_roll:
                         kind = "edge_peek"
-            lead = {"pop_in": self.ms("pop_in") + self.ms("landing_squash"),
-                    "relocate": self.ms("relocate") + self.ms("landing_squash"),
-                    "edge_peek": self.ms("edge_peek") + self.ms("fly_in") + self.ms("peek_landing_hop")}[kind]
-            spot = self.pick_spot(ta, min(ta + lead + min_stay, self.duration), prev,
-                                  self.pending_talk(i, ta + lead))
+            leads = {"pop_in": self.ms("pop_in") + self.ms("landing_squash"),
+                     "relocate": self.ms("relocate") + self.ms("landing_squash"),
+                     "edge_peek": self.ms("edge_peek") + self.ms("fly_in") + self.ms("peek_landing_hop")}
+            if kind == "edge_peek" and ta + leads[kind] > b:
+                kind = "relocate"
+            if ta + leads[kind] > b:
+                return None
+            spot = self.pick_spot(ta, min(ta + leads[kind] + min_stay, self.duration), prev,
+                                  self.pending_talk(i, ta + leads[kind]))
             geometry = None
             if spot is not None and kind == "edge_peek":
                 geometry = self.peek_clear(ta, spot)
                 if geometry is None:
                     kind = "relocate"
-                    lead = self.ms("relocate") + self.ms("landing_squash")
             if spot is not None:
                 return self._land(kind, ta, spot, i, geometry)
             ta += 0.5
@@ -340,10 +340,10 @@ class _Planner:
         return (line["text"], start, start + self.talk_length(line["text"]))
 
     def next_line(self, i):
-        pinned = [l for l in self.lines if l["scene"] == i]
+        pinned = [line for line in self.lines if line["scene"] == i]
         if pinned:
             return pinned[0]
-        free = [l for l in self.lines if l["scene"] is None]
+        free = [line for line in self.lines if line["scene"] is None]
         return free[0] if free else None
 
     def plan_rest(self, stay, i, a, b, carried):
@@ -356,7 +356,7 @@ class _Planner:
 
         line = self.next_line(i)
         if (line and st["talks"] < self.budgets["per_scene"]["lines"] and self.said < self.kind["quiet_after_lines"]):
-            tl = anchor + self.budgets["line_after_landing_ms"] / 1000.0
+            tl = max(anchor + self.budgets["line_after_landing_ms"] / 1000.0, a)
             if line["at"] is not None:
                 tl = max(tl, float(line["at"]))
             tl = self.per_minute_next("lines", tl)
@@ -384,7 +384,7 @@ class _Planner:
         gap = self.budgets["small_min_gap_ms"] / 1000.0
         first = self.budgets["first_small_after_landing_ms"] / 1000.0
         allowed = min(self.budgets["per_scene"]["small"], self.kind["small_per_scene"])
-        ts = max(stay["landed"] + first, (s0 + settle) if carried else a)
+        ts = max(stay["landed"] + first, (s0 + settle) if carried else a, a)
         if stay["_last_small"] is not None:
             ts = max(ts, stay["_last_small"] + gap)
         small = self.ms("side_scoot")
@@ -407,6 +407,7 @@ class _Planner:
         beat = self.kind["rest_beat_ms"] / 1000.0
         glance_ms = self.ms("glance")
         hold = self.spec.faces["happy"]["hold_ms"] / 1000.0
+        stay["_next_beat"] = max(stay["_next_beat"], a)
         while stay["_next_beat"] < b:
             tb = stay["_next_beat"]
             stay["_beats"] += 1
@@ -468,7 +469,8 @@ class _Planner:
                     continue
                 free_end = self.tm.free_until(self.m.footprint(*stay["box"][:2]), stay["start"], self.duration)
                 t, fresh = stay["landed"], True
-                if t >= b:
+                if t >= b - 1e-9:
+                    fresh = False
                     continue
             carried = not fresh and abs(t - a) < 1e-9
             fresh = False
@@ -478,13 +480,20 @@ class _Planner:
             if carried and every_cut and self.state(i)["big"] < self.budgets["per_scene"]["big"]:
                 candidate = self.arrival_time(a, i, after_cut=True)
                 if candidate < seg_end:
-                    relocate_at = seg_end = candidate
+                    relocate_at = candidate
+            if relocate_at is not None:
+                if relocate_at > t:
+                    self.plan_rest(stay, i, t, relocate_at, carried)
+                nxt = self.arrive(relocate_at, i, after_cut=True, prev=stay["box"][:2], deadline=seg_end - 1e-3)
+                if nxt is not None:
+                    stay["end"] = nxt["start"]
+                    stay = nxt
+                    free_end = self.tm.free_until(self.m.footprint(*stay["box"][:2]), stay["start"], self.duration)
+                    t, fresh = stay["landed"], True
+                    continue
+                t = relocate_at
             if seg_end > t:
                 self.plan_rest(stay, i, t, seg_end, carried)
-            if relocate_at is not None:
-                stay["end"] = relocate_at
-                stay, t = None, relocate_at
-                continue
             if vanish_by >= b - 1e-9:
                 t = b
                 continue
@@ -503,9 +512,9 @@ class _Planner:
             stay, t = None, vanish + hide
         if stay is not None:
             stay["end"] = self.duration
-        unplaced = [{"text": l["text"], "scene": l["scene"],
+        unplaced = [{"text": line["text"], "scene": line["scene"],
                      "reason": "quiet after enough lines" if self.said >= self.kind["quiet_after_lines"]
-                     else l.get("_reason", "no stay in a scene with room for it")} for l in self.lines]
+                     else line.get("_reason", "no stay in a scene with room for it")} for line in self.lines]
         for event in self.events:
             for key in [k for k in event if k.startswith("_")]:
                 del event[key]

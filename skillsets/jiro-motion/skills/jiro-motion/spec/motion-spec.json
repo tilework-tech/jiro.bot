@@ -185,6 +185,7 @@
     "per_video": {
       "pop_in": 1
     },
+    "first_appearance_ms": 500,
     "small_min_gap_ms": 2000,
     "first_small_after_landing_ms": 2000,
     "rest_before_relocate_ms": 2000,

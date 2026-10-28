@@ -130,6 +130,27 @@ class CheckerTest(unittest.TestCase):
         report = self.run_check(frames=shifted)
         self.assertIn("track_matches_pixels", failed(report))
 
+    def test_missing_frames_fail_the_pixel_cross_check(self):
+        report = self.run_check(frames=self.frames[:-10])
+        self.assertIn("track_matches_pixels", failed(report))
+
+    def test_relocating_too_soon_after_landing_fails(self):
+        timeline = Timeline.from_json(self.timeline.to_json())
+        stays = sorted((e for e in timeline.events if e["kind"] == "stay"), key=lambda e: e["start"])
+        first = stays[0]
+        start = first["landed"] + 0.5
+        timeline.events.append({"kind": "relocate", "start": start, "end": start + 0.3, "scene": 0, "box": first["box"]})
+        report = self.run_check(timeline=timeline)
+        self.assertIn("rest_before_relocate", failed(report))
+
+    def test_a_first_arrival_that_is_not_a_pop_in_fails(self):
+        timeline = Timeline.from_json(self.timeline.to_json())
+        for e in timeline.events:
+            if e["kind"] == "pop_in":
+                e["kind"] = "relocate"
+        report = self.run_check(timeline=timeline)
+        self.assertIn("pop_in_once", failed(report))
+
     def test_resting_in_the_centre_band_fails(self):
         timeline = Timeline.from_json(self.timeline.to_json())
         for event in timeline.events:

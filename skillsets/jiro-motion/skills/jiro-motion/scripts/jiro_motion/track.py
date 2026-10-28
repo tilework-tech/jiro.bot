@@ -10,7 +10,6 @@ matrices (what the drawer paints) and the ink and bubble boxes.
 import json
 import math
 
-import numpy as np
 
 from .geometry import Mascot, affine, apply_box, union
 from .spec import ease, parse_easing

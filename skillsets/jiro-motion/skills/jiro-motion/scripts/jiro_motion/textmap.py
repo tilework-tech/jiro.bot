@@ -22,7 +22,7 @@ class TextMap:
         pairs = sorted(((float(t), [self._box(b) for b in boxes]) for t, boxes in samples), key=lambda p: p[0])
         self.times = [t for t, _ in pairs]
         self.boxes = [b for _, b in pairs]
-        self.busy = busy
+        self.busy = [np.asarray(b, dtype=np.float16) for b in busy] if busy is not None else None
         gw, gh = -(-self.width // cell), -(-self.height // cell)
         self._integral = []
         for boxes in self.boxes:
@@ -33,7 +33,9 @@ class TextMap:
                 if c1 > c0 and r1 > r0:
                     mask[r0:r1, c0:c1] = 1
             self._integral.append(self._sat(mask))
-        self._busy_integral = [self._sat(np.asarray(b, dtype=np.float64)) for b in busy] if busy is not None else None
+        self._busy_integral = ([self._sat(b.astype(np.float32)).astype(np.float32) for b in self.busy]
+                               if self.busy is not None else None)
+        self._sampled_scenes = {self.scene_index(t) for t in self.times}
 
     @staticmethod
     def _sat(grid):
@@ -48,6 +50,12 @@ class TextMap:
             return (float(x0), float(y0), float(x1), float(y1), box.get("label", "text"))
         x0, y0, x1, y1 = box[:4]
         return (float(x0), float(y0), float(x1), float(y1), box[4] if len(box) > 4 else "text")
+
+    def _unsampled(self, t0, t1):
+        """True if [t0, t1] touches a scene with no samples at all: nothing is known there."""
+        if not self.times:
+            return False
+        return any(i not in self._sampled_scenes for i in range(self.scene_index(t0), self.scene_index(t1) + 1))
 
     def scene_index(self, t):
         return bisect.bisect_right(self.cuts, t + 1e-9)
@@ -81,6 +89,8 @@ class TextMap:
         padded = (x0 - pad, y0 - pad, x1 + pad, y1 + pad)
         if not self._integral:
             return True
+        if self._unsampled(t0, t1):
+            return False
         r0, c0, r1, c1 = self._cells(padded)
         if r1 <= r0 or c1 <= c0:
             return True
@@ -104,6 +114,8 @@ class TextMap:
         free = np.ones(len(b), dtype=bool)
         if not self._integral or not len(b):
             return free
+        if self._unsampled(t0, t1):
+            return np.zeros(len(b), dtype=bool)
         r0, c0, r1, c1 = self._cells_many(b)
         for i in self.sample_indices(t0, t1):
             sat = self._integral[i]
@@ -121,7 +133,7 @@ class TextMap:
             out = np.maximum(out, (sat[r1, c1] - sat[r0, c1] - sat[r1, c0] + sat[r0, c0]) / area)
         return out
 
-    def free_until(self, box, t0, limit, pad=0.0, step=None):
+    def free_until(self, box, t0, limit, pad=0.0):
         """Latest t <= limit such that box stays free over [t0, t]; t0 if not free at all."""
         if not self.is_free(box, t0, t0, pad):
             return t0
@@ -129,18 +141,13 @@ class TextMap:
         last = t0
         for t in later:
             if not self.is_free(box, t0, t, pad):
-                return max(t0, t - 1e-3)
+                end = t - 1e-3
+                scene = self.scene_index(t)
+                if scene > self.scene_index(t0):
+                    end = min(end, self.cuts[scene - 1] - 1e-3)
+                return max(t0, end)
             last = t
         return limit if self.is_free(box, t0, limit, pad) else last
-
-    def cost(self, box, t0, t1):
-        """Mean edge density (0..1) under the box: lower is flatter, emptier space."""
-        if not self._busy_integral:
-            return 0.0
-        r0, c0, r1, c1 = self._cells(box)
-        area = max((r1 - r0) * (c1 - c0), 1)
-        values = [self._sum(self._busy_integral[i], r0, c0, r1, c1) / area for i in self.sample_indices(t0, t1)]
-        return float(max(values)) if values else 0.0
 
     def boxes_at(self, t):
         """Every box that may be on screen at t (from the samples governing t)."""
@@ -152,7 +159,7 @@ class TextMap:
     def to_json(self):
         return json.dumps({
             "width": self.width, "height": self.height, "cell": self.cell, "cuts": self.cuts,
-            "samples": [{"t": t, "boxes": [{"box": [round(v, 1) for v in b[:4]], "label": b[4]} for b in boxes]}
+            "samples": [{"t": t, "boxes": [{"box": list(b[:4]), "label": b[4]} for b in boxes]}
                         for t, boxes in zip(self.times, self.boxes)],
         })
 
@@ -161,7 +168,7 @@ class TextMap:
         path = Path(path)
         path.write_text(self.to_json())
         if self.busy is not None:
-            np.savez_compressed(str(path) + ".busy.npz", *[np.asarray(b, dtype=np.float16) for b in self.busy])
+            np.savez_compressed(str(path) + ".busy.npz", *self.busy)
 
     @classmethod
     def load(cls, path):
@@ -171,12 +178,6 @@ class TextMap:
         busy = None
         if busy_path.exists():
             with np.load(busy_path) as npz:
-                busy = [npz[f"arr_{i}"].astype(np.float64) for i in range(len(npz.files))]
+                busy = [npz[f"arr_{i}"] for i in range(len(npz.files))]
         return cls(data["width"], data["height"], [(s["t"], s["boxes"]) for s in data["samples"]],
                    cuts=data["cuts"], busy=busy, cell=data.get("cell", CELL))
-
-    @classmethod
-    def from_json(cls, text):
-        data = json.loads(text)
-        return cls(data["width"], data["height"], [(s["t"], s["boxes"]) for s in data["samples"]],
-                   cuts=data["cuts"], cell=data.get("cell", CELL))

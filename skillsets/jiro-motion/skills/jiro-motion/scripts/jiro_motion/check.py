@@ -95,8 +95,10 @@ class _Checker:
                       {"plays": len(events), "spec_ms": expected_ms, "off": bad_durations})
             extremes = self.spec.keyframe_extremes(move, self.s)
             worst_amp, worst_curve, worst_over = 0.0, 0.0, []
+            measured_frames = 0
             for e in events:
                 frames = self.frames_driven_by(e, layer)
+                measured_frames += len(frames)
                 if not frames:
                     continue
                 for ch, peak in extremes.items():
@@ -112,13 +114,14 @@ class _Checker:
                     overshoot_ok = abs(m_peak) <= abs(peak) * 1.0 + tol_for[ch] or ch == "opacity"
                     if not overshoot_ok and not self._overshoots_by_design(move):
                         worst_over.append((ch, round(m_peak, 3), round(peak, 3)))
-            amp_ok = worst_amp <= 1.0 and not worst_over
-            self.rule(f"amplitude:{move}", amp_ok,
-                      f"peaks within tolerance (worst {worst_amp:.2f}x tol)" if amp_ok
-                      else f"peak off by {worst_amp:.2f}x tolerance; beyond keyframe range: {worst_over}",
-                      {"worst_ratio": round(worst_amp, 3), "beyond": worst_over,
+            amp_ok = worst_amp <= 1.0 and not worst_over and measured_frames > 0
+            detail = (f"peaks within tolerance over {measured_frames} frames (worst {worst_amp:.2f}x tol)" if amp_ok
+                      else "no frames were driven by this move, so nothing was measured" if not measured_frames
+                      else f"peak off by {worst_amp:.2f}x tolerance; beyond keyframe range: {worst_over}")
+            self.rule(f"amplitude:{move}", amp_ok, detail,
+                      {"worst_ratio": round(worst_amp, 3), "beyond": worst_over, "frames": measured_frames,
                        "spec_peaks": {k: round(v, 3) for k, v in extremes.items()}})
-            curve_ok = worst_curve <= self.tol["curve_px"] / self.tol["amplitude_px"] + 1e-9
+            curve_ok = worst_curve <= self.tol["curve_px"] / self.tol["amplitude_px"] + 1e-9 and measured_frames > 0
             self.rule(f"curve:{move}", curve_ok,
                       f"easing and overshoot follow the spec curve (worst {worst_curve:.2f}x tol)",
                       {"worst_ratio": round(worst_curve, 3)})
@@ -155,7 +158,7 @@ class _Checker:
         to = self.spec.moves["talk_stretch"]["to"]
         peaks = [f["layers"]["art"]["sy"] for f in self.track.frames if f["visible"] and "talk" in f["active"]]
         peak = max(peaks) if peaks else 1.0
-        ok = to["sy"] - 0.01 <= peak <= 1 + (to["sy"] - 1) * 1.35
+        ok = to["sy"] - 0.01 <= peak <= 1 + (to["sy"] - 1) * self.spec.stretch_overshoot() + self.tol["scale"]
         self.rule("amplitude:talk_stretch", ok, f"shell grows to {peak:.3f} tall (spec {to['sy']} with overshoot)",
                   {"peak_sy": round(peak, 4)})
 
@@ -198,13 +201,13 @@ class _Checker:
                   f"smallest gap {min(gaps, default=float('inf')):.2f} s (need {need:g} s)", {"gaps": gaps})
         landings = self.landings()
         first = b["first_small_after_landing_ms"] / 1000
-        early = [s for s in smalls if any(0 <= s - l < first - 1e-6 for l in landings)]
+        early = [s for s in smalls if any(0 <= s - x < first - 1e-6 for x in landings)]
         self.rule("first_small_after_landing", not early, f"small moves wait {first:g} s after landing", {"early": early})
 
         rest = b["rest_before_relocate_ms"] / 1000
         short = []
         for e in self.of("relocate", "edge_peek"):
-            before = [l for l in landings if l <= e["start"] + 1e-9]
+            before = [x for x in landings if x <= e["start"] + 1e-9]
             if before and e["start"] - before[-1] < rest - 1e-6:
                 short.append(round(e["start"] - before[-1], 3))
         self.rule("rest_before_relocate", not short, f"at least {rest:g} s of rest before relocating", {"short": short})
@@ -228,7 +231,7 @@ class _Checker:
         delay = b["line_after_landing_ms"] / 1000
         early_lines = []
         for talk in self.of("talk"):
-            before = [l for l in landings if l <= talk["start"] + 1e-9]
+            before = [x for x in landings if x <= talk["start"] + 1e-9]
             if not before or talk["start"] - before[-1] < delay - 1e-6:
                 early_lines.append(talk["text"])
         self.rule("line_after_landing", not early_lines, f"lines start {delay:g} s or more after landing",
@@ -258,7 +261,9 @@ class _Checker:
         tol = self.tol["pixel_bbox_px"]
         overlap, clearance, edge, mismatch = [], [], [], []
         images = frames if frames is not None else [None] * len(self.track.frames)
+        decoded = 0
         for f, img in zip(self.track.frames, images):
+            decoded += 1
             t = f["t"]
             alpha = img[..., 3] > ALPHA_ON if img is not None else None
             if alpha is not None:
@@ -309,9 +314,16 @@ class _Checker:
         self.rule("edge_margin", not edge, f"{len(edge)} frames closer than {margin:.1f}px to the edge outside the peek",
                   {"frames": len(edge), "times": edge[:20]})
         if frames is not None:
-            self.rule("track_matches_pixels", not mismatch,
-                      f"{len(mismatch)} frames where the drawn pixels leave the tracked box by more than {tol}px",
-                      {"frames": len(mismatch), "times": mismatch[:20]})
+            if hasattr(frames, "__next__"):
+                decoded += sum(1 for _ in frames)
+            elif len(frames) != decoded:
+                decoded = len(frames)
+            count_ok = decoded == len(self.track.frames)
+            self.rule("track_matches_pixels", not mismatch and count_ok,
+                      f"{len(mismatch)} frames where the drawn pixels leave the tracked box by more than {tol}px; "
+                      f"{decoded} frames decoded for {len(self.track.frames)} tracked",
+                      {"frames": len(mismatch), "times": mismatch[:20], "decoded": decoded,
+                       "tracked": len(self.track.frames)})
 
 
 def check(spec, *, video_type, timeline, track, textmap, frame_size, frames=None):

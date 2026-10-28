@@ -12,12 +12,11 @@ import numpy as np
 from . import video
 from .check import check
 from .draw import Painter
-from .scheduler import _Planner, schedule
+from .scheduler import Timeline, _Planner, schedule
 from .spec import load_spec
 from .textdetect import build_textmap
 from .track import build_track, load_track
 from .textmap import TextMap
-from .scheduler import Timeline
 
 
 def log(msg):
@@ -47,19 +46,27 @@ def scenes_from(cuts, duration):
     return [(a, b) for a, b in zip(bounds, bounds[1:]) if b - a > 1e-3]
 
 
-def allowed_masks(spec, textmap, timeline):
-    """Per text sample: where his resting body may be at that moment (for the debug view)."""
-    planner = _Planner(spec, timeline.video_type, timeline.duration, timeline.frame_size, timeline.scenes,
-                       textmap, [], 0, timeline.scale * spec.mascot["ref_height"])
-    W, H = timeline.frame_size
-    out = {}
-    for t in textmap.times:
-        mask = np.zeros((H, W), dtype=np.uint8)
-        free = textmap.free_many(planner.footprints, t, t) if len(planner.footprints) else []
-        for (x0, y0, x1, y1) in planner.mascot_boxes[np.flatnonzero(free)] if len(free) else []:
-            mask[int(y0):int(y1), int(x0):int(x1)] = 1
-        out[t] = mask
-    return out
+class AllowedRegions:
+    """Where his resting body may be at each text sample (for the debug view), built on demand."""
+
+    def __init__(self, spec, textmap, timeline):
+        self.planner = _Planner(spec, timeline.video_type, timeline.duration, timeline.frame_size, timeline.scenes,
+                                textmap, [], 0, timeline.scale * spec.mascot["ref_height"])
+        self.textmap = textmap
+        self.W, self.H = timeline.frame_size
+        self.cache = {}
+
+    def at(self, t):
+        if t not in self.cache:
+            if len(self.cache) > 4:
+                self.cache.clear()
+            mask = np.zeros((self.H, self.W), dtype=bool)
+            if len(self.planner.footprints):
+                free = self.textmap.free_many(self.planner.footprints, t, t)
+                for x0, y0, x1, y1 in self.planner.mascot_boxes[np.flatnonzero(free)]:
+                    mask[int(y0):int(y1), int(x0):int(x1)] = True
+            self.cache[t] = mask
+        return self.cache[t]
 
 
 def debug_frame(rgb, overlay, frame, textmap, masks, timeline, spec):
@@ -68,10 +75,10 @@ def debug_frame(rgb, overlay, frame, textmap, masks, timeline, spec):
     t = frame["t"]
     idx = textmap.sample_indices(t, t)
     if idx:
-        mask = masks[textmap.times[idx[0]]]
+        mask = masks.at(textmap.times[idx[0]])
         for i in idx[1:]:
-            mask = mask & masks[textmap.times[i]]
-        img[mask.astype(bool)] = img[mask.astype(bool)] * 0.65 + np.array([60, 220, 110]) * 0.35
+            mask = mask & masks.at(textmap.times[i])
+        img[mask] = img[mask] * 0.65 + np.array([60, 220, 110]) * 0.35
     W, H = timeline.frame_size
     if W >= H:
         lo, hi = spec.placement["centre_band"]
@@ -117,6 +124,7 @@ def run(args):
                                 chrome_threshold=spec.placement["chrome_edge_density"],
                                 progress=lambda n, total: log(f"text detection {n}/{total}") if n % 10 == 0 or n == total else None)
         textmap.save(textmap_path)
+        textmap = TextMap.load(textmap_path)
 
     lines = read_lines(args.lines)
     timeline = schedule(spec, video_type=args.type, duration=info["duration"], frame_size=(info["width"], info["height"]),
@@ -142,7 +150,7 @@ def run(args):
 
     report = run_check(spec, args.type, out, textmap)
     if not args.no_debug:
-        masks = allowed_masks(spec, textmap, timeline)
+        masks = AllowedRegions(spec, textmap, timeline)
         dbg = video.Mp4Writer(out / "debug.mp4", size, fps, crf=23)
         for frame, rgb in zip(track.frames, video.frames(src)):
             dbg.write(debug_frame(rgb, painter.paint(frame, size), frame, textmap, masks, timeline, spec))

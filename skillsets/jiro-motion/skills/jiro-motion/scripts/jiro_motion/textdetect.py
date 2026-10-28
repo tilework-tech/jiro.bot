@@ -85,8 +85,9 @@ def build_textmap(path, info, cuts, interval=0.5, chrome_threshold=0.18, progres
     """Decode the video once, run both detectors on the sampled frames, return a TextMap."""
     times = sample_times(info["duration"], cuts, interval)
     wanted = {}
+    last_frame = max(int(info["duration"] * info["fps"]) - 1, 0)
     for t in times:
-        wanted.setdefault(int(round(t * info["fps"])), []).append(t)
+        wanted.setdefault(min(int(round(t * info["fps"])), last_frame), []).append(t)
     last = max(wanted)
     samples, busy = [], []
     for index, rgb in enumerate(decode(path)):
@@ -101,4 +102,7 @@ def build_textmap(path, info, cuts, interval=0.5, chrome_threshold=0.18, progres
                 progress(len(samples), len(times))
         if index >= last:
             break
+    missing = [t for t in times if t not in {s for s, _ in samples}]
+    if missing:
+        raise RuntimeError(f"could not decode frames for text detection at {missing[:5]} s; the video may be truncated")
     return TextMap(info["width"], info["height"], samples, cuts=cuts, busy=busy)

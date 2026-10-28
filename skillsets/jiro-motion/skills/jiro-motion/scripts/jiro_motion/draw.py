@@ -5,7 +5,6 @@ by resvg with the bundled Inter font, then pasted into a transparent frame.
 """
 
 import math
-from pathlib import Path
 
 import cv2
 import numpy as np

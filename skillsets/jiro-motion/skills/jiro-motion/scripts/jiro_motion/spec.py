@@ -170,6 +170,11 @@ class Spec:
                         out[name] = dev
         return out
 
+    def stretch_overshoot(self):
+        """Peak of the talk-stretch transition as a multiple of its target (its easing overshoots)."""
+        easing = parse_easing(self.moves["talk_stretch"]["transition"])
+        return max(ease(easing, k / 400) for k in range(401))
+
     def envelope(self, scale=1.0):
         """Most any rest-time move or hover can push the art from its spot, in px."""
         up = down = side = 0.0
@@ -186,9 +191,15 @@ class Spec:
                     down = max(down, frame.get("ty", 0))
                     side = max(side, abs(frame.get("tx", 0)))
         stretch = self.moves["talk_stretch"]["to"]
-        overshoot = 1.25
+        overshoot = self.stretch_overshoot()
         up += self.mascot["art"]["art_height"] * (stretch["sy"] - 1) * overshoot
-        side += self.mascot["ref_width"] * (stretch["sx"] - 1) / 2 * overshoot + 2
+        side += self.mascot["ref_width"] * (stretch["sx"] - 1) / 2 * overshoot
+        tilt = max([abs(f.get("rot", 0)) for m in self.moves.values() for f in m.get("keyframes", [])]
+                   + [abs(f.get("rot", 0)) for i in self.idles.values() for layer in i["layers"].values() for f in layer["keyframes"]]
+                   + [self.moves["fly_in"]["arc"]["rot_peak"]])
+        lean = math.sin(math.radians(tilt))
+        side += self.mascot["ref_height"] * lean / 2
+        up += self.mascot["ref_width"] * lean / 2
         return {"up": up * scale, "down": down * scale, "side": side * scale}
 
 

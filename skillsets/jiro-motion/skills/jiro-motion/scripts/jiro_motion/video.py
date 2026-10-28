@@ -6,6 +6,7 @@ libx264), so nothing has to be installed system-wide.
 
 import re
 import subprocess
+import tempfile
 
 import imageio_ffmpeg
 import numpy as np
@@ -30,7 +31,8 @@ def frames(path, pix_fmt="rgb24", decoder=None):
     if decoder:
         cmd += ["-c:v", decoder]
     cmd += ["-i", str(path), "-f", "rawvideo", "-pix_fmt", pix_fmt, "-"]
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    log = tempfile.TemporaryFile()
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=log)
     size = info["width"] * info["height"] * channels
     finished = False
     try:
@@ -44,9 +46,11 @@ def frames(path, pix_fmt="rgb24", decoder=None):
         proc.stdout.close()
         if not finished:
             proc.kill()
-        err = proc.stderr.read().decode(errors="replace")
-        proc.stderr.close()
-        if proc.wait() and finished:
+        code = proc.wait()
+        log.seek(0)
+        err = log.read().decode(errors="replace")
+        log.close()
+        if code and finished:
             raise RuntimeError(f"ffmpeg could not decode {path}: {err.strip()}")
 
 
@@ -61,12 +65,22 @@ def detect_cuts(path, min_jump=2.5, ratio=3.0, window=3):
     which is why this does not use it.
     """
     info = probe(path)
-    proc = subprocess.run([FFMPEG, "-v", "error", "-i", str(path), "-vf", "scale=64:36", "-f", "rawvideo",
-                           "-pix_fmt", "rgb24", "-"], capture_output=True, check=True)
-    small = np.frombuffer(proc.stdout, dtype=np.uint8).reshape(-1, 36, 64, 3).astype(np.float32)
-    if len(small) < 2:
-        return []
-    diff = np.abs(np.diff(small, axis=0)).mean(axis=(1, 2, 3))
+    proc = subprocess.Popen([FFMPEG, "-v", "error", "-i", str(path), "-vf", "scale=64:36", "-f", "rawvideo",
+                             "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
+    size = 64 * 36 * 3
+    diffs, prev = [], None
+    while True:
+        buf = proc.stdout.read(size)
+        if len(buf) < size:
+            break
+        frame = np.frombuffer(buf, dtype=np.uint8).astype(np.int16)
+        if prev is not None:
+            diffs.append(float(np.abs(frame - prev).mean()))
+        prev = frame
+    proc.stdout.close()
+    if proc.wait():
+        raise RuntimeError(f"ffmpeg could not decode {path}")
+    diff = np.asarray(diffs)
     cuts = []
     for i, d in enumerate(diff):
         around = np.concatenate([diff[max(i - window, 0):i], diff[i + 1:i + 1 + window]])
@@ -92,8 +106,13 @@ class OverlayWriter:
 
     def write(self, rgba):
         data = np.ascontiguousarray(rgba).tobytes()
-        for proc in self.procs:
-            proc.stdin.write(data)
+        try:
+            for proc in self.procs:
+                proc.stdin.write(data)
+        except BrokenPipeError:
+            for proc in self.procs:
+                proc.kill()
+            raise RuntimeError("an overlay encoder exited early; see the ffmpeg error above")
 
     def close(self):
         for proc in self.procs:

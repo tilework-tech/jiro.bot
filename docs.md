@@ -7,6 +7,7 @@ Path: @/
 - Static site for jiro.bot: a hand-written landing page plus generated comparison pages (alternatives, head-to-head, switching guides, best-of lists) whose purpose is answer-engine optimization (AEO) — getting LLM answer engines to mention and cite Jiro for "best X alternatives", "Jiro vs X" and "how do I switch from X" questions.
 - [build.py](build.py) is a stdlib-only Python generator that turns TOML records in [content/](content/docs.md) into HTML pages, markdown twins and machine-readable indexes in `site/`.
 - [tools/](tools/docs.md) holds the pre-publish gate ([tools/lint.py](tools/lint.py)) and AEO measurement scripts; [tests/](tests/) black-box `build.py` and `lint.py`.
+- [skillsets/](skillsets/jiro-motion/docs.md) holds Nori agent skillsets that live beside the site but are not part of it, currently `jiro-motion` (renders the Jiro mascot into video as a transparent overlay and checks it against a motion spec).
 
 ### How it fits into the larger codebase
 
@@ -51,5 +52,6 @@ content/pages/*.toml ─┘                site/llms.txt, llms-full.txt, sitemap
 - `site.toml` `updated` drives every page's "Updated" date, Article `dateModified` and sitemap lastmod at once; there is no per-page modified date.
 - The site was rewritten after GTM review (2026-10-19) because pages pasted the same fact wording wherever it was cited and read like one template. The `[[cite:]]` marker and the lint overlap and sentence-variation gates exist to keep pages individual; see [content/docs.md](content/docs.md) for the editor rules.
 - Tests in [tests/](tests/) run the real `build.py` and `tools/lint.py` CLIs against a temp copy of `tests/fixtures/content`, so they never depend on the live `content/` records. Run them with `cd tests && python3 -m unittest`.
+- `skillsets/` is outside the site build and deploy: `build.py` reads only `content/`, `tools/lint.py` compares `content/` against `site/`, and the deploy workflow syncs only `site/`, so nothing under `skillsets/` ships to jiro.bot (the same holds for the scroll-buddy `prototypes/` folder on its branch). Skillset tests have their own runner and are not part of `tests/`: run `skillsets/jiro-motion/skills/jiro-motion/scripts/jm test` (needs `uv`; the first run builds a venv in `~/.cache/jiro-motion/venv`).
 
 Created and maintained by Nori.

@@ -86,8 +86,8 @@ def build(spec, out, title):
         f"<tr class='{'ok' if r['passed'] else 'bad'}'><td><code>{html.escape(r['id'])}</code></td>"
         f"<td class='st'>{'pass' if r['passed'] else 'FAIL'}</td><td>{_inline(r['detail'])}</td></tr>"
         for r in report["rules"])
-    unplaced = "".join(f"<li>{html.escape(l['text'])} <span class='muted'>({html.escape(l['reason'])})</span></li>"
-                       for l in timeline.get("unplaced_lines", []))
+    unplaced = "".join(f"<li>{html.escape(line['text'])} <span class='muted'>({html.escape(line['reason'])})</span></li>"
+                       for line in timeline.get("unplaced_lines", []))
     facts = [("Type", timeline["video_type"]), ("Seed", timeline["seed"]),
              ("Frame", f"{timeline['frame_size'][0]}×{timeline['frame_size'][1]}"),
              ("Mascot", f"{manifest.get('mascot_height_px', '?')}px tall (scale {timeline['scale']:.2f})"),

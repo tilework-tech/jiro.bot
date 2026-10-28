@@ -167,6 +167,67 @@ class BudgetTest(unittest.TestCase):
         self.assertEqual(len(kinds(tl, "talk")), spec.type("social_short")["quiet_after_lines"])
 
 
+class CutSafetyTest(unittest.TestCase):
+    def test_gone_before_a_cut_reveals_text_over_his_spot(self):
+        # Real text maps sample one frame after each cut, so the first sample of the new scene is at cut + 0.04.
+        cut = 10.02
+        samples = [(round(t * 0.5, 3), []) for t in range(20) if t * 0.5 < cut]
+        samples += [(round(cut + 0.04 + k * 0.5, 3), [(0, 0, W, H)]) for k in range(10)]
+        tm = TextMap(W, H, samples, cuts=[cut])
+        spec = load_spec()
+        tl = schedule(spec, video_type="product_demo", duration=15.0, frame_size=(W, H),
+                      scenes=[(0, cut), (cut, 15.0)], textmap=tm, seed=0)
+        track = build_track(spec, tl, FPS)
+        self.assertTrue(any(f["visible"] for f in track.frames if f["t"] < cut))
+        self.assertFalse(any(f["visible"] for f in track.frames if f["t"] >= cut))
+
+    def test_never_vanishes_without_a_fade(self):
+        for video_type in ("release_showcase", "social_short", "product_demo"):
+            for seed in range(4):
+                scenes = scenes_of(6, 3, 6, 5)
+                def boxes_at(t):
+                    return [(0, 0, W, H)] if 9 <= t < 15 else []
+                _, _, tl = run(scenes, boxes_at=boxes_at, video_type=video_type, seed=seed)
+                hides = {round(e["end"], 6) for e in kinds(tl, "hide")}
+                arrivals = {round(e["start"], 6) for e in kinds(tl, "pop_in", "relocate", "edge_peek")}
+                for stay in kinds(tl, "stay"):
+                    end = round(stay["end"], 6)
+                    self.assertTrue(end == round(tl.duration, 6) or end in hides or end in arrivals,
+                                    (video_type, seed, stay["start"], stay["end"]))
+
+    def test_arrivals_finish_inside_their_scene(self):
+        for video_type in ("release_showcase", "social_short", "product_demo"):
+            for seed in range(6):
+                scenes = scenes_of(1.0, 2.0, 2.7, 6, 1.2, 5)
+                _, _, tl = run(scenes, video_type=video_type, seed=seed)
+                for stay in kinds(tl, "stay"):
+                    self.assertEqual(scene_of(scenes, stay["start"]), scene_of(scenes, stay["landed"] - 1e-6),
+                                     (video_type, seed, stay["start"], stay["landed"]))
+
+    def test_a_scene_without_text_samples_is_never_treated_as_clear(self):
+        samples = [(t / 2, []) for t in range(10)]
+        tm = TextMap(W, H, samples, cuts=[5.0])
+        spec = load_spec()
+        tl = schedule(spec, video_type="release_showcase", duration=10.0, frame_size=(W, H),
+                      scenes=[(0, 5.0), (5.0, 10.0)], textmap=tm, seed=0)
+        track = build_track(spec, tl, FPS)
+        self.assertFalse(any(f["visible"] for f in track.frames if f["t"] >= 5.0))
+
+    def test_same_timeline_after_a_textmap_round_trip(self):
+        import os
+        import tempfile
+        boxes = [(100.37, 40.2, 600.91, 90.55), (700.1, 400.3, 1200.7, 520.9)]
+        scenes = scenes_of(8, 8)
+        spec, tm, tl = run(scenes, boxes_at=lambda t: boxes, seed=5, lines=["Hi, I'm Jiro."])
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "textmap.json")
+            tm.save(path)
+            again = TextMap.load(path)
+        tl2 = schedule(spec, video_type="product_demo", duration=16.0, frame_size=(W, H), scenes=scenes,
+                       textmap=again, lines=["Hi, I'm Jiro."], seed=5)
+        self.assertEqual(tl.to_json(), tl2.to_json())
+
+
 class LinesTest(unittest.TestCase):
     def test_each_line_spoken_once_after_landing(self):
         spec = load_spec()
