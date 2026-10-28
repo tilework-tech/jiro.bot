@@ -158,12 +158,6 @@ class _Planner:
         x, y = spot
         return [x, y, x + self.m.w, y + self.m.h]
 
-    def bubble_fits(self, text, spot, t0, t1):
-        layout = bubble_layout(self.spec, self.s, text, self.box(spot), (self.W, self.H))
-        bx0, by0, bx1, by1 = layout["box"]
-        inside = bx0 >= 0 and by0 >= 0 and bx1 <= self.W and by1 <= self.H
-        return inside and self.tm.is_free(layout["box"], t0, t1, self.m.pad)
-
     def pick_spot(self, t0, t1, prev, talk=None):
         """Best clear spot over [t0, t1]; with a pending line, prefer spots with room for its bubble."""
         if talk is not None:
@@ -370,9 +364,9 @@ class _Planner:
             release = end + self.spec.moves["talk_stretch"]["transition_ms"] / 1000.0
             if release <= b:
                 layout = bubble_layout(self.spec, self.s, line["text"], stay["box"], (self.W, self.H))
-                bx0, by0, bx1, by1 = layout["box"]
+                bx0, by0, bx1, by1 = layout["reach"]
                 inside = bx0 >= 0 and by0 >= 0 and bx1 <= self.W and by1 <= self.H
-                if inside and self.tm.is_free(layout["box"], tl, end, self.m.pad):
+                if inside and self.tm.is_free(layout["reach"], tl, end, self.m.pad):
                     self.add("talk", tl, end, text=line["text"], bubble=layout)
                     self.add("talk_squash", tl, tl + self.ms("talk_squash"))
                     self.lines.remove(line)

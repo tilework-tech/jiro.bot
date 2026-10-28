@@ -106,17 +106,24 @@ def bubble_size(spec, scale, text):
     return lines, math.ceil(width), height
 
 
+def _overshoot(spec, width, height):
+    """How far the bubble pop's overshoot reaches past the resting bubble, per side."""
+    sx, sy = spec.peak("bubble_pop", "sx"), spec.peak("bubble_pop", "sy")
+    return max(sx - 1, 0) * width / 2, max(sy - 1, 0) * height
+
+
 def bubble_boxes(spec, scale, text, mascot_boxes, frame_size):
-    """Bubble boxes (incl. its drop shadow) for an (N, 4) array of resting mascot boxes."""
+    """Space each bubble can cover, pop overshoot and drop shadow included, for (N, 4) mascot boxes."""
     b = spec.mascot["bubble"]
     _, width, height = bubble_size(spec, scale, text)
+    ox, oy = _overshoot(spec, width, height)
     boxes = np.asarray(mascot_boxes, dtype=np.float64)
     edge, gap = b["edge_margin"] * scale, b["gap"] * scale
-    left = np.clip((boxes[:, 0] + boxes[:, 2]) / 2 - width / 2, edge, frame_size[0] - edge - width)
+    left = np.clip((boxes[:, 0] + boxes[:, 2]) / 2 - width / 2, edge + ox, frame_size[0] - edge - ox - width)
     top = boxes[:, 1] - gap - height
-    below = top < edge
+    below = top - oy < edge
     top = np.where(below, boxes[:, 3] + gap, top)
-    return np.stack([left, top, left + width, top + height + 3 * scale], axis=1)
+    return np.stack([left - ox, top - oy, left + width + ox, top + height + 3 * scale], axis=1)
 
 
 def bubble_layout(spec, scale, text, mascot_box, frame_size):
@@ -128,17 +135,20 @@ def bubble_layout(spec, scale, text, mascot_box, frame_size):
     border = b["border"] * s
     lines, width, height = bubble_size(spec, scale, text)
     x0, y0, x1, y1 = mascot_box
+    ox, oy = _overshoot(spec, width, height)
     cx = (x0 + x1) / 2
     left = cx - width / 2
     edge = b["edge_margin"] * s
     W, _ = frame_size
-    dx = edge - left if left < edge else (W - edge) - (left + width) if left + width > W - edge else 0.0
+    lo, hi = edge + ox, W - edge - ox - width
+    dx = lo - left if left < lo else hi - left if left > hi else 0.0
     left += dx
     top = y0 - b["gap"] * s - height
-    below = top < edge
+    below = top - oy < edge
     if below:
         top = y1 + b["gap"] * s
-    return {"box": [left, top, left + width, top + height + 3 * s], "lines": lines, "below": below,
+    return {"box": [left, top, left + width, top + height + 3 * s],
+            "reach": [left - ox, top - oy, left + width + ox, top + height + 3 * s], "lines": lines, "below": below,
             "dx": dx, "font_size": size, "line_height": size * b["line_height"], "pad": [pad_x, pad_y],
             "border": border, "radius": b["radius"] * s, "tail": [cx, y0 if not below else y1]}
 

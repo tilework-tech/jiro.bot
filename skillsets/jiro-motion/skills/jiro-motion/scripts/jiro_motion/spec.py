@@ -92,6 +92,8 @@ def _interpolate(tracks, progress, scale):
                 local = 0.0 if o1 == o0 else min(max((progress - o0) / (o1 - o0), 0.0), 1.0)
                 value = v0 + (v1 - v0) * ease(seg, local)
                 break
+        if name == "opacity":
+            value = min(max(value, 0.0), 1.0)
         out[name] = value * scale if name in LENGTH_CHANNELS else value
     return out
 
@@ -148,6 +150,14 @@ class Spec:
             self._tracks[key] = (_channel_tracks(loop["keyframes"], loop.get("ease", "linear")), None)
         tracks, _ = self._tracks[key]
         return _interpolate(tracks, (t_ms % loop["period_ms"]) / loop["period_ms"], 1.0)
+
+    def peak(self, move, channel):
+        """Largest value a channel reaches over the whole move (overshoot included)."""
+        key = ("peak", move, channel)
+        if key not in self._tracks:
+            d = self.moves[move]["duration_ms"]
+            self._tracks[key] = max(self.sample(move, d * k / 400)[channel] for k in range(401))
+        return self._tracks[key]
 
     def keyframe_extremes(self, move, scale=1.0):
         """Largest deviation from identity each channel reaches at a keyframe."""

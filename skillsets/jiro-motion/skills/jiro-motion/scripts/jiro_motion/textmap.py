@@ -8,6 +8,7 @@ belongs to the same scene, is free. Samples never leak across a scene cut.
 
 import bisect
 import json
+from pathlib import Path
 
 import numpy as np
 
@@ -153,12 +154,29 @@ class TextMap:
             "width": self.width, "height": self.height, "cell": self.cell, "cuts": self.cuts,
             "samples": [{"t": t, "boxes": [{"box": [round(v, 1) for v in b[:4]], "label": b[4]} for b in boxes]}
                         for t, boxes in zip(self.times, self.boxes)],
-            "busy": [np.round(np.asarray(b), 3).tolist() for b in self.busy] if self.busy is not None else None,
         })
+
+    def save(self, path):
+        """Write <path> (boxes, JSON) and, if present, <path>.busy.npz (edge density grids)."""
+        path = Path(path)
+        path.write_text(self.to_json())
+        if self.busy is not None:
+            np.savez_compressed(str(path) + ".busy.npz", *[np.asarray(b, dtype=np.float16) for b in self.busy])
+
+    @classmethod
+    def load(cls, path):
+        path = Path(path)
+        data = json.loads(path.read_text())
+        busy_path = Path(str(path) + ".busy.npz")
+        busy = None
+        if busy_path.exists():
+            with np.load(busy_path) as npz:
+                busy = [npz[f"arr_{i}"].astype(np.float64) for i in range(len(npz.files))]
+        return cls(data["width"], data["height"], [(s["t"], s["boxes"]) for s in data["samples"]],
+                   cuts=data["cuts"], busy=busy, cell=data.get("cell", CELL))
 
     @classmethod
     def from_json(cls, text):
         data = json.loads(text)
-        busy = [np.asarray(b) for b in data["busy"]] if data.get("busy") is not None else None
         return cls(data["width"], data["height"], [(s["t"], s["boxes"]) for s in data["samples"]],
-                   cuts=data["cuts"], busy=busy, cell=data.get("cell", CELL))
+                   cuts=data["cuts"], cell=data.get("cell", CELL))

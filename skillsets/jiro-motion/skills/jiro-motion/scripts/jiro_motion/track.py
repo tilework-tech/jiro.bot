@@ -52,6 +52,11 @@ class Track:
                            "frames": clean(self.frames)})
 
 
+def load_track(text):
+    data = json.loads(text)
+    return Track(data["frames"], data["fps"], data["frame_size"], data["scale"])
+
+
 class _Pose:
     def __init__(self, spec, timeline):
         self.spec, self.tl = spec, timeline

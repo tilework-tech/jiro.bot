@@ -102,5 +102,18 @@ class LoadSpecTest(unittest.TestCase):
         self.assertIn("cartwheel", str(caught.exception))
 
 
+class TablesTest(unittest.TestCase):
+    def test_committed_tables_are_generated_from_the_json(self):
+        from jiro_motion.tables import markdown
+        committed = (Path(DEFAULT_SPEC).parent / "MOTION-SPEC.md").read_text()
+        self.assertEqual(committed, markdown(load_spec()),
+                         "spec/MOTION-SPEC.md is stale: run scripts/jm tables --write spec/MOTION-SPEC.md")
+
+    def test_tables_reflect_a_changed_limit(self):
+        from jiro_motion.tables import markdown
+        path = write_variant(lambda d: d["types"]["explainer"]["per_minute"].update(small=7))
+        self.assertIn("≤7 per minute", markdown(load_spec(path)))
+
+
 if __name__ == "__main__":
     unittest.main()

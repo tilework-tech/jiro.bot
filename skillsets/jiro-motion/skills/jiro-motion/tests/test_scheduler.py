@@ -233,7 +233,8 @@ class TextAvoidanceTest(unittest.TestCase):
         lo, hi = spec.placement["centre_band"]
         margin = spec.placement["edge_margin"]
         for seed in range(8):
-            spec, tm, tl = run(scenes_of(6, 6, 6), seed=seed, video_type="release_showcase")
+            spec, tm, tl = run(scenes_of(9, 9, 9), seed=seed, video_type="release_showcase",
+                               lines=["A line long enough to need a wide bubble near an edge.", "Short.", "Hi."])
             scale = tl.scale
             for stay in kinds(tl, "stay"):
                 x0, y0, x1, y1 = stay["box"]
@@ -244,8 +245,22 @@ class TextAvoidanceTest(unittest.TestCase):
             for frame in track.frames:
                 if not frame["visible"] or any(s <= frame["t"] <= e for s, e in peeking):
                     continue
-                x0, y0, x1, y1 = frame["ink_box"]
-                self.assertGreaterEqual(min(x0, y0, W - x1, H - y1), margin * scale - 1, (seed, frame["t"]))
+                for box in (frame["ink_box"], frame["bubble_box"]):
+                    if box:
+                        x0, y0, x1, y1 = box
+                        self.assertGreaterEqual(min(x0, y0, W - x1, H - y1), margin * scale - 1, (seed, frame["t"]))
+
+    def test_bubble_pop_stays_inside_the_edge_margin(self):
+        spec = load_spec()
+        boxes = [(200, 100, W, H)]
+        spec, tm, tl = run(scenes_of(10), boxes_at=lambda t: boxes, seed=0,
+                           lines=["A line long enough to need a wide bubble near the edge."])
+        self.assertEqual(len(kinds(tl, "talk")), 1)
+        track = build_track(spec, tl, FPS)
+        margin = spec.placement["edge_margin"] * tl.scale
+        bubbles = [f["bubble_box"] for f in track.frames if f["visible"] and f["bubble_box"]]
+        self.assertTrue(bubbles)
+        self.assertGreaterEqual(min(b[0] for b in bubbles), margin - 1)
 
     def test_portrait_frames_drop_the_centre_band(self):
         spec = load_spec()
