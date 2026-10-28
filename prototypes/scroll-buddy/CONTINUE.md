@@ -23,7 +23,7 @@ Martin said he only saw small moves. Changes, all approved by him:
 2. Hop-in after a peek (shared `hopIn()`): the peek animation uses `fill: forwards` and is held through a 220 ms crouch (squash 1.06/0.92), then cancelled as the 850 ms arc starts, then the 8 px hop. This removed a ~230 ms flash at the resting spot before the flight.
 3. Peek from behind an element: a section can declare `data-jiro-peek="<selector>"`; `#video` uses `#video-frame`. On desktop, with motion, not pinned, the element visible and `journey.covered` unset, `peekBehind()` raises the element's inline `z-index` to the buddy's + 1, starts him tucked behind it, slides him out until ~30% shows at the side edge nearest his resting spot, holds (2000 ms total), then `hopIn()`; the inline `z-index` is restored afterwards. Label `large-peek-behind`. Once per pass, checked before the edge peek and not counted in `peeks`, so the first pass can contain both big moves.
 4. Game idle (A2) range +50%: bob 5.25 px, drift ±1.1 px, tilt ±2.25°, timing unchanged, no scale change. Eager now has its own `jiro-buddy-eager-drift` / `-tilt` keyframes with the old values, so only game idle grew. The resting hover cap in tests went from 7 to 9 px.
-5. Gzip budget raised from 12 KB to 13 KB ("whatever you need"); currently ~12,600 bytes.
+5. Gzip budget raised from 12 KB to 13 KB ("whatever you need"); currently ~12,700 bytes.
 6. `versions/v7/` is a frozen snapshot (`index.html`, buddy files, `jiro-v3.svg`), served at `/versions/v7/` on port 4320. No single-file build was made for v7 (v6 has `jiro-scroll-buddy-v6.html`).
 
 ## Start and link the previews
@@ -41,7 +41,7 @@ Verify both local ports using the hostname from `NORI_SESSION_URL` as the Host h
 
 - `uv run --no-project --with playwright python -m unittest tests/test_scroll_buddy.py` from the repo root: 36 tests, all pass (headless system Chrome, about 13 minutes). New tests use the reading-pace helper `read_to()` (200 px flicks, 2.5 s pauses) and cover: the edge peek on the first read-down of the real page exactly once per visit, the peek behind a marked element once per pass (fixture `peek.html`), the real landing page peeking behind `#video-frame`, game idle range bounds, and a dropped Jiro never peeking.
 - `qa/check_motion.py` accepts `large-peek-behind` alongside `large-peek`, `small-*` and `game-idle`, and passed (down pass: `large-peek`, `small-hop`, `small-hop`). Other checks (at least two small moves, idle style, bubble closed after 13 s, heading clearance at 1440 px and 390 px) are unchanged.
-- The two buddy files are ~12,600 bytes gzip against the 13 KB budget.
+- The two buddy files are ~12,700 bytes gzip against the 13 KB budget.
 
 ## Specific implementation details to preserve
 
@@ -59,7 +59,7 @@ Verify both local ports using the hostname from `NORI_SESSION_URL` as the Host h
 - Maddy's template ZIP has still not been received; the page is still the hand-built mockup. Porting the two buddy files and section attributes to the real page remains undone, and every resting point needs checking at desktop and phone widths after the port.
 - "4 up and down" was interpreted as 4 long passes, each direction counting once (so two full round trips). Confirm with Martin.
 - There is no way to un-pin Jiro except clearing the tab session; dragging again just re-pins. Ask Martin whether he wants a reset (for example double-click or the close menu).
-- The gzip budget has ~700 bytes of headroom (~12,600 of 13,312 bytes).
+- The gzip budget has ~630 bytes of headroom (~12,700 of 13,312 bytes).
 - `moodboard/handoff.html` still describes v6 movements (no peek behind, old game idle range, old edge peek trigger); it was not regenerated for v7.
 - v7 has no single-file build yet; make one (like `versions/v6/jiro-scroll-buddy-v6.html`) if Martin wants to share it.
 - The `share/` video and screenshots are pre-v6. Re-record only after Martin signs off.

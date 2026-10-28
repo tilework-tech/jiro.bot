@@ -70,7 +70,7 @@ jiro-buddy.js ── IntersectionObserver + scroll ──> nearestToCenter() ─
 - Logo docking: `data-jiro-merge` points at a likeness (Ditch card, FAQ reserve seal). `merge()` hides it only when Jiro's centre matches it within 12 px, scale capped at 2.4; it is restored when he moves, closes, or is grabbed. Pinned Jiro never docks.
 - Reduced motion (`prefers-reduced-motion: reduce`): no CSS idle, no Web Animations, no rest loop, no stretch; lines appear in full. Placement, speech and docking still work. Speech uses a visible paragraph plus an `aria-live` status announced once. Ask buttons (Yes / Later) come from `data-jiro-ask`; Yes scrolls to and focuses `data-jiro-action`. The close button hides him for the tab.
 - No layout shift: the `<aside>` is absolutely positioned (fixed when pinned) and moved with `translate`.
-- Gzip budget: the two buddy files must stay under 13,312 bytes (13 KB) compressed, enforced by the budget test. Martin approved raising it from 12 KB for v7; v7 is at about 12,600 bytes.
+- Gzip budget: the two buddy files must stay under 13,312 bytes (13 KB) compressed, enforced by the budget test. Martin approved raising it from 12 KB for v7; v7 is at about 12,700 bytes.
 - Un-pinning: there is no control for it. Dragging again re-pins; only clearing the tab session returns him to section travel.
 - Host-page attributes:
 

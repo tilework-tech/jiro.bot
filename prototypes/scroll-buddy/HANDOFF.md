@@ -178,7 +178,7 @@ The current 8 on the mockup (`index.html`):
 ## Engineering notes
 
 - **Files:** `jiro-buddy.js` and `jiro-buddy.css` are the whole runtime: vanilla, no dependencies, and loaded after the page. These two files are what transplants onto the real site. `index.html` is a hand-built reconstruction of the design, not Maddy's final HTML.
-- **Size:** the two files are about 12,600 bytes gzipped against a 13 KB (13,312-byte) budget, enforced by a test; Martin approved the raise from 12 KB for v7. The `BODY_FILL` path is the biggest chunk.
+- **Size:** the two files are about 12,700 bytes gzipped against a 13 KB (13,312-byte) budget, enforced by a test; Martin approved the raise from 12 KB for v7. The `BODY_FILL` path is the biggest chunk.
 - **Tuning constants** at the top of `jiro-buddy.js`:
 
   | Constant | Value |
