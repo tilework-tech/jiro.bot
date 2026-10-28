@@ -270,18 +270,22 @@ class _Checker:
                 rows, cols = np.flatnonzero(alpha.any(axis=1)), np.flatnonzero(alpha.any(axis=0))
                 pixel_box = [cols[0], rows[0], cols[-1] + 1, rows[-1] + 1] if len(rows) else None
                 drawn = [b for b in (f["ink_box"], f["bubble_box"]) if b]
-                expect = None
+                expect, on_screen = None, False
                 if drawn:
-                    expect = [max(min(b[0] for b in drawn), 0), max(min(b[1] for b in drawn), 0),
-                              min(max(b[2] for b in drawn), self.W), min(max(b[3] for b in drawn), self.H)]
+                    full = [min(b[0] for b in drawn), min(b[1] for b in drawn),
+                            max(b[2] for b in drawn), max(b[3] for b in drawn)]
+                    expect = [max(full[0], 0), max(full[1], 0), min(full[2], self.W), min(full[3], self.H)]
+                    on_screen = expect == full
                 if pixel_box is not None and expect is not None:
                     if any(p < e - tol for p, e in zip(pixel_box[:2], expect[:2])) or \
                        any(p > e + tol for p, e in zip(pixel_box[2:], expect[2:])):
                         mismatch.append(round(t, 3))
                 elif pixel_box is not None and expect is None:
                     mismatch.append(round(t, 3))
-                elif (pixel_box is None and expect is not None and f["opacity"] > 0.05
+                elif (pixel_box is None and on_screen and f["opacity"] > 0.05
                       and expect[2] - expect[0] > tol and expect[3] - expect[1] > tol):
+                    # The tracked boxes bound his ink from outside, so a box cut by the frame
+                    # edge may hold only empty corners; only a fully visible box must show ink.
                     mismatch.append(round(t, 3))
             else:
                 pixel_box = None

@@ -8,7 +8,7 @@ description: Use when someone wants Jiro (the animated >_ speech-bubble mascot) 
 
 1. Ask me (unless I already said) for:
    - the input video;
-   - the video type: `product_demo`, `release_showcase`, `social_short` or `explainer` (see the frequency table in `{{skills_dir}}/jiro-motion/spec/MOTION-SPEC.md`; the type columns are proposals awaiting Martin Stübler's confirmation, so say so if I ask about them);
+   - the video type: `product_demo`, `release_showcase`, `social_short` or `explainer` (see the frequency table in `{{skills_dir}}/jiro-motion/spec/MOTION-SPEC.md`; the type columns were approved by Martin Stübler on 2026-10-28);
    - the lines Jiro should say, if any, and which scene each belongs to;
    - known cut times, if I have them (otherwise they are auto-detected).
    Do not invent lines. Silence is a valid choice.
@@ -19,7 +19,7 @@ description: Use when someone wants Jiro (the animated >_ speech-bubble mascot) 
    ```
    The first run builds a virtualenv in `~/.cache/jiro-motion/venv` with `uv` (about a minute). Keep the seed: the same seed and input give the same overlay, byte for byte.
 4. Read `OUT_DIR/check.md`. Every rule must pass. If one fails, find out why before re-rendering. Do not loosen tolerances or the spec to make a render pass.
-5. Read the `line not placed` messages (also in `timeline.json` under `unplaced_lines`). Tell me which lines were dropped and the reason given (usually a shot too short for 0.9 s + typing + the 4.5 s hold, or no clear space for the bubble). Offer to pin them to longer scenes; do not shorten the hold on your own.
+5. Read the `line not placed` messages (also in `timeline.json` under `unplaced_lines`). Tell me which lines were dropped and the reason given (usually a shot too short for 0.9 s + typing + the 2.5 s hold, the video type's lines-per-minute limit, or no clear space for the bubble). Offer to pin them to longer scenes; do not shorten the hold on your own.
 6. Build and serve the review page, then give me the link with a fresh `?t=<unix time>`:
    ```bash
    {{skills_dir}}/jiro-motion/scripts/jm review OUT_DIR --title "..."

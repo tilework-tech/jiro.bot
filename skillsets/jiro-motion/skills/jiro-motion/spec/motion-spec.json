@@ -562,8 +562,8 @@
       "category": "talk",
       "label": "Typed line",
       "type_ms_per_char": 28,
-      "hold_ms": 4500,
-      "notes": "Types out at 28 ms per character, holds 4.5 s, then closes."
+      "hold_ms": 2500,
+      "notes": "Types out at 28 ms per character, holds 2.5 s, then closes. Hold shortened from v6's 4.5 s for video, approved by Martin Stübler on 2026-10-28."
     }
   },
   "idles": {
@@ -1010,7 +1010,7 @@
   "types": {
     "product_demo": {
       "label": "Product demo",
-      "status": "proposal — awaiting Martin's confirmation",
+      "status": "approved by Martin Stübler on 2026-10-28",
       "description": "Screen recording of the product with UI text everywhere. Calm, closest to v6.",
       "idle_odds": {
         "idle_game": 0.4,
@@ -1035,7 +1035,7 @@
     },
     "release_showcase": {
       "label": "Release / feature showcase",
-      "status": "proposal — awaiting Martin's confirmation",
+      "status": "approved by Martin Stübler on 2026-10-28",
       "description": "Short high-production cut (making-feature-showcases). Livelier: follows every cut, peeks once.",
       "idle_odds": {
         "idle_game": 0.4,
@@ -1060,7 +1060,7 @@
     },
     "social_short": {
       "label": "Short social clip",
-      "status": "proposal — awaiting Martin's confirmation",
+      "status": "approved by Martin Stübler on 2026-10-28",
       "description": "Under 60 s, often vertical. Fast settle, most bouncy, fewest lines in total.",
       "idle_odds": {
         "idle_game": 0.3,
@@ -1085,7 +1085,7 @@
     },
     "explainer": {
       "label": "Talking head / explainer",
-      "status": "proposal — awaiting Martin's confirmation",
+      "status": "approved by Martin Stübler on 2026-10-28",
       "description": "A person is speaking; Jiro is a quiet companion. Fewest moves, mostly game idle.",
       "idle_odds": {
         "idle_game": 0.6,

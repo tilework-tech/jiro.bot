@@ -119,7 +119,8 @@ def markdown(spec):
         w(f"| `{face['glyph']}` ({name}) | {face['when']} |")
     w(f"| glance | the `>_` face shifted toward something; resting beats alternate glance and expression every {_num(d['rest']['beat_ms'])} ms in v6 |")
     w("")
-    w("## Frequency by video type (PROPOSAL — awaiting Martin's confirmation)")
+    statuses = {spec.type(t)["status"] for t in types}
+    w("## Frequency by video type" + (f" ({statuses.pop()})" if len(statuses) == 1 else ""))
     w("")
     w("Rows are movements, columns are video types. Everything not listed follows the per-scene limits above for every type.")
     w("")

@@ -1,4 +1,5 @@
 import atexit
+import copy
 import json
 import os
 import tempfile
@@ -130,6 +131,20 @@ class CheckerTest(unittest.TestCase):
         report = self.run_check(frames=shifted)
         self.assertIn("track_matches_pixels", failed(report))
 
+    def test_an_empty_frame_fails_only_when_his_whole_box_is_on_screen(self):
+        track = copy.deepcopy(self.track)
+        k = next(i for i, f in enumerate(track.frames) if f["visible"] and f["opacity"] > 0.5 and not f["bubble_box"])
+        frame = track.frames[k]
+        x0, y0, x1, y1 = frame["ink_box"]
+        frames = list(self.frames)
+        frames[k] = np.zeros_like(frames[k])
+
+        frame["ink_box"] = [-(x1 - x0) + 6, y0, 6, y1]
+        self.assertNotIn("track_matches_pixels", failed(self.run_check(track=track, frames=frames)))
+
+        frame["ink_box"] = [x0, y0, x1, y1]
+        self.assertIn("track_matches_pixels", failed(self.run_check(track=track, frames=frames)))
+
     def test_missing_frames_fail_the_pixel_cross_check(self):
         report = self.run_check(frames=self.frames[:-10])
         self.assertIn("track_matches_pixels", failed(report))
@@ -160,6 +175,20 @@ class CheckerTest(unittest.TestCase):
                 event["box"] = [x0 + dx, y0, x1 + dx, y1]
         report = self.run_check(timeline=timeline, track=build_track(self.spec, timeline, FPS))
         self.assertIn("centre_band", failed(report))
+
+    def test_a_line_must_hold_for_two_and_a_half_seconds_after_typing(self):
+        def with_hold(hold):
+            timeline = Timeline.from_json(self.timeline.to_json())
+            timeline.events = [e for e in timeline.events if e["kind"] != "talk"]
+            text = "Hi, I'm Jiro."
+            start = first_stay(timeline, 1)["landed"] + 0.9
+            timeline.events.append({"kind": "talk", "start": start, "scene": 1, "text": text,
+                                    "end": start + 0.028 * (len(text) - 1) + hold})
+            return timeline
+
+        self.assertNotIn("duration:talk", failed(self.run_check(timeline=with_hold(2.5))))
+        self.assertIn("duration:talk", failed(self.run_check(timeline=with_hold(4.5))))
+        self.assertIn("duration:talk", failed(self.run_check(timeline=with_hold(1.5))))
 
     def test_budgets_come_from_the_video_type(self):
         timeline = without_small(self.timeline)

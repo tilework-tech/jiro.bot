@@ -253,6 +253,38 @@ class LinesTest(unittest.TestCase):
         self.assertEqual(kinds(tl, "talk"), [])
         self.assertEqual(len(tl.unplaced_lines), 1)
 
+    def test_a_line_fits_a_shot_with_about_four_point_three_seconds_after_landing(self):
+        line = "Hold on, this part matters a lot."
+        typing = 0.028 * (len(line) - 1)
+        spoken = 0.9 + typing + 2.5
+        self.assertAlmostEqual(spoken, 4.3, delta=0.01)
+        release = 0.28
+        landed = kinds(run(scenes_of(9))[2], "stay")[0]["landed"]
+
+        _, _, tl = run(scenes_of(landed + spoken + release + 0.05), lines=[line])
+        talks = kinds(tl, "talk")
+        self.assertEqual(len(talks), 1, tl.unplaced_lines)
+        self.assertAlmostEqual(talks[0]["start"] - landed, 0.9, places=6)
+        self.assertAlmostEqual(talks[0]["end"] - talks[0]["start"], typing + 2.5, places=6)
+
+        _, _, tl = run(scenes_of(landed + spoken + 0.1), lines=[line])
+        self.assertEqual(kinds(tl, "talk"), [], "the shell's release after the bubble closes must fit too")
+        self.assertEqual(len(tl.unplaced_lines), 1)
+
+        _, _, tl = run(scenes_of(landed + spoken - 0.1), lines=[line])
+        self.assertEqual(kinds(tl, "talk"), [])
+        self.assertEqual(len(tl.unplaced_lines), 1)
+        self.assertIn("2.5 s hold", tl.unplaced_lines[0]["reason"])
+
+    def test_a_line_held_back_by_the_per_minute_cap_says_so(self):
+        lines = [{"text": f"Line {i}.", "scene": i} for i in range(4)]
+        _, _, tl = run(scenes_of(8, 8, 8, 8), lines=lines)
+        self.assertEqual(len(kinds(tl, "talk")), 3)
+        self.assertEqual([u["text"] for u in tl.unplaced_lines], ["Line 3."])
+        reason = tl.unplaced_lines[0]["reason"]
+        self.assertIn("3 lines per minute", reason)
+        self.assertNotIn("needs", reason)
+
 
 class TextAvoidanceTest(unittest.TestCase):
     def test_never_covers_text(self):

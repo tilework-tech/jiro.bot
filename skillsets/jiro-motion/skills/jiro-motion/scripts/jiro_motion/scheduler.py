@@ -359,14 +359,20 @@ class _Planner:
             tl = max(anchor + self.budgets["line_after_landing_ms"] / 1000.0, a)
             if line["at"] is not None:
                 tl = max(tl, float(line["at"]))
-            tl = self.per_minute_next("lines", tl)
-            end = tl + self.talk_length(line["text"])
-            release = end + self.spec.moves["talk_stretch"]["transition_ms"] / 1000.0
-            if release > b:
-                line["_reason"] = (f"needs {release - anchor:.1f} s after landing (0.9 s wait, typing, "
+            length = self.talk_length(line["text"]) + self.spec.moves["talk_stretch"]["transition_ms"] / 1000.0
+            capped = self.per_minute_next("lines", tl)
+            if tl + length > b:
+                line["_reason"] = (f"needs {tl + length - anchor:.1f} s after landing "
+                                   f"({self.budgets['line_after_landing_ms'] / 1000:g} s wait, typing, "
                                    f"{self.spec.moves['talk']['hold_ms'] / 1000:g} s hold); scene {i + 1} had "
                                    f"{max(b - anchor, 0):.1f} s")
+            elif capped + length > b:
+                line["_reason"] = (f"the limit of {self.kind['per_minute']['lines']} lines per minute for this video type "
+                                   f"leaves no room before he has to move or hide at {b:.1f} s in scene {i + 1}")
             else:
+                tl = capped
+                end = tl + self.talk_length(line["text"])
+                release = end + self.spec.moves["talk_stretch"]["transition_ms"] / 1000.0
                 layout = bubble_layout(self.spec, self.s, line["text"], stay["box"], (self.W, self.H))
                 bx0, by0, bx1, by1 = layout["reach"]
                 inside = bx0 >= 0 and by0 >= 0 and bx1 <= self.W and by1 <= self.H

@@ -48,7 +48,7 @@ Units: lengths are px at the reference mascot box (92×90) and scale with the re
 | Talk squash (`talk_squash`) | talk | x ×0.9…1, y ×1…1.12 | 300 ms | ease-out |  |
 | Bubble pop (`bubble_pop`) | talk | opacity 0…1, x ×0.15…1, y ×0.3…1 | 340 ms | cubic-bezier(.2,1.4,.4,1) (overshoots) |  |
 | Shell grows into the bubble (`talk_stretch`) | talk | x ×1.05, y ×1.12 | 280 ms in and out | cubic-bezier(.3,1.4,.5,1) (overshoots) | Held while the bubble is open, then shrinks back with the same overshooting transition. |
-| Typed line (`talk`) | talk | — | 28 ms per character + 4500 ms hold | — | Types out at 28 ms per character, holds 4.5 s, then closes. |
+| Typed line (`talk`) | talk | — | 28 ms per character + 2500 ms hold | — | Types out at 28 ms per character, holds 2.5 s, then closes. Hold shortened from v6's 4.5 s for video, approved by Martin Stübler on 2026-10-28. |
 | Glance (`glance`) | face | 3 SVG units toward a text box within 520px | 1300 ms | 220ms cubic-bezier(.3,.7,.4,1) | Face shifts 3 SVG units (about 4.5px at 92px) towards a random detected text box within 520px. |
 
 ## Idle hovers (exactly one runs; re-picked on every landing)
@@ -70,7 +70,7 @@ Units: lengths are px at the reference mascot box (92×90) and scale with the re
 | `-_-` (sleepy) | for as long as the sleepy hover runs |
 | glance | the `>_` face shifted toward something; resting beats alternate glance and expression every 5000 ms in v6 |
 
-## Frequency by video type (PROPOSAL — awaiting Martin's confirmation)
+## Frequency by video type (approved by Martin Stübler on 2026-10-28)
 
 Rows are movements, columns are video types. Everything not listed follows the per-scene limits above for every type.
 
@@ -90,10 +90,10 @@ Rows are movements, columns are video types. Everything not listed follows the p
 | Spoken lines | ≤1 per scene, ≤3 per minute, quiet after 4 | ≤1 per scene, ≤3 per minute, quiet after 4 | ≤1 per scene, ≤4 per minute, quiet after 3 | ≤1 per scene, ≤2 per minute, quiet after 3 |
 | Hide | whenever text will reach his spot and no clear spot is free | whenever text will reach his spot and no clear spot is free | whenever text will reach his spot and no clear spot is free | whenever text will reach his spot and no clear spot is free |
 
-- **Product demo** (`product_demo`, proposal — awaiting Martin's confirmation): Screen recording of the product with UI text everywhere. Calm, closest to v6.
-- **Release / feature showcase** (`release_showcase`, proposal — awaiting Martin's confirmation): Short high-production cut (making-feature-showcases). Livelier: follows every cut, peeks once.
-- **Short social clip** (`social_short`, proposal — awaiting Martin's confirmation): Under 60 s, often vertical. Fast settle, most bouncy, fewest lines in total.
-- **Talking head / explainer** (`explainer`, proposal — awaiting Martin's confirmation): A person is speaking; Jiro is a quiet companion. Fewest moves, mostly game idle.
+- **Product demo** (`product_demo`, approved by Martin Stübler on 2026-10-28): Screen recording of the product with UI text everywhere. Calm, closest to v6.
+- **Release / feature showcase** (`release_showcase`, approved by Martin Stübler on 2026-10-28): Short high-production cut (making-feature-showcases). Livelier: follows every cut, peeks once.
+- **Short social clip** (`social_short`, approved by Martin Stübler on 2026-10-28): Under 60 s, often vertical. Fast settle, most bouncy, fewest lines in total.
+- **Talking head / explainer** (`explainer`, approved by Martin Stübler on 2026-10-28): A person is speaking; Jiro is a quiet companion. Fewest moves, mostly game idle.
 
 ## Placement
 
