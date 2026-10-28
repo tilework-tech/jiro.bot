@@ -1,0 +1,48 @@
+#copy-toolbar, #copy-dialog {
+  font: 13px/1.4 system-ui, sans-serif;
+  color: #393939;
+  background: #fff;
+  border: 1px solid #c1c7cd;
+  border-radius: 6px;
+  color-scheme: light;
+}
+#copy-toolbar {
+  position: fixed;
+  z-index: 2147483000;
+  bottom: 12px;
+  right: 12px;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
+  padding: 10px 12px;
+}
+#copy-status { margin-bottom: 7px; max-width: 560px; overflow-wrap: anywhere; }
+.copy-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+#copy-toolbar button, #copy-toolbar a, #copy-dialog button {
+  font: inherit;
+  color: inherit;
+  padding: 7px 10px;
+  border: 1px solid #c1c7cd;
+  background: #f2f4f8;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  touch-action: manipulation;
+}
+#copy-toolbar #copy-save { background: #198038; color: #fff; border-color: #198038; }
+#copy-toolbar button:disabled { opacity: .5; cursor: wait; }
+.copy-editing [data-copy-id] { cursor: text; min-width: 2px; }
+.copy-editing [data-copy-id]:focus { outline: 2px solid #198038; background: rgba(36,161,72,.09); }
+.copy-editing [data-copy-id].copy-dirty { outline: 1px solid #198038; }
+[data-copy-id].copy-dirty { white-space: pre-wrap; }
+#copy-dialog { width: min(1000px, calc(100vw - 40px)); max-height: 80vh; padding: 20px; }
+#copy-dialog::backdrop { background: rgba(22,22,22,.5); }
+#copy-dialog h2 { font: 600 18px/1.4 system-ui, sans-serif; }
+#copy-dialog pre { overflow: auto; max-height: 55vh; padding: 12px; border: 1px solid #dde1e6; background: #f2f4f8; white-space: pre-wrap; overflow-wrap: anywhere; }
+body.copy-editing { padding-bottom: 140px; }
+@media (prefers-color-scheme: dark) {
+  #copy-toolbar, #copy-dialog { color: #dde1e6; background: #1c1c1c; border-color: #393939; color-scheme: dark; }
+  #copy-toolbar button, #copy-toolbar a, #copy-dialog button { background: #262626; border-color: #393939; }
+  #copy-toolbar #copy-save { background: #42be65; color: #161616; border-color: #42be65; }
+  #copy-dialog pre { background: #262626; border-color: #393939; }
+}

@@ -1,288 +1,2217 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Jiro</title>
-<meta name="description" content="Jiro by Nori.">
-<link rel="icon" href="jiro-16px.png" type="image/png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&display=swap">
-<style>
-/* Layout: one centered stage (Jiro + sign-up link) on a fixed dithered pixel grid. One typeface throughout. */
-:root {
-  --jungle: #24a148;
-  --gunmetal: #424242;
-  --emerald: #6fdc8c;
-  --mist: #f3eff5;
-  --apricot: #ed9b40;
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>jiro.bot · The tasteful software engineer</title>
+    <meta
+      name="description"
+      content="Jiro is a craftsperson: an expert engineer who cares more about quality than volume. Call him in with @jirobot."
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <meta name="early-access-endpoint" content="https://9bt7wykv5e.execute-api.us-east-1.amazonaws.com/signup" />
+  </head>
+  <body>
+    <div
+      style="
+        --fs-display: 104px;
+        --fs-h1: 88px;
+        --fs-stat: 80px;
+        --fs-h2: 60px;
+        --fs-h3: 40px;
+        --fs-h4: 32px;
+        --fs-h5: 24px;
+        --fs-body-lg: 18px;
+        --fs-body: 16px;
+        --fs-sm: 14px;
+        --fs-label: 13px;
+        --fs-caption: 12px;
+        min-height: 100vh;
+        background: #2bff6b;
+        color: #0a0a0a;
+        font-size: var(--fs-body);
+        font-family: &quot;Sohne&quot;, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      "
+    >
+      <header style="position: sticky; top: 0; z-index: 1000; background: #ffffff; border-bottom: 2px solid #0a0a0a">
+        <nav
+          aria-label="Primary"
+          class="nav-logo topnav"
+          style="box-sizing: border-box; display: flex; align-items: stretch; flex-wrap: wrap"
+        >
+          <a
+            href="#top"
+            style="
+              height: 52px;
+              width: 232px;
+              padding: 0 24px;
+              box-sizing: border-box;
+              border-right: 2px solid #0a0a0a;
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              font-weight: 700;
+              font-size: 19px;
+              letter-spacing: -0.035em;
+            "
+          >
+            <span
+              aria-hidden="true"
+              style="
+                position: relative;
+                display: block;
+                flex: none;
+                width: 64px;
+                height: 28px;
+                transform: scale(0.7);
+                transform-origin: 0 50%;
+                margin-right: -19px;
+              "
+              data-px="logo"
+            ></span>
+            <span class="logotype">jiro.bot</span>
+          </a>
+          <div
+            class="nav-links"
+            id="nav-links"
+            style="
+              flex: 1 1 auto;
+              min-width: 0;
+              padding: 0 24px;
+              display: flex;
+              gap: 23px;
+              font-family: &quot;JetBrains Mono&quot;, monospace;
+              font-weight: 600;
+              font-size: var(--fs-caption);
+              letter-spacing: 0.04em;
+              text-transform: uppercase;
+              overflow-x: auto;
+            "
+          >
+            <a class="link" href="#why" aria-current="false" data-nav="why">Why Jiro</a>
+            <a class="link" href="#features" aria-current="false" data-nav="features">How</a>
+            <a class="link" href="#pricing" aria-current="false" data-nav="pricing">Pricing</a>
+            <a class="link" href="#compare" aria-current="false" data-nav="compare">Compare</a>
+            <a class="link" href="#faq" aria-current="false" data-nav="faq">FAQ</a>
+          </div>
+          <a
+            href="#reserve"
+            class="nav-cta btn btn-hot"
+            style="
+              min-height: 52px;
+              width: 228px;
+              padding: 0 24px;
+              border-left: 2px solid #0a0a0a;
+              box-sizing: border-box;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 16px;
+              background-color: #fb5e45;
+              font-family: &quot;JetBrains Mono&quot;, monospace;
+              font-weight: 600;
+              font-size: var(--fs-caption);
+              letter-spacing: 0.04em;
+              text-transform: uppercase;
+            "
+            ><span style="white-space: nowrap">Get early access</span
+            ><span class="chevs hchev" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+          ></a>
+          <button
+            class="nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="nav-links"
+            aria-label="Open menu"
+          >
+            <span></span><span></span><span></span>
+          </button>
+        </nav>
+      </header>
 
-  --bg: #f3eff5;
-  --fg: #424242;
-  --btn: #24a148;
-  --btn-hover: #1f8f3f;
-  --btn-fg: #ffffff;
-  --btn-edge: #424242;
+      <main style="padding: 12px 12px 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
+        <section
+          id="top"
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 2px;
+            box-sizing: border-box;
+            background: #0a0a0a;
+          "
+        >
+          <div class="hero-row" style="display: flex; flex-wrap: wrap; gap: 0; min-height: 641px">
+            <div
+              class="hero-copy"
+              style="
+                flex: 547 1 0;
+                min-width: 320px;
+                min-width: 0;
+                background: #ffffff;
+                padding: 104px 36px 98px;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                gap: 48px;
+              "
+            >
+              <div class="lbl">&gt;_ Meet Jiro</div>
+              <div style="display: flex; flex-direction: column; gap: 14px">
+                <h1 class="h-hero">
+                  The <span class="hot">tasteful</span> software
+                  <span style="white-space: nowrap">engineer<span class="cursor" aria-hidden="true"></span></span>
+                </h1>
+                <div style="display: flex; flex-direction: column; gap: 22px">
+                  <p style="margin: 0; max-width: 420px; font-size: 15px; line-height: 22px">
+                    Jiro is a craftsperson: an expert engineer who cares more about quality than volume. Jiro will push
+                    back on your ideas and flag potential missteps early. Call him in with
+                    <span
+                      style="
+                        font-family: &quot;JetBrains Mono&quot;, monospace;
+                        background: #2bff6b;
+                        padding: 0 0.2em;
+                        font-weight: 600;
+                        font-size: 0.94em;
+                      "
+                      >@jirobot</span
+                    >.
+                  </p>
+                  <div
+                    style="
+                      display: flex;
+                      flex-wrap: wrap;
+                      gap: 10px;
+                      font-family: &quot;JetBrains Mono&quot;, monospace;
+                      font-weight: 600;
+                      font-size: 11px;
+                      letter-spacing: 0.06em;
+                      text-transform: uppercase;
+                    "
+                  >
+                    <a
+                      href="#reserve"
+                      class="btn btn-hot"
+                      style="
+                        height: 43px;
+                        padding: 0 20px;
+                        display: inline-flex;
+                        align-items: center;
+                        background-color: #fb5e45;
+                      "
+                      >Get early access</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="hero-media"
+              style="
+                flex: 711 1 0;
+                min-width: 320px;
+                min-height: 420px;
+                background: #2a2f35;
+                position: relative;
+                overflow: hidden;
+              "
+            >
+              <video
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="auto"
+                poster="video/jiro-hero-v25-poster.jpg"
+                aria-label="Jiro hero video"
+                style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block"
+              >
+                <source src="video/jiro-hero-v25-46s-loop-1200x960.mp4" type="video/mp4" />
+              </video>
+            </div>
+          </div>
+          <div class="ditch-row" style="display: flex; flex-wrap: wrap; gap: 2px; min-height: 501px">
+            <div
+              class="ditch-copy"
+              style="
+                flex: 989 1 0;
+                min-width: 320px;
+                background: #fb5e45;
+                padding: 56px 34px 38px;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                gap: 22px;
+              "
+            >
+              <h2 class="h-ditch">Ditch D*vin.<br />Forget F@ctory.<br />Stop slopping around.</h2>
+              <p style="margin: 0; max-width: 680px; font-size: 25px; line-height: 1.2; letter-spacing: -0.01em">
+                Jiro is the AI engineer that knows your style and proactively provides feedback. No markup, no lock-in.
+              </p>
+            </div>
+            <div
+              class="call-cell"
+              style="
+                flex: 299 1 0;
+                min-width: 300px;
+                background: #ffffff;
+                padding: 30px 27px 22px;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                gap: 46px;
+              "
+            >
+              <div class="lbl">&gt;_ Call him in</div>
+              <img
+                class="callj"
+                src="img/jiro-working-v4.png"
+                alt=""
+                aria-hidden="true"
+                width="252"
+                height="239"
+                style="display: block; width: 252px; height: 239px; object-fit: contain"
+              />
+              <div style="margin-top: auto">
+                <span
+                  style="
+                    font-family: &quot;JetBrains Mono&quot;, monospace;
+                    font-weight: 600;
+                    font-size: 50px;
+                    line-height: 1.32;
+                    letter-spacing: -0.02em;
+                    background: #2bff6b;
+                    padding: 0 0.1em;
+                  "
+                  >@jirobot</span
+                >
+              </div>
+            </div>
+          </div>
+        </section>
 
-  /* heat ramp 0 → 4 */
-  --h0: #e9e4ec;
-  --h1: #d6ecdb;
-  --h2: #b6e6c2;
-  --h3: #91dfa6;
-  --h4: #6fdc8c;
+        <section
+          id="how"
+          aria-label="Jiro compared with other coding agents"
+          style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a"
+        >
+          <div class="vs-side" style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+            <div
+              style="
+                flex: none;
+                background: #0a0a0a;
+                color: #ffffff;
+                padding: 56px;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                gap: 51px;
+              "
+            >
+              <div class="lbl" style="color: #fb5e45">&gt;_ Jiro vs. other agents</div>
+              <div aria-hidden="true" style="position: relative; width: 256px; height: 104px" data-px="howFace"></div>
+            </div>
+            <div
+              style="
+                flex: 1;
+                background: #fb5e45;
+                color: #0a0a0a;
+                padding: 56px;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                gap: 20px;
+              "
+            >
+              <h2
+                style="
+                  margin: 0;
+                  max-width: 9em;
+                  font-family: &quot;Sohne&quot;, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
+                  font-weight: 600;
+                  font-size: 59px;
+                  line-height: 0.98;
+                  letter-spacing: -0.04em;
+                "
+              >
+                Other agents ship more code. Jiro ships the right code.
+              </h2>
+              <p style="margin: 0; max-width: 26em; font-size: 17.6px; line-height: 1.5; color: #0a0a0a">
+                Your models, your subscription. The difference is judgment: what to read, what to ask, and what to leave
+                alone.
+              </p>
+            </div>
+          </div>
+          <div class="vs-table" style="flex: 2 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+            <div class="vshead-row vsrow" style="padding-top: 20px; padding-bottom: 20px; align-items: center">
+              <span class="vstag" style="padding-top: 0"></span>
+              <div class="vscol vshead">
+                <span
+                  style="
+                    font-family: &quot;JetBrains Mono&quot;, monospace;
+                    font-weight: 600;
+                    font-size: var(--fs-caption);
+                    letter-spacing: 0.1em;
+                    text-transform: uppercase;
+                    padding: 6px 12px;
+                    color: #7a7a76;
+                    box-shadow: inset 0 0 0 1px #d6d6d0;
+                  "
+                  >Other agents</span
+                >
+              </div>
+              <div class="vscol us vshead">
+                <span
+                  style="
+                    font-family: &quot;JetBrains Mono&quot;, monospace;
+                    font-weight: 600;
+                    font-size: var(--fs-caption);
+                    letter-spacing: 0.1em;
+                    text-transform: uppercase;
+                    padding: 6px 12px;
+                    color: #0a0a0a;
+                    background: #2bff6b;
+                  "
+                  >Jiro</span
+                >
+              </div>
+            </div>
+            <div class="vsrow">
+              <span class="vstag">Tokens</span>
+              <div class="vscol">
+                <span class="vsm vsx" aria-hidden="true"><i></i></span
+                ><span class="vsthem">Locks you into proprietary model and billing.</span>
+              </div>
+              <div class="vscol us">
+                <span class="vsm vsk" aria-hidden="true"><i></i></span
+                ><span class="vsus">You pay your provider for the tokens and Jiro per virtual machine.</span>
+              </div>
+            </div>
+            <div class="vsrow">
+              <span class="vstag">Scope</span>
+              <div class="vscol">
+                <span class="vsm vsx" aria-hidden="true"><i></i></span
+                ><span class="vsthem">Rewrites whatever it touches, resulting in massive PRs nobody wants to review.</span>
+              </div>
+              <div class="vscol us">
+                <span class="vsm vsk" aria-hidden="true"><i></i></span
+                ><span class="vsus">One focused PR for you to review.</span>
+              </div>
+            </div>
+            <div class="vsrow">
+              <span class="vstag">Context</span>
+              <div class="vscol">
+                <span class="vsm vsx" aria-hidden="true"><i></i></span
+                ><span class="vsthem">Proprietary context layer, identical for each team.</span>
+              </div>
+              <div class="vscol us">
+                <span class="vsm vsk" aria-hidden="true"><i></i></span
+                ><span class="vsus">Org-wide context layer, portable and tunable to each team's needs.</span>
+              </div>
+            </div>
+            <div class="vsrow">
+              <span class="vstag">Cost</span>
+              <div class="vscol">
+                <span class="vsm vsx" aria-hidden="true"><i></i></span
+                ><span class="vsthem">Adds a markup on every token.</span>
+              </div>
+              <div class="vscol us">
+                <span class="vsm vsk" aria-hidden="true"><i></i></span
+                ><span class="vsus">No token markup. You pay your provider directly, not a middleman.</span>
+              </div>
+            </div>
+          </div>
+        </section>
 
-  --font: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #1b1d1c; --fg: #f3eff5; --btn: #24a148; --btn-hover: #2bb553; --btn-fg: #ffffff; --btn-edge: #0c0d0c;
-    --h0: #212422; --h1: #1c3424; --h2: #1d4a2c; --h3: #1f6033; --h4: #24763c;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #1b1d1c; --fg: #f3eff5; --btn: #24a148; --btn-hover: #2bb553; --btn-fg: #ffffff; --btn-edge: #0c0d0c;
-  --h0: #212422; --h1: #1c3424; --h2: #1d4a2c; --h3: #1f6033; --h4: #24763c;
-  color-scheme: dark;
-}
+        <section id="why" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
+          <div
+            class="sec-head"
+            style="
+              flex: 1 1 100%;
+              background: #0a0a0a;
+              color: #ffffff;
+              padding: 52px 36px 0;
+              box-sizing: border-box;
+              display: flex;
+              flex-wrap: wrap;
+              justify-content: space-between;
+              align-items: flex-start;
+              gap: 24px;
+            "
+          >
+            <div class="lbl" style="flex: 0 0 124px; color: #ffffff; font-size: 11px">&gt;_ Why Jiro</div>
+            <div class="why-copy">
+              <h2 class="h-why" style="font-weight: 400">Jiro vs. AI slop.</h2>
+              <p>
+                Jiro works opinionated inside your code host, Slack, and Web, so context flows in and work ships out
+                without a new dashboard or a migration to plan.
+              </p>
+            </div>
+          </div>
+          <div
+            class="video-wrap"
+            style="
+              flex: 1 1 100%;
+              min-width: 0;
+              margin-top: -2px;
+              background: #0a0a0a;
+              color: #ffffff;
+              padding: 82px 34px 122px;
+              box-sizing: border-box;
+            "
+          >
+            <div
+              class="v2"
+              role="img"
+              aria-label="The same task done by a regular agent, a sprawling pull request, and by Jiro, a focused one"
+              style="padding: 56px 24px 32px"
+            >
+              <div class="v2grid">
+                <div class="v2col">
+                  <span class="v2chip">Regular agent</span>
+                  <div class="gh" style="opacity: 0.62">
+                    <div class="gh-bar">
+                      <span class="cc-dots"><i></i><i></i><i></i></span
+                      ><span class="gh-url">github.com/acme/website/pull/244</span>
+                    </div>
+                    <div class="gh-repo">acme / <b>website</b></div>
+                    <div class="gh-tabs">
+                      <span>Code</span><span>Issues</span><span class="on">Pull requests</span><span>Actions</span>
+                    </div>
+                    <div class="gh-title">Homepage redesign <span style="color: #8a8a8a">#244</span></div>
+                    <div class="gh-sub"><span class="gh-open">Open</span>agent-bot wants to merge 100 commits</div>
+                    <div class="gh-body">
+                      <div class="gh-h">Overview</div>
+                      <div class="gh-p">
+                        This PR implements comprehensive improvements to the homepage as part of the ongoing redesign
+                        effort, to enhance the overall user experience and maintainability.
+                      </div>
+                      <div class="gh-h">Changes made</div>
+                      <div data-list="vid.bloat" style="display: contents"></div>
+                    </div>
+                  </div>
+                  <div class="v2stat">
+                    <span style="color: #2bff6b">+<span data-text="vid.addA">12,659</span></span>
+                    <span style="color: #fb5e45">-<span data-text="vid.delA">1,649</span></span>
+                  </div>
+                  <div class="v2meta">
+                    <span data-text="vid.filesA">171</span> files · <span data-text="vid.commitsA">100</span> commits
+                  </div>
+                </div>
+                <div class="v2col">
+                  <span class="v2chip" style="color: #2bff6b; box-shadow: inset 0 0 0 1px #1e7a3f">Jiro</span>
+                  <div class="gh">
+                    <div class="gh-bar">
+                      <span class="cc-dots"><i></i><i></i><i></i></span
+                      ><span class="gh-url">github.com/acme/website/pull/251</span>
+                    </div>
+                    <div class="gh-repo">acme / <b>website</b></div>
+                    <div class="gh-tabs">
+                      <span>Code</span><span>Issues</span><span class="on">Pull requests</span><span>Actions</span>
+                    </div>
+                    <div class="gh-title">Homepage redesign <span style="color: #8a8a8a">#251</span></div>
+                    <div class="gh-sub"><span class="gh-open">Open</span>jiro wants to merge 6 commits</div>
+                    <div class="gh-body">
+                      <div class="gh-h">Summary</div>
+                      <div class="gh-li">
+                        Replaces the homepage with the responsive redesign, next to the existing blog and guides.
+                      </div>
+                      <div class="gh-li">Keeps analytics, sitemap, canonical and social metadata intact.</div>
+                      <div class="gh-li">Server-renders the FAQ and JSON-LD, so both work without JavaScript.</div>
+                      <div class="gh-h">Test plan</div>
+                      <div class="gh-ck"><span class="gh-box"></span>Production build and TypeScript pass</div>
+                      <div class="gh-ck"><span class="gh-box"></span>18 site checks and SEO export checks pass</div>
+                      <div class="gh-ck">
+                        <span class="gh-box"></span>Regression test covers structured data and FAQ content
+                      </div>
+                    </div>
+                  </div>
+                  <div class="v2stat">
+                    <span style="color: #2bff6b">+1,412</span> <span style="color: #fb5e45">-318</span>
+                  </div>
+                  <div class="v2meta">23 files · 6 commits</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="wcell">
+            <p class="wtext">
+              Bring your own subscription: any model, any harness, any key.
+            </p>
+          </div>
+          <div class="wcell">
+            <p class="wtext">
+              Jiro handles the infrastructure for connecting, storing, and managing credentials for each agent, making
+              it easy to integrate a wide range of tools, from Salesforce to Microsoft Office to any database you
+              already use.
+            </p>
+          </div>
+          <div class="wcell">
+            <p class="wtext">
+              Jiro handles the creation of the right swim-lanes and architecture. Trained on thousands of PRs and
+              distilled into a single harness.
+            </p>
+          </div>
+        </section>
 
-*, *::before, *::after { box-sizing: border-box; }
-html, body { height: 100%; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--fg);
-  font-family: var(--font);
-  font-weight: 500;
-  padding-inline: 20px;
-  padding-block: 0;
-  -webkit-font-smoothing: antialiased;
-}
-#heat { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; }
+        <section id="features" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
+          <div
+            class="sec-head"
+            style="
+              flex: 1 1 100%;
+              background: #ffffff;
+              padding: 42px 36px 0;
+              min-height: 253px;
+              box-sizing: border-box;
+              display: flex;
+              flex-wrap: wrap;
+              justify-content: space-between;
+              align-items: flex-start;
+              gap: 24px;
+            "
+          >
+            <div class="lbl" style="flex: 0 0 152px; font-size: 11px">&gt;_ Why Jiro</div>
+            <h2 class="h-most">
+              Most agents optimize for token maxing. Jiro optimizes for the change you would have made yourself, on a
+              good day.
+            </h2>
+          </div>
+          <div class="frow">
+            <div class="ftext" style="flex: 621 1 0; min-width: 320px">
+              <div class="fnum">01</div>
+              <h3 class="fh">Look at the codebase, tell me proactively what we need to do.</h3>
+              <p class="fp">
+                Jiro maps your repository before touching it, then comes back with a plan of what needs doing.
+              </p>
+              <a href="#pricing" class="flink" aria-label="See pricing"
+                ><span class="chevs" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+              ></a>
+            </div>
+            <div class="fimg" style="flex: 609 1 0; min-width: 320px; background: #fb5e45">
+              <div
+                class="fpanel"
+                role="img"
+                aria-label="Animation: Jiro maps a repository and writes a plan"
+                style="background: #132a1e; color: #faf8f2; box-shadow: inset 0 0 0 1px #2b4a38"
+              >
+                <div class="fbar" style="border-bottom: 1px solid #2b4a38; color: #8fa89a">
+                  <span
+                    style="position: relative; display: block; flex: none; width: 64px; height: 28px; margin-left: -8px"
+                    data-px="f1Face"
+                  ></span
+                  ><span>mapping services/payments</span
+                  ><span data-bind="f1Stat" style="margin-left: auto; color: #2bff6b">plan ready</span>
+                </div>
+                <div style="flex: 1; display: flex; min-height: 0">
+                  <div class="fcol" style="flex: 1 1 50%; border-right: 1px solid #2b4a38">
+                    <div data-list="feat.f1Tree" style="display: contents"></div>
+                  </div>
+                  <div class="fcol" style="flex: 1 1 50%">
+                    <div class="fline" style="color: #8fa89a">plan</div>
+                    <div data-list="feat.f1Plan" style="display: contents"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="frow">
+            <div class="fimg" style="flex: 682 1 0; min-width: 320px; background: #2bff6b">
+              <div
+                class="fpanel"
+                role="img"
+                aria-label="Animation: a teammate mentions @jirobot in a thread and Jiro answers"
+                style="background: #ffffff; color: #0a0a0a; box-shadow: inset 0 0 0 2px #0a0a0a"
+              >
+                <div class="fbar" style="border-bottom: 2px solid #0a0a0a; color: #5c5c5c">
+                  <span># orders-team</span><span style="margin-left: auto">thread</span>
+                </div>
+                <div
+                  style="
+                    flex: 1;
+                    padding: 18px 20px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    gap: 12px;
+                  "
+                >
+                  <div data-list="feat.f2Msgs" style="display: contents"></div>
+                </div>
+              </div>
+            </div>
+            <div class="ftext" style="flex: 548 1 0; min-width: 320px">
+              <div class="fnum">02</div>
+              <h3 class="fh">Early ticket work, proactive question asking.</h3>
+              <p class="fp">
+                Jiro picks up tickets early and asks the questions that matter before writing code.
+              </p>
+              <a href="#pricing" class="flink" aria-label="See pricing"
+                ><span class="chevs" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+              ></a>
+            </div>
+          </div>
+          <div class="frow">
+            <div class="ftext" style="flex: 621 1 0; min-width: 320px">
+              <div class="fnum">03</div>
+              <h3 class="fh">Be proactive about what would make the code better for agents.</h3>
+              <p class="fp">
+                Jiro flags what would make your codebase easier for agents to work in, and offers to fix it.
+              </p>
+              <a href="#pricing" class="flink" aria-label="See pricing"
+                ><span class="chevs" aria-hidden="true"><i></i><i></i><i></i><i></i></span
+              ></a>
+            </div>
+            <div class="fimg" style="flex: 609 1 0; min-width: 320px; background: #1d3b2a">
+              <div
+                class="fpanel"
+                role="img"
+                aria-label="Animation: Jiro's pull request passes checks and is merged"
+                style="background: #ffffff; color: #0a0a0a; box-shadow: inset 0 0 0 2px #0a0a0a"
+              >
+                <div class="fbar" style="border-bottom: 2px solid #0a0a0a">
+                  <span
+                    style="
+                      font-family: &quot;Sohne&quot;, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
+                      font-weight: 400;
+                      font-size: var(--fs-sm);
+                      letter-spacing: 0;
+                      text-transform: none;
+                    "
+                    >#1284 Bulk actions for the orders table</span
+                  ><span
+                    data-bind="f3Pill"
+                    style="margin-left: auto; padding: 3px 7px; font-size: 10px; background: #fb5e45; color: #0a0a0a"
+                    >Merged</span
+                  >
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column">
+                  <div class="fcol" style="border-bottom: 1px solid #dadad4">
+                    <div data-list="feat.f3Checks" style="display: contents"></div>
+                  </div>
+                  <div class="fcol" style="flex: 1"><div data-list="feat.f3Diff" style="display: contents"></div></div>
+                  <div
+                    class="fbar"
+                    style="border-top: 1px solid #dadad4; color: #5c5c5c; font-weight: 400; opacity: 1"
+                    data-bind="f3Foot"
+                  >
+                    merged by you · 2 files · +38 -6
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-.shell { position: relative; z-index: 1; min-height: 100%; max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; }
+        <section id="pricing" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
+          <div
+            class="sec-head"
+            style="
+              flex: 1 1 100%;
+              background: #ffffff;
+              padding: 40px 36px 26px;
+              box-sizing: border-box;
+              display: flex;
+              flex-direction: column;
+              gap: 18px;
+            "
+          >
+            <div class="lbl" style="font-size: 11px">&gt;_ Pricing</div>
+            <h2 class="h-sec">Not market price.</h2>
+          </div>
+          <div
+            class="tier"
+            style="flex: 1 1 300px; min-width: 0; background: #ffffff; display: flex; flex-direction: column"
+          >
+            <div
+              aria-hidden="true"
+              class="tface"
+              style="
+                height: 121px;
+                padding: 0 28px;
+                box-sizing: border-box;
+                border-bottom: 2px solid #0a0a0a;
+                display: flex;
+                align-items: center;
+              "
+            >
+              <span style="position: relative; display: block; width: 170px; height: 60px"
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 0px;
+                    top: 0px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 0px;
+                    top: 5px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 5px;
+                    top: 10px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 10px;
+                    top: 15px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 15px;
+                    top: 20px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 20px;
+                    top: 25px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 20px;
+                    top: 30px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 115px;
+                    top: 30px;
+                    width: 55px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 15px;
+                    top: 35px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 115px;
+                    top: 35px;
+                    width: 55px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 10px;
+                    top: 40px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 5px;
+                    top: 45px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 55px;
+                    top: 45px;
+                    width: 50px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 0px;
+                    top: 50px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 55px;
+                    top: 50px;
+                    width: 50px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 0px;
+                    top: 55px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 55px;
+                    top: 55px;
+                    width: 50px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+              ></span>
+            </div>
+            <div style="padding: 32px 28px 27px; display: flex; flex-direction: column; flex: 1">
+              <span class="tname">Single Developer Seat</span>
+              <div style="margin-top: 26px; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap">
+                <span class="tprice">$99</span
+                ><span class="tsub" style="font-size: 13.5px; color: #3d3d3d">/ month, per developer</span>
+              </div>
+              <ul class="tbul">
+                <li>1 developer</li>
+                <li>Up to 3 agents</li>
+                <li>Bring your own subscription</li>
+              </ul>
+              <a href="#reserve" class="btn btn-line tbtn"><span>Get early access</span></a>
+            </div>
+          </div>
+          <div
+            class="tier"
+            style="flex: 1 1 300px; min-width: 0; background: #ffffff; display: flex; flex-direction: column"
+          >
+            <div
+              aria-hidden="true"
+              class="tface"
+              style="
+                height: 121px;
+                padding: 0 28px;
+                box-sizing: border-box;
+                border-bottom: 2px solid #0a0a0a;
+                display: flex;
+                align-items: center;
+              "
+            >
+              <span style="position: relative; display: block; width: 170px; height: 60px"
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 0px;
+                    top: 0px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 0px;
+                    top: 5px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 140px;
+                    top: 5px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 5px;
+                    top: 10px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 140px;
+                    top: 10px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 10px;
+                    top: 15px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 120px;
+                    top: 15px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 140px;
+                    top: 15px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 160px;
+                    top: 15px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 15px;
+                    top: 20px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 125px;
+                    top: 20px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 140px;
+                    top: 20px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 155px;
+                    top: 20px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 20px;
+                    top: 25px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 130px;
+                    top: 25px;
+                    width: 30px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 20px;
+                    top: 30px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 130px;
+                    top: 30px;
+                    width: 30px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 15px;
+                    top: 35px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 125px;
+                    top: 35px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 140px;
+                    top: 35px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 155px;
+                    top: 35px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 10px;
+                    top: 40px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 120px;
+                    top: 40px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 140px;
+                    top: 40px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 160px;
+                    top: 40px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 5px;
+                    top: 45px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 55px;
+                    top: 45px;
+                    width: 50px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 140px;
+                    top: 45px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 0px;
+                    top: 50px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 55px;
+                    top: 50px;
+                    width: 50px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 140px;
+                    top: 50px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 0px;
+                    top: 55px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 55px;
+                    top: 55px;
+                    width: 50px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+              ></span>
+            </div>
+            <div style="padding: 32px 28px 27px; display: flex; flex-direction: column; flex: 1">
+              <span class="tname">Jiro for Teams</span>
+              <div style="margin-top: 26px; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap">
+                <span class="tprice">$250</span
+                ><span class="tsub" style="font-size: 13.5px; color: #3d3d3d">/ month, per team</span>
+              </div>
+              <ul class="tbul">
+                <li>Unlimited seats</li>
+                <li>5 shared agents</li>
+                <li>Bring your own subscription</li>
+              </ul>
+              <a href="#reserve" class="btn btn-line tbtn"><span>Get early access</span></a>
+            </div>
+          </div>
+          <div
+            class="tier"
+            style="flex: 1 1 300px; min-width: 0; background: #ffffff; display: flex; flex-direction: column"
+          >
+            <div
+              aria-hidden="true"
+              class="tface"
+              style="
+                height: 121px;
+                padding: 0 28px;
+                box-sizing: border-box;
+                border-bottom: 2px solid #0a0a0a;
+                display: flex;
+                align-items: center;
+              "
+            >
+              <span style="position: relative; display: block; width: 170px; height: 60px"
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 0px;
+                    top: 0px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 135px;
+                    top: 0px;
+                    width: 20px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 0px;
+                    top: 5px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 130px;
+                    top: 5px;
+                    width: 30px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 5px;
+                    top: 10px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 125px;
+                    top: 10px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 155px;
+                    top: 10px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 10px;
+                    top: 15px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 120px;
+                    top: 15px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 160px;
+                    top: 15px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 15px;
+                    top: 20px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 120px;
+                    top: 20px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 160px;
+                    top: 20px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 20px;
+                    top: 25px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 120px;
+                    top: 25px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 140px;
+                    top: 25px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 160px;
+                    top: 25px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 20px;
+                    top: 30px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 120px;
+                    top: 30px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 140px;
+                    top: 30px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 160px;
+                    top: 30px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 15px;
+                    top: 35px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 120px;
+                    top: 35px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 160px;
+                    top: 35px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 10px;
+                    top: 40px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 120px;
+                    top: 40px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 160px;
+                    top: 40px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 5px;
+                    top: 45px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 55px;
+                    top: 45px;
+                    width: 50px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 125px;
+                    top: 45px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 155px;
+                    top: 45px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 0px;
+                    top: 50px;
+                    width: 15px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 55px;
+                    top: 50px;
+                    width: 50px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 130px;
+                    top: 50px;
+                    width: 30px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 0px;
+                    top: 55px;
+                    width: 10px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 55px;
+                    top: 55px;
+                    width: 50px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+                ><span
+                  style="
+                    position: absolute;
+                    display: block;
+                    left: 135px;
+                    top: 55px;
+                    width: 20px;
+                    height: 5px;
+                    background: #fb5e45;
+                  "
+                ></span
+              ></span>
+            </div>
+            <div style="padding: 32px 28px 27px; display: flex; flex-direction: column; flex: 1">
+              <span class="tname">Enterprise</span>
+              <div style="margin-top: 26px; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap">
+                <span class="tprice">Custom</span>
+              </div>
+              <a href="#reserve" class="btn btn-line tbtn"><span>Talk to us</span></a>
+            </div>
+          </div>
+        </section>
+        <div
+          style="
+            background: #ffffff;
+            box-shadow: inset 0 0 0 2px #0a0a0a;
+            padding: 16px 36px;
+            font-size: 13.5px;
+            line-height: 21px;
+            color: #3d3d3d;
+          "
+        >
+          Bring your own model subscription. No token markup. Agents sleep when idle.
+        </div>
 
-/* Shared label style */
-.label { font-family: var(--font); font-weight: 500; font-size: 16px; letter-spacing: 0.12em; font-variant-caps: all-small-caps; }
+        <section id="compare" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
+          <div
+            class="sec-head"
+            style="
+              flex: 1 1 100%;
+              background: #ffffff;
+              padding: 40px 36px 32px;
+              box-sizing: border-box;
+              display: flex;
+              flex-direction: column;
+              gap: 18px;
+            "
+          >
+            <div class="lbl" style="font-size: 11px">&gt;_ Compare</div>
+            <h2 class="h-sec">The Bake-off.</h2>
+            <p style="margin: -2px 0 0; font-size: 15px; line-height: 1.4; color: #3d3d3d">
+              Jiro is the control plane for agents. It handles the painful parts: memory, security, RBAC, integrations,
+              and automations. One person sets up Jiro one time, and everyone can start using it without any additional
+              setup on their end.
+            </p>
+          </div>
+          <div class="cscroll" style="flex: 1 1 100%; min-width: 0; background: #ffffff; overflow-x: auto">
+            <div class="ctable" style="min-width: 960px; font-size: 13.5px; line-height: 1.4">
+              <div style="display: grid; grid-template-columns: var(--ccols); align-items: stretch; height: 75px">
+                <div
+                  style="
+                    padding: 0 20px 18px;
+                    display: flex;
+                    align-items: flex-end;
+                    font-family: &quot;JetBrains Mono&quot;, monospace;
+                    font-weight: 600;
+                    font-size: 10px;
+                    letter-spacing: 0.06em;
+                    text-transform: uppercase;
+                    color: #5c5c5c;
+                  "
+                >
+                  Compare
+                </div>
+                <div style="padding: 0 22px 18px; background: #2bff6b; display: flex; align-items: flex-end">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 12px;
+                      font-family: &quot;Sohne&quot;, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
+                      font-weight: 600;
+                      font-size: 28px;
+                      line-height: 1;
+                      letter-spacing: -0.045em;
+                    "
+                  >
+                    <span
+                      aria-hidden="true"
+                      style="position: relative; display: block; flex: none; width: 54px; height: 24px"
+                      data-px="logoW"
+                    ></span
+                    ><span>jiro.bot</span>
+                  </div>
+                </div>
+                <div class="chd">Claude Tag</div>
+                <div class="chd">Devin</div>
+                <div class="chd">Cursor Cloud</div>
+              </div>
+              <div
+                class="crow"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+              >
+                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
+                  <span>Agent</span>
+                </div>
+                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
+                  <span>Claude Code, Codex, Gemini CLI, pi, Cursor Agent, Goose, Copilot, or your own</span>
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Claude only
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Devin only
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Cursor only
+                </div>
+              </div>
+              <div
+                class="crow"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+              >
+                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
+                  <span>Model</span>
+                </div>
+                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
+                  <span>Any model, your keys</span>
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Anthropic only
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  routed for you
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Cursor's catalogue
+                </div>
+              </div>
+              <div
+                class="crow"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+              >
+                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
+                  <span>Context</span>
+                </div>
+                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
+                  <span>Org-wide, portable</span>
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Claude memories
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  API export
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  proprietary rules
+                </div>
+              </div>
+              <div
+                class="crow"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+              >
+                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
+                  <span>Cloud</span>
+                </div>
+                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
+                  <span>AWS · Azure · GCP, your VPC</span>
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Anthropic only
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  hosted (VPC on contract)
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  hosted only
+                </div>
+              </div>
+              <div
+                class="crow"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+              >
+                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
+                  <span>Pricing</span>
+                </div>
+                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
+                  <span>Flat, zero token markup</span>
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  API tokens, high volume
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  credits (token markup)
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  metered, per model
+                </div>
+              </div>
+              <div style="border-top: 2px solid #0a0a0a; padding: 13px 20px; font-size: 12px; color: #5c5c5c">
+                Competitor pricing from public pages, October 2026.
+              </div>
+            </div>
+          </div>
+        </section>
 
-main { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 36px; padding-block: 48px; }
+        <section id="faq" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
+          <div
+            class="faq-col"
+            style="
+              flex: 779 1 0;
+              min-width: 320px;
+              background: #ffffff;
+              padding: 40px 35px 30px;
+              box-sizing: border-box;
+              display: flex;
+              flex-direction: column;
+              gap: 18px;
+            "
+          >
+            <div class="lbl" style="font-size: 11px">&gt;_ FAQ</div>
+            <div style="display: flex; flex-direction: column">
+              <details open="" class="fq">
+                <summary><span>Who is Jiro?</span><span class="pl" aria-hidden="true">+</span></summary>
+                <p>
+                  An autonomous software engineer you call into a conversation. He takes on a task, raises concerns
+                  early, and hands back a pull request for review.
+                </p>
+              </details>
+              <details class="fq">
+                <summary>
+                  <span>Which coding agents can I run?</span><span class="pl" aria-hidden="true">+</span>
+                </summary>
+                <p>
+                  Claude Code, Codex, Cursor, DeepSeek, Pi, Gemini, and Goose. Any agent that speaks the
+                  Agent Client Protocol can be plugged into the Jiro ecosystem. Every agent runs on the
+                  same environment primitives, so you can mix agents across tasks or run several inside
+                  one workspace.
+                </p>
+              </details>
+              <details class="fq">
+                <summary>
+                  <span>What repositories can I use?</span><span class="pl" aria-hidden="true">+</span>
+                </summary>
+                <p>
+                  Any GitHub repository you have access to. Connect your GitHub account and select which
+                  repos to enable.
+                </p>
+              </details>
+              <details class="fq">
+                <summary>
+                  <span>Can it work with our non-engineering tools?</span><span class="pl" aria-hidden="true">+</span>
+                </summary>
+                <p>
+                  Jiro works with HubSpot, Google Sheets, Google Drive, Notion, Linear, Jira, Stripe,
+                  and Gmail, plus hundreds more. One agent across the stack, scoped per person, rather
+                  than a pile of logins. Ops, finance, and data teams describe the work in Slack or
+                  Teams the way they would ask a teammate. No CLI and no new dashboard.
+                </p>
+              </details>
+              <details class="fq">
+                <summary>
+                  <span>What does an agent's environment look like?</span><span class="pl" aria-hidden="true">+</span>
+                </summary>
+                <p>
+                  Each agent works in a single-tenant cloud environment with your repository, tools,
+                  dependencies, and access credentials layered in. No separate OAuth process for each
+                  tool or platform.
+                </p>
+              </details>
+              <details class="fq">
+                <summary>
+                  <span>How does billing work?</span><span class="pl" aria-hidden="true">+</span>
+                </summary>
+                <p>
+                  Plans are sized by runtimes. Developer gives one user up to three persistent runtimes,
+                  and Team gives multiple users five shared ones. Enterprise sets capacity to fit.
+                  Runtimes sleep when idle and wake on demand.
+                </p>
+              </details>
+              <details class="fq">
+                <summary>
+                  <span>Is the output always a pull request?</span><span class="pl" aria-hidden="true">+</span>
+                </summary>
+                <p>
+                  Agents can return a pull request, commit, comment, or completed task for you to
+                  review, merge, or send back. An output can also be a file when that is what the work
+                  produces: a document, a spreadsheet, a presentation, or another office artifact.
+                </p>
+              </details>
+              <details class="fq">
+                <summary>
+                  <span>Why use cloud agents?</span><span class="pl" aria-hidden="true">+</span>
+                </summary>
+                <p>
+                  Jiro is a cloud coding agent on a virtual machine that has your repos, credentials,
+                  and team context layered in. You hand off a task the way you would to a junior
+                  colleague, the agent works while you are on the road, and you can check in from your
+                  phone. Tasks can come from a Slack mention, a cron schedule, or a Linear ticket, so
+                  work starts without anyone at a keyboard.
+                </p>
+              </details>
+              <details class="fq" style="border-bottom: 0">
+                <summary><span>Who makes Jiro</span><span class="pl" aria-hidden="true">+</span></summary>
+                <p>Jiro is built by the Nori team.</p>
+              </details>
+            </div>
+          </div>
+          <div
+            class="reserve-col"
+            id="reserve"
+            style="
+              flex: 487 1 0;
+              min-width: 320px;
+              background: #0a0a0a;
+              color: #ffffff;
+              padding: 40px 37px 0;
+              box-sizing: border-box;
+              display: flex;
+              flex-direction: column;
+              gap: 18px;
+            "
+          >
+            <div class="lbl" style="color: #fb5e45; font-size: 11px">&gt;_ Reserve a seat</div>
+            <h2 class="h-res">Pull up a stool at the counter.</h2>
+            <p style="margin: -4px 0 0; max-width: 24em; font-size: 15px; line-height: 22px; color: #cfcfcb">
+              Get on the list. We'll set Jiro up with your team in a 30-minute call.
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <label
+                for="email"
+                style="
+                  font-family: &quot;JetBrains Mono&quot;, monospace;
+                  font-weight: 500;
+                  font-size: 10px;
+                  letter-spacing: 0.06em;
+                  text-transform: uppercase;
+                  color: #9a9f9a;
+                "
+                >Work email</label
+              >
+              <input
+                id="email"
+                type="email"
+                placeholder="you@company.com"
+                style="
+                  height: 43px;
+                  padding: 0 14px;
+                  box-sizing: border-box;
+                  border: 0;
+                  background: #ffffff;
+                  color: #0a0a0a;
+                  font-family: &quot;JetBrains Mono&quot;, monospace;
+                  font-size: var(--fs-caption);
+                "
+              />
+              <button
+                type="button"
+                class="btn btn-hot"
+                data-early-access
+                style="
+                  height: 43px;
+                  padding: 0 16px;
+                  border: 0;
+                  background-color: #fb5e45;
+                  color: #0a0a0a;
+                  display: flex;
+                  align-items: center;
+                  font-family: &quot;JetBrains Mono&quot;, monospace;
+                  font-weight: 600;
+                  font-size: var(--fs-caption);
+                  letter-spacing: 0.08em;
+                  text-transform: uppercase;
+                  cursor: pointer;
+                "
+              >
+                <span>Get early access</span>
+              </button>
+            </div>
+            <div style="margin-top: auto; padding: 8px 0 74px; display: flex; flex-direction: column">
+              <div
+                role="img"
+                aria-label="A sushi counter lined with stools; the green one, blinking, is open for you"
+                style="position: relative; margin: 0 -37px; aspect-ratio: 94 / 19; overflow: hidden"
+                data-px="counter"
+              ></div>
+            </div>
+          </div>
+        </section>
+      </main>
 
-.stage { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; }
-#jiro { display: block; }
-
-.signup {
-  display: inline-flex; align-items: center; text-decoration: none;
-  color: var(--btn-fg); background: var(--btn); border: 0; cursor: pointer;
-  padding: 14px 24px; min-height: 44px;
-  box-shadow: 0 0 0 3px var(--btn-edge), 6px 6px 0 3px var(--btn-edge);
-  transition: transform 90ms ease-out, box-shadow 90ms ease-out, background-color 90ms ease-out;
-}
-.signup:hover { background: var(--btn-hover); transform: translate(3px, 3px); box-shadow: 0 0 0 3px var(--btn-edge), 3px 3px 0 3px var(--btn-edge); }
-.signup:active { transform: translate(6px, 6px); box-shadow: 0 0 0 3px var(--btn-edge), 0 0 0 3px var(--btn-edge); }
-.signup:focus-visible { outline: 3px solid var(--apricot); outline-offset: 8px; }
-
-@media (prefers-reduced-motion: reduce) {
-  .signup { transition: none; }
-}
-</style>
-</head>
-<body>
-
-<canvas id="heat" aria-hidden="true"></canvas>
-
-<div class="shell">
-  <main>
-    <div class="stage">
-      <canvas id="jiro" width="252" height="238" role="img" aria-label="Jiro, a pixel onigiri"></canvas>
-      <a class="signup label" href="https://login.norisessions.com/?signup=1&amp;entrypoint=jiro">sign up ›</a>
+      <footer
+        id="footer"
+        style="
+          margin: 12px 0 0;
+          background: #fb5e45;
+          box-shadow: inset 0 0 0 2px #0a0a0a;
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+        "
+      >
+        <div
+          class="foot-bar"
+          style="
+            height: 39px;
+            padding: 0 37px;
+            box-sizing: border-box;
+            border-bottom: 2px solid #0a0a0a;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px 24px;
+            font-family: &quot;JetBrains Mono&quot;, monospace;
+            font-weight: 600;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #0a0a0a;
+          "
+        >
+          <span>Built on Nori</span
+          ><span style="display: flex; gap: 24px"
+            ><a href="#pricing" style="color: inherit">Pricing</a><a href="#faq" style="color: inherit">FAQ</a
+            ><a href="#reserve" style="color: inherit">Get early access</a></span
+          ><span>2026</span>
+        </div>
+        <div class="foot-mark" style="padding: 88px 37px 87px">
+          <div
+            role="img"
+            aria-label="jiro.bot"
+            style="position: relative; width: 100%; height: 213px"
+            data-px="wordmark"
+          ></div>
+        </div>
+      </footer>
     </div>
-  </main>
-</div>
-
-<script>
-(function () {
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-  /* ---------- Jiro sprite (exact 16x14 onigiri, new palette) ---------- */
-  var BODY = [
-    "......oooo......",
-    ".....owwwwo.....",
-    "....owwwwwwo....",
-    "....owwwwwso....",
-    "...owwwwwwwso...",
-    "...owwwwwwwso...",
-    "..owwwwwwwwwso..",
-    "..owwwwwwwwwso..",
-    ".owwwnnnnnwwwso.",
-    ".owwnnnnnnnwsso.",
-    "owwwnnnnnnnwwsso",
-    "owwwnnnnnnnwssso",
-    ".oossnnnnnnnsso.",
-    "..oooooooooooo.."
-  ];
-  var PAL = { o: "#424242", w: "#f3eff5", s: "#d9d2de", n: "#24a148", k: "#424242", g: "#8f8a94", b: "#ed9b40", sh: "#424242" };
-  var S = 14;                                      // one art pixel = one background cell
-  var GW = 18, GH = 17, BX = 1, BY = 2;
-  var jc = document.getElementById("jiro");
-  var jx = jc.getContext("2d");
-  var jdpr = Math.min(window.devicePixelRatio || 1, 2);
-  jc.width = GW * S * jdpr; jc.height = GH * S * jdpr;
-  jc.style.width = GW * S + "px"; jc.style.height = GH * S + "px";
-  jx.setTransform(jdpr, 0, 0, jdpr, 0, 0);
-
-  var HOP = [1, 2, 2, 2, 1, "q", 0];               // pixels up per frame; "q" = landing squash
-  var FRAME_MS = 70;
-  var anim = null, hovering = false;
-
-  function px(x, y, c) { jx.fillStyle = c; jx.fillRect(x * S, y * S, S, S); }
-
-  function draw(lift, squash, happy) {
-    jx.clearRect(0, 0, GW * S, GH * S);
-
-    var sw = 10 - lift * 2, sx = BX + 8 - sw / 2;
-    jx.globalAlpha = 0.18;
-    for (var i = 0; i < sw; i++) px(sx + i, BY + 14, PAL.sh);
-    jx.globalAlpha = 1;
-
-    var oy = BY - lift;
-    for (var r = 0; r < BODY.length; r++) {
-      if (squash && r === 1) continue;
-      var yy = oy + r + (squash && r === 0 ? 1 : 0);
-      for (var c = 0; c < 16; c++) { var ch = BODY[r][c]; if (ch !== ".") px(BX + c, yy, PAL[ch]); }
-    }
-
-    if (happy) {
-      // eyes raised one row, a gray outer pixel hints the ^ arc; resting dot mouth
-      px(BX + 5, oy + 4, PAL.k); px(BX + 9, oy + 4, PAL.k);
-      px(BX + 4, oy + 5, PAL.g); px(BX + 10, oy + 5, PAL.g);
-      px(BX + 7, oy + 6, PAL.k);
-    } else {
-      px(BX + 5, oy + 5, PAL.k); px(BX + 9, oy + 5, PAL.k);
-      px(BX + 7, oy + 6, PAL.k);
-    }
-    px(BX + 4, oy + 6, PAL.b); px(BX + 10, oy + 6, PAL.b);
-  }
-
-  function rest() { draw(0, false, hovering); }
-
-  function hop() {
-    if (reduce.matches) { rest(); return; }
-    if (anim) return;
-    var start = performance.now();
-    anim = function (now) {
-      var f = Math.floor((now - start) / FRAME_MS);
-      if (f >= HOP.length) { anim = null; rest(); return; }
-      var v = HOP[f];
-      draw(v === "q" ? 0 : v, v === "q", true);
-      requestAnimationFrame(anim);
-    };
-    requestAnimationFrame(anim);
-  }
-
-  jc.addEventListener("pointerenter", function () { hovering = true; hop(); if (!anim) rest(); });
-  jc.addEventListener("pointerleave", function () { hovering = false; if (!anim) rest(); });
-
-  rest();
-  setTimeout(hop, 350);
-
-  /* ---------- Pixel heat background ---------- */
-  var canvas = document.getElementById("heat");
-  var ctx = canvas.getContext("2d");
-  var PITCH = S, GAP = 2, CELL = PITCH - GAP, OX = 0, OY = 0;   // grid snapped to the sprite pixels
-  var cols = 0, rows = 0, base, heat, shown, colors = [], bg = "#f3eff5";
-  var BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(function (v) { return (v + 0.5) / 16; });
-
-  function readColors() {
-    var cs = getComputedStyle(document.documentElement);
-    colors = ["--h0", "--h1", "--h2", "--h3", "--h4"].map(function (v) { return cs.getPropertyValue(v).trim(); });
-    bg = cs.getPropertyValue("--bg").trim();
-  }
-  function hash(x, y) { var s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return s - Math.floor(s); }
-  function noise(x, y) {
-    var xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
-    var u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
-    var a = hash(xi, yi), b = hash(xi + 1, yi), c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
-    return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
-  }
-  function level(i, c, r) {
-    var v = base[i] + heat[i], f = Math.floor(v), t = BAYER[(r & 3) * 4 + (c & 3)];
-    return Math.min(4, f + (v - f > t ? 1 : 0));
-  }
-  function drawCell(c, r, lv) { ctx.fillStyle = colors[lv]; ctx.fillRect(OX + (c - 1) * PITCH + GAP / 2, OY + (r - 1) * PITCH + GAP / 2, CELL, CELL); }
-  function fullDraw() {
-    ctx.fillStyle = bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
-    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
-      var i = r * cols + c, lv = level(i, c, r); shown[i] = lv; drawCell(c, r, lv);
-    }
-  }
-  function resize() {
-    var dpr = Math.min(window.devicePixelRatio || 1, 2), w = window.innerWidth, h = window.innerHeight;
-    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var jr = jc.getBoundingClientRect();
-    OX = ((Math.round(jr.left) % PITCH) + PITCH) % PITCH; OY = ((Math.round(jr.top) % PITCH) + PITCH) % PITCH;
-    var oc = cols, oh = heat;
-    cols = Math.ceil(w / PITCH) + 2; rows = Math.ceil(h / PITCH) + 2;
-    base = new Float32Array(cols * rows); heat = new Float32Array(cols * rows); shown = new Int8Array(cols * rows);
-    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
-      var n = noise(c * 0.085, r * 0.085) * 0.8 + noise(c * 0.25 + 40, r * 0.25) * 0.35;
-      base[r * cols + c] = Math.max(0, n - 0.42) * 1.5;
-    }
-    if (oh && oc) {
-      var orows = oh.length / oc;
-      for (var r2 = 0; r2 < Math.min(rows, orows); r2++) for (var c2 = 0; c2 < Math.min(cols, oc); c2++) heat[r2 * cols + c2] = oh[r2 * oc + c2];
-    }
-    fullDraw();
-  }
-  function stamp(x, y, amt) {
-    var cc = (x - OX) / PITCH + 1, rr = (y - OY) / PITCH + 1, R = 5;
-    var c0 = Math.max(0, Math.floor(cc - R)), c1 = Math.min(cols - 1, Math.ceil(cc + R));
-    var r0 = Math.max(0, Math.floor(rr - R)), r1 = Math.min(rows - 1, Math.ceil(rr + R));
-    for (var r = r0; r <= r1; r++) for (var c = c0; c <= c1; c++) {
-      var dx = c + 0.5 - cc, dy = r + 0.5 - rr, d = Math.sqrt(dx * dx + dy * dy);
-      if (d > R) continue;
-      var f = 1 - d / R, i = r * cols + c;
-      heat[i] = Math.min(3.6, heat[i] + amt * f * f);
-    }
-  }
-
-  var last = null, heatRunning = false;
-  window.addEventListener("pointermove", function (e) {
-    if (reduce.matches) return;
-    if (last) {
-      var dx = e.clientX - last.x, dy = e.clientY - last.y, dist = Math.sqrt(dx * dx + dy * dy);
-      var steps = Math.min(30, Math.max(1, Math.round(dist / (PITCH * 1.5))));
-      for (var s = 1; s <= steps; s++) stamp(last.x + dx * s / steps, last.y + dy * s / steps, 0.22);
-    } else stamp(e.clientX, e.clientY, 0.22);
-    last = { x: e.clientX, y: e.clientY };
-    if (!heatRunning) { heatRunning = true; requestAnimationFrame(stepHeat); }
-  }, { passive: true });
-  document.addEventListener("pointerleave", function () { last = null; });
-  window.addEventListener("blur", function () { last = null; });
-  window.addEventListener("resize", resize);
-
-  function stepHeat() {
-    var any = false;
-    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
-      var i = r * cols + c;
-      if (heat[i] > 0.02) { heat[i] *= 0.972; any = true; } else heat[i] = 0;
-      var lv = level(i, c, r);
-      if (lv !== shown[i]) { shown[i] = lv; drawCell(c, r, lv); }
-    }
-    if (any) requestAnimationFrame(stepHeat); else heatRunning = false;
-  }
-
-  function retheme() { readColors(); if (cols) fullDraw(); }
-  var mq = window.matchMedia("(prefers-color-scheme: dark)");
-  if (mq.addEventListener) mq.addEventListener("change", retheme);
-  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-
-  readColors();
-  resize();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(resize);
-})();
-</script>
-
-</body>
+    <dialog class="ea" id="early-access" aria-labelledby="ea-title">
+      <form class="ea-form" novalidate>
+        <button type="button" class="ea-close" aria-label="Close" data-ea-close>&times;</button>
+        <div class="ea-lbl">&gt;_ Early access</div>
+        <h2 class="ea-title" id="ea-title">Get early access to Jiro</h2>
+        <p class="ea-lede">We're onboarding every team in person. Sign up and we'll email you to book a 30-minute setup call.</p>
+        <label class="ea-field">Name<input name="name" autocomplete="name" required minlength="2" maxlength="160" /></label>
+        <label class="ea-field">Work email<input name="email" type="email" autocomplete="email" required maxlength="254" /></label>
+        <label class="ea-field">Organization<input name="org" autocomplete="organization" required maxlength="200" /></label>
+        <label class="ea-trap" aria-hidden="true">Leave this empty<input name="ea_hp" tabindex="-1" autocomplete="new-password" /></label>
+        <p class="ea-error" role="alert" hidden></p>
+        <button type="submit" class="btn btn-hot ea-submit"><span>Get early access</span></button>
+        <p class="ea-fine">We only use your details to contact you about Jiro early access. <a href="privacy.html">Privacy policy</a>.</p>
+      </form>
+      <div class="ea-done" hidden>
+        <button type="button" class="ea-close" aria-label="Close" data-ea-close>&times;</button>
+        <div class="ea-lbl">&gt;_ Almost there</div>
+        <h2 class="ea-title" tabindex="-1" data-ea-done-title>Check your inbox</h2>
+        <p class="ea-lede">We sent a confirmation link to <strong data-ea-email></strong>. Click it to hold your spot. The link expires in 24 hours.</p>
+      </div>
+    </dialog>
+    <script src="js/early-access.js" defer></script>
+    <script src="js/jiro-pixels.js" defer></script>
+    <script src="js/main.js" defer></script>
+  </body>
 </html>

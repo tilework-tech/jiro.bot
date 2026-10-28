@@ -1,0 +1,36 @@
+# Copy to .github/workflows/deploy-early-access.yml. Pushing workflow files needs
+# an admin-approved GitHub token, so this lives here until that is granted.
+# Infra (function, API, SES identity, deploy-role access) is infra/early-access.cfn.yaml.
+name: Deploy early access
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: deploy-early-access
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # The deploy role trusts only main, and only without a GitHub environment.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Test
+        working-directory: lambda/early-access
+        run: npm ci && npm test
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::870844658207:role/github-actions-jiro-bot-deploy
+          aws-region: us-east-1
+      - name: Update Lambda code
+        run: bash lambda/early-access/deploy.sh

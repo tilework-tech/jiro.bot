@@ -1,1 +1,5 @@
 __pycache__/
+node_modules/
+.DS_Store
+# Söhne trial fonts are licensed for development only; never publish them.
+site/fonts/Sohne*.woff2

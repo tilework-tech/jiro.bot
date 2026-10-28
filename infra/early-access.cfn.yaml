@@ -1,0 +1,235 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Early-access sign-up for jiro.bot: SES sending identity (DKIM + DMARC in
+  Route 53), the jirobot-early-access Lambda behind a throttled HTTP API, and
+  permission for the jiro.bot deploy role to update the function's code.
+  The function starts with placeholder code; real code ships only through the
+  "Deploy early access" GitHub Actions workflow.
+
+Parameters:
+  DomainName:
+    Type: String
+    Default: jiro.bot
+
+  HostedZoneId:
+    Type: AWS::Route53::HostedZone::Id
+    Default: Z05729413D5MHTW3NNZHL
+
+  FunctionName:
+    Type: String
+    Default: jirobot-early-access
+
+  DeployRoleName:
+    Type: String
+    Default: github-actions-jiro-bot-deploy
+
+  FromAddress:
+    Type: String
+    Default: Martin Stuebler <martin@jiro.bot>
+
+  ReplyToAddress:
+    Type: String
+    Default: martin@noriagentic.com
+
+  ClarifyWorkspace:
+    Type: String
+    Default: noriagentic
+
+  ClarifyApiKey:
+    Type: String
+    NoEcho: true
+    Description: Clarify API key that can edit People records. "pending" until one is issued.
+    Default: pending
+
+  ConfirmSecret:
+    Type: String
+    NoEcho: true
+    MinLength: 32
+    Description: HMAC key for confirm links. Rotating it invalidates every outstanding link.
+
+Resources:
+  # ---------- email ----------
+  EmailIdentity:
+    Type: AWS::SES::EmailIdentity
+    Properties:
+      EmailIdentity: !Ref DomainName
+      DkimSigningAttributes:
+        NextSigningKeyLength: RSA_2048_BIT
+
+  DkimRecord1:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !GetAtt EmailIdentity.DkimDNSTokenName1
+      Type: CNAME
+      TTL: '1800'
+      ResourceRecords: [!GetAtt EmailIdentity.DkimDNSTokenValue1]
+
+  DkimRecord2:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !GetAtt EmailIdentity.DkimDNSTokenName2
+      Type: CNAME
+      TTL: '1800'
+      ResourceRecords: [!GetAtt EmailIdentity.DkimDNSTokenValue2]
+
+  DkimRecord3:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !GetAtt EmailIdentity.DkimDNSTokenName3
+      Type: CNAME
+      TTL: '1800'
+      ResourceRecords: [!GetAtt EmailIdentity.DkimDNSTokenValue3]
+
+  # Gmail and Yahoo require DMARC from bulk senders; p=none only reports.
+  DmarcRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Sub _dmarc.${DomainName}
+      Type: TXT
+      TTL: '1800'
+      ResourceRecords: ['"v=DMARC1; p=none"']
+
+  # ---------- function ----------
+  FunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: { Service: lambda.amazonaws.com }
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: send-from-jiro-bot
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: ses:SendEmail
+                Resource: !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/${DomainName}
+
+  FunctionLogs:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${FunctionName}
+      RetentionInDays: 30
+
+  Function:
+    Type: AWS::Lambda::Function
+    DependsOn: FunctionLogs
+    Properties:
+      FunctionName: !Ref FunctionName
+      Runtime: nodejs22.x
+      Handler: index.handler
+      Role: !GetAtt FunctionRole.Arn
+      # Two Clarify calls at 4 s each, plus SES; the default 3 s would cut off the retry page.
+      Timeout: 15
+      MemorySize: 256
+      Environment:
+        Variables:
+          CONFIRM_SECRET: !Ref ConfirmSecret
+          CLARIFY_API_KEY: !Ref ClarifyApiKey
+          CLARIFY_WORKSPACE: !Ref ClarifyWorkspace
+          FROM_ADDRESS: !Ref FromAddress
+          REPLY_TO_ADDRESS: !Ref ReplyToAddress
+          SITE_ORIGIN: !Sub https://${DomainName}
+      Code:
+        ZipFile: |
+          exports.handler = async () => ({ statusCode: 503, body: "not deployed yet" });
+
+  # ---------- HTTP API ----------
+  Api:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: !Ref FunctionName
+      ProtocolType: HTTP
+
+  Integration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref Api
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !GetAtt Function.Arn
+      PayloadFormatVersion: '2.0'
+
+  SignupRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref Api
+      RouteKey: POST /signup
+      Target: !Sub integrations/${Integration}
+
+  SignupPreflightRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref Api
+      RouteKey: OPTIONS /signup
+      Target: !Sub integrations/${Integration}
+
+  ConfirmPageRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref Api
+      RouteKey: GET /confirm
+      Target: !Sub integrations/${Integration}
+
+  ConfirmRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref Api
+      RouteKey: POST /confirm
+      Target: !Sub integrations/${Integration}
+
+  # No access logging: confirm URLs carry the sign-up in readable base64.
+  Stage:
+    Type: AWS::ApiGatewayV2::Stage
+    DependsOn: [SignupRoute, SignupPreflightRoute, ConfirmPageRoute, ConfirmRoute]
+    Properties:
+      ApiId: !Ref Api
+      StageName: $default
+      AutoDeploy: true
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 20
+        ThrottlingRateLimit: 5
+      # Each sign-up sends an email; keep a scripted flood small.
+      RouteSettings:
+        POST /signup:
+          ThrottlingBurstLimit: 5
+          ThrottlingRateLimit: 1
+
+  InvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref Function
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${Api}/*
+
+  # ---------- deploy ----------
+  DeployRoleFunctionAccess:
+    Type: AWS::IAM::RolePolicy
+    Properties:
+      RoleName: !Ref DeployRoleName
+      PolicyName: update-early-access-code
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - lambda:UpdateFunctionCode
+              - lambda:GetFunction
+              - lambda:GetFunctionConfiguration
+            Resource: !GetAtt Function.Arn
+
+Outputs:
+  SignupEndpoint:
+    Description: Value for <meta name="early-access-endpoint"> in site/index.html
+    Value: !Sub ${Api.ApiEndpoint}/signup
+  FunctionName:
+    Value: !Ref Function
