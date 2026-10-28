@@ -6,6 +6,7 @@ Path: @/tools
 
 - Standalone stdlib-only Python scripts around the page generator: a pre-publish gate, two Gemini-backed AEO measurements, a copy-overlap check and a local preview server.
 - Only [lint.py](lint.py) is a hard gate; the others measure or support review.
+- [copy-editor/](copy-editor/docs.md) is a separate preview server and inline copy editor for the hand-written landing page only; it does not serve the generated pages.
 
 ### How it fits into the larger codebase
 
@@ -23,7 +24,7 @@ Path: @/tools
 | [grade_page.py](grade_page.py) | LLM judge scoring each built `.md` 0-2 on direct_answer, extractable, specific, entity_clarity, claims_risk and freshness against the record's `question`; also returns the answer an engine would give and a suggested fix. Optional slug arguments limit which pages are graded |
 | [aeo_probe.py](aeo_probe.py) | Asks Gemini with Google Search grounding a fixed question panel (baseline how-to/guide/compare/brand questions, "best {Rival} alternatives" per rival, Jiro vs Kiro and vs Claude Tag, a switching question, best-of list) N times each (default 3); counts Jiro mentions, jiro.bot citations, Kiro confusion and rival brands |
 | [overlap.py](overlap.py) | Reports shared 8-word shingles between a generated page and a reference HTML page; used to show no text was copied from the noriagentic.com seed pages. Complements lint's overlap gate, which only compares pages with each other |
-| [serve.py](serve.py) | Serves `site/` on port 4310 (or `PORT`), mapping extensionless paths to `.html` and serving `.md` as markdown |
+| [serve.py](serve.py) | Serves all of `site/` on port 4310 (or `PORT`), mapping extensionless paths to `.html` and serving `.md` as markdown. Use it for the generated pages; the landing page's copy editor is [copy-editor/server.py](copy-editor/server.py) |
 
 ### Things to Know
 

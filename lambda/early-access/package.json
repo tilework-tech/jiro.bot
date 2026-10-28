@@ -1,0 +1,14 @@
+{
+  "name": "jirobot-early-access",
+  "version": "1.0.0",
+  "description": "Double opt-in early-access sign-up Lambda for jiro.bot",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-sesv2": "^3.700.0",
+    "aws-sdk-client-mock": "^4.1.0"
+  }
+}
