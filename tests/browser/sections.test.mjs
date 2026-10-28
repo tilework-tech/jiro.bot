@@ -200,11 +200,21 @@ test("differentiators cover on-call, multiplayer across interfaces, and permissi
   await page.close();
 });
 
-test("the sign-up block shows two customer quotes, naming Jiro rather than Nori, above the email field", async () => {
+test("the sign-up block shows two customer quotes, one each from Corvus and Miravoice, naming Jiro rather than Nori, above the email field", async () => {
   const { page } = await open();
   const reserve = page.locator("#reserve");
   const quotes = reserve.locator("blockquote");
   assert.equal(await quotes.count(), 2);
+  const credits = await reserve.locator(".quote figcaption").allInnerTexts();
+  assert.equal(credits.length, 2);
+  assert.ok(
+    credits.some((c) => /corvus/i.test(c)),
+    "a quote is credited to Corvus",
+  );
+  assert.ok(
+    credits.some((c) => /miravoice/i.test(c)),
+    "a quote is credited to Miravoice",
+  );
   const texts = await quotes.allInnerTexts();
   assert.ok(
     texts.some((q) => /Jiro/.test(q)),

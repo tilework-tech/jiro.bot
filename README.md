@@ -46,7 +46,7 @@ In a Nori Session, background the preview server (`setsid nohup python3 tools/co
 
 The typing bar's messages are the `TYPING_MESSAGES` array in `main.js`; edit that list to change them (it also fills the screen-reader text, so the HTML copies are only the no-JavaScript fallback). "Jiro vs. AI slop" is driven by scroll, not time: `initSlop` marks the step in the middle of the viewport with `aria-current="step"` and mirrors it on `data-at`, and CSS fades the two pull requests in. Below 900px the steps read as a plain list and both pull requests show at once.
 
-The two quotes in the black sign-up block are Corvus's (Alex, CTO, and Nikhil, CEO) from noriagentic.com, with Nori renamed to Jiro, reused with Martin's approval.
+The two quotes in the black sign-up block come from two customers: Alex (CTO, Corvus) and Danny (CTO, Miravoice), from their published case studies on noriagentic.com (https://noriagentic.com/newsletter/2026-05-19-corvus-case-study.html and https://noriagentic.com/newsletter/2026-09-18-miravoice-case-study.html), with Nori renamed to Jiro, reused with Martin's approval. Keep one quote per company.
 
 The design is drawn at 1440px; the "Responsive" block at the end of `site/css/styles.css` steps down at 1180px, 900px (dropdown menu from `initMenu`, stacked sections, sideways-scrolling compare table) and 420px.
 
