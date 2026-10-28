@@ -1,0 +1,11 @@
+{
+  "name": "jiro-motion",
+  "version": "1.0.0",
+  "type": "skillset",
+  "description": "Drop Jiro, the animated >_ speech-bubble mascot, into any video as a transparent overlay (WebM VP9 alpha + ProRes 4444) or a composited MP4, with motion measured against the v6 spec and no overlap with on-screen text.",
+  "dependencies": {
+    "skills": {
+      "jiro-motion": "1.0.0"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "jiro-motion",
+  "version": "1.0.0",
+  "type": "skill",
+  "description": "Use when someone wants Jiro (the animated >_ speech-bubble mascot) dropped into a video as a transparent overlay, or a composited MP4 of Jiro over footage, or wants to check that a rendered Jiro moves the way the v6 motion spec says."
+}

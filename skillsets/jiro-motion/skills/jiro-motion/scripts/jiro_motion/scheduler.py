@@ -362,11 +362,17 @@ class _Planner:
             tl = self.per_minute_next("lines", tl)
             end = tl + self.talk_length(line["text"])
             release = end + self.spec.moves["talk_stretch"]["transition_ms"] / 1000.0
-            if release <= b:
+            if release > b:
+                line["_reason"] = (f"needs {release - anchor:.1f} s after landing (0.9 s wait, typing, "
+                                   f"{self.spec.moves['talk']['hold_ms'] / 1000:g} s hold); scene {i + 1} had "
+                                   f"{max(b - anchor, 0):.1f} s")
+            else:
                 layout = bubble_layout(self.spec, self.s, line["text"], stay["box"], (self.W, self.H))
                 bx0, by0, bx1, by1 = layout["reach"]
                 inside = bx0 >= 0 and by0 >= 0 and bx1 <= self.W and by1 <= self.H
-                if inside and self.tm.is_free(layout["reach"], tl, end, self.m.pad):
+                if not (inside and self.tm.is_free(layout["reach"], tl, end, self.m.pad)):
+                    line["_reason"] = f"no clear space for the bubble next to his spot in scene {i + 1}"
+                else:
                     self.add("talk", tl, end, text=line["text"], bubble=layout)
                     self.add("talk_squash", tl, tl + self.ms("talk_squash"))
                     self.lines.remove(line)
@@ -499,7 +505,7 @@ class _Planner:
             stay["end"] = self.duration
         unplaced = [{"text": l["text"], "scene": l["scene"],
                      "reason": "quiet after enough lines" if self.said >= self.kind["quiet_after_lines"]
-                     else "no clear spot or time for the bubble"} for l in self.lines]
+                     else l.get("_reason", "no stay in a scene with room for it")} for l in self.lines]
         for event in self.events:
             for key in [k for k in event if k.startswith("_")]:
                 del event[key]
