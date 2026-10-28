@@ -129,13 +129,6 @@ summary:focus-visible {
   margin: 0;
   flex: none;
 }
-.why-copy p {
-  margin: 0;
-  max-width: 760px;
-  font-size: var(--fs-body-lg);
-  line-height: 1.45;
-  color: #d6d6d6;
-}
 .v2grid {
   display: flex;
   flex-wrap: wrap;
@@ -185,41 +178,10 @@ summary:focus-visible {
   color: #7d8590;
   font-family: "JetBrains Mono", monospace;
 }
-.gh-repo {
-  padding: 8px 14px;
-  color: #7d8590;
-}
-.gh-repo b {
-  color: #e6edf3;
-}
-.gh-tabs {
-  display: flex;
-  gap: 18px;
-  padding: 0 14px 8px;
-  border-bottom: 1px solid #2a2e35;
-  color: #7d8590;
-}
-.gh-tabs .on {
-  color: #e6edf3;
-  box-shadow: 0 9px 0 -7px #fb5e45;
-}
 .gh-title {
   padding: 12px 14px 4px;
   font-size: var(--fs-body-lg);
   color: #e6edf3;
-}
-.gh-sub {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  padding: 0 14px 10px;
-  color: #7d8590;
-}
-.gh-open {
-  padding: 1px 8px;
-  border-radius: 10px;
-  background: #238636;
-  color: #ffffff;
 }
 .gh-body {
   margin: 0 14px;
@@ -896,8 +858,18 @@ details[open] .pl::after {
   display: inline-block;
   width: 0.55em;
   height: 1.05em;
-  margin-left: -14px;
+  vertical-align: -0.15em;
+  margin-left: 2px;
   background: #fb5e45;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 /* ---------- FAQ and the sign-up block ---------- */

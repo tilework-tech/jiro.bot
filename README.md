@@ -44,7 +44,7 @@ In a Nori Session, background the preview server (`setsid nohup python3 tools/co
 
 `site/js/main.js` renders a frame every 100 ms and only writes to the DOM when a region's output changes. Regions are marked in the HTML with `data-px` (pixel faces such as the header logo, the sign-up block's sushi counter and the footer wordmark), `data-list` (the on-call log and chat threads in the three feature panels), `data-typing` (the typing bar under "Jiro vs. AI slop") and `data-bind`. The HTML ships with still values, and visitors with reduced motion get a still frame of every region.
 
-The typing bar's messages are the `TYPING_MESSAGES` array in `main.js`; edit that list to change them. "Jiro vs. AI slop" is driven by scroll, not time: `initSlop` marks the step in the middle of the viewport with `aria-current="step"` and mirrors it on `data-at`, and CSS fades the two pull requests in. Below 900px the steps read as a plain list and both pull requests show at once.
+The typing bar's messages are the `TYPING_MESSAGES` array in `main.js`; edit that list to change them (it also fills the screen-reader text, so the HTML copies are only the no-JavaScript fallback). "Jiro vs. AI slop" is driven by scroll, not time: `initSlop` marks the step in the middle of the viewport with `aria-current="step"` and mirrors it on `data-at`, and CSS fades the two pull requests in. Below 900px the steps read as a plain list and both pull requests show at once.
 
 The two quotes in the black sign-up block are Corvus's (Alex, CTO, and Nikhil, CEO) from noriagentic.com, with Nori renamed to Jiro, reused with Martin's approval.
 

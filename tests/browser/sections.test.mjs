@@ -126,18 +126,25 @@ test("AI slop shows a three-step illustration with no counts or totals", async (
   await page.close();
 });
 
-test("scrolling through AI slop reaches the final step", async () => {
+test("scrolling through AI slop moves the current step from the first to the last", async () => {
   const { page } = await open();
   const steps = page.locator("#why [data-step]");
   const current = page.locator("#why [data-step][aria-current='step']");
-  await steps.first().scrollIntoViewIfNeeded();
-  await page.waitForTimeout(800);
-  assert.equal(await current.getAttribute("data-step"), "1");
-  await steps.last().scrollIntoViewIfNeeded();
-  await page.waitForTimeout(800);
+  const centerOn = (el) => el.evaluate((n) => n.scrollIntoView({ block: "center" }));
+  const currentIs = (step) =>
+    page.waitForFunction(
+      (want) => {
+        const on = document.querySelectorAll("#why [data-step][aria-current='step']");
+        return on.length === 1 && on[0].dataset.step === want;
+      },
+      step,
+      { timeout: 5000 },
+    );
+  await centerOn(steps.first());
+  await currentIs("1");
+  await centerOn(steps.last());
+  await currentIs("3");
   assert.equal(await current.count(), 1);
-  const active = await page.locator("#why [data-step][aria-current='step']").getAttribute("data-step");
-  assert.equal(active, "3");
   await page.close();
 });
 
@@ -169,6 +176,17 @@ test("with reduced motion the typing bar shows a full message and does not chang
   await page.waitForTimeout(1500);
   assert.equal((await bar.innerText()).trim(), first);
   assert.match(first, /Bring your own subscription/);
+  await page.close();
+});
+
+test("with reduced motion every feature panel still shows its content", async () => {
+  const { page } = await open({ reducedMotion: "reduce" });
+  const panels = page.locator("#features [role='img']");
+  assert.equal(await panels.count(), 3);
+  for (let i = 0; i < 3; i++) {
+    const text = (await panels.nth(i).innerText()).trim();
+    assert.ok(text.split("\n").length >= 4, `panel ${i + 1} shows: ${text}`);
+  }
   await page.close();
 });
 

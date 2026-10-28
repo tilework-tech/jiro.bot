@@ -155,7 +155,7 @@
       conv
         .map(([who, via, x, at]) => {
           const jiro = who === "jiro";
-          const vis = c >= at && c < period - 600;
+          const vis = c >= 1e9 || (c >= at && c < period - 600);
           const txt = jiro && c < 1e9 ? typed(x, at, c, 24) : x;
           const tag = (txt.match(/^@\w+/) || [""])[0];
           const rest = txt.slice(tag.length);
@@ -230,6 +230,7 @@
   R.typing = (f) => {
     const el = $("[data-typing]");
     if (!el) return;
+    put($("[data-typing-all]"), esc(TYPING_MESSAGES.join(". ") + "."));
     let text = TYPING_MESSAGES[0];
     if (!still) {
       const spans = TYPING_MESSAGES.map((m) => m.length * (TYPE_MS + DELETE_MS) + HOLD_MS + GAP_MS);
@@ -453,6 +454,7 @@
     const box = $("[data-slop]");
     if (!box || !("IntersectionObserver" in window)) return;
     const steps = $$("[data-step]", box);
+    box.dataset.at = "1";
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
