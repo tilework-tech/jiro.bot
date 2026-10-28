@@ -271,3 +271,11 @@ test("screen readers hear the whole rotating sentence once", async () => {
   assert.equal(snapshot.match(/You just hired/g).length, 1, snapshot);
   await close(h);
 });
+
+test("the hero copy never calls Jiro 'he', never 'calls him in', and says nothing about craft", async () => {
+  const h = await openHero();
+  const text = await h.page.locator(".hero-row").innerText();
+  assert.doesNotMatch(text, /craftsm|craftsperson|call him in|\bhe\b|\bhim\b/i);
+  assert.match(text, /@jirobot/);
+  await close(h);
+});
