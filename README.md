@@ -5,14 +5,14 @@ The landing page, copy editor and sign-up Lambda were consolidated here from the
 
 | Path | What it is |
 |---|---|
-| `site/` | Everything published to jiro.bot, synced as-is. Hand-written: `index.html` with `css/`, `js/` (`main.js` animation, `jiro-pixels.js` pixel art, `early-access.js` pop-up), `fonts/`, `img/`, `video/`, and `confirmed.html`, `link-expired.html`, `privacy.html`. Generated and committed: `alternatives/`, `compare/`, `switch/`, `best/`, `assets/pages.css`, `llms*.txt`, `sitemap.xml`, `robots.txt`. Never put docs or other non-public files here |
+| `site/` | Everything published to jiro.bot, synced as-is. Hand-written: `index.html` with `css/`, `js/` (`main.js` animation, `jiro-pixels.js` pixel art, `early-access.js` pop-up, `hero.js` hero line and carousel), `fonts/`, `img/`, `video/`, and `confirmed.html`, `link-expired.html`, `privacy.html`. Generated and committed: `alternatives/`, `compare/`, `switch/`, `best/`, `assets/pages.css`, `llms*.txt`, `sitemap.xml`, `robots.txt`. Never put docs or other non-public files here |
 | `content/` | TOML records the generated pages are built from, plus the content rules editors must follow. See [content/docs.md](content/docs.md) |
 | `build.py` | Stdlib-only generator, `content/` -> `site/`. Owns one directory per page family under `site/` and rebuilds them from scratch; leaves hand-written files alone |
 | `tools/` | Pre-publish lint, LLM grader, AEO probe, overlap check, AEO preview server. See [tools/docs.md](tools/docs.md) |
 | `tools/copy-editor/` | Landing-page preview server with an optional inline copy editor. See [tools/copy-editor/docs.md](tools/copy-editor/docs.md) |
 | `lambda/early-access/` | Sign-up and confirm Lambda. See [lambda/early-access/docs.md](lambda/early-access/docs.md) |
 | `aeo/` | Dated grader and probe results |
-| `tests/` | Black-box tests of `build.py` and `tools/lint.py`; `tests/browser/` holds Playwright tests of the pop-up |
+| `tests/` | Black-box tests of `build.py` and `tools/lint.py`; `tests/browser/` holds Playwright tests of the pop-up, hero and landing-page sections |
 | `infra/site.cfn.yaml` | CloudFormation stack `jiro-bot-site` (S3, CloudFront, ACM, Route 53, deploy role) |
 | `infra/early-access.cfn.yaml` | CloudFormation stack `jiro-bot-early-access` (SES identity, Lambda, HTTP API) |
 | `.github/workflows/deploy.yml` | Manual-dispatch site deploy from `main` |
@@ -28,7 +28,7 @@ python3 tools/serve.py               # preview all of site/ on :4310 with extens
 python3 tools/copy-editor/server.py --port 4100          # preview the landing page
 python3 tools/copy-editor/server.py --port 4100 --edit   # ...with the inline copy editor
 
-cd tests/browser && npm install && npm test              # pop-up browser tests (Playwright)
+cd tests/browser && npm install && npm test              # pop-up, hero and landing-page browser tests (Playwright)
 cd lambda/early-access && npm install && npm test        # Lambda tests (no network)
 python3 -m unittest discover -s tools/copy-editor/editor -p 'test_*.py'   # copy-editor HTTP tests
 node tools/copy-editor/editor/browser-test.mjs           # copy-editor browser checks (needs nori-browser)
@@ -51,7 +51,14 @@ The two quotes in the black sign-up block come from two customers: Alex (CTO, Co
 
 The design is drawn at 1440px; the "Responsive" block at the end of `site/css/styles.css` steps down at 1180px, 900px (dropdown menu from `initMenu`, stacked sections, sideways-scrolling compare table) and 420px.
 
-The hero video is Jiro hero v25 (46s loop, muted H.264 web encode); its source and render scripts live on the `video/hero-loop-v1` branch.
+The hero is kept calm. Its right panel (`.hero-media`, carbon `#161616` with structural grays, so nothing competes with the static orange cursor) holds two things driven by `site/js/hero.js`:
+
+- "You just hired …" shows "an engineer.", "a reviewer.", "a doc writer.", "an on-call." once, about 2.6s each with a 200ms fade, then rests on "Jiro." The HTML already says "Jiro.", so no-JS and reduced-motion visitors see the end state. It waits while the tab is hidden. The animated line is aria-hidden; screen readers get the full sentence from a `.sr-only` paragraph.
+- A three-example carousel (On-call, Multiplayer, RBAC) following the WAI-ARIA APG tabbed carousel: dots are labelled tabs, Left/Right/Home/End move between them, there is one tab stop and selection follows focus. It never auto-advances. The crossfade is 200ms (off under reduced motion), and a pause/play button satisfies WCAG 2.2.2.
+
+Carousel videos are dropped in without code changes: `site/video/carousel/{oncall,multiplayer,rbac}-{desktop,mobile}.mp4` plus `{name}-poster.jpg`. The script picks the mobile cut at 900px and below (re-picking when the breakpoint is crossed), loads only the active example, and under reduced motion loads nothing until play is pressed. The frame is 5:4 and at most 560px wide on desktop, full-width 4:5 on mobile, with `object-fit: cover`; posters are shared by both cuts, so keep their content center-safe. The posters in the repo are marked PLACEHOLDER stills, and until the mp4s land the browser gets a 404 and keeps the poster up.
+
+The retired looping hero video (Jiro hero v25) and its render scripts live on the `video/hero-loop-v1` branch.
 
 ## Early access
 

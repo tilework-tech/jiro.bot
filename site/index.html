@@ -162,12 +162,12 @@
               <div style="display: flex; flex-direction: column; gap: 14px">
                 <h1 class="h-hero">
                   The <span class="hot">tasteful</span> software
-                  <span style="white-space: nowrap">engineer<span class="cursor" aria-hidden="true"></span></span>
+                  <span style="white-space: nowrap">engineer<span class="cursor" aria-hidden="true" data-hero-cursor></span></span>
                 </h1>
                 <div style="display: flex; flex-direction: column; gap: 22px">
                   <p style="margin: 0; max-width: 420px; font-size: 15px; line-height: 22px">
-                    Jiro is a craftsperson: an expert engineer who cares more about quality than volume. Jiro will push
-                    back on your ideas and flag potential missteps early. Call him in with
+                    Jiro is an expert AI engineer that cares more about quality than volume. Jiro will push back on your
+                    ideas and flag potential missteps early. Tag
                     <span
                       style="
                         font-family: &quot;JetBrains Mono&quot;, monospace;
@@ -177,7 +177,8 @@
                         font-size: 0.94em;
                       "
                       >@jirobot</span
-                    >.
+                    >
+                    to start.
                   </p>
                   <div
                     style="
@@ -213,23 +214,114 @@
                 flex: 711 1 0;
                 min-width: 320px;
                 min-height: 420px;
-                background: #2a2f35;
+                background: #161616;
                 position: relative;
                 overflow: hidden;
               "
             >
-              <video
-                autoplay
-                muted
-                loop
-                playsinline
-                preload="auto"
-                poster="video/jiro-hero-v25-poster.jpg"
-                aria-label="Jiro hero video"
-                style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block"
-              >
-                <source src="video/jiro-hero-v25-46s-loop-1200x960.mp4" type="video/mp4" />
-              </video>
+              <p class="hero-hired" data-hero-line aria-hidden="true">
+                You just hired <span class="hero-role">Jiro.</span>
+              </p>
+              <p class="sr-only">You just hired an engineer, a reviewer, a doc writer, an on-call. Jiro.</p>
+              <div class="hero-carousel" role="region" aria-roledescription="carousel" aria-label="What Jiro does">
+                <div class="hc-stage">
+                  <div
+                    class="hc-slide"
+                    role="tabpanel"
+                    id="hc-oncall"
+                    aria-labelledby="hc-tab-oncall"
+                    tabindex="0" data-active
+                  >
+                    <video
+                      muted
+                      loop
+                      playsinline
+                      preload="none"
+                      poster="video/carousel/oncall-poster.jpg"
+                      data-desktop="video/carousel/oncall-desktop.mp4"
+                      data-mobile="video/carousel/oncall-mobile.mp4"
+                      aria-label="On-call: a bug fires at 4 a.m., Jiro fixes it and opens a pull request, and a teammate approves it at 8 a.m."
+                    ></video>
+                  </div>
+                  <div
+                    class="hc-slide"
+                    role="tabpanel"
+                    id="hc-multiplayer"
+                    aria-labelledby="hc-tab-multiplayer"
+                    tabindex="0" aria-hidden="true"
+                  >
+                    <video
+                      muted
+                      loop
+                      playsinline
+                      preload="none"
+                      poster="video/carousel/multiplayer-poster.jpg"
+                      data-desktop="video/carousel/multiplayer-desktop.mp4"
+                      data-mobile="video/carousel/multiplayer-mobile.mp4"
+                      aria-label="Multiplayer: teammates work with the same Jiro session from Slack on a phone and the CLI on a laptop."
+                    ></video>
+                  </div>
+                  <div
+                    class="hc-slide"
+                    role="tabpanel"
+                    id="hc-rbac"
+                    aria-labelledby="hc-tab-rbac"
+                    tabindex="0" aria-hidden="true"
+                  >
+                    <video
+                      muted
+                      loop
+                      playsinline
+                      preload="none"
+                      poster="video/carousel/rbac-poster.jpg"
+                      data-desktop="video/carousel/rbac-desktop.mp4"
+                      data-mobile="video/carousel/rbac-mobile.mp4"
+                      aria-label="RBAC: three people in one thread, and Jiro answers each according to their permissions."
+                    ></video>
+                  </div>
+                </div>
+                <div class="hc-controls" hidden>
+                  <div class="hc-dots" role="tablist" aria-label="Choose an example">
+                    <button
+                      type="button"
+                      role="tab"
+                      id="hc-tab-oncall"
+                      aria-controls="hc-oncall"
+                      aria-label="On-call"
+                      aria-selected="true"
+                      tabindex="0"
+                    ></button>
+                    <button
+                      type="button"
+                      role="tab"
+                      id="hc-tab-multiplayer"
+                      aria-controls="hc-multiplayer"
+                      aria-label="Multiplayer"
+                      aria-selected="false"
+                      tabindex="-1"
+                    ></button>
+                    <button
+                      type="button"
+                      role="tab"
+                      id="hc-tab-rbac"
+                      aria-controls="hc-rbac"
+                      aria-label="RBAC"
+                      aria-selected="false"
+                      tabindex="-1"
+                    ></button>
+                  </div>
+                  <span class="hc-name" aria-hidden="true">On-call</span>
+                  <button type="button" class="hc-pause" aria-label="Pause video" data-state="playing">
+                    <svg viewBox="0 0 16 16" aria-hidden="true" class="i-pause">
+                      <path d="M5.5 3.5v9M10.5 3.5v9" />
+                    </svg>
+                    <svg viewBox="0 0 16 16" aria-hidden="true" class="i-play">
+                      <path d="M5 3.5l7 4.5-7 4.5z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <script src="js/hero.js" defer></script>
             </div>
           </div>
           <div class="ditch-row" style="display: flex; flex-wrap: wrap; gap: 2px; min-height: 501px">
