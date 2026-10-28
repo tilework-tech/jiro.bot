@@ -56,13 +56,6 @@ SECTIONS = "\n".join(
 )
 COMMENTED_PAGE = page_html(SECTIONS)
 DOUBLE_SCRIPT_PAGE = page_html(SECTIONS, scripts=2)
-PEEK_SECTIONS = "\n".join(
-    f'<section id="s{i}" data-jiro-comment="{text}"' + (' data-jiro-peek="#frame"' if i == 3 else '') + f'><h2>Section {i}</h2>'
-    + ('<div id="frame" style="position:absolute;left:30%;top:30%;width:40%;height:45%;background:#222"></div>' if i == 3 else '')
-    + '</section>'
-    for i, text in enumerate(COMMENTS, start=1)
-)
-PEEK_PAGE = page_html(PEEK_SECTIONS)
 PLAIN_PAGE = page_html("\n".join(f'<section id="s{i}"><h2>Section {i}</h2></section>' for i in range(1, 6)))
 
 SEEDED_RANDOM = """
@@ -104,27 +97,6 @@ new MutationObserver(records => {
   attributeFilter: ['data-jiro-motion', 'data-jiro-face']});
 """
 
-SAMPLE_BEHIND = """
-window.__behind = [];
-(function sample() {
-  const mascot = document.querySelector('.jiro-buddy__mascot');
-  const section = document.querySelector('[data-jiro-peek]');
-  const cover = section && document.querySelector(section.dataset.jiroPeek);
-  if (mascot && cover) {
-    const m = mascot.getBoundingClientRect(), c = cover.getBoundingClientRect();
-    const left = Math.max(m.left, c.left), right = Math.min(m.right, c.right);
-    const top = Math.max(m.top, c.top), bottom = Math.min(m.bottom, c.bottom);
-    let behind = false;
-    if (m.width && right - left > m.width * 0.2 && bottom - top > m.height * 0.2) {
-      const hit = document.elementFromPoint((left + right) / 2, (top + bottom) / 2);
-      behind = !!hit && cover.contains(hit) && !mascot.contains(hit);
-    }
-    window.__behind.push([performance.now(), behind]);
-  }
-  requestAnimationFrame(sample);
-})();
-"""
-
 SAMPLE_EDGE = """
 window.__edge = [];
 (function sample() {
@@ -163,7 +135,6 @@ class BuddyTestCase(unittest.TestCase):
         (root / "index.html").write_text(COMMENTED_PAGE)
         (root / "double.html").write_text(DOUBLE_SCRIPT_PAGE)
         (root / "plain.html").write_text(PLAIN_PAGE)
-        (root / "peek.html").write_text(PEEK_PAGE)
         cls._fixtures, cls.base = serve(root)
         cls._mockup, cls.mockup = serve(BUDDY)
         cls._pw = sync_playwright().start()
@@ -453,30 +424,6 @@ class MotionTest(BuddyTestCase):
         later = [d for _, d in self.runs(page.evaluate("window.__edge")) if d >= 300]
         self.assertEqual(len(later), 1, later)
 
-    def test_he_peeks_out_from_behind_the_marked_element_once_per_pass(self):
-        page = self.open(f"{self.base}/peek.html")
-        page.evaluate(SAMPLE_BEHIND)
-        self.read_to(page, "s3")
-        self.read_to(page, "s5")
-        turned = page.evaluate("performance.now()")
-        self.read_to(page, "s3")
-        peeks = [(at, d) for at, d in self.runs(page.evaluate("window.__behind")) if d >= 300]
-        self.assertEqual([at < turned for at, _ in peeks], [True, False], peeks)
-        for _, d in peeks:
-            self.assertGreaterEqual(d, 800)
-        self.assertTrue(page.evaluate("""() => {
-            const m = document.querySelector('.jiro-buddy__mascot'), r = m.getBoundingClientRect();
-            return m.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2));
-        }"""), "he should end up in front, fully visible")
-
-    def test_on_the_landing_page_he_peeks_out_from_behind_the_video(self):
-        page = self.open(f"{self.mockup}/index.html")
-        page.evaluate(SAMPLE_BEHIND)
-        self.read_to(page, "video")
-        peeks = [d for _, d in self.runs(page.evaluate("window.__behind")) if d >= 300]
-        self.assertEqual(len(peeks), 1, peeks)
-        self.assertGreaterEqual(peeks[0], 800)
-
     def test_the_game_idle_hovers_about_half_again_as_far(self):
         page = self.open()
         for target in ("s2", "s3", "s4", "s5", "s6", "s7", "s8"):
@@ -506,16 +453,15 @@ class MotionTest(BuddyTestCase):
         self.assertLessEqual(spread[1], 9, spread)
 
     def test_a_dropped_jiro_never_peeks(self):
-        page = self.open(f"{self.base}/peek.html")
-        self.drag(page, -400, 100)
+        page = self.open(f"{self.mockup}/index.html")
+        self.drag(page, 300, 100)
         dropped = self.mascot(page).bounding_box()
-        page.evaluate(SAMPLE_EDGE + SAMPLE_BEHIND)
-        self.read_to(page, "s3")
+        page.evaluate(SAMPLE_EDGE)
+        self.read_to(page, "ditch")
         self.assertEqual(self.mascot(page).bounding_box(), dropped)
-        edge, behind = page.evaluate("[window.__edge, window.__behind]")
-        self.assertTrue(edge and behind)
+        edge = page.evaluate("window.__edge")
+        self.assertTrue(edge)
         self.assertFalse(any(on for _, on in edge))
-        self.assertFalse(any(on for _, on in behind))
 
     def test_his_face_changes_expression_while_resting(self):
         page = self.open()
@@ -623,6 +569,41 @@ class DragTest(BuddyTestCase):
         touch("touchEnd", 40, 300)
         page.wait_for_timeout(500)
         self.assertGreater(page.evaluate("scrollY"), before + 100)
+
+
+class CloseButtonTest(BuddyTestCase):
+    def close_opacity(self, page):
+        page.wait_for_timeout(400)
+        return page.evaluate("+getComputedStyle(document.querySelector('.jiro-buddy__close')).opacity")
+
+    def test_the_close_button_is_faint_until_you_hover_jiro(self):
+        page = self.open()
+        page.mouse.move(5, 5)
+        self.assertLessEqual(self.close_opacity(page), 0.1)
+        x, y = self.mascot_center(page)
+        page.mouse.move(x, y)
+        self.assertAlmostEqual(self.close_opacity(page), 0.35, delta=0.05)
+        page.mouse.move(5, 5)
+        self.assertLessEqual(self.close_opacity(page), 0.1)
+        box = page.locator(".jiro-buddy__close").bounding_box()
+        page.mouse.move(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
+        self.assertAlmostEqual(self.close_opacity(page), 0.35, delta=0.05)
+
+    def test_the_close_button_is_fully_visible_with_keyboard_focus(self):
+        page = self.open()
+        page.mouse.move(5, 5)
+        for _ in range(40):
+            page.keyboard.press("Tab")
+            if page.evaluate("document.activeElement.matches('.jiro-buddy__close')"):
+                break
+        else:
+            self.fail("the close button is not reachable with Tab")
+        self.assertEqual(self.close_opacity(page), 1)
+
+    def test_on_a_phone_the_close_button_stays_visible(self):
+        page = self.open(viewport=NARROW, has_touch=True, is_mobile=True)
+        self.assertTrue(page.evaluate("matchMedia('(hover: none)').matches"))
+        self.assertAlmostEqual(self.close_opacity(page), 0.35, delta=0.05)
 
 
 class ReducedMotionTest(BuddyTestCase):

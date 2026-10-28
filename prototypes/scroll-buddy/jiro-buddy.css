@@ -323,7 +323,16 @@
   transition: opacity .15s;
 }
 
-.jiro-buddy:hover .jiro-buddy__close,
+@media (hover: hover) {
+  .jiro-buddy__close {
+    opacity: .07;
+  }
+}
+
+.jiro-buddy:hover .jiro-buddy__close {
+  opacity: .35;
+}
+
 .jiro-buddy__close:focus-visible {
   opacity: 1;
 }

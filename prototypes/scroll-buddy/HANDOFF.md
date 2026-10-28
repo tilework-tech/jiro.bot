@@ -11,15 +11,16 @@ You are taking over the **Jiro scroll buddy**: an animated `>_` speech-bubble ma
 | What | Where |
 |---|---|
 | This handoff (always latest) | https://github.com/tilework-tech/jiro.bot/blob/feat/jiro-scroll-buddy/prototypes/scroll-buddy/HANDOFF.md |
-| **v7, latest version** (frozen snapshot) | https://github.com/tilework-tech/jiro.bot/tree/feat/jiro-scroll-buddy/prototypes/scroll-buddy/versions/v7 |
-| **v6, previous version** (frozen snapshot, plus single-file build `jiro-scroll-buddy-v6.html`) | https://github.com/tilework-tech/jiro.bot/tree/feat/jiro-scroll-buddy/prototypes/scroll-buddy/versions/v6 |
+| **v8, latest version** (frozen snapshot) | https://github.com/tilework-tech/jiro.bot/tree/feat/jiro-scroll-buddy/prototypes/scroll-buddy/versions/v8 |
+| **v7, previous version** (frozen snapshot; still has the video peek) | https://github.com/tilework-tech/jiro.bot/tree/feat/jiro-scroll-buddy/prototypes/scroll-buddy/versions/v7 |
+| v6 (frozen snapshot, Martin's approved baseline, plus single-file build `jiro-scroll-buddy-v6.html`) | https://github.com/tilework-tech/jiro.bot/tree/feat/jiro-scroll-buddy/prototypes/scroll-buddy/versions/v6 |
 | v5 (frozen snapshot) | https://github.com/tilework-tech/jiro.bot/tree/feat/jiro-scroll-buddy/prototypes/scroll-buddy/versions/v5 |
 | Working copy (where edits go) | https://github.com/tilework-tech/jiro.bot/tree/feat/jiro-scroll-buddy/prototypes/scroll-buddy |
-| **Handoff moodboard**: v6 movements, grouped, with frequency and placement (not yet regenerated for v7) | https://github.com/tilework-tech/jiro.bot/blob/feat/jiro-scroll-buddy/prototypes/scroll-buddy/moodboard/handoff.html |
+| **Handoff moodboard**: v6 movements, grouped, with frequency and placement (not yet regenerated for v7 or v8) | https://github.com/tilework-tech/jiro.bot/blob/feat/jiro-scroll-buddy/prototypes/scroll-buddy/moodboard/handoff.html |
 | Behaviour contract (engineering) | https://github.com/tilework-tech/jiro.bot/blob/feat/jiro-scroll-buddy/prototypes/scroll-buddy/docs.md |
 | Session-to-session notes | https://github.com/tilework-tech/jiro.bot/blob/feat/jiro-scroll-buddy/prototypes/scroll-buddy/CONTINUE.md |
 | PR | https://github.com/tilework-tech/jiro.bot/pull/22 |
-| Slack threads | https://tilework-tech.slack.com/archives/C0BGDN7PK3K/p1792432910834459 (v1–v5) and https://tilework-tech.slack.com/archives/C0BGDN7PK3K/p1793107657025189 (v6 and this handoff) and https://tilework-tech.slack.com/archives/C0BGDN7PK3K/p1793141153275509 (v7) |
+| Slack threads | https://tilework-tech.slack.com/archives/C0BGDN7PK3K/p1792432910834459 (v1–v5) and https://tilework-tech.slack.com/archives/C0BGDN7PK3K/p1793107657025189 (v6 and this handoff) and https://tilework-tech.slack.com/archives/C0BGDN7PK3K/p1793141153275509 (v7, v8) |
 | Design sources | Slack channel #jiro-bot-design (Maddy's 2026-10-19 Figma "updated sequence" screenshot, 2026-10-14 review mock `jiro-bot-review.png`) |
 
 Preview links from earlier sessions die with their session. To see anything you must serve it yourself (see "Run it" below).
@@ -35,7 +36,8 @@ setsid -f nohup python3 prototypes/scroll-buddy/moodboard/serve.py --port 4330 >
 
 | Page | Path on port 4320 |
 |---|---|
-| v7 live (working copy) | `/` |
+| v8 live (working copy) | `/` |
+| v8 frozen | `/versions/v8/` |
 | v7 frozen | `/versions/v7/` |
 | v6 frozen | `/versions/v6/` |
 | v5 frozen | `/versions/v5/` |
@@ -44,12 +46,17 @@ setsid -f nohup python3 prototypes/scroll-buddy/moodboard/serve.py --port 4330 >
 
 Port 4330 serves the same boards with star and note saving (`serve.py`). In a Nori session, the links are `$NORI_SESSION_URL/port/4320/...?t=<unix time>`. Resolve the real URL before sharing it, and in Slack wrap it as `<url|label>`.
 
-## The two latest versions
+## The latest versions
 
-**v7 (2026-10-28, the current version; no single-file build yet).** Martin's feedback on v6 was that he only saw small moves.
+**v8 (2026-10-28, the current version; no single-file build).** Two changes on top of v7:
+- *Peek from behind the video removed:* Martin: "didn't quite work, let's stick to side of screen peeks". Only the edge peek remains (first downward section change on desktop, at most once per page visit, plus the old trigger when his previous spot is fully off-screen), with the same hold, crouch, low arc and 8px hop.
+- *Fainter ×:* the hide button is 80% less visible at rest (opacity 0.07) on devices with a mouse, back to its old 0.35 while the pointer is anywhere over Jiro, and fully visible on keyboard focus. Phones and other no-hover devices keep 0.35 so the × stays findable.
+- Game idle (+50% from v7) and the 13 KB budget are unchanged; the two files are 12,374 bytes gzipped.
+
+**v7 (2026-10-28, previous version; no single-file build).** Martin's feedback on v6 was that he only saw small moves.
 - *Edge peek fix:* it only fired when his old spot had scrolled fully off-screen, which never happens when you read in short flicks and pauses. Now the first downward section change on desktop always plays it (still at most once per page visit).
 - *Smoother hop-in:* after any peek he holds the peek pose through a short crouch, then arcs in. The brief flash at his resting spot before flying in is gone.
-- *New: peek from behind an element:* on the landing page he slides out from behind the video frame, once per scroll pass. The first pass can therefore have two big moves (approved).
+- *Peek from behind an element:* on the landing page he slid out from behind the video frame, once per scroll pass. Removed in v8.
 - *Bigger game idle:* the hover range is 50% larger; his size is unchanged.
 - *Size budget:* raised from 12 KB to 13 KB gzip (Martin approved).
 
@@ -65,11 +72,11 @@ Older history: v5 (2026-10-26, commit `2b66db4`) was a silent observer with one 
 
 ## Movement catalogue and how often each may play
 
-A **pass** is one scroll in one direction. A reversal of at least 60px starts a new pass. These per-pass limits apply in v7:
+A **pass** is one scroll in one direction. A reversal of at least 60px starts a new pass. These per-pass limits apply in v8:
 
 | Per pass | Limit |
 |---|---|
-| Big moves | at most 1 peek behind an element (every pass) plus the edge peek (only once per page visit), so up to 2 in the first pass |
+| Big moves | the edge peek only, at most once per page visit (so at most 1 per pass) |
 | Small moves | at most 2, at least 2s apart |
 | Spoken lines | at most 1 |
 | Bouncy hover (spring or eager) | at most 1 |
@@ -80,7 +87,6 @@ A **pass** is one scroll in one direction. A reversal of at least 60px starts a 
 | Movement | How often | Where | Notes |
 |---|---|---|---|
 | Pop-in | once per page load | first section's spot | scales from 30% with an overshoot, 700ms |
-| Peek from behind, then hop in | **at most once per pass**, desktop (≥768px) only, when entering a section with `data-jiro-peek` and that element is on screen; checked before the edge peek | slides out from behind `#video-frame` at its side nearest his spot (about 30% showing), then the new spot | 2s peek, 220ms crouch, 850ms low arc, 8px landing hop |
 | Edge peek, then fly in (B3) | **at most once per page visit**, desktop (≥768px) only, on the first downward section change or when his old spot has scrolled off-screen | nearest left or right edge, then the new spot | 2.4s peek (about 1.2s visible, about a quarter of him showing), 220ms crouch, 850ms low arc, 8px landing hop |
 | Follow to the next section | once per section change | the next section's resting spot | waits 1.2s after scrolling stops (0.45s when jumping 2+ sections), then a 300ms fade relocation; always rests 2s or more first |
 | Dock into a logo | every landing on Ditch or FAQ | `#callin-logo`, `#reserve-jiro-logo` | the logo hides and he scales up (max 2.4×) to replace it; never while dropped |
@@ -136,7 +142,7 @@ While resting, a beat fires every 5s, alternating a glance and an expression. Ea
 - **Should rest:** empty monochrome space beside headings, solid-colour areas, and the outer left or right 35% bands on desktop. Each section's `data-jiro-anchor` marks his preferred spot (resting markers alternate left and right).
 - **Docks into:** the existing Jiro logos in Ditch (`#callin-logo`) and FAQ (`#reserve-jiro-logo`), replacing them while he sits there.
 - **Must never cover:** headings (h1–h3, the hardest rule), body text, labels, links, buttons, inputs, list items or table cells. If the anchor overlaps any of these, `spotFor()` searches a grid of nearby candidates and takes the closest clear one.
-- **Must never sit:** in the centre band (35–65% of the width) on screens 768px and wider, or off-screen (he keeps at least 8px from the edges). The two peeks are the deliberate exceptions (the peek from behind briefly tucks him under the marked element).
+- **Must never sit:** in the centre band (35–65% of the width) on screens 768px and wider, or off-screen (he keeps at least 8px from the edges). The edge peek is the deliberate exception.
 - **Phones (under 768px):** a 56px mascot, no centre-band rule and no peek. The same rules against covering text apply. The FAQ has a phone-only anchor (`#jiro-faq`).
 - **After a drag:** exactly where the user dropped him, fixed on screen and kept inside the viewport. No travel, peek or docking until the tab is closed.
 
@@ -149,9 +155,9 @@ While resting, a beat fires every 5s, alternating a glance and an expression. Ea
 | Arrow keys (Jiro focused) | move him 24px (96px with Shift) and drop him there; the page doesn't scroll |
 | Hover | `o_o` eyes |
 | Yes please / Later (ask line) | Yes goes to the email field, Later closes the bubble |
-| × | hides him for the rest of the tab; a new tab brings him back and resets his dropped spot |
+| × | hides him for the rest of the tab; a new tab brings him back and resets his dropped spot. Faint (0.07) at rest on mouse devices, 0.35 while hovering Jiro, 1 on keyboard focus; 0.35 at rest on phones |
 
-Clicks on other parts of the page do nothing. Ideas for page clicks (fact-check a bakeoff cell, explain a Slack line, bouncy wordmark, and more) are on `moodboard/interactions.html`, but none were chosen for v6 or v7.
+Clicks on other parts of the page do nothing. Ideas for page clicks (fact-check a bakeoff cell, explain a Slack line, bouncy wordmark, and more) are on `moodboard/interactions.html`, but none were chosen for v6, v7 or v8.
 
 ## Where comments can be added
 
@@ -159,7 +165,6 @@ Comments live in the page markup, not the code. Any element with `data-jiro-comm
 - `data-jiro-anchor="#id"`: his resting spot
 - `data-jiro-mobile-anchor="#id"`: a phone-only resting spot
 - `data-jiro-merge="#id"`: a logo to dock into
-- `data-jiro-peek="#id"`: an element he peeks out from behind (`#video` uses `#video-frame`)
 - `data-jiro-ask="Button text"` with `data-jiro-action="#target"`: Yes/Later buttons
 
 The current 8 on the mockup (`index.html`):
@@ -178,7 +183,7 @@ The current 8 on the mockup (`index.html`):
 ## Engineering notes
 
 - **Files:** `jiro-buddy.js` and `jiro-buddy.css` are the whole runtime: vanilla, no dependencies, and loaded after the page. These two files are what transplants onto the real site. `index.html` is a hand-built reconstruction of the design, not Maddy's final HTML.
-- **Size:** the two files are about 12,700 bytes gzipped against a 13 KB (13,312-byte) budget, enforced by a test; Martin approved the raise from 12 KB for v7. The `BODY_FILL` path is the biggest chunk.
+- **Size:** the two files are 12,374 bytes gzipped against a 13 KB (13,312-byte) budget, enforced by a test; Martin approved the raise from 12 KB for v7. The `BODY_FILL` path is the biggest chunk.
 - **Tuning constants** at the top of `jiro-buddy.js`:
 
   | Constant | Value |
@@ -199,22 +204,23 @@ The current 8 on the mockup (`index.html`):
   | `NUDGE` | 24 |
 
   Idle odds are in `pickIdle()`; the small move sizes are in `smallGesture()`.
-- **Tests:** `uv run --no-project --with playwright python -m unittest tests/test_scroll_buddy.py` from the repo root runs 36 browser tests in headless system Chrome (about 13 minutes); all pass. Peek tests scroll at reading pace (`read_to()`: 200px flicks, 2.5s pauses). `prototypes/scroll-buddy/qa/check_motion.py` is a quick check against a running preview and the session browser on CDP port 9222. Repo checks: `cd tests && python3 -m unittest` and `python3 tools/lint.py`.
+- **Tests:** `uv run --no-project --with playwright python -m unittest tests/test_scroll_buddy.py` from the repo root runs 37 tests in headless system Chrome (about 13 minutes), including `CloseButtonTest` for the × visibility rules. Peek tests scroll at reading pace (`read_to()`: 200px flicks, 2.5s pauses). `prototypes/scroll-buddy/qa/check_motion.py` is a quick check against a running preview and the session browser on CDP port 9222. Repo checks: `cd tests && python3 -m unittest` and `python3 tools/lint.py`.
 - **Workflow:** write tests first. Commit on `feat/jiro-scroll-buddy` (in Nori sessions, publish with `nori-git publish`), then push and update PR #22. Never merge or push to `main`, and never deploy, without Martin's explicit approval. Deploys only go through the GitHub Actions workflow dispatch.
 
 ## What Martin cares about (from the threads)
 
 - **Calm over busy:** "less speaking and more just small, gentle, hovering movements". He disliked erratic movement, high jumps and sitting in the centre.
 - **Never over headings that should be read:** "there is plenty of monochrome space where we don't mind having him hop".
-- **He should feel alive:** in v5 Martin said "I don't see it at all". He likes the game-like hover, the slow peek from the side with a joyful landing, and some randomness. In v6 he still saw only small moves when reading normally, which led to the v7 peek fixes.
+- **He should feel alive:** in v5 Martin said "I don't see it at all". He likes the game-like hover, the slow peek from the side with a joyful landing, and some randomness. In v6 he still saw only small moves when reading normally, which led to the v7 peek fixes. The v7 peek from behind the video did not work for him, so v8 keeps only side-of-screen peeks.
 - **Bouncy hovers are fine:** "not too much as long as it's only shown once per up and down scroll".
 - **Concise replies:** short replies with a direct link to the latest version, plus a fresh `?t=` timestamp.
 
 ## Open items
 
-1. **Confirm the quiet rule:** "after 4 up and down" — 4 long passes (current) or 4 round trips?
-2. **No way back to following:** once dropped, Jiro can only be moved again. Should a double-click (or similar) send him back to following the page?
-3. **Real page:** Maddy's template ZIP or copy-editor page never arrived, so this is still the reconstruction. Port the two buddy files plus the `data-jiro-*` tags onto the real page when it exists.
-4. **Outdated assets:** `moodboard/handoff.html` still shows v6 movements (no peek behind, smaller game idle); the `share/` explainer video and stills and `moodboard/motion.html` show pre-v6 behaviour. v7 has no single-file build yet.
-5. **Lost picks:** star and note picks on `index.html`, `interactions.html` and `expressions.html` are gitignored (only `picks-motion.json` is tracked). Earlier picks were never saved.
-6. **Size budget:** about 700 bytes of headroom under the 13 KB budget.
+1. **Next step, agreed with Martin: extract the buddy into its own repo.** Create the private repo `tilework-tech/jiro-buddy` with numbered releases. The live site repo `tilework-tech/jirobot-site` (default branch `ritam-served-2026-10-26`; plain HTML/CSS/JS, 7 sections, sticky header at z-index 1000) vendors a pinned copy under `vendor/jiro-buddy/` and keeps the per-section lines and resting spots in a `jiro-buddy.json` config. The CSS link and script tag sit in one marked block that is the on/off switch. Jiro drafts the 7 new lines for Martin to approve.
+2. **Confirm the quiet rule:** "after 4 up and down" — 4 long passes (current) or 4 round trips?
+3. **No way back to following:** once dropped, Jiro can only be moved again. Should a double-click (or similar) send him back to following the page?
+4. **Real page:** Maddy's template ZIP or copy-editor page never arrived, so the mockup here is still the reconstruction. The port now targets `tilework-tech/jirobot-site` through the `jiro-buddy` repo (item 1); every resting spot needs checking at desktop and phone widths there.
+5. **Outdated assets:** `moodboard/handoff.html` still shows v6 movements (smaller game idle, old edge-peek trigger); the `share/` explainer video and stills and `moodboard/motion.html` show pre-v6 behaviour. v7 and v8 have no single-file build.
+6. **Lost picks:** star and note picks on `index.html`, `interactions.html` and `expressions.html` are gitignored (only `picks-motion.json` is tracked). Earlier picks were never saved.
+7. **Size budget:** about 940 bytes of headroom under the 13 KB budget.
