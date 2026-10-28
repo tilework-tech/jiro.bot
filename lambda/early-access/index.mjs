@@ -7,7 +7,7 @@ const {
   CONFIRM_SECRET,
   CLARIFY_API_KEY,
   CLARIFY_WORKSPACE,
-  FROM_ADDRESS = "Martin Stuebler <martin@jiro.bot>",
+  FROM_ADDRESS = "Martin from Jiro <hello@jiro.bot>",
   REPLY_TO_ADDRESS = "martin@noriagentic.com",
   SITE_ORIGIN = "https://jiro.bot",
 } = process.env;

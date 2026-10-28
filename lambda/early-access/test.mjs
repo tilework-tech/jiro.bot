@@ -163,7 +163,7 @@ test("sign-up emails a confirm link from Martin and saves nothing to Clarify yet
   assert.equal(res.headers["access-control-allow-origin"], SITE);
   const [email] = sentEmails();
   assert.deepEqual(email.Destination.ToAddresses, ["alex@company.com"]);
-  assert.match(email.FromEmailAddress, /<martin@jiro\.bot>$/);
+  assert.match(email.FromEmailAddress, /<hello@jiro\.bot>$/);
   assert.deepEqual(email.ReplyToAddresses, ["martin@noriagentic.com"]);
   for (const body of [email.Content.Simple.Body.Text.Data, email.Content.Simple.Body.Html.Data]) {
     assert.match(body, /Hi Alex,/);
