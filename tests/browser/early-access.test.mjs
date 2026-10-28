@@ -122,6 +122,22 @@ test("submitting name and email asks the visitor to check their inbox", async ()
   await page.close();
 });
 
+test("a visitor can explore a hero example and then sign up", async () => {
+  const { page, errors, submissions } = await openSite();
+  page.setDefaultTimeout(5000);
+  await page.getByRole("tab", { name: "Multiplayer", exact: true }).click();
+  await page.getByRole("link", { name: "Get early access" }).first().click();
+  await fill(page);
+  await submitButton(page).click();
+  await dialog(page).getByText(/check your inbox/i).waitFor();
+  assert.equal(submissions.length, 1);
+  assert.equal(submissions[0].email, "alex@company.com");
+  await page.keyboard.press("Escape");
+  assert.equal(await page.getByRole("tab", { name: "Multiplayer", exact: true }).getAttribute("aria-selected"), "true");
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
 test("the bottom email field carries its address into the pop-up, by button or Enter", async () => {
   const { page } = await openSite();
   const reserve = page.locator("#reserve");
