@@ -1,5 +1,6 @@
 import { test, beforeEach, afterEach, mock } from "node:test";
 import assert from "node:assert/strict";
+import { createHmac } from "node:crypto";
 import { mockClient } from "aws-sdk-client-mock";
 import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
 
@@ -110,7 +111,6 @@ async function confirm(token, app = handler) {
 const valid = (overrides = {}) => ({
   name: "Alex Morgan",
   email: "alex@company.com",
-  org: "Acme Robotics",
   page: "https://jiro.bot/?utm_source=linkedin&utm_campaign=launch",
   referrer: "https://www.linkedin.com/",
   ...overrides,
@@ -198,9 +198,6 @@ test("rejects missing or malformed fields without sending email", async () => {
     valid({ email: "not-an-email" }),
     valid({ email: undefined }),
     valid({ email: `${"a".repeat(250)}@company.com` }),
-    valid({ org: "" }),
-    valid({ org: "   " }),
-    valid({ org: "x".repeat(500) }),
   ];
   for (const body of bad) {
     assert.equal((await handler(signupEvent(body))).statusCode, 400, JSON.stringify(body).slice(0, 80));
@@ -286,7 +283,6 @@ test("confirming adds a new person to the early-access waitlist and redirects to
   assert.deepEqual(person.attributes.name, { first_name: "Alex", last_name: "Morgan" });
   assert.deepEqual(person.attributes.labels.items, [LABEL]);
   assert.equal(person.attributes.early_access_status, "Waitlist");
-  assert.equal(person.attributes.early_access_org, "Acme Robotics");
   assert.equal(person.attributes.early_access_confirmed_at, "2026-11-03");
   const context = JSON.parse(person.attributes.early_access_context);
   assert.equal(context.page, "https://jiro.bot/?utm_source=linkedin&utm_campaign=launch");
@@ -310,17 +306,30 @@ test("confirming an existing contact keeps their labels and their outreach statu
       email_addresses: { items: ["Alex@Company.com"] },
       labels: { items: ["Newsletter"] },
       early_access_status: "Booked",
+      early_access_org: "Existing team",
     },
   });
 
-  const res = await confirm(await signUpAndGetToken(valid({ org: "Acme Labs" })));
+  const res = await confirm(await signUpAndGetToken());
 
   assert.equal(res.headers.location, `${SITE}/confirmed.html`);
   assert.equal(people.length, 1);
   const { attributes } = findPerson("alex@company.com");
   assert.deepEqual([...attributes.labels.items].sort(), [LABEL, "Newsletter"].sort());
   assert.equal(attributes.early_access_status, "Booked");
-  assert.equal(attributes.early_access_org, "Acme Labs");
+  assert.equal(attributes.early_access_org, "Existing team");
+});
+
+test("previously issued confirmation links remain usable", async () => {
+  const payload = Buffer.from(JSON.stringify({
+    name: "Alex Morgan", email: "alex@company.com",
+    org: "Previously collected team", page: "https://jiro.bot/", referrer: "",
+    exp: Date.now() + 60000,
+  })).toString("base64url");
+  const signature = createHmac("sha256", process.env.CONFIRM_SECRET).update(payload).digest("base64url");
+  const res = await confirm(`${payload}.${signature}`);
+  assert.equal(res.headers.location, `${SITE}/confirmed.html`);
+  assert.deepEqual(findPerson("alex@company.com").attributes.labels.items, [LABEL]);
 });
 
 test("an existing contact who was never on the waitlist starts at Waitlist", async () => {

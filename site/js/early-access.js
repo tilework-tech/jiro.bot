@@ -3,7 +3,7 @@
  * Every link to #reserve, and the reserve section's button, opens the dialog instead of scrolling.
  * Without JavaScript those links still scroll to the reserve section.
  * The form posts to the early-access Lambda named in <meta name="early-access-endpoint">;
- * the visitor is only added to the list once they click the link in the confirmation email.
+ * the visitor is only added after opening the emailed link and pressing Confirm my spot.
  */
 (function () {
   "use strict";
@@ -76,7 +76,6 @@
     const data = {
       name: form.elements.name.value,
       email: form.elements.email.value,
-      org: form.elements.org.value,
       ea_hp: form.elements.ea_hp.value,
       page: pageWithCampaign(),
       referrer: document.referrer,

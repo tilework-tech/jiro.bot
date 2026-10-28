@@ -101,148 +101,81 @@
   // compare table header logo: his face in white
   R.logoW = (f) => put($('[data-px="logoW"]'), pxHtml(jiroArt(f.eyes, 1.6, { F: "#FFFFFF" }, { faceOnly: true }).px));
 
-  // Jiro vs. other agents: big terminal face
-  R.howFace = (f) => put($('[data-px="howFace"]'), pxHtml(termFace(f, 1500, 20, [256, 104], "open")));
-
-  // PR comparison: the regular agent's numbers count up, its bullet list keeps growing
-  R.vid = (f) => {
-    const vc = still ? 1e9 : f.t % 9000;
-    const ramp = Math.min(1, vc / 4500);
-    const fmt = (n) => Math.round(n).toLocaleString("en-US");
-    const set = (k, v) => {
-      const el = $('[data-text="' + k + '"]');
-      if (el && el.textContent !== v) el.textContent = v;
-    };
-    set("vid.addA", fmt(12659 * ramp));
-    set("vid.delA", fmt(1649 * ramp));
-    set("vid.filesA", fmt(171 * ramp));
-    set("vid.commitsA", fmt(100 * ramp));
-    const bloat = [
-      "Updated homepage components",
-      "Refactored layout and styling",
-      "Improved responsiveness across devices",
-      "Enhanced performance optimizations",
-      "Added new utility functions",
-      "Updated configuration files",
-      "Fixed various issues",
-      "Cleaned up code",
-    ];
-    put(
-      $('[data-list="vid.bloat"]'),
-      bloat
-        .map((x, i) => '<div class="gh-li" style="opacity:' + (vc >= i * 520 ? 1 : 0) + '">' + esc(x) + "</div>")
-        .join(""),
-    );
-  };
-
   const typed = (str, start, now, cps) =>
     now >= 1e9 ? str : now < start ? "" : str.slice(0, Math.floor(((now - start) * cps) / 1000));
   const loop = (f, p) => (still ? 1e9 : f.t % p);
 
-  // 01: Jiro maps the repo, then writes a plan
+  // 01: on call. An alert fires at night, Jiro fixes it, a person approves in the morning
   R.f1 = (f) => {
-    const c1 = loop(f, 9600);
-    const tree = [
-      "repo/",
-      "  apps/web/",
-      "    routes/checkout.tsx",
-      "  services/payments/",
-      "    webhook.ts",
-      "    charge.ts",
-      "    retry.ts",
-      "  packages/ui/",
-      "  infra/terraform/",
+    const c1 = loop(f, 16000);
+    const log = [
+      ["04:02", "alert  checkout 500s are climbing", TOMATO],
+      ["04:03", "jiro   reading logs and the last deploy", "#8FA89A"],
+      ["04:11", "jiro   cause: retry runs without a cart id", "#8FA89A"],
+      ["04:19", "jiro   PR #1291 opened, checks pass", GREEN],
+      ["08:04", "maya   approved and merged", "#FAF8F2"],
     ];
-    const scan = Math.min(tree.length - 1, Math.floor(c1 / 420));
-    const mapped = c1 >= 4200;
+    const at = (k) => 600 + k * 2200;
     put(
-      $('[data-list="feat.f1Tree"]'),
-      tree
-        .map((x, i) => {
-          const hit = mapped && (i === 4 || i === 5),
-            cur = !mapped && i === scan;
-          const op = c1 >= i * 420 ? (cur || hit ? 1 : 0.55) : 0;
-          const bg = cur ? "rgba(251,94,69,0.22)" : hit ? "rgba(43,255,107,0.16)" : "transparent";
-          return '<div class="fline" style="opacity:' + op + ";background:" + bg + '">' + esc(x) + "</div>";
-        })
-        .join(""),
-    );
-    const plan = [
-      "record the event before charging",
-      "key retries on the event id",
-      "back off: 2s, 8s, 30s",
-      "test a double delivery",
-    ];
-    put(
-      $('[data-list="feat.f1Plan"]'),
-      plan
-        .map((x, k) => {
-          const at = 4600 + k * 900,
-            done = c1 >= at + 600;
-          return (
-            '<div class="fline" style="opacity:' +
-            (c1 >= at ? 1 : 0) +
-            ';white-space:normal"><span style="color:' +
-            (done ? GREEN : "#8FA89A") +
+      $('[data-list="feat.f1Log"]'),
+      log
+        .map(
+          ([time, x, col], k) =>
+            '<div class="fline" style="white-space:normal;opacity:' +
+            (c1 >= at(k) ? 1 : 0) +
+            '"><span style="color:#8FA89A">' +
+            time +
+            '</span>  <span style="color:' +
+            col +
             '">' +
-            (done ? "[x]" : "[ ]") +
-            "</span> " +
-            esc(typed(x, at, c1, 48)) +
-            "</div>"
-          );
-        })
+            esc(x) +
+            "</span></div>",
+        )
         .join(""),
     );
+    const step = log.filter((_, k) => c1 >= at(k)).length;
     put(
       $('[data-px="f1Face"]'),
-      pxHtml(termFace(f, 400, 4, [64, 28], mapped ? (c1 >= 8200 ? "star" : "caret") : "zero")),
+      pxHtml(termFace(f, 400, 4, [64, 28], step >= 5 ? "star" : step >= 2 ? "caret" : "zero")),
     );
     const stat = $('[data-bind="f1Stat"]');
     if (stat) {
-      const txt = c1 >= 8200 ? "plan ready" : mapped ? "planning" : "reading";
+      const txt = step >= 5 ? "approved" : step >= 4 ? "PR ready" : step >= 2 ? "fixing" : "paged";
       if (stat.textContent !== txt) stat.textContent = txt;
-      stat.style.color = c1 >= 8200 ? GREEN : TOMATO;
+      stat.style.color = step >= 4 ? GREEN : TOMATO;
     }
   };
 
-  // 02: a teammate tags @jirobot in a Slack thread and he answers
-  R.f2 = (f) => {
-    const c2 = loop(f, 10800);
+  // a chat thread that fills in message by message; Jiro's replies type out
+  const thread = (f, el, conv, period) => {
+    const c = loop(f, period);
     const jiroAv = pxHtml(plain(0, f.eyes, 1.3, { noShadow: true, box: [28, 28] }));
-    const you = { av: "#3A3F3A", px: "", nc: "#5C5C5C" },
-      ji = { av: "transparent", px: jiroAv, nc: INK };
-    const conv = [
-      [you, "maya", "@jirobot add bulk actions to the orders table. labels and CSV export.", 300, 0],
-      [ji, "jiro", "On it. Reading the table and the export service first.", 1600, 38],
-      [ji, "jiro", "One question: should export respect the current filters?", 3600, 38],
-      [you, "maya", "yes, filtered rows only.", 5400, 0],
-      [ji, "jiro", "Draft PR #1284 is up: bulk select, labels, filtered CSV. 3 commits.", 6800, 38],
-    ];
     put(
-      $('[data-list="feat.f2Msgs"]'),
+      el,
       conv
-        .map(([a, who, x, at, cps]) => {
-          const vis = c2 >= at && c2 < 10200;
-          const txt = cps && c2 < 1e9 ? typed(x, at, c2, cps) : x;
-          const tag = txt.startsWith("@jirobot") ? "@jirobot" : "";
-          const rest = tag ? txt.slice(8) : txt;
-          const cursor = cps && vis && c2 < 1e9 && txt.length < x.length;
+        .map(([who, via, x, at]) => {
+          const jiro = who === "jiro";
+          const vis = c >= 1e9 || (c >= at && c < period - 600);
+          const txt = jiro && c < 1e9 ? typed(x, at, c, 24) : x;
+          const tag = (txt.match(/^@\w+/) || [""])[0];
+          const rest = txt.slice(tag.length);
+          const cursor = jiro && vis && c < 1e9 && txt.length < x.length;
           return (
             '<div style="display:' +
             (vis ? "flex" : "none") +
             ';gap:12px;align-items:flex-start">' +
             '<span style="flex:none;position:relative;width:28px;height:28px;background:' +
-            a.av +
+            (jiro ? "transparent" : "#3A3F3A") +
             '">' +
-            a.px +
+            (jiro ? jiroAv : "") +
             "</span>" +
             '<div style="display:flex;flex-direction:column;gap:3px"><span class="fmeta" style="color:' +
-            a.nc +
+            (jiro ? INK : "#5C5C5C") +
             ';font-size:9px">' +
-            who +
+            esc(who + (via ? " · " + via : "")) +
             "</span>" +
             "<span style=\"font-family:'Sohne','Helvetica Neue',Helvetica,sans-serif;font-size:13px;line-height:1.4\"><span style=\"font-family:'JetBrains Mono',monospace;font-size:0.92em\">" +
-            tag +
+            esc(tag) +
             "</span>" +
             esc(rest) +
             '<span class="wc" style="display:' +
@@ -254,60 +187,67 @@
     );
   };
 
-  // 03: checks pass, the diff fills in, the PR merges
-  R.f3 = (f) => {
-    const c3 = loop(f, 10400);
-    const checks = ["typecheck", "unit tests", "e2e · checkout", "jiro review"];
-    put(
-      $('[data-list="feat.f3Checks"]'),
-      checks
-        .map((n, k) => {
-          const ok = c3 >= 900 + k * 900;
-          return (
-            '<div class="fline" style="display:flex;gap:10px;align-items:center"><span style="flex:none;width:8px;height:8px;background:' +
-            (ok ? "#1ED65A" : "#DADAD4") +
-            '"></span><span style="flex:1">' +
-            esc(n) +
-            '</span><span style="color:' +
-            (ok ? INK : "#8A8A8A") +
-            '">' +
-            (ok ? "passed" : "running") +
-            "</span></div>"
-          );
-        })
-        .join(""),
+  // 02: multiplayer. Two people on different devices steer the same task
+  R.f2 = (f) =>
+    thread(
+      f,
+      $('[data-list="feat.f2Msgs"]'),
+      [
+        ["maya", "terminal", "@jirobot add CSV export to the orders table", 400],
+        ["jiro", "", "Draft PR #1284 is up.", 2200],
+        ["maya", "slack", "@martin can you check the columns?", 4600],
+        ["martin", "phone", "@jirobot keep the current filters in the export", 7000],
+        ["jiro", "", "Done. Pushed to #1284.", 9000],
+      ],
+      14000,
     );
-    const diff = [
-      ["+ const selected = useSelection(rows)", "a"],
-      ["- <Toolbar />", "d"],
-      ["+ <BulkBar onLabel={label} onExport={exportCsv} />", "a"],
-      ["+ exportCsv(rows.filter(isVisible))", "a"],
-      ['+ test("exports filtered rows only")', "a"],
-    ];
-    put(
-      $('[data-list="feat.f3Diff"]'),
-      diff
-        .map(
-          ([x, k], i) =>
-            '<div class="fline" style="opacity:' +
-            (c3 >= 300 + i * 450 ? 1 : 0) +
-            ";background:" +
-            (k === "a" ? "rgba(43,255,107,0.22)" : "rgba(251,94,69,0.18)") +
-            '">' +
-            esc(x) +
-            "</div>",
-        )
-        .join(""),
+
+  // 03: permissions. The same question gets a different answer for each role
+  R.f3 = (f) =>
+    thread(
+      f,
+      $('[data-list="feat.f3Msgs"]'),
+      [
+        ["ana", "support", "@jirobot what changed in billing-service this week?", 400],
+        ["jiro", "", "You don't have access to billing-service, so I can't share that.", 2400],
+        ["lee", "billing", "@jirobot what changed in billing-service this week?", 6000],
+        ["jiro", "", "Three PRs merged. The retry fix is the one to read.", 8000],
+      ],
+      14000,
     );
-    const merged = c3 >= 6000;
-    const pill = $('[data-bind="f3Pill"]');
-    if (pill) {
-      const txt = merged ? "Merged" : "Open";
-      if (pill.textContent !== txt) pill.textContent = txt;
-      pill.style.background = merged ? TOMATO : GREEN;
+
+  // Typing bar under "Jiro vs. AI slop". Edit this list to change the messages.
+  const TYPING_MESSAGES = [
+    "Bring your own subscription",
+    "Single-tenant for every agent",
+    "Your intelligence stays with you",
+  ];
+  // ms per typed character, pause on the full message, ms per deleted character, pause when empty
+  const TYPE_MS = 110,
+    HOLD_MS = 2800,
+    DELETE_MS = 45,
+    GAP_MS = 800;
+  R.typing = (f) => {
+    const el = $("[data-typing]");
+    if (!el) return;
+    put($("[data-typing-all]"), esc(TYPING_MESSAGES.join(". ") + "."));
+    let text = TYPING_MESSAGES[0];
+    if (!still) {
+      const spans = TYPING_MESSAGES.map((m) => m.length * (TYPE_MS + DELETE_MS) + HOLD_MS + GAP_MS);
+      let c = f.t % spans.reduce((a, b) => a + b, 0),
+        i = 0;
+      while (c >= spans[i]) c -= spans[i++];
+      const m = TYPING_MESSAGES[i],
+        typedEnd = m.length * TYPE_MS;
+      const n =
+        c < typedEnd
+          ? Math.floor(c / TYPE_MS)
+          : c < typedEnd + HOLD_MS
+            ? m.length
+            : Math.max(0, m.length - Math.floor((c - typedEnd - HOLD_MS) / DELETE_MS));
+      text = m.slice(0, n);
     }
-    const foot = $('[data-bind="f3Foot"]');
-    if (foot) foot.style.opacity = merged ? 1 : 0;
+    if (el.textContent !== text) el.textContent = text;
   };
 
   // reserve panel: a sushi counter with seven stools; the open one blinks green
@@ -509,6 +449,28 @@
     });
   }
 
+  // ---------- AI slop: the step in the middle of the screen is the current one ----------
+  function initSlop() {
+    const box = $("[data-slop]");
+    if (!box || !("IntersectionObserver" in window)) return;
+    const steps = $$("[data-step]", box);
+    box.dataset.at = "1";
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (!e.isIntersecting) return;
+          steps.forEach((li) => {
+            if (li === e.target) li.setAttribute("aria-current", "step");
+            else li.removeAttribute("aria-current");
+          });
+          box.dataset.at = e.target.dataset.step;
+        });
+      },
+      { rootMargin: "-45% 0px -45% 0px" },
+    );
+    steps.forEach((li) => io.observe(li));
+  }
+
   // ---------- mobile menu ----------
   function initMenu() {
     const nav = $(".topnav");
@@ -540,6 +502,7 @@
 
   render();
   initNav();
+  initSlop();
   initMenu();
   window.addEventListener("resize", () => {
     if (still) render();

@@ -6,7 +6,7 @@
     <title>jiro.bot · The tasteful software engineer</title>
     <meta
       name="description"
-      content="Jiro is a craftsperson: an expert engineer who cares more about quality than volume. Call him in with @jirobot."
+      content="Jiro is the tasteful software engineer: an expert AI engineer that cares more about quality than volume. Tag @jirobot to start."
     />
     <link rel="stylesheet" href="css/styles.css" />
     <meta name="early-access-endpoint" content="https://9bt7wykv5e.execute-api.us-east-1.amazonaws.com/signup" />
@@ -89,10 +89,10 @@
               overflow-x: auto;
             "
           >
+            <a class="link" href="#compare" aria-current="false" data-nav="compare">Compare</a>
             <a class="link" href="#why" aria-current="false" data-nav="why">Why Jiro</a>
             <a class="link" href="#features" aria-current="false" data-nav="features">How</a>
             <a class="link" href="#pricing" aria-current="false" data-nav="pricing">Pricing</a>
-            <a class="link" href="#compare" aria-current="false" data-nav="compare">Compare</a>
             <a class="link" href="#faq" aria-current="false" data-nav="faq">FAQ</a>
           </div>
           <a
@@ -162,12 +162,12 @@
               <div style="display: flex; flex-direction: column; gap: 14px">
                 <h1 class="h-hero">
                   The <span class="hot">tasteful</span> software
-                  <span style="white-space: nowrap">engineer<span class="cursor" aria-hidden="true"></span></span>
+                  <span style="white-space: nowrap">engineer<span class="cursor" aria-hidden="true" data-hero-cursor></span></span>
                 </h1>
                 <div style="display: flex; flex-direction: column; gap: 22px">
                   <p style="margin: 0; max-width: 420px; font-size: 15px; line-height: 22px">
-                    Jiro is a craftsperson: an expert engineer who cares more about quality than volume. Jiro will push
-                    back on your ideas and flag potential missteps early. Call him in with
+                    Jiro is an expert AI engineer that cares more about quality than volume. Jiro will push back on your
+                    ideas and flag potential missteps early. Tag
                     <span
                       style="
                         font-family: &quot;JetBrains Mono&quot;, monospace;
@@ -177,7 +177,8 @@
                         font-size: 0.94em;
                       "
                       >@jirobot</span
-                    >.
+                    >
+                    to start.
                   </p>
                   <div
                     style="
@@ -213,23 +214,114 @@
                 flex: 711 1 0;
                 min-width: 320px;
                 min-height: 420px;
-                background: #2a2f35;
+                background: #161616;
                 position: relative;
                 overflow: hidden;
               "
             >
-              <video
-                autoplay
-                muted
-                loop
-                playsinline
-                preload="auto"
-                poster="video/jiro-hero-v25-poster.jpg"
-                aria-label="Jiro hero video"
-                style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block"
-              >
-                <source src="video/jiro-hero-v25-46s-loop-1200x960.mp4" type="video/mp4" />
-              </video>
+              <p class="hero-hired" data-hero-line aria-hidden="true">
+                You just hired <span class="hero-role">Jiro.</span>
+              </p>
+              <p class="sr-only">You just hired an engineer, a reviewer, a doc writer, an on-call. Jiro.</p>
+              <div class="hero-carousel" role="region" aria-roledescription="carousel" aria-label="What Jiro does">
+                <div class="hc-stage">
+                  <div
+                    class="hc-slide"
+                    role="tabpanel"
+                    id="hc-oncall"
+                    aria-labelledby="hc-tab-oncall"
+                    tabindex="0" data-active
+                  >
+                    <video
+                      muted
+                      loop
+                      playsinline
+                      preload="none"
+                      poster="video/carousel/oncall-poster.jpg"
+                      data-desktop="video/carousel/oncall-desktop.mp4"
+                      data-mobile="video/carousel/oncall-mobile.mp4"
+                      aria-label="On-call: a bug fires at 4 a.m., Jiro fixes it and opens a pull request, and a teammate approves it at 8 a.m."
+                    ></video>
+                  </div>
+                  <div
+                    class="hc-slide"
+                    role="tabpanel"
+                    id="hc-multiplayer"
+                    aria-labelledby="hc-tab-multiplayer"
+                    tabindex="0" aria-hidden="true"
+                  >
+                    <video
+                      muted
+                      loop
+                      playsinline
+                      preload="none"
+                      poster="video/carousel/multiplayer-poster.jpg"
+                      data-desktop="video/carousel/multiplayer-desktop.mp4"
+                      data-mobile="video/carousel/multiplayer-mobile.mp4"
+                      aria-label="Multiplayer: teammates work with the same Jiro session from Slack on a phone and the CLI on a laptop."
+                    ></video>
+                  </div>
+                  <div
+                    class="hc-slide"
+                    role="tabpanel"
+                    id="hc-rbac"
+                    aria-labelledby="hc-tab-rbac"
+                    tabindex="0" aria-hidden="true"
+                  >
+                    <video
+                      muted
+                      loop
+                      playsinline
+                      preload="none"
+                      poster="video/carousel/rbac-poster.jpg"
+                      data-desktop="video/carousel/rbac-desktop.mp4"
+                      data-mobile="video/carousel/rbac-mobile.mp4"
+                      aria-label="RBAC: three people in one thread, and Jiro answers each according to their permissions."
+                    ></video>
+                  </div>
+                </div>
+                <div class="hc-controls" hidden>
+                  <div class="hc-dots" role="tablist" aria-label="Choose an example">
+                    <button
+                      type="button"
+                      role="tab"
+                      id="hc-tab-oncall"
+                      aria-controls="hc-oncall"
+                      aria-label="On-call"
+                      aria-selected="true"
+                      tabindex="0"
+                    ></button>
+                    <button
+                      type="button"
+                      role="tab"
+                      id="hc-tab-multiplayer"
+                      aria-controls="hc-multiplayer"
+                      aria-label="Multiplayer"
+                      aria-selected="false"
+                      tabindex="-1"
+                    ></button>
+                    <button
+                      type="button"
+                      role="tab"
+                      id="hc-tab-rbac"
+                      aria-controls="hc-rbac"
+                      aria-label="RBAC"
+                      aria-selected="false"
+                      tabindex="-1"
+                    ></button>
+                  </div>
+                  <span class="hc-name" aria-hidden="true">On-call</span>
+                  <button type="button" class="hc-pause" aria-label="Pause video" data-state="playing">
+                    <svg viewBox="0 0 16 16" aria-hidden="true" class="i-pause">
+                      <path d="M5.5 3.5v9M10.5 3.5v9" />
+                    </svg>
+                    <svg viewBox="0 0 16 16" aria-hidden="true" class="i-play">
+                      <path d="M5 3.5l7 4.5-7 4.5z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <script src="js/hero.js" defer></script>
             </div>
           </div>
           <div class="ditch-row" style="display: flex; flex-wrap: wrap; gap: 2px; min-height: 501px">
@@ -265,7 +357,6 @@
                 gap: 46px;
               "
             >
-              <div class="lbl">&gt;_ Call him in</div>
               <img
                 class="callj"
                 src="img/jiro-working-v4.png"
@@ -293,135 +384,171 @@
           </div>
         </section>
 
-        <section
-          id="how"
-          aria-label="Jiro compared with other coding agents"
-          style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a"
-        >
-          <div class="vs-side" style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 2px">
-            <div
-              style="
-                flex: none;
-                background: #0a0a0a;
-                color: #ffffff;
-                padding: 56px;
-                box-sizing: border-box;
-                display: flex;
-                flex-direction: column;
-                gap: 51px;
-              "
-            >
-              <div class="lbl" style="color: #fb5e45">&gt;_ Jiro vs. other agents</div>
-              <div aria-hidden="true" style="position: relative; width: 256px; height: 104px" data-px="howFace"></div>
-            </div>
-            <div
-              style="
-                flex: 1;
-                background: #fb5e45;
-                color: #0a0a0a;
-                padding: 56px;
-                box-sizing: border-box;
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-end;
-                gap: 20px;
-              "
-            >
-              <h2
-                style="
-                  margin: 0;
-                  max-width: 9em;
-                  font-family: &quot;Sohne&quot;, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
-                  font-weight: 600;
-                  font-size: 59px;
-                  line-height: 0.98;
-                  letter-spacing: -0.04em;
-                "
-              >
-                Other agents ship more code. Jiro ships the right code.
-              </h2>
-              <p style="margin: 0; max-width: 26em; font-size: 17.6px; line-height: 1.5; color: #0a0a0a">
-                Your models, your subscription. The difference is judgment: what to read, what to ask, and what to leave
-                alone.
-              </p>
-            </div>
+        <section id="compare" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
+          <div
+            class="sec-head"
+            style="
+              flex: 1 1 100%;
+              background: #ffffff;
+              padding: 40px 36px 32px;
+              box-sizing: border-box;
+              display: flex;
+              flex-direction: column;
+              gap: 18px;
+            "
+          >
+            <div class="lbl" style="font-size: 11px">&gt;_ Compare</div>
+            <h2 class="h-sec">The Bake-off.</h2>
+            <p style="margin: -2px 0 0; font-size: 15px; line-height: 1.4; color: #3d3d3d">
+              Jiro handles memory, security, RBAC, integrations and automations for your agents. One person sets it up
+              once, and the whole team can use it.
+            </p>
           </div>
-          <div class="vs-table" style="flex: 2 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 2px">
-            <div class="vshead-row vsrow" style="padding-top: 20px; padding-bottom: 20px; align-items: center">
-              <span class="vstag" style="padding-top: 0"></span>
-              <div class="vscol vshead">
-                <span
+          <div class="cscroll" style="flex: 1 1 100%; min-width: 0; background: #ffffff; overflow-x: auto">
+            <div class="ctable" style="min-width: 960px; font-size: 13.5px; line-height: 1.4">
+              <div style="display: grid; grid-template-columns: var(--ccols); align-items: stretch; height: 75px">
+                <div
                   style="
+                    padding: 0 20px 18px;
+                    display: flex;
+                    align-items: flex-end;
                     font-family: &quot;JetBrains Mono&quot;, monospace;
                     font-weight: 600;
-                    font-size: var(--fs-caption);
-                    letter-spacing: 0.1em;
+                    font-size: 10px;
+                    letter-spacing: 0.06em;
                     text-transform: uppercase;
-                    padding: 6px 12px;
-                    color: #7a7a76;
-                    box-shadow: inset 0 0 0 1px #d6d6d0;
+                    color: #5c5c5c;
                   "
-                  >Other agents</span
                 >
+                  Compare
+                </div>
+                <div style="padding: 0 22px 18px; background: #2bff6b; display: flex; align-items: flex-end">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 12px;
+                      font-family: &quot;Sohne&quot;, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
+                      font-weight: 600;
+                      font-size: 28px;
+                      line-height: 1;
+                      letter-spacing: -0.045em;
+                    "
+                  >
+                    <span
+                      aria-hidden="true"
+                      style="position: relative; display: block; flex: none; width: 54px; height: 24px"
+                      data-px="logoW"
+                    ></span
+                    ><span>jiro.bot</span>
+                  </div>
+                </div>
+                <div class="chd">Claude Tag</div>
+                <div class="chd">Devin</div>
+                <div class="chd">Cursor Cloud</div>
               </div>
-              <div class="vscol us vshead">
-                <span
-                  style="
-                    font-family: &quot;JetBrains Mono&quot;, monospace;
-                    font-weight: 600;
-                    font-size: var(--fs-caption);
-                    letter-spacing: 0.1em;
-                    text-transform: uppercase;
-                    padding: 6px 12px;
-                    color: #0a0a0a;
-                    background: #2bff6b;
-                  "
-                  >Jiro</span
-                >
+              <div
+                class="crow"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+              >
+                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
+                  <span>Agent</span>
+                </div>
+                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
+                  <span>Claude Code, Codex, Gemini CLI, pi, Cursor Agent, OpenCode, or your own</span>
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Claude Code only
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Devin only
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Cursor only
+                </div>
               </div>
-            </div>
-            <div class="vsrow">
-              <span class="vstag">Tokens</span>
-              <div class="vscol">
-                <span class="vsm vsx" aria-hidden="true"><i></i></span
-                ><span class="vsthem">Locks you into proprietary model and billing.</span>
+              <div
+                class="crow"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+              >
+                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
+                  <span>Model</span>
+                </div>
+                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
+                  <span>Any model: your keys or subscription</span>
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Claude only
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Cognition's menu, no own keys
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Cursor's catalogue, no own keys
+                </div>
               </div>
-              <div class="vscol us">
-                <span class="vsm vsk" aria-hidden="true"><i></i></span
-                ><span class="vsus">You pay your provider for the tokens and Jiro per virtual machine.</span>
+              <div
+                class="crow"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+              >
+                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
+                  <span>Context</span>
+                </div>
+                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
+                  <span>Org-wide, yours to keep if you leave</span>
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Claude memories
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  API export
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  proprietary rules
+                </div>
               </div>
-            </div>
-            <div class="vsrow">
-              <span class="vstag">Scope</span>
-              <div class="vscol">
-                <span class="vsm vsx" aria-hidden="true"><i></i></span
-                ><span class="vsthem">Rewrites whatever it touches, resulting in massive PRs nobody wants to review.</span>
+              <div
+                class="crow"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+              >
+                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
+                  <span>Cloud</span>
+                </div>
+                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
+                  <span>AWS · Azure · GCP, your VPC</span>
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  Anthropic or self-hosted runners
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  hosted (VPC on contract)
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  hosted, or your machines for tools
+                </div>
               </div>
-              <div class="vscol us">
-                <span class="vsm vsk" aria-hidden="true"><i></i></span
-                ><span class="vsus">One focused PR for you to review.</span>
+              <div
+                class="crow"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+              >
+                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
+                  <span>Pricing</span>
+                </div>
+                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
+                  <span>Flat, zero token markup</span>
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  API tokens, high volume
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  plans $0–$200, usage at API price
+                </div>
+                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
+                  metered, per model
+                </div>
               </div>
-            </div>
-            <div class="vsrow">
-              <span class="vstag">Context</span>
-              <div class="vscol">
-                <span class="vsm vsx" aria-hidden="true"><i></i></span
-                ><span class="vsthem">Proprietary context layer, identical for each team.</span>
-              </div>
-              <div class="vscol us">
-                <span class="vsm vsk" aria-hidden="true"><i></i></span
-                ><span class="vsus">Org-wide context layer, portable and tunable to each team's needs.</span>
-              </div>
-            </div>
-            <div class="vsrow">
-              <span class="vstag">Cost</span>
-              <div class="vscol">
-                <span class="vsm vsx" aria-hidden="true"><i></i></span
-                ><span class="vsthem">Adds a markup on every token.</span>
-              </div>
-              <div class="vscol us">
-                <span class="vsm vsk" aria-hidden="true"><i></i></span
-                ><span class="vsus">No token markup. You pay your provider directly, not a middleman.</span>
+              <div style="border-top: 2px solid #0a0a0a; padding: 13px 20px; font-size: 12px; color: #5c5c5c">
+                Competitor pricing from public pages, October 2026.
               </div>
             </div>
           </div>
@@ -446,115 +573,77 @@
             <div class="lbl" style="flex: 0 0 124px; color: #ffffff; font-size: 11px">&gt;_ Why Jiro</div>
             <div class="why-copy">
               <h2 class="h-why" style="font-weight: 400">Jiro vs. AI slop.</h2>
-              <p>
-                Jiro works opinionated inside your code host, Slack, and Web, so context flows in and work ships out
-                without a new dashboard or a migration to plan.
-              </p>
             </div>
           </div>
-          <div
-            class="video-wrap"
-            style="
-              flex: 1 1 100%;
-              min-width: 0;
-              margin-top: -2px;
-              background: #0a0a0a;
-              color: #ffffff;
-              padding: 82px 34px 122px;
-              box-sizing: border-box;
-            "
-          >
-            <div
-              class="v2"
-              role="img"
-              aria-label="The same task done by a regular agent, a sprawling pull request, and by Jiro, a focused one"
-              style="padding: 56px 24px 32px"
-            >
-              <div class="v2grid">
-                <div class="v2col">
-                  <span class="v2chip">Regular agent</span>
-                  <div class="gh" style="opacity: 0.62">
-                    <div class="gh-bar">
-                      <span class="cc-dots"><i></i><i></i><i></i></span
-                      ><span class="gh-url">github.com/acme/website/pull/244</span>
-                    </div>
-                    <div class="gh-repo">acme / <b>website</b></div>
-                    <div class="gh-tabs">
-                      <span>Code</span><span>Issues</span><span class="on">Pull requests</span><span>Actions</span>
-                    </div>
-                    <div class="gh-title">Homepage redesign <span style="color: #8a8a8a">#244</span></div>
-                    <div class="gh-sub"><span class="gh-open">Open</span>agent-bot wants to merge 100 commits</div>
-                    <div class="gh-body">
-                      <div class="gh-h">Overview</div>
-                      <div class="gh-p">
-                        This PR implements comprehensive improvements to the homepage as part of the ongoing redesign
-                        effort, to enhance the overall user experience and maintainability.
+          <div class="slop" data-slop data-at="3">
+            <ol class="slop-steps">
+              <li data-step="1" aria-current="step">
+                <span class="slop-n">01</span><span>Two agents get the same ticket: redesign the homepage.</span>
+              </li>
+              <li data-step="2"><span class="slop-n">02</span><span>Another agent rewrites everything it touches.</span></li>
+              <li data-step="3"><span class="slop-n">03</span><span>Jiro opens one focused pull request. Done.</span></li>
+            </ol>
+            <div class="slop-stage">
+              <div
+                class="v2"
+                role="img"
+                aria-label="The same task done by another agent, a sprawling pull request, and by Jiro, a focused one"
+              >
+                <div class="v2grid">
+                  <div class="v2col slop-a">
+                    <span class="v2chip">Another agent</span>
+                    <div class="gh">
+                      <div class="gh-bar">
+                        <span class="cc-dots"><i></i><i></i><i></i></span
+                        ><span class="gh-url">github.com/acme/website/pull/244</span>
                       </div>
-                      <div class="gh-h">Changes made</div>
-                      <div data-list="vid.bloat" style="display: contents"></div>
-                    </div>
-                  </div>
-                  <div class="v2stat">
-                    <span style="color: #2bff6b">+<span data-text="vid.addA">12,659</span></span>
-                    <span style="color: #fb5e45">-<span data-text="vid.delA">1,649</span></span>
-                  </div>
-                  <div class="v2meta">
-                    <span data-text="vid.filesA">171</span> files · <span data-text="vid.commitsA">100</span> commits
-                  </div>
-                </div>
-                <div class="v2col">
-                  <span class="v2chip" style="color: #2bff6b; box-shadow: inset 0 0 0 1px #1e7a3f">Jiro</span>
-                  <div class="gh">
-                    <div class="gh-bar">
-                      <span class="cc-dots"><i></i><i></i><i></i></span
-                      ><span class="gh-url">github.com/acme/website/pull/251</span>
-                    </div>
-                    <div class="gh-repo">acme / <b>website</b></div>
-                    <div class="gh-tabs">
-                      <span>Code</span><span>Issues</span><span class="on">Pull requests</span><span>Actions</span>
-                    </div>
-                    <div class="gh-title">Homepage redesign <span style="color: #8a8a8a">#251</span></div>
-                    <div class="gh-sub"><span class="gh-open">Open</span>jiro wants to merge 6 commits</div>
-                    <div class="gh-body">
-                      <div class="gh-h">Summary</div>
-                      <div class="gh-li">
-                        Replaces the homepage with the responsive redesign, next to the existing blog and guides.
-                      </div>
-                      <div class="gh-li">Keeps analytics, sitemap, canonical and social metadata intact.</div>
-                      <div class="gh-li">Server-renders the FAQ and JSON-LD, so both work without JavaScript.</div>
-                      <div class="gh-h">Test plan</div>
-                      <div class="gh-ck"><span class="gh-box"></span>Production build and TypeScript pass</div>
-                      <div class="gh-ck"><span class="gh-box"></span>18 site checks and SEO export checks pass</div>
-                      <div class="gh-ck">
-                        <span class="gh-box"></span>Regression test covers structured data and FAQ content
+                      <div class="gh-title">Homepage redesign</div>
+                      <div class="gh-body">
+                        <div class="gh-h">Overview</div>
+                        <div class="gh-p">
+                          Comprehensive improvements to the homepage to enhance the overall user experience and
+                          maintainability.
+                        </div>
+                        <div class="gh-h">Changes made</div>
+                        <div class="gh-li">Updated homepage components</div>
+                        <div class="gh-li">Refactored layout and styling</div>
+                        <div class="gh-li">Enhanced performance optimizations</div>
+                        <div class="gh-li">Added new utility functions</div>
+                        <div class="gh-li">Updated configuration files</div>
+                        <div class="gh-li">Fixed various issues</div>
+                        <div class="gh-li">Cleaned up code</div>
                       </div>
                     </div>
                   </div>
-                  <div class="v2stat">
-                    <span style="color: #2bff6b">+1,412</span> <span style="color: #fb5e45">-318</span>
+                  <div class="v2col slop-b">
+                    <span class="v2chip" style="color: #2bff6b; box-shadow: inset 0 0 0 1px #1e7a3f">Jiro</span>
+                    <div class="gh">
+                      <div class="gh-bar">
+                        <span class="cc-dots"><i></i><i></i><i></i></span
+                        ><span class="gh-url">github.com/acme/website/pull/251</span>
+                      </div>
+                      <div class="gh-title">Homepage redesign</div>
+                      <div class="gh-body">
+                        <div class="gh-h">Summary</div>
+                        <div class="gh-li">Replaces the homepage with the responsive redesign.</div>
+                        <div class="gh-li">Keeps analytics, sitemap and social metadata intact.</div>
+                        <div class="gh-h">Test plan</div>
+                        <div class="gh-ck"><span class="gh-box"></span>Build and type checks pass</div>
+                        <div class="gh-ck"><span class="gh-box"></span>Regression test covers the FAQ</div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="v2meta">23 files · 6 commits</div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="wcell">
-            <p class="wtext">
-              Bring your own subscription: any model, any harness, any key.
-            </p>
-          </div>
-          <div class="wcell">
-            <p class="wtext">
-              Jiro handles the infrastructure for connecting, storing, and managing credentials for each agent, making
-              it easy to integrate a wide range of tools, from Salesforce to Microsoft Office to any database you
-              already use.
-            </p>
-          </div>
-          <div class="wcell">
-            <p class="wtext">
-              Jiro handles the creation of the right swim-lanes and architecture. Trained on thousands of PRs and
-              distilled into a single harness.
-            </p>
+          <div class="typing">
+            <span class="sr-only" data-typing-all>Bring your own subscription. Single-tenant for every agent. Your intelligence stays with you.</span
+            ><span class="typing-prompt" aria-hidden="true">&gt;_</span
+            ><span aria-hidden="true"
+              ><span class="typing-text" data-typing>Bring your own subscription</span
+              ><span class="typing-cursor"></span
+            ></span>
           </div>
         </section>
 
@@ -574,18 +663,16 @@
               gap: 24px;
             "
           >
-            <div class="lbl" style="flex: 0 0 152px; font-size: 11px">&gt;_ Why Jiro</div>
-            <h2 class="h-most">
-              Most agents optimize for token maxing. Jiro optimizes for the change you would have made yourself, on a
-              good day.
-            </h2>
+            <div class="lbl" style="flex: 0 0 152px; font-size: 11px">&gt;_ How it works</div>
+            <h2 class="h-most">Jiro makes the change you would have made yourself, on a good day.</h2>
           </div>
           <div class="frow">
             <div class="ftext" style="flex: 621 1 0; min-width: 320px">
               <div class="fnum">01</div>
-              <h3 class="fh">Look at the codebase, tell me proactively what we need to do.</h3>
+              <h3 class="fh">On call at 4 a.m.</h3>
               <p class="fp">
-                Jiro maps your repository before touching it, then comes back with a plan of what needs doing.
+                Set up an on-call automation once. When something breaks overnight, Jiro fixes it and opens a pull
+                request that is ready for your approval in the morning.
               </p>
               <a href="#pricing" class="flink" aria-label="See pricing"
                 ><span class="chevs" aria-hidden="true"><i></i><i></i><i></i><i></i></span
@@ -595,7 +682,7 @@
               <div
                 class="fpanel"
                 role="img"
-                aria-label="Animation: Jiro maps a repository and writes a plan"
+                aria-label="Animation: an alert fires at 4 a.m., Jiro fixes it and opens a pull request, and it is approved at 8 a.m."
                 style="background: #132a1e; color: #faf8f2; box-shadow: inset 0 0 0 1px #2b4a38"
               >
                 <div class="fbar" style="border-bottom: 1px solid #2b4a38; color: #8fa89a">
@@ -603,17 +690,11 @@
                     style="position: relative; display: block; flex: none; width: 64px; height: 28px; margin-left: -8px"
                     data-px="f1Face"
                   ></span
-                  ><span>mapping services/payments</span
-                  ><span data-bind="f1Stat" style="margin-left: auto; color: #2bff6b">plan ready</span>
+                  ><span>on-call · checkout</span
+                  ><span data-bind="f1Stat" style="margin-left: auto; color: #2bff6b">approved</span>
                 </div>
-                <div style="flex: 1; display: flex; min-height: 0">
-                  <div class="fcol" style="flex: 1 1 50%; border-right: 1px solid #2b4a38">
-                    <div data-list="feat.f1Tree" style="display: contents"></div>
-                  </div>
-                  <div class="fcol" style="flex: 1 1 50%">
-                    <div class="fline" style="color: #8fa89a">plan</div>
-                    <div data-list="feat.f1Plan" style="display: contents"></div>
-                  </div>
+                <div class="fcol" style="flex: 1; justify-content: center">
+                  <div data-list="feat.f1Log" style="display: contents"></div>
                 </div>
               </div>
             </div>
@@ -623,11 +704,11 @@
               <div
                 class="fpanel"
                 role="img"
-                aria-label="Animation: a teammate mentions @jirobot in a thread and Jiro answers"
+                aria-label="Animation: two teammates on different devices work with Jiro on the same task"
                 style="background: #ffffff; color: #0a0a0a; box-shadow: inset 0 0 0 2px #0a0a0a"
               >
                 <div class="fbar" style="border-bottom: 2px solid #0a0a0a; color: #5c5c5c">
-                  <span># orders-team</span><span style="margin-left: auto">thread</span>
+                  <span># orders-team</span><span style="margin-left: auto">one task, three devices</span>
                 </div>
                 <div
                   style="
@@ -645,9 +726,10 @@
             </div>
             <div class="ftext" style="flex: 548 1 0; min-width: 320px">
               <div class="fnum">02</div>
-              <h3 class="fh">Early ticket work, proactive question asking.</h3>
+              <h3 class="fh">Everyone works together, on any interface.</h3>
               <p class="fp">
-                Jiro picks up tickets early and asks the questions that matter before writing code.
+                Start a task in the terminal, pull a teammate in from Slack, check in from your phone. It is the same
+                Jiro and the same task, wherever each person happens to be.
               </p>
               <a href="#pricing" class="flink" aria-label="See pricing"
                 ><span class="chevs" aria-hidden="true"><i></i><i></i><i></i><i></i></span
@@ -657,9 +739,10 @@
           <div class="frow">
             <div class="ftext" style="flex: 621 1 0; min-width: 320px">
               <div class="fnum">03</div>
-              <h3 class="fh">Be proactive about what would make the code better for agents.</h3>
+              <h3 class="fh">Permissions that follow the person.</h3>
               <p class="fp">
-                Jiro flags what would make your codebase easier for agents to work in, and offers to fix it.
+                Jiro knows who is asking. Each person gets what their role allows, so the same request can get a
+                different answer depending on who sends it.
               </p>
               <a href="#pricing" class="flink" aria-label="See pricing"
                 ><span class="chevs" aria-hidden="true"><i></i><i></i><i></i><i></i></span
@@ -669,37 +752,23 @@
               <div
                 class="fpanel"
                 role="img"
-                aria-label="Animation: Jiro's pull request passes checks and is merged"
+                aria-label="Animation: two people ask Jiro the same question and get answers that match their access"
                 style="background: #ffffff; color: #0a0a0a; box-shadow: inset 0 0 0 2px #0a0a0a"
               >
-                <div class="fbar" style="border-bottom: 2px solid #0a0a0a">
-                  <span
-                    style="
-                      font-family: &quot;Sohne&quot;, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
-                      font-weight: 400;
-                      font-size: var(--fs-sm);
-                      letter-spacing: 0;
-                      text-transform: none;
-                    "
-                    >#1284 Bulk actions for the orders table</span
-                  ><span
-                    data-bind="f3Pill"
-                    style="margin-left: auto; padding: 3px 7px; font-size: 10px; background: #fb5e45; color: #0a0a0a"
-                    >Merged</span
-                  >
+                <div class="fbar" style="border-bottom: 2px solid #0a0a0a; color: #5c5c5c">
+                  <span># support</span><span style="margin-left: auto">roles: support, billing</span>
                 </div>
-                <div style="flex: 1; display: flex; flex-direction: column">
-                  <div class="fcol" style="border-bottom: 1px solid #dadad4">
-                    <div data-list="feat.f3Checks" style="display: contents"></div>
-                  </div>
-                  <div class="fcol" style="flex: 1"><div data-list="feat.f3Diff" style="display: contents"></div></div>
-                  <div
-                    class="fbar"
-                    style="border-top: 1px solid #dadad4; color: #5c5c5c; font-weight: 400; opacity: 1"
-                    data-bind="f3Foot"
-                  >
-                    merged by you · 2 files · +38 -6
-                  </div>
+                <div
+                  style="
+                    flex: 1;
+                    padding: 18px 20px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-end;
+                    gap: 12px;
+                  "
+                >
+                  <div data-list="feat.f3Msgs" style="display: contents"></div>
                 </div>
               </div>
             </div>
@@ -1786,198 +1855,15 @@
           Bring your own model subscription. No token markup. Agents sleep when idle.
         </div>
 
-        <section id="compare" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
-          <div
-            class="sec-head"
-            style="
-              flex: 1 1 100%;
-              background: #ffffff;
-              padding: 40px 36px 32px;
-              box-sizing: border-box;
-              display: flex;
-              flex-direction: column;
-              gap: 18px;
-            "
-          >
-            <div class="lbl" style="font-size: 11px">&gt;_ Compare</div>
-            <h2 class="h-sec">The Bake-off.</h2>
-            <p style="margin: -2px 0 0; font-size: 15px; line-height: 1.4; color: #3d3d3d">
-              Jiro is the control plane for agents. It handles the painful parts: memory, security, RBAC, integrations,
-              and automations. One person sets up Jiro one time, and everyone can start using it without any additional
-              setup on their end.
-            </p>
-          </div>
-          <div class="cscroll" style="flex: 1 1 100%; min-width: 0; background: #ffffff; overflow-x: auto">
-            <div class="ctable" style="min-width: 960px; font-size: 13.5px; line-height: 1.4">
-              <div style="display: grid; grid-template-columns: var(--ccols); align-items: stretch; height: 75px">
-                <div
-                  style="
-                    padding: 0 20px 18px;
-                    display: flex;
-                    align-items: flex-end;
-                    font-family: &quot;JetBrains Mono&quot;, monospace;
-                    font-weight: 600;
-                    font-size: 10px;
-                    letter-spacing: 0.06em;
-                    text-transform: uppercase;
-                    color: #5c5c5c;
-                  "
-                >
-                  Compare
-                </div>
-                <div style="padding: 0 22px 18px; background: #2bff6b; display: flex; align-items: flex-end">
-                  <div
-                    style="
-                      display: flex;
-                      align-items: center;
-                      gap: 12px;
-                      font-family: &quot;Sohne&quot;, &quot;Helvetica Neue&quot;, Helvetica, sans-serif;
-                      font-weight: 600;
-                      font-size: 28px;
-                      line-height: 1;
-                      letter-spacing: -0.045em;
-                    "
-                  >
-                    <span
-                      aria-hidden="true"
-                      style="position: relative; display: block; flex: none; width: 54px; height: 24px"
-                      data-px="logoW"
-                    ></span
-                    ><span>jiro.bot</span>
-                  </div>
-                </div>
-                <div class="chd">Claude Tag</div>
-                <div class="chd">Devin</div>
-                <div class="chd">Cursor Cloud</div>
-              </div>
-              <div
-                class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
-              >
-                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
-                  <span>Agent</span>
-                </div>
-                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
-                  <span>Claude Code, Codex, Gemini CLI, pi, Cursor Agent, Goose, Copilot, or your own</span>
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  Claude only
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  Devin only
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  Cursor only
-                </div>
-              </div>
-              <div
-                class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
-              >
-                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
-                  <span>Model</span>
-                </div>
-                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
-                  <span>Any model, your keys</span>
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  Anthropic only
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  routed for you
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  Cursor's catalogue
-                </div>
-              </div>
-              <div
-                class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
-              >
-                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
-                  <span>Context</span>
-                </div>
-                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
-                  <span>Org-wide, portable</span>
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  Claude memories
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  API export
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  proprietary rules
-                </div>
-              </div>
-              <div
-                class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
-              >
-                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
-                  <span>Cloud</span>
-                </div>
-                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
-                  <span>AWS · Azure · GCP, your VPC</span>
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  Anthropic only
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  hosted (VPC on contract)
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  hosted only
-                </div>
-              </div>
-              <div
-                class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
-              >
-                <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
-                  <span>Pricing</span>
-                </div>
-                <div class="cj" style="padding: 0 22px; background: #2bff6b; display: flex; align-items: center">
-                  <span>Flat, zero token markup</span>
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  API tokens, high volume
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  credits (token markup)
-                </div>
-                <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  metered, per model
-                </div>
-              </div>
-              <div style="border-top: 2px solid #0a0a0a; padding: 13px 20px; font-size: 12px; color: #5c5c5c">
-                Competitor pricing from public pages, October 2026.
-              </div>
-            </div>
-          </div>
-        </section>
-
         <section id="faq" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
-          <div
-            class="faq-col"
-            style="
-              flex: 779 1 0;
-              min-width: 320px;
-              background: #ffffff;
-              padding: 40px 35px 30px;
-              box-sizing: border-box;
-              display: flex;
-              flex-direction: column;
-              gap: 18px;
-            "
-          >
+          <div class="faq-col">
             <div class="lbl" style="font-size: 11px">&gt;_ FAQ</div>
-            <div style="display: flex; flex-direction: column">
-              <details open="" class="fq">
+            <div class="faq-list">
+              <details class="fq">
                 <summary><span>Who is Jiro?</span><span class="pl" aria-hidden="true">+</span></summary>
                 <p>
-                  An autonomous software engineer you call into a conversation. He takes on a task, raises concerns
-                  early, and hands back a pull request for review.
+                  An AI software engineer for your team. Tag @jirobot in a conversation, and Jiro takes on the task,
+                  raises concerns early and hands back a pull request for review.
                 </p>
               </details>
               <details class="fq">
@@ -1985,40 +1871,17 @@
                   <span>Which coding agents can I run?</span><span class="pl" aria-hidden="true">+</span>
                 </summary>
                 <p>
-                  Claude Code, Codex, Cursor, DeepSeek, Pi, Gemini, and Goose. Any agent that speaks the
-                  Agent Client Protocol can be plugged into the Jiro ecosystem. Every agent runs on the
-                  same environment primitives, so you can mix agents across tasks or run several inside
-                  one workspace.
+                  Claude Code, Codex, Gemini CLI, pi, Cursor Agent, OpenCode, or any agent that speaks the Agent Client
+                  Protocol. You can mix agents across tasks.
                 </p>
               </details>
               <details class="fq">
                 <summary>
-                  <span>What repositories can I use?</span><span class="pl" aria-hidden="true">+</span>
+                  <span>What can Jiro connect to?</span><span class="pl" aria-hidden="true">+</span>
                 </summary>
                 <p>
-                  Any GitHub repository you have access to. Connect your GitHub account and select which
-                  repos to enable.
-                </p>
-              </details>
-              <details class="fq">
-                <summary>
-                  <span>Can it work with our non-engineering tools?</span><span class="pl" aria-hidden="true">+</span>
-                </summary>
-                <p>
-                  Jiro works with HubSpot, Google Sheets, Google Drive, Notion, Linear, Jira, Stripe,
-                  and Gmail, plus hundreds more. One agent across the stack, scoped per person, rather
-                  than a pile of logins. Ops, finance, and data teams describe the work in Slack or
-                  Teams the way they would ask a teammate. No CLI and no new dashboard.
-                </p>
-              </details>
-              <details class="fq">
-                <summary>
-                  <span>What does an agent's environment look like?</span><span class="pl" aria-hidden="true">+</span>
-                </summary>
-                <p>
-                  Each agent works in a single-tenant cloud environment with your repository, tools,
-                  dependencies, and access credentials layered in. No separate OAuth process for each
-                  tool or platform.
+                  Any GitHub repository you can access, plus tools like Linear, Jira, Notion, Google Drive and Stripe.
+                  Each agent runs in its own single-tenant cloud environment with your repos and credentials in place.
                 </p>
               </details>
               <details class="fq">
@@ -2026,118 +1889,99 @@
                   <span>How does billing work?</span><span class="pl" aria-hidden="true">+</span>
                 </summary>
                 <p>
-                  Plans are sized by runtimes. Developer gives one user up to three persistent runtimes,
-                  and Team gives multiple users five shared ones. Enterprise sets capacity to fit.
-                  Runtimes sleep when idle and wake on demand.
-                </p>
-              </details>
-              <details class="fq">
-                <summary>
-                  <span>Is the output always a pull request?</span><span class="pl" aria-hidden="true">+</span>
-                </summary>
-                <p>
-                  Agents can return a pull request, commit, comment, or completed task for you to
-                  review, merge, or send back. An output can also be a file when that is what the work
-                  produces: a document, a spreadsheet, a presentation, or another office artifact.
-                </p>
-              </details>
-              <details class="fq">
-                <summary>
-                  <span>Why use cloud agents?</span><span class="pl" aria-hidden="true">+</span>
-                </summary>
-                <p>
-                  Jiro is a cloud coding agent on a virtual machine that has your repos, credentials,
-                  and team context layered in. You hand off a task the way you would to a junior
-                  colleague, the agent works while you are on the road, and you can check in from your
-                  phone. Tasks can come from a Slack mention, a cron schedule, or a Linear ticket, so
-                  work starts without anyone at a keyboard.
+                  Plans are sized by runtimes. Developer gives one user up to three, Team gives multiple users five
+                  shared ones, and Enterprise sets capacity to fit. Runtimes sleep when idle.
                 </p>
               </details>
               <details class="fq" style="border-bottom: 0">
-                <summary><span>Who makes Jiro</span><span class="pl" aria-hidden="true">+</span></summary>
+                <summary><span>Who makes Jiro?</span><span class="pl" aria-hidden="true">+</span></summary>
                 <p>Jiro is built by the Nori team.</p>
               </details>
             </div>
           </div>
-          <div
-            class="reserve-col"
-            id="reserve"
-            style="
-              flex: 487 1 0;
-              min-width: 320px;
-              background: #0a0a0a;
-              color: #ffffff;
-              padding: 40px 37px 0;
-              box-sizing: border-box;
-              display: flex;
-              flex-direction: column;
-              gap: 18px;
-            "
-          >
-            <div class="lbl" style="color: #fb5e45; font-size: 11px">&gt;_ Reserve a seat</div>
-            <h2 class="h-res">Pull up a stool at the counter.</h2>
-            <p style="margin: -4px 0 0; max-width: 24em; font-size: 15px; line-height: 22px; color: #cfcfcb">
-              Get on the list. We'll set Jiro up with your team in a 30-minute call.
-            </p>
-            <div style="display: flex; flex-direction: column; gap: 8px">
-              <label
-                for="email"
-                style="
-                  font-family: &quot;JetBrains Mono&quot;, monospace;
-                  font-weight: 500;
-                  font-size: 10px;
-                  letter-spacing: 0.06em;
-                  text-transform: uppercase;
-                  color: #9a9f9a;
-                "
-                >Work email</label
-              >
-              <input
-                id="email"
-                type="email"
-                placeholder="you@company.com"
-                style="
-                  height: 43px;
-                  padding: 0 14px;
-                  box-sizing: border-box;
-                  border: 0;
-                  background: #ffffff;
-                  color: #0a0a0a;
-                  font-family: &quot;JetBrains Mono&quot;, monospace;
-                  font-size: var(--fs-caption);
-                "
-              />
-              <button
-                type="button"
-                class="btn btn-hot"
-                data-early-access
-                style="
-                  height: 43px;
-                  padding: 0 16px;
-                  border: 0;
-                  background-color: #fb5e45;
-                  color: #0a0a0a;
-                  display: flex;
-                  align-items: center;
-                  font-family: &quot;JetBrains Mono&quot;, monospace;
-                  font-weight: 600;
-                  font-size: var(--fs-caption);
-                  letter-spacing: 0.08em;
-                  text-transform: uppercase;
-                  cursor: pointer;
-                "
-              >
-                <span>Get early access</span>
-              </button>
+        </section>
+
+        <section id="reserve" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
+          <div class="reserve-col">
+            <div class="quotes">
+              <figure class="quote">
+                <blockquote>
+                  “I was at a client dinner Friday night, saw a bug in prod, had Jiro look into it, deploy a fix, and
+                  re-run customer accounts all while still at the table.”
+                </blockquote>
+                <figcaption>Alex, CTO, Corvus</figcaption>
+              </figure>
+              <figure class="quote">
+                <blockquote>
+                  “Jiro easily saves me 5 hours a week. I can’t begin to describe how much of a multiplier it is.
+                  There’s no going back.”
+                </blockquote>
+                <figcaption>Danny, CTO, Miravoice</figcaption>
+              </figure>
             </div>
-            <div style="margin-top: auto; padding: 8px 0 74px; display: flex; flex-direction: column">
-              <div
-                role="img"
-                aria-label="A sushi counter lined with stools; the green one, blinking, is open for you"
-                style="position: relative; margin: 0 -37px; aspect-ratio: 94 / 19; overflow: hidden"
-                data-px="counter"
-              ></div>
+            <div class="reserve-form">
+              <h2 class="h-res">Pull up a stool at the counter.</h2>
+              <p style="margin: 0; font-size: 15px; line-height: 22px; color: #cfcfcb">
+                Get on the list. We'll set Jiro up with your team in a 30-minute call.
+              </p>
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <label
+                  for="email"
+                  style="
+                    font-family: &quot;JetBrains Mono&quot;, monospace;
+                    font-weight: 500;
+                    font-size: 10px;
+                    letter-spacing: 0.06em;
+                    text-transform: uppercase;
+                    color: #9a9f9a;
+                  "
+                  >Work email</label
+                >
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="you@company.com"
+                  style="
+                    height: 43px;
+                    padding: 0 14px;
+                    box-sizing: border-box;
+                    border: 0;
+                    background: #ffffff;
+                    color: #0a0a0a;
+                    font-family: &quot;JetBrains Mono&quot;, monospace;
+                    font-size: var(--fs-caption);
+                  "
+                />
+                <button
+                  type="button"
+                  class="btn btn-hot"
+                  data-early-access
+                  style="
+                    height: 43px;
+                    padding: 0 16px;
+                    border: 0;
+                    background-color: #fb5e45;
+                    color: #0a0a0a;
+                    display: flex;
+                    align-items: center;
+                    font-family: &quot;JetBrains Mono&quot;, monospace;
+                    font-weight: 600;
+                    font-size: var(--fs-caption);
+                    letter-spacing: 0.08em;
+                    text-transform: uppercase;
+                    cursor: pointer;
+                  "
+                >
+                  <span>Get early access</span>
+                </button>
+              </div>
             </div>
+            <div
+              class="reserve-counter"
+              role="img"
+              aria-label="A sushi counter lined with stools; the green one, blinking, is open for you"
+              data-px="counter"
+            ></div>
           </div>
         </section>
       </main>
@@ -2194,10 +2038,8 @@
         <button type="button" class="ea-close" aria-label="Close" data-ea-close>&times;</button>
         <div class="ea-lbl">&gt;_ Early access</div>
         <h2 class="ea-title" id="ea-title">Get early access to Jiro</h2>
-        <p class="ea-lede">We're onboarding every team in person. Sign up and we'll email you to book a 30-minute setup call.</p>
         <label class="ea-field">Name<input name="name" autocomplete="name" required minlength="2" maxlength="160" /></label>
         <label class="ea-field">Work email<input name="email" type="email" autocomplete="email" required maxlength="254" /></label>
-        <label class="ea-field">Organization<input name="org" autocomplete="organization" required maxlength="200" /></label>
         <label class="ea-trap" aria-hidden="true">Leave this empty<input name="ea_hp" tabindex="-1" autocomplete="new-password" /></label>
         <p class="ea-error" role="alert" hidden></p>
         <button type="submit" class="btn btn-hot ea-submit"><span>Get early access</span></button>
