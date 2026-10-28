@@ -1,0 +1,119 @@
+[
+  {
+    "file": "oncall-desktop.mp4",
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+      1200,
+      960
+    ],
+    "duration": 33.0,
+    "audio": false,
+    "fps": 30,
+    "faststart": true,
+    "seam_mean_abs_diff": 0.2048611111111111,
+    "bytes": 664752
+  },
+  {
+    "file": "oncall-mobile.mp4",
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+      720,
+      900
+    ],
+    "duration": 33.0,
+    "audio": false,
+    "fps": 30,
+    "faststart": true,
+    "seam_mean_abs_diff": 0.2580295138888889,
+    "bytes": 563077
+  },
+  {
+    "file": "oncall-poster.jpg",
+    "size": [
+      1080,
+      1080
+    ],
+    "matches_explicit_time_zero": true,
+    "bytes": 64795
+  },
+  {
+    "file": "multiplayer-desktop.mp4",
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+      1200,
+      960
+    ],
+    "duration": 38.0,
+    "audio": false,
+    "fps": 30,
+    "faststart": true,
+    "seam_mean_abs_diff": 0.2690972222222222,
+    "bytes": 954681
+  },
+  {
+    "file": "multiplayer-mobile.mp4",
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+      720,
+      900
+    ],
+    "duration": 38.0,
+    "audio": false,
+    "fps": 30,
+    "faststart": true,
+    "seam_mean_abs_diff": 0.3525390625,
+    "bytes": 732896
+  },
+  {
+    "file": "multiplayer-poster.jpg",
+    "size": [
+      1080,
+      1080
+    ],
+    "matches_explicit_time_zero": true,
+    "bytes": 63794
+  },
+  {
+    "file": "rbac-desktop.mp4",
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+      1200,
+      960
+    ],
+    "duration": 37.0,
+    "audio": false,
+    "fps": 30,
+    "faststart": true,
+    "seam_mean_abs_diff": 0.17903645833333334,
+    "bytes": 489692
+  },
+  {
+    "file": "rbac-mobile.mp4",
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+      720,
+      900
+    ],
+    "duration": 37.0,
+    "audio": false,
+    "fps": 30,
+    "faststart": true,
+    "seam_mean_abs_diff": 0.314453125,
+    "bytes": 466888
+  },
+  {
+    "file": "rbac-poster.jpg",
+    "size": [
+      1080,
+      1080
+    ],
+    "matches_explicit_time_zero": true,
+    "bytes": 56537
+  }
+]
