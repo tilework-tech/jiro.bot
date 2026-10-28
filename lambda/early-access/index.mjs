@@ -130,13 +130,11 @@ function parseSignup(body) {
   const signup = {
     name: clean(body.name, 160),
     email: clean(body.email, 1000).toLowerCase(),
-    org: clean(body.org, 200),
     page: clean(body.page, 1000),
     referrer: clean(body.referrer, 1000),
   };
   if (signup.name.length < 2) throw new Error("invalid name");
   if (signup.email.length > 254 || !EMAIL_RE.test(signup.email)) throw new Error("invalid email");
-  if (!signup.org || clean(body.org, 1000).length > 200) throw new Error("invalid org");
   return signup;
 }
 
@@ -263,10 +261,9 @@ function utmFrom(page) {
   }
 }
 
-async function saveToClarify({ name, email, org, page, referrer }) {
+async function saveToClarify({ name, email, page, referrer }) {
   const [first_name, ...rest] = name.split(/\s+/);
   const details = {
-    early_access_org: org,
     early_access_confirmed_at: new Date().toISOString().slice(0, 10),
     early_access_context: JSON.stringify({
       source: "jiro.bot-early-access",

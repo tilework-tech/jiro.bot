@@ -1,5 +1,3 @@
-# Copy to .github/workflows/deploy-early-access.yml. Pushing workflow files needs
-# an admin-approved GitHub token, so this lives here until that is granted.
 # Infra (function, API, SES identity, deploy-role access) is infra/early-access.cfn.yaml.
 name: Deploy early access
 

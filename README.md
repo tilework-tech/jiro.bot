@@ -1,7 +1,7 @@
 # jiro.bot
 
 Static site for jiro.bot: a hand-written landing page (the marketing design with an early-access sign-up pop-up) plus generated comparison pages (alternatives, head-to-head comparisons, switching guides, best-of lists) for answer-engine optimization (AEO).
-The landing page, copy editor and sign-up Lambda were consolidated here from the private `tilework-tech/jirobot-site` repo, which is archived. The previous interactive site work is preserved on the `backup/jiro-site-2026-10-09` branch (and `jiro-site`, which open PRs target).
+The landing page, copy editor and sign-up Lambda were consolidated here from the private `tilework-tech/jirobot-site` repo; archiving that source repo is pending approval. The previous interactive site work is preserved on the `backup/jiro-site-2026-10-09` branch (and `jiro-site`, which open PRs target).
 
 | Path | What it is |
 |---|---|
@@ -16,6 +16,7 @@ The landing page, copy editor and sign-up Lambda were consolidated here from the
 | `infra/site.cfn.yaml` | CloudFormation stack `jiro-bot-site` (S3, CloudFront, ACM, Route 53, deploy role) |
 | `infra/early-access.cfn.yaml` | CloudFormation stack `jiro-bot-early-access` (SES identity, Lambda, HTTP API) |
 | `.github/workflows/deploy.yml` | Manual-dispatch site deploy from `main` |
+| `.github/workflows/deploy-early-access.yml` | Manual-dispatch Lambda code deploy from `main` |
 
 Python 3.11+ (for `tomllib`) for the generator and tools; Node 22 for the Lambda and browser tests.
 
@@ -52,6 +53,6 @@ Still placeholder: "Lorem ipsum section title.", the 01/02/03 feature text, the 
 
 ## Early access
 
-Every "Get early access" link opens a pop-up asking for name, work email and organization, which posts to the URL in `<meta name="early-access-endpoint">` (the live HTTP API). Visitors join the list only after clicking the emailed link and pressing "Confirm my spot" (opening the link alone does nothing, so mail scanners can't confirm); they land on `confirmed.html` or `link-expired.html`.
+Every "Get early access" link opens a pop-up asking for name and work email, which posts to the URL in `<meta name="early-access-endpoint">` (the live HTTP API). Visitors join the list only after clicking the emailed link and pressing "Confirm my spot" (opening the link alone does nothing, so mail scanners can't confirm); they land on `confirmed.html` or `link-expired.html`.
 
-Deploy only by dispatching the GitHub Actions workflows, after approval. Architecture and known gaps: [docs.md](docs.md).
+Deploy only by dispatching the GitHub Actions workflows from `main`, after approval: [site](.github/workflows/deploy.yml) and [early-access Lambda](.github/workflows/deploy-early-access.yml). The Lambda workflow updates code only; environment configuration belongs to the CloudFormation stack. Architecture and deployment state: [docs.md](docs.md) and [Lambda docs](lambda/early-access/docs.md).
