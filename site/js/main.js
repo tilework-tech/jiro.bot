@@ -134,7 +134,10 @@
         .join(""),
     );
     const step = log.filter((_, k) => c1 >= at(k)).length;
-    put($('[data-px="f1Face"]'), pxHtml(termFace(f, 400, 4, [64, 28], step >= 5 ? "star" : step >= 2 ? "caret" : "zero")));
+    put(
+      $('[data-px="f1Face"]'),
+      pxHtml(termFace(f, 400, 4, [64, 28], step >= 5 ? "star" : step >= 2 ? "caret" : "zero")),
+    );
     const stat = $('[data-bind="f1Stat"]');
     if (stat) {
       const txt = step >= 5 ? "approved" : step >= 4 ? "PR ready" : step >= 2 ? "fixing" : "paged";
@@ -214,7 +217,11 @@
     );
 
   // Typing bar under "Jiro vs. AI slop". Edit this list to change the messages.
-  const TYPING_MESSAGES = ["Bring your own subscription", "Single-tenant for every agent", "Your intelligence stays with you"];
+  const TYPING_MESSAGES = [
+    "Bring your own subscription",
+    "Single-tenant for every agent",
+    "Your intelligence stays with you",
+  ];
   // ms per typed character, pause on the full message, ms per deleted character, pause when empty
   const TYPE_MS = 110,
     HOLD_MS = 2800,

@@ -149,7 +149,12 @@ test("the typing bar types each message, then moves on to the next", async () =>
   const deadline = Date.now() + 25000;
   while (Date.now() < deadline && seen.size < 2) {
     const t = (await bar.innerText()).trim();
-    for (const m of ["Bring your own subscription", "Single-tenant for every agent", "Your intelligence stays with you"]) if (new RegExp(`${m}[.!]?$`).test(t)) seen.add(m);
+    for (const m of [
+      "Bring your own subscription",
+      "Single-tenant for every agent",
+      "Your intelligence stays with you",
+    ])
+      if (new RegExp(`${m}[.!]?$`).test(t)) seen.add(m);
     await page.waitForTimeout(150);
   }
   assert.ok(seen.size >= 2, `saw ${[...seen].join(", ")}`);
@@ -183,7 +188,10 @@ test("the sign-up block shows two customer quotes, naming Jiro rather than Nori,
   const quotes = reserve.locator("blockquote");
   assert.equal(await quotes.count(), 2);
   const texts = await quotes.allInnerTexts();
-  assert.ok(texts.some((q) => /Jiro/.test(q)), "a quote names Jiro");
+  assert.ok(
+    texts.some((q) => /Jiro/.test(q)),
+    "a quote names Jiro",
+  );
   for (const q of texts) assert.doesNotMatch(q, /Nori/);
   const qBox = await quotes.last().boundingBox();
   const emailBox = await reserve.getByLabel(/work email/i).boundingBox();
