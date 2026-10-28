@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../node_modules/@fontsource/inter/400.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/inter/600.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/lato/400.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/lato/400-italic.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/lato/700.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/lato/900.css">
+<link rel="stylesheet" href="../lib/stage.css">
+<style>
+#world { width: 3100px; }
+.dev { position: absolute; }
+.plate { position: absolute; left: 50%; transform: translateX(-50%); bottom: -76px; }
+#devMon { left: 60px; top: 150px; width: 1080px; height: 800px; }
+#devPh { left: 1400px; top: 110px; width: 400px; height: 820px; }
+#devLap { left: 1960px; top: 210px; width: 1060px; height: 700px; }
+#devMon .monitor, #devLap .laptop { inset: 0; }
+#devPh .phone { left: 0; top: 0; }
+.cut-mobile #devMon { left: 40px; top: 80px; width: 640px; height: 700px; }
+.cut-mobile #devPh { left: 800px; top: 40px; width: 420px; height: 760px; }
+.cut-mobile #devPh .phone { width: 420px; height: 760px; }
+.cut-mobile #devLap { left: 1300px; top: 90px; width: 660px; height: 640px; }
+.cut-mobile .plate { display: none; }
+#plate { left: 50%; bottom: 26px; transform: translateX(-50%); display: none; }
+.cut-mobile #plate { display: inline-flex; }
+.cut-mobile .slack .side { width: 64px; padding-top: 16px; }
+.cut-mobile .slack .side > :not(.rail) { display: none; }
+.slack .side .rail { display: none; }
+.cut-mobile .slack .side .rail { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.rail .wsi { width: 38px; height: 38px; border-radius: 9px; background: #fff; color: var(--s-aub); font: 900 18px var(--lato); display: grid; place-items: center; }
+.rail .ri { width: 38px; height: 38px; border-radius: 9px; display: grid; place-items: center; color: rgba(255,255,255,.8); font-size: 20px; }
+.rail .ri.on { background: rgba(255,255,255,.2); color: #fff; }
+.cut-mobile .slack .top .search { width: 70%; }
+.cut-mobile .slack .hd .sub { display: none; }
+.cut-mobile .slack .m { padding: 8px 16px; }
+.cut-mobile .phone .m .tx { font-size: 19px; }
+.cut-mobile .laptop .lid { padding: 14px 14px 18px; }
+.cut-mobile .term .tbody { font-size: 19px; padding: 16px 18px; }
+.m .av .ico { width: 24px; height: 24px; }
+.term .tbody { justify-content: flex-start; }
+.term .who { color: #7d8590; margin-top: 12px; }
+.term .who .g { font-weight: 600; }
+.term .you { color: #ffffff; }
+.term .jl { color: #d1d7e0; }
+.term .grow-l { overflow: hidden; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="dots"></div>
+  <div id="world">
+    <div class="dev" id="devMon">
+      <div class="monitor"><div class="scr"><div class="slack">
+        <div class="top"><i></i><i></i><i></i><div class="search">Search Beauty Corp</div></div>
+        <div class="body">
+          <div class="side">
+            <div class="ws">Beauty Corp</div>
+            <div class="sec">Channels</div>
+            <div class="ch"># general</div>
+            <div class="ch on"># checkout</div>
+            <div class="ch"># design</div>
+            <div class="sec">Direct messages</div>
+            <div class="ch"><span class="dm" style="background:#2eb67d">M</span>Martin</div>
+            <div class="ch"><span class="dm" style="background:#1d9bd1">S</span>Sam</div>
+            <div class="rail"><div class="wsi">B</div><div class="ri">{{i:house}}</div><div class="ri on">{{i:message-circle}}</div><div class="ri">{{i:bell}}</div></div>
+          </div>
+          <div class="main">
+            <div class="hd"># checkout<span class="sub">Cart, promos and payments</span></div>
+            <div class="msgs" id="monMsgs"></div>
+            <div class="comp"><span id="monComp"></span><div class="tools">{{i:plus}}{{i:at-sign}}{{i:smile}}<span class="send" id="monSend">{{i:send-horizontal}}</span></div></div>
+          </div>
+        </div>
+      </div></div><div class="neck"></div><div class="foot"></div></div>
+      <div class="chip plate" id="plMon">{{i:monitor}}<b>Priya</b><span class="dim">Slack on desktop</span></div>
+    </div>
+
+    <div class="dev" id="devPh">
+      <div class="phone"><div class="scr">
+        <div class="isl"></div>
+        <div class="sb"><span>10:16</span><span class="bat"></span></div>
+        <div class="ph">{{i:chevron-left}}<div># checkout<span class="sub">Beauty Corp</span></div></div>
+        <div class="msgs" id="phMsgs"></div>
+        <div class="comp" id="phComp"></div>
+        <div class="banner" id="banner"><div class="ap">{{slack}}</div><div><div class="t1">Priya in #checkout</div><div class="t2">Looks good. @Martin can you check the copy?</div></div><span class="tm">now</span></div>
+      </div></div>
+      <div class="chip plate" id="plPh">{{i:smartphone}}<b>Martin</b><span class="dim">Slack on phone</span></div>
+    </div>
+
+    <div class="dev" id="devLap">
+      <div class="laptop"><div class="lid"><div class="term">
+        <div class="tb"><i></i><i></i><i></i><span>nori cloud · beauty-corp/shop · Gift card field</span></div>
+        <div class="tbody">
+          <div class="ln dim">Attached to the session in #checkout</div>
+          <div class="ln who"><span class="g">Martin</span> · via Slack</div>
+          <div class="ln you">› change the label to “Gift card or promo code”.</div>
+          <div class="ln who"><span class="g">Jiro</span></div>
+          <div class="ln jl">Done. The label now reads “Gift card or promo code” and the preview is updated.</div>
+          <div class="grow-l" id="tS" data-grow><div class="ln who"><span class="g">Sam</span> · you</div><div class="ln you">› also add a test for an empty code</div></div>
+          <div class="grow-l" id="tJ" data-grow><div class="ln who"><span class="g">Jiro</span></div><div class="ln jl" id="tJt"></div></div>
+          <div class="bar" id="cliBar"></div>
+          <div class="status"><span>claude · opus</span><span>3 people in this session</span></div>
+        </div>
+      </div></div><div class="base"></div></div>
+      <div class="chip plate" id="plLap">{{i:laptop}}<b>Sam</b><span class="dim">CLI on laptop</span></div>
+    </div>
+  </div>
+  <div class="chip" id="plate"></div>
+</div>
+<template id="ic-jiro"><img src="../brand/jiro-v4.png"></template>
+<template id="ic-pr">{{i:git-pull-request}}</template>
+<template id="ic-spin">{{i:loader-circle}}</template>
+<script type="module">
+import { $, CUT, W, H, prog, eo, eio, typed, typeEnd, fmt, caret, grow, camera, scene } from '../lib/core.js';
+
+// Shot times (seconds). The camera eases between devices for PAN seconds.
+const PAN = 1.8;
+const P1 = { text: 'Looks good. @Martin can you check the copy?', at: 1.0 };
+const M1 = { text: '@Jiro change the label to “Gift card or promo code”.', at: 12.0 };
+const S1 = { text: 'also add a test for an empty code', at: 23.2 };
+[P1, M1, S1].forEach((x) => { x.sent = typeEnd(x.text, x.at, 15) + 0.5; });
+const TO_PHONE = 7.0, BANNER = TO_PHONE + PAN + 0.2, TO_LAPTOP = 20.0, BACK = 30.0;
+const J1 = M1.sent + 1.4, J2 = S1.sent + 2.2;
+const D = 38.0, OUT = D - 2.2;
+
+const JIRO = { who: 'Jiro', app: true };
+const MSGS = [
+  { id: 'p0', who: 'Priya', av: 'P', color: '#e01e5a', tm: '10:02 AM', tx: '@Jiro add a gift card field to checkout.' },
+  { id: 'j0', ...JIRO, tm: '10:09 AM', tx: 'Done. Draft PR is up with a preview.', card: ['#52 Gift card field at checkout', 'Draft'] },
+  { id: 'p1', who: 'Priya', av: 'P', color: '#e01e5a', tm: '10:14 AM', tx: P1.text, at: P1.sent },
+  { id: 'm1', who: 'Martin', av: 'M', color: '#2eb67d', tm: '10:16 AM', tx: M1.text, at: M1.sent },
+  { id: 'j1', ...JIRO, tm: '10:16 AM', tx: 'Done. The label now reads “Gift card or promo code” and the preview is updated.', at: J1 },
+  { id: 's1', ...JIRO, tm: '10:18 AM', via: 'Sam · via CLI', quote: S1.text, at: S1.sent },
+  { id: 'j2', ...JIRO, tm: '10:18 AM', tx: 'Added 3 tests for empty and invalid codes. All passing.', at: J2 },
+];
+const msgHTML = (m, pre) => `<div class="m" id="${pre}${m.id}" ${m.at ? 'data-grow' : ''}>
+  <div class="av" style="background:${m.color ?? '#faf8f2'}">${m.av ?? $('ic-jiro').innerHTML}</div>
+  <div><div class="who">${m.who}${m.app ? '<span class="app">APP</span>' : ''}<span class="tm">${m.tm}</span></div>
+  ${m.via ? `<div class="tx"><span class="via">${m.via}</span><div class="quote">${fmt(m.quote)}</div></div>` : `<div class="tx">${fmt(m.tx)}</div>`}
+  ${m.card ? `<span class="card">${$('ic-pr').innerHTML}${m.card[0]}<span class="st">${m.card[1]}</span></span>` : ''}</div></div>`;
+
+// Desktop frames each device whole with its nameplate; mobile frames the device tighter
+// and shows the nameplate as one fixed chip instead.
+const centre = (id) => {
+  const e = $(id), [x, y, w, h] = [e.offsetLeft, e.offsetTop, e.offsetWidth, e.offsetHeight];
+  if (CUT === 'mobile') {
+    const sc = Math.min(1.12, W / (w + 40));
+    return [x + w / 2, Math.max(y + h / 2 - 20, y + h + 96 / sc - H / sc / 2), sc];
+  }
+  return [x + w / 2, y + h / 2 + 30, Math.min(1, W / (w + 80), H / (h + 190))];
+};
+let KEYS;
+
+scene({ duration: D, setup: () => {
+  $('monMsgs').innerHTML = MSGS.map((m) => msgHTML(m, 'mon-')).join('');
+  $('phMsgs').innerHTML = MSGS.map((m) => msgHTML(m, 'ph-')).join('');
+  $('tJt').textContent = MSGS.at(-1).tx;
+  const [mon, ph, lap] = [centre('devMon'), centre('devPh'), centre('devLap')];
+  KEYS = [[TO_PHONE, ...mon], [TO_PHONE + PAN, ...ph], [TO_LAPTOP, ...ph], [TO_LAPTOP + PAN, ...lap], [BACK, ...lap], [BACK + PAN, ...mon]];
+}, seek: (t) => {
+  const out = eio(prog(t, OUT, 1.6));
+  const g = (el, at) => { grow(el, t, at); if (out > 0) { el.style.height = `${Number(el.dataset.h) * (1 - out)}px`; el.style.opacity = String(Math.min(Number(el.style.opacity), 1 - out)); } };
+  for (const m of MSGS) if (m.at) { g($(`mon-${m.id}`), m.at); g($(`ph-${m.id}`), m.at); }
+  g($('tS'), S1.sent); g($('tJ'), J2);
+
+  // composers: Priya types on the desktop, Martin on the phone, Sam in the CLI
+  const typing = (x) => t >= x.at && t < x.sent;
+  $('monComp').innerHTML = typing(P1) ? fmt(typed(P1.text, t, P1.at, 15)) + caret : '<span class="ph">Message #checkout</span>';
+  $('monSend').classList.toggle('on', typing(P1));
+  $('phComp').innerHTML = typing(M1) ? fmt(typed(M1.text, t, M1.at, 15)) + caret : '<span class="ph2">Message #checkout</span>';
+  const working = t >= S1.sent && t < J2;
+  $('cliBar').innerHTML = typing(S1) ? `<span class="g">›</span> ${typed(S1.text, t, S1.at, 15)}${caret}`
+    : working ? `<span class="dim">${$('ic-spin').innerHTML.replace('class="ico"', `class="ico" style="transform:rotate(${t * 240}deg)"`)} Jiro is working…</span>`
+    : '<span class="dim">› Message Jiro…</span>';
+
+  // notification banner on Martin's phone
+  const b = $('banner'), bin = eo(prog(t, BANNER, 0.6)), bout = prog(t, M1.at - 0.6, 0.5);
+  b.style.opacity = String(Math.min(bin, 1 - bout)); b.style.transform = `translateY(${(1 - bin) * -30}px)`;
+
+  // the device in focus is lit, the others rest
+  const p = (a) => prog(t, a, PAN);
+  const lit = { Mon: Math.max(1 - p(TO_PHONE), p(BACK)), Ph: Math.min(p(TO_PHONE), 1 - p(TO_LAPTOP)), Lap: Math.min(p(TO_LAPTOP), 1 - p(BACK)) };
+  for (const [d, l] of Object.entries(lit)) $(`dev${d}`).style.opacity = String(0.5 + 0.5 * l);
+  const [top] = Object.entries(lit).sort((a, b) => b[1] - a[1]);
+  $('plate').innerHTML = $(`pl${top[0]}`).innerHTML;
+  $('plate').style.opacity = String(Math.max(0, 2 * top[1] - 1));
+
+  camera(t, KEYS);
+}});
+</script>
+</body>
+</html>

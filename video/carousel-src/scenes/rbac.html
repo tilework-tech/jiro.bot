@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../node_modules/@fontsource/inter/400.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/inter/600.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/lato/400.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/lato/400-italic.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/lato/700.css">
+<link rel="stylesheet" href="../node_modules/@fontsource/lato/900.css">
+<link rel="stylesheet" href="../lib/stage.css">
+<style>
+#win { left: 40px; top: 60px; width: 1120px; height: 960px; }
+.cut-mobile #win { left: 16px; top: 16px; width: 594px; height: 751px; }
+.cut-mobile .slack .side { width: 64px; padding-top: 16px; }
+.cut-mobile .slack .side > :not(.rail) { display: none; }
+.slack .side .rail { display: none; }
+.cut-mobile .slack .side .rail { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.rail .wsi { width: 38px; height: 38px; border-radius: 9px; background: #fff; color: var(--s-aub); font: 900 18px var(--lato); display: grid; place-items: center; }
+.rail .ri { width: 38px; height: 38px; border-radius: 9px; display: grid; place-items: center; color: rgba(255,255,255,.8); font-size: 20px; }
+.rail .ri.on { background: rgba(255,255,255,.2); color: #fff; }
+.cut-mobile .slack .top .search { width: 70%; }
+.cut-mobile .slack .hd .sub { display: none; }
+.cut-mobile .m { padding: 8px 16px; }
+#jA .tx, #jC .tx { position: relative; }
+.wait { position: absolute; left: 0; top: 2px; }
+.day { display: flex; align-items: center; margin: 10px 0; }
+.day::before, .day::after { content: ''; flex: 1; height: 1px; background: var(--s-line); }
+.day span { font: 700 15px var(--lato); border: 1px solid var(--s-line); border-radius: 999px; padding: 4px 14px; }
+.m .av .ico { width: 24px; height: 24px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="dots"></div>
+  <div id="world">
+    <div class="slack" id="win">
+      <div class="top"><i></i><i></i><i></i><div class="search">Search Beauty Corp</div></div>
+      <div class="body">
+        <div class="side">
+          <div class="ws">Beauty Corp</div>
+          <div class="sec">Channels</div>
+          <div class="ch"># general</div>
+          <div class="ch"># checkout</div>
+          <div class="ch on"># incidents</div>
+          <div class="ch"># deploys</div>
+          <div class="sec">Direct messages</div>
+          <div class="ch"><span class="dm" style="background:#2bac76">R</span>Rae</div>
+          <div class="ch"><span class="dm" style="background:#4a6fd1">J</span>Jordan</div>
+          <div class="ch"><span class="dm" style="background:#e8912d">A</span>Alex</div>
+          <div class="rail"><div class="wsi">B</div><div class="ri">{{i:house}}</div><div class="ri on">{{i:message-circle}}</div><div class="ri">{{i:bell}}</div></div>
+        </div>
+        <div class="main">
+          <div class="hd"># incidents<span class="sub">Outages and on-call</span></div>
+          <div class="msgs" id="msgs">
+            <div class="m"><div class="av" style="background:#6b6f75">{{i:rocket}}</div><div><div class="who">Deploys<span class="app">APP</span><span class="tm">11:02 AM</span></div><div class="tx">shop <code>v2.41</code> is live in production.</div></div></div>
+            <div class="m"><div class="av" style="background:#2bac76">R</div><div><div class="who">Rae<span class="role admin">ops admin</span><span class="tm">11:05 AM</span></div><div class="tx">Thanks. I'm on call until 6.</div></div></div>
+            <div class="day"><span>Today</span></div>
+            <div class="m" id="m0"><div class="av" style="background:#e8912d">A</div><div><div class="who">Alex<span class="tm">2:14 PM</span></div><div class="tx">Checkout queue is stuck again. Anyone looking?</div></div></div>
+            <div class="m" id="r1" data-grow><div class="av" style="background:#2bac76">R</div><div><div class="who">Rae<span class="role admin">ops admin</span><span class="tm">2:15 PM</span></div><div class="tx" id="r1t"></div></div></div>
+            <div class="m" id="jA" data-grow><div class="av"><img src="../brand/jiro-v4.png"></div><div><div class="who">jiro-ops<span class="app">APP</span><span class="tm">2:15 PM</span></div><div class="tx"><span class="wait status" id="jAw">{{i:file-search}}Reading the last hour of logs<span class="dots"><i></i><i></i><i></i></span></span><span id="jAt">Root cause: a lock was held while a new machine was being set up, so every other request waited about 7 minutes. Nothing crashed. Want a fix PR?</span></div></div></div>
+            <div class="m" id="j1" data-grow><div class="av" style="background:#4a6fd1">J</div><div><div class="who">Jordan<span class="role none">no ops access</span><span class="tm">2:17 PM</span></div><div class="tx" id="j1t"></div></div></div>
+            <div class="m deny" id="jB" data-grow><div class="av"><img src="../brand/jiro-v4.png"></div><div><div class="who">jiro-ops<span class="app">APP</span><span class="tm">2:17 PM</span></div><div class="tx"><span class="lockline">{{i:lock}}<span>You don't have access to <span class="mention">@jiro-ops</span>. Ask an org admin to grant you access.</span></span></div></div></div>
+            <div class="m" id="r2" data-grow><div class="av" style="background:#2bac76">R</div><div><div class="who">Rae<span class="role admin">ops admin</span><span class="tm">2:18 PM</span></div><div class="tx" id="r2t"></div></div></div>
+            <div class="m" id="jC" data-grow><div class="av"><img src="../brand/jiro-v4.png"></div><div><div class="who">jiro-ops<span class="app">APP</span><span class="tm">2:18 PM</span></div><div class="tx"><span class="wait status" id="jCw">{{i:git-pull-request}}Opening a draft PR<span class="dots"><i></i><i></i><i></i></span></span><span id="jCt">Draft PR is up: release the lock before waiting on a new machine, with a test.<br><span class="card">{{i:git-pull-request}}#231 Release the claim lock before provisioning<span class="st">Draft</span></span></span></div></div></div>
+          </div>
+          <div class="comp"><span id="compT"></span><div class="tools">{{i:plus}}{{i:at-sign}}{{i:smile}}<span class="send" id="send">{{i:send-horizontal}}</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="module">
+import { $, CUT, prog, eio, typed, typeEnd, fmt, caret, grow, dots, camera, scene } from '../lib/core.js';
+
+const LINES = {
+  r1: '@jiro-ops read the last hour of logs and tell us what happened.',
+  j1: '@jiro-ops did the automations take all the machines?',
+  r2: '@jiro-ops open the fix PR.',
+};
+// Who types what, when (seconds). Each line is typed into the composer, then sent.
+const TYPE = [
+  { id: 'r1', at: 1.4 },
+  { id: 'j1', at: 15.4 },
+  { id: 'r2', at: 25.0 },
+];
+TYPE.forEach((x) => { x.sent = typeEnd(LINES[x.id], x.at) + 0.5; });
+const REPLY = { jA: [TYPE[0].sent + 0.9, 10.2], jB: [TYPE[1].sent + 1.0, null], jC: [TYPE[2].sent + 0.9, 29.4] };
+const D = 37.0, OUT = D - 2.2;
+
+scene({ duration: D, setup: () => TYPE.forEach((x) => { $(`${x.id}t`).innerHTML = fmt(LINES[x.id]); }), seek: (t) => {
+  // Outro: everything after Alex's message folds away, back to frame 0.
+  const out = eio(prog(t, OUT, 1.6));
+  const g = (id, at) => {
+    const el = $(id);
+    grow(el, t, at);
+    if (out > 0) { el.style.height = `${Number(el.dataset.h) * (1 - out)}px`; el.style.opacity = String(Math.min(Number(el.style.opacity), 1 - out)); }
+  };
+
+  let comp = '<span class="ph">Message #incidents</span>';
+  for (const x of TYPE) {
+    if (t >= x.at && t < x.sent) comp = fmt(typed(LINES[x.id], t, x.at)) + caret;
+    g(x.id, x.sent);
+  }
+  $('compT').innerHTML = comp;
+  $('send').classList.toggle('on', TYPE.some((x) => t >= x.at && t < x.sent));
+
+  for (const [id, [at, done]] of Object.entries(REPLY)) {
+    g(id, at);
+    if (done == null) continue;
+    const w = $(`${id}w`), txt = $(`${id}t`);
+    const p = prog(t, done, 0.6);
+    w.style.opacity = String(1 - p); txt.style.opacity = String(p);
+    dots(w.querySelector('.dots'), t);
+  }
+
+  camera(t, CUT === 'mobile' ? [[0, 313, 391.5, 1.15]] : [[0, 600, 540, 1.0]]);
+}});
+</script>
+</body>
+</html>
