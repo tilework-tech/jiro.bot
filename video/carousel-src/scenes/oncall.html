@@ -9,8 +9,8 @@
 <link rel="stylesheet" href="../node_modules/@fontsource/lato/900.css">
 <link rel="stylesheet" href="../lib/stage.css">
 <style>
-#clock { left: 60px; top: 36px; }
-.win { left: 60px; top: 110px; width: 1080px; height: 920px; }
+#clock { left: 20px; top: 14px; }
+.win { left: 20px; top: 76px; width: 960px; height: 704px; }
 .cut-mobile #clock { left: 16px; top: 14px; }
 .cut-mobile .win { left: 16px; top: 76px; width: 594px; height: 691px; }
 .cut-mobile .slack .side { display: none; }
@@ -28,10 +28,10 @@
 .step { display: flex; gap: 14px; }
 .step .mk { width: 1.2em; flex: none; text-align: center; }
 .step .mk .ico { width: 22px; height: 22px; vertical-align: -4px; }
-#s-pr .pr { height: auto; top: 150px; }
+#s-pr .pr { height: auto; top: 110px; }
 .cut-mobile #s-pr .pr { top: 76px; }
 #s-term .tbody { justify-content: flex-start; }
-#s-term .term { top: 200px; height: 640px; }
+#s-term .term { top: 130px; height: 560px; }
 .cut-mobile #s-term .term { top: 76px; height: 691px; }
 .term .hdr { color: #7d8590; margin-bottom: 14px; }
 </style>
@@ -41,6 +41,7 @@
   <div id="dots"></div>
   <div id="night"></div>
   <div id="world">
+    <div class="chip" id="clock"><span id="clockI"></span><b id="clockT"></b><span class="dim" id="clockS"></span></div>
     <!-- A: the one-time prompt in Slack -->
     <div class="shot" id="s-slack">
       <div class="slack win">
@@ -108,12 +109,11 @@
       </div>
     </div>
   </div>
-  <div class="chip" id="clock"><span id="clockI"></span><b id="clockT"></b><span class="dim" id="clockS"></span></div>
 </div>
 <template id="ic-sun">{{i:sun}}</template><template id="ic-moon">{{i:moon}}</template>
 <template id="ic-spin">{{i:loader-circle}}</template><template id="ic-ok">{{i:check:2.5}}</template>
 <script type="module">
-import { $, CUT, prog, eo, typed, typeEnd, fmt, caret, grow, reveal, show, camera, scene } from '../lib/core.js';
+import { $, CUT, fit, prog, eo, typed, typeEnd, fmt, caret, grow, reveal, show, camera, scene } from '../lib/core.js';
 
 const PROMPT = "@Jiro take on-call for checkout. If it breaks overnight, fix it and open a PR for me.";
 const TYPE_AT = 1.2, SENT = typeEnd(PROMPT, TYPE_AT, 15) + 0.5, REPLY = SENT + 1.2;
@@ -162,7 +162,7 @@ scene({ duration: D, setup: () => { $('mDt').innerHTML = fmt(PROMPT); }, seek: (
   $('clockI').innerHTML = ICON(`ic-${k[1]}`); $('clockT').textContent = k[2]; $('clockS').textContent = k[3] ? `· ${k[3]}` : '';
   $('clock').style.opacity = String(k[0] === 0 ? 1 : 0.25 + 0.75 * eo(prog(since, 0, 0.8)));
 
-  camera(t, CUT === 'mobile' ? [[0, 313, 391.5, 1.15]] : [[0, 600, 540, 1.0]]);
+  camera(t, [[0, ...(CUT === 'desktop' ? fit(0, 0, 1000, 800) : fit(0, 0, 626, 783))]]);
 }});
 </script>
 </body>

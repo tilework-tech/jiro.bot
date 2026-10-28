@@ -19,5 +19,6 @@ for scene in oncall multiplayer rbac; do
       -vf "scale=$w:-1,tile=$([ "$cut" = desktop ] && echo 3x2 || echo 6x1):padding=10:color=0x0a0a0a" \
       -frames:v 1 "storyboard/$scene-$cut.png"
   done
+  node render.mjs --scene="$scene" --cut=poster && cp "../../site/video/carousel/$scene-poster.jpg" storyboard/
 done
 ls storyboard

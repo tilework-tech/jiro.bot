@@ -92,22 +92,22 @@ def mean_abs_diff(a, b):
 
 @unittest.skipUnless(FFMPEG, "no ffmpeg binary found")
 class CarouselVideoTest(unittest.TestCase):
-    def each(self):
-        """Run the calling test's body once per video, each in its own subTest."""
+    def each(self, check):
+        """Run check(name, cut, video) once per video, each in its own subTest."""
         for name in NAMES:
             for cut in CUTS:
                 video = CAROUSEL / f"{name}-{cut}.mp4"
                 with self.subTest(video=video.name):
                     self.assertTrue(video.is_file(), video)
-                    yield name, cut, video
+                    check(name, cut, video)
 
-    def poster(self, name, cut):
-        poster = CAROUSEL / f"{name}-{cut}-poster.jpg"
+    def poster(self, name):
+        poster = CAROUSEL / f"{name}-poster.jpg"
         self.assertTrue(poster.is_file(), poster)
         return poster
 
     def test_videos_are_muted_browser_safe_h264_with_faststart(self):
-        for _, _, video in self.each():
+        def check(_name, _cut, video):
             info = probe(video)
             self.assertEqual(info["codec"], "h264")
             self.assertEqual(info["pix_fmt"], "yuv420p", "Safari plays only 4:2:0 H.264")
@@ -116,43 +116,49 @@ class CarouselVideoTest(unittest.TestCase):
             self.assertIn("moov", atoms)
             self.assertIn("mdat", atoms)
             self.assertLess(atoms.index("moov"), atoms.index("mdat"), atoms)
+        self.each(check)
 
-    def test_desktop_is_near_square_landscape_and_mobile_is_portrait(self):
-        for _, cut, video in self.each():
+    def test_desktop_is_5_by_4_and_mobile_is_4_by_5(self):
+        # The hero carousel (jiro.bot PR #26) shows desktop at up to 560 CSS px and mobile full width.
+        def check(_name, cut, video):
             w, h = probe(video)["size"]
-            if cut == "desktop":
-                self.assertTrue(1.0 <= w / h <= 1.25, (w, h))
-                self.assertGreaterEqual(w, 1100)
-            else:
-                self.assertAlmostEqual(w / h, 4 / 5, places=2)
-                self.assertGreaterEqual(w, 700)
+            self.assertAlmostEqual(w / h, 5 / 4 if cut == "desktop" else 4 / 5, places=2)
+            self.assertGreaterEqual(w, 1100 if cut == "desktop" else 700)
+        self.each(check)
 
     def test_videos_are_long_enough_to_read_and_short_enough_to_loop(self):
         # One calm story per slide: under 20 s would be v25 pace again, over 40 s nobody waits for the loop.
-        for _, _, video in self.each():
+        def check(_name, _cut, video):
             self.assertTrue(20 <= probe(video)["duration"] <= 40)
+        self.each(check)
 
     def test_files_fit_the_web_budget(self):
-        for name, cut, video in self.each():
+        def check(name, cut, video):
             self.assertLessEqual(video.stat().st_size, MAX_VIDEO_BYTES[cut])
-            self.assertLessEqual(self.poster(name, cut).stat().st_size, MAX_POSTER_BYTES)
+        self.each(check)
 
-    def test_poster_is_the_first_frame_so_playback_starts_without_a_jump(self):
-        for name, cut, video in self.each():
-            poster = self.poster(name, cut)
-            self.assertEqual(probe(poster)["size"], probe(video)["size"])
-            self.assertLess(mean_abs_diff(gray_frames(poster)[0], frame_at(video, 0)), 2.0)
+    def test_one_poster_per_example_fits_both_crops(self):
+        # One poster serves both cuts, cropped by object-fit: cover to 5:4 or 4:5.
+        for name in NAMES:
+            with self.subTest(poster=name):
+                poster = self.poster(name)
+                w, h = probe(poster)["size"]
+                self.assertTrue(4 / 5 <= w / h <= 5 / 4, (w, h))
+                self.assertGreaterEqual(min(w, h), 800)
+                self.assertLessEqual(poster.stat().st_size, MAX_POSTER_BYTES)
 
     def test_last_frame_flows_into_first_frame(self):
-        for _, _, video in self.each():
+        def check(_name, _cut, video):
             self.assertLess(mean_abs_diff(frame_at(video, 0), last_frame(video)), 1.5)
+        self.each(check)
 
     def test_video_is_not_a_still(self):
-        for _, _, video in self.each():
+        def check(_name, _cut, video):
             duration = probe(video)["duration"]
             first = frame_at(video, 0)
             changes = [mean_abs_diff(first, frame_at(video, duration * k / 5)) for k in range(1, 5)]
             self.assertGreater(max(changes), 4.0)
+        self.each(check)
 
 
 if __name__ == "__main__":

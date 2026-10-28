@@ -11,8 +11,9 @@ The landing page, copy editor and sign-up Lambda were consolidated here from the
 | `tools/` | Pre-publish lint, LLM grader, AEO probe, overlap check, AEO preview server. See [tools/docs.md](tools/docs.md) |
 | `tools/copy-editor/` | Landing-page preview server with an optional inline copy editor. See [tools/copy-editor/docs.md](tools/copy-editor/docs.md) |
 | `lambda/early-access/` | Sign-up and confirm Lambda. See [lambda/early-access/docs.md](lambda/early-access/docs.md) |
+| `video/carousel-src/` | Sources and render scripts for the hero carousel videos in `site/video/carousel/`. See [video/carousel-src/README.md](video/carousel-src/README.md) |
 | `aeo/` | Dated grader and probe results |
-| `tests/` | Black-box tests of `build.py` and `tools/lint.py`; `tests/browser/` holds Playwright tests of the pop-up |
+| `tests/` | Black-box tests of `build.py`, `tools/lint.py` and the carousel videos (`test_carousel_videos.py`, which needs ffmpeg); `tests/browser/` holds Playwright tests of the pop-up |
 | `infra/site.cfn.yaml` | CloudFormation stack `jiro-bot-site` (S3, CloudFront, ACM, Route 53, deploy role) |
 | `infra/early-access.cfn.yaml` | CloudFormation stack `jiro-bot-early-access` (SES identity, Lambda, HTTP API) |
 | `.github/workflows/deploy.yml` | Manual-dispatch site deploy from `main` |
@@ -22,7 +23,7 @@ Python 3.11+ (for `tomllib`) for the generator and tools; Node 22 for the Lambda
 ```bash
 python3 build.py                     # regenerate site/ from content/
 python3 tools/lint.py                # must pass before publishing; also fails if site/ is stale
-cd tests && python3 -m unittest      # generator and lint tests
+cd tests && python3 -m unittest      # generator, lint and carousel video tests (video tests need ffmpeg)
 python3 tools/serve.py               # preview all of site/ on :4310 with extensionless URLs
 python3 tools/copy-editor/server.py --port 4100          # preview the landing page
 python3 tools/copy-editor/server.py --port 4100 --edit   # ...with the inline copy editor
@@ -46,7 +47,7 @@ In a Nori Session, background the preview server (`setsid nohup python3 tools/co
 
 The design is drawn at 1440px; the "Responsive" block at the end of `site/css/styles.css` steps down at 1180px, 900px (dropdown menu from `initMenu`, stacked sections, sideways-scrolling compare table) and 420px.
 
-The hero video is Jiro hero v25 (46s loop, muted H.264 web encode); its source and render scripts live on the `video/hero-loop-v1` branch.
+The hero video is Jiro hero v25 (46s loop, muted H.264 web encode); its source and render scripts live on the `video/hero-loop-v1` branch. Its replacements, the three hero carousel videos (on-call, multiplayer, RBAC), render into `site/video/carousel/` from [video/carousel-src/](video/carousel-src/README.md).
 
 Still placeholder: "Lorem ipsum section title.", the 01/02/03 feature text, the compare table's "Feature Row title" / "Lorem ipsum" rows, and the FAQ answers in [BRACKETS].
 

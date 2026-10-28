@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="../node_modules/@fontsource/lato/900.css">
 <link rel="stylesheet" href="../lib/stage.css">
 <style>
-#win { left: 40px; top: 60px; width: 1120px; height: 960px; }
+#win { left: 20px; top: 20px; width: 960px; height: 760px; }
 .cut-mobile #win { left: 16px; top: 16px; width: 594px; height: 751px; }
 .cut-mobile .slack .side { width: 64px; padding-top: 16px; }
 .cut-mobile .slack .side > :not(.rail) { display: none; }
@@ -71,7 +71,7 @@
   </div>
 </div>
 <script type="module">
-import { $, CUT, prog, eio, typed, typeEnd, fmt, caret, grow, dots, camera, scene } from '../lib/core.js';
+import { $, CUT, fit, prog, eio, typed, typeEnd, fmt, caret, grow, dots, camera, scene } from '../lib/core.js';
 
 const LINES = {
   r1: '@jiro-ops read the last hour of logs and tell us what happened.',
@@ -91,11 +91,7 @@ const D = 37.0, OUT = D - 2.2;
 scene({ duration: D, setup: () => TYPE.forEach((x) => { $(`${x.id}t`).innerHTML = fmt(LINES[x.id]); }), seek: (t) => {
   // Outro: everything after Alex's message folds away, back to frame 0.
   const out = eio(prog(t, OUT, 1.6));
-  const g = (id, at) => {
-    const el = $(id);
-    grow(el, t, at);
-    if (out > 0) { el.style.height = `${Number(el.dataset.h) * (1 - out)}px`; el.style.opacity = String(Math.min(Number(el.style.opacity), 1 - out)); }
-  };
+  const g = (id, at) => grow($(id), t, at, out);
 
   let comp = '<span class="ph">Message #incidents</span>';
   for (const x of TYPE) {
@@ -114,7 +110,7 @@ scene({ duration: D, setup: () => TYPE.forEach((x) => { $(`${x.id}t`).innerHTML 
     dots(w.querySelector('.dots'), t);
   }
 
-  camera(t, CUT === 'mobile' ? [[0, 313, 391.5, 1.15]] : [[0, 600, 540, 1.0]]);
+  camera(t, [[0, ...(CUT === 'desktop' ? fit(0, 0, 1000, 800) : fit(0, 0, 626, 783))]]);
 }});
 </script>
 </body>

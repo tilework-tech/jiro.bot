@@ -1,11 +1,19 @@
 // Shared timeline helpers for the carousel scenes. Every visual is a pure
 // function of the video time t (seconds), so any frame can be rendered alone.
-export const CUTS = { desktop: [1200, 1080], mobile: [720, 900] };
-export const CUT = new URLSearchParams(location.search).get('cut') === 'mobile' ? 'mobile' : 'desktop';
+// desktop 5:4 and mobile 4:5 match the hero carousel. The poster is square and
+// keeps its content inside SAFE, the part that survives both crops.
+export const CUTS = { desktop: [1200, 960], mobile: [720, 900], poster: [1080, 1080] };
+const asked = new URLSearchParams(location.search).get('cut');
+export const CUT = asked in CUTS ? asked : 'desktop';
 export const [W, H] = CUTS[CUT];
+export const SAFE = CUT === 'poster' ? [864, 864] : [W, H];
 document.documentElement.style.width = document.body.style.width = `${W}px`;
 document.documentElement.style.height = document.body.style.height = `${H}px`;
-document.body.classList.add(`cut-${CUT}`);
+// The poster uses the mobile layout, framed into its safe square.
+document.body.classList.add(`cut-${CUT === 'poster' ? 'mobile' : CUT}`);
+
+// Camera key for a world box (x, y, w, h): centred, scaled to fill SAFE, at most `max`.
+export const fit = (x, y, w, h, max = 2) => [x + w / 2, y + h / 2, Math.min(max, SAFE[0] / w, SAFE[1] / h)];
 
 export const $ = (id) => document.getElementById(id);
 export const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
@@ -32,13 +40,14 @@ export const reveal = (el, t, at, dur = 0.7, rise = 12) => {
 };
 
 // A message joining a bottom-anchored list: its slot opens (pushing older
-// messages up), then it fades in. Heights are measured once in init().
-export const grow = (el, t, at, dur = 0.8) => {
-  const h = Number(el.dataset.h);
-  const open = eio(prog(t, at, dur * 0.7));
-  el.style.height = t < at ? '0px' : `${h * open}px`;
-  el.style.paddingTop = el.style.paddingBottom = t < at ? '0px' : '';
-  el.style.opacity = String(eo(prog(t, at + dur * 0.35, dur * 0.65)));
+// messages up), then it fades in. `fold` (0..1) closes it again for the loop.
+// Heights and paddings are measured once in init().
+export const grow = (el, t, at, fold = 0, dur = 0.8) => {
+  const open = (t < at ? 0 : eio(prog(t, at, dur * 0.7))) * (1 - fold);
+  el.style.height = `${Number(el.dataset.h) * open}px`;
+  el.style.paddingTop = `${Number(el.dataset.pt) * open}px`;
+  el.style.paddingBottom = `${Number(el.dataset.pb) * open}px`;
+  el.style.opacity = String(eo(prog(t, at + dur * 0.35, dur * 0.65)) * (1 - fold));
 };
 
 // Three-dot "working" indicator.
@@ -81,7 +90,10 @@ export const scene = ({ duration, seek, setup = () => {} }) => {
     await document.fonts.ready;
     setup();
     document.querySelectorAll('.shot').forEach((el) => show(el, true));
-    document.querySelectorAll('[data-grow]').forEach((el) => { el.dataset.h = String(el.offsetHeight); });
+    document.querySelectorAll('[data-grow]').forEach((el) => {
+      const cs = getComputedStyle(el);
+      Object.assign(el.dataset, { h: el.offsetHeight, pt: parseFloat(cs.paddingTop), pb: parseFloat(cs.paddingBottom) });
+    });
     seek(0);
     return duration;
   };
