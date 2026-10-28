@@ -35,7 +35,7 @@ def check_pass(page, direction):
     result = snapshot(page)
     labels = [event["move"] for event in result["moves"]]
     assert result["direction"] == direction, result
-    assert all(label in ("large-peek", "game-idle") or label.startswith("small-") for label in labels), result
+    assert all(label in ("large-peek", "large-peek-behind", "game-idle") or label.startswith("small-") for label in labels), result
     assert sum(label.startswith("small-") for label in labels) >= 2, result
     assert result["idle"] in ("game", "spring", "eager", "sleepy") and result["state"] == "idle", result
     assert result["bubbleHidden"], result

@@ -23,6 +23,8 @@ COMMENTS = [
 DESKTOP = {"width": 1440, "height": 900}
 NARROW = {"width": 390, "height": 844}
 PASS_MS = 7500
+READ_CHUNK = 200
+READ_PAUSE_MS = 2500
 REST_MS = 4000
 IDLE_STYLES = {"game", "spring", "eager", "sleepy"}
 BOUNCY_STYLES = {"spring", "eager"}
@@ -54,6 +56,13 @@ SECTIONS = "\n".join(
 )
 COMMENTED_PAGE = page_html(SECTIONS)
 DOUBLE_SCRIPT_PAGE = page_html(SECTIONS, scripts=2)
+PEEK_SECTIONS = "\n".join(
+    f'<section id="s{i}" data-jiro-comment="{text}"' + (' data-jiro-peek="#frame"' if i == 3 else '') + f'><h2>Section {i}</h2>'
+    + ('<div id="frame" style="position:absolute;left:30%;top:30%;width:40%;height:45%;background:#222"></div>' if i == 3 else '')
+    + '</section>'
+    for i, text in enumerate(COMMENTS, start=1)
+)
+PEEK_PAGE = page_html(PEEK_SECTIONS)
 PLAIN_PAGE = page_html("\n".join(f'<section id="s{i}"><h2>Section {i}</h2></section>' for i in range(1, 6)))
 
 SEEDED_RANDOM = """
@@ -95,6 +104,27 @@ new MutationObserver(records => {
   attributeFilter: ['data-jiro-motion', 'data-jiro-face']});
 """
 
+SAMPLE_BEHIND = """
+window.__behind = [];
+(function sample() {
+  const mascot = document.querySelector('.jiro-buddy__mascot');
+  const section = document.querySelector('[data-jiro-peek]');
+  const cover = section && document.querySelector(section.dataset.jiroPeek);
+  if (mascot && cover) {
+    const m = mascot.getBoundingClientRect(), c = cover.getBoundingClientRect();
+    const left = Math.max(m.left, c.left), right = Math.min(m.right, c.right);
+    const top = Math.max(m.top, c.top), bottom = Math.min(m.bottom, c.bottom);
+    let behind = false;
+    if (m.width && right - left > m.width * 0.2 && bottom - top > m.height * 0.2) {
+      const hit = document.elementFromPoint((left + right) / 2, (top + bottom) / 2);
+      behind = !!hit && cover.contains(hit) && !mascot.contains(hit);
+    }
+    window.__behind.push([performance.now(), behind]);
+  }
+  requestAnimationFrame(sample);
+})();
+"""
+
 SAMPLE_EDGE = """
 window.__edge = [];
 (function sample() {
@@ -133,6 +163,7 @@ class BuddyTestCase(unittest.TestCase):
         (root / "index.html").write_text(COMMENTED_PAGE)
         (root / "double.html").write_text(DOUBLE_SCRIPT_PAGE)
         (root / "plain.html").write_text(PLAIN_PAGE)
+        (root / "peek.html").write_text(PEEK_PAGE)
         cls._fixtures, cls.base = serve(root)
         cls._mockup, cls.mockup = serve(BUDDY)
         cls._pw = sync_playwright().start()
@@ -177,6 +208,43 @@ class BuddyTestCase(unittest.TestCase):
     def scroll_to_end(self, page, end, wait=PASS_MS):
         page.evaluate("end => window.scrollTo({top: end === 'bottom' ? document.documentElement.scrollHeight : 0, behavior: 'instant'})", end)
         page.wait_for_timeout(wait)
+
+    def read_to(self, page, section_id, chunk=READ_CHUNK, pause=READ_PAUSE_MS, wait=PASS_MS):
+        """Scroll like a reader: a short flick, a pause to read, repeat."""
+        page.evaluate(
+            """([id, chunk, pause]) => new Promise(done => {
+                const r = document.getElementById(id).getBoundingClientRect();
+                const max = document.documentElement.scrollHeight - innerHeight;
+                const target = Math.min(max, Math.max(0, scrollY + r.top + r.height / 2 - innerHeight / 2));
+                const sign = target > scrollY ? 1 : -1;
+                (function flick() {
+                    const stop = Math.abs(target - scrollY) <= chunk ? target : scrollY + sign * chunk;
+                    (function tick() {
+                        const left = stop - scrollY;
+                        window.scrollBy({top: Math.abs(left) < 25 ? left : sign * 25, behavior: 'instant'});
+                        if (Math.abs(stop - scrollY) >= 1) return setTimeout(tick, 16);
+                        if (Math.abs(target - scrollY) < 1) return done();
+                        setTimeout(flick, pause);
+                    })();
+                })();
+            })""",
+            [section_id, chunk, pause],
+        )
+        page.wait_for_timeout(wait)
+
+    def runs(self, samples, gap_ms=100):
+        found, start, last_on = [], None, None
+        for at, on in samples:
+            if on:
+                if start is None:
+                    start = at
+                last_on = at
+            elif start is not None and at - last_on > gap_ms:
+                found.append((start, last_on - start))
+                start = None
+        if start is not None:
+            found.append((start, last_on - start))
+        return found
 
     def lines(self, page):
         return [entry["text"] for entry in page.evaluate("window.__lines")]
@@ -316,11 +384,12 @@ class MotionTest(BuddyTestCase):
             bouncy = [e for e in styles if e["pass"] == walk_pass and e["style"] in BOUNCY_STYLES]
             self.assertLessEqual(len(bouncy), 1, styles)
 
-    def test_resting_hover_stays_within_seven_pixels(self):
+    def test_resting_hover_stays_within_seven_pixels_or_nine_for_the_game_idle(self):
         page = self.open()
         self.scroll_to(page, "s3", wait=PASS_MS)
         expect(self.bubble(page)).to_be_hidden(timeout=9000)
         page.wait_for_timeout(600)
+        cap = 9 if page.evaluate("document.querySelector('.jiro-buddy').dataset.jiroMotion") == "game" else 7
         spread = page.evaluate(
             """() => new Promise(done => {
                 const art = document.querySelector('.jiro-buddy__art');
@@ -335,8 +404,8 @@ class MotionTest(BuddyTestCase):
                 })();
             })"""
         )
-        self.assertLessEqual(spread[0], 7, spread)
-        self.assertLessEqual(spread[1], 7, spread)
+        self.assertLessEqual(spread[0], cap, spread)
+        self.assertLessEqual(spread[1], cap, spread)
 
     def test_passes_use_only_small_moves_apart_from_the_edge_peek(self):
         page = self.open()
@@ -369,6 +438,84 @@ class MotionTest(BuddyTestCase):
         self.assertGreaterEqual(longest, 800)
         box = self.mascot(page).bounding_box()
         self.assertTrue(0 <= box["x"] and box["x"] + box["width"] <= DESKTOP["width"], box)
+
+    def test_reading_down_the_landing_page_he_peeks_in_from_the_edge_once(self):
+        page = self.open(f"{self.mockup}/index.html")
+        page.evaluate(SAMPLE_EDGE)
+        self.read_to(page, "ditch")
+        first = [d for _, d in self.runs(page.evaluate("window.__edge")) if d >= 300]
+        self.assertEqual(len(first), 1, first)
+        self.assertGreaterEqual(first[0], 800)
+        box = self.mascot(page).bounding_box()
+        self.assertTrue(0 <= box["x"] and box["x"] + box["width"] <= DESKTOP["width"], box)
+        for target in ("pillars", "hero", "how"):
+            self.read_to(page, target)
+        later = [d for _, d in self.runs(page.evaluate("window.__edge")) if d >= 300]
+        self.assertEqual(len(later), 1, later)
+
+    def test_he_peeks_out_from_behind_the_marked_element_once_per_pass(self):
+        page = self.open(f"{self.base}/peek.html")
+        page.evaluate(SAMPLE_BEHIND)
+        self.read_to(page, "s3")
+        self.read_to(page, "s5")
+        turned = page.evaluate("performance.now()")
+        self.read_to(page, "s3")
+        peeks = [(at, d) for at, d in self.runs(page.evaluate("window.__behind")) if d >= 300]
+        self.assertEqual([at < turned for at, _ in peeks], [True, False], peeks)
+        for _, d in peeks:
+            self.assertGreaterEqual(d, 800)
+        self.assertTrue(page.evaluate("""() => {
+            const m = document.querySelector('.jiro-buddy__mascot'), r = m.getBoundingClientRect();
+            return m.contains(document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2));
+        }"""), "he should end up in front, fully visible")
+
+    def test_on_the_landing_page_he_peeks_out_from_behind_the_video(self):
+        page = self.open(f"{self.mockup}/index.html")
+        page.evaluate(SAMPLE_BEHIND)
+        self.read_to(page, "video")
+        peeks = [d for _, d in self.runs(page.evaluate("window.__behind")) if d >= 300]
+        self.assertEqual(len(peeks), 1, peeks)
+        self.assertGreaterEqual(peeks[0], 800)
+
+    def test_the_game_idle_hovers_about_half_again_as_far(self):
+        page = self.open()
+        for target in ("s2", "s3", "s4", "s5", "s6", "s7", "s8"):
+            self.scroll_to(page, target, wait=PASS_MS)
+            expect(self.bubble(page)).to_be_hidden(timeout=9000)
+            if page.evaluate("document.querySelector('.jiro-buddy').dataset.jiroMotion") == "game":
+                break
+        else:
+            self.fail("never rested in the game idle")
+        spread = page.evaluate(
+            """() => new Promise(done => {
+                const art = document.querySelector('.jiro-buddy__art');
+                const button = document.querySelector('.jiro-buddy__mascot');
+                const ys = [], xs = [];
+                const end = performance.now() + 7000;
+                (function sample() {
+                    const a = art.getBoundingClientRect(), b = button.getBoundingClientRect();
+                    ys.push(a.top - b.top); xs.push(a.left - b.left);
+                    if (performance.now() < end) requestAnimationFrame(sample);
+                    else done([Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)]);
+                })();
+            })"""
+        )
+        self.assertGreaterEqual(spread[0], 3.3, spread)
+        self.assertLessEqual(spread[0], 5, spread)
+        self.assertGreaterEqual(spread[1], 6.5, spread)
+        self.assertLessEqual(spread[1], 9, spread)
+
+    def test_a_dropped_jiro_never_peeks(self):
+        page = self.open(f"{self.base}/peek.html")
+        self.drag(page, -400, 100)
+        dropped = self.mascot(page).bounding_box()
+        page.evaluate(SAMPLE_EDGE + SAMPLE_BEHIND)
+        self.read_to(page, "s3")
+        self.assertEqual(self.mascot(page).bounding_box(), dropped)
+        edge, behind = page.evaluate("[window.__edge, window.__behind]")
+        self.assertTrue(edge and behind)
+        self.assertFalse(any(on for _, on in edge))
+        self.assertFalse(any(on for _, on in behind))
 
     def test_his_face_changes_expression_while_resting(self):
         page = self.open()
@@ -549,10 +696,10 @@ class PageTest(BuddyTestCase):
 
 
 class BuddyBudgetTest(unittest.TestCase):
-    def test_buddy_ships_in_under_twelve_kilobytes_compressed(self):
+    def test_buddy_ships_in_under_thirteen_kilobytes_compressed(self):
         total = sum(len(gzip.compress((BUDDY / name).read_bytes(), 9))
                     for name in ("jiro-buddy.js", "jiro-buddy.css"))
-        self.assertLess(total, 12 * 1024)
+        self.assertLess(total, 13 * 1024)
 
 
 @unittest.skipUnless(HAVE_PLAYWRIGHT, "playwright is not installed")

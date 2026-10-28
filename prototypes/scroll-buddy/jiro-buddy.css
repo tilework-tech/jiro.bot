@@ -423,11 +423,11 @@
   }
 
   [data-jiro-motion="eager"] .jiro-buddy__drift {
-    animation-duration: 3.2s;
+    animation: jiro-buddy-eager-drift 3.2s ease-in-out infinite;
   }
 
   [data-jiro-motion="eager"] .jiro-buddy__tilt {
-    animation-duration: 3.8s;
+    animation: jiro-buddy-eager-tilt 3.8s ease-in-out infinite;
   }
 
   [data-jiro-motion="eager"] .jiro-buddy__shadow {
@@ -497,7 +497,7 @@
 
 @keyframes jiro-buddy-bob {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3.5px); }
+  50% { transform: translateY(-5.25px); }
 }
 
 @keyframes jiro-buddy-calm {
@@ -525,11 +525,21 @@
 }
 
 @keyframes jiro-buddy-drift {
+  0%, 100% { transform: translateX(-1.1px); }
+  50% { transform: translateX(1.1px); }
+}
+
+@keyframes jiro-buddy-tilt {
+  0%, 100% { transform: rotate(-2.25deg); }
+  50% { transform: rotate(2.25deg); }
+}
+
+@keyframes jiro-buddy-eager-drift {
   0%, 100% { transform: translateX(-.75px); }
   50% { transform: translateX(.75px); }
 }
 
-@keyframes jiro-buddy-tilt {
+@keyframes jiro-buddy-eager-tilt {
   0%, 100% { transform: rotate(-1.5deg); }
   50% { transform: rotate(1.5deg); }
 }

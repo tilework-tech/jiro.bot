@@ -94,6 +94,11 @@
     return (section.getAttribute("data-jiro-" + name) || "").trim();
   }
 
+  function visible(node) {
+    var box = node.getBoundingClientRect();
+    return box.width > 0 && box.bottom > 0 && box.top < window.innerHeight;
+  }
+
   function target(section, name) {
     var selector = attr(section, name);
     if (!selector) return null;
@@ -158,6 +163,8 @@
     var moving = false;
     var landedAt = 0;
     var peekAnimation = null;
+    var raised = null;
+    var raisedZ = "";
     var peeks = 0;
     var mergedLogo = null;
     var direction = 0;
@@ -322,6 +329,7 @@
       flight = null;
       if (peekAnimation) peekAnimation.cancel();
       peekAnimation = null;
+      lower();
       hop.getAnimations().forEach(function (animation) { animation.cancel(); });
     }
 
@@ -622,11 +630,23 @@
         { transform: transform(edge), opacity: 1, offset: 0.3 },
         { transform: transform(edge), opacity: 1, offset: 0.8 },
         { transform: transform(out), opacity: 0.7 }
-      ], { duration: 2400, easing: "ease-in-out" });
-      await peekAnimation.finished.catch(function () {});
-      peekAnimation = null;
+      ], { duration: 2400, easing: "ease-in-out", fill: "forwards" });
+      await hopIn(section, id, out, y);
+    }
+
+    function lower() {
+      if (raised) raised.style.zIndex = raisedZ;
+      raised = null;
+    }
+
+    async function hopIn(section, id, x, y) {
+      var held = peekAnimation;
+      await held.finished.catch(function () {});
+      if (id === moveId) await squash(1.06, 0.92, 220);
+      held.cancel();
+      if (peekAnimation === held) peekAnimation = null;
       if (id !== moveId) return;
-      await arc({ left: out, top: y }, 850);
+      await arc({ left: x, top: y }, 850);
       if (id !== moveId) return;
       await play(hop, [
         { transform: "translateY(0)" },
@@ -636,7 +656,30 @@
       finishMove(section, id);
     }
 
-    function hopTo(section, kind) {
+    async function peekBehind(section, id, cover) {
+      var to = aside.getBoundingClientRect();
+      var box = cover.getBoundingClientRect();
+      var width = mascot.offsetWidth;
+      var fromRight = to.left + width / 2 > box.left + box.width / 2;
+      var hidden = fromRight ? box.right - width : box.left;
+      var edge = fromRight ? box.right - width * 0.7 : box.left - width * 0.3;
+      var y = Math.min(Math.max(to.top, box.top + 8), box.bottom - mascot.offsetHeight - 8);
+      var transform = function (x) { return "translate(" + (x - to.left) + "px," + (y - to.top) + "px)"; };
+      raised = cover;
+      raisedZ = cover.style.zIndex;
+      cover.style.zIndex = (parseInt(getComputedStyle(aside).zIndex, 10) || 50) + 1;
+      setState("peeking");
+      peekAnimation = aside.animate([
+        { transform: transform(hidden) },
+        { transform: transform(edge), offset: 0.3 },
+        { transform: transform(edge), offset: 0.8 },
+        { transform: transform(edge) }
+      ], { duration: 2000, easing: "ease-in-out", fill: "forwards" });
+      await hopIn(section, id, edge, y);
+      if (id === moveId) lower();
+    }
+
+    function hopTo(section, kind, cover) {
       var id = ++moveId;
       pendingKind = kind || "quiet";
       pendingJourney = journey.id;
@@ -664,6 +707,7 @@
         }).then(function () { finishMove(section, id); });
         return;
       }
+      if (cover) return peekBehind(section, id, cover);
       peeks += 1;
       peekThenFly(section, id);
     }
@@ -671,7 +715,14 @@
     function travelTo(section) {
       var from = aside.getBoundingClientRect();
       var offscreen = from.bottom < 0 || from.top > window.innerHeight;
-      if (wide.matches && motion() && offscreen && peeks < MAX_PEEKS) {
+      var cover = target(section, "peek");
+      if (wide.matches && motion() && cover && !journey.covered && visible(cover)) {
+        journey.covered = true;
+        aside.setAttribute("data-jiro-move", "large-peek-behind");
+        hopTo(section, "large", cover);
+        return;
+      }
+      if (wide.matches && motion() && (offscreen || direction > 0) && peeks < MAX_PEEKS) {
         aside.setAttribute("data-jiro-move", "large-peek");
         hopTo(section, "large");
         return;
