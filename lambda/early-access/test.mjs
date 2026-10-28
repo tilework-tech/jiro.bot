@@ -110,7 +110,6 @@ async function confirm(token, app = handler) {
 const valid = (overrides = {}) => ({
   name: "Alex Morgan",
   email: "alex@company.com",
-  org: "Acme Robotics",
   page: "https://jiro.bot/?utm_source=linkedin&utm_campaign=launch",
   referrer: "https://www.linkedin.com/",
   ...overrides,
@@ -128,7 +127,7 @@ async function signUpAndGetToken(body = valid(), app = handler) {
 const findPerson = (email) => people.find((p) => hasEmail(p, email));
 const assertNoVisitorDetails = () => {
   assert.ok(logs.length > 0, "failure was logged");
-  for (const secret of ["alex@company.com", "Alex Morgan", "Acme Robotics"]) {
+  for (const secret of ["alex@company.com", "Alex Morgan"]) {
     assert.ok(
       logs.every((line) => !line.includes(secret)),
       `logs leak ${secret}`,
@@ -198,9 +197,6 @@ test("rejects missing or malformed fields without sending email", async () => {
     valid({ email: "not-an-email" }),
     valid({ email: undefined }),
     valid({ email: `${"a".repeat(250)}@company.com` }),
-    valid({ org: "" }),
-    valid({ org: "   " }),
-    valid({ org: "x".repeat(500) }),
   ];
   for (const body of bad) {
     assert.equal((await handler(signupEvent(body))).statusCode, 400, JSON.stringify(body).slice(0, 80));
@@ -286,7 +282,6 @@ test("confirming adds a new person to the early-access waitlist and redirects to
   assert.deepEqual(person.attributes.name, { first_name: "Alex", last_name: "Morgan" });
   assert.deepEqual(person.attributes.labels.items, [LABEL]);
   assert.equal(person.attributes.early_access_status, "Waitlist");
-  assert.equal(person.attributes.early_access_org, "Acme Robotics");
   assert.equal(person.attributes.early_access_confirmed_at, "2026-11-03");
   const context = JSON.parse(person.attributes.early_access_context);
   assert.equal(context.page, "https://jiro.bot/?utm_source=linkedin&utm_campaign=launch");
@@ -313,14 +308,13 @@ test("confirming an existing contact keeps their labels and their outreach statu
     },
   });
 
-  const res = await confirm(await signUpAndGetToken(valid({ org: "Acme Labs" })));
+  const res = await confirm(await signUpAndGetToken());
 
   assert.equal(res.headers.location, `${SITE}/confirmed.html`);
   assert.equal(people.length, 1);
   const { attributes } = findPerson("alex@company.com");
   assert.deepEqual([...attributes.labels.items].sort(), [LABEL, "Newsletter"].sort());
   assert.equal(attributes.early_access_status, "Booked");
-  assert.equal(attributes.early_access_org, "Acme Labs");
 });
 
 test("an existing contact who was never on the waitlist starts at Waitlist", async () => {

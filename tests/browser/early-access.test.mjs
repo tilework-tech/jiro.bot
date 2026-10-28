@@ -68,11 +68,10 @@ async function openSite({ status = 202, path = "/", networkError = false } = {})
 const dialog = (page) => page.getByRole("dialog");
 const submitButton = (page) => dialog(page).getByRole("button", { name: /get early access/i });
 
-async function fill(page, { name = "Alex Morgan", email = "alex@company.com", org = "Acme Robotics" } = {}) {
+async function fill(page, { name = "Alex Morgan", email = "alex@company.com" } = {}) {
   const d = dialog(page);
   await d.getByLabel(/name/i).fill(name);
   await d.getByLabel(/email/i).fill(email);
-  await d.getByLabel(/organization/i).fill(org);
 }
 
 test("every Get early access button opens the sign-up pop-up", async () => {
@@ -94,7 +93,17 @@ test("every Get early access button opens the sign-up pop-up", async () => {
   await page.close();
 });
 
-test("submitting the pop-up sends name, email, org and page, then asks the visitor to check their inbox", async () => {
+test("the pop-up asks only for name and email", async () => {
+  const { page } = await openSite();
+  await page.getByRole("link", { name: "Get early access" }).first().click();
+  const fields = await dialog(page)
+    .getByRole("textbox")
+    .evaluateAll((els) => els.filter((e) => e.checkVisibility()).map((e) => e.labels[0]?.textContent.trim()));
+  assert.deepEqual(fields, ["Name", "Work email"]);
+  await page.close();
+});
+
+test("submitting the pop-up sends name, email and page, then asks the visitor to check their inbox", async () => {
   const { page, submissions } = await openSite();
   await page.getByRole("link", { name: "Get early access" }).first().click();
   await fill(page);
@@ -107,7 +116,6 @@ test("submitting the pop-up sends name, email, org and page, then asks the visit
   assert.equal(submissions.length, 1);
   assert.equal(submissions[0].name, "Alex Morgan");
   assert.equal(submissions[0].email, "alex@company.com");
-  assert.equal(submissions[0].org, "Acme Robotics");
   assert.match(submissions[0].page, /^http:\/\/127\.0\.0\.1/);
   assert.equal(submissions[0].ea_hp, "", "honeypot field the Lambda checks is sent empty");
   assert.ok(
@@ -150,7 +158,7 @@ test("the close button and a click on the backdrop close the pop-up", async () =
 test("an incomplete form is not sent", async () => {
   const { page, submissions } = await openSite();
   await page.getByRole("link", { name: "Get early access" }).first().click();
-  for (const fields of [{ email: "not-an-email" }, { org: "   " }, { name: " " }]) {
+  for (const fields of [{ email: "not-an-email" }, { email: "   " }, { name: " " }]) {
     await fill(page, fields);
     await submitButton(page).click();
     assert.equal(submissions.length, 0, JSON.stringify(fields));

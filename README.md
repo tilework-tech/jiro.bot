@@ -52,6 +52,6 @@ Still placeholder: "Lorem ipsum section title.", the 01/02/03 feature text, the 
 
 ## Early access
 
-Every "Get early access" link opens a pop-up asking for name, work email and organization, which posts to the URL in `<meta name="early-access-endpoint">` (the live HTTP API). Visitors join the list only after clicking the emailed link and pressing "Confirm my spot" (opening the link alone does nothing, so mail scanners can't confirm); they land on `confirmed.html` or `link-expired.html`.
+Every "Get early access" link opens a pop-up asking only for name and work email, which posts to the URL in `<meta name="early-access-endpoint">` (the live HTTP API). Visitors join the list only after clicking the emailed link and pressing "Confirm my spot" (opening the link alone does nothing, so mail scanners can't confirm); they land on `confirmed.html` or `link-expired.html`.
 
 Deploy only by dispatching the GitHub Actions workflows, after approval. Architecture and known gaps: [docs.md](docs.md).

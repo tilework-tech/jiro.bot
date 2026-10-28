@@ -76,7 +76,6 @@
     const data = {
       name: form.elements.name.value,
       email: form.elements.email.value,
-      org: form.elements.org.value,
       ea_hp: form.elements.ea_hp.value,
       page: pageWithCampaign(),
       referrer: document.referrer,

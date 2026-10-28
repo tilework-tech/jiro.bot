@@ -25,8 +25,8 @@ POST /confirm (form-urlencoded token) ──> verify ──> Clarify ──> 303
 ### Core Implementation
 
 - Routing is by `rawPath` and method. `/confirm` accepts GET and POST without an origin check. `/signup` enforces an origin allowlist (`https://jiro.bot`, `https://www.jiro.bot`), answers CORS preflight, and accepts only POST; requests without an `Origin` header are allowed through. Unknown routes return 404.
-- Sign-up parsing: rejects bodies over 16 KB (413) and non-object JSON (400); a non-empty honeypot `ea_hp` returns a fake 202 and sends nothing. Fields are trimmed and email is lowercased. Name needs at least 2 characters (longer input is truncated); email (simple regex) and org are rejected, not truncated, when over 254 and 200 characters respectively.
-- Stateless pending sign-up: the token is `base64url(JSON{name,email,org,page,referrer,exp}).HMAC-SHA256(CONFIRM_SECRET)` with a 24-hour expiry. Nothing is stored until the confirm form comes back. Verification uses a timing-safe comparison, and the confirm URL is built from the request's own API Gateway domain.
+- Sign-up parsing: rejects bodies over 16 KB (413) and non-object JSON (400); a non-empty honeypot `ea_hp` returns a fake 202 and sends nothing. Fields are trimmed and email is lowercased. Name needs at least 2 characters (longer input is truncated); email (simple regex) is rejected, not truncated, when over 254 characters. Organization is not collected; any `org` field sent is ignored.
+- Stateless pending sign-up: the token is `base64url(JSON{name,email,page,referrer,exp}).HMAC-SHA256(CONFIRM_SECRET)` with a 24-hour expiry. Nothing is stored until the confirm form comes back. Verification uses a timing-safe comparison, and the confirm URL is built from the request's own API Gateway domain.
 - The confirmation email has text and HTML parts. The greeting uses the first name only when it is plain (letters, marks, apostrophes, hyphens, at most 40 characters) and the full name contains no `.`, `/`, or `:`; otherwise it says "Hi there". The email is sent as Martin, and URL-like names would otherwise render as links in mail clients. SES failure returns 502 to the browser.
 - Clarify write on `POST /confirm`, after a lookup by email. Lookup results whose email addresses do not actually match are ignored, and empty response bodies are treated as `{}`.
 
@@ -34,12 +34,12 @@ POST /confirm (form-urlencoded token) ──> verify ──> Clarify ──> 303
 |------|--------|
 | No match | Create the person with `match_on: email_addresses`, split name into first/last, label `Jiro Early Access`, `early_access_status` `Waitlist` |
 | Existing person | PATCH, appending the label (meta `collection: append`) only if missing and setting `Waitlist` only if status is empty |
-| Both cases | Set `early_access_org`, `early_access_confirmed_at` (YYYY-MM-DD), and `early_access_context` (JSON with source, page, referrer, UTM params parsed from `page`, timestamp) |
+| Both cases | Set `early_access_confirmed_at` (YYYY-MM-DD), and `early_access_context` (JSON with source, page, referrer, UTM params parsed from `page`, timestamp) |
 
 ### Things to Know
 
 - Confirmation is two steps because corporate mail scanners (Safe Links, Mimecast) open links but do not submit forms. `GET /confirm` must never write to Clarify.
-- A status Martin has already set in Clarify is never overwritten, and repeat confirms do not duplicate the person or the label; the org, date, and context fields are refreshed each time.
+- A status Martin has already set in Clarify is never overwritten, and repeat confirms do not duplicate the person or the label; the date and context fields are refreshed each time. The Clarify `early_access_org` field exists but is no longer written.
 - A Clarify failure (non-2xx, network error, or 4-second per-call timeout) returns a 502 HTML "try the link again" page rather than a redirect, since the token is still valid until it expires. The stack sets a 15-second function timeout for this: the Lambda default of 3 seconds would kill the invocation before the retry page renders.
 - Logs carry only the stage, request ID, and error name (non-2xx Clarify responses surface as `ClarifyHTTP<status>`, e.g. `ClarifyHTTP503`). Error messages are never logged because SES messages can contain the recipient address.
 - The origin check does not stop non-browser clients, so `/signup` can be scripted to send confirmation emails to arbitrary addresses. The only limit is API Gateway throttling on the `$default` stage (`POST /signup` burst 5, 1 request/s; other routes burst 20, 5 requests/s); there is no per-recipient limit.
