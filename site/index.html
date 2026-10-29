@@ -640,44 +640,45 @@
             <div class="ftext">
               <h2 id="features-heading" class="lbl">&gt;_ How it works</h2>
               <div class="fnum">01</div>
-              <h3 class="fh" id="multiplayer-title">Working together on any interface</h3>
+              <hgroup>
+                <h3 class="fh" id="multiplayer-title">True multiplayer across all interfaces</h3>
+                <p class="feature-subline">Different people. Different devices. One shared session.</p>
+              </hgroup>
               <p class="fp">Different people. Different devices. One shared session.</p>
-              <ol class="feature-steps" aria-label="Working together on any interface. Steps">
+              <ol class="feature-steps" aria-label="True multiplayer across all interfaces. Steps">
                 <li class="feature-step" id="multiplayer-step-1">
-                  <a href="#multiplayer-region-1"><span class="feature-step-number">01</span><span>Start together in Slack</span></a>
+                  <a href="#multiplayer-region-1"><span class="feature-step-number">01</span><span>Tackle a problem in Slack</span></a>
                 </li>
                 <li class="feature-step" id="multiplayer-step-2">
-                  <a href="#multiplayer-region-2"><span class="feature-step-number">02</span><span>Kira joins from a phone</span></a>
+                  <a href="#multiplayer-region-2"><span class="feature-step-number">02</span><span>Kira joins from her phone</span></a>
                 </li>
                 <li class="feature-step" id="multiplayer-step-3">
-                  <a href="#multiplayer-region-3"><span class="feature-step-number">03</span><span>Pick it up in the terminal</span></a>
-                </li>
-                <li class="feature-step" id="multiplayer-step-4">
-                  <a href="#multiplayer-region-4"><span class="feature-step-number">04</span><span>The reply reaches everyone</span></a>
+                  <a href="#multiplayer-region-3"><span class="feature-step-number">03</span><span>Once back on her computer, picks it up in terminal</span></a>
                 </li>
               </ol>
             </div>
             <div class="fimg">
-              <figure class="feature-demo fpanel" aria-label="Working together on any interface. Illustrated example">
+              <figure class="feature-demo fpanel" aria-label="True multiplayer across all interfaces. Illustrated example">
                 <div class="feature-window-bar"><span>Alder / orders-export</span><span class="feature-tag">example</span></div>
                 <div class="feature-region" id="multiplayer-region-1">
                   <div class="feature-app-label">Desktop Slack / #orders-team</div>
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">P</span><div><p class="feature-meta"><strong>Priya</strong></p><p>@Jiro, add CSV export to orders. @Kira, can you check the columns?</p></div></div>
+                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">P</span><div><p class="feature-meta"><strong>Priya</strong> <span>09:38</span></p><p>@Jiro, the CSV downloads every order even when I select “Paid”. @Kira, is this what finance hit yesterday?</p></div></div>
                 </div>
                 <div class="feature-region feature-phone" id="multiplayer-region-2">
                   <div class="feature-app-label">Phone Slack <span>09:41</span></div>
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">K</span><div><p class="feature-meta"><strong>Kira</strong> <span>same thread</span></p><p>@Jiro, keep the current filters in the export.</p></div></div>
+                  <p class="feature-notification">Priya mentioned you in #orders-team</p>
+                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">K</span><div><p class="feature-meta"><strong>Kira</strong> <span>same thread</span></p><p>Yep, they only need paid orders for this month. @Jiro, keep the date range too. On my phone right now.</p></div></div>
                 </div>
                 <div class="feature-region feature-terminal" id="multiplayer-region-3">
-                  <div class="feature-app-label"><span aria-hidden="true">● ● ●</span> Laptop terminal</div>
-                  <pre><code>nori cloud · orders-export
-Connected · Priya + Kira + Sam
-Kira · Slack: keep the current filters
-in the export.</code></pre>
-                </div>
-                <div class="feature-region" id="multiplayer-region-4">
-                  <div class="feature-app-label">Mirrored to Slack + terminal</div>
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">J</span><div><p class="feature-meta"><strong>Jiro</strong></p><p>Done. CSV export keeps the current filters. The update is ready in PR #1284.</p></div></div>
+                  <div class="feature-app-label"><span aria-hidden="true">● ● ●</span> Kira’s laptop terminal</div>
+                  <pre><code>$ nori cloud
+orders-export · resumed as Kira
+&gt; Back at my desk. Show the filter fix.
+Jiro: paid + date range now reach CSV.
+$ npm test -- orders-export
+PASS 6 tests · filters + date range
+$ git diff --stat
+ export.ts | 8 ++++++--</code></pre>
                 </div>
               </figure>
             </div>
@@ -685,45 +686,52 @@ in the export.</code></pre>
           <article class="frow feature-story" id="feature-oncall" aria-labelledby="oncall-title">
             <div class="ftext">
               <div class="fnum">02</div>
-              <h3 class="fh" id="oncall-title">On call at 4 a.m.</h3>
+              <hgroup>
+                <h3 class="fh" id="oncall-title">On call automation for small teams</h3>
+                <p class="feature-subline">Wake up to a fix you can review.</p>
+              </hgroup>
               <p class="fp">Set it up once. Wake up to a fix you can review.</p>
-              <ol class="feature-steps" aria-label="On call at 4 a.m. Steps">
+              <ol class="feature-steps" aria-label="On call automation for small teams. Steps">
                 <li class="feature-step" id="oncall-step-1">
-                  <a href="#oncall-region-1"><span class="feature-step-number">01</span><span>Set it once</span></a>
+                  <a href="#oncall-region-1"><span class="feature-step-number">01</span><span>Set Jiro on his task once</span></a>
                 </li>
                 <li class="feature-step" id="oncall-step-2">
-                  <a href="#oncall-region-2"><span class="feature-step-number">02</span><span>The alert wakes Jiro</span></a>
+                  <a href="#oncall-region-2"><span class="feature-step-number">02</span><span>Linear kicks Jiro into action</span></a>
                 </li>
                 <li class="feature-step" id="oncall-step-3">
-                  <a href="#oncall-region-3"><span class="feature-step-number">03</span><span>Get the whole explanation</span></a>
-                </li>
-                <li class="feature-step" id="oncall-step-4">
-                  <a href="#oncall-region-4"><span class="feature-step-number">04</span><span>Review in the morning</span></a>
+                  <a href="#oncall-region-3"><span class="feature-step-number">03</span><span>Review the PR in the morning</span></a>
                 </li>
               </ol>
             </div>
             <div class="fimg">
-              <figure class="feature-demo fpanel" aria-label="On call at 4 a.m. Illustrated example">
+              <figure class="feature-demo fpanel" aria-label="On call automation for small teams. Illustrated example">
                 <div class="feature-window-bar"><span>Alder · Slack / #checkout-oncall</span><span class="feature-tag">example</span></div>
                 <div class="feature-region" id="oncall-region-1">
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">D</span><div><p class="feature-meta"><strong>Dana</strong> <span>Monday · 16:30</span></p><p>@Jiro, when checkout alerts overnight, investigate, test a fix, and open a PR. Leave approval to us.</p></div></div>
+                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">D</span><div><p class="feature-meta"><strong>Dana</strong> <span>Monday · 16:30</span></p><p>@Jiro, if a checkout issue lands in Linear labelled “overnight”, take a look and leave me a small PR. Don’t merge it — I’ll review in the morning.</p></div></div>
                 </div>
                 <div class="feature-region feature-terminal" id="oncall-region-2">
+                  <div class="feature-issue">
+                    <div class="feature-app-label">Linear / ALD-241</div>
+                    <p class="feature-issue-title">Paid orders stuck as pending</p>
+                    <p class="feature-meta">04:12 · Open · High priority</p>
+                    <p>23 orders affected. Payments went through, but Stripe webhook retries return 400.</p>
+                    <p class="feature-meta">bug · checkout · overnight</p>
+                  </div>
                   <div class="feature-app-label"><span aria-hidden="true">● ● ●</span> Terminal / checkout</div>
-                  <p class="feature-meta">04:02 · checkout error rate alert</p>
-                  <pre><code>nori cloud · checkout incident
-Cause: retry runs without a cart ID
-Fix: validate the cart before retrying
-PASS · regression test</code></pre>
+                  <pre><code>$ rg -n 'express.json|webhook' src/app.ts
+41: app.use(express.json())
+58: app.post('/stripe/webhook', handler)
+Jiro: JSON parsing breaks the signature.
+Fix: register the raw-body route first.
+$ npm test -- stripe-webhook
+PASS 18 tests · signed payloads</code></pre>
                 </div>
                 <div class="feature-region feature-pr" id="oncall-region-3">
                   <div class="feature-app-label">Pull request / alder/shop</div>
-                  <p class="feature-pr-title">Guard checkout retries <span>#1291</span></p>
-                  <p>Missing cart IDs caused the 500s. This fix validates the ID before retrying; a regression test covers the missing-cart case.</p>
-                  <p class="feature-meta">04:19 · Jiro opened · checks passed</p>
-                </div>
-                <div class="feature-region" id="oncall-region-4">
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">D</span><div><p class="feature-meta"><strong>Dana</strong> <span>08:04 · PR review</span></p><p>Reviewed the fix and regression test. Approved.</p></div></div>
+                  <p class="feature-pr-title">Keep Stripe webhooks on the raw body <span>#1847</span></p>
+                  <p>The webhook route now runs before JSON parsing. Replayed the failing event: 200, order confirmed.</p>
+                  <p class="feature-meta">04:31 · 2 files · +12 / −3 · 18 tests passed</p>
+                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">D</span><div><p class="feature-meta"><strong>Dana</strong> <span>08:02 · Approved</span></p><p>ah yep, middleware order. nice catch — thanks.</p></div></div>
                 </div>
               </figure>
             </div>
@@ -731,43 +739,39 @@ PASS · regression test</code></pre>
           <article class="frow feature-story" id="feature-permissions" aria-labelledby="permissions-title">
             <div class="ftext">
               <div class="fnum">03</div>
-              <h3 class="fh" id="permissions-title">Permissions that follow the person</h3>
+              <hgroup>
+                <h3 class="fh" id="permissions-title">User level access control</h3>
+                <p class="feature-subline">On each surface, even in a single thread.</p>
+              </hgroup>
               <p class="fp">One thread. Each person’s access still applies.</p>
-              <ol class="feature-steps" aria-label="Permissions that follow the person. Steps">
+              <ol class="feature-steps" aria-label="User level access control. Steps">
                 <li class="feature-step" id="permissions-step-1">
-                  <a href="#permissions-region-1"><span class="feature-step-number">01</span><span>A shared thread, distinct roles</span></a>
+                  <a href="#permissions-region-1"><span class="feature-step-number">01</span><span>A shared thread with distinct roles assigned</span></a>
                 </li>
                 <li class="feature-step" id="permissions-step-2">
-                  <a href="#permissions-region-2"><span class="feature-step-number">02</span><span>No access means a real refusal</span></a>
-                </li>
-                <li class="feature-step" id="permissions-step-3">
-                  <a href="#permissions-region-3"><span class="feature-step-number">03</span><span>The right access opens the work</span></a>
-                </li>
-                <li class="feature-step" id="permissions-step-4">
-                  <a href="#permissions-region-4"><span class="feature-step-number">04</span><span>The cause and the fix</span></a>
+                  <a href="#permissions-region-2"><span class="feature-step-number">02</span><span>access enforced for each person talking to Jiro</span></a>
                 </li>
               </ol>
             </div>
             <div class="fimg">
-              <figure class="feature-demo fpanel" aria-label="Permissions that follow the person. Illustrated example">
+              <figure class="feature-demo fpanel" aria-label="User level access control. Illustrated example">
                 <div class="feature-window-bar"><span>Alder · Slack / #incidents</span><span class="feature-tag">example</span></div>
                 <div class="feature-region" id="permissions-region-1">
-                  <div class="feature-app-label">People in this thread</div>
-                  <dl class="feature-roles"><div><dt>Jordan</dt><dd>Support agent only</dd></div><div><dt>Rae</dt><dd>Ops agent only</dd></div><div><dt>Kira</dt><dd>Ops + support agents</dd></div></dl>
+                  <div class="feature-app-label">Thread / Checkout confirmations</div>
+                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">J</span><div><p class="feature-meta"><strong>Jordan</strong> <span>Support agent access · 08:07</span></p><p>Three customers paid but still see “pending”. Is this the overnight issue?</p></div></div>
+                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">R</span><div><p class="feature-meta"><strong>Rae</strong> <span>Ops agent access · 08:08</span></p><p>Looks like it. Checking the webhook errors now.</p></div></div>
                 </div>
                 <div class="feature-region" id="permissions-region-2">
-                  <p class="feature-meta"><strong>Jordan</strong> <span>no ops agent access</span></p>
-                  <p>@jiro-ops, investigate the checkout alert.</p>
-                  <p class="feature-reply"><strong>jiro-ops · <span class="feature-refusal">Access refused</span></strong><br>You don’t have access to @jiro-ops. Ask an org admin to grant you access.</p>
-                </div>
-                <div class="feature-region" id="permissions-region-3">
-                  <p class="feature-meta"><strong>Rae</strong> <span>ops agent access</span></p>
-                  <p>@jiro-ops, investigate the checkout alert.</p>
-                </div>
-                <div class="feature-region" id="permissions-region-4">
-                  <p class="feature-meta"><strong>jiro-ops</strong> <span>reply to Rae</span></p>
-                  <p>Missing cart IDs caused the checkout failures.</p>
-                  <p class="feature-reply"><strong>Fix ready · alder/shop #1291</strong><br>Validate the cart before retrying. Regression test passed; PR ready for your review.</p>
+                  <div class="feature-access-case">
+                    <p class="feature-meta"><strong>Jordan</strong> <span>no ops agent access</span></p>
+                    <p>@jiro-ops, can you pull the failed payment logs?</p>
+                    <p class="feature-reply"><strong>jiro-ops · reply to Jordan</strong><br>You don't have access to @jiro-ops. Ask an org admin to grant you access.</p>
+                  </div>
+                  <div class="feature-access-case">
+                    <p class="feature-meta"><strong>Rae</strong> <span>ops agent access</span></p>
+                    <p>@jiro-ops, how many orders are waiting, and is the fix ready?</p>
+                    <p class="feature-reply"><strong>jiro-ops · reply to Rae</strong><br>23 paid orders are waiting on webhook retries. Signature checks rejected parsed bodies. PR #1847 keeps the raw body; all 18 tests pass.</p>
+                  </div>
                 </div>
               </figure>
             </div>
