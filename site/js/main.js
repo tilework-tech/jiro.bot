@@ -1,7 +1,7 @@
 /*
  * jiro.bot: page behaviour.
- * Everything animated on the page runs off one shared clock (a 100 ms tick), so the
- * pixel Jiros, the terminal / Slack / PR panels and the footer wordmark stay in step.
+ * Pixel art and the typing bar share a 100 ms clock. The feature walkthroughs
+ * are scroll-driven in features.js; the hero has its own controller.
  * Each region only touches the DOM when its output changes.
  * Motion is off when the visitor prefers reduced motion; every region then shows a still frame.
  */
@@ -10,7 +10,6 @@
   const { jiroGrid, jiroPx, jiroArt } = window.JiroPixels;
 
   const TOMATO = "#FB5E45",
-    GREEN = "#2BFF6B",
     NORI = "#1D3B2A",
     INK = "#0A0A0A";
   const reduced = (() => {
@@ -60,7 +59,6 @@
   };
 
   const plain = jiroPx({ K: NORI, F: TOMATO, SH: ["#000", "#000", "#000"] });
-  const onBlack = jiroPx({ K: GREEN, F: TOMATO, SH: ["#2A2A27", "#232320", "#1C1C1A"] });
 
   // ---------- one frame of state ----------
   function frame() {
@@ -75,22 +73,6 @@
     return { t, c, eyes };
   }
 
-  // a face-only Jiro on a dark ground with its own blink offset
-  function termFace(f, off, s, box, face) {
-    const f0 = face || "open";
-    const cc = (f.t + off) % 6000,
-      b = cc - 4800;
-    const e =
-      still || cc < 4800
-        ? f0
-        : (b > 600 && b < 700) || (b > 800 && b < 900)
-          ? "half"
-          : b >= 700 && b <= 800
-            ? "shut"
-            : "open";
-    return onBlack(0, e, s, { faceOnly: true, box });
-  }
-
   // ---------- regions ----------
   const R = {};
 
@@ -100,121 +82,6 @@
 
   // compare table header logo: his face in white
   R.logoW = (f) => put($('[data-px="logoW"]'), pxHtml(jiroArt(f.eyes, 1.6, { F: "#FFFFFF" }, { faceOnly: true }).px));
-
-  const typed = (str, start, now, cps) =>
-    now >= 1e9 ? str : now < start ? "" : str.slice(0, Math.floor(((now - start) * cps) / 1000));
-  const loop = (f, p) => (still ? 1e9 : f.t % p);
-
-  // 01: on call. An alert fires at night, Jiro fixes it, a person approves in the morning
-  R.f1 = (f) => {
-    const c1 = loop(f, 16000);
-    const log = [
-      ["04:02", "alert  checkout 500s are climbing", TOMATO],
-      ["04:03", "jiro   reading logs and the last deploy", "#8FA89A"],
-      ["04:11", "jiro   cause: retry runs without a cart id", "#8FA89A"],
-      ["04:19", "jiro   PR #1291 opened, checks pass", GREEN],
-      ["08:04", "maya   approved and merged", "#FAF8F2"],
-    ];
-    const at = (k) => 600 + k * 2200;
-    put(
-      $('[data-list="feat.f1Log"]'),
-      log
-        .map(
-          ([time, x, col], k) =>
-            '<div class="fline" style="white-space:normal;opacity:' +
-            (c1 >= at(k) ? 1 : 0) +
-            '"><span style="color:#8FA89A">' +
-            time +
-            '</span>  <span style="color:' +
-            col +
-            '">' +
-            esc(x) +
-            "</span></div>",
-        )
-        .join(""),
-    );
-    const step = log.filter((_, k) => c1 >= at(k)).length;
-    put(
-      $('[data-px="f1Face"]'),
-      pxHtml(termFace(f, 400, 4, [64, 28], step >= 5 ? "star" : step >= 2 ? "caret" : "zero")),
-    );
-    const stat = $('[data-bind="f1Stat"]');
-    if (stat) {
-      const txt = step >= 5 ? "approved" : step >= 4 ? "PR ready" : step >= 2 ? "fixing" : "paged";
-      if (stat.textContent !== txt) stat.textContent = txt;
-      stat.style.color = step >= 4 ? GREEN : TOMATO;
-    }
-  };
-
-  // a chat thread that fills in message by message; Jiro's replies type out
-  const thread = (f, el, conv, period) => {
-    const c = loop(f, period);
-    const jiroAv = pxHtml(plain(0, f.eyes, 1.3, { noShadow: true, box: [28, 28] }));
-    put(
-      el,
-      conv
-        .map(([who, via, x, at]) => {
-          const jiro = who === "jiro";
-          const vis = c >= 1e9 || (c >= at && c < period - 600);
-          const txt = jiro && c < 1e9 ? typed(x, at, c, 24) : x;
-          const tag = (txt.match(/^@\w+/) || [""])[0];
-          const rest = txt.slice(tag.length);
-          const cursor = jiro && vis && c < 1e9 && txt.length < x.length;
-          return (
-            '<div style="display:' +
-            (vis ? "flex" : "none") +
-            ';gap:12px;align-items:flex-start">' +
-            '<span style="flex:none;position:relative;width:28px;height:28px;background:' +
-            (jiro ? "transparent" : "#3A3F3A") +
-            '">' +
-            (jiro ? jiroAv : "") +
-            "</span>" +
-            '<div style="display:flex;flex-direction:column;gap:3px"><span class="fmeta" style="color:' +
-            (jiro ? INK : "#5C5C5C") +
-            ';font-size:9px">' +
-            esc(who + (via ? " · " + via : "")) +
-            "</span>" +
-            "<span style=\"font-family:'Sohne','Helvetica Neue',Helvetica,sans-serif;font-size:13px;line-height:1.4\"><span style=\"font-family:'JetBrains Mono',monospace;font-size:0.92em\">" +
-            esc(tag) +
-            "</span>" +
-            esc(rest) +
-            '<span class="wc" style="display:' +
-            (cursor ? "inline-block" : "none") +
-            '"></span></span></div></div>'
-          );
-        })
-        .join(""),
-    );
-  };
-
-  // 02: multiplayer. Two people on different devices steer the same task
-  R.f2 = (f) =>
-    thread(
-      f,
-      $('[data-list="feat.f2Msgs"]'),
-      [
-        ["maya", "terminal", "@jirobot add CSV export to the orders table", 400],
-        ["jiro", "", "Draft PR #1284 is up.", 2200],
-        ["maya", "slack", "@martin can you check the columns?", 4600],
-        ["martin", "phone", "@jirobot keep the current filters in the export", 7000],
-        ["jiro", "", "Done. Pushed to #1284.", 9000],
-      ],
-      14000,
-    );
-
-  // 03: permissions. The same question gets a different answer for each role
-  R.f3 = (f) =>
-    thread(
-      f,
-      $('[data-list="feat.f3Msgs"]'),
-      [
-        ["ana", "support", "@jirobot what changed in billing-service this week?", 400],
-        ["jiro", "", "You don't have access to billing-service, so I can't share that.", 2400],
-        ["lee", "billing", "@jirobot what changed in billing-service this week?", 6000],
-        ["jiro", "", "Three PRs merged. The retry fix is the one to read.", 8000],
-      ],
-      14000,
-    );
 
   // Typing bar under "Jiro vs. AI slop". Edit this list to change the messages.
   const TYPING_MESSAGES = [
@@ -248,71 +115,6 @@
       text = m.slice(0, n);
     }
     if (el.textContent !== text) el.textContent = text;
-  };
-
-  // reserve panel: a sushi counter with seven stools; the open one blinks green
-  R.counter = (f) => {
-    const el = $('[data-px="counter"]');
-    if (!el) return;
-    const P = 6,
-      W = ($("#reserve") || {}).clientWidth || 560,
-      cols = Math.max(40, Math.floor(W / P));
-    const on = still || Math.floor(f.t / 600) % 2 === 0;
-    const RICE = "#FAF8F2",
-      GRAIN = "#E2DDCF",
-      OPEN = on ? GREEN : null,
-      H = 19;
-    const g = Array.from({ length: H }, () => new Array(cols).fill(null));
-    const set = (x, y, c) => {
-      if (c && y >= 0 && y < H && x >= 0 && x < cols) g[y][x] = c;
-    };
-    for (let x = 0; x < cols; x++) {
-      set(x, 0, RICE);
-      set(x, 1, (x * 7 + 3) % 11 === 0 ? GRAIN : RICE);
-      set(x, 2, RICE);
-      set(x, 3, GRAIN);
-    }
-    const n = 7,
-      gap = (cols - n * 5) / n;
-    for (let k = 0; k < n; k++) {
-      const x0 = Math.round(gap / 2 + k * (5 + gap)),
-        c = k === n - 1 ? OPEN : RICE,
-        d = k === n - 1 ? OPEN : GRAIN;
-      [1, 2, 3].forEach((dx) => set(x0 + dx, 6, c));
-      [0, 1, 2, 3, 4].forEach((dx) => set(x0 + dx, 7, c));
-      [0, 1, 2, 3, 4].forEach((dx) => set(x0 + dx, 8, d));
-      [9, 10, 11, 12, 13, 14].forEach((y) => set(x0 + 2, y, c));
-      [1, 2, 3].forEach((dx) => set(x0 + dx, 13, c));
-      set(x0 + 1, 15, c);
-      set(x0 + 3, 15, c);
-      set(x0 + 1, 16, c);
-      set(x0 + 3, 16, c);
-      set(x0, 17, c);
-      set(x0 + 4, 17, c);
-    }
-    const runs = [];
-    g.forEach((row, y) => {
-      let x = 0;
-      while (x < cols) {
-        const cc = row[x];
-        if (!cc) {
-          x++;
-          continue;
-        }
-        let e = x + 1;
-        while (e < cols && row[e] === cc) e++;
-        runs.push({
-          l: ((x / cols) * 100).toFixed(4),
-          t: ((y / H) * 100).toFixed(4),
-          w: (((e - x) / cols) * 100 + 0.05).toFixed(4),
-          h: (100 / H + 0.05).toFixed(4),
-          c: cc,
-        });
-        x = e;
-      }
-    });
-    el.style.aspectRatio = cols + " / " + H;
-    put(el, pxHtml(runs, "%"));
   };
 
   // footer wordmark: JIRO.BOT where the two Os become his eyes.
@@ -449,26 +251,38 @@
     });
   }
 
-  // ---------- AI slop: the step in the middle of the screen is the current one ----------
+  // ---------- AI slop: compact section progress selects one of three steps ----------
   function initSlop() {
     const box = $("[data-slop]");
-    if (!box || !("IntersectionObserver" in window)) return;
+    if (!box) return;
     const steps = $$("[data-step]", box);
-    box.dataset.at = "1";
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (!e.isIntersecting) return;
-          steps.forEach((li) => {
-            if (li === e.target) li.setAttribute("aria-current", "step");
-            else li.removeAttribute("aria-current");
-          });
-          box.dataset.at = e.target.dataset.step;
-        });
-      },
-      { rootMargin: "-45% 0px -45% 0px" },
-    );
-    steps.forEach((li) => io.observe(li));
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let queued = false;
+    function update() {
+      queued = false;
+      const rect = box.getBoundingClientRect();
+      const progress = (window.innerHeight / 2 - rect.top) / rect.height;
+      const current = motion.matches ? 2 : Math.max(0, Math.min(2, Math.floor(progress * 3)));
+      box.dataset.at = String(current + 1);
+      steps.forEach((step, i) => {
+        if (i === current) step.setAttribute("aria-current", "step");
+        else step.removeAttribute("aria-current");
+      });
+    }
+    function requestUpdate() {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(update);
+    }
+    function configure() {
+      box.classList.toggle("slop-enhanced", !motion.matches);
+      update();
+    }
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+    window.addEventListener("pageshow", requestUpdate);
+    motion.addEventListener("change", configure);
+    configure();
   }
 
   // ---------- mobile menu ----------

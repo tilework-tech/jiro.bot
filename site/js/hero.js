@@ -1,51 +1,10 @@
-// Hero: the slow "You just hired ..." line and the three-example carousel.
+// Hero: the three-example carousel.
 // The carousel follows the WAI-ARIA tabbed carousel pattern and never advances on its own.
 (function () {
   var hero = document.getElementById("top");
   if (!hero) return;
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   var mobile = window.matchMedia("(max-width: 900px)");
-
-  var ROLES = ["an engineer.", "a reviewer.", "a doc writer.", "an on-call.", "Jiro."];
-  var STEP_MS = 2600;
-  var FADE_MS = 200;
-
-  var role = hero.querySelector("[data-hero-line] .hero-role");
-  var settled = reduce.matches;
-
-  function settleRoles() {
-    settled = true;
-    role.classList.remove("is-out");
-    role.textContent = ROLES[ROLES.length - 1];
-  }
-
-  function rollRoles() {
-    if (settled) return;
-    var i = 0;
-    role.classList.add("is-out");
-    role.textContent = ROLES[0];
-    setTimeout(function () {
-      if (settled) return;
-      role.classList.remove("is-out");
-      setTimeout(next, STEP_MS);
-    }, FADE_MS);
-
-    function next() {
-      if (settled) return;
-      if (document.hidden) {
-        document.addEventListener("visibilitychange", next, { once: true });
-        return;
-      }
-      role.classList.add("is-out");
-      setTimeout(function () {
-        if (settled) return;
-        i += 1;
-        role.textContent = ROLES[i];
-        role.classList.remove("is-out");
-        if (i < ROLES.length - 1) setTimeout(next, STEP_MS);
-      }, FADE_MS);
-    }
-  }
 
   function initCarousel() {
     var tabs = Array.prototype.slice.call(hero.querySelectorAll('.hc-dots [role="tab"]'));
@@ -105,10 +64,9 @@
         select(to, true);
       });
     });
-    // Pausing stops all hero motion, including the rotating line (WCAG 2.2.2).
+    // The visitor controls video playback (WCAG 2.2.2).
     toggle.addEventListener("click", function () {
       playing = !playing;
-      if (!playing) settleRoles();
       sync();
     });
     mobile.addEventListener("change", sync);
@@ -116,6 +74,5 @@
     hero.querySelector(".hc-controls").hidden = false;
   }
 
-  rollRoles();
   initCarousel();
 })();

@@ -8,7 +8,6 @@ const REPO = fileURLToPath(new URL("../..", import.meta.url));
 const PORT = 4198;
 const SITE = `http://127.0.0.1:${PORT}`;
 const EXAMPLES = { "On-call": "oncall", Multiplayer: "multiplayer", RBAC: "rbac" };
-const ROLES = ["an engineer.", "a reviewer.", "a doc writer.", "an on-call.", "Jiro."];
 const DESKTOP = { width: 1440, height: 900 };
 const MOBILE = { width: 390, height: 844 };
 const T0 = new Date("2026-10-28T12:00:00Z").getTime();
@@ -102,7 +101,6 @@ async function close({ page, errors }) {
 
 const hero = (page) => page.locator("#top");
 const tab = (page, name) => hero(page).getByRole("tab", { name });
-const line = (page) => hero(page).locator("[data-hero-line]");
 const selectedTab = (page) => hero(page).getByRole("tab", { selected: true }).getAttribute("aria-label");
 const activeVideo = (page) => hero(page).getByRole("tabpanel").locator("video");
 const anyPlaying = (page) =>
@@ -204,33 +202,11 @@ test("every example shows its own poster still", async () => {
   await close(h);
 });
 
-test("the rotating line shows each role for at least two seconds, then rests on Jiro", async () => {
-  const h = await openHero();
-  const seen = [];
-  for (let t = 0; t <= 30_000; t += 250) {
-    const text = (await line(h.page).innerText()).trim();
-    const last = seen.at(-1);
-    if (last && last.text === text) last.samples++;
-    else seen.push({ text, samples: 1 });
-    await h.page.clock.runFor(250);
-  }
-  assert.deepEqual(
-    seen.map((s) => s.text),
-    ROLES.map((r) => `You just hired ${r}`),
-  );
-  for (const s of seen.slice(0, -1)) assert.ok(s.samples * 250 >= 2000, `"${s.text}" shown for ${s.samples * 250}ms`);
-  await h.page.clock.runFor(120_000);
-  assert.equal((await line(h.page).innerText()).trim(), "You just hired Jiro.");
-  await close(h);
-});
-
-test("the pause control stops the example video and the rotating line, and play restarts the video", async () => {
+test("the pause control stops the example video, and play restarts the video", async () => {
   const h = await openHero({ playable: true });
   const video = activeVideo(h.page);
   await anyPlaying(h.page);
-  assert.equal((await line(h.page).innerText()).trim(), "You just hired an engineer.");
   await hero(h.page).getByRole("button", { name: "Pause video" }).click();
-  assert.equal((await line(h.page).innerText()).trim(), "You just hired Jiro.", "pausing also stops the line");
   await hero(h.page).getByRole("button", { name: "Play video" }).waitFor();
   assert.equal(await video.evaluate((v) => v.paused), true);
   await hero(h.page).getByRole("button", { name: "Play video" }).click();
@@ -241,9 +217,7 @@ test("the pause control stops the example video and the rotating line, and play 
 
 test("with reduced motion the hero holds still until the visitor presses play", async () => {
   const h = await openHero({ reducedMotion: "reduce", playable: true });
-  assert.equal((await line(h.page).innerText()).trim(), "You just hired Jiro.");
   await h.page.clock.runFor(30_000);
-  assert.equal((await line(h.page).innerText()).trim(), "You just hired Jiro.");
   await hero(h.page).getByRole("button", { name: "Play video" }).waitFor();
   await h.page.waitForTimeout(500);
   assert.deepEqual(h.videos, [], "no video is fetched before play");
@@ -264,14 +238,6 @@ test("the cursor after 'engineer' is a still orange block", async () => {
   await close(h);
 });
 
-test("screen readers hear the whole rotating sentence once", async () => {
-  const h = await openHero();
-  const snapshot = await hero(h.page).ariaSnapshot();
-  assert.match(snapshot, /You just hired an engineer, a reviewer, a doc writer, an on-call\. Jiro\./);
-  assert.equal(snapshot.match(/You just hired/g).length, 1, snapshot);
-  await close(h);
-});
-
 test("the hero copy never calls Jiro 'he', never 'calls him in', and says nothing about craft", async () => {
   const h = await openHero();
   const text = await h.page.locator(".hero-row").innerText();
@@ -279,3 +245,22 @@ test("the hero copy never calls Jiro 'he', never 'calls him in', and says nothin
   assert.match(text, /@jirobot/);
   await close(h);
 });
+
+for (const width of [1440, 1180, 390]) {
+  test(`at ${width}px the video fills a white panel with independently centered dots`, async () => {
+    const h = await openHero({ viewport: { width, height: 900 } });
+    const media = h.page.locator('.hero-media');
+    const stage = h.page.locator('.hc-stage');
+    for (const el of [media, stage]) {
+      assert.equal(await el.evaluate(n => getComputedStyle(n).backgroundColor), 'rgb(255, 255, 255)');
+    }
+    const m = await media.boundingBox(), v = await stage.boundingBox();
+    const dots = await h.page.getByRole('tablist').boundingBox();
+    assert.ok(v.width >= m.width - 16, 'video fills the available width');
+    assert.ok(Math.abs(dots.x + dots.width / 2 - (v.x + v.width / 2)) < 2, 'dots centered under video');
+    assert.doesNotMatch(await hero(h.page).ariaSnapshot(), /You just hired/);
+    assert.doesNotMatch(await hero(h.page).textContent(), /You just hired/);
+    assert.equal(await h.page.getByRole('button', { name: 'Pause video' }).isVisible(), true);
+    await close(h);
+  });
+}
