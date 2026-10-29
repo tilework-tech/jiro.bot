@@ -224,27 +224,9 @@
                   <div
                     class="hc-slide"
                     role="tabpanel"
-                    id="hc-oncall"
-                    aria-labelledby="hc-tab-oncall"
-                    tabindex="0" data-active
-                  >
-                    <video
-                      muted
-                      loop
-                      playsinline
-                      preload="none"
-                      poster="video/carousel/oncall-poster.jpg"
-                      data-desktop="video/carousel/oncall-desktop.mp4"
-                      data-mobile="video/carousel/oncall-mobile.mp4"
-                      aria-label="On-call: a bug fires at 4 a.m., Jiro fixes it and opens a pull request, and a teammate approves it at 8 a.m."
-                    ></video>
-                  </div>
-                  <div
-                    class="hc-slide"
-                    role="tabpanel"
                     id="hc-multiplayer"
                     aria-labelledby="hc-tab-multiplayer"
-                    tabindex="0" aria-hidden="true"
+                    tabindex="0" data-active
                   >
                     <video
                       muted
@@ -255,6 +237,24 @@
                       data-desktop="video/carousel/multiplayer-desktop.mp4"
                       data-mobile="video/carousel/multiplayer-mobile.mp4"
                       aria-label="Multiplayer: teammates work with the same Jiro session from Slack on a phone and the CLI on a laptop."
+                    ></video>
+                  </div>
+                  <div
+                    class="hc-slide"
+                    role="tabpanel"
+                    id="hc-oncall"
+                    aria-labelledby="hc-tab-oncall"
+                    tabindex="0" aria-hidden="true"
+                  >
+                    <video
+                      muted
+                      loop
+                      playsinline
+                      preload="none"
+                      poster="video/carousel/oncall-poster.jpg"
+                      data-desktop="video/carousel/oncall-desktop.mp4"
+                      data-mobile="video/carousel/oncall-mobile.mp4"
+                      aria-label="On-call: a bug fires at 4 a.m., Jiro fixes it and opens a pull request, and a teammate approves it at 8 a.m."
                     ></video>
                   </div>
                   <div
@@ -281,18 +281,18 @@
                     <button
                       type="button"
                       role="tab"
-                      id="hc-tab-oncall"
-                      aria-controls="hc-oncall"
-                      aria-label="On-call"
+                      id="hc-tab-multiplayer"
+                      aria-controls="hc-multiplayer"
+                      aria-label="Multiplayer"
                       aria-selected="true"
                       tabindex="0"
                     ></button>
                     <button
                       type="button"
                       role="tab"
-                      id="hc-tab-multiplayer"
-                      aria-controls="hc-multiplayer"
-                      aria-label="Multiplayer"
+                      id="hc-tab-oncall"
+                      aria-controls="hc-oncall"
+                      aria-label="On-call"
                       aria-selected="false"
                       tabindex="-1"
                     ></button>
@@ -306,7 +306,7 @@
                       tabindex="-1"
                     ></button>
                   </div>
-                  <span class="hc-name" aria-hidden="true">On-call</span>
+                  <span class="hc-name" aria-hidden="true">Multiplayer</span>
                   <button type="button" class="hc-pause" aria-label="Pause video" data-state="playing">
                     <svg viewBox="0 0 16 16" aria-hidden="true" class="i-pause">
                       <path d="M5.5 3.5v9M10.5 3.5v9" />
