@@ -220,7 +220,8 @@ test("differentiators cover on-call, multiplayer across interfaces, and permissi
 
 test("the sign-up block shows two customer quotes, one each from Corvus and Miravoice, naming Jiro rather than Nori, above the email field", async () => {
   const { page } = await open();
-  const reserve = page.locator("#reserve");
+  const reserve = page.getByRole("region", { name: "Get early access", exact: true });
+  assert.equal(await reserve.count(), 1, "signup is a named region");
   const quotes = reserve.locator("blockquote");
   assert.equal(await quotes.count(), 2);
   const credits = await reserve.locator(".quote figcaption").allInnerTexts();

@@ -778,14 +778,6 @@ details[open] .pl::after {
   line-height: 22px;
   color: #3d3d3d;
 }
-.h-res {
-  margin: 0;
-  font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
-  font-weight: 600;
-  font-size: 52px;
-  line-height: 47px;
-  letter-spacing: -0.045em;
-}
 .hchev {
   transform: scale(0.55);
   transform-origin: 100% 50%;
@@ -880,7 +872,6 @@ details[open] .pl::after {
 /* ---------- FAQ and the sign-up block ---------- */
 .faq-reserve { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
 .faq-reserve > section { min-width: 0; }
-.faq-reserve .h-res { font-size: 32px; line-height: 1.1; }
 
 .faq-col {
   flex: 1 1 100%;
@@ -898,7 +889,7 @@ details[open] .pl::after {
   min-width: 0;
   background: #0a0a0a;
   color: #ffffff;
-  padding: 40px 32px 32px;
+  padding: 48px 32px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -907,7 +898,7 @@ details[open] .pl::after {
 .quotes {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 24px;
+  gap: 32px;
 }
 .quote {
   margin: 0;
@@ -1241,8 +1232,7 @@ details[open] .pl::after {
   }
   .h-why,
   .h-most,
-  .h-sec,
-  .h-res {
+  .h-sec {
     font-size: 32px;
     line-height: 1.06;
   }
