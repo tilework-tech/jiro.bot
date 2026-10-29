@@ -224,9 +224,21 @@
     let queued = false;
     function update() {
       queued = false;
-      const rect = box.getBoundingClientRect();
-      const progress = (window.innerHeight / 2 - rect.top) / rect.height;
-      const current = motion.matches ? 2 : Math.max(0, Math.min(2, Math.floor(progress * 3)));
+      const rect = box.closest("section").getBoundingClientRect();
+      // Begin at viewport entry; finish while the diff panels are still in view.
+      const progress = motion.matches ? 1 : (window.innerHeight - rect.top) / (window.innerHeight + rect.height * .45);
+      const ramp = (from, to) => Math.max(0, Math.min(1, (progress - from) / (to - from)));
+      const first = 1 - ramp(.33, .46);
+      const second = ramp(.43, .53) * (1 - ramp(.65, .74));
+      const third = ramp(.72, .84);
+      const current = progress < .46 ? 0 : progress < .74 ? 1 : 2;
+      box.style.setProperty("--frame", String(ramp(.25, .43) * .3));
+      box.style.setProperty("--left-focus", String(ramp(.46, .55) * (1 - ramp(.72, .84))));
+      box.style.setProperty("--right-focus", String(third));
+      [first, second, third].forEach((opacity, i) => {
+        steps[i].style.setProperty("--step-opacity", String(opacity));
+        steps[i].style.setProperty("--step-offset", (motion.matches ? 0 : i === 2 ? (1 - third) * 18 : 0) + "px");
+      });
       box.dataset.at = String(current + 1);
       steps.forEach((step, i) => {
         if (i === current) step.setAttribute("aria-current", "step");
@@ -239,7 +251,7 @@
       window.requestAnimationFrame(update);
     }
     function configure() {
-      box.classList.toggle("slop-enhanced", !motion.matches);
+      box.classList.add("slop-ready");
       update();
     }
     window.addEventListener("scroll", requestUpdate, { passive: true });
