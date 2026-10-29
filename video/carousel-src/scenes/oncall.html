@@ -54,6 +54,15 @@
 #s-term .term { top: 130px; height: 560px; }
 .cut-mobile #s-term .term { top: 76px; height: 691px; }
 .term .hdr { margin-bottom: 14px; }
+.term .tbody { line-height: 1.4; }
+.term .ln { flex-shrink: 0; }
+.step > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+.pr .branch { margin-top: 10px; font: 400 16px/1.4 var(--mono); color: #525252; }
+.pr .patch { margin: 12px 0 0; padding: 10px 12px; border: 1px solid #dde1e6; background: #f2f4f8; font: 400 17px/1.45 var(--mono); white-space: pre-wrap; }
+.pr .patch .add { color: #198038; }
+.pr .patch .del { color: #da1e28; }
+.pr .review-copy { display: block; margin-top: 5px; }
+.pr .desc { padding-top: 16px; padding-bottom: 16px; line-height: 1.4; }
 </style>
 </head>
 <body>
@@ -75,17 +84,17 @@
             <div class="ch"># deploys</div>
             <div class="sec">Direct messages</div>
             <div class="ch"><span class="dm" style="background:#9b5de5">D</span>Dana</div>
-            <div class="ch"><span class="dm" style="background:#e8912d">A</span>Alex</div>
+            <div class="ch"><span class="dm" style="background:#e8912d">M</span>Mateo</div>
           </div>
           <div class="main">
             <div class="hd"># checkout<span class="sub">Cart, promos and payments</span></div>
             <div class="msgs">
-              <div class="m"><div class="av" style="background:#6b6f75">{{i:rocket}}</div><div><div class="who">Deploys<span class="app">APP</span><span class="tm">11:20 AM</span></div><div class="tx">shop <code>v2.40</code> is live in production.</div></div></div>
-              <div class="m"><div class="av" style="background:#9b5de5">D</div><div><div class="who">Dana<span class="tm">11:31 AM</span></div><div class="tx">Checkout conversion is up 3% since the new cart. Thanks all.</div></div></div>
-              <div class="m"><div class="av" style="background:#e8912d">A</div><div><div class="who">Alex<span class="tm">3:12 PM</span></div><div class="tx">Promo codes and gift cards can now be combined. Shipping it today.</div></div></div>
-              <div class="m"><div class="av" style="background:#9b5de5">D</div><div><div class="who">Dana<span class="tm">3:14 PM</span></div><div class="tx">Nice. Nobody is on call tonight though.</div></div></div>
+              <div class="m"><div class="av" style="background:#6b6f75">{{i:rocket}}</div><div><div class="who">Deploys<span class="app">APP</span><span class="tm">11:20 AM</span></div><div class="tx"><code>checkout-api v2.40.3</code> deployed. All healthy.</div></div></div>
+              <div class="m"><div class="av" style="background:#9b5de5">D</div><div><div class="who">Dana<span class="tm">11:31 AM</span></div><div class="tx">Gift card fix looks good. Support can close those two tickets.</div></div></div>
+              <div class="m"><div class="av" style="background:#e8912d">M</div><div><div class="who">Mateo<span class="tm">3:12 PM</span></div><div class="tx">Middleware cleanup is in the next release. Same rollback guard as usual.</div></div></div>
+              <div class="m"><div class="av" style="background:#9b5de5">D</div><div><div class="who">Dana<span class="tm">3:14 PM</span></div><div class="tx">thanks. heading out in a bit</div></div></div>
               <div class="m" id="mD" data-grow><div class="av" style="background:#9b5de5">D</div><div><div class="who">Dana<span class="tm">3:40 PM</span></div><div class="tx" id="mDt"></div></div></div>
-              <div class="m" id="mJ" data-grow><div class="av"><img src="../brand/jiro-v4.png"></div><div><div class="who">Jiro<span class="app">APP</span><span class="tm">3:40 PM</span></div><div class="tx">On it. I'll watch checkout alerts every night, fix what breaks, and open a PR for you to review.</div></div></div>
+              <div class="m" id="mJ" data-grow><div class="av"><img src="../brand/jiro-v4.png"></div><div><div class="who">Jiro<span class="app">APP</span><span class="tm">3:40 PM</span></div><div class="tx">Yep. I'll dig into any pages and leave the fix here.</div></div></div>
             </div>
             <div class="comp"><span id="compT"></span><div class="tools">{{i:plus}}{{i:at-sign}}{{i:smile}}<span class="send" id="send">{{i:send-horizontal}}</span></div></div>
           </div>
@@ -99,13 +108,13 @@
         <div class="time-badge">4:12 AM</div>
         <div class="tb"><i></i><i></i><i></i><span>jiro · on call · sable/shop</span></div>
         <div class="tbody">
-          <div class="ln hdr"><span class="g">jiro</span> on call for <span class="w">checkout-api</span>, <span class="w">payments-api</span><br>3:40 PM  watching alerts until 9:00 AM<br>1:00 AM  all quiet<br>3:00 AM  all quiet</div>
-          <div class="ln step" id="k0"><span class="mk o">{{i:bell}}</span><span><span class="o">Alert</span> <span class="w">checkout-api</span> 500 errors at 14%</span></div>
-          <div class="ln step" id="k1"><span class="mk"></span><span>Read the last 30 minutes of checkout logs</span></div>
-          <div class="ln step" id="k2"><span class="mk"></span><span>Cause: the promo discount is applied twice when a gift card is used</span></div>
-          <div class="ln step" id="k3"><span class="mk"></span><span>Wrote a failing test for promo + gift card</span></div>
-          <div class="ln step" id="k4"><span class="mk"></span><span>Fixed <span class="w">cart/total.ts</span> · 214 tests passing</span></div>
-          <div class="ln step" id="k5"><span class="mk"></span><span>Opened <span class="g">PR #418</span> for review</span></div>
+          <div class="ln hdr"><span class="g">jiro</span> · checkout-api · prod / eu-west-1</div>
+          <div class="ln step" id="k0"><span class="mk o">{{i:bell}}</span><span><span class="o">Stripe webhooks: 100% HTTP 400 / 5m</span><br>23 paid orders awaiting confirmation</span></div>
+          <div class="ln step" id="k1"><span class="mk"></span><span><span class="dim">$ logs checkout-api --since 04:07</span><br>04:12:06Z POST /webhooks/stripe 400<br>trace=7b2c40d91e6f4a8b body=object</span></div>
+          <div class="ln step" id="k2"><span class="mk"></span><span>The 04:07 deploy put JSON parsing<br>before Stripe signature verification.</span></div>
+          <div class="ln step" id="k3"><span class="mk"></span><span>04:16Z deploy guard rolled back v2.41.0<br>New webhooks: 200. Retries draining.</span></div>
+          <div class="ln step" id="k4"><span class="mk"></span><span>Signed-request test: 400 → <span class="g">200</span><br>Moved raw route above JSON parser.<br><span class="g">18 passed</span> · webhooks.test.ts</span></div>
+          <div class="ln step" id="k5"><span class="mk"></span><span><span class="g">PR #1847</span> · fix/stripe-webhook-body<br>2 files · +12 −3 · ready for Dana</span></div>
         </div>
       </div>
     </div>
@@ -116,17 +125,21 @@
         <div class="time-badge" id="prTime">4:31 AM</div>
         <div class="bar">{{i:git-pull-request}}sable / shop · Pull requests</div>
         <div class="head">
-          <h2>Fix promo discount applied twice <span class="num">#418</span></h2>
+          <h2>Keep Stripe webhooks on the raw body <span class="num">#1847</span></h2>
           <div class="meta"><span class="pill open" id="prOpen">{{i:git-pull-request}}Open</span><span class="pill ok" id="prOk">{{i:check:2.5}}Approved</span><span><b>Jiro</b> opened this at 4:31 AM</span></div>
+          <div class="branch">fix/stripe-webhook-body → main · +12 −3</div>
         </div>
         <div class="desc">
-          <h3>What happened</h3>
-          <p>At 4:12 AM checkout started returning 500s for orders that used a promo code and a gift card. The discount was applied twice, so the total went negative and the payment was rejected.</p>
-          <h3>Fix</h3>
-          <p>Apply the discount once in <code>cart/total.ts</code> and add a regression test.</p>
+          <h3>Found it</h3>
+          <p>JSON parsing ran before Stripe signature verification. 23 paid orders were left awaiting confirmation.</p>
+          <p>Deploy guard rolled back at 4:16. New webhooks pass; retries are draining.</p>
+          <pre class="patch"><span class="del">− app.use(express.json());</span>
+  app.use('/webhooks/stripe', stripeRouter);
+<span class="add">+ app.use(express.json());</span></pre>
+          <p>Raw-body route first. Added a signed-request test.</p>
         </div>
-        <div class="checks"><div>{{i:circle-check}}All checks have passed · 214 tests</div></div>
-        <div class="rv" id="rv"><span class="av" style="background:#9b5de5">D</span><span><b>Dana</b> approved these changes · 8:02 AM</span><span class="ok" style="margin-left:auto">{{i:check:3}}</span></div>
+        <div class="checks"><div>{{i:circle-check}}18 webhook tests · typecheck · lint · passed</div></div>
+        <div class="rv" id="rv"><span class="av" style="background:#9b5de5">D</span><span><b>Dana</b> approved · 8:02 AM<span class="review-copy">ah yep. nice catch, thanks</span></span><span class="ok" style="margin-left:auto">{{i:check:3}}</span></div>
       </div>
     </div>
   </div>
@@ -135,7 +148,7 @@
 <script type="module">
 import { $, CUT, fit, prog, typed, typeEnd, fmt, caret, grow, reveal, show, camera, scene } from '../lib/core.js';
 
-const PROMPT = "@Jiro take on-call for checkout. If it breaks overnight, fix it and open a PR for me.";
+const PROMPT = "@Jiro, keep an eye on checkout overnight. If it pages, leave me a PR for the morning?";
 const TYPE_AT = 1.2, SENT = typeEnd(PROMPT, TYPE_AT, 15) + 0.5, REPLY = SENT + 1.2;
 const ALERT_AT = 12.0;             // dissolve to the terminal at 4:12 AM
 const PR_AT = 21.6, APPROVE = 25.6;
