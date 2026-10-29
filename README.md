@@ -5,7 +5,7 @@ The landing page, copy editor and sign-up Lambda were consolidated here from the
 
 | Path | What it is |
 |---|---|
-| `site/` | Everything published to jiro.bot, synced as-is. Hand-written: `index.html` with `css/`, `js/` (`main.js` animation, `jiro-pixels.js` pixel art, `early-access.js` pop-up, `hero.js` hero line and carousel), `fonts/`, `img/`, `video/`, and `confirmed.html`, `link-expired.html`, `privacy.html`. Generated and committed: `alternatives/`, `compare/`, `switch/`, `best/`, `assets/pages.css`, `llms*.txt`, `sitemap.xml`, `robots.txt`. Never put docs or other non-public files here |
+| `site/` | Everything published to jiro.bot, synced as-is. Hand-written: `index.html` with `css/`, `js/` (`main.js` page behavior, `features.js` scroll walkthroughs, `jiro-pixels.js` pixel art, `early-access.js` pop-up, `hero.js` hero line and carousel), `fonts/`, `img/`, `video/`, and `confirmed.html`, `link-expired.html`, `privacy.html`. Generated and committed: `alternatives/`, `compare/`, `switch/`, `best/`, `assets/pages.css`, `llms*.txt`, `sitemap.xml`, `robots.txt`. Never put docs or other non-public files here |
 | `content/` | TOML records the generated pages are built from, plus the content rules editors must follow. See [content/docs.md](content/docs.md) |
 | `build.py` | Stdlib-only generator, `content/` -> `site/`. Owns one directory per page family under `site/` and rebuilds them from scratch; leaves hand-written files alone |
 | `tools/` | Pre-publish lint, LLM grader, AEO probe, overlap check, AEO preview server. See [tools/docs.md](tools/docs.md) |
@@ -44,9 +44,13 @@ In a Nori Session, background the preview server (`setsid nohup python3 tools/co
 
 ## Landing page
 
-`site/js/main.js` renders a frame every 100 ms and only writes to the DOM when a region's output changes. Regions are marked in the HTML with `data-px` (pixel faces such as the header logo, the sign-up block's sushi counter and the footer wordmark), `data-list` (the on-call log and chat threads in the three feature panels), `data-typing` (the typing bar under "Jiro vs. AI slop") and `data-bind`. The HTML ships with still values, and visitors with reduced motion get a still frame of every region.
+`site/js/main.js` renders the pixel art (`data-px`) and typing bar (`data-typing`) every 100 ms and only writes to the DOM when a region's output changes. The HTML ships with still values, and visitors with reduced motion get a still frame of these regions. The feature walkthroughs have a separate scroll controller.
 
 The typing bar's messages are the `TYPING_MESSAGES` array in `main.js`; edit that list to change them (it also fills the screen-reader text, so the HTML copies are only the no-JavaScript fallback). "Jiro vs. AI slop" is driven by scroll, not time: `initSlop` marks the step in the middle of the viewport with `aria-current="step"` and mirrors it on `data-at`, and CSS fades the two pull requests in. Below 900px the steps read as a plain list and both pull requests show at once.
+
+"How it works" (`#features`) contains complete, fictional interface stories in [site/index.html](site/index.html): an overnight alert progressing from a Slack instruction through terminal work and a PR to morning approval; Priya, Kira and Sam sharing a session across desktop Slack, phone Slack and a laptop terminal; and a shared thread showing person-specific agent access, a refusal for someone without access, and a customer-update draft awaiting review. [site/js/features.js](site/js/features.js) changes only emphasis, using the step nearest the viewport center to highlight its matching demo region. There are no feature timers or videos. Each step is a keyboard-accessible link; activating it reveals its corresponding part of the story and retains focus on the link.
+
+On desktop, the demo sticks beside the steps only when it fits the available viewport height. At 900px and below or in short viewports, the story stacks and emphasis follows the visible demo region. Without JavaScript or with reduced motion, the full examples remain readable in a compact, static layout. Changing the motion preference updates the layout immediately. Keep each story's steps, links and demo regions in matching order. The `.fpanel` class on each demo keeps fictional interface text out of the inline copy editor.
 
 The two quotes in the black sign-up block come from two customers: Alex (CTO, Corvus) and Danny (CTO, Miravoice), from their published case studies on noriagentic.com (https://noriagentic.com/newsletter/2026-05-19-corvus-case-study.html and https://noriagentic.com/newsletter/2026-09-18-miravoice-case-study.html), with Nori renamed to Jiro, reused with Martin's approval. Keep one quote per company.
 

@@ -181,7 +181,7 @@ test("with reduced motion the typing bar shows a full message and does not chang
 
 test("with reduced motion every feature panel still shows its content", async () => {
   const { page } = await open({ reducedMotion: "reduce" });
-  const panels = page.locator("#features [role='img']");
+  const panels = page.locator("#features figure");
   assert.equal(await panels.count(), 3);
   for (let i = 0; i < 3; i++) {
     const text = (await panels.nth(i).innerText()).trim();
