@@ -1,0 +1,12 @@
+FAQ dialog signup — PR #38
+Source tree: 1a18460cc397c447779345ee94519b502651dd42 (same tree tested as 0b38fc4 before GitHub App signing).
+
+Python: 63 passed, including ffmpeg carousel checks.
+Browser: 74 passed, 0 skipped, sequential; session Chrome over CDP using an untracked preload.
+Lambda: 22 passed, 0 skipped; unchanged backend, no network.
+Lint: 26 pages passed, generated output current; no build needed.
+JavaScript syntax and git diff --check passed.
+
+Screenshots: local site at 1440, 1180 and 390px, plus desktop/mobile dialog and keyboard focus under reduced motion. Two customer quotes and one button; zero textboxes in signup block. No API requests during capture.
+Browser submission tests intercept the API, verifying payload and Check your inbox. No real signup email was sent.
+Deploy workflows remain manual dispatch only. No deployment performed.
