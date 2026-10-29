@@ -9,9 +9,29 @@
 <link rel="stylesheet" href="../node_modules/@fontsource/lato/900.css">
 <link rel="stylesheet" href="../lib/stage.css">
 <style>
-#clock { left: 20px; top: 14px; }
+:root { --stage: #f2f4f8; --s-ink: #161616; --s-muted: #525252; --s-line: #dde1e6; }
+#dots { display: none; }
+.win { background: #fff; color: #393939; box-shadow: 0 0 0 1px #dde1e6; }
+.time-badge { position: absolute; top: 7px; right: 12px; z-index: 2; padding: 5px 12px; border: 1px solid #c1c7cd; border-radius: 999px; background: #fff; color: #393939; box-shadow: 0 2px 4px rgba(22,22,22,.08); font: 600 18px/20px var(--wrap); white-space: nowrap; }
+.slack .top, .term .tb, .pr .bar { height: 46px; padding-right: 126px; background: #f2f4f8; border-bottom: 1px solid #dde1e6; color: #525252; }
+.slack .top i, .term .tb i { background: #c1c7cd; }
+.slack .top .search { background: #fff; color: #525252; border: 1px solid #dde1e6; }
+.slack .side { background: #f2f4f8; color: #525252; border-right: 1px solid #dde1e6; }
+.slack .side .ws { color: #161616; border-color: #dde1e6; }
+.slack .side .ch.on { background: rgba(36,161,72,.09); color: #198038; }
+.term .tb span { color: #525252; padding-right: 0; white-space: nowrap; }
+.term .hdr, .term .dim { color: #525252; }
+.term .w { color: #161616; }
+.term .g { color: #198038; }
+.term .o { color: #8e6a00; }
+.pr .head, .pr .rv { border-color: #dde1e6; }
+.pr h2, .pr .meta b, .pr .desc h3, .pr .rv b { color: #161616; }
+.pr h2 .num, .pr .meta, .pr .checks { color: #525252; }
+.pr .desc, .pr .rv { color: #393939; }
+.pr .desc code { background: #f2f4f8; }
+.pr .checks .ico { color: #198038; }
+.pr .pill.open, .pr .pill.ok, .pr .rv .ok { background: #198038; }
 .win { left: 20px; top: 76px; width: 960px; height: 704px; }
-.cut-mobile #clock { left: 16px; top: 14px; }
 .cut-mobile .win { left: 16px; top: 76px; width: 594px; height: 691px; }
 .cut-mobile .slack .side { display: none; }
 .cut-mobile .slack .top .search { width: 70%; }
@@ -33,18 +53,17 @@
 #s-term .tbody { justify-content: flex-start; }
 #s-term .term { top: 130px; height: 560px; }
 .cut-mobile #s-term .term { top: 76px; height: 691px; }
-.term .hdr { color: #7d8590; margin-bottom: 14px; }
+.term .hdr { margin-bottom: 14px; }
 </style>
 </head>
 <body>
 <div id="stage">
   <div id="dots"></div>
-  <div id="night"></div>
   <div id="world">
-    <div class="chip" id="clock"><span id="clockI"></span><b id="clockT"></b><span class="dim" id="clockS"></span></div>
     <!-- A: the one-time prompt in Slack -->
     <div class="shot" id="s-slack">
       <div class="slack win">
+        <div class="time-badge">3:40 PM</div>
         <div class="top"><i></i><i></i><i></i><div class="search">Search Sable</div></div>
         <div class="body">
           <div class="side">
@@ -77,6 +96,7 @@
     <!-- B: 4:12 AM, Jiro works the alert in its own terminal -->
     <div class="shot" id="s-term">
       <div class="term win">
+        <div class="time-badge">4:12 AM</div>
         <div class="tb"><i></i><i></i><i></i><span>jiro · on call · sable/shop</span></div>
         <div class="tbody">
           <div class="ln hdr"><span class="g">jiro</span> on call for <span class="w">checkout-api</span>, <span class="w">payments-api</span><br>3:40 PM  watching alerts until 9:00 AM<br>1:00 AM  all quiet<br>3:00 AM  all quiet</div>
@@ -93,6 +113,7 @@
     <!-- C: the PR explains what happened; approved in the morning -->
     <div class="shot" id="s-pr">
       <div class="pr win">
+        <div class="time-badge" id="prTime">4:31 AM</div>
         <div class="bar">{{i:git-pull-request}}sable / shop · Pull requests</div>
         <div class="head">
           <h2>Fix promo discount applied twice <span class="num">#418</span></h2>
@@ -110,39 +131,35 @@
     </div>
   </div>
 </div>
-<template id="ic-sun">{{i:sun}}</template><template id="ic-moon">{{i:moon}}</template>
 <template id="ic-spin">{{i:loader-circle}}</template><template id="ic-ok">{{i:check:2.5}}</template>
 <script type="module">
-import { $, CUT, fit, prog, eo, typed, typeEnd, fmt, caret, grow, reveal, show, camera, scene } from '../lib/core.js';
+import { $, CUT, fit, prog, typed, typeEnd, fmt, caret, grow, reveal, show, camera, scene } from '../lib/core.js';
 
 const PROMPT = "@Jiro take on-call for checkout. If it breaks overnight, fix it and open a PR for me.";
 const TYPE_AT = 1.2, SENT = typeEnd(PROMPT, TYPE_AT, 15) + 0.5, REPLY = SENT + 1.2;
-const NIGHT = [12.0, 25.4];        // dissolve to the terminal at 4:12 AM, then morning
+const ALERT_AT = 12.0;             // dissolve to the terminal at 4:12 AM
 const PR_AT = 21.6, APPROVE = 25.6;
 const STEPS = [13.0, 14.6, 16.2, 17.8, 19.4];
 const D = 33.0, BACK = D - 2.0;     // dissolve back to the opening frame
 const ICON = (id) => $(id).innerHTML;
 
-const CLOCK = [[0, 'sun', '3:40 PM', ''], [NIGHT[0], 'moon', '4:12 AM', 'Nobody awake'], [PR_AT, 'moon', '4:31 AM', 'PR ready'], [APPROVE, 'sun', '8:02 AM', 'Dana is in'], [BACK, 'sun', '3:40 PM', '']];
-
 scene({ duration: D, setup: () => { $('mDt').innerHTML = fmt(PROMPT); }, seek: (t) => {
   // Each change of shot dips through the stage: out for 0.7 s, then in for 0.8 s.
   const out = (a) => 1 - prog(t, a - 0.7, 0.7), inn = (a) => prog(t, a, 0.8);
-  const aOp = Math.max(out(NIGHT[0]), inn(BACK));
-  const bOp = Math.min(inn(NIGHT[0]), out(PR_AT));
+  const aOp = Math.max(out(ALERT_AT), inn(BACK));
+  const bOp = Math.min(inn(ALERT_AT), out(PR_AT));
   const cOp = Math.min(inn(PR_AT), out(BACK));
   [['s-slack', aOp], ['s-term', bOp], ['s-pr', cOp]].forEach(([id, o]) => { $(id).style.opacity = String(o); show($(id), o > 0); });
-  $('night').style.opacity = String(Math.min(prog(t, NIGHT[0] - 0.7, 1.4), 1 - prog(t, APPROVE, 1.4)));
 
   // A: Slack. After the night it shows its opening state again.
-  const ta = t >= NIGHT[0] ? 0 : t;
+  const ta = t >= ALERT_AT ? 0 : t;
   const typing = ta >= TYPE_AT && ta < SENT;
   $('compT').innerHTML = typing ? fmt(typed(PROMPT, ta, TYPE_AT, 15)) + caret : '<span class="ph">Message #checkout</span>';
   $('send').classList.toggle('on', typing);
   grow($('mD'), ta, SENT); grow($('mJ'), ta, REPLY);
 
   // B: terminal steps land one at a time.
-  reveal($('k0'), t, NIGHT[0] + 0.4);
+  reveal($('k0'), t, ALERT_AT + 0.4);
   STEPS.forEach((at, i) => {
     const el = $(`k${i + 1}`); reveal(el, t, at);
     const done = t >= at + 1.0;
@@ -156,11 +173,8 @@ scene({ duration: D, setup: () => { $('mDt').innerHTML = fmt(PROMPT); }, seek: (
   const ok = t >= APPROVE + 0.6;
   show($('prOpen'), !ok); show($('prOk'), ok);
 
-  // Clock chip, cross-fading its label at each change.
-  let k = CLOCK[0]; let since = 0;
-  for (const c of CLOCK) if (t >= c[0]) { k = c; since = t - c[0]; }
-  $('clockI').innerHTML = ICON(`ic-${k[1]}`); $('clockT').textContent = k[2]; $('clockS').textContent = k[3] ? `· ${k[3]}` : '';
-  $('clock').style.opacity = String(k[0] === 0 ? 1 : 0.25 + 0.75 * eo(prog(since, 0, 0.8)));
+  // Each badge belongs to its window and follows the shot's dissolve.
+  $('prTime').textContent = t >= APPROVE ? '8:02 AM' : '4:31 AM';
 
   camera(t, [[0, ...(CUT === 'desktop' ? fit(0, 0, 1000, 800) : fit(0, 0, 626, 783))]]);
 }});

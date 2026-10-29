@@ -35,7 +35,13 @@ The pipeline is the v25 hero's (jiro.bot PR #20, branch `video/hero-loop-v1`, fo
 | `storyboard.sh` | Key-frame sheets in `storyboard/`, for review before a full render |
 | `brand/jiro-v4.png` | Maddy's mascot avatar from v25 |
 
-Pacing rules: typing runs at 15 characters per second, and scene changes dip through the stage colour (0.7 s out, 0.8 s in) or are slow camera moves between devices (1.8 s). There are no hard cuts. The stage is the hero box colour `#2a2f35`.
+Pacing rules: typing runs at 15 characters per second, and scene changes dip through the stage colour (0.7 s out, 0.8 s in) or are slow camera moves between devices (1.8 s). There are no hard cuts. Multiplayer and RBAC use the hero box colour `#2a2f35` for their stage.
+
+### On-call presentation
+
+[The on-call scene](scenes/oncall.html) keeps its stage, Slack chrome, terminal and PR page light throughout the 33-second loop: a near-white `#f2f4f8` stage and chrome surround white interface surfaces. The overnight beat reads through the times and messages, without a dark-mode transition. These overrides live in the scene itself; the shared styles and the multiplayer and RBAC scenes are unchanged.
+
+Each interface window owns a small time badge pinned to its top-right, inset 7 px from the top and 12 px from the right in scene coordinates. The white pill has a 1 px `#c1c7cd` border, fully rounded corners, a subtle shadow and dark semibold text. It contains only the time, with no icon or subtitle, and fades with its window. Slack shows **3:40 PM**, the terminal **4:12 AM**, and the PR page **4:31 AM**, changing to **8:02 AM** when Dana approves. The return to the opening Slack shot restores its **3:40 PM** badge. The story remains set in Sable (`sable/shop`), with the existing beat timing and seamless return to frame zero.
 
 ## Rebuild
 
