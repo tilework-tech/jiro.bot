@@ -62,6 +62,16 @@ Carousel videos are dropped in without code changes: `site/video/carousel/{oncal
 
 The retired looping hero video (Jiro hero v25) and its render scripts live on the `video/hero-loop-v1` branch.
 
+## Scroll buddy
+
+The dependency-free v9 buddy is vendored unchanged from `tilework-tech/jiro-buddy` commit `974c0072e6a624f0003449f2cc33b3be104ba0b8`: [runtime](site/js/jiro-buddy.js), [stylesheet](site/css/jiro-buddy.css), and [reference artwork](site/img/jiro-v3.svg). The runtime draws its own inline SVG; the separate SVG preserves the upstream reference asset. The marked `jiro-buddy: start` / `jiro-buddy: end` block in [site/index.html](site/index.html) is the on/off switch. Remove that block to disable the integration.
+
+[Site configuration](site/js/jiro-buddy.json) opts in only `#why` and `#pricing`, with short comments, section-header anchors, desktop `spot` and narrow-screen `mobileSpot` coordinates. Coordinates are fractions of the anchor box; upstream clearance scoring can choose a nearby position. The `avoid` selectors protect the hero, carousel, bake-off and interactive controls. Upstream v9 pacing keeps automatic speech occasional and tied to the section where the mascot rests; closing or dragging the mascot stores tab-local state in `sessionStorage`.
+
+The site's [safety controller](site/js/buddy.js) and [visibility stylesheet](site/css/buddy.css) keep the buddy hidden until its mascot and close control fit within the viewport, clear readable text and controls, and the mascot fits inside an opted-in section. The hero must be entirely above the viewport. Speech has a separate check: its bubble must fit the same section and clear the same protected content. These checks also apply during movement and to restored pins. When space is unavailable, the buddy or bubble stays hidden. An open dialog or reduced-motion preference hides the buddy and makes it inert; hidden speech is not announced. The landing-page signup dialog and its existing email-confirmation flow remain independent.
+
+To upgrade, copy the upstream assets from an explicit revision, update the provenance above, and rerun the full browser suite. Keep site-specific placement and safety policy in the configuration and host files. [Buddy browser tests](tests/browser/buddy.test.mjs) cover desktop and narrow-phone placement, readable-content clearance, hero and bake-off exclusion during scrolling, restored pins and reduced-motion changes. Recheck the rendered layout after changes to section copy or geometry, because the upstream fallback can choose a least-overlapping position that the site's stricter safety policy suppresses.
+
 ## Early access
 
 Every "Get early access" link or button opens a pop-up asking for name and work email, which posts to the URL in `<meta name="early-access-endpoint">` (the live HTTP API). Successful submission shows “Check your inbox” in the dialog. Visitors join the list only after clicking the emailed link and pressing "Confirm my spot" (opening the link alone does nothing, so mail scanners can't confirm); they land on `confirmed.html` or `link-expired.html`.

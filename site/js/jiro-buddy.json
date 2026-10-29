@@ -1,0 +1,19 @@
+{
+  "avoid": ["header", ".hero-row", ".hero-media", "video", "#compare", "a", "button", "input", "summary", "dialog"],
+  "sections": [
+    {
+      "section": "#why",
+      "comment": "Small changes. Clear intent.",
+      "anchor": "#why .sec-head",
+      "spot": "0.91,0.78",
+      "mobileSpot": "0.88,0.22"
+    },
+    {
+      "section": "#pricing",
+      "comment": "Bring the tools you already like.",
+      "anchor": "#pricing .sec-head",
+      "spot": "0.91,0.78",
+      "mobileSpot": "0.85,0.22"
+    }
+  ]
+}
