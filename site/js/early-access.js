@@ -15,13 +15,11 @@
   const done = dialog.querySelector(".ea-done");
   const error = dialog.querySelector(".ea-error");
   const submit = form.querySelector(".ea-submit");
-  const reserveEmail = document.querySelector("#reserve input[type=email]");
 
-  function open(prefillEmail) {
+  function open() {
     form.hidden = false;
     done.hidden = true;
     error.hidden = true;
-    if (prefillEmail) form.elements.email.value = prefillEmail;
     dialog.showModal();
     const first = Array.from(form.querySelectorAll("input[required]")).find((i) => !i.value);
     (first || submit).focus();
@@ -31,16 +29,8 @@
     const trigger = e.target.closest('a[href="#reserve"], [data-early-access]');
     if (!trigger) return;
     e.preventDefault();
-    open(trigger.hasAttribute("data-early-access") && reserveEmail ? reserveEmail.value.trim() : "");
+    open();
   });
-
-  if (reserveEmail) {
-    reserveEmail.addEventListener("keydown", (e) => {
-      if (e.key !== "Enter") return;
-      e.preventDefault();
-      open(reserveEmail.value.trim());
-    });
-  }
 
   // Close on a backdrop click only when the press also started there, so dragging a
   // text selection out of a field doesn't throw away what the visitor typed.
