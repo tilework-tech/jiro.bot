@@ -647,10 +647,10 @@
                   <a href="#multiplayer-region-1"><span class="feature-step-number">01</span><span>Tackle a problem in Slack</span></a>
                 </li>
                 <li class="feature-step" id="multiplayer-step-2">
-                  <a href="#multiplayer-region-2"><span class="feature-step-number">02</span><span>Kira joins from her phone</span></a>
+                  <a href="#multiplayer-region-2"><span class="feature-step-number">02</span><span>Cliff joins from his phone</span></a>
                 </li>
                 <li class="feature-step" id="multiplayer-step-3">
-                  <a href="#multiplayer-region-3"><span class="feature-step-number">03</span><span>Once back on her computer, picks it up in terminal</span></a>
+                  <a href="#multiplayer-region-3"><span class="feature-step-number">03</span><span>Sam adds a test in terminal</span></a>
                 </li>
               </ol>
             </div>
@@ -659,21 +659,21 @@
                 <div class="feature-window-bar"><span>Alder / orders-export</span><span class="feature-tag">example</span></div>
                 <div class="feature-region" id="multiplayer-region-1">
                   <div class="feature-app-label">Desktop Slack / #orders-team</div>
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">P</span><div><p class="feature-meta"><strong>Priya</strong> <span>09:38</span></p><p>@Jiro, the CSV downloads every order even when I select “Paid”. @Kira, is this what finance hit yesterday?</p></div></div>
+                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">A</span><div><p class="feature-meta"><strong>Amol</strong> <span>09:38</span></p><p>@Jiro, add a CSV export to checkout reports.</p></div></div>
                 </div>
                 <div class="feature-region feature-phone" id="multiplayer-region-2">
                   <div class="feature-app-label">Phone Slack <span>09:41</span></div>
-                  <p class="feature-notification">Priya mentioned you in #orders-team</p>
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">K</span><div><p class="feature-meta"><strong>Kira</strong> <span>same thread</span></p><p>Yep, they only need paid orders for this month. @Jiro, keep the date range too. On my phone right now.</p></div></div>
+                  <p class="feature-notification">Amol mentioned you in #orders-team</p>
+                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">C</span><div><p class="feature-meta"><strong>Cliff</strong> <span>same thread</span></p><p>@Jiro, keep the current filters in the CSV export. On my phone right now.</p></div></div>
                 </div>
                 <div class="feature-region feature-terminal" id="multiplayer-region-3">
-                  <div class="feature-app-label"><span aria-hidden="true">● ● ●</span> Kira’s laptop terminal</div>
+                  <div class="feature-app-label"><span aria-hidden="true">● ● ●</span> Sam’s laptop terminal</div>
                   <pre><code>$ nori cloud
-orders-export · resumed as Kira
-&gt; Back at my desk. Show the filter fix.
-Jiro: paid + date range now reach CSV.
+orders-export · Sam joined from CLI
+&gt; Also add a test for filtered exports.
+Jiro: The export keeps the current filters.
 $ npm test -- orders-export
-PASS 6 tests · filters + date range
+PASS 6 tests · filtered and empty exports
 $ git diff --stat
  export.ts | 8 ++++++--</code></pre>
                 </div>
@@ -755,19 +755,19 @@ PASS 18 tests · signed payloads</code></pre>
                 <div class="feature-window-bar"><span>Alder · Slack / #incidents</span><span class="feature-tag">example</span></div>
                 <div class="feature-region" id="permissions-region-1">
                   <div class="feature-app-label">Thread / Checkout confirmations</div>
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">J</span><div><p class="feature-meta"><strong>Jordan</strong> <span>Support agent access · 08:07</span></p><p>Three customers paid but still see “pending”. Is this the overnight issue?</p></div></div>
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">R</span><div><p class="feature-meta"><strong>Rae</strong> <span>Ops agent access · 08:08</span></p><p>Looks like it. Checking the webhook errors now.</p></div></div>
+                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">C</span><div><p class="feature-meta"><strong>Cliff</strong> <span>Support agent access · 08:07</span></p><p>Three customers paid but still see “pending”. Is this the overnight issue?</p></div></div>
+                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">A</span><div><p class="feature-meta"><strong>Amol</strong> <span>Ops agent access · 08:08</span></p><p>Looks like it. Checking the webhook errors now.</p></div></div>
                 </div>
                 <div class="feature-region" id="permissions-region-2">
                   <div class="feature-access-case">
-                    <p class="feature-meta"><strong>Jordan</strong> <span>no ops agent access</span></p>
+                    <p class="feature-meta"><strong>Cliff</strong> <span>no ops agent access</span></p>
                     <p>@jiro-ops, can you pull the failed payment logs?</p>
-                    <p class="feature-reply"><strong>jiro-ops · reply to Jordan</strong><br>You don't have access to @jiro-ops. Ask an org admin to grant you access.</p>
+                    <p class="feature-reply"><strong>jiro-ops · reply to Cliff</strong><br>You don't have access to @jiro-ops. Ask an org admin to grant you access.</p>
                   </div>
                   <div class="feature-access-case">
-                    <p class="feature-meta"><strong>Rae</strong> <span>ops agent access</span></p>
+                    <p class="feature-meta"><strong>Amol</strong> <span>ops agent access</span></p>
                     <p>@jiro-ops, how many orders are waiting, and is the fix ready?</p>
-                    <p class="feature-reply"><strong>jiro-ops · reply to Rae</strong><br>23 paid orders are waiting on webhook retries. Signature checks rejected parsed bodies. PR #1847 keeps the raw body; all 18 tests pass.</p>
+                    <p class="feature-reply"><strong>jiro-ops · reply to Amol</strong><br>23 paid orders are waiting on webhook retries. Signature checks rejected parsed bodies. PR #1847 keeps the raw body; all 18 tests pass.</p>
                   </div>
                 </div>
               </figure>

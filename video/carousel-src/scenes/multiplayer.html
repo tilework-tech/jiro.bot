@@ -62,7 +62,7 @@
             <div class="ch on"># checkout</div>
             <div class="ch"># design</div>
             <div class="sec">Direct messages</div>
-            <div class="ch"><span class="dm" style="background:#2eb67d">K</span>Kira</div>
+            <div class="ch"><span class="dm" style="background:#2eb67d">C</span>Cliff</div>
             <div class="ch"><span class="dm" style="background:#1d9bd1">S</span>Sam</div>
             <div class="rail"><div class="wsi">A</div><div class="ri">{{i:house}}</div><div class="ri on">{{i:message-circle}}</div><div class="ri">{{i:bell}}</div></div>
           </div>
@@ -73,7 +73,7 @@
           </div>
         </div>
       </div></div><div class="neck"></div><div class="foot"></div></div>
-      <div class="chip plate" id="plMon">{{i:monitor}}<b>Priya</b><span class="dim">Slack on desktop</span></div>
+      <div class="chip plate" id="plMon">{{i:monitor}}<b>Amol</b><span class="dim">Slack on desktop</span></div>
     </div>
 
     <div class="dev" id="devPh">
@@ -83,21 +83,21 @@
         <div class="ph">{{i:chevron-left}}<div># checkout<span class="sub">Alder</span></div></div>
         <div class="msgs" id="phMsgs"></div>
         <div class="comp" id="phComp"></div>
-        <div class="banner" id="banner"><div class="ap">{{slack}}</div><div><div class="t1">Priya in #checkout</div><div class="t2">Looks good. @Kira can you check the copy?</div></div><span class="tm">now</span></div>
+        <div class="banner" id="banner"><div class="ap">{{slack}}</div><div><div class="t1">Amol in #checkout</div><div class="t2">Looks good. @Cliff can you keep the filters?</div></div><span class="tm">now</span></div>
       </div></div>
-      <div class="chip plate" id="plPh">{{i:smartphone}}<b>Kira</b><span class="dim">Slack on phone</span></div>
+      <div class="chip plate" id="plPh">{{i:smartphone}}<b>Cliff</b><span class="dim">Slack on phone</span></div>
     </div>
 
     <div class="dev" id="devLap">
       <div class="laptop"><div class="lid"><div class="term">
-        <div class="tb"><i></i><i></i><i></i><span>nori cloud · alder/shop · Gift card field</span></div>
+        <div class="tb"><i></i><i></i><i></i><span>nori cloud · alder/shop · CSV export</span></div>
         <div class="tbody">
           <div class="ln dim">Attached to the session in #checkout</div>
-          <div class="ln who"><span class="g">Kira</span> · via Slack</div>
-          <div class="ln you">› change the label to “Gift card or promo code”.</div>
+          <div class="ln who"><span class="g">Cliff</span> · via Slack</div>
+          <div class="ln you">› keep the current filters in the CSV export.</div>
           <div class="ln who"><span class="g">Jiro</span></div>
-          <div class="ln jl">Done. The label now reads “Gift card or promo code” and the preview is updated.</div>
-          <div class="grow-l" id="tS" data-grow><div class="ln who"><span class="g">Sam</span> · you</div><div class="ln you">› also add a test for an empty code</div></div>
+          <div class="ln jl">Done. The export now respects the active filters.</div>
+          <div class="grow-l" id="tS" data-grow><div class="ln who"><span class="g">Sam</span> · you</div><div class="ln you">› also add a test for filtered exports</div></div>
           <div class="grow-l" id="tJ" data-grow><div class="ln who"><span class="g">Jiro</span></div><div class="ln jl" id="tJt"></div></div>
           <div class="bar" id="cliBar"></div>
           <div class="status"><span>claude · opus</span><span>3 people in this session</span></div>
@@ -116,9 +116,9 @@ import { $, CUT, H, SAFE, prog, eo, eio, typed, typeEnd, fmt, caret, grow, camer
 
 // Shot times (seconds). The camera eases between devices for PAN seconds.
 const PAN = 1.8;
-const P1 = { text: 'Looks good. @Kira can you check the copy?', at: 1.0, sent: 4.366666666666667 };
-const M1 = { text: '@Jiro change the label to “Gift card or promo code”.', at: 12.0 };
-const S1 = { text: 'also add a test for an empty code', at: 23.2 };
+const P1 = { text: 'Looks good. @Cliff can you keep the filters?', at: 1.0 };
+const M1 = { text: '@Jiro keep the current filters in the CSV export.', at: 12.0 };
+const S1 = { text: 'also add a test for filtered exports', at: 23.2 };
 [P1, M1, S1].forEach((x) => { x.sent ??= typeEnd(x.text, x.at, 15) + 0.5; });
 const TO_PHONE = 7.0, BANNER = TO_PHONE + PAN + 0.2, TO_LAPTOP = 20.0, BACK = 30.0;
 const J1 = M1.sent + 1.4, J2 = S1.sent + 2.2;
@@ -126,13 +126,13 @@ const D = 38.0, OUT = D - 2.2;
 
 const JIRO = { who: 'Jiro', app: true };
 const MSGS = [
-  { id: 'p0', who: 'Priya', av: 'P', color: '#e01e5a', tm: '10:02 AM', tx: '@Jiro add a gift card field to checkout.' },
-  { id: 'j0', ...JIRO, tm: '10:09 AM', tx: 'Done. Draft PR is up with a preview.', card: ['#52 Gift card field at checkout', 'Draft'] },
-  { id: 'p1', who: 'Priya', av: 'P', color: '#e01e5a', tm: '10:14 AM', tx: P1.text, at: P1.sent },
-  { id: 'm1', who: 'Kira', av: 'K', color: '#2eb67d', tm: '10:16 AM', tx: M1.text, at: M1.sent },
-  { id: 'j1', ...JIRO, tm: '10:16 AM', tx: 'Done. The label now reads “Gift card or promo code” and the preview is updated.', at: J1 },
+  { id: 'p0', who: 'Amol', av: 'A', color: '#e01e5a', tm: '10:02 AM', tx: '@Jiro add a CSV export to checkout reports.' },
+  { id: 'j0', ...JIRO, tm: '10:09 AM', tx: 'Done. Draft PR is up with a preview.', card: ['#52 CSV export for checkout reports', 'Draft'] },
+  { id: 'p1', who: 'Amol', av: 'A', color: '#e01e5a', tm: '10:14 AM', tx: P1.text, at: P1.sent },
+  { id: 'm1', who: 'Cliff', av: 'C', color: '#2eb67d', tm: '10:16 AM', tx: M1.text, at: M1.sent },
+  { id: 'j1', ...JIRO, tm: '10:16 AM', tx: 'Done. The export now respects the active filters.', at: J1 },
   { id: 's1', ...JIRO, tm: '10:18 AM', via: 'Sam · via CLI', quote: S1.text, at: S1.sent },
-  { id: 'j2', ...JIRO, tm: '10:18 AM', tx: 'Added 3 tests for empty and invalid codes. All passing.', at: J2 },
+  { id: 'j2', ...JIRO, tm: '10:18 AM', tx: 'Added tests for filtered and empty exports. All passing.', at: J2 },
 ];
 const msgHTML = (m, pre) => `<div class="m" id="${pre}${m.id}" ${m.at ? 'data-grow' : ''}>
   <div class="av" style="background:${m.color ?? '#faf8f2'}">${m.av ?? $('ic-jiro').innerHTML}</div>
@@ -162,7 +162,7 @@ scene({ duration: D, setup: () => {
   for (const m of MSGS) if (m.at) { g($(`mon-${m.id}`), m.at); g($(`ph-${m.id}`), m.at); }
   g($('tS'), S1.sent); g($('tJ'), J2);
 
-  // composers: Priya types on the desktop, Kira on the phone, Sam in the CLI
+  // composers: Amol types on the desktop, Cliff on the phone, Sam in the CLI
   const typing = (x) => t >= x.at && t < x.sent;
   $('monComp').innerHTML = typing(P1) ? fmt(typed(P1.text, t, P1.at, 15)) + caret : '<span class="ph">Message #checkout</span>';
   $('monSend').classList.toggle('on', typing(P1));
@@ -172,7 +172,7 @@ scene({ duration: D, setup: () => {
     : working ? `<span class="dim">${$('ic-spin').innerHTML.replace('class="ico"', `class="ico" style="transform:rotate(${t * 240}deg)"`)} Jiro is working…</span>`
     : '<span class="dim">› Message Jiro…</span>';
 
-  // notification banner on Kira's phone
+  // notification banner on Cliff's phone
   const b = $('banner'), bin = eo(prog(t, BANNER, 0.6)), bout = prog(t, M1.at - 0.6, 0.5);
   b.style.opacity = String(Math.min(bin, 1 - bout)); b.style.transform = `translateY(${(1 - bin) * -30}px)`;
 

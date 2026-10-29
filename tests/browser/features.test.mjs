@@ -80,16 +80,16 @@ test("keyboard step links reveal their region without moving focus into the mock
   await context.close();
 });
 
-test("multiplayer step links follow Priya in Slack, Kira on her phone and Kira back at her terminal", async () => {
+test("multiplayer step links follow Amol in Slack, Cliff on his phone and Sam in terminal", async () => {
   const { page, context, errors } = await open();
   const story = page.locator("#feature-multiplayer");
   const links = story.locator(".feature-step a");
   assert.deepEqual(await links.locator('span:last-child').allTextContents(), [
     "Tackle a problem in Slack",
-    "Kira joins from her phone",
-    "Once back on her computer, picks it up in terminal",
+    "Cliff joins from his phone",
+    "Sam adds a test in terminal",
   ]);
-  for (const [i, person] of ["Priya", "Kira", "Kira"].entries()) {
+  for (const [i, person] of ["Amol", "Cliff", "Sam"].entries()) {
     const link = links.nth(i);
     const region = story.locator(await link.getAttribute("href"));
     assert.match(await region.innerText(), new RegExp(person));
@@ -100,8 +100,8 @@ test("multiplayer step links follow Priya in Slack, Kira on her phone and Kira b
     const box = await region.boundingBox();
     assert.ok(box.y >= 0 && box.y + box.height <= 900, "keyboard link reveals its complete interface region");
   }
-  assert.match(await story.locator('#multiplayer-region-2').innerText(), /mentioned you[\s\S]*Kira/);
-  assert.match(await story.locator('#multiplayer-region-3').innerText(), /nori cloud[\s\S]*Kira[\s\S]*npm test/);
+  assert.match(await story.locator('#multiplayer-region-2').innerText(), /mentioned you[\s\S]*Cliff/);
+  assert.match(await story.locator('#multiplayer-region-3').innerText(), /nori cloud[\s\S]*Sam[\s\S]*npm test/);
   assert.deepEqual(errors, []);
   await context.close();
 });
@@ -139,7 +139,7 @@ test("permissions links reveal assigned roles and enforce access for each partic
     "A shared thread with distinct roles assigned",
     "access enforced for each person talking to Jiro",
   ]);
-  const contents = [/Jordan[\s\S]*Support agent access[\s\S]*Rae[\s\S]*Ops agent access/, /Jordan[\s\S]*You don't have access to @jiro-ops\. Ask an org admin to grant you access\.[\s\S]*Rae[\s\S]*23 paid orders[\s\S]*PR #1847/];
+  const contents = [/Cliff[\s\S]*Support agent access[\s\S]*Amol[\s\S]*Ops agent access/, /Cliff[\s\S]*You don't have access to @jiro-ops\. Ask an org admin to grant you access\.[\s\S]*Amol[\s\S]*23 paid orders[\s\S]*PR #1847/];
   for (const [i, content] of contents.entries()) {
     const link = links.nth(i);
     const region = story.locator(await link.getAttribute("href"));

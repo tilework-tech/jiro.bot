@@ -45,8 +45,8 @@
           <div class="ch on"># incidents</div>
           <div class="ch"># deploys</div>
           <div class="sec">Direct messages</div>
-          <div class="ch"><span class="dm" style="background:#2bac76">R</span>Rae</div>
-          <div class="ch"><span class="dm" style="background:#4a6fd1">J</span>Jordan</div>
+          <div class="ch"><span class="dm" style="background:#2bac76">A</span>Amol</div>
+          <div class="ch"><span class="dm" style="background:#4a6fd1">C</span>Cliff</div>
           <div class="ch"><span class="dm" style="background:#e8912d">A</span>Alex</div>
           <div class="rail"><div class="wsi">A</div><div class="ri">{{i:house}}</div><div class="ri on">{{i:message-circle}}</div><div class="ri">{{i:bell}}</div></div>
         </div>
@@ -54,14 +54,14 @@
           <div class="hd"># incidents<span class="sub">Outages and on-call</span></div>
           <div class="msgs" id="msgs">
             <div class="m"><div class="av" style="background:#6b6f75">{{i:rocket}}</div><div><div class="who">Deploys<span class="app">APP</span><span class="tm">11:02 AM</span></div><div class="tx">shop <code>v2.41</code> is live in production.</div></div></div>
-            <div class="m"><div class="av" style="background:#2bac76">R</div><div><div class="who">Rae<span class="role admin">ops admin</span><span class="tm">11:05 AM</span></div><div class="tx">Thanks. I'm on call until 6.</div></div></div>
+            <div class="m"><div class="av" style="background:#2bac76">A</div><div><div class="who">Amol<span class="role admin">ops admin</span><span class="tm">11:05 AM</span></div><div class="tx">Thanks. I'm on call until 6.</div></div></div>
             <div class="day"><span>Today</span></div>
             <div class="m" id="m0"><div class="av" style="background:#e8912d">A</div><div><div class="who">Alex<span class="tm">2:14 PM</span></div><div class="tx">Checkout queue is stuck again. Anyone looking?</div></div></div>
-            <div class="m" id="r1" data-grow><div class="av" style="background:#2bac76">R</div><div><div class="who">Rae<span class="role admin">ops admin</span><span class="tm">2:15 PM</span></div><div class="tx" id="r1t"></div></div></div>
+            <div class="m" id="r1" data-grow><div class="av" style="background:#2bac76">A</div><div><div class="who">Amol<span class="role admin">ops admin</span><span class="tm">2:15 PM</span></div><div class="tx" id="r1t"></div></div></div>
             <div class="m" id="jA" data-grow><div class="av"><img src="../brand/jiro-v4.png"></div><div><div class="who">jiro-ops<span class="app">APP</span><span class="tm">2:15 PM</span></div><div class="tx"><span class="wait status" id="jAw">{{i:file-search}}Reading the last hour of logs<span class="dots"><i></i><i></i><i></i></span></span><span id="jAt">Root cause: a lock was held while a new machine was being set up, so every other request waited about 7 minutes. Nothing crashed. Want a fix PR?</span></div></div></div>
-            <div class="m" id="j1" data-grow><div class="av" style="background:#4a6fd1">J</div><div><div class="who">Jordan<span class="role none">no ops access</span><span class="tm">2:17 PM</span></div><div class="tx" id="j1t"></div></div></div>
+            <div class="m" id="j1" data-grow><div class="av" style="background:#4a6fd1">C</div><div><div class="who">Cliff<span class="role none">no ops access</span><span class="tm">2:17 PM</span></div><div class="tx" id="j1t"></div></div></div>
             <div class="m deny" id="jB" data-grow><div class="av"><img src="../brand/jiro-v4.png"></div><div><div class="who">jiro-ops<span class="app">APP</span><span class="tm">2:17 PM</span></div><div class="tx"><span class="lockline">{{i:lock}}<span>You don't have access to <span class="mention">@jiro-ops</span>. Ask an org admin to grant you access.</span></span></div></div></div>
-            <div class="m" id="r2" data-grow><div class="av" style="background:#2bac76">R</div><div><div class="who">Rae<span class="role admin">ops admin</span><span class="tm">2:18 PM</span></div><div class="tx" id="r2t"></div></div></div>
+            <div class="m" id="r2" data-grow><div class="av" style="background:#2bac76">A</div><div><div class="who">Amol<span class="role admin">ops admin</span><span class="tm">2:18 PM</span></div><div class="tx" id="r2t"></div></div></div>
             <div class="m" id="jC" data-grow><div class="av"><img src="../brand/jiro-v4.png"></div><div><div class="who">jiro-ops<span class="app">APP</span><span class="tm">2:18 PM</span></div><div class="tx"><span class="wait status" id="jCw">{{i:git-pull-request}}Opening a draft PR<span class="dots"><i></i><i></i><i></i></span></span><span id="jCt">Draft PR is up: release the lock before waiting on a new machine, with a test.<br><span class="card">{{i:git-pull-request}}#231 Release the claim lock before provisioning<span class="st">Draft</span></span></span></div></div></div>
           </div>
           <div class="comp"><span id="compT"></span><div class="tools">{{i:plus}}{{i:at-sign}}{{i:smile}}<span class="send" id="send">{{i:send-horizontal}}</span></div></div>

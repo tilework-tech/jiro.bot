@@ -32,6 +32,9 @@
     open();
   });
 
+  // Social post links can open the same dialog directly.
+  if (location.hash === "#reserve") open();
+
   // Close on a backdrop click only when the press also started there, so dragging a
   // text selection out of a field doesn't throw away what the visitor typed.
   let pressedBackdrop = false;

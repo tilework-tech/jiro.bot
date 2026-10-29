@@ -97,6 +97,18 @@ test("every Get early access button opens the sign-up pop-up", async () => {
   await page.close();
 });
 
+test("a direct #reserve link opens the name and email pop-up", async () => {
+  const { page, errors, submissions } = await openSite({ path: "/#reserve" });
+  await dialog(page).waitFor({ state: "visible" });
+  assert.deepEqual(
+    await dialog(page).getByRole("textbox").evaluateAll((inputs) => inputs.map((input) => input.name)),
+    ["name", "email"],
+  );
+  assert.equal(submissions.length, 0);
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
 test("submitting name and email asks the visitor to check their inbox", async () => {
   const { page, submissions } = await openSite();
   await page.getByRole("link", { name: "Get early access" }).first().click();
