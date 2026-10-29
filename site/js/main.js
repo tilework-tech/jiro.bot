@@ -10,7 +10,6 @@
   const { jiroGrid, jiroPx, jiroArt } = window.JiroPixels;
 
   const TOMATO = "#FB5E45",
-    GREEN = "#2BFF6B",
     NORI = "#1D3B2A",
     INK = "#0A0A0A";
   const reduced = (() => {
@@ -116,71 +115,6 @@
       text = m.slice(0, n);
     }
     if (el.textContent !== text) el.textContent = text;
-  };
-
-  // reserve panel: a sushi counter with seven stools; the open one blinks green
-  R.counter = (f) => {
-    const el = $('[data-px="counter"]');
-    if (!el) return;
-    const P = 6,
-      W = ($("#reserve") || {}).clientWidth || 560,
-      cols = Math.max(40, Math.floor(W / P));
-    const on = still || Math.floor(f.t / 600) % 2 === 0;
-    const RICE = "#FAF8F2",
-      GRAIN = "#E2DDCF",
-      OPEN = on ? GREEN : null,
-      H = 19;
-    const g = Array.from({ length: H }, () => new Array(cols).fill(null));
-    const set = (x, y, c) => {
-      if (c && y >= 0 && y < H && x >= 0 && x < cols) g[y][x] = c;
-    };
-    for (let x = 0; x < cols; x++) {
-      set(x, 0, RICE);
-      set(x, 1, (x * 7 + 3) % 11 === 0 ? GRAIN : RICE);
-      set(x, 2, RICE);
-      set(x, 3, GRAIN);
-    }
-    const n = 7,
-      gap = (cols - n * 5) / n;
-    for (let k = 0; k < n; k++) {
-      const x0 = Math.round(gap / 2 + k * (5 + gap)),
-        c = k === n - 1 ? OPEN : RICE,
-        d = k === n - 1 ? OPEN : GRAIN;
-      [1, 2, 3].forEach((dx) => set(x0 + dx, 6, c));
-      [0, 1, 2, 3, 4].forEach((dx) => set(x0 + dx, 7, c));
-      [0, 1, 2, 3, 4].forEach((dx) => set(x0 + dx, 8, d));
-      [9, 10, 11, 12, 13, 14].forEach((y) => set(x0 + 2, y, c));
-      [1, 2, 3].forEach((dx) => set(x0 + dx, 13, c));
-      set(x0 + 1, 15, c);
-      set(x0 + 3, 15, c);
-      set(x0 + 1, 16, c);
-      set(x0 + 3, 16, c);
-      set(x0, 17, c);
-      set(x0 + 4, 17, c);
-    }
-    const runs = [];
-    g.forEach((row, y) => {
-      let x = 0;
-      while (x < cols) {
-        const cc = row[x];
-        if (!cc) {
-          x++;
-          continue;
-        }
-        let e = x + 1;
-        while (e < cols && row[e] === cc) e++;
-        runs.push({
-          l: ((x / cols) * 100).toFixed(4),
-          t: ((y / H) * 100).toFixed(4),
-          w: (((e - x) / cols) * 100 + 0.05).toFixed(4),
-          h: (100 / H + 0.05).toFixed(4),
-          c: cc,
-        });
-        x = e;
-      }
-    });
-    el.style.aspectRatio = cols + " / " + H;
-    put(el, pxHtml(runs, "%"));
   };
 
   // footer wordmark: JIRO.BOT where the two Os become his eyes.

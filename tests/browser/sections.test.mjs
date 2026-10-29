@@ -247,7 +247,7 @@ test("the sign-up block shows two customer quotes, one each from Corvus and Mira
 });
 
 for (const width of [1440, 1180, 390]) {
-  test(`FAQ and sign-up at ${width}px keep readable questions, quotes, form and stools`, async () => {
+  test(`FAQ and sign-up at ${width}px keep readable questions, quotes and form`, async () => {
     const { page } = await open({ width });
     const faq = await page.locator('#faq').boundingBox();
     const reserve = await page.locator('#reserve').boundingBox();
@@ -264,11 +264,11 @@ for (const width of [1440, 1180, 390]) {
     await page.locator('#reserve [data-early-access]').click();
     assert.equal(await page.getByLabel('Work email', { exact: true }).last().inputValue(), 'reader@example.test');
     await page.keyboard.press('Escape');
-    const counter = page.locator('.reserve-counter');
-    assert.ok(await counter.locator('span').count() > 0, 'stools render');
-    assert.equal(await counter.evaluate(el => el.scrollWidth <= el.clientWidth + 1), true, "stools do not overflow their canvas");
-    const box = await counter.boundingBox();
-    assert.ok(box.x >= reserve.x - 1 && box.x + box.width <= reserve.x + reserve.width + 1, 'stools fit column');
+    for (const element of await page.locator('#reserve .quote, #reserve input, #reserve button').all()) {
+      const box = await element.boundingBox();
+      assert.ok(box.x >= reserve.x && box.x + box.width <= reserve.x + reserve.width, 'quotes and controls fit column');
+      assert.ok(box.x >= 0 && box.x + box.width <= width, 'quotes and controls fit viewport');
+    }
     await page.close();
   });
 }

@@ -925,11 +925,6 @@ details[open] .pl::after {
   flex-direction: column;
   gap: 18px;
 }
-.reserve-counter {
-  position: relative;
-  margin: 0 -32px;
-  overflow: hidden;
-}
 @media (prefers-reduced-motion: reduce) {
   .slop-steps li,
   .slop-a,
@@ -1181,9 +1176,6 @@ details[open] .pl::after {
   }
   .quote blockquote {
     font-size: 20px;
-  }
-  .reserve-counter {
-    margin: 0 -20px;
   }
   /* Compact steps stay side by side; pull requests stack when space is limited. */
   .slop {
