@@ -1,0 +1,68 @@
+[
+  {
+    "viewport": "desktop",
+    "action": "initial load",
+    "name": "Multiplayer",
+    "src": "video/carousel/multiplayer-desktop.mp4",
+    "poster": "video/carousel/multiplayer-poster.jpg",
+    "paused": false,
+    "currentTime": 0.7485,
+    "width": 1200,
+    "height": 960
+  },
+  {
+    "viewport": "desktop",
+    "action": "click dot 2",
+    "name": "On-call",
+    "src": "video/carousel/oncall-desktop.mp4",
+    "poster": "video/carousel/oncall-poster.jpg",
+    "paused": false,
+    "currentTime": 0.3326,
+    "width": 1200,
+    "height": 960
+  },
+  {
+    "viewport": "desktop",
+    "action": "click dot 3",
+    "name": "RBAC",
+    "src": "video/carousel/rbac-desktop.mp4",
+    "poster": "video/carousel/rbac-poster.jpg",
+    "paused": false,
+    "currentTime": 0.3379,
+    "width": 1200,
+    "height": 960
+  },
+  {
+    "viewport": "mobile",
+    "action": "initial load",
+    "name": "Multiplayer",
+    "src": "video/carousel/multiplayer-mobile.mp4",
+    "poster": "video/carousel/multiplayer-poster.jpg",
+    "paused": false,
+    "currentTime": 0.7963,
+    "width": 720,
+    "height": 900
+  },
+  {
+    "viewport": "mobile",
+    "action": "click dot 2",
+    "name": "On-call",
+    "src": "video/carousel/oncall-mobile.mp4",
+    "poster": "video/carousel/oncall-poster.jpg",
+    "paused": false,
+    "currentTime": 0.6989,
+    "width": 720,
+    "height": 900
+  },
+  {
+    "viewport": "mobile",
+    "action": "click dot 3",
+    "name": "RBAC",
+    "src": "video/carousel/rbac-mobile.mp4",
+    "poster": "video/carousel/rbac-poster.jpg",
+    "paused": false,
+    "currentTime": 1.8258,
+    "width": 720,
+    "height": 900
+  }
+]
