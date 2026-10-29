@@ -31,6 +31,31 @@ after(async () => {
   server?.kill();
 });
 
+test("all comparison row labels stay visible while their values scroll on mobile", async t => {
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: "reduce" });
+  t.after(() => page.close());
+  await page.goto(SITE);
+  const rows = page.locator(".ctable .crow");
+  const before = await rows.evaluateAll(rows => rows.map(row => ({
+    label: row.children[0].getBoundingClientRect().x,
+    value: row.children[1].getBoundingClientRect().x,
+  })));
+  const distance = await page.locator(".cscroll").evaluate(el => {
+    el.scrollLeft = 200;
+    return el.scrollLeft;
+  });
+  assert.ok(distance > 0, "comparison table scrolls horizontally");
+  await page.evaluate(() => new Promise(requestAnimationFrame));
+  const after = await rows.evaluateAll(rows => rows.map(row => ({
+    label: row.children[0].getBoundingClientRect().x,
+    value: row.children[1].getBoundingClientRect().x,
+  })));
+  for (let i = 0; i < before.length; i++) {
+    assert.ok(Math.abs(after[i].label - before[i].label) <= 1, `row ${i + 1} label stays in view`);
+    assert.ok(Math.abs(after[i].value - before[i].value + distance) <= 1, `row ${i + 1} values scroll`);
+  }
+});
+
 for (const width of WIDTHS) {
   test(`page layout fits at ${width}px, with balanced hero and readable table`, async t => {
     const page = await browser.newPage({ viewport: { width, height: 1000 }, reducedMotion: "reduce" });
