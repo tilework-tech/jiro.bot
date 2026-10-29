@@ -1,6 +1,6 @@
 /*
  * jiro.bot: page behaviour.
- * Pixel art and the typing bar share a 100 ms clock. The feature walkthroughs
+ * Pixel art uses a 100 ms clock. The feature walkthroughs
  * are scroll-driven in features.js; the hero has its own controller.
  * Each region only touches the DOM when its output changes.
  * Motion is off when the visitor prefers reduced motion; every region then shows a still frame.
@@ -25,8 +25,6 @@
   // ---------- helpers ----------
   const $ = (sel, el) => (el || document).querySelector(sel);
   const $$ = (sel, el) => Array.from((el || document).querySelectorAll(sel));
-  const esc = (s) =>
-    String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
   const cache = new WeakMap();
   // write html into el only when it changed
   const put = (el, html) => {
@@ -82,40 +80,6 @@
 
   // compare table header logo: his face in white
   R.logoW = (f) => put($('[data-px="logoW"]'), pxHtml(jiroArt(f.eyes, 1.6, { F: "#FFFFFF" }, { faceOnly: true }).px));
-
-  // Typing bar under "Jiro vs. AI slop". Edit this list to change the messages.
-  const TYPING_MESSAGES = [
-    "Bring your own subscription",
-    "Single-tenant for every agent",
-    "Your intelligence stays with you",
-  ];
-  // ms per typed character, pause on the full message, ms per deleted character, pause when empty
-  const TYPE_MS = 110,
-    HOLD_MS = 2800,
-    DELETE_MS = 45,
-    GAP_MS = 800;
-  R.typing = (f) => {
-    const el = $("[data-typing]");
-    if (!el) return;
-    put($("[data-typing-all]"), esc(TYPING_MESSAGES.join(". ") + "."));
-    let text = TYPING_MESSAGES[0];
-    if (!still) {
-      const spans = TYPING_MESSAGES.map((m) => m.length * (TYPE_MS + DELETE_MS) + HOLD_MS + GAP_MS);
-      let c = f.t % spans.reduce((a, b) => a + b, 0),
-        i = 0;
-      while (c >= spans[i]) c -= spans[i++];
-      const m = TYPING_MESSAGES[i],
-        typedEnd = m.length * TYPE_MS;
-      const n =
-        c < typedEnd
-          ? Math.floor(c / TYPE_MS)
-          : c < typedEnd + HOLD_MS
-            ? m.length
-            : Math.max(0, m.length - Math.floor((c - typedEnd - HOLD_MS) / DELETE_MS));
-      text = m.slice(0, n);
-    }
-    if (el.textContent !== text) el.textContent = text;
-  };
 
   // footer wordmark: JIRO.BOT where the two Os become his eyes.
   // Loop (10 s): Os, blink shut, open as eyes (O in JIRO is the chevron, O in BOT is the right eye),

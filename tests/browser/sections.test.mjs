@@ -166,37 +166,6 @@ test("reduced-motion slop stays on a complete static end state", async () => {
   await page.close();
 });
 
-test("the typing bar types each message, then moves on to the next", async () => {
-  const { page, errors } = await open();
-  const bar = page.locator("#why [data-typing]");
-  await bar.scrollIntoViewIfNeeded();
-  const seen = new Set();
-  const deadline = Date.now() + 25000;
-  while (Date.now() < deadline && seen.size < 2) {
-    const t = (await bar.innerText()).trim();
-    for (const m of [
-      "Bring your own subscription",
-      "Single-tenant for every agent",
-      "Your intelligence stays with you",
-    ])
-      if (new RegExp(`${m}[.!]?$`).test(t)) seen.add(m);
-    await page.waitForTimeout(150);
-  }
-  assert.ok(seen.size >= 2, `saw ${[...seen].join(", ")}`);
-  assert.deepEqual(errors, []);
-  await page.close();
-});
-
-test("with reduced motion the typing bar shows a full message and does not change", async () => {
-  const { page } = await open({ reducedMotion: "reduce" });
-  const bar = page.locator("#why [data-typing]");
-  const first = (await bar.innerText()).trim();
-  await page.waitForTimeout(1500);
-  assert.equal((await bar.innerText()).trim(), first);
-  assert.match(first, /Bring your own subscription/);
-  await page.close();
-});
-
 test("with reduced motion every feature panel still shows its content", async () => {
   const { page } = await open({ reducedMotion: "reduce" });
   const panels = page.locator("#features figure");

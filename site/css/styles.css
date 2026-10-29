@@ -830,45 +830,6 @@ details[open] .pl::after {
 .slop-enhanced[data-at="2"] .slop-a,
 .slop-enhanced[data-at="3"] .slop-a,
 .slop-enhanced[data-at="3"] .slop-b { opacity: 1; }
-.typing {
-  flex: 1 1 100%;
-  min-width: 0;
-  background: #ffffff;
-  padding: 28px 36px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 24px;
-  letter-spacing: -0.01em;
-  min-height: 1.5em;
-}
-.typing-prompt {
-  color: #fb5e45;
-  font-weight: 600;
-}
-.typing-text {
-  white-space: pre-wrap;
-}
-.typing-cursor {
-  display: inline-block;
-  width: 0.55em;
-  height: 1.05em;
-  vertical-align: -0.15em;
-  margin-left: 2px;
-  background: #fb5e45;
-}
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-
 /* ---------- FAQ and the sign-up block ---------- */
 .faq-reserve { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
 .faq-reserve > section { min-width: 0; }
@@ -1140,6 +1101,10 @@ details[open] .pl::after {
     min-width: 700px !important;
     --ccols: 140px 170px 1fr 1fr 1fr;
   }
+  .compare-brand {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
   .ctable > div:not(:last-child) > :first-child {
     position: sticky;
     left: 0;
@@ -1197,10 +1162,6 @@ details[open] .pl::after {
   .slop .slop-a,
   .slop .slop-b {
     opacity: 1;
-  }
-  .typing {
-    padding: 22px 20px;
-    font-size: 16px;
   }
 
   /* footer */
