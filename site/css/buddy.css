@@ -1,0 +1,16 @@
+/* The host only reveals the buddy where the entire control has clear space. */
+.jiro-buddy:not([data-site-visible]),
+.jiro-buddy:not([data-site-visible]) *,
+.jiro-buddy:not([data-site-speech]) .jiro-buddy__bubble,
+.jiro-buddy:not([data-site-speech]) .jiro-buddy__sr {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jiro-buddy,
+  .jiro-buddy * {
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
