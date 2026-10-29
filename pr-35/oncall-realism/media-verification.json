@@ -1,0 +1,24 @@
+{
+  "desktop": {
+    "dimensions": [
+      1200,
+      960
+    ],
+    "frames": 990,
+    "fps": 30,
+    "seconds": 33,
+    "bytes": 573018,
+    "sha256": "c093a0c4d3305b3917e64e972ee9a7140fb4698f10d9c6c23fbe4b816f080c4e"
+  },
+  "mobile": {
+    "dimensions": [
+      720,
+      900
+    ],
+    "frames": 990,
+    "fps": 30,
+    "seconds": 33,
+    "bytes": 504941,
+    "sha256": "239ff719a8659a4585b7fc06cc028cdc95ffb72db8d70a70b9fb38a1d9e722b7"
+  }
+}
