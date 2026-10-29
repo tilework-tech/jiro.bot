@@ -3,1323 +3,1338 @@
 > node --test --test-concurrency=1
 
 TAP version 13
-# 127.0.0.1 - - [29/Oct/2026 15:34:11] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:11] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:11] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:11] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:11] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:11] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:11] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:11] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:12] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:12] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:12] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:12] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:12] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:12] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:12] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:12] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:12] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:12] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:16] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: every Get early access button opens the sign-up pop-up
 ok 1 - every Get early access button opens the sign-up pop-up
   ---
-  duration_ms: 1803.061901
+  duration_ms: 1874.597561
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:13] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:18] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: submitting name and email asks the visitor to check their inbox
 ok 2 - submitting name and email asks the visitor to check their inbox
   ---
-  duration_ms: 1088.077993
+  duration_ms: 1145.221287
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:14] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:15] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:15] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:19] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: a visitor can explore a hero example and then sign up
 ok 3 - a visitor can explore a hero example and then sign up
   ---
-  duration_ms: 1461.255089
+  duration_ms: 1176.05506
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:16] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:20] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: the bottom email field carries its address into the pop-up, by button or Enter
 ok 4 - the bottom email field carries its address into the pop-up, by button or Enter
   ---
-  duration_ms: 1243.837168
+  duration_ms: 1257.944644
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:17] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:21] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:22] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: the close button and a click on the backdrop close the pop-up
 ok 5 - the close button and a click on the backdrop close the pop-up
   ---
-  duration_ms: 1039.690153
+  duration_ms: 1113.647474
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:18] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:22] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:22] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:22] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:22] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:22] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:22] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:22] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:23] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:23] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:23] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:23] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:23] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:23] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:23] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:23] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:23] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:23] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: an incomplete form is not sent
 ok 6 - an incomplete form is not sent
   ---
-  duration_ms: 1220.667848
+  duration_ms: 1298.672351
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:19] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:20] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:24] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:25] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: a failed or unreachable sign-up keeps the form and lets the visitor try again
 ok 7 - a failed or unreachable sign-up keeps the form and lets the visitor try again
   ---
-  duration_ms: 2070.644783
+  duration_ms: 2096.625383
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:21] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:22] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:22] "GET /privacy.html HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:22] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:22] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:22] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /privacy.html HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:26] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
 # Subtest: the pop-up links to the privacy policy, which is served on jiro.bot
 ok 8 - the pop-up links to the privacy policy, which is served on jiro.bot
   ---
-  duration_ms: 1111.811553
+  duration_ms: 1184.293293
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:22] "GET /confirmed.html HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:22] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:22] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:22] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:22] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:22] "GET /favicon.ico HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:23] "GET /link-expired.html HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:23] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:23] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:23] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:23] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:27] "GET /confirmed.html HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:27] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:27] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:27] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:27] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:27] "GET /link-expired.html HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:27] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:27] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:27] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:27] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
 # Subtest: confirmed and link-expired pages explain the next step and link home
 ok 9 - confirmed and link-expired pages explain the next step and link home
   ---
-  duration_ms: 792.39103
+  duration_ms: 899.463945
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:23] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:24] "GET /favicon.ico HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:28] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:28] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:29] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
 # Subtest: feature-oncall: scrolling forwards, backwards and jumping selects the matching region inside its colored box
 ok 10 - feature-oncall: scrolling forwards, backwards and jumping selects the matching region inside its colored box
   ---
-  duration_ms: 3663.475716
+  duration_ms: 3582.110132
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:27] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:28] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:32] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: feature-multiplayer: scrolling forwards, backwards and jumping selects the matching region inside its colored box
 ok 11 - feature-multiplayer: scrolling forwards, backwards and jumping selects the matching region inside its colored box
   ---
-  duration_ms: 3445.238595
+  duration_ms: 3393.154193
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:31] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:35] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:35] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:35] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:35] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:35] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:35] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:35] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:35] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:35] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:35] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:35] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:36] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:36] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:36] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:36] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:36] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:36] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: feature-permissions: scrolling forwards, backwards and jumping selects the matching region inside its colored box
 ok 12 - feature-permissions: scrolling forwards, backwards and jumping selects the matching region inside its colored box
   ---
-  duration_ms: 3369.087393
+  duration_ms: 3400.072137
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:34] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:39] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: keyboard step links reveal their region without moving focus into the mock interface
 ok 13 - keyboard step links reveal their region without moving focus into the mock interface
   ---
-  duration_ms: 1003.153698
+  duration_ms: 1027.197887
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:35] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:40] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
 # Subtest: reduced motion shows complete static demos, including after changing the preference
 ok 14 - reduced motion shows complete static demos, including after changing the preference
   ---
-  duration_ms: 1617.511844
+  duration_ms: 1450.857205
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:37] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:37] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:37] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:37] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:37] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:37] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:37] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:37] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:37] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:37] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:37] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:41] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:41] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:41] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:41] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:41] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:41] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:41] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:41] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:41] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:41] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:41] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
 # Subtest: without JavaScript every narrative and interface region is readable
 ok 15 - without JavaScript every narrative and interface region is readable
   ---
-  duration_ms: 1048.647516
+  duration_ms: 986.749771
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /video/carousel/oncall-mobile.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:38] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:42] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
 # Subtest: at 390px stories stack, regions fit and scrolling emphasizes the region in view
 ok 16 - at 390px stories stack, regions fit and scrolling emphasizes the region in view
   ---
-  duration_ms: 1505.343587
+  duration_ms: 1547.295964
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /video/carousel/oncall-mobile.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:39] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:44] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
 # Subtest: at 320px stories stack, regions fit and scrolling emphasizes the region in view
 ok 17 - at 320px stories stack, regions fit and scrolling emphasizes the region in view
   ---
-  duration_ms: 1461.155219
+  duration_ms: 1473.459964
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /video/carousel/oncall-mobile.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:41] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:45] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
 # Subtest: at 900px stories stack, regions fit and scrolling emphasizes the region in view
 ok 18 - at 900px stories stack, regions fit and scrolling emphasizes the region in view
   ---
-  duration_ms: 1520.717983
+  duration_ms: 1477.367015
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:42] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:47] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: short desktop viewports keep demo content in normal flow
 ok 19 - short desktop viewports keep demo content in normal flow
   ---
-  duration_ms: 1053.194079
+  duration_ms: 988.712141
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:43] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:48] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: a demo that cannot fit a laptop viewport does not pin off-screen
 ok 20 - a demo that cannot fit a laptop viewport does not pin off-screen
   ---
-  duration_ms: 908.726769
+  duration_ms: 1205.091592
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:44] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:49] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: at 1440px three colored feature boxes alternate with white copy and remain readable
 ok 21 - at 1440px three colored feature boxes alternate with white copy and remain readable
   ---
-  duration_ms: 1047.819506
+  duration_ms: 1074.152168
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:45] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:50] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: at 1180px three colored feature boxes alternate with white copy and remain readable
 ok 22 - at 1180px three colored feature boxes alternate with white copy and remain readable
   ---
-  duration_ms: 1033.31879
+  duration_ms: 1081.46392
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:46] "GET /video/carousel/oncall-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:51] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
 # Subtest: at 390px three colored feature boxes alternate with white copy and remain readable
 ok 23 - at 390px three colored feature boxes alternate with white copy and remain readable
   ---
-  duration_ms: 949.824696
+  duration_ms: 989.306472
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:47] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:49] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
-# Subtest: the hero carousel offers three examples, starting on On-call
-ok 24 - the hero carousel offers three examples, starting on On-call
+# 127.0.0.1 - - [29/Oct/2026 15:39:52] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:54] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:54] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:54] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:54] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:54] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:54] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:54] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:54] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:54] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:54] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:54] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:54] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:54] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:54] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:55] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:55] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:55] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# Subtest: the hero carousel offers three examples, starting on Multiplayer
+ok 24 - the hero carousel offers three examples, starting on Multiplayer
   ---
-  duration_ms: 2566.043299
+  duration_ms: 2581.229975
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:50] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:51] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:51] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:51] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:51] "GET /video/carousel/rbac-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:55] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:55] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:55] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:55] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:55] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:55] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:55] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:55] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:55] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:55] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:55] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: without JavaScript the hero starts on Multiplayer
+ok 25 - without JavaScript the hero starts on Multiplayer
+  ---
+  duration_ms: 748.836641
+  type: 'test'
+  ...
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:56] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /video/carousel/rbac-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: clicking the dots moves forward and back between examples
-ok 25 - clicking the dots moves forward and back between examples
+ok 26 - clicking the dots moves forward and back between examples
   ---
-  duration_ms: 1131.175311
+  duration_ms: 1228.792942
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:52] "GET /video/carousel/rbac-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:57] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:58] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:58] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:58] "GET /video/carousel/rbac-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: arrow keys, Home and End move between the dots
-ok 26 - arrow keys, Home and End move between the dots
+ok 27 - arrow keys, Home and End move between the dots
   ---
-  duration_ms: 1091.782995
+  duration_ms: 1167.810817
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:53] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:34:58] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:58] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:39:59] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:04] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: the carousel never advances on its own
-ok 27 - the carousel never advances on its own
+ok 28 - the carousel never advances on its own
   ---
-  duration_ms: 11710.689727
+  duration_ms: 11768.952991
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:04] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /video/carousel/rbac-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:10] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:10] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:10] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:10] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:10] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:10] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:10] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:10] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:10] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:10] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:10] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:10] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:10] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:10] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /video/carousel/rbac-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: desktop plays the desktop cut
-ok 28 - desktop plays the desktop cut
+ok 29 - desktop plays the desktop cut
   ---
-  duration_ms: 958.95708
+  duration_ms: 996.911005
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:05] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /video/carousel/rbac-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:11] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /video/carousel/rbac-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: a 901px window plays the desktop cut
-ok 29 - a 901px window plays the desktop cut
+ok 30 - a 901px window plays the desktop cut
   ---
-  duration_ms: 1069.255365
+  duration_ms: 1030.778799
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:06] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /video/carousel/oncall-mobile.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /video/carousel/rbac-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:12] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /video/carousel/rbac-mobile.mp4 HTTP/1.1" 200 -
 # Subtest: a 900px window plays the mobile cut
-ok 30 - a 900px window plays the mobile cut
+ok 31 - a 900px window plays the mobile cut
   ---
-  duration_ms: 978.407518
+  duration_ms: 1031.56921
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:07] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /video/carousel/oncall-mobile.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /video/carousel/rbac-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:13] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /video/carousel/rbac-mobile.mp4 HTTP/1.1" 200 -
 # Subtest: mobile plays the mobile cut
-ok 31 - mobile plays the mobile cut
+ok 32 - mobile plays the mobile cut
   ---
-  duration_ms: 1043.064114
+  duration_ms: 995.418434
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:08] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /video/carousel/oncall-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:14] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
 # Subtest: crossing the mobile breakpoint swaps to the other cut
-ok 32 - crossing the mobile breakpoint swaps to the other cut
+ok 33 - crossing the mobile breakpoint swaps to the other cut
   ---
-  duration_ms: 938.340651
+  duration_ms: 1023.662807
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:09] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:10] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:10] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:10] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:10] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:10] "GET /video/carousel/rbac-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:10] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:15] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:16] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:16] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:16] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:16] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:16] "GET /video/carousel/rbac-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:16] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
 # Subtest: every example shows its own poster still
-ok 33 - every example shows its own poster still
+ok 34 - every example shows its own poster still
   ---
-  duration_ms: 1186.694654
+  duration_ms: 1324.523961
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:10] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:11] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:17] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
 # Subtest: the pause control stops the example video, and play restarts the video
-ok 34 - the pause control stops the example video, and play restarts the video
+ok 35 - the pause control stops the example video, and play restarts the video
   ---
-  duration_ms: 1075.670058
+  duration_ms: 1077.066408
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:12] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:18] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
 # Subtest: with reduced motion the hero holds still until the visitor presses play
-ok 35 - with reduced motion the hero holds still until the visitor presses play
+ok 36 - with reduced motion the hero holds still until the visitor presses play
   ---
-  duration_ms: 1464.767891
+  duration_ms: 1479.530457
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:13] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:19] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:19] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:19] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:19] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:19] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:19] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:19] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:19] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:19] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:19] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:19] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:19] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:19] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:19] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: the cursor after 'engineer' is a still orange block
-ok 36 - the cursor after 'engineer' is a still orange block
+ok 37 - the cursor after 'engineer' is a still orange block
   ---
-  duration_ms: 1006.432179
+  duration_ms: 1041.670063
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:14] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:20] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: the hero copy never calls Jiro 'he', never 'calls him in', and says nothing about craft
-ok 37 - the hero copy never calls Jiro 'he', never 'calls him in', and says nothing about craft
+ok 38 - the hero copy never calls Jiro 'he', never 'calls him in', and says nothing about craft
   ---
-  duration_ms: 1020.673415
+  duration_ms: 942.792773
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:15] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:21] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: at 1440px the video fills a white panel with independently centered dots
-ok 38 - at 1440px the video fills a white panel with independently centered dots
+ok 39 - at 1440px the video fills a white panel with independently centered dots
   ---
-  duration_ms: 1054.268439
+  duration_ms: 996.366985
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:16] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:22] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: at 1180px the video fills a white panel with independently centered dots
-ok 39 - at 1180px the video fills a white panel with independently centered dots
+ok 40 - at 1180px the video fills a white panel with independently centered dots
   ---
-  duration_ms: 935.65297
+  duration_ms: 1097.124747
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:17] "GET /video/carousel/oncall-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:23] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:24] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
 # Subtest: at 390px the video fills a white panel with independently centered dots
-ok 40 - at 390px the video fills a white panel with independently centered dots
+ok 41 - at 390px the video fills a white panel with independently centered dots
   ---
-  duration_ms: 871.491693
+  duration_ms: 948.564115
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:18] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:18] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:19] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:25] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
 # Subtest: below the hero, Jiro is never 'he' and never 'called in', and nothing says craftsman
-ok 41 - below the hero, Jiro is never 'he' and never 'called in', and nothing says craftsman
+ok 42 - below the hero, Jiro is never 'he' and never 'called in', and nothing says craftsman
   ---
-  duration_ms: 1199.72743
+  duration_ms: 1137.742914
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:20] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:26] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: sections run hero, bake-off, AI slop, differentiators, pricing, FAQ, sign-up
-ok 42 - sections run hero, bake-off, AI slop, differentiators, pricing, FAQ, sign-up
+ok 43 - sections run hero, bake-off, AI slop, differentiators, pricing, FAQ, sign-up
   ---
-  duration_ms: 1131.220142
+  duration_ms: 1055.87756
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:21] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:27] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: bake-off: Jiro's cells are bold, the context row says you can leave, and hovering a row focuses only that row
-ok 43 - bake-off: Jiro's cells are bold, the context row says you can leave, and hovering a row focuses only that row
+ok 44 - bake-off: Jiro's cells are bold, the context row says you can leave, and hovering a row focuses only that row
   ---
-  duration_ms: 2152.775837
+  duration_ms: 2245.810366
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:23] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:29] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: bake-off rows match the fact-checked comparison
-ok 44 - bake-off rows match the fact-checked comparison
+ok 45 - bake-off rows match the fact-checked comparison
   ---
-  duration_ms: 879.874616
+  duration_ms: 925.997435
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:24] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:30] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: AI slop shows a three-step illustration with no counts or totals
-ok 45 - AI slop shows a three-step illustration with no counts or totals
+ok 46 - AI slop shows a three-step illustration with no counts or totals
   ---
-  duration_ms: 1024.396867
+  duration_ms: 898.227724
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:25] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:31] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: compact AI slop keeps a horizontal step row and advances in both scroll directions
-ok 46 - compact AI slop keeps a horizontal step row and advances in both scroll directions
+ok 47 - compact AI slop keeps a horizontal step row and advances in both scroll directions
   ---
-  duration_ms: 1129.3727
+  duration_ms: 1111.981414
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:26] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:32] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
 # Subtest: reduced-motion slop stays on a complete static end state
-ok 47 - reduced-motion slop stays on a complete static end state
+ok 48 - reduced-motion slop stays on a complete static end state
   ---
-  duration_ms: 1715.248385
+  duration_ms: 1725.158528
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:28] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:34] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: the typing bar types each message, then moves on to the next
-ok 48 - the typing bar types each message, then moves on to the next
+ok 49 - the typing bar types each message, then moves on to the next
   ---
-  duration_ms: 11850.383145
+  duration_ms: 11628.684693
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:40] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:45] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:46] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
 # Subtest: with reduced motion the typing bar shows a full message and does not change
-ok 49 - with reduced motion the typing bar shows a full message and does not change
+ok 50 - with reduced motion the typing bar shows a full message and does not change
   ---
-  duration_ms: 2336.060693
+  duration_ms: 2226.966168
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:42] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
 # Subtest: with reduced motion every feature panel still shows its content
-ok 50 - with reduced motion every feature panel still shows its content
+ok 51 - with reduced motion every feature panel still shows its content
   ---
-  duration_ms: 801.043014
+  duration_ms: 780.981375
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:48] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: differentiators cover on-call, multiplayer across interfaces, and permissions
-ok 51 - differentiators cover on-call, multiplayer across interfaces, and permissions
+ok 52 - differentiators cover on-call, multiplayer across interfaces, and permissions
   ---
-  duration_ms: 880.982267
+  duration_ms: 841.944731
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:43] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:44] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:49] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: the sign-up block shows two customer quotes, one each from Corvus and Miravoice, naming Jiro rather than Nori, above the email field
-ok 52 - the sign-up block shows two customer quotes, one each from Corvus and Miravoice, naming Jiro rather than Nori, above the email field
+ok 53 - the sign-up block shows two customer quotes, one each from Corvus and Miravoice, naming Jiro rather than Nori, above the email field
   ---
-  duration_ms: 1026.823787
+  duration_ms: 955.158258
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:45] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:50] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:51] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: FAQ and sign-up at 1440px keep readable questions, quotes and form
-ok 53 - FAQ and sign-up at 1440px keep readable questions, quotes and form
+ok 54 - FAQ and sign-up at 1440px keep readable questions, quotes and form
   ---
-  duration_ms: 1183.214793
+  duration_ms: 1146.333547
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:46] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:51] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:51] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:52] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
 # Subtest: FAQ and sign-up at 1180px keep readable questions, quotes and form
-ok 54 - FAQ and sign-up at 1180px keep readable questions, quotes and form
+ok 55 - FAQ and sign-up at 1180px keep readable questions, quotes and form
   ---
-  duration_ms: 1109.734822
+  duration_ms: 1109.909953
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:47] "GET /video/carousel/oncall-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:53] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
 # Subtest: FAQ and sign-up at 390px keep readable questions, quotes and form
-ok 55 - FAQ and sign-up at 390px keep readable questions, quotes and form
+ok 56 - FAQ and sign-up at 390px keep readable questions, quotes and form
   ---
-  duration_ms: 1413.862639
+  duration_ms: 1324.462721
   type: 'test'
   ...
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET / HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /css/styles.css HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /js/features.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /js/hero.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /js/early-access.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /js/main.js HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
-# 127.0.0.1 - - [29/Oct/2026 15:35:48] "GET /video/carousel/oncall-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 15:40:54] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
 # Subtest: mobile layout has no horizontal overflow outside the bake-off scroller and no errors
-ok 56 - mobile layout has no horizontal overflow outside the bake-off scroller and no errors
+ok 57 - mobile layout has no horizontal overflow outside the bake-off scroller and no errors
   ---
-  duration_ms: 858.974288
+  duration_ms: 816.33551
   type: 'test'
   ...
-1..56
-# tests 56
+1..57
+# tests 57
 # suites 0
-# pass 56
+# pass 57
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 98410.863587
+# duration_ms 99460.824414
