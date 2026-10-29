@@ -1,0 +1,137 @@
+{
+  "errors": [],
+  "viewports": [
+    {
+      "width": 1440,
+      "inventory": [
+        {
+          "tag": "A",
+          "href": "#reserve",
+          "dataEarlyAccess": false,
+          "text": "Get early access"
+        },
+        {
+          "tag": "A",
+          "href": "#reserve",
+          "dataEarlyAccess": false,
+          "text": "Get early access"
+        },
+        {
+          "tag": "A",
+          "href": "#reserve",
+          "dataEarlyAccess": false,
+          "text": "Get early access"
+        },
+        {
+          "tag": "A",
+          "href": "#reserve",
+          "dataEarlyAccess": false,
+          "text": "Get early access"
+        },
+        {
+          "tag": "BUTTON",
+          "href": null,
+          "dataEarlyAccess": true,
+          "text": "Get early access"
+        },
+        {
+          "tag": "A",
+          "href": "#reserve",
+          "dataEarlyAccess": false,
+          "text": "Get early access"
+        }
+      ],
+      "sections": [
+        {
+          "id": "why",
+          "visible": true,
+          "mascot": {
+            "x": 1239.300048828125,
+            "y": 202.699951171875,
+            "width": 92,
+            "height": 90
+          },
+          "speech": true
+        },
+        {
+          "id": "pricing",
+          "visible": true,
+          "mascot": {
+            "x": 1239.300048828125,
+            "y": 192.5,
+            "width": 92,
+            "height": 90
+          },
+          "speech": true
+        }
+      ],
+      "reducedHidden": true
+    },
+    {
+      "width": 390,
+      "inventory": [
+        {
+          "tag": "A",
+          "href": "#reserve",
+          "dataEarlyAccess": false,
+          "text": "Get early access"
+        },
+        {
+          "tag": "A",
+          "href": "#reserve",
+          "dataEarlyAccess": false,
+          "text": "Get early access"
+        },
+        {
+          "tag": "A",
+          "href": "#reserve",
+          "dataEarlyAccess": false,
+          "text": "Get early access"
+        },
+        {
+          "tag": "A",
+          "href": "#reserve",
+          "dataEarlyAccess": false,
+          "text": "Get early access"
+        },
+        {
+          "tag": "BUTTON",
+          "href": null,
+          "dataEarlyAccess": true,
+          "text": "Get early access"
+        },
+        {
+          "tag": "A",
+          "href": "#reserve",
+          "dataEarlyAccess": false,
+          "text": "Get early access"
+        }
+      ],
+      "sections": [
+        {
+          "id": "why",
+          "visible": true,
+          "mascot": {
+            "x": 294.3999938964844,
+            "y": 134.89990234375,
+            "width": 56,
+            "height": 55
+          },
+          "speech": false
+        },
+        {
+          "id": "pricing",
+          "visible": true,
+          "mascot": {
+            "x": 283.79998779296875,
+            "y": 123.10009765625,
+            "width": 56,
+            "height": 55
+          },
+          "speech": false
+        }
+      ],
+      "reducedHidden": true
+    }
+  ]
+}
