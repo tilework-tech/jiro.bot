@@ -1,0 +1,49 @@
+{
+  "desktop": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+      1200,
+      960
+    ],
+    "duration": 33.0,
+    "audio": false,
+    "fps": 30,
+    "frames": 990,
+    "size_bytes": 494904,
+    "seam_mean_abs_difference": 0.2727864583333333,
+    "atoms": [
+      "ftyp",
+      "moov",
+      "free",
+      "mdat"
+    ]
+  },
+  "mobile": {
+    "codec": "h264",
+    "pix_fmt": "yuv420p",
+    "size": [
+      720,
+      900
+    ],
+    "duration": 33.0,
+    "audio": false,
+    "fps": 30,
+    "frames": 990,
+    "size_bytes": 428500,
+    "seam_mean_abs_difference": 0.2557508680555556,
+    "atoms": [
+      "ftyp",
+      "moov",
+      "free",
+      "mdat"
+    ]
+  },
+  "poster": {
+    "size": [
+      1080,
+      1080
+    ],
+    "time_zero_exact": true
+  }
+}
