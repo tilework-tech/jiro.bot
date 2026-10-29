@@ -1118,16 +1118,12 @@ details[open] .pl::after {
     padding-left: 8px !important;
     padding-right: 8px !important;
   }
-  .ctable > div:not(:last-child) > :first-child {
+  .ctable > div > :first-child {
     position: sticky;
     left: 0;
     z-index: 1;
     background: #ffffff;
     box-shadow: 2px 0 0 #0a0a0a;
-  }
-  .ctable > div:last-child {
-    position: sticky;
-    left: 0;
   }
 
   /* FAQ and reserve */
