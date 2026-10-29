@@ -214,15 +214,11 @@
                 flex: 711 1 0;
                 min-width: 320px;
                 min-height: 420px;
-                background: #161616;
+                background: #ffffff;
                 position: relative;
                 overflow: hidden;
               "
             >
-              <p class="hero-hired" data-hero-line aria-hidden="true">
-                You just hired <span class="hero-role">Jiro.</span>
-              </p>
-              <p class="sr-only">You just hired an engineer, a reviewer, a doc writer, an on-call. Jiro.</p>
               <div class="hero-carousel" role="region" aria-roledescription="carousel" aria-label="What Jiro does">
                 <div class="hc-stage">
                   <div
@@ -652,31 +648,27 @@
             <div class="lbl">&gt;_ How it works</div>
             <h2 id="features-heading" class="h-most">Jiro makes the change you would have made yourself, on a good day.</h2>
           </div>
-          <article class="feature-story" id="feature-oncall" aria-labelledby="oncall-title">
-            <header class="feature-intro">
-              <span class="feature-number">01</span>
-              <div><h3 id="oncall-title">On call at 4 a.m.</h3><p>Set it up once. Wake up to a fix you can review.</p></div>
-              <a class="feature-pricing" href="#pricing">See pricing <span aria-hidden="true">↗</span></a>
-            </header>
-            <div class="feature-walkthrough">
+          <article class="frow feature-story" id="feature-oncall" aria-labelledby="oncall-title">
+            <div class="ftext">
+              <div class="fnum">01</div>
+              <h3 class="fh" id="oncall-title">On call at 4 a.m.</h3>
+              <p class="fp">Set it up once. Wake up to a fix you can review.</p>
               <ol class="feature-steps" aria-label="On call at 4 a.m. Steps">
                 <li class="feature-step" id="oncall-step-1">
                   <a href="#oncall-region-1"><span class="feature-step-number">01</span><span>Set it once</span></a>
-                  <p>A Slack prompt sets the boundaries: investigate, fix, and open a PR. Approval stays with you.</p>
                 </li>
                 <li class="feature-step" id="oncall-step-2">
                   <a href="#oncall-region-2"><span class="feature-step-number">02</span><span>The alert wakes Jiro</span></a>
-                  <p>At 4 a.m., Jiro follows the alert into the logs, finds the cause, and tests a fix.</p>
                 </li>
                 <li class="feature-step" id="oncall-step-3">
                   <a href="#oncall-region-3"><span class="feature-step-number">03</span><span>Get the whole explanation</span></a>
-                  <p>The pull request explains what broke, what changed, and how the fix was checked.</p>
                 </li>
                 <li class="feature-step" id="oncall-step-4">
                   <a href="#oncall-region-4"><span class="feature-step-number">04</span><span>Review in the morning</span></a>
-                  <p>The work is ready when you are. A person reviews and approves the change.</p>
                 </li>
               </ol>
+            </div>
+            <div class="fimg">
               <figure class="feature-demo fpanel" aria-label="On call at 4 a.m. Illustrated example">
                 <div class="feature-window-bar"><span>Sable · Slack / #checkout-oncall</span><span class="feature-tag">example</span></div>
                 <div class="feature-region" id="oncall-region-1">
@@ -703,31 +695,27 @@ PASS · regression test</code></pre>
               </figure>
             </div>
           </article>
-          <article class="feature-story" id="feature-multiplayer" aria-labelledby="multiplayer-title">
-            <header class="feature-intro">
-              <span class="feature-number">02</span>
-              <div><h3 id="multiplayer-title">Working together on any interface.</h3><p>Different people. Different devices. One shared session.</p></div>
-              <a class="feature-pricing" href="#pricing">See pricing <span aria-hidden="true">↗</span></a>
-            </header>
-            <div class="feature-walkthrough">
+          <article class="frow feature-story" id="feature-multiplayer" aria-labelledby="multiplayer-title">
+            <div class="ftext">
+              <div class="fnum">02</div>
+              <h3 class="fh" id="multiplayer-title">Working together on any interface</h3>
+              <p class="fp">Different people. Different devices. One shared session.</p>
               <ol class="feature-steps" aria-label="Working together on any interface. Steps">
                 <li class="feature-step" id="multiplayer-step-1">
                   <a href="#multiplayer-region-1"><span class="feature-step-number">01</span><span>Start together in Slack</span></a>
-                  <p>Priya starts the task and brings Kira into the same thread.</p>
                 </li>
                 <li class="feature-step" id="multiplayer-step-2">
                   <a href="#multiplayer-region-2"><span class="feature-step-number">02</span><span>Kira joins from a phone</span></a>
-                  <p>A teammate can steer the work without opening a laptop or starting over.</p>
                 </li>
                 <li class="feature-step" id="multiplayer-step-3">
                   <a href="#multiplayer-region-3"><span class="feature-step-number">03</span><span>Pick it up in the terminal</span></a>
-                  <p>Sam joins from the CLI. Kira’s prompt is already there, with the same context.</p>
                 </li>
                 <li class="feature-step" id="multiplayer-step-4">
                   <a href="#multiplayer-region-4"><span class="feature-step-number">04</span><span>The reply reaches everyone</span></a>
-                  <p>Jiro’s update appears in the shared thread and terminal. Everyone follows the same work.</p>
                 </li>
               </ol>
+            </div>
+            <div class="fimg">
               <figure class="feature-demo fpanel" aria-label="Working together on any interface. Illustrated example">
                 <div class="feature-window-bar"><span>Sable / orders-export</span><span class="feature-tag">example</span></div>
                 <div class="feature-region" id="multiplayer-region-1">
@@ -753,31 +741,27 @@ in the export.</code></pre>
               </figure>
             </div>
           </article>
-          <article class="feature-story" id="feature-permissions" aria-labelledby="permissions-title">
-            <header class="feature-intro">
-              <span class="feature-number">03</span>
-              <div><h3 id="permissions-title">Permissions that follow the person.</h3><p>One thread. Each person’s access still applies.</p></div>
-              <a class="feature-pricing" href="#pricing">See pricing <span aria-hidden="true">↗</span></a>
-            </header>
-            <div class="feature-walkthrough">
+          <article class="frow feature-story" id="feature-permissions" aria-labelledby="permissions-title">
+            <div class="ftext">
+              <div class="fnum">03</div>
+              <h3 class="fh" id="permissions-title">Permissions that follow the person</h3>
+              <p class="fp">One thread. Each person’s access still applies.</p>
               <ol class="feature-steps" aria-label="Permissions that follow the person. Steps">
                 <li class="feature-step" id="permissions-step-1">
                   <a href="#permissions-region-1"><span class="feature-step-number">01</span><span>A shared thread, distinct roles</span></a>
-                  <p>Jordan uses the support agent, Rae uses ops, and Kira can use both. Sharing a thread does not share agent access.</p>
                 </li>
                 <li class="feature-step" id="permissions-step-2">
                   <a href="#permissions-region-2"><span class="feature-step-number">02</span><span>No access means a real refusal</span></a>
-                  <p>Jordan asks the ops agent to investigate. The request is refused because Jordan does not have access to that agent.</p>
                 </li>
                 <li class="feature-step" id="permissions-step-3">
                   <a href="#permissions-region-3"><span class="feature-step-number">03</span><span>The right access opens the work</span></a>
-                  <p>Rae asks the same agent. With ops access, Rae can start the investigation.</p>
                 </li>
                 <li class="feature-step" id="permissions-step-4">
-                  <a href="#permissions-region-4"><span class="feature-step-number">04</span><span>The right agent for each person</span></a>
-                  <p>Kira can use both agents and asks the support agent for a customer update. The draft still waits for review.</p>
+                  <a href="#permissions-region-4"><span class="feature-step-number">04</span><span>The cause and the fix</span></a>
                 </li>
               </ol>
+            </div>
+            <div class="fimg">
               <figure class="feature-demo fpanel" aria-label="Permissions that follow the person. Illustrated example">
                 <div class="feature-window-bar"><span>Sable · Slack / #incidents</span><span class="feature-tag">example</span></div>
                 <div class="feature-region" id="permissions-region-1">
@@ -792,12 +776,11 @@ in the export.</code></pre>
                 <div class="feature-region" id="permissions-region-3">
                   <p class="feature-meta"><strong>Rae</strong> <span>ops agent access</span></p>
                   <p>@jiro-ops, investigate the checkout alert.</p>
-                  <p class="feature-reply"><strong>jiro-ops</strong><br>Investigation started. I’ll prepare a fix for review.</p>
                 </div>
                 <div class="feature-region" id="permissions-region-4">
-                  <p class="feature-meta"><strong>Kira</strong> <span>ops + support agent access</span></p>
-                  <p>@jiro-support, draft a customer update.</p>
-                  <p class="feature-reply"><strong>jiro-support</strong><br>Draft ready for review. Nothing sent.</p>
+                  <p class="feature-meta"><strong>jiro-ops</strong> <span>reply to Rae</span></p>
+                  <p>Missing cart IDs caused the checkout failures.</p>
+                  <p class="feature-reply"><strong>Fix ready · sable/shop #1291</strong><br>Validate the cart before retrying. Regression test passed; PR ready for your review.</p>
                 </div>
                 <figcaption>Illustrative example · fictional people and data</figcaption>
               </figure>
@@ -1886,6 +1869,7 @@ in the export.</code></pre>
           Bring your own model subscription. No token markup. Agents sleep when idle.
         </div>
 
+        <div class="faq-reserve">
         <section id="faq" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
           <div class="faq-col">
             <div class="lbl" style="font-size: 11px">&gt;_ FAQ</div>
@@ -2015,6 +1999,7 @@ in the export.</code></pre>
             ></div>
           </div>
         </section>
+        </div>
       </main>
 
       <footer

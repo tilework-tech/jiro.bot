@@ -126,25 +126,43 @@ test("AI slop shows a three-step illustration with no counts or totals", async (
   await page.close();
 });
 
-test("scrolling through AI slop moves the current step from the first to the last", async () => {
+test("compact AI slop keeps a horizontal step row and advances in both scroll directions", async () => {
   const { page } = await open();
-  const steps = page.locator("#why [data-step]");
-  const current = page.locator("#why [data-step][aria-current='step']");
-  const centerOn = (el) => el.evaluate((n) => n.scrollIntoView({ block: "center" }));
-  const currentIs = (step) =>
-    page.waitForFunction(
-      (want) => {
-        const on = document.querySelectorAll("#why [data-step][aria-current='step']");
-        return on.length === 1 && on[0].dataset.step === want;
-      },
-      step,
-      { timeout: 5000 },
-    );
-  await centerOn(steps.first());
-  await currentIs("1");
-  await centerOn(steps.last());
-  await currentIs("3");
-  assert.equal(await current.count(), 1);
+  const steps = await page.locator('#why [data-step]').all();
+  const boxes = await Promise.all(steps.map(el => el.boundingBox()));
+  assert.ok(boxes.every(b => Math.abs(b.y - boxes[0].y) < 2), 'steps share a row');
+  assert.ok(boxes[1].x > boxes[0].x && boxes[2].x > boxes[1].x);
+  assert.ok((await page.locator('#why').boundingBox()).height < 800, 'section is roughly a third of the former 1988px');
+  const a = await page.locator('.slop-a').boundingBox(), b = await page.locator('.slop-b').boundingBox();
+  assert.ok(b.x > a.x && Math.abs(a.y - b.y) < 2, 'two-column diff');
+  for (const i of [0, 1, 2, 0, 2]) {
+    await page.locator('[data-slop]').evaluate((el, i) => {
+      const r = el.getBoundingClientRect();
+      window.scrollTo({ top: window.scrollY + r.top + r.height * ((i + .5) / 3) - innerHeight / 2, behavior: 'instant' });
+    }, i);
+    await page.waitForFunction(i => document.querySelector('#why [aria-current="step"]')?.dataset.step === String(i + 1), i);
+  }
+  await page.close();
+});
+
+test("reduced-motion slop stays on a complete static end state", async () => {
+  const { page } = await open({ reducedMotion: 'reduce' });
+  await page.locator('[data-slop]').scrollIntoViewIfNeeded();
+  for (const el of await page.locator('.slop-a, .slop-b, .slop-steps li').all()) {
+    assert.equal(await el.evaluate(n => getComputedStyle(n).opacity), '1');
+  }
+  const state = () => page.locator('.slop-a, .slop-b, .slop-steps li').evaluateAll(els => els.map(el => ({
+    opacity: getComputedStyle(el).opacity, current: el.getAttribute('aria-current'),
+  })));
+  const before = await state();
+  for (const progress of [0.1, 0.9, 0.1]) {
+    await page.locator('[data-slop]').evaluate((el, progress) => {
+      const r = el.getBoundingClientRect();
+      window.scrollTo({ top: scrollY + r.top + r.height * progress - innerHeight / 2, behavior: 'instant' });
+    }, progress);
+    await page.waitForTimeout(250);
+    assert.deepEqual(await state(), before);
+  }
   await page.close();
 });
 
@@ -227,13 +245,32 @@ test("the sign-up block shows two customer quotes, one each from Corvus and Mira
   await page.close();
 });
 
-test("FAQ and sign-up are stacked, not side by side, on desktop", async () => {
-  const { page } = await open();
-  const faq = await page.locator("#faq").boundingBox();
-  const reserve = await page.locator("#reserve").boundingBox();
-  assert.ok(reserve.y >= faq.y + faq.height - 4, "sign-up block starts below the FAQ");
-  await page.close();
-});
+for (const width of [1440, 1180, 390]) {
+  test(`FAQ and sign-up at ${width}px keep readable questions, quotes, form and stools`, async () => {
+    const { page } = await open({ width });
+    const faq = await page.locator('#faq').boundingBox();
+    const reserve = await page.locator('#reserve').boundingBox();
+    if (width > 900) {
+      assert.ok(Math.abs(faq.y - reserve.y) < 2, 'columns aligned');
+      assert.ok(reserve.x >= faq.x + faq.width - 2, 'signup on right');
+      assert.ok(reserve.width / (faq.width + reserve.width) < .43, 'narrow signup column');
+    } else assert.ok(reserve.y >= faq.y + faq.height - 2, 'FAQ first on mobile');
+    assert.equal(await page.locator('.faq-col').evaluate(n => getComputedStyle(n).backgroundColor), 'rgb(255, 255, 255)');
+    assert.equal(await page.locator('#faq details').count(), 5);
+    await page.locator('#faq summary').first().click();
+    assert.equal(await page.locator('#faq details p').first().isVisible(), true);
+    await page.locator('#reserve #email').fill('reader@example.test');
+    await page.locator('#reserve [data-early-access]').click();
+    assert.equal(await page.getByLabel('Work email', { exact: true }).last().inputValue(), 'reader@example.test');
+    await page.keyboard.press('Escape');
+    const counter = page.locator('.reserve-counter');
+    assert.ok(await counter.locator('span').count() > 0, 'stools render');
+    assert.equal(await counter.evaluate(el => el.scrollWidth <= el.clientWidth + 1), true, "stools do not overflow their canvas");
+    const box = await counter.boundingBox();
+    assert.ok(box.x >= reserve.x - 1 && box.x + box.width <= reserve.x + reserve.width + 1, 'stools fit column');
+    await page.close();
+  });
+}
 
 test("mobile layout has no horizontal overflow outside the bake-off scroller and no errors", async () => {
   const { page, errors } = await open({ width: 390, height: 844 });

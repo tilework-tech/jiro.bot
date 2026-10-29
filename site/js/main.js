@@ -317,26 +317,38 @@
     });
   }
 
-  // ---------- AI slop: the step in the middle of the screen is the current one ----------
+  // ---------- AI slop: compact section progress selects one of three steps ----------
   function initSlop() {
     const box = $("[data-slop]");
-    if (!box || !("IntersectionObserver" in window)) return;
+    if (!box) return;
     const steps = $$("[data-step]", box);
-    box.dataset.at = "1";
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (!e.isIntersecting) return;
-          steps.forEach((li) => {
-            if (li === e.target) li.setAttribute("aria-current", "step");
-            else li.removeAttribute("aria-current");
-          });
-          box.dataset.at = e.target.dataset.step;
-        });
-      },
-      { rootMargin: "-45% 0px -45% 0px" },
-    );
-    steps.forEach((li) => io.observe(li));
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let queued = false;
+    function update() {
+      queued = false;
+      const rect = box.getBoundingClientRect();
+      const progress = (window.innerHeight / 2 - rect.top) / rect.height;
+      const current = motion.matches ? 2 : Math.max(0, Math.min(2, Math.floor(progress * 3)));
+      box.dataset.at = String(current + 1);
+      steps.forEach((step, i) => {
+        if (i === current) step.setAttribute("aria-current", "step");
+        else step.removeAttribute("aria-current");
+      });
+    }
+    function requestUpdate() {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(update);
+    }
+    function configure() {
+      box.classList.toggle("slop-enhanced", !motion.matches);
+      update();
+    }
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+    window.addEventListener("pageshow", requestUpdate);
+    motion.addEventListener("change", configure);
+    configure();
   }
 
   // ---------- mobile menu ----------

@@ -41,14 +41,13 @@ async function current(page, story, index) {
 }
 
 for (const story of ["feature-oncall", "feature-multiplayer", "feature-permissions"]) {
-  test(`${story}: scrolling forwards, backwards and jumping selects the matching region; pane stays pinned`, async () => {
+  test(`${story}: scrolling forwards, backwards and jumping selects the matching region inside its colored box`, async () => {
     const { page, context, errors } = await open();
-    const steps = page.locator(`#${story} .feature-step`);
+    const steps = page.locator(`#${story} .feature-region`);
     assert.equal(await steps.count(), 4, "four readable story steps");
     const pane = page.locator(`#${story} .feature-demo`);
     await center(steps.nth(1));
     await current(page, story, 1);
-    const pinned = (await pane.boundingBox()).y;
     for (const i of [2, 3, 0, 2]) {
       await center(steps.nth(i));
       await current(page, story, i);
@@ -57,10 +56,9 @@ for (const story of ["feature-oncall", "feature-multiplayer", "feature-permissio
       const other = await page.locator(`#${story} .feature-region`).nth((i + 1) % 4).evaluate(el => getComputedStyle(el).backgroundColor);
       assert.notEqual(await region.evaluate(el => getComputedStyle(el).backgroundColor), other, "current interface region has visible emphasis");
     }
-    assert.ok(Math.abs((await pane.boundingBox()).y - pinned) < 3, "pane remains in place between middle steps");
     const state = await pane.screenshot();
     await page.waitForTimeout(1100);
-    assert.deepEqual(await pane.screenshot(), state, "no timer changes the demo while idle");
+    assert.ok((await pane.screenshot()).equals(state), "no timer changes the demo while idle");
     assert.deepEqual(errors, []);
     await context.close();
   });
@@ -90,9 +88,9 @@ test("reduced motion shows complete static demos, including after changing the p
   const demo = page.locator("#feature-oncall .feature-demo");
   const initial = await demo.screenshot();
   await center(page.locator("#feature-oncall .feature-step").first());
-  assert.deepEqual(await demo.screenshot(), initial, "scrolling does not change reduced-motion end state");
+  assert.ok((await demo.screenshot()).equals(initial), "scrolling does not change reduced-motion end state");
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await center(page.locator("#feature-oncall .feature-step").nth(1));
+  await center(page.locator("#feature-oncall .feature-region").nth(1));
   await current(page, "feature-oncall", 1);
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.waitForFunction(() => document.querySelectorAll("#features [aria-current='step']").length === 0);
@@ -154,3 +152,28 @@ test("a demo that cannot fit a laptop viewport does not pin off-screen", async (
   }
   await context.close();
 });
+
+for (const width of [1440, 1180, 390]) {
+  test(`at ${width}px three colored feature boxes alternate with white copy and remain readable`, async () => {
+    const {page, context} = await open({viewport: {width, height: 900}});
+    const rows = page.locator('#features .frow');
+    assert.equal(await rows.count(), 3);
+    const colors = ['rgb(251, 94, 69)', 'rgb(43, 255, 107)', 'rgb(29, 59, 42)'];
+    assert.equal(await page.locator('#features .sec-head').evaluate(n => getComputedStyle(n).backgroundColor), 'rgb(255, 255, 255)');
+    for (let i = 0; i < 3; i++) {
+      const row = rows.nth(i), text = row.locator('.ftext'), image = row.locator('.fimg');
+      assert.equal(await text.evaluate(n => getComputedStyle(n).backgroundColor), 'rgb(255, 255, 255)');
+      assert.equal(await image.evaluate(n => getComputedStyle(n).backgroundColor), colors[i]);
+      const t = await text.boundingBox(), b = await image.boundingBox();
+      if (width > 900) {
+        assert.ok(Math.abs(t.y - b.y) < 2, 'text and square share a row');
+        assert.ok(i === 1 ? b.x < t.x : t.x < b.x, 'alternating sides');
+        assert.ok(b.height / b.width >= .98 && b.height / b.width < 1.3, 'colored box stays approximately square');
+      } else assert.ok(b.y >= t.y + t.height - 2, 'text first on mobile');
+      const demo = await row.locator('.fpanel').boundingBox();
+      assert.ok(demo.x >= b.x && demo.x + demo.width <= b.x + b.width + 1);
+      assert.ok(demo.y >= b.y && demo.y + demo.height <= b.y + b.height + 1, 'complete demo fits box');
+    }
+    await context.close();
+  });
+}
