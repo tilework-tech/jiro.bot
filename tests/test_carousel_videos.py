@@ -152,6 +152,34 @@ class CarouselVideoTest(unittest.TestCase):
             self.assertLess(mean_abs_diff(frame_at(video, 0), last_frame(video)), 1.5)
         self.each(check)
 
+    def test_exposed_stage_blends_into_white_hero(self):
+        # Decode the shipped assets, including the transition beats and loop fold.
+        # All four corners are bare stage; RGB catches range/conversion errors too.
+        assets = [(CAROUSEL / f"{name}-{cut}.mp4", (0, 10, 15, 25, 32))
+                  for name in NAMES for cut in CUTS]
+        assets += [(self.poster(name), (0,)) for name in NAMES]
+        for asset, times in assets:
+            w, h = probe(asset)["size"]
+            for seconds in times:
+                with self.subTest(asset=asset.name, seconds=seconds):
+                    seek = ("-ss", str(seconds)) if asset.suffix == ".mp4" else ()
+                    rgb = subprocess.run(
+                        [FFMPEG, "-v", "error", *seek, "-i", str(asset),
+                         "-frames:v", "1", "-pix_fmt", "rgb24", "-f", "rawvideo", "-"],
+                        capture_output=True, check=True,
+                    ).stdout
+                    self.assertEqual(len(rgb), w * h * 3)
+                    patches = [(0, 0), (w - 4, 0), (0, h - 4), (w - 4, h - 4)]
+                    if not asset.name.startswith("multiplayer"):
+                        # Single windows must not leave a clipped shadow at the panel edge.
+                        patches += [(w // 2, 0), (w // 2, h - 4)]
+                    for x, y in patches:
+                        corner = b"".join(rgb[((y + row) * w + x) * 3:
+                                              ((y + row) * w + x + 4) * 3]
+                                          for row in range(4))
+                        self.assertGreaterEqual(min(corner), 254,
+                                                f"stage at {(x, y)} must decode as white")
+
     def test_video_is_not_a_still(self):
         def check(_name, _cut, video):
             duration = probe(video)["duration"]
