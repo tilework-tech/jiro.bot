@@ -262,8 +262,8 @@ test("the hero copy never calls Jiro 'he', never 'calls him in', and says nothin
   await close(h);
 });
 
-for (const width of [1440, 1180, 390]) {
-  test(`at ${width}px the video fills a white panel with independently centered dots`, async () => {
+for (const width of [2560, 1440, 1180, 901, 900, 390, 320]) {
+  test(`at ${width}px the video fills the entire panel and controls overlay it`, async () => {
     const h = await openHero({ viewport: { width, height: 900 } });
     const media = h.page.locator('.hero-media');
     const stage = h.page.locator('.hc-stage');
@@ -272,8 +272,23 @@ for (const width of [1440, 1180, 390]) {
     }
     const m = await media.boundingBox(), v = await stage.boundingBox();
     const dots = await h.page.getByRole('tablist').boundingBox();
-    assert.ok(v.width >= m.width - 16, 'video fills the available width');
-    assert.ok(Math.abs(dots.x + dots.width / 2 - (v.x + v.width / 2)) < 2, 'dots centered under video');
+    for (const edge of ['x', 'y', 'width', 'height']) {
+      assert.ok(Math.abs(v[edge] - m[edge]) < 2, `video and media share ${edge}: ${v[edge]} vs ${m[edge]}`);
+    }
+    for (const selector of ['.hc-name', '.hc-dots', '.hc-pause']) {
+      const box = await h.page.locator(selector).boundingBox();
+      assert.ok(box.x >= v.x && box.y >= v.y && box.x + box.width <= v.x + v.width && box.y + box.height <= v.y + v.height, `${selector} is inside the video`);
+    }
+    for (const control of [tab(h.page, 'Multiplayer'), h.page.locator('.hc-pause')]) {
+      await control.focus();
+      const focus = await control.evaluate(el => ({visible: el.matches(':focus-visible'), width: parseFloat(getComputedStyle(el).outlineWidth)}));
+      assert.ok(focus.visible && focus.width >= 2, 'keyboard focus stays visible over video');
+    }
+    assert.ok(Math.abs(dots.x + dots.width / 2 - (v.x + v.width / 2)) < 2, 'dots centered inside video');
+    assert.ok(dots.y + dots.height < v.y + v.height / 2, 'controls leave the video’s baked-in bottom captions readable');
+    const title = await h.page.locator('.hc-name').boundingBox();
+    const pause = await h.page.locator('.hc-pause').boundingBox();
+    assert.ok(title.x + title.width <= dots.x && dots.x + dots.width <= pause.x, 'overlays do not overlap each other');
     assert.doesNotMatch(await hero(h.page).ariaSnapshot(), /You just hired/);
     assert.doesNotMatch(await hero(h.page).textContent(), /You just hired/);
     assert.equal(await h.page.getByRole('button', { name: 'Pause video' }).isVisible(), true);
