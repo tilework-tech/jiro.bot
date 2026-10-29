@@ -3,7 +3,7 @@
 @font-face { font-family: 'JetBrains Mono'; font-weight: 600; src: url(../../../site/fonts/JetBrainsMono-600.woff2) format('woff2'); }
 
 :root {
-  --stage: #2a2f35; --stage-night: #161b26;
+  --stage: #ffffff; --stage-night: #161b26;
   --jiro: #2bff6b; --jiro-ink: #1e7a3f; --orange: #fb5e45;
   --wrap: 'Helvetica Neue', Helvetica, 'Nimbus Sans', Arial, sans-serif;
   --ui: 'Inter', system-ui, sans-serif; --lato: 'Lato', sans-serif; --mono: 'JetBrains Mono', monospace;
@@ -27,7 +27,7 @@ body { -webkit-font-smoothing: antialiased; font-family: var(--ui); }
 .chip .dim { color: #9a9a96; }
 
 /* Slack desktop window (light theme) */
-.slack { position: absolute; background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.35), 0 0 0 1px rgba(0,0,0,.2); display: flex; flex-direction: column; font-family: var(--lato); color: var(--s-ink); }
+.slack { position: absolute; background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px #dde1e6, 0 4px 10px rgba(22,22,22,.08); display: flex; flex-direction: column; font-family: var(--lato); color: var(--s-ink); }
 .slack .top { height: 44px; flex: none; background: #350d36; display: flex; align-items: center; padding: 0 16px; gap: 8px; }
 .slack .top i { width: 13px; height: 13px; border-radius: 50%; background: rgba(255,255,255,.25); display: block; }
 .slack .top .search { margin: 0 auto; width: 46%; height: 26px; border-radius: 6px; background: rgba(255,255,255,.16); color: rgba(255,255,255,.7); font: 400 15px/26px var(--lato); padding-left: 12px; }
@@ -91,20 +91,20 @@ body { -webkit-font-smoothing: antialiased; font-family: var(--ui); }
 
 /* laptop around a terminal */
 .laptop { position: absolute; }
-.laptop .lid { position: absolute; left: 0; top: 0; right: 0; bottom: 26px; background: #111316; border-radius: 22px 22px 6px 6px; box-shadow: 0 0 0 2px #3a3f46, 0 40px 90px rgba(0,0,0,.45); padding: 20px 20px 26px; }
+.laptop .lid { position: absolute; left: 0; top: 0; right: 0; bottom: 26px; background: #111316; border-radius: 22px 22px 6px 6px; box-shadow: 0 0 0 1px #dde1e6, 0 4px 10px rgba(22,22,22,.08); padding: 20px 20px 26px; }
 .laptop .lid .term { position: relative; width: 100%; height: 100%; border-radius: 6px; box-shadow: none; }
 .laptop .base { position: absolute; left: -6%; right: -6%; bottom: 0; height: 26px; border-radius: 4px 4px 16px 16px; background: linear-gradient(#c9ccd1, #8e9399); }
 .laptop .base::after { content: ''; position: absolute; left: 42%; right: 42%; top: 0; height: 8px; border-radius: 0 0 8px 8px; background: #7c8187; }
 
 /* desktop monitor around a Slack window */
 .monitor { position: absolute; }
-.monitor .scr { position: absolute; left: 0; top: 0; right: 0; bottom: 70px; background: #111316; border-radius: 16px; padding: 14px; box-shadow: 0 0 0 2px #3a3f46, 0 40px 90px rgba(0,0,0,.45); }
+.monitor .scr { position: absolute; left: 0; top: 0; right: 0; bottom: 70px; background: #111316; border-radius: 16px; padding: 14px; box-shadow: 0 0 0 1px #dde1e6, 0 4px 10px rgba(22,22,22,.08); }
 .monitor .scr .slack { position: relative; width: 100%; height: 100%; border-radius: 6px; box-shadow: none; }
 .monitor .neck { position: absolute; left: 44%; right: 44%; bottom: 14px; height: 58px; background: linear-gradient(90deg, #8e9399, #c9ccd1, #8e9399); }
 .monitor .foot { position: absolute; left: 34%; right: 34%; bottom: 0; height: 16px; border-radius: 8px 8px 4px 4px; background: #a9adb3; }
 
 /* phone running Slack mobile */
-.phone { position: absolute; width: 400px; height: 820px; border-radius: 62px; background: #0b0b0c; padding: 14px; box-shadow: 0 0 0 2px #3a3f46, 0 40px 100px rgba(0,0,0,.5); }
+.phone { position: absolute; width: 400px; height: 820px; border-radius: 62px; background: #0b0b0c; padding: 14px; box-shadow: 0 0 0 1px #dde1e6, 0 4px 10px rgba(22,22,22,.08); }
 .phone .scr { position: relative; width: 100%; height: 100%; border-radius: 48px; overflow: hidden; background: #fff; display: flex; flex-direction: column; font-family: var(--lato); color: var(--s-ink); }
 .phone .isl { position: absolute; top: 12px; left: 50%; width: 112px; height: 32px; margin-left: -56px; border-radius: 20px; background: #000; z-index: 5; }
 .phone .sb { height: 54px; flex: none; display: flex; align-items: flex-end; justify-content: space-between; padding: 0 34px 6px; font: 700 17px var(--ui); color: #fff; background: var(--s-aub); }
