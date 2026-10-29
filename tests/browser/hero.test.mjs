@@ -7,7 +7,7 @@ import { chromium } from "playwright";
 const REPO = fileURLToPath(new URL("../..", import.meta.url));
 const PORT = 4198;
 const SITE = `http://127.0.0.1:${PORT}`;
-const EXAMPLES = { "On-call": "oncall", Multiplayer: "multiplayer", RBAC: "rbac" };
+const EXAMPLES = { Multiplayer: "multiplayer", "On-call": "oncall", RBAC: "rbac" };
 const DESKTOP = { width: 1440, height: 900 };
 const MOBILE = { width: 390, height: 844 };
 const T0 = new Date("2026-10-28T12:00:00Z").getTime();
@@ -106,25 +106,41 @@ const activeVideo = (page) => hero(page).getByRole("tabpanel").locator("video");
 const anyPlaying = (page) =>
   page.waitForFunction(() => [...document.querySelectorAll("#top video")].some((v) => !v.paused));
 
-test("the hero carousel offers three examples, starting on On-call", async () => {
+test("the hero carousel offers three examples, starting on Multiplayer", async () => {
   const h = await openHero();
   const tabs = hero(h.page).getByRole("tablist").getByRole("tab");
-  assert.equal(await tabs.count(), 3);
+  assert.deepEqual(await tabs.evaluateAll((els) => els.map((el) => el.getAttribute("aria-label"))), Object.keys(EXAMPLES));
   for (const name of Object.keys(EXAMPLES)) assert.ok(await tab(h.page, name).isVisible(), `${name} dot is visible`);
-  assert.equal(await selectedTab(h.page), "On-call");
+  assert.equal(await selectedTab(h.page), "Multiplayer");
   assert.equal(await hero(h.page).getByRole("tabpanel").count(), 1, "only one example is shown at a time");
-  assert.equal(await hero(h.page).getByRole("tabpanel", { name: "On-call" }).count(), 1);
+  assert.equal(await hero(h.page).getByRole("tabpanel", { name: "Multiplayer" }).count(), 1);
+  assert.equal(await activeVideo(h.page).getAttribute("poster"), "video/carousel/multiplayer-poster.jpg");
+  await requested(h, /multiplayer-desktop\.mp4/);
+  assert.ok(h.videos.every((url) => url.includes("/multiplayer-desktop.mp4")), "only the active example is loaded");
   await close(h);
+});
+
+test("without JavaScript the hero starts on Multiplayer", async () => {
+  const page = await browser.newPage({ javaScriptEnabled: false });
+  await page.goto(SITE);
+  const panel = hero(page).getByRole("tabpanel");
+  assert.equal(await panel.count(), 1);
+  assert.equal(await hero(page).getByRole("tabpanel", { name: "Multiplayer" }).count(), 1);
+  assert.equal(await panel.locator("video").getAttribute("poster"), "video/carousel/multiplayer-poster.jpg");
+  await page.close();
 });
 
 test("clicking the dots moves forward and back between examples", async () => {
   const h = await openHero();
-  await tab(h.page, "RBAC").click();
-  assert.equal(await selectedTab(h.page), "RBAC");
-  await hero(h.page).getByRole("tabpanel", { name: "RBAC" }).waitFor();
   await tab(h.page, "On-call").click();
   assert.equal(await selectedTab(h.page), "On-call");
   await hero(h.page).getByRole("tabpanel", { name: "On-call" }).waitFor();
+  await tab(h.page, "RBAC").click();
+  assert.equal(await selectedTab(h.page), "RBAC");
+  await hero(h.page).getByRole("tabpanel", { name: "RBAC" }).waitFor();
+  await tab(h.page, "Multiplayer").click();
+  assert.equal(await selectedTab(h.page), "Multiplayer");
+  await hero(h.page).getByRole("tabpanel", { name: "Multiplayer" }).waitFor();
   assert.equal(await hero(h.page).getByRole("tabpanel").count(), 1);
   await close(h);
 });
@@ -133,19 +149,19 @@ test("clicking the dots moves forward and back between examples", async () => {
 test("arrow keys, Home and End move between the dots", async () => {
   const h = await openHero();
   const { page } = h;
-  await tab(page, "On-call").focus();
+  await tab(page, "Multiplayer").focus();
   const focusedName = () => page.evaluate(() => document.activeElement.getAttribute("aria-label"));
 
   await page.keyboard.press("ArrowRight");
-  assert.equal(await selectedTab(page), "Multiplayer");
-  assert.equal(await focusedName(), "Multiplayer");
+  assert.equal(await selectedTab(page), "On-call");
+  assert.equal(await focusedName(), "On-call");
 
   await page.keyboard.press("ArrowLeft");
   await page.keyboard.press("ArrowLeft");
   assert.equal(await selectedTab(page), "RBAC", "ArrowLeft wraps from the first example to the last");
 
   await page.keyboard.press("Home");
-  assert.equal(await selectedTab(page), "On-call");
+  assert.equal(await selectedTab(page), "Multiplayer");
   await page.keyboard.press("End");
   assert.equal(await selectedTab(page), "RBAC");
   assert.equal(await focusedName(), "RBAC");
@@ -160,10 +176,10 @@ test("arrow keys, Home and End move between the dots", async () => {
 test("the carousel never advances on its own", async () => {
   const h = await openHero();
   await h.page.clock.runFor(120_000);
-  assert.equal(await selectedTab(h.page), "On-call");
-  await tab(h.page, "Multiplayer").click();
-  await h.page.clock.runFor(120_000);
   assert.equal(await selectedTab(h.page), "Multiplayer");
+  await tab(h.page, "On-call").click();
+  await h.page.clock.runFor(120_000);
+  assert.equal(await selectedTab(h.page), "On-call");
   await close(h);
 });
 
@@ -175,7 +191,7 @@ for (const [label, viewport, cut, other] of [
 ]) {
   test(`${label} plays the ${cut} cut`, async () => {
     const h = await openHero({ viewport });
-    await requested(h, new RegExp(`/video/carousel/oncall-${cut}\\.mp4`));
+    await requested(h, new RegExp(`/video/carousel/multiplayer-${cut}\\.mp4`));
     await tab(h.page, "RBAC").click();
     await requested(h, new RegExp(`/video/carousel/rbac-${cut}\\.mp4`));
     assert.ok(!h.videos.some((u) => u.includes(`-${other}.mp4`)), h.videos.join(", "));
@@ -185,9 +201,9 @@ for (const [label, viewport, cut, other] of [
 
 test("crossing the mobile breakpoint swaps to the other cut", async () => {
   const h = await openHero({ viewport: DESKTOP });
-  await requested(h, /oncall-desktop\.mp4/);
+  await requested(h, /multiplayer-desktop\.mp4/);
   await h.page.setViewportSize(MOBILE);
-  await requested(h, /oncall-mobile\.mp4/);
+  await requested(h, /multiplayer-mobile\.mp4/);
   await close(h);
 });
 
@@ -222,7 +238,7 @@ test("with reduced motion the hero holds still until the visitor presses play", 
   await h.page.waitForTimeout(500);
   assert.deepEqual(h.videos, [], "no video is fetched before play");
   await hero(h.page).getByRole("button", { name: "Play video" }).click();
-  await requested(h, /oncall-desktop\.mp4/);
+  await requested(h, /multiplayer-desktop\.mp4/);
   await anyPlaying(h.page);
   await close(h);
 });
