@@ -1,0 +1,59 @@
+{
+  "errors": [],
+  "videos": [
+    {
+      "width": 1440,
+      "name": "Multiplayer",
+      "source": "http://localhost:4100/video/carousel/multiplayer-desktop.mp4",
+      "videoWidth": 1200,
+      "videoHeight": 960,
+      "playing": true,
+      "time": 1.5274
+    },
+    {
+      "width": 1440,
+      "name": "On-call",
+      "source": "http://localhost:4100/video/carousel/oncall-desktop.mp4",
+      "videoWidth": 1200,
+      "videoHeight": 960,
+      "playing": true,
+      "time": 0.9197
+    },
+    {
+      "width": 1440,
+      "name": "RBAC",
+      "source": "http://localhost:4100/video/carousel/rbac-desktop.mp4",
+      "videoWidth": 1200,
+      "videoHeight": 960,
+      "playing": true,
+      "time": 0.9317
+    },
+    {
+      "width": 390,
+      "name": "Multiplayer",
+      "source": "http://localhost:4100/video/carousel/multiplayer-mobile.mp4",
+      "videoWidth": 720,
+      "videoHeight": 900,
+      "playing": true,
+      "time": 1.4889
+    },
+    {
+      "width": 390,
+      "name": "On-call",
+      "source": "http://localhost:4100/video/carousel/oncall-mobile.mp4",
+      "videoWidth": 720,
+      "videoHeight": 900,
+      "playing": true,
+      "time": 0.921
+    },
+    {
+      "width": 390,
+      "name": "RBAC",
+      "source": "http://localhost:4100/video/carousel/rbac-mobile.mp4",
+      "videoWidth": 720,
+      "videoHeight": 900,
+      "playing": true,
+      "time": 0.9141
+    }
+  ]
+}

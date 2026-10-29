@@ -1,0 +1,58 @@
+TAP version 13
+# 127.0.0.1 - - [29/Oct/2026 16:27:32] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:32] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:32] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:32] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:32] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:32] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:32] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:33] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:33] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:33] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:33] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:33] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:33] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:33] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:33] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:33] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:33] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 390px, with balanced hero and readable table
+not ok 1 - page layout fits at 390px, with balanced hero and readable table
+  ---
+  duration_ms: 702.642883
+  type: 'test'
+  location: '/home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:35:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    390px layout
+    + actual - expected
+    
+    + [
+    +   'pricing must flow straight into FAQ',
+    +   'comparison heading crosses its column',
+    +   'comparison text overlaps its next row'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'pricing must flow straight into FAQ'
+    1: 'comparison heading crosses its column'
+    2: 'comparison text overlaps its next row'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:75:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1163.654697

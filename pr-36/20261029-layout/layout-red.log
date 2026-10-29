@@ -1,0 +1,459 @@
+TAP version 13
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:07] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 3440px, with balanced hero and readable table
+not ok 1 - page layout fits at 3440px, with balanced hero and readable table
+  ---
+  duration_ms: 795.634156
+  type: 'test'
+  location: '/home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:35:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    3440px layout
+    + actual - expected
+    
+    + [
+    +   'hero eyebrow separates from headline by 1093.5px',
+    +   'pricing must flow straight into FAQ'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'hero eyebrow separates from headline by 1093.5px'
+    1: 'pricing must flow straight into FAQ'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:73:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 2560px, with balanced hero and readable table
+not ok 2 - page layout fits at 2560px, with balanced hero and readable table
+  ---
+  duration_ms: 651.057707
+  type: 'test'
+  location: '/home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:35:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    2560px layout
+    + actual - expected
+    
+    + [
+    +   'hero eyebrow separates from headline by 598.75px',
+    +   'pricing must flow straight into FAQ'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'hero eyebrow separates from headline by 598.75px'
+    1: 'pricing must flow straight into FAQ'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:73:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:08] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 1920px, with balanced hero and readable table
+not ok 3 - page layout fits at 1920px, with balanced hero and readable table
+  ---
+  duration_ms: 809.834375
+  type: 'test'
+  location: '/home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:35:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    1920px layout
+    + actual - expected
+    
+    + [
+    +   'hero eyebrow separates from headline by 309.375px',
+    +   'pricing must flow straight into FAQ'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'hero eyebrow separates from headline by 309.375px'
+    1: 'pricing must flow straight into FAQ'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:73:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:09] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 1440px, with balanced hero and readable table
+not ok 4 - page layout fits at 1440px, with balanced hero and readable table
+  ---
+  duration_ms: 620.318693
+  type: 'test'
+  location: '/home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:35:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    1440px layout
+    + actual - expected
+    
+    + [
+    +   'pricing must flow straight into FAQ'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'pricing must flow straight into FAQ'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:73:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 1180px, with balanced hero and readable table
+not ok 5 - page layout fits at 1180px, with balanced hero and readable table
+  ---
+  duration_ms: 700.595729
+  type: 'test'
+  location: '/home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:35:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    1180px layout
+    + actual - expected
+    
+    + [
+    +   'hero eyebrow separates from headline by 101.53125px',
+    +   'pricing must flow straight into FAQ'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'hero eyebrow separates from headline by 101.53125px'
+    1: 'pricing must flow straight into FAQ'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:73:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:10] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 1024px, with balanced hero and readable table
+not ok 6 - page layout fits at 1024px, with balanced hero and readable table
+  ---
+  duration_ms: 716.325582
+  type: 'test'
+  location: '/home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:35:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    1024px layout
+    + actual - expected
+    
+    + [
+    +   'hero eyebrow separates from headline by 101.53125px',
+    +   'pricing must flow straight into FAQ'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'hero eyebrow separates from headline by 101.53125px'
+    1: 'pricing must flow straight into FAQ'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:73:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:11] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 901px, with balanced hero and readable table
+not ok 7 - page layout fits at 901px, with balanced hero and readable table
+  ---
+  duration_ms: 686.64279
+  type: 'test'
+  location: '/home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:35:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    901px layout
+    + actual - expected
+    
+    + [
+    +   'pricing must flow straight into FAQ',
+    +   'comparison text overlaps its next row'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'pricing must flow straight into FAQ'
+    1: 'comparison text overlaps its next row'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:73:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 900px, with balanced hero and readable table
+not ok 8 - page layout fits at 900px, with balanced hero and readable table
+  ---
+  duration_ms: 640.633555
+  type: 'test'
+  location: '/home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:35:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    900px layout
+    + actual - expected
+    
+    + [
+    +   'pricing must flow straight into FAQ',
+    +   'comparison text overlaps its next row'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'pricing must flow straight into FAQ'
+    1: 'comparison text overlaps its next row'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:73:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:12] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 768px, with balanced hero and readable table
+not ok 9 - page layout fits at 768px, with balanced hero and readable table
+  ---
+  duration_ms: 666.974211
+  type: 'test'
+  location: '/home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:35:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    768px layout
+    + actual - expected
+    
+    + [
+    +   'pricing must flow straight into FAQ',
+    +   'comparison text overlaps its next row'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'pricing must flow straight into FAQ'
+    1: 'comparison text overlaps its next row'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:73:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:13] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 390px, with balanced hero and readable table
+not ok 10 - page layout fits at 390px, with balanced hero and readable table
+  ---
+  duration_ms: 636.700868
+  type: 'test'
+  location: '/home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:35:3'
+  failureType: 'testCodeFailure'
+  error: |-
+    390px layout
+    + actual - expected
+    
+    + [
+    +   'pricing must flow straight into FAQ',
+    +   'comparison text overlaps its next row'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'pricing must flow straight into FAQ'
+    1: 'comparison text overlaps its next row'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/sprite/org/workspace/jiro.bot/tests/browser/layout.test.mjs:73:12)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 0
+# fail 10
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7403.029746

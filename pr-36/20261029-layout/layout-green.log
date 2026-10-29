@@ -1,0 +1,231 @@
+TAP version 13
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:50] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 3440px, with balanced hero and readable table
+ok 1 - page layout fits at 3440px, with balanced hero and readable table
+  ---
+  duration_ms: 808.838383
+  type: 'test'
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:51] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 2560px, with balanced hero and readable table
+ok 2 - page layout fits at 2560px, with balanced hero and readable table
+  ---
+  duration_ms: 729.87428
+  type: 'test'
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 1920px, with balanced hero and readable table
+ok 3 - page layout fits at 1920px, with balanced hero and readable table
+  ---
+  duration_ms: 617.835428
+  type: 'test'
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:52] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 1440px, with balanced hero and readable table
+ok 4 - page layout fits at 1440px, with balanced hero and readable table
+  ---
+  duration_ms: 691.817281
+  type: 'test'
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:53] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 1180px, with balanced hero and readable table
+ok 5 - page layout fits at 1180px, with balanced hero and readable table
+  ---
+  duration_ms: 681.130569
+  type: 'test'
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 1024px, with balanced hero and readable table
+ok 6 - page layout fits at 1024px, with balanced hero and readable table
+  ---
+  duration_ms: 644.653024
+  type: 'test'
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:54] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 901px, with balanced hero and readable table
+ok 7 - page layout fits at 901px, with balanced hero and readable table
+  ---
+  duration_ms: 605.882804
+  type: 'test'
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 900px, with balanced hero and readable table
+ok 8 - page layout fits at 900px, with balanced hero and readable table
+  ---
+  duration_ms: 614.524712
+  type: 'test'
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:55] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 768px, with balanced hero and readable table
+ok 9 - page layout fits at 768px, with balanced hero and readable table
+  ---
+  duration_ms: 665.694627
+  type: 'test'
+  ...
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [29/Oct/2026 16:27:56] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# Subtest: page layout fits at 390px, with balanced hero and readable table
+ok 10 - page layout fits at 390px, with balanced hero and readable table
+  ---
+  duration_ms: 639.995744
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7181.492407
