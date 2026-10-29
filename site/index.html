@@ -154,7 +154,7 @@
                 box-sizing: border-box;
                 display: flex;
                 flex-direction: column;
-                justify-content: space-between;
+                justify-content: center;
                 gap: 48px;
               "
             >
@@ -418,7 +418,7 @@
                 >
                   Compare
                 </div>
-                <div style="padding: 0 22px 18px; background: #2bff6b; display: flex; align-items: flex-end">
+                <div class="compare-brand" style="padding: 0 22px 18px; background: #2bff6b; display: flex; align-items: flex-end">
                   <div
                     style="
                       display: flex;
@@ -445,7 +445,7 @@
               </div>
               <div
                 class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; min-height: 65px"
               >
                 <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
                   <span>Agent</span>
@@ -465,7 +465,7 @@
               </div>
               <div
                 class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; min-height: 65px"
               >
                 <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
                   <span>Model</span>
@@ -485,7 +485,7 @@
               </div>
               <div
                 class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; min-height: 65px"
               >
                 <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
                   <span>Context</span>
@@ -505,7 +505,7 @@
               </div>
               <div
                 class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; min-height: 65px"
               >
                 <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
                   <span>Cloud</span>
@@ -525,7 +525,7 @@
               </div>
               <div
                 class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; height: 65px"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; min-height: 65px"
               >
                 <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: center">
                   <span>Pricing</span>
@@ -632,14 +632,6 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="typing">
-            <span class="sr-only" data-typing-all>Bring your own subscription. Single-tenant for every agent. Your intelligence stays with you.</span
-            ><span class="typing-prompt" aria-hidden="true">&gt;_</span
-            ><span aria-hidden="true"
-              ><span class="typing-text" data-typing>Bring your own subscription</span
-              ><span class="typing-cursor"></span
-            ></span>
           </div>
         </section>
 
@@ -1856,19 +1848,6 @@ in the export.</code></pre>
             </div>
           </div>
         </section>
-        <div
-          style="
-            background: #ffffff;
-            box-shadow: inset 0 0 0 2px #0a0a0a;
-            padding: 16px 36px;
-            font-size: 13.5px;
-            line-height: 21px;
-            color: #3d3d3d;
-          "
-        >
-          Bring your own model subscription. No token markup. Agents sleep when idle.
-        </div>
-
         <div class="faq-reserve">
         <section id="faq" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
           <div class="faq-col">
