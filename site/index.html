@@ -636,57 +636,10 @@
         </section>
 
         <section id="features" aria-labelledby="features-heading">
-          <article class="frow feature-story" id="feature-oncall" aria-labelledby="oncall-title">
+          <article class="frow feature-story" id="feature-multiplayer" aria-labelledby="multiplayer-title">
             <div class="ftext">
               <h2 id="features-heading" class="lbl">&gt;_ How it works</h2>
               <div class="fnum">01</div>
-              <h3 class="fh" id="oncall-title">On call at 4 a.m.</h3>
-              <p class="fp">Set it up once. Wake up to a fix you can review.</p>
-              <ol class="feature-steps" aria-label="On call at 4 a.m. Steps">
-                <li class="feature-step" id="oncall-step-1">
-                  <a href="#oncall-region-1"><span class="feature-step-number">01</span><span>Set it once</span></a>
-                </li>
-                <li class="feature-step" id="oncall-step-2">
-                  <a href="#oncall-region-2"><span class="feature-step-number">02</span><span>The alert wakes Jiro</span></a>
-                </li>
-                <li class="feature-step" id="oncall-step-3">
-                  <a href="#oncall-region-3"><span class="feature-step-number">03</span><span>Get the whole explanation</span></a>
-                </li>
-                <li class="feature-step" id="oncall-step-4">
-                  <a href="#oncall-region-4"><span class="feature-step-number">04</span><span>Review in the morning</span></a>
-                </li>
-              </ol>
-            </div>
-            <div class="fimg">
-              <figure class="feature-demo fpanel" aria-label="On call at 4 a.m. Illustrated example">
-                <div class="feature-window-bar"><span>Sable · Slack / #checkout-oncall</span><span class="feature-tag">example</span></div>
-                <div class="feature-region" id="oncall-region-1">
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">D</span><div><p class="feature-meta"><strong>Dana</strong> <span>Monday · 16:30</span></p><p>@Jiro, when checkout alerts overnight, investigate, test a fix, and open a PR. Leave approval to us.</p></div></div>
-                </div>
-                <div class="feature-region feature-terminal" id="oncall-region-2">
-                  <div class="feature-app-label"><span aria-hidden="true">● ● ●</span> Terminal / checkout</div>
-                  <p class="feature-meta">04:02 · checkout error rate alert</p>
-                  <pre><code>nori cloud · checkout incident
-Cause: retry runs without a cart ID
-Fix: validate the cart before retrying
-PASS · regression test</code></pre>
-                </div>
-                <div class="feature-region feature-pr" id="oncall-region-3">
-                  <div class="feature-app-label">Pull request / sable/shop</div>
-                  <p class="feature-pr-title">Guard checkout retries <span>#1291</span></p>
-                  <p>Missing cart IDs caused the 500s. This fix validates the ID before retrying; a regression test covers the missing-cart case.</p>
-                  <p class="feature-meta">04:19 · Jiro opened · checks passed</p>
-                </div>
-                <div class="feature-region" id="oncall-region-4">
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">D</span><div><p class="feature-meta"><strong>Dana</strong> <span>08:04 · PR review</span></p><p>Reviewed the fix and regression test. Approved.</p></div></div>
-                </div>
-                <figcaption>Illustrative example · fictional people and data</figcaption>
-              </figure>
-            </div>
-          </article>
-          <article class="frow feature-story" id="feature-multiplayer" aria-labelledby="multiplayer-title">
-            <div class="ftext">
-              <div class="fnum">02</div>
               <h3 class="fh" id="multiplayer-title">Working together on any interface</h3>
               <p class="fp">Different people. Different devices. One shared session.</p>
               <ol class="feature-steps" aria-label="Working together on any interface. Steps">
@@ -706,7 +659,7 @@ PASS · regression test</code></pre>
             </div>
             <div class="fimg">
               <figure class="feature-demo fpanel" aria-label="Working together on any interface. Illustrated example">
-                <div class="feature-window-bar"><span>Sable / orders-export</span><span class="feature-tag">example</span></div>
+                <div class="feature-window-bar"><span>Alder / orders-export</span><span class="feature-tag">example</span></div>
                 <div class="feature-region" id="multiplayer-region-1">
                   <div class="feature-app-label">Desktop Slack / #orders-team</div>
                   <div class="feature-message"><span class="feature-avatar" aria-hidden="true">P</span><div><p class="feature-meta"><strong>Priya</strong></p><p>@Jiro, add CSV export to orders. @Kira, can you check the columns?</p></div></div>
@@ -726,7 +679,52 @@ in the export.</code></pre>
                   <div class="feature-app-label">Mirrored to Slack + terminal</div>
                   <div class="feature-message"><span class="feature-avatar" aria-hidden="true">J</span><div><p class="feature-meta"><strong>Jiro</strong></p><p>Done. CSV export keeps the current filters. The update is ready in PR #1284.</p></div></div>
                 </div>
-                <figcaption>Illustrative example · fictional people and data</figcaption>
+              </figure>
+            </div>
+          </article>
+          <article class="frow feature-story" id="feature-oncall" aria-labelledby="oncall-title">
+            <div class="ftext">
+              <div class="fnum">02</div>
+              <h3 class="fh" id="oncall-title">On call at 4 a.m.</h3>
+              <p class="fp">Set it up once. Wake up to a fix you can review.</p>
+              <ol class="feature-steps" aria-label="On call at 4 a.m. Steps">
+                <li class="feature-step" id="oncall-step-1">
+                  <a href="#oncall-region-1"><span class="feature-step-number">01</span><span>Set it once</span></a>
+                </li>
+                <li class="feature-step" id="oncall-step-2">
+                  <a href="#oncall-region-2"><span class="feature-step-number">02</span><span>The alert wakes Jiro</span></a>
+                </li>
+                <li class="feature-step" id="oncall-step-3">
+                  <a href="#oncall-region-3"><span class="feature-step-number">03</span><span>Get the whole explanation</span></a>
+                </li>
+                <li class="feature-step" id="oncall-step-4">
+                  <a href="#oncall-region-4"><span class="feature-step-number">04</span><span>Review in the morning</span></a>
+                </li>
+              </ol>
+            </div>
+            <div class="fimg">
+              <figure class="feature-demo fpanel" aria-label="On call at 4 a.m. Illustrated example">
+                <div class="feature-window-bar"><span>Alder · Slack / #checkout-oncall</span><span class="feature-tag">example</span></div>
+                <div class="feature-region" id="oncall-region-1">
+                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">D</span><div><p class="feature-meta"><strong>Dana</strong> <span>Monday · 16:30</span></p><p>@Jiro, when checkout alerts overnight, investigate, test a fix, and open a PR. Leave approval to us.</p></div></div>
+                </div>
+                <div class="feature-region feature-terminal" id="oncall-region-2">
+                  <div class="feature-app-label"><span aria-hidden="true">● ● ●</span> Terminal / checkout</div>
+                  <p class="feature-meta">04:02 · checkout error rate alert</p>
+                  <pre><code>nori cloud · checkout incident
+Cause: retry runs without a cart ID
+Fix: validate the cart before retrying
+PASS · regression test</code></pre>
+                </div>
+                <div class="feature-region feature-pr" id="oncall-region-3">
+                  <div class="feature-app-label">Pull request / alder/shop</div>
+                  <p class="feature-pr-title">Guard checkout retries <span>#1291</span></p>
+                  <p>Missing cart IDs caused the 500s. This fix validates the ID before retrying; a regression test covers the missing-cart case.</p>
+                  <p class="feature-meta">04:19 · Jiro opened · checks passed</p>
+                </div>
+                <div class="feature-region" id="oncall-region-4">
+                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">D</span><div><p class="feature-meta"><strong>Dana</strong> <span>08:04 · PR review</span></p><p>Reviewed the fix and regression test. Approved.</p></div></div>
+                </div>
               </figure>
             </div>
           </article>
@@ -752,7 +750,7 @@ in the export.</code></pre>
             </div>
             <div class="fimg">
               <figure class="feature-demo fpanel" aria-label="Permissions that follow the person. Illustrated example">
-                <div class="feature-window-bar"><span>Sable · Slack / #incidents</span><span class="feature-tag">example</span></div>
+                <div class="feature-window-bar"><span>Alder · Slack / #incidents</span><span class="feature-tag">example</span></div>
                 <div class="feature-region" id="permissions-region-1">
                   <div class="feature-app-label">People in this thread</div>
                   <dl class="feature-roles"><div><dt>Jordan</dt><dd>Support agent only</dd></div><div><dt>Rae</dt><dd>Ops agent only</dd></div><div><dt>Kira</dt><dd>Ops + support agents</dd></div></dl>
@@ -769,9 +767,8 @@ in the export.</code></pre>
                 <div class="feature-region" id="permissions-region-4">
                   <p class="feature-meta"><strong>jiro-ops</strong> <span>reply to Rae</span></p>
                   <p>Missing cart IDs caused the checkout failures.</p>
-                  <p class="feature-reply"><strong>Fix ready · sable/shop #1291</strong><br>Validate the cart before retrying. Regression test passed; PR ready for your review.</p>
+                  <p class="feature-reply"><strong>Fix ready · alder/shop #1291</strong><br>Validate the cart before retrying. Regression test passed; PR ready for your review.</p>
                 </div>
-                <figcaption>Illustrative example · fictional people and data</figcaption>
               </figure>
             </div>
           </article>

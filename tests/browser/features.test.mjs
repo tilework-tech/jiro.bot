@@ -158,12 +158,13 @@ for (const width of [1440, 1180, 390]) {
     const {page, context} = await open({viewport: {width, height: 900}});
     const rows = page.locator('#features .frow');
     assert.equal(await rows.count(), 3);
-    const colors = ['rgb(251, 94, 69)', 'rgb(43, 255, 107)', 'rgb(29, 59, 42)'];
+    assert.deepEqual(await rows.locator('.fnum').allInnerTexts(), ['01', '02', '03']);
+    const colors = ['rgb(43, 255, 107)', 'rgb(251, 94, 69)', 'rgb(29, 59, 42)'];
     const label = page.getByRole('heading', {name: '>_ How it works', exact: true});
     const firstText = rows.first().locator('.ftext');
     assert.equal(await firstText.getByRole('heading', {name: '>_ How it works', exact: true}).count(), 1);
     const l = await label.boundingBox(), t0 = await firstText.boundingBox();
-    const heading = await page.locator('#oncall-title').boundingBox();
+    const heading = await page.locator('#multiplayer-title').boundingBox();
     assert.ok(l.x >= t0.x && l.y >= t0.y && l.y + l.height <= heading.y, 'eyebrow belongs to the first white story panel');
     assert.ok(Math.abs((await rows.first().boundingBox()).y - (await page.locator('#features').boundingBox()).y) <= 2, 'first example begins the section');
     for (let i = 0; i < 3; i++) {

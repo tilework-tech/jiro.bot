@@ -250,12 +250,12 @@ test("with reduced motion every feature panel still shows its content", async ()
   await page.close();
 });
 
-test("differentiators cover on-call, multiplayer across interfaces, and permissions", async () => {
+test("differentiators match the carousel order: multiplayer, on-call, permissions", async () => {
   const { page } = await open();
   const heads = await page.locator("#features h3").allInnerTexts();
   assert.equal(heads.length, 3);
-  assert.match(heads[0], /on.call|4 ?a\.?m/i);
-  assert.match(heads[1], /interface|together|everyone/i);
+  assert.match(heads[1], /on.call|4 ?a\.?m/i);
+  assert.match(heads[0], /interface|together|everyone/i);
   assert.match(heads[2], /permission|role|access/i);
   await page.close();
 });
