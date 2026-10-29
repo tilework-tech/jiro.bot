@@ -1,0 +1,90 @@
+[
+  {
+    "file": "oncall-desktop.mp4",
+    "duration": 33.0,
+    "fps": 30,
+    "frames": 990,
+    "codec": "h264",
+    "format": "yuv420p",
+    "audio": false,
+    "bytes": 575119,
+    "decoded_frame_times": [
+      3,
+      14,
+      23.5
+    ]
+  },
+  {
+    "file": "oncall-mobile.mp4",
+    "duration": 33.0,
+    "fps": 30,
+    "frames": 990,
+    "codec": "h264",
+    "format": "yuv420p",
+    "audio": false,
+    "bytes": 511313,
+    "decoded_frame_times": [
+      3,
+      14,
+      23.5
+    ]
+  },
+  {
+    "file": "multiplayer-desktop.mp4",
+    "duration": 38.0,
+    "fps": 30,
+    "frames": 1140,
+    "codec": "h264",
+    "format": "yuv420p",
+    "audio": false,
+    "bytes": 966850,
+    "decoded_frame_times": [
+      4.5,
+      17,
+      28.5
+    ]
+  },
+  {
+    "file": "multiplayer-mobile.mp4",
+    "duration": 38.0,
+    "fps": 30,
+    "frames": 1140,
+    "codec": "h264",
+    "format": "yuv420p",
+    "audio": false,
+    "bytes": 723322,
+    "decoded_frame_times": [
+      4.5,
+      17,
+      28.5
+    ]
+  },
+  {
+    "file": "rbac-desktop.mp4",
+    "duration": 37.0,
+    "fps": 30,
+    "frames": 1110,
+    "codec": "h264",
+    "format": "yuv420p",
+    "audio": false,
+    "bytes": 490672,
+    "decoded_frame_times": [
+      4,
+      22
+    ]
+  },
+  {
+    "file": "rbac-mobile.mp4",
+    "duration": 37.0,
+    "fps": 30,
+    "frames": 1110,
+    "codec": "h264",
+    "format": "yuv420p",
+    "audio": false,
+    "bytes": 464066,
+    "decoded_frame_times": [
+      4,
+      22
+    ]
+  }
+]

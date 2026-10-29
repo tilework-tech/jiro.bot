@@ -1,0 +1,3 @@
+oncall: poster byte-identical to time-zero render
+multiplayer: poster byte-identical to time-zero render
+rbac: poster byte-identical to time-zero render

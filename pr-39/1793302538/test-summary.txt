@@ -1,0 +1,10 @@
+HEAD: 92e4c04217279486e5a6256689e454813b73d6e5 (GitHub-signed publication; identical tree to tested 292d90a)
+Video contract suite: 7 passed, 0 skipped.
+Full Python suite: 63 passed, 0 skipped.
+Media: six MP4s verified (33/38/37 seconds; 990/1140/1110 frames; 30 fps; H.264/yuv420p; no audio).
+Posters: all three byte-identical to a fresh time-zero render.
+Features: verified order/numbering/alternation/no overflow at 1440 and 390px; three captions removed.
+Browser suite: 74 passed, 0 failed/cancelled/skipped/todo.
+Lint: all 26 pages passed.
+git diff --check: clean.
+Source review: no findings.

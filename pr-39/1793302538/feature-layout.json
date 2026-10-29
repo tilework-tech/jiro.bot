@@ -1,0 +1,52 @@
+[
+  {
+    "width": 1440,
+    "captions": 0,
+    "rows": [
+      {
+        "heading": "Working together on any interface",
+        "number": "01",
+        "textX": 14,
+        "demoX": 721
+      },
+      {
+        "heading": "On call at 4 a.m.",
+        "number": "02",
+        "textX": 721,
+        "demoX": 14
+      },
+      {
+        "heading": "Permissions that follow the person",
+        "number": "03",
+        "textX": 14,
+        "demoX": 721
+      }
+    ],
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "captions": 0,
+    "rows": [
+      {
+        "heading": "Working together on any interface",
+        "number": "01",
+        "textX": 10,
+        "demoX": 10
+      },
+      {
+        "heading": "On call at 4 a.m.",
+        "number": "02",
+        "textX": 10,
+        "demoX": 10
+      },
+      {
+        "heading": "Permissions that follow the person",
+        "number": "03",
+        "textX": 10,
+        "demoX": 10
+      }
+    ],
+    "overflow": false
+  }
+]
