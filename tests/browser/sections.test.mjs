@@ -260,7 +260,7 @@ test("differentiators match the carousel order: multiplayer, on-call, permission
   await page.close();
 });
 
-test("the sign-up block shows two customer quotes, one each from Corvus and Miravoice, naming Jiro rather than Nori, above the email field", async () => {
+test("the sign-up block shows two customer quotes, one each from Corvus and Miravoice, naming Jiro rather than Nori, above the early-access button", async () => {
   const { page } = await open();
   const reserve = page.getByRole("region", { name: "Get early access", exact: true });
   assert.equal(await reserve.count(), 1, "signup is a named region");
@@ -283,30 +283,33 @@ test("the sign-up block shows two customer quotes, one each from Corvus and Mira
   );
   for (const q of texts) assert.doesNotMatch(q, /Nori/);
   const qBox = await quotes.last().boundingBox();
-  const emailBox = await reserve.getByLabel(/work email/i).boundingBox();
-  assert.ok(qBox.y + qBox.height <= emailBox.y, "quotes sit above the email field");
+  const button = reserve.getByRole("button", { name: /get early access/i });
+  assert.equal(await button.count(), 1);
+  const buttonBox = await button.boundingBox();
+  assert.ok(qBox.y + qBox.height <= buttonBox.y, "quotes sit above the early-access button");
   await page.close();
 });
 
 for (const width of [1440, 1180, 390]) {
-  test(`FAQ and sign-up at ${width}px keep readable questions, quotes and form`, async () => {
+  test(`FAQ and sign-up at ${width}px keep readable questions, quotes and signup button`, async () => {
     const { page } = await open({ width });
     const faq = await page.locator('#faq').boundingBox();
     const reserve = await page.locator('#reserve').boundingBox();
     if (width > 900) {
       assert.ok(Math.abs(faq.y - reserve.y) < 2, 'columns aligned');
       assert.ok(reserve.x >= faq.x + faq.width - 2, 'signup on right');
-      assert.ok(reserve.width / (faq.width + reserve.width) < .43, 'narrow signup column');
+      assert.ok(Math.abs(reserve.width / (faq.width + reserve.width) - .4) < .01, '60/40 split');
     } else assert.ok(reserve.y >= faq.y + faq.height - 2, 'FAQ first on mobile');
     assert.equal(await page.locator('.faq-col').evaluate(n => getComputedStyle(n).backgroundColor), 'rgb(255, 255, 255)');
     assert.equal(await page.locator('#faq details').count(), 5);
     await page.locator('#faq summary').first().click();
     assert.equal(await page.locator('#faq details p').first().isVisible(), true);
-    await page.locator('#reserve #email').fill('reader@example.test');
     await page.locator('#reserve [data-early-access]').click();
-    assert.equal(await page.getByLabel('Work email', { exact: true }).last().inputValue(), 'reader@example.test');
+    const email = page.getByRole('dialog').getByLabel('Work email', { exact: true });
+    await email.fill('reader@example.test');
+    assert.equal(await email.inputValue(), 'reader@example.test');
     await page.keyboard.press('Escape');
-    for (const element of await page.locator('#reserve .quote, #reserve input, #reserve button').all()) {
+    for (const element of await page.locator('#reserve .quote, #reserve button').all()) {
       const box = await element.boundingBox();
       assert.ok(box.x >= reserve.x && box.x + box.width <= reserve.x + reserve.width, 'quotes and controls fit column');
       assert.ok(box.x >= 0 && box.x + box.width <= width, 'quotes and controls fit viewport');

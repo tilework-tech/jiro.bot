@@ -138,20 +138,47 @@ test("a visitor can explore a hero example and then sign up", async () => {
   await page.close();
 });
 
-test("the bottom email field carries its address into the pop-up, by button or Enter", async () => {
-  const { page } = await openSite();
-  const reserve = page.locator("#reserve");
-  await reserve.getByLabel(/work email/i).fill("sam@studio.com");
+test("the FAQ button collects name and email in the dialog and submits the signup", async () => {
+  const { page, submissions } = await openSite();
+  const reserve = page.getByRole("region", { name: "Get early access", exact: true });
   await reserve.getByRole("button", { name: /get early access/i }).click();
-  assert.equal(await dialog(page).getByLabel(/email/i).inputValue(), "sam@studio.com");
-  await page.keyboard.press("Escape");
-
-  await reserve.getByLabel(/work email/i).fill("kim@studio.com");
-  await reserve.getByLabel(/work email/i).press("Enter");
-  await dialog(page).waitFor({ state: "visible" });
-  assert.equal(await dialog(page).getByLabel(/email/i).inputValue(), "kim@studio.com");
+  await fill(page, { name: "Sam Rivera", email: "sam@studio.com" });
+  await submitButton(page).click();
+  await dialog(page).getByText(/check your inbox/i).waitFor();
+  assert.ok(await dialog(page).getByText("sam@studio.com").isVisible());
+  assert.deepEqual(submissions, [{
+    name: "Sam Rivera",
+    email: "sam@studio.com",
+    ea_hp: "",
+    page: `${SITE}/`,
+    referrer: "",
+  }]);
   await page.close();
 });
+
+for (const reducedMotion of ["no-preference", "reduce"]) {
+  test(`FAQ signup is reachable by keyboard with ${reducedMotion} motion`, async () => {
+    const { page } = await openSite();
+    await page.emulateMedia({ reducedMotion });
+    // The final FAQ question is the preceding tab stop.
+    await page.locator("#faq summary").last().focus();
+    await page.keyboard.press("Tab");
+    const button = page.locator("#reserve button");
+    assert.ok(await button.evaluate((n) => n === document.activeElement), "Tab reaches the signup button");
+    assert.ok(await button.evaluate((n) => {
+      const style = getComputedStyle(n);
+      return n.matches(":focus-visible") && style.outlineStyle !== "none" && parseFloat(style.outlineWidth) >= 2;
+    }), "button has a visible keyboard focus ring");
+    await page.keyboard.press("Enter");
+    await dialog(page).waitFor({ state: "visible" });
+    assert.ok(await dialog(page).getByLabel("Name", { exact: true }).evaluate((n) => n === document.activeElement));
+    await page.keyboard.press("Tab");
+    assert.ok(await dialog(page).getByLabel("Work email").evaluate((n) => n === document.activeElement));
+    await page.keyboard.press("Escape");
+    assert.ok(await button.evaluate((n) => n === document.activeElement), "Escape returns focus to the signup button");
+    await page.close();
+  });
+}
 
 test("the close button and a click on the backdrop close the pop-up", async () => {
   const { page } = await openSite();

@@ -869,7 +869,8 @@ details[open] .pl::after {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  justify-content: center;
+  gap: 40px;
 }
 .quotes {
   display: grid;
