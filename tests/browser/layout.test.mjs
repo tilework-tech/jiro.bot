@@ -37,7 +37,9 @@ for (const width of [390, 320]) {
     t.after(() => page.close());
     await page.goto(SITE);
     const rows = page.locator(".ctable .crow");
-    assert.ok(await rows.count() > 0, "comparison has rows to read and scroll");
+    assert.equal(await rows.count(), 5, "five comparison rows");
+    assert.equal(await page.locator(".ctable > div:first-child > *").count(), 6, "label and five product headers");
+    await page.evaluate(() => document.fonts.ready);
     const cells = await rows.locator(':scope > *').evaluateAll(cells => cells.map(cell => {
       const style = getComputedStyle(cell);
       return {
@@ -49,13 +51,16 @@ for (const width of [390, 320]) {
         fits: cell.scrollWidth <= cell.clientWidth && cell.scrollHeight <= cell.clientHeight,
       };
     }));
-    assert.ok(cells.length > 0, "comparison rows contain readable cells");
+    assert.equal(cells.length, 30, "each row has a label and five products");
     for (const cell of cells) {
       assert.ok(cell.fontSize >= 15, `${cell.text}: comfortable font size`);
       assert.ok(cell.lineHeight >= cell.fontSize * 1.5, `${cell.text}: readable line spacing`);
       assert.ok(cell.paddingTop >= 18 && cell.paddingBottom >= 18, `${cell.text}: breathing room above and below`);
       assert.ok(cell.fits, `${cell.text}: all text fits its cell`);
     }
+    for (const cell of await rows.locator('.cx').evaluateAll(cells => cells.map(cell => ({
+      text: cell.textContent.trim(), width: cell.getBoundingClientRect().width,
+    })))) assert.ok(cell.width >= 190, `${cell.text}: product column keeps its reading width`);
     const before = await rows.evaluateAll(rows => rows.map(row => ({
       label: row.children[0].getBoundingClientRect().x,
       value: row.children[1].getBoundingClientRect().x,
@@ -73,6 +78,25 @@ for (const width of [390, 320]) {
     for (let i = 0; i < before.length; i++) {
       assert.ok(Math.abs(after[i].label - before[i].label) <= 1, `row ${i + 1} label stays in view`);
       assert.ok(Math.abs(after[i].value - before[i].value + distance) <= 1, `row ${i + 1} values scroll`);
+    }
+    for (const column of [4, 5]) {
+      await page.locator(".cscroll").evaluate((scroller, column) => {
+        const header = scroller.querySelector(".ctable > div:first-child");
+        const target = header.children[column];
+        scroller.scrollLeft += target.getBoundingClientRect().left - header.children[0].getBoundingClientRect().right;
+      }, column);
+      await page.evaluate(() => new Promise(requestAnimationFrame));
+      const visible = await rows.evaluateAll((rows, column) => rows.map(row => {
+        const label = row.children[0].getBoundingClientRect();
+        const value = row.children[column].getBoundingClientRect();
+        const edge = row.closest('.cscroll').getBoundingClientRect().right;
+        return { label: label.x, left: value.left, right: value.right, labelRight: label.right, edge };
+      }), column);
+      for (const [i, cell] of visible.entries()) {
+        assert.ok(Math.abs(cell.label - before[i].label) <= 1, `column ${column}, row ${i}: label stays pinned`);
+        assert.ok(cell.left >= cell.labelRight - 1 && cell.right <= cell.edge + 1,
+          `column ${column}, row ${i}: full product cell is reachable beside its label`);
+      }
     }
   });
 }
