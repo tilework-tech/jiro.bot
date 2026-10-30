@@ -20,7 +20,7 @@ before(async () => {
 after(async () => { await browser?.close(); server?.kill(); });
 
 async function clearance(page) {
-  return page.evaluate(() => {
+  const result = await page.evaluate(() => {
     const overlap = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
     const visible = n => n.checkVisibility({visibilityProperty: true}) && n.getBoundingClientRect().width;
     const protectedRects = [...document.querySelectorAll('header, .hero-row, .cscroll, video, main a, main button, main input, main summary, footer a')]
@@ -32,11 +32,15 @@ async function clearance(page) {
       const range = document.createRange(); range.selectNodeContents(n);
       protectedRects.push(...range.getClientRects());
     }
-    return [...document.querySelectorAll('.jiro-buddy__mascot,.jiro-buddy__close,.jiro-buddy__bubble')].filter(visible).every(n => {
+    return [...document.querySelectorAll('.jiro-buddy__mascot,.jiro-buddy__close,.jiro-buddy__bubble')].filter(visible).flatMap(n => {
       const r = n.getBoundingClientRect();
-      return r.left >= 8 && r.top >= 8 && r.right <= innerWidth - 8 && r.bottom <= innerHeight - 8 && !protectedRects.some(p => overlap(r, p));
+      const contained = r.left >= 8 && r.top >= 8 && r.right <= innerWidth - 8 && r.bottom <= innerHeight - 8;
+      const collisions = protectedRects.filter(p => overlap(r, p));
+      return contained && !collisions.length ? [] : [{control: n.className, bounds: r.toJSON(), contained, collisions: collisions.map(p => p.toJSON())}];
     });
   });
+  if (result.length) console.error('Buddy clearance failure:', JSON.stringify(result));
+  return result.length === 0;
 }
 
 for (const width of [390, 320]) {

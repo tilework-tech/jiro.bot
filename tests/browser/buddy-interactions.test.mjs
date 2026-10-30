@@ -79,7 +79,10 @@ for (const width of [1440, 390, 320]) {
   test(`hover grows the animated game idle at ${width}px`, async t => {
     const page = await open(t, width, false);
     await rest(page, '#why');
+    // Let the entrance's optional greeting start, then measure the idle pose.
+    await page.waitForTimeout(1200);
     await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
     const art = page.locator('.jiro-buddy__art');
     const before = await art.boundingBox();
     await page.locator('.jiro-buddy__mascot').hover();

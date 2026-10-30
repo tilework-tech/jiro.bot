@@ -58,8 +58,8 @@
     return speechSizes.get(key);
   }
   function speechAt(x, y, size, below = false) {
-    const left = Math.max(8, Math.min(innerWidth - size.width - 8, x + mascot.offsetWidth / 2 - size.width / 2));
-    return rect(left, below ? y + mascot.offsetHeight + 14 : y - size.height - 14, size.width, size.height);
+    const left = Math.max(9, Math.min(innerWidth - size.width - 9, x + mascot.offsetWidth / 2 - size.width / 2));
+    return rect(left, below ? y + mascot.offsetHeight + 14 : y - size.height - 24, size.width, size.height);
   }
   function safeSpeech(section, x, y, size) {
     for (const below of [false, true]) {
@@ -141,7 +141,8 @@
         for (const [name, value] of [['--site-bubble-left', `${fit.box.left - box.left}px`], ['--site-bubble-top', `${fit.box.top - box.top}px`]]) {
           if (bubble.style.getPropertyValue(name) !== value) bubble.style.setProperty(name, value);
         }
-        speech = true;
+        const actual = bubble.getBoundingClientRect();
+        speech = contains(section, actual) && clear(actual);
       }
     }
     flag("data-site-speech", speech);
