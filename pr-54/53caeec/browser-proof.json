@@ -1,0 +1,254 @@
+{
+  "results": [
+    {
+      "width": 1440,
+      "section": "hero",
+      "scrollY": 0,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 1440,
+      "section": "compare",
+      "scrollY": 1126,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 1440,
+      "section": "why",
+      "scrollY": 1714,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 1440,
+      "section": "features",
+      "scrollY": 2130,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 1440,
+      "section": "multiplayer",
+      "scrollY": 2132,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 1440,
+      "section": "oncall",
+      "scrollY": 2831,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 1440,
+      "section": "permissions",
+      "scrollY": 3664,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 1440,
+      "section": "pricing",
+      "scrollY": 4376,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 1440,
+      "section": "faq",
+      "scrollY": 4934,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 1440,
+      "section": "reserve",
+      "scrollY": 4934,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 390,
+      "section": "hero",
+      "scrollY": 0,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 390,
+      "section": "compare",
+      "scrollY": 1568,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 390,
+      "section": "why",
+      "scrollY": 2336,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 390,
+      "section": "features",
+      "scrollY": 2979,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 390,
+      "section": "multiplayer",
+      "scrollY": 2981,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 390,
+      "section": "oncall",
+      "scrollY": 4171,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 390,
+      "section": "permissions",
+      "scrollY": 5550,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 390,
+      "section": "pricing",
+      "scrollY": 6648,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 390,
+      "section": "faq",
+      "scrollY": 7862,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    },
+    {
+      "width": 390,
+      "section": "reserve",
+      "scrollY": 8063,
+      "buddyElements": 0,
+      "overflow": false,
+      "pixelRegions": 3
+    }
+  ],
+  "errors": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:4100/fonts/Sohne-Buch.woff2",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:4100/fonts/Sohne-Halbfett.woff2",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:4100/fonts/Sohne-Buch.woff2",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:4100/fonts/Sohne-Halbfett.woff2",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    }
+  ],
+  "scriptErrors": [],
+  "failures": [
+    {
+      "url": "http://127.0.0.1:4100/fonts/Sohne-Buch.woff2",
+      "failure": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:4100/fonts/Sohne-Halbfett.woff2",
+      "failure": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:4100/fonts/Sohne-Buch.woff2",
+      "failure": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    },
+    {
+      "url": "http://127.0.0.1:4100/fonts/Sohne-Halbfett.woff2",
+      "failure": {
+        "errorText": "net::ERR_ABORTED"
+      }
+    }
+  ],
+  "httpErrors": [
+    {
+      "url": "http://127.0.0.1:4100/fonts/Sohne-Buch.woff2",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:4100/fonts/Sohne-Halbfett.woff2",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:4100/fonts/Sohne-Buch.woff2",
+      "status": 404
+    },
+    {
+      "url": "http://127.0.0.1:4100/fonts/Sohne-Halbfett.woff2",
+      "status": 404
+    }
+  ],
+  "buddyRequests": [],
+  "commit": "53caeecb614950342fb056b933441189c5fbe4f1",
+  "knownBaselineIssue": "Sohne-Buch.woff2 and Sohne-Halbfett.woff2 are referenced by unchanged styles.css but absent/ignored at base 5eb9fe7. Font 404s are retained in this report; no script errors or buddy requests occurred."
+}

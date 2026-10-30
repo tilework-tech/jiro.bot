@@ -1,0 +1,65 @@
+{
+  "baselineRevision": "5eb9fe7e0e4ba166595b455fd85b0f445ff3e115",
+  "method": "Read each tests/browser/*.test.mjs source with git show at the baseline revision; evaluate its ES module using vm.SourceTextModule with node:test test() replaced by a registration counter, all lifecycle hooks inert, and playwright replaced by an inert chromium object. Top-level loops execute to count parameterized registrations. No test callbacks, lifecycle hooks, browser operations, or baseline test suite execution occur.",
+  "baselineExecution": false,
+  "counts": [
+    {
+      "file": "tests/browser/buddy-interactions.test.mjs",
+      "count": 14,
+      "removedForBuddy": true
+    },
+    {
+      "file": "tests/browser/buddy.test.mjs",
+      "count": 6,
+      "removedForBuddy": true
+    },
+    {
+      "file": "tests/browser/copy-polish.test.mjs",
+      "count": 8,
+      "removedForBuddy": false
+    },
+    {
+      "file": "tests/browser/early-access.test.mjs",
+      "count": 11,
+      "removedForBuddy": false
+    },
+    {
+      "file": "tests/browser/favicon.test.mjs",
+      "count": 9,
+      "removedForBuddy": false
+    },
+    {
+      "file": "tests/browser/features.test.mjs",
+      "count": 17,
+      "removedForBuddy": false
+    },
+    {
+      "file": "tests/browser/hero.test.mjs",
+      "count": 22,
+      "removedForBuddy": false
+    },
+    {
+      "file": "tests/browser/layout.test.mjs",
+      "count": 14,
+      "removedForBuddy": false
+    },
+    {
+      "file": "tests/browser/mobile-follow.test.mjs",
+      "count": 2,
+      "removedForBuddy": true
+    },
+    {
+      "file": "tests/browser/pricing-polish.test.mjs",
+      "count": 6,
+      "removedForBuddy": false
+    },
+    {
+      "file": "tests/browser/sections.test.mjs",
+      "count": 13,
+      "removedForBuddy": false
+    }
+  ],
+  "total": 122,
+  "removed": 22,
+  "expectedRemaining": 100
+}

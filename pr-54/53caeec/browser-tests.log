@@ -1,0 +1,2499 @@
+
+> test
+> node --test --test-concurrency=1
+
+TAP version 13
+# 127.0.0.1 - - [30/Oct/2026 19:12:05] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:06] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:06] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:06] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:06] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:06] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:06] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:06] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:06] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:06] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:06] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:06] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:07] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:07] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:07] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:07] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:07] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:07] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:07] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: hero explains token markup and model lock-in, and navigation names the walkthrough
+ok 1 - hero explains token markup and model lock-in, and navigation names the walkthrough
+  ---
+  duration_ms: 2521.967202
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:08] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: feature summaries appear once in each narrative panel
+ok 2 - feature summaries appear once in each narrative panel
+  ---
+  duration_ms: 1466.712281
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:09] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:09] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:09] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:09] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:09] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:09] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:09] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:09] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:09] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:09] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:09] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:09] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:10] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:10] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:10] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:10] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:10] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:10] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:10] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: feature steps at 1440px keep pointer and keyboard navigation with clear non-underlined emphasis
+ok 3 - feature steps at 1440px keep pointer and keyboard navigation with clear non-underlined emphasis
+  ---
+  duration_ms: 2260.198732
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:12] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: comparison row labels at 1440px begin at the top padding
+ok 4 - comparison row labels at 1440px begin at the top padding
+  ---
+  duration_ms: 1480.812102
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:13] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:14] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:14] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: footer at 1440px links to Nori Agentic and opens the early-access dialog
+ok 5 - footer at 1440px links to Nori Agentic and opens the early-access dialog
+  ---
+  duration_ms: 1801.326691
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:15] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: feature steps at 390px keep pointer and keyboard navigation with clear non-underlined emphasis
+ok 6 - feature steps at 390px keep pointer and keyboard navigation with clear non-underlined emphasis
+  ---
+  duration_ms: 1835.028712
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:17] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: comparison row labels at 390px begin at the top padding
+ok 7 - comparison row labels at 390px begin at the top padding
+  ---
+  duration_ms: 1247.403474
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:18] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: footer at 390px links to Nori Agentic and opens the early-access dialog
+ok 8 - footer at 390px links to Nori Agentic and opens the early-access dialog
+  ---
+  duration_ms: 1706.840994
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:20] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:21] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:21] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:22] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:22] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:22] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:22] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:22] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:22] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:22] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:22] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:22] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:22] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:23] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:23] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:23] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:23] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:23] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:24] "GET /img/favicon.svg HTTP/1.1" 200 -
+# Subtest: every Get early access button opens the sign-up pop-up
+ok 9 - every Get early access button opens the sign-up pop-up
+  ---
+  duration_ms: 7630.258496
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:29] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:29] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:29] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:29] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:29] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:29] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:29] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:29] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:30] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:30] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:30] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:30] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:30] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:30] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:30] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:30] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:30] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:31] "GET /img/favicon.svg HTTP/1.1" 200 -
+# Subtest: submitting name and email asks the visitor to check their inbox
+ok 10 - submitting name and email asks the visitor to check their inbox
+  ---
+  duration_ms: 4287.405951
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:33] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:34] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:35] "GET /img/favicon.svg HTTP/1.1" 200 -
+# Subtest: a visitor can explore a hero example and then sign up
+ok 11 - a visitor can explore a hero example and then sign up
+  ---
+  duration_ms: 5307.921135
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:39] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:39] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:39] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:39] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:39] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:39] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:39] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:39] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:39] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:39] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:39] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:40] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:40] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:40] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:40] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:40] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:41] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:41] "GET /img/favicon.svg HTTP/1.1" 200 -
+# Subtest: the FAQ button collects name and email in the dialog and submits the signup
+ok 12 - the FAQ button collects name and email in the dialog and submits the signup
+  ---
+  duration_ms: 5420.023832
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:44] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:44] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:44] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:44] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:44] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:44] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:44] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:44] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:45] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:45] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:45] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:45] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:45] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:45] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:45] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:45] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:45] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:45] "GET /img/favicon.svg HTTP/1.1" 200 -
+# Subtest: FAQ signup is reachable by keyboard with no-preference motion
+ok 13 - FAQ signup is reachable by keyboard with no-preference motion
+  ---
+  duration_ms: 3096.552339
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:47] "GET /img/favicon.svg HTTP/1.1" 200 -
+# Subtest: FAQ signup is reachable by keyboard with reduce motion
+ok 14 - FAQ signup is reachable by keyboard with reduce motion
+  ---
+  duration_ms: 2305.489525
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:49] "GET /img/favicon.svg HTTP/1.1" 200 -
+# Subtest: the close button and a click on the backdrop close the pop-up
+ok 15 - the close button and a click on the backdrop close the pop-up
+  ---
+  duration_ms: 1886.717789
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:50] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:51] "GET /img/favicon.svg HTTP/1.1" 200 -
+# Subtest: an incomplete form is not sent
+ok 16 - an incomplete form is not sent
+  ---
+  duration_ms: 2027.69374
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:53] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:54] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:54] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:55] "GET /img/favicon.svg HTTP/1.1" 200 -
+# Subtest: a failed or unreachable sign-up keeps the form and lets the visitor try again
+ok 17 - a failed or unreachable sign-up keeps the form and lets the visitor try again
+  ---
+  duration_ms: 3759.057719
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:56] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:57] "GET /privacy.html HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:58] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:58] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:58] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:58] "GET /img/favicon.svg HTTP/1.1" 200 -
+# Subtest: the pop-up links to the privacy policy, which is served on jiro.bot
+ok 18 - the pop-up links to the privacy policy, which is served on jiro.bot
+  ---
+  duration_ms: 2153.7436
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:12:58] "GET /confirmed.html HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:58] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:59] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:59] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:59] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:59] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:59] "GET /link-expired.html HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:59] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:59] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:59] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:59] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:12:59] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: confirmed and link-expired pages explain the next step and link home
+ok 19 - confirmed and link-expired pages explain the next step and link home
+  ---
+  duration_ms: 1401.10829
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:00] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /index.html HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:01] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /img/apple-touch-icon.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:02] "GET /img/apple-touch-icon.png HTTP/1.1" 200 -
+# Subtest: /index.html serves decodable favicon and touch-icon links
+ok 20 - /index.html serves decodable favicon and touch-icon links
+  ---
+  duration_ms: 2181.394179
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /confirmed.html HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /img/apple-touch-icon.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:03] "GET /img/apple-touch-icon.png HTTP/1.1" 200 -
+# Subtest: /confirmed.html serves decodable favicon and touch-icon links
+ok 21 - /confirmed.html serves decodable favicon and touch-icon links
+  ---
+  duration_ms: 1150.624746
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /link-expired.html HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /img/apple-touch-icon.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:04] "GET /img/apple-touch-icon.png HTTP/1.1" 200 -
+# Subtest: /link-expired.html serves decodable favicon and touch-icon links
+ok 22 - /link-expired.html serves decodable favicon and touch-icon links
+  ---
+  duration_ms: 1126.549503
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:05] "GET /privacy.html HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:05] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:05] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:05] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:05] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:05] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:06] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:06] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:06] "GET /img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:06] "GET /img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:06] "GET /img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:06] "GET /img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:06] "GET /img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:06] "GET /img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:06] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:06] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:06] "GET /img/apple-touch-icon.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:06] "GET /img/apple-touch-icon.png HTTP/1.1" 200 -
+# Subtest: /privacy.html serves decodable favicon and touch-icon links
+ok 23 - /privacy.html serves decodable favicon and touch-icon links
+  ---
+  duration_ms: 1264.270008
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:06] "GET /port/4192/index.html HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:07] "GET /port/4192/img/apple-touch-icon.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:08] "GET /port/4192/img/apple-touch-icon.png HTTP/1.1" 200 -
+# Subtest: /port/4192/index.html serves decodable favicon and touch-icon links
+ok 24 - /port/4192/index.html serves decodable favicon and touch-icon links
+  ---
+  duration_ms: 1801.477437
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:08] "GET /port/4192/confirmed.html HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:08] "GET /port/4192/css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:08] "GET /port/4192/fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:08] "GET /port/4192/fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:08] "GET /port/4192/img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:08] "GET /port/4192/favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:08] "GET /port/4192/favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:08] "GET /port/4192/favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:08] "GET /port/4192/img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:08] "GET /port/4192/img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:08] "GET /port/4192/img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:09] "GET /port/4192/img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:09] "GET /port/4192/img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:09] "GET /port/4192/img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:09] "GET /port/4192/img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:09] "GET /port/4192/img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:09] "GET /port/4192/img/apple-touch-icon.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:09] "GET /port/4192/img/apple-touch-icon.png HTTP/1.1" 200 -
+# Subtest: /port/4192/confirmed.html serves decodable favicon and touch-icon links
+ok 25 - /port/4192/confirmed.html serves decodable favicon and touch-icon links
+  ---
+  duration_ms: 1076.542571
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:09] "GET /port/4192/link-expired.html HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:09] "GET /port/4192/css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/img/apple-touch-icon.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/img/apple-touch-icon.png HTTP/1.1" 200 -
+# Subtest: /port/4192/link-expired.html serves decodable favicon and touch-icon links
+ok 26 - /port/4192/link-expired.html serves decodable favicon and touch-icon links
+  ---
+  duration_ms: 1238.321053
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:10] "GET /port/4192/privacy.html HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/img/favicon-16x16.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/img/favicon-32x32.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/img/favicon-48x48.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/img/apple-touch-icon.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /port/4192/img/apple-touch-icon.png HTTP/1.1" 200 -
+# Subtest: /port/4192/privacy.html serves decodable favicon and touch-icon links
+ok 27 - /port/4192/privacy.html serves decodable favicon and touch-icon links
+  ---
+  duration_ms: 1095.942427
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:11] "GET /jiro-16px.png HTTP/1.1" 200 -
+# Subtest: origin favicon and the generated pages' legacy icon are served
+ok 28 - origin favicon and the generated pages' legacy icon are served
+  ---
+  duration_ms: 23.476435
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:12] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:13] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:13] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:13] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:13] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:13] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:13] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:13] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:13] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:13] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:13] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:13] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:13] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:14] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:14] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:14] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:14] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:14] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:14] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:14] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: feature-oncall: scrolling forwards, backwards and jumping selects the matching region inside its colored box
+ok 29 - feature-oncall: scrolling forwards, backwards and jumping selects the matching region inside its colored box
+  ---
+  duration_ms: 4985.0042
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:18] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: feature-multiplayer: scrolling forwards, backwards and jumping selects the matching region inside its colored box
+ok 30 - feature-multiplayer: scrolling forwards, backwards and jumping selects the matching region inside its colored box
+  ---
+  duration_ms: 4437.879527
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:22] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:23] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:23] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: feature-permissions: scrolling forwards, backwards and jumping selects the matching region inside its colored box
+ok 31 - feature-permissions: scrolling forwards, backwards and jumping selects the matching region inside its colored box
+  ---
+  duration_ms: 4198.744746
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:26] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:26] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:26] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:26] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:26] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:26] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:26] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:26] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:26] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:26] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:26] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:27] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:27] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:27] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:27] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:27] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:27] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:27] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:27] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: keyboard step links reveal their region without moving focus into the mock interface
+ok 32 - keyboard step links reveal their region without moving focus into the mock interface
+  ---
+  duration_ms: 1740.094792
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:28] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:29] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:29] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: multiplayer step links follow Priya in Slack, Kira on her phone and Kira back at her terminal
+ok 33 - multiplayer step links follow Priya in Slack, Kira on her phone and Kira back at her terminal
+  ---
+  duration_ms: 1946.823979
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:30] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:31] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:31] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: on-call links reveal setup, a Linear issue with terminal work, and the morning PR review
+ok 34 - on-call links reveal setup, a Linear issue with terminal work, and the morning PR review
+  ---
+  duration_ms: 2277.948521
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:32] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:32] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:32] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:32] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:32] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:32] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:32] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:32] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:32] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:32] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:32] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:33] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:33] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:33] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:33] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:33] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:33] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:33] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:33] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: permissions links reveal assigned roles and enforce access for each participant together
+ok 35 - permissions links reveal assigned roles and enforce access for each participant together
+  ---
+  duration_ms: 1769.067325
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:34] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:35] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:35] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: reduced motion shows complete static demos, including after changing the preference
+ok 36 - reduced motion shows complete static demos, including after changing the preference
+  ---
+  duration_ms: 2566.810364
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:37] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:37] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:37] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:37] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:37] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:37] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:37] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:37] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:37] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:37] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:37] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:37] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:37] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: without JavaScript every narrative and interface region is readable
+ok 37 - without JavaScript every narrative and interface region is readable
+  ---
+  duration_ms: 1700.710252
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:38] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:38] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:38] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:38] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:38] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:38] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:38] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:38] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:38] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:38] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:38] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:39] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:39] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:39] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:39] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:39] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:39] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:39] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:39] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 390px stories stack, regions fit and scrolling emphasizes the region in view
+ok 38 - at 390px stories stack, regions fit and scrolling emphasizes the region in view
+  ---
+  duration_ms: 2375.375383
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:41] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 320px stories stack, regions fit and scrolling emphasizes the region in view
+ok 39 - at 320px stories stack, regions fit and scrolling emphasizes the region in view
+  ---
+  duration_ms: 2293.121803
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:43] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 900px stories stack, regions fit and scrolling emphasizes the region in view
+ok 40 - at 900px stories stack, regions fit and scrolling emphasizes the region in view
+  ---
+  duration_ms: 2425.87209
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:45] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:46] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: short desktop viewports keep demo content in normal flow
+ok 41 - short desktop viewports keep demo content in normal flow
+  ---
+  duration_ms: 1797.523182
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:47] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:48] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:48] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: a demo that cannot fit a laptop viewport does not pin off-screen
+ok 42 - a demo that cannot fit a laptop viewport does not pin off-screen
+  ---
+  duration_ms: 1597.481033
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:49] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 1440px three colored feature boxes alternate with white copy and remain readable
+ok 43 - at 1440px three colored feature boxes alternate with white copy and remain readable
+  ---
+  duration_ms: 2070.440386
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:51] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 1180px three colored feature boxes alternate with white copy and remain readable
+ok 44 - at 1180px three colored feature boxes alternate with white copy and remain readable
+  ---
+  duration_ms: 1962.014947
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:53] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 390px three colored feature boxes alternate with white copy and remain readable
+ok 45 - at 390px three colored feature boxes alternate with white copy and remain readable
+  ---
+  duration_ms: 1884.296185
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:55] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:58] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: the hero carousel offers three examples, starting on Multiplayer
+ok 46 - the hero carousel offers three examples, starting on Multiplayer
+  ---
+  duration_ms: 3750.286986
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:13:59] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:59] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:59] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:59] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:59] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:13:59] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:00] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:00] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:00] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:00] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:00] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:00] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:00] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: without JavaScript the hero starts on Multiplayer
+ok 47 - without JavaScript the hero starts on Multiplayer
+  ---
+  duration_ms: 1294.792789
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:01] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:02] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:02] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:02] "GET /video/carousel/rbac-desktop.mp4 HTTP/1.1" 200 -
+# Subtest: clicking the dots moves forward and back between examples
+ok 48 - clicking the dots moves forward and back between examples
+  ---
+  duration_ms: 1995.978661
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:03] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:04] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:04] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:04] "GET /video/carousel/rbac-desktop.mp4 HTTP/1.1" 200 -
+# Subtest: arrow keys, Home and End move between the dots
+ok 49 - arrow keys, Home and End move between the dots
+  ---
+  duration_ms: 1927.524272
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:05] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:06] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:06] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:12] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# Subtest: the carousel never advances on its own
+ok 50 - the carousel never advances on its own
+  ---
+  duration_ms: 14169.779928
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:19] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:20] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:20] "GET /video/carousel/rbac-desktop.mp4 HTTP/1.1" 200 -
+# Subtest: desktop plays the desktop cut
+ok 51 - desktop plays the desktop cut
+  ---
+  duration_ms: 1668.010256
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:21] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:22] "GET /video/carousel/rbac-desktop.mp4 HTTP/1.1" 200 -
+# Subtest: a 901px window plays the desktop cut
+ok 52 - a 901px window plays the desktop cut
+  ---
+  duration_ms: 1765.844228
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:22] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:22] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:22] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:22] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:22] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:22] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:22] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:22] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:22] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:22] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:22] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:23] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:23] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:23] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:23] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:23] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:23] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:23] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:23] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:23] "GET /video/carousel/rbac-mobile.mp4 HTTP/1.1" 200 -
+# Subtest: a 900px window plays the mobile cut
+ok 53 - a 900px window plays the mobile cut
+  ---
+  duration_ms: 1613.093514
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:24] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:25] "GET /video/carousel/rbac-mobile.mp4 HTTP/1.1" 200 -
+# Subtest: mobile plays the mobile cut
+ok 54 - mobile plays the mobile cut
+  ---
+  duration_ms: 1451.738227
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:25] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:25] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:25] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:25] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:25] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:25] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:25] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:25] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:25] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:25] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:25] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:26] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:26] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:26] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:26] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:26] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:26] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:26] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:26] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:26] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# Subtest: crossing the mobile breakpoint swaps to the other cut
+ok 55 - crossing the mobile breakpoint swaps to the other cut
+  ---
+  duration_ms: 1685.901647
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:27] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:28] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:28] "GET /favicon.ico HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:28] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:28] "GET /video/carousel/oncall-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:28] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:28] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# Subtest: every example shows its own poster still
+ok 56 - every example shows its own poster still
+  ---
+  duration_ms: 2056.187154
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:29] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:30] "GET /img/favicon.svg HTTP/1.1" 200 -
+# Subtest: the pause control stops the example video, and play restarts the video
+ok 57 - the pause control stops the example video, and play restarts the video
+  ---
+  duration_ms: 1766.649527
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:31] "GET /img/favicon.svg HTTP/1.1" 200 -
+# Subtest: with reduced motion the hero holds still until the visitor presses play
+ok 58 - with reduced motion the hero holds still until the visitor presses play
+  ---
+  duration_ms: 2111.815623
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:33] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:34] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:34] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: the cursor after 'engineer' is a still orange block
+ok 59 - the cursor after 'engineer' is a still orange block
+  ---
+  duration_ms: 1688.599857
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:35] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: the hero copy never calls Jiro 'he', never 'calls him in', and says nothing about craft
+ok 60 - the hero copy never calls Jiro 'he', never 'calls him in', and says nothing about craft
+  ---
+  duration_ms: 1409.191772
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:36] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:37] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:37] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 2560px the video fills the entire panel and controls overlay it
+ok 61 - at 2560px the video fills the entire panel and controls overlay it
+  ---
+  duration_ms: 1855.197742
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:38] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:39] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 1440px the video fills the entire panel and controls overlay it
+ok 62 - at 1440px the video fills the entire panel and controls overlay it
+  ---
+  duration_ms: 1820.838635
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:40] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 1180px the video fills the entire panel and controls overlay it
+ok 63 - at 1180px the video fills the entire panel and controls overlay it
+  ---
+  duration_ms: 1855.388048
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:42] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 901px the video fills the entire panel and controls overlay it
+ok 64 - at 901px the video fills the entire panel and controls overlay it
+  ---
+  duration_ms: 2019.998541
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:44] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 900px the video fills the entire panel and controls overlay it
+ok 65 - at 900px the video fills the entire panel and controls overlay it
+  ---
+  duration_ms: 1857.463503
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:45] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:46] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 390px the video fills the entire panel and controls overlay it
+ok 66 - at 390px the video fills the entire panel and controls overlay it
+  ---
+  duration_ms: 1936.628947
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:47] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:47] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:47] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:47] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:48] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 320px the video fills the entire panel and controls overlay it
+ok 67 - at 320px the video fills the entire panel and controls overlay it
+  ---
+  duration_ms: 1798.120459
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:50] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:50] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:50] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:50] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:50] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:50] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:50] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:51] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:51] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:51] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:51] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:51] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:51] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:51] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:51] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:51] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:51] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:51] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:51] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 390px comparison rows are readable and labels stay visible while values scroll
+ok 68 - at 390px comparison rows are readable and labels stay visible while values scroll
+  ---
+  duration_ms: 2026.448802
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:52] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:53] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:53] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: at 320px comparison rows are readable and labels stay visible while values scroll
+ok 69 - at 320px comparison rows are readable and labels stay visible while values scroll
+  ---
+  duration_ms: 1505.783209
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:53] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:54] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: page sections and signup dialog have accessible names
+ok 70 - page sections and signup dialog have accessible names
+  ---
+  duration_ms: 1611.516347
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:55] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:55] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:55] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:55] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:55] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:55] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:55] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:55] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:55] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:55] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:55] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:56] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:56] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:56] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:56] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:56] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:56] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:56] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: page layout fits at 3440px, with balanced hero and readable table
+ok 71 - page layout fits at 3440px, with balanced hero and readable table
+  ---
+  duration_ms: 1352.620107
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:57] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: page layout fits at 2560px, with balanced hero and readable table
+ok 72 - page layout fits at 2560px, with balanced hero and readable table
+  ---
+  duration_ms: 1310.220002
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:58] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: page layout fits at 1920px, with balanced hero and readable table
+ok 73 - page layout fits at 1920px, with balanced hero and readable table
+  ---
+  duration_ms: 1201.360142
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:14:59] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:00] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:00] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: page layout fits at 1440px, with balanced hero and readable table
+ok 74 - page layout fits at 1440px, with balanced hero and readable table
+  ---
+  duration_ms: 1230.835429
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:00] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:00] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:00] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:00] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:00] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:00] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:00] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:00] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:00] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:00] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:00] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:01] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:01] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:01] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:01] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:01] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:01] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:01] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: page layout fits at 1180px, with balanced hero and readable table
+ok 75 - page layout fits at 1180px, with balanced hero and readable table
+  ---
+  duration_ms: 1294.658066
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:02] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: page layout fits at 1024px, with balanced hero and readable table
+ok 76 - page layout fits at 1024px, with balanced hero and readable table
+  ---
+  duration_ms: 1203.04509
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:03] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: page layout fits at 901px, with balanced hero and readable table
+ok 77 - page layout fits at 901px, with balanced hero and readable table
+  ---
+  duration_ms: 1194.546054
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:04] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: page layout fits at 900px, with balanced hero and readable table
+ok 78 - page layout fits at 900px, with balanced hero and readable table
+  ---
+  duration_ms: 1143.458391
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:05] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:05] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:05] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:05] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:05] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:05] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:05] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:05] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:05] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:05] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:05] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:06] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:06] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:06] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:06] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:06] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:06] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:06] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: page layout fits at 768px, with balanced hero and readable table
+ok 79 - page layout fits at 768px, with balanced hero and readable table
+  ---
+  duration_ms: 1293.866919
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:06] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:06] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:06] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:06] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:06] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:06] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:06] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:07] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:07] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:07] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:07] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:07] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:07] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:07] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:07] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:07] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:07] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:07] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: page layout fits at 390px, with balanced hero and readable table
+ok 80 - page layout fits at 390px, with balanced hero and readable table
+  ---
+  duration_ms: 1134.585143
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:07] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:08] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: page layout fits at 320px, with balanced hero and readable table
+ok 81 - page layout fits at 320px, with balanced hero and readable table
+  ---
+  duration_ms: 1039.958795
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:09] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:10] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:11] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:11] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: pricing names the section plainly and mentions the free trial
+ok 82 - pricing names the section plainly and mentions the free trial
+  ---
+  duration_ms: 2110.290925
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:12] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: pricing controls at 1440px fit their cards with consistent bottom spacing and open signup
+ok 83 - pricing controls at 1440px fit their cards with consistent bottom spacing and open signup
+  ---
+  duration_ms: 1887.369737
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:14] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: pricing controls at 390px fit their cards with consistent bottom spacing and open signup
+ok 84 - pricing controls at 390px fit their cards with consistent bottom spacing and open signup
+  ---
+  duration_ms: 1657.282495
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:15] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:15] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:15] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:15] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:15] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:15] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:15] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:15] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:15] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:15] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:15] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:16] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:16] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:16] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:16] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:16] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:16] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:16] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:16] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: pricing hover is black and its green button fill finishes promptly
+ok 85 - pricing hover is black and its green button fill finishes promptly
+  ---
+  duration_ms: 1871.834612
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:17] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:18] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:18] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:18] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: pricing faces blink once on entry, settle, and keep the controls stationary
+ok 86 - pricing faces blink once on entry, settle, and keep the controls stationary
+  ---
+  duration_ms: 8599.614538
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:26] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: pricing respects reduced motion at entry and when the preference changes
+ok 87 - pricing respects reduced motion at entry and when the preference changes
+  ---
+  duration_ms: 3579.075506
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:30] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:30] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:31] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: below the hero, Jiro uses neutral copy outside the approved on-call step and is never 'called in'
+ok 88 - below the hero, Jiro uses neutral copy outside the approved on-call step and is never 'called in'
+  ---
+  duration_ms: 1737.547239
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:32] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:33] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:33] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:33] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: sections run hero, comparison, testimonials, differentiators, pricing, FAQ, sign-up
+ok 89 - sections run hero, comparison, testimonials, differentiators, pricing, FAQ, sign-up
+  ---
+  duration_ms: 1793.139553
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:34] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: bake-off: Jiro's cells are bold, the context row says you can leave, and hovering a row focuses only that row
+ok 90 - bake-off: Jiro's cells are bold, the context row says you can leave, and hovering a row focuses only that row
+  ---
+  duration_ms: 2569.566591
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:36] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:37] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: bake-off rows match the fact-checked comparison
+ok 91 - bake-off rows match the fact-checked comparison
+  ---
+  duration_ms: 1803.032892
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:38] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:38] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:38] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:38] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:38] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:38] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:38] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:38] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:38] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:38] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:38] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:39] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:39] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:39] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:39] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:39] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:39] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:39] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: with reduced motion every feature panel still shows its content
+ok 92 - with reduced motion every feature panel still shows its content
+  ---
+  duration_ms: 1522.756784
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:40] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: differentiators match the carousel order: multiplayer, on-call, permissions
+ok 93 - differentiators match the carousel order: multiplayer, on-call, permissions
+  ---
+  duration_ms: 1391.637716
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:41] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:42] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:42] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: customer quotes at 1440px sit between comparison and walkthroughs with their verified wording
+ok 94 - customer quotes at 1440px sit between comparison and walkthroughs with their verified wording
+  ---
+  duration_ms: 1698.243851
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:43] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: customer quotes at 1180px sit between comparison and walkthroughs with their verified wording
+ok 95 - customer quotes at 1180px sit between comparison and walkthroughs with their verified wording
+  ---
+  duration_ms: 1590.687908
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:44] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:44] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:44] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:45] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: customer quotes at 390px sit between comparison and walkthroughs with their verified wording
+ok 96 - customer quotes at 390px sit between comparison and walkthroughs with their verified wording
+  ---
+  duration_ms: 1500.747362
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:46] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:47] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:47] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: FAQ and sign-up at 1440px keep readable questions and the standalone signup button
+ok 97 - FAQ and sign-up at 1440px keep readable questions and the standalone signup button
+  ---
+  duration_ms: 1903.42919
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /video/carousel/multiplayer-desktop.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:48] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: FAQ and sign-up at 1180px keep readable questions and the standalone signup button
+ok 98 - FAQ and sign-up at 1180px keep readable questions and the standalone signup button
+  ---
+  duration_ms: 1855.370001
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:50] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: FAQ and sign-up at 390px keep readable questions and the standalone signup button
+ok 99 - FAQ and sign-up at 390px keep readable questions and the standalone signup button
+  ---
+  duration_ms: 1763.541541
+  type: 'test'
+  ...
+# 127.0.0.1 - - [30/Oct/2026 19:15:51] "GET / HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:51] "GET /css/styles.css HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:51] "GET /video/carousel/multiplayer-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:51] "GET /video/carousel/oncall-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:51] "GET /video/carousel/rbac-poster.jpg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:51] "GET /img/jiro-working-v4.png HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:51] "GET /js/hero.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:51] "GET /js/features.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:52] "GET /js/early-access.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:52] "GET /js/jiro-pixels.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:52] "GET /js/main.js HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:52] "GET /fonts/Sohne-Buch.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:52] "GET /fonts/Sohne-Halbfett.woff2 HTTP/1.1" 404 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:52] "GET /fonts/JetBrainsMono-600.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:52] "GET /fonts/JetBrainsMono-500.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:52] "GET /fonts/JetBrainsMono-400.woff2 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:52] "GET /video/carousel/multiplayer-mobile.mp4 HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:52] "GET /img/favicon.svg HTTP/1.1" 200 -
+# 127.0.0.1 - - [30/Oct/2026 19:15:52] "GET /favicon.ico HTTP/1.1" 200 -
+# Subtest: mobile layout has no horizontal overflow outside the bake-off scroller and no errors
+ok 100 - mobile layout has no horizontal overflow outside the bake-off scroller and no errors
+  ---
+  duration_ms: 1437.777234
+  type: 'test'
+  ...
+1..100
+# tests 100
+# suites 0
+# pass 100
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 228350.285748
