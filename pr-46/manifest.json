@@ -1,0 +1,395 @@
+[
+  {
+    "width": 1440,
+    "name": "hero",
+    "file": "1440-hero.png",
+    "scrollY": 0,
+    "buddyVisible": false,
+    "buddyRect": {
+      "x": 1239.300048828125,
+      "y": 760.5,
+      "width": 92,
+      "height": 90,
+      "top": 760.5,
+      "right": 1331.300048828125,
+      "bottom": 850.5,
+      "left": 1239.300048828125
+    },
+    "overflow": -15
+  },
+  {
+    "width": 1440,
+    "name": "compare",
+    "file": "1440-compare.png",
+    "scrollY": 1136,
+    "buddyVisible": false,
+    "buddyRect": {
+      "x": 1414.239990234375,
+      "y": 198,
+      "width": 92,
+      "height": 90,
+      "top": 198,
+      "right": 1506.239990234375,
+      "bottom": 288,
+      "left": 1414.239990234375
+    },
+    "overflow": 67
+  },
+  {
+    "width": 1440,
+    "name": "why",
+    "file": "1440-why.png",
+    "scrollY": 1724,
+    "buddyVisible": true,
+    "buddyRect": {
+      "x": 1239.300048828125,
+      "y": 172.0999755859375,
+      "width": 92,
+      "height": 90,
+      "top": 172.0999755859375,
+      "right": 1331.300048828125,
+      "bottom": 262.0999755859375,
+      "left": 1239.300048828125
+    },
+    "overflow": -15
+  },
+  {
+    "width": 1440,
+    "name": "features",
+    "file": "1440-features.png",
+    "scrollY": 2432,
+    "buddyVisible": false,
+    "buddyRect": {
+      "x": 458,
+      "y": 658.39990234375,
+      "width": 92,
+      "height": 90,
+      "top": 658.39990234375,
+      "right": 550,
+      "bottom": 748.39990234375,
+      "left": 458
+    },
+    "overflow": -15
+  },
+  {
+    "width": 1440,
+    "name": "pricing",
+    "file": "1440-pricing.png",
+    "scrollY": 4676,
+    "buddyVisible": true,
+    "buddyRect": {
+      "x": 1239.300048828125,
+      "y": 161.2001953125,
+      "width": 92,
+      "height": 90,
+      "top": 161.2001953125,
+      "right": 1331.300048828125,
+      "bottom": 251.2001953125,
+      "left": 1239.300048828125
+    },
+    "overflow": -15
+  },
+  {
+    "width": 1440,
+    "name": "faq",
+    "file": "1440-faq.png",
+    "scrollY": 5237,
+    "buddyVisible": false,
+    "buddyRect": {
+      "x": 890,
+      "y": 301,
+      "width": 92,
+      "height": 90,
+      "top": 301,
+      "right": 982,
+      "bottom": 391,
+      "left": 890
+    },
+    "overflow": -15
+  },
+  {
+    "width": 1440,
+    "name": "signup",
+    "file": "1440-signup.png",
+    "scrollY": 5237,
+    "buddyVisible": false,
+    "buddyRect": {
+      "x": 890,
+      "y": 301,
+      "width": 92,
+      "height": 90,
+      "top": 301,
+      "right": 982,
+      "bottom": 391,
+      "left": 890
+    },
+    "overflow": -15
+  },
+  {
+    "width": 1440,
+    "name": "dialog",
+    "file": "1440-dialog.png"
+  },
+  {
+    "width": 390,
+    "name": "hero",
+    "file": "390-hero.png",
+    "scrollY": 0,
+    "buddyVisible": false,
+    "buddyRect": {
+      "x": 296.5,
+      "y": 990.2000122070312,
+      "width": 56,
+      "height": 54.99993896484375,
+      "top": 990.2000122070312,
+      "right": 352.5,
+      "bottom": 1045.199951171875,
+      "left": 296.5
+    },
+    "overflow": 0
+  },
+  {
+    "width": 390,
+    "name": "compare",
+    "file": "390-compare.png",
+    "scrollY": 1620,
+    "buddyVisible": true,
+    "buddyRect": {
+      "x": 296.5,
+      "y": 100.390625,
+      "width": 56,
+      "height": 55,
+      "top": 100.390625,
+      "right": 352.5,
+      "bottom": 155.390625,
+      "left": 296.5
+    },
+    "overflow": 0
+  },
+  {
+    "width": 390,
+    "name": "why",
+    "file": "390-why.png",
+    "scrollY": 2437,
+    "buddyVisible": true,
+    "buddyRect": {
+      "x": 307.6000061035156,
+      "y": 352.296875,
+      "width": 56,
+      "height": 55,
+      "top": 352.296875,
+      "right": 363.6000061035156,
+      "bottom": 407.296875,
+      "left": 307.6000061035156
+    },
+    "overflow": 0
+  },
+  {
+    "width": 390,
+    "name": "features",
+    "file": "390-features.png",
+    "scrollY": 3580,
+    "buddyVisible": true,
+    "buddyRect": {
+      "x": 296.5,
+      "y": 122.072509765625,
+      "width": 56,
+      "height": 55,
+      "top": 122.072509765625,
+      "right": 352.5,
+      "bottom": 177.072509765625,
+      "left": 296.5
+    },
+    "overflow": 0
+  },
+  {
+    "width": 390,
+    "name": "pricing",
+    "file": "390-pricing.png",
+    "scrollY": 7314,
+    "buddyVisible": true,
+    "buddyRect": {
+      "x": 296.5,
+      "y": 100.15625,
+      "width": 56,
+      "height": 55,
+      "top": 100.15625,
+      "right": 352.5,
+      "bottom": 155.15625,
+      "left": 296.5
+    },
+    "overflow": 0
+  },
+  {
+    "width": 390,
+    "name": "faq",
+    "file": "390-faq.png",
+    "scrollY": 8505,
+    "buddyVisible": true,
+    "buddyRect": {
+      "x": 297.8999938964844,
+      "y": 116.244140625,
+      "width": 56,
+      "height": 55,
+      "top": 116.244140625,
+      "right": 353.8999938964844,
+      "bottom": 171.244140625,
+      "left": 297.8999938964844
+    },
+    "overflow": 0
+  },
+  {
+    "width": 390,
+    "name": "signup",
+    "file": "390-signup.png",
+    "scrollY": 8900,
+    "buddyVisible": true,
+    "buddyRect": {
+      "x": 297.8999938964844,
+      "y": 179.083984375,
+      "width": 56,
+      "height": 55,
+      "top": 179.083984375,
+      "right": 353.8999938964844,
+      "bottom": 234.083984375,
+      "left": 297.8999938964844
+    },
+    "overflow": 0
+  },
+  {
+    "width": 390,
+    "name": "dialog",
+    "file": "390-dialog.png"
+  },
+  {
+    "width": 320,
+    "name": "hero",
+    "file": "320-hero.png",
+    "scrollY": 0,
+    "buddyVisible": false,
+    "buddyRect": {
+      "x": 237,
+      "y": 935.7000122070312,
+      "width": 56,
+      "height": 55,
+      "top": 935.7000122070312,
+      "right": 293,
+      "bottom": 990.7000122070312,
+      "left": 237
+    },
+    "overflow": 0
+  },
+  {
+    "width": 320,
+    "name": "compare",
+    "file": "320-compare.png",
+    "scrollY": 1647,
+    "buddyVisible": true,
+    "buddyRect": {
+      "x": 237,
+      "y": 100.608154296875,
+      "width": 56,
+      "height": 55,
+      "top": 100.608154296875,
+      "right": 293,
+      "bottom": 155.608154296875,
+      "left": 237
+    },
+    "overflow": 0
+  },
+  {
+    "width": 320,
+    "name": "why",
+    "file": "320-why.png",
+    "scrollY": 2498,
+    "buddyVisible": true,
+    "buddyRect": {
+      "x": 246,
+      "y": 111.703125,
+      "width": 56,
+      "height": 55,
+      "top": 111.703125,
+      "right": 302,
+      "bottom": 166.703125,
+      "left": 246
+    },
+    "overflow": 0
+  },
+  {
+    "width": 320,
+    "name": "features",
+    "file": "320-features.png",
+    "scrollY": 3724,
+    "buddyVisible": true,
+    "buddyRect": {
+      "x": 248,
+      "y": 122.572509765625,
+      "width": 56,
+      "height": 55,
+      "top": 122.572509765625,
+      "right": 304,
+      "bottom": 177.572509765625,
+      "left": 248
+    },
+    "overflow": 0
+  },
+  {
+    "width": 320,
+    "name": "pricing",
+    "file": "320-pricing.png",
+    "scrollY": 7874,
+    "buddyVisible": true,
+    "buddyRect": {
+      "x": 237,
+      "y": 99.703125,
+      "width": 56,
+      "height": 55,
+      "top": 99.703125,
+      "right": 293,
+      "bottom": 154.703125,
+      "left": 237
+    },
+    "overflow": 0
+  },
+  {
+    "width": 320,
+    "name": "faq",
+    "file": "320-faq.png",
+    "scrollY": 9065,
+    "buddyVisible": true,
+    "buddyRect": {
+      "x": 238.39999389648438,
+      "y": 118.6708984375,
+      "width": 56,
+      "height": 55,
+      "top": 118.6708984375,
+      "right": 294.3999938964844,
+      "bottom": 173.6708984375,
+      "left": 238.39999389648438
+    },
+    "overflow": 0
+  },
+  {
+    "width": 320,
+    "name": "signup",
+    "file": "320-signup.png",
+    "scrollY": 9537,
+    "buddyVisible": true,
+    "buddyRect": {
+      "x": 238.39999389648438,
+      "y": 123.53125,
+      "width": 56,
+      "height": 55,
+      "top": 123.53125,
+      "right": 294.3999938964844,
+      "bottom": 178.53125,
+      "left": 238.39999389648438
+    },
+    "overflow": 0
+  },
+  {
+    "width": 320,
+    "name": "dialog",
+    "file": "320-dialog.png"
+  }
+]
