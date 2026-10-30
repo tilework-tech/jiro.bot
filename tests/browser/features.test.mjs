@@ -6,6 +6,12 @@ import { chromium } from "playwright";
 
 const REPO = fileURLToPath(new URL("../..", import.meta.url));
 const SITE = "http://127.0.0.1:4198";
+const T0 = new Date("2026-10-28T12:00:00Z").getTime();
+const ROTATE = 20_000;
+const GREEN = "rgb(43, 255, 107)";
+const WHITE = "rgb(255, 255, 255)";
+const TABS = ["01 Multiplayer", "02 On-call", "03 RBAC"];
+const STORIES = ["feature-multiplayer", "feature-oncall", "feature-permissions"];
 let server;
 let browser;
 before(async () => {
@@ -24,240 +30,338 @@ before(async () => {
 });
 after(async () => { await browser?.close(); server?.kill(); });
 
+// Opens the page on a paused fake clock, scrolled so "How it works" sits under the header.
 async function open(options = {}) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, ...options });
   const page = await context.newPage();
+  page.setDefaultTimeout(5000);
   const errors = [];
   page.on("pageerror", e => errors.push(e.message));
+  if (options.javaScriptEnabled !== false) {
+    await page.clock.install({ time: T0 });
+    await page.clock.pauseAt(T0 + 60_000);
+  }
   await page.goto(SITE);
+  await page.locator("#features").evaluate(el => el.scrollIntoView({ block: "start", behavior: "instant" }));
   return { page, context, errors };
 }
-const center = locator => locator.evaluate(el => el.scrollIntoView({ block: "center", behavior: "instant" }));
-async function current(page, story, index) {
-  await page.waitForFunction(({ story, index }) => {
-    const links = [...document.querySelectorAll(`#${story} .feature-step a`)];
-    return links.length > index && links.every((a, i) => (a.getAttribute("aria-current") === "step") === (i === index));
-  }, { story, index }, { timeout: 2500 });
-}
-
-for (const [story, count] of [["feature-oncall", 3], ["feature-multiplayer", 3], ["feature-permissions", 2]]) {
-  test(`${story}: scrolling forwards, backwards and jumping selects the matching region inside its colored box`, async () => {
-    const { page, context, errors } = await open();
-    const steps = page.locator(`#${story} .feature-region`);
-    assert.equal(await steps.count(), count, "complete readable story steps");
-    assert.equal(await page.locator(`#${story} .feature-step a`).count(), count, "one link per story region");
-    const pane = page.locator(`#${story} .feature-demo`);
-    await center(steps.nth(1));
-    await current(page, story, 1);
-    for (const i of [count - 1, 0, count - 1]) {
-      await center(steps.nth(i));
-      await current(page, story, i);
-      const region = page.locator(`#${story} .feature-region`).nth(i);
-      await page.waitForTimeout(230);
-      const other = await page.locator(`#${story} .feature-region`).nth((i + 1) % count).evaluate(el => getComputedStyle(el).backgroundColor);
-      assert.notEqual(await region.evaluate(el => getComputedStyle(el).backgroundColor), other, "current interface region has visible emphasis");
-    }
-    await center(pane);
-    await pane.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-    await pane.evaluate(el => Promise.all(el.getAnimations({ subtree: true }).map(animation => animation.finished)));
-    const state = await pane.screenshot();
-    await page.waitForTimeout(1100);
-    assert.ok((await pane.screenshot()).equals(state), "no timer changes the demo while idle");
-    assert.deepEqual(errors, []);
-    await context.close();
+const features = page => page.locator("#features");
+const strip = page => features(page).getByRole("tablist", { name: "Choose a story" });
+const tab = (page, name) => strip(page).getByRole("tab", { name, exact: true });
+const selected = async page => (await strip(page).getByRole("tab", { selected: true }).textContent()).replace(/\s+/g, " ").trim();
+const button = (page, name) => features(page).getByRole("button", { name, exact: true });
+const becomes = (page, name) => page.waitForFunction(name => {
+  const tab = document.querySelector('#features [role="tab"][aria-selected="true"]');
+  return tab && tab.textContent.replace(/\s+/g, " ").trim() === name;
+}, name);
+// Where a story starts inside the horizontal track.
+const offset = (page, i) => page.locator(".feature-story").nth(i).evaluate(el => el.offsetLeft - el.parentElement.offsetLeft);
+// The story whose box sits inside the visible part of the section.
+const shown = page => page.waitForFunction(() => {
+  const area = document.querySelector("#features").getBoundingClientRect();
+  const visible = [...document.querySelectorAll(".feature-story")].filter(story => {
+    const r = story.getBoundingClientRect();
+    return r.width > 0 && r.left >= area.left - 1 && r.right <= area.right + 1;
   });
+  return visible.length === 1 && visible[0].id;
+}).then(handle => handle.jsonValue());
+async function shows(page, id) {
+  await page.waitForFunction(id => {
+    const area = document.querySelector("#features").getBoundingClientRect();
+    const r = document.getElementById(id).getBoundingClientRect();
+    return Math.abs(r.left - area.left) <= 3;
+  }, id);
+  assert.equal(await shown(page), id);
 }
 
-test("keyboard step links reveal their region without moving focus into the mock interface", async () => {
+test("How it works is a white tab strip of three stories with the active tab in green, one story at a time", async () => {
+  const { page, context, errors } = await open();
+  const tabs = strip(page).getByRole("tab");
+  assert.deepEqual((await tabs.allTextContents()).map(t => t.replace(/\s+/g, " ").trim()), TABS);
+  assert.equal(await selected(page), "01 Multiplayer");
+  assert.equal(await strip(page).evaluate(el => getComputedStyle(el.closest(".feature-tabs")).backgroundColor), WHITE);
+  await page.waitForFunction(expected => JSON.stringify([...document.querySelectorAll('#features [role="tab"]')]
+    .map(el => getComputedStyle(el).backgroundColor)) === JSON.stringify(expected), [GREEN, WHITE, WHITE]);
+  assert.equal(await features(page).getByRole("tabpanel").count(), 1, "one story is exposed at a time");
+  await shows(page, "feature-multiplayer");
+  assert.equal(await page.getByRole("region", { name: "How it works", exact: true }).count(), 1);
+  assert.deepEqual(errors, []);
+  await context.close();
+});
+
+test("stories autorotate every 20 seconds and wrap, without moving the page", async () => {
   const { page, context } = await open();
-  const link = page.locator("#feature-oncall .feature-step a").nth(2);
-  assert.equal(await link.count(), 1, "step link exists");
-  await link.focus();
-  await page.keyboard.press("Enter");
-  await current(page, "feature-oncall", 2);
-  assert.equal(await link.evaluate(el => document.activeElement === el), true);
+  const top = await page.evaluate(() => scrollY);
+  await page.clock.runFor(ROTATE - 1_000);
+  assert.equal(await selected(page), "01 Multiplayer");
+  await page.clock.runFor(2_000);
+  assert.equal(await selected(page), "02 On-call");
+  await shows(page, "feature-oncall");
+  await page.clock.runFor(ROTATE);
+  assert.equal(await selected(page), "03 RBAC");
+  await shows(page, "feature-permissions");
+  await page.clock.runFor(ROTATE);
+  assert.equal(await selected(page), "01 Multiplayer");
+  await shows(page, "feature-multiplayer");
+  assert.equal(await page.evaluate(() => scrollY), top, "rotation never scrolls the page");
+  await context.close();
+});
+
+test("choosing a tab shows its story and stops the rotation", async () => {
+  const { page, context } = await open();
+  await tab(page, "03 RBAC").click();
+  assert.equal(await selected(page), "03 RBAC");
+  await shows(page, "feature-permissions");
+  await page.clock.runFor(ROTATE * 3);
+  assert.equal(await selected(page), "03 RBAC");
+  assert.equal(await button(page, "Play stories").count(), 1);
+  await context.close();
+});
+
+test("pressing pause on a fresh page pauses the rotation", async () => {
+  const { page, context } = await open();
+  await button(page, "Pause stories").click();
+  await button(page, "Play stories").waitFor();
+  await page.mouse.move(5, 5);
+  await page.clock.runFor(ROTATE * 3);
+  assert.equal(await selected(page), "01 Multiplayer");
+  await button(page, "Play stories").click();
+  await button(page, "Pause stories").waitFor();
+  await page.mouse.move(5, 5);
+  await page.clock.runFor(ROTATE + 500);
+  assert.equal(await selected(page), "02 On-call");
+  await context.close();
+});
+
+test("resting the pointer on a story holds the rotation until it leaves", async () => {
+  const { page, context } = await open();
+  await page.locator("#feature-multiplayer .ftext").hover();
+  assert.equal(await selected(page), "01 Multiplayer");
+  await page.clock.runFor(ROTATE * 2);
+  assert.equal(await selected(page), "01 Multiplayer");
+  await page.mouse.move(5, 5);
+  await page.clock.runFor(ROTATE + 500);
+  assert.equal(await selected(page), "02 On-call");
+  await context.close();
+});
+
+test("stories wait while the section is out of view", async () => {
+  const { page, context } = await open();
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await page.waitForTimeout(300);
+  await page.clock.runFor(ROTATE * 2);
+  assert.equal(await selected(page), "01 Multiplayer");
+  await context.close();
+});
+
+test("clicking into a story holds the rotation so focus is never dropped", async () => {
+  const { page, context } = await open();
+  await page.locator("#feature-multiplayer .ftext").click();
+  await page.mouse.move(5, 5);
+  await page.clock.runFor(ROTATE * 2);
+  assert.equal(await selected(page), "01 Multiplayer");
+  assert.equal(await page.evaluate(() => document.activeElement.id), "feature-multiplayer");
+  await context.close();
+});
+
+test("on a phone, scrolling through a story emphasizes the step whose demo is in the middle", async () => {
+  const { page, context } = await open({ viewport: { width: 390, height: 844 } });
+  await tab(page, "02 On-call").click();
+  await shows(page, "feature-oncall");
+  for (const i of [2, 1]) {
+    await page.locator(`#oncall-region-${i + 1}`).evaluate(el => el.scrollIntoView({ block: "center", behavior: "instant" }));
+    // Let the browser deliver the scroll event, then run the emphasis frame on the fake clock.
+    await page.waitForTimeout(150);
+    await page.clock.runFor(100);
+    await page.waitForFunction(i => document.querySelector(`#oncall-step-${i + 1}`).getAttribute("aria-current") === "step"
+      && document.querySelector(`#oncall-region-${i + 1}`).classList.contains("is-current")
+      && document.querySelectorAll("#feature-oncall [aria-current]").length === 1, i);
+  }
+  await context.close();
+});
+
+test("keyboard: arrows, Home and End move between tabs, and Tab reaches the story panel", async () => {
+  const { page, context } = await open();
+  await tab(page, "01 Multiplayer").focus();
+  await page.keyboard.press("ArrowRight");
+  assert.equal(await selected(page), "02 On-call");
+  await page.keyboard.press("End");
+  assert.equal(await selected(page), "03 RBAC");
+  await page.keyboard.press("Home");
+  assert.equal(await selected(page), "01 Multiplayer");
+  await page.keyboard.press("ArrowLeft");
+  assert.equal(await selected(page), "03 RBAC");
+  assert.equal(await strip(page).getByRole("tab").evaluateAll(els => els.filter(el => el.tabIndex === 0).length), 1);
+  await page.keyboard.press("Tab");
+  const focused = await page.evaluate(() => ({
+    role: document.activeElement.getAttribute("role"),
+    story: document.activeElement.id,
+    visible: document.activeElement.matches(":focus-visible"),
+  }));
+  assert.equal(focused.role, "tabpanel", "Tab moves from the tabs into the story panel");
+  assert.equal(focused.story, "feature-permissions");
+  assert.ok(focused.visible, "the panel shows keyboard focus");
+  await shows(page, "feature-permissions");
+  await page.clock.runFor(ROTATE * 2);
+  assert.equal(await selected(page), "03 RBAC", "keyboard use stops the rotation");
+  await context.close();
+});
+
+test("story steps are plain text with no links, hover or pointer", async () => {
+  const { page, context } = await open();
+  assert.equal(await page.locator("#features .feature-step a, #features .feature-step [tabindex]").count(), 0);
+  assert.deepEqual(await page.locator("#features .feature-step").allTextContents().then(t => t.map(s => s.trim())), [
+    "Tackle a problem in Slack",
+    "Kira joins from her phone",
+    "Once back on her computer, picks it up in terminal",
+    "Set Jiro on his task once",
+    "Linear kicks Jiro into action",
+    "Review the PR in the morning",
+    "A shared thread with distinct roles assigned",
+    "access enforced for each person talking to Jiro",
+  ]);
+  const step = page.locator("#feature-multiplayer .feature-step").nth(1);
+  const look = () => step.evaluate(el => {
+    const s = getComputedStyle(el);
+    return { cursor: s.cursor, color: s.color, background: s.backgroundColor };
+  });
+  const before = await look();
+  assert.notEqual(before.cursor, "pointer");
+  await step.hover();
+  assert.deepEqual(await look(), before, "hovering a step changes nothing");
   assert.equal(await page.locator(".feature-demo button, .feature-demo input").count(), 0, "mock controls are not fake tab stops");
   await context.close();
 });
 
-test("multiplayer step links follow Priya in Slack, Kira on her phone and Kira back at her terminal", async () => {
-  const { page, context, errors } = await open();
-  const story = page.locator("#feature-multiplayer");
-  const links = story.locator(".feature-step a");
-  assert.deepEqual(await links.locator('span:last-child').allTextContents(), [
-    "Tackle a problem in Slack",
-    "Kira joins from her phone",
-    "Once back on her computer, picks it up in terminal",
-  ]);
-  for (const [i, person] of ["Priya", "Kira", "Kira"].entries()) {
-    const link = links.nth(i);
-    const region = story.locator(await link.getAttribute("href"));
-    assert.match(await region.innerText(), new RegExp(person));
-    await link.focus();
-    await page.keyboard.press("Enter");
-    await current(page, "feature-multiplayer", i);
-    assert.equal(await link.evaluate(el => document.activeElement === el), true);
-    const box = await region.boundingBox();
-    assert.ok(box.y >= 0 && box.y + box.height <= 900, "keyboard link reveals its complete interface region");
-  }
-  assert.match(await story.locator('#multiplayer-region-2').innerText(), /mentioned you[\s\S]*Kira/);
-  assert.match(await story.locator('#multiplayer-region-3').innerText(), /nori cloud[\s\S]*Kira[\s\S]*npm test/);
-  assert.deepEqual(errors, []);
+test("each demo region shows its scenario", async () => {
+  const { page, context } = await open();
+  const text = id => page.locator(id).innerText();
+  assert.match(await text("#multiplayer-region-1"), /Priya/);
+  assert.match(await text("#multiplayer-region-2"), /mentioned you[\s\S]*Kira/);
+  assert.match(await text("#multiplayer-region-3"), /nori cloud[\s\S]*Kira[\s\S]*npm test/);
+  assert.match(await text("#oncall-region-1"), /@Jiro.*Linear/);
+  assert.match(await text("#oncall-region-2"), /Linear[\s\S]*High[\s\S]*overnight[\s\S]*Terminal[\s\S]*npm test[\s\S]*PASS/);
+  assert.match(await text("#oncall-region-3"), /Pull request[\s\S]*\+12[\s\S]*approved/i);
+  assert.match(await text("#permissions-region-1"), /Jordan[\s\S]*Support agent access[\s\S]*Rae[\s\S]*Ops agent access/);
+  assert.match(await text("#permissions-region-2"), /Jordan[\s\S]*You don't have access to @jiro-ops\. Ask an org admin to grant you access\.[\s\S]*Rae[\s\S]*23 paid orders[\s\S]*PR #1847/);
+  assert.deepEqual(await page.locator("#features .fnum").allTextContents(), ["01", "02", "03"]);
   await context.close();
 });
 
-test("on-call links reveal setup, a Linear issue with terminal work, and the morning PR review", async () => {
-  const { page, context, errors } = await open();
-  const story = page.locator("#feature-oncall");
-  const links = story.locator(".feature-step a");
-  assert.deepEqual(await links.locator('span:last-child').allTextContents(), [
-    "Set Jiro on his task once",
-    "Linear kicks Jiro into action",
-    "Review the PR in the morning",
-  ]);
-  const contents = [/@Jiro.*Linear/, /Linear[\s\S]*High[\s\S]*overnight[\s\S]*Terminal[\s\S]*npm test[\s\S]*PASS/, /Pull request[\s\S]*\+12[\s\S]*approved/i];
-  for (const [i, content] of contents.entries()) {
-    const link = links.nth(i);
-    const region = story.locator(await link.getAttribute("href"));
-    assert.match(await region.innerText(), content);
-    await link.focus();
-    await page.keyboard.press("Enter");
-    await current(page, "feature-oncall", i);
-    assert.equal(await link.evaluate(el => document.activeElement === el), true);
-    const box = await region.boundingBox();
-    assert.ok(box.y >= 0 && box.y + box.height <= 900, "keyboard link reveals the complete story beat");
-  }
-  assert.deepEqual(errors, []);
-  await context.close();
-});
-
-test("permissions links reveal assigned roles and enforce access for each participant together", async () => {
-  const { page, context, errors } = await open();
-  const story = page.locator("#feature-permissions");
-  const links = story.locator(".feature-step a");
-  assert.deepEqual(await links.locator('span:last-child').allTextContents(), [
-    "A shared thread with distinct roles assigned",
-    "access enforced for each person talking to Jiro",
-  ]);
-  const contents = [/Jordan[\s\S]*Support agent access[\s\S]*Rae[\s\S]*Ops agent access/, /Jordan[\s\S]*You don't have access to @jiro-ops\. Ask an org admin to grant you access\.[\s\S]*Rae[\s\S]*23 paid orders[\s\S]*PR #1847/];
-  for (const [i, content] of contents.entries()) {
-    const link = links.nth(i);
-    const region = story.locator(await link.getAttribute("href"));
-    assert.match(await region.innerText(), content);
-    await link.focus();
-    await page.keyboard.press("Enter");
-    await current(page, "feature-permissions", i);
-    assert.equal(await link.evaluate(el => document.activeElement === el), true);
-    const box = await region.boundingBox();
-    assert.ok(box.y >= 0 && box.y + box.height <= 900, "keyboard link reveals both access outcomes");
-  }
-  assert.deepEqual(errors, []);
-  await context.close();
-});
-
-test("reduced motion shows complete static demos, including after changing the preference", async () => {
+test("reduced motion: no rotation, instant tab switching, static demos", async () => {
   const { page, context } = await open({ reducedMotion: "reduce" });
+  await page.clock.runFor(ROTATE * 5);
+  assert.equal(await selected(page), "01 Multiplayer");
+  await tab(page, "02 On-call").click();
+  await shows(page, "feature-oncall");
   const regions = page.locator("#features .feature-region");
   assert.equal(await regions.count(), 8);
   for (const region of await regions.all()) {
-    assert.equal(await region.isVisible(), true);
     assert.equal(await region.evaluate(el => getComputedStyle(el).opacity), "1");
     assert.equal(await region.evaluate(el => getComputedStyle(el).transitionDuration), "0s");
   }
-  const demo = page.locator("#feature-oncall .feature-demo");
-  const screenshotOptions = { style: 'header { visibility: hidden !important; }' };
-  await center(demo);
-  const initial = await demo.screenshot(screenshotOptions);
-  await center(page.locator("#feature-oncall .feature-step").first());
-  await center(demo);
-  assert.ok((await demo.screenshot(screenshotOptions)).equals(initial), "scrolling does not change reduced-motion end state");
-  await page.emulateMedia({ reducedMotion: "no-preference" });
-  await center(page.locator("#feature-oncall .feature-region").nth(1));
-  await current(page, "feature-oncall", 1);
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.waitForFunction(() => document.querySelectorAll("#features [aria-current='step']").length === 0);
   await context.close();
 });
 
-test("without JavaScript every narrative and interface region is readable", async () => {
+test("without JavaScript every story is stacked and readable", async () => {
   const { page, context } = await open({ javaScriptEnabled: false });
-  assert.equal(await page.locator("#features .feature-step").count(), 8);
+  assert.equal(await strip(page).isVisible().catch(() => false), false, "no tab strip without the script");
+  const stories = await page.locator(".feature-story").evaluateAll(els => els.map(el => el.getBoundingClientRect().top));
+  assert.ok(stories[0] < stories[1] && stories[1] < stories[2], "stories stack in order");
   const regions = page.locator("#features .feature-region");
   assert.equal(await regions.count(), 8);
   for (const region of await regions.all()) {
     assert.equal(await region.isVisible(), true);
-    assert.equal(await region.evaluate(el => getComputedStyle(el).opacity), "1");
     assert.ok((await region.innerText()).trim().length > 30, "demo content is delivered in HTML");
   }
-  assert.doesNotMatch(await page.locator("#features").innerText(), /\bMartin\b|beauty[ -]corp|\b(he|him)\b|call him in/i);
+  assert.doesNotMatch(await features(page).innerText(), /\bMartin\b|beauty[ -]corp|\b(he|him)\b|call him in/i);
   await context.close();
 });
 
-for (const width of [390, 320, 900]) {
-  test(`at ${width}px stories stack, regions fit and scrolling emphasizes the region in view`, async () => {
-    const { page, context, errors } = await open({ viewport: { width, height: 844 } });
-    assert.equal(await page.locator(".feature-story").count(), 3);
-    for (const story of await page.locator(".feature-story").all()) {
-      const pane = story.locator(".feature-demo");
-      assert.equal(await pane.evaluate(el => getComputedStyle(el).position), "static");
-      const regions = story.locator(".feature-region");
-      for (const [i, region] of (await regions.all()).entries()) {
-        await center(region);
-        await current(page, await story.getAttribute("id"), i);
+test("scrolling partway between stories snaps to the nearest one", async () => {
+  const { page, context } = await open();
+  const track = page.locator(".feature-track");
+  const second = await offset(page, 1);
+  await track.evaluate((el, left) => el.scrollTo({ left, behavior: "instant" }), Math.round(second * 0.7));
+  await page.waitForFunction(w => Math.abs(document.querySelector(".feature-track").scrollLeft - w) <= 2, second);
+  await becomes(page, "02 On-call");
+  await context.close();
+});
+
+test("at 1440px the section locks into place under the sticky header", async () => {
+  const { page, context } = await open();
+  const target = await page.locator("#features").evaluate(el => el.getBoundingClientRect().top + scrollY);
+  await page.evaluate(y => window.scrollTo({ top: y - 140, behavior: "instant" }), target);
+  await page.mouse.move(720, 450);
+  await page.mouse.wheel(0, 60);
+  await page.waitForFunction(() => {
+    const header = document.querySelector("header").getBoundingClientRect().bottom;
+    const strip = document.querySelector(".feature-tabs").getBoundingClientRect().top;
+    return strip >= header && strip <= header + 16;
+  }, null, { timeout: 3000 });
+  await context.close();
+});
+
+for (const width of [390, 320]) {
+  test(`at ${width}px the tabs fit, swiping changes story and every region fits the screen`, async () => {
+    const { page, context, errors } = await open({ viewport: { width, height: 844 }, hasTouch: true });
+    const tabs = await strip(page).getByRole("tab").evaluateAll(els => els.map(el => {
+      const r = el.getBoundingClientRect();
+      return { y: r.y, x: r.x, right: r.right, height: r.height, fits: el.scrollWidth <= el.clientWidth + 1 };
+    }));
+    assert.ok(tabs.every(t => Math.abs(t.y - tabs[0].y) < 1 && t.x >= 0 && t.right <= width + 0.5 && t.height >= 40 && t.fits), "tabs form one compact row");
+    const track = page.locator(".feature-track");
+    for (const [i, id] of STORIES.entries()) {
+      if (i) {
+        await track.evaluate((el, left) => el.scrollTo({ left, behavior: "instant" }), await offset(page, i));
+        await becomes(page, TABS[i]);
+      }
+      await shows(page, id);
+      for (const region of await page.locator(`#${id} .feature-region`).all()) {
         assert.equal(await region.evaluate(el => el.scrollWidth <= el.clientWidth), true, "text is not clipped");
-        const box = await region.boundingBox();
-        assert.ok(box.x >= 0 && box.x + box.width <= width + 1, "mock interface fits width");
-        assert.ok(box.height < 844, "a complete region fits the viewport");
+        const b = await region.boundingBox();
+        assert.ok(b.x >= 0 && b.x + b.width <= width + 1, "mock interface fits width");
+        assert.ok(b.height < 844, "a complete region fits the viewport");
       }
     }
-    assert.equal(await page.locator("#features").evaluate(el => el.scrollWidth <= el.clientWidth), true, "feature section has no horizontal overflow");
+    await page.clock.runFor(ROTATE * 2);
+    assert.equal(await selected(page), "03 RBAC", "swiping stops the rotation");
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, "no horizontal page overflow");
     assert.deepEqual(errors, []);
     await context.close();
   });
 }
 
-test("short desktop viewports keep demo content in normal flow", async () => {
-  const { page, context } = await open({ viewport: { width: 1200, height: 600 } });
-  assert.equal(await page.locator(".feature-demo").count(), 3);
-  for (const pane of await page.locator(".feature-demo").all()) {
-    assert.equal(await pane.evaluate(el => getComputedStyle(el).position), "static");
-  }
-  await context.close();
-});
-
-
-test("a demo that cannot fit a laptop viewport does not pin off-screen", async () => {
-  const { page, context } = await open({ viewport: { width: 901, height: 760 } });
-  for (const pane of await page.locator(".feature-demo").all()) {
-    const layout = await pane.evaluate(el => ({ height: el.offsetHeight, position: getComputedStyle(el).position, top: parseFloat(getComputedStyle(el).top) }));
-    assert.ok(layout.position === "static" || layout.height + layout.top <= 760, "sticky content fits height");
-  }
-  await context.close();
-});
-
 for (const width of [1440, 1180, 390]) {
-  test(`at ${width}px three colored feature boxes alternate with white copy and remain readable`, async () => {
-    const {page, context} = await open({viewport: {width, height: 900}});
-    const rows = page.locator('#features .frow');
-    assert.equal(await rows.count(), 3);
-    assert.deepEqual(await rows.locator('.fnum').allInnerTexts(), ['01', '02', '03']);
-    const colors = ['rgb(43, 255, 107)', 'rgb(251, 94, 69)', 'rgb(29, 59, 42)'];
-    assert.equal(await page.getByRole('region', {name: 'How it works', exact: true}).count(), 1, 'stories retain an accessible section name');
-    assert.ok(Math.abs((await rows.first().boundingBox()).y - (await page.locator('#features').boundingBox()).y) <= 2, 'first example begins the section');
-    for (let i = 0; i < 3; i++) {
-      const row = rows.nth(i), text = row.locator('.ftext'), image = row.locator('.fimg');
-      assert.equal(await text.evaluate(n => getComputedStyle(n).backgroundColor), 'rgb(255, 255, 255)');
+  test(`at ${width}px each story pairs white copy with an offset colored box holding a large Jiro`, async () => {
+    const { page, context } = await open({ viewport: { width, height: 900 } });
+    const colors = ["rgb(43, 255, 107)", "rgb(251, 94, 69)", "rgb(29, 59, 42)"];
+    for (const [i, id] of STORIES.entries()) {
+      await tab(page, TABS[i]).click();
+      await shows(page, id);
+      const text = page.locator(`#${id} .ftext`), image = page.locator(`#${id} .fimg`);
+      assert.equal(await text.evaluate(n => getComputedStyle(n).backgroundColor), WHITE);
       assert.equal(await image.evaluate(n => getComputedStyle(n).backgroundColor), colors[i]);
       const t = await text.boundingBox(), b = await image.boundingBox();
       if (width > 900) {
-        assert.ok(Math.abs(t.y - b.y) < 2, 'text and demo share a row');
-        assert.ok(i === 1 ? b.x < t.x : t.x < b.x, 'alternating sides');
-        assert.ok(b.height / b.width >= .98, 'colored box stays square or grows to fit the complete story');
-      } else assert.ok(b.y >= t.y + t.height - 2, 'text first on mobile');
-      const demo = await row.locator('.fpanel').boundingBox();
-      assert.equal(await row.locator('.fpanel').evaluate(n => getComputedStyle(n).backgroundColor), 'rgb(255, 255, 255)', 'mock interfaces use light surfaces');
+        assert.ok(i === 1 ? b.x < t.x : t.x < b.x, "alternating sides");
+        assert.ok(Math.abs(t.y - b.y) >= 12 || Math.abs(t.y + t.height - (b.y + b.height)) >= 12, "boxes are offset, not corner to corner");
+        const overlap = Math.min(t.x + t.width, b.x + b.width) - Math.max(t.x, b.x);
+        assert.ok(overlap >= 12, `colored box overlaps the copy panel: ${overlap}`);
+      } else assert.ok(b.y >= t.y + t.height - 40, "text first on mobile");
+      const demo = await page.locator(`#${id} .fpanel`).boundingBox();
+      assert.equal(await page.locator(`#${id} .fpanel`).evaluate(n => getComputedStyle(n).backgroundColor), WHITE, "mock interfaces use light surfaces");
       assert.ok(demo.x >= b.x && demo.x + demo.width <= b.x + b.width + 1);
-      assert.ok(demo.y >= b.y && demo.y + demo.height <= b.y + b.height + 1, 'complete demo fits box');
+      assert.ok(demo.y >= b.y && demo.y + demo.height <= b.y + b.height + 1, "complete demo fits box");
+      const art = page.locator(`#${id} .fimg img`);
+      assert.equal(await art.count(), 1);
+      const info = await art.evaluate(img => ({ src: img.getAttribute("src"), alt: img.alt, ok: img.complete && img.naturalWidth > 0, w: img.getBoundingClientRect().width }));
+      assert.match(info.src, /^img\/jiro-[a-z-]+-flat\.svg$/);
+      assert.equal(info.alt, "");
+      assert.ok(info.ok, "artwork decodes");
+      assert.ok(info.w >= (width > 900 ? 120 : 72), `Jiro is large: ${info.w}`);
+      const a = await art.boundingBox();
+      assert.ok(a.x >= b.x - 1 && a.x + a.width <= b.x + b.width + 1 && a.y >= b.y - 1 && a.y + a.height <= b.y + b.height + 1, "Jiro sits in the colored box");
     }
     await context.close();
   });

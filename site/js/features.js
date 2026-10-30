@@ -1,75 +1,175 @@
-/* Complete stories live in HTML. Scroll changes emphasis, never their content. */
+/*
+ * "How it works": the three stories become tabs over a horizontal snap track.
+ * One story shows at a time and the tabs autorotate every 20 seconds. Choosing a tab,
+ * swiping or keyboard use hands control to the visitor and stops the rotation; a resting
+ * pointer holds it. Without JavaScript the stories stay stacked; reduced motion never rotates.
+ * Steps are plain text: scrolling only emphasizes the demo region nearest the viewport center.
+ */
 (function () {
   "use strict";
-  const stories = [...document.querySelectorAll(".feature-story")].map((el) => ({
-    el,
-    links: [...el.querySelectorAll(".feature-step a")],
-    regions: [...el.querySelectorAll(".feature-region")],
-    current: -1,
-  }));
-  if (!stories.length) return;
+  const section = document.getElementById("features");
+  if (!section) return;
+  const strip = section.querySelector(".feature-tabs");
+  const tablist = strip.querySelector('[role="tablist"]');
+  const tabs = [...tablist.querySelectorAll('[role="tab"]')];
+  const toggle = strip.querySelector(".ft-pause");
+  const track = section.querySelector(".feature-track");
+  const stories = tabs.map((tab) => {
+    const el = document.getElementById(tab.getAttribute("aria-controls"));
+    return {
+      el,
+      steps: [...el.querySelectorAll(".feature-step")],
+      regions: [...el.querySelectorAll(".feature-region")],
+      emphasis: -1,
+    };
+  });
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let current = 0;
   let queued = false;
+  let steering = false;
+  let trackWidth = track.clientWidth;
+  const cycle = window.JiroTabCycle(tablist, 20000, () => select(current + 1), section);
 
-  function select(story, index) {
-    if (story.current === index) return;
-    story.current = index;
-    story.links.forEach((link, i) => {
-      if (i === index) link.setAttribute("aria-current", "step");
-      else link.removeAttribute("aria-current");
+  const behavior = () => (reduced.matches ? "instant" : "smooth");
+  const offset = (i) => stories[i].el.offsetLeft - track.offsetLeft;
+
+  function select(i, focus) {
+    current = (i + tabs.length) % tabs.length;
+    tabs.forEach((tab, j) => {
+      const on = j === current;
+      tab.setAttribute("aria-selected", on ? "true" : "false");
+      tab.tabIndex = on ? 0 : -1;
+      const story = stories[j].el;
+      story.inert = !on;
+      story.tabIndex = on ? 0 : -1;
+      if (on) story.removeAttribute("aria-hidden");
+      else story.setAttribute("aria-hidden", "true");
+    });
+    if (focus) tabs[current].focus();
+    if (Math.abs(track.scrollLeft - offset(current)) > 1) {
+      steering = true;
+      track.scrollTo({ left: offset(current), behavior: behavior() });
+    }
+    requestEmphasis();
+  }
+
+  // The visitor took over: show their choice and stop rotating until they press play.
+  function take(i, focus) {
+    select(i, focus);
+    setPaused(true);
+  }
+
+  function setPaused(on) {
+    cycle.setPaused(on);
+    toggle.dataset.state = on ? "paused" : "playing";
+    toggle.setAttribute("aria-label", on ? "Play stories" : "Pause stories");
+  }
+
+  // Where a swipe settled; a story other than the selected one means the visitor moved it.
+  // A scroll this script started is finished back onto the selected story instead.
+  function settled() {
+    let nearest = 0;
+    stories.forEach((_, i) => {
+      if (Math.abs(offset(i) - track.scrollLeft) < Math.abs(offset(nearest) - track.scrollLeft)) nearest = i;
+    });
+    if (steering) {
+      steering = false;
+      if (nearest !== current) track.scrollTo({ left: offset(current), behavior: "instant" });
+    } else if (nearest !== current) take(nearest, false);
+  }
+
+  function emphasize(story, index) {
+    if (story.emphasis === index) return;
+    story.emphasis = index;
+    story.steps.forEach((step, i) => {
+      if (i === index) step.setAttribute("aria-current", "step");
+      else step.removeAttribute("aria-current");
       story.regions[i].classList.toggle("is-current", i === index);
     });
   }
 
-  function update() {
+  function updateEmphasis() {
     queued = false;
     if (reduced.matches || document.hidden) return;
+    const story = stories[current];
     const middle = window.innerHeight / 2;
-    stories.forEach((story) => {
-      const bounds = story.el.getBoundingClientRect();
-      if (bounds.bottom < 0 || bounds.top > window.innerHeight) return;
-      // Geometry handles reverse scrolling and jumps past several steps at once.
-      let nearest = 0;
-      let distance = Infinity;
-      story.regions.forEach((target, i) => {
-        const rect = target.getBoundingClientRect();
-        const next = Math.abs(rect.top + rect.height / 2 - middle);
-        if (next < distance) { distance = next; nearest = i; }
-      });
-      select(story, nearest);
+    let nearest = 0;
+    let distance = Infinity;
+    story.regions.forEach((target, i) => {
+      const rect = target.getBoundingClientRect();
+      const next = Math.abs(rect.top + rect.height / 2 - middle);
+      if (next < distance) { distance = next; nearest = i; }
     });
+    emphasize(story, nearest);
   }
 
-  function requestUpdate() {
+  function requestEmphasis() {
     if (queued || reduced.matches) return;
     queued = true;
-    window.requestAnimationFrame(update);
+    window.requestAnimationFrame(updateEmphasis);
   }
 
   function configure() {
     stories.forEach((story) => {
       story.el.classList.toggle("feature-enhanced", !reduced.matches);
-      select(story, -1);
+      emphasize(story, -1);
     });
-    requestUpdate();
+    toggle.hidden = reduced.matches;
+    requestEmphasis();
   }
 
-  stories.forEach((story) => {
-    story.links.forEach((link, i) => {
-      link.addEventListener("click", (event) => {
-        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-        event.preventDefault();
-        const target = story.regions[i];
-        target.scrollIntoView({ block: "center", behavior: "instant" });
-        // Keep keyboard focus on the real link; the mock UI is read-only.
-        if (!reduced.matches) select(story, i);
-      });
+  tabs.forEach((tab, i) => {
+    tab.addEventListener("click", () => take(i, false));
+    tab.addEventListener("keydown", (e) => {
+      const to = { ArrowRight: current + 1, ArrowLeft: current - 1, Home: 0, End: tabs.length - 1 }[e.key];
+      if (to === undefined) return;
+      e.preventDefault();
+      take(to, true);
     });
   });
-  window.addEventListener("scroll", requestUpdate, { passive: true });
-  window.addEventListener("resize", requestUpdate);
-  window.addEventListener("pageshow", requestUpdate);
-  document.addEventListener("visibilitychange", requestUpdate);
+  // Keyboard focus on the tabs or a story stops the rotation (APG carousel). The pause button
+  // is excluded so its first press always pauses. Clicking into a story only holds it, so the
+  // focused story is never made inert under the visitor.
+  [tablist, track].forEach((area) => area.addEventListener("focusin", (e) => {
+    if (e.target.matches(":focus-visible")) setPaused(true);
+    else if (area === track) cycle.hold("focus", true);
+  }));
+  track.addEventListener("focusout", (e) => {
+    if (!track.contains(e.relatedTarget)) cycle.hold("focus", false);
+  });
+  toggle.addEventListener("click", () => setPaused(!cycle.paused()));
+  track.addEventListener("pointerenter", (e) => {
+    if (e.pointerType === "mouse") cycle.hold("pointer", true);
+  });
+  track.addEventListener("pointerleave", () => cycle.hold("pointer", false));
+  if ("onscrollend" in track) track.addEventListener("scrollend", settled);
+  else {
+    let quiet;
+    track.addEventListener("scroll", () => {
+      clearTimeout(quiet);
+      quiet = setTimeout(settled, 150);
+    }, { passive: true });
+  }
+  // Mobile toolbars resize the viewport while scrolling; only a new track width needs re-aligning.
+  window.addEventListener("resize", () => {
+    if (track.clientWidth !== trackWidth) {
+      trackWidth = track.clientWidth;
+      track.scrollTo({ left: offset(current), behavior: "instant" });
+    }
+    requestEmphasis();
+  });
+  window.addEventListener("scroll", requestEmphasis, { passive: true });
+  window.addEventListener("pageshow", requestEmphasis);
+  document.addEventListener("visibilitychange", requestEmphasis);
   reduced.addEventListener("change", configure);
+
+  section.classList.add("is-tabbed");
+  strip.hidden = false;
+  stories.forEach((story, i) => {
+    story.el.setAttribute("role", "tabpanel");
+    story.el.setAttribute("aria-labelledby", tabs[i].id);
+  });
   configure();
+  select(0, false);
+  setPaused(false);
 })();
