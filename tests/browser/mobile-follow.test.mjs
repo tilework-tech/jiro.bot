@@ -81,6 +81,8 @@ for (const width of [390, 320]) {
     for (const selector of ['.ditch-row', '#compare', '#why', '#feature-multiplayer', '#feature-oncall', '#feature-permissions', '#pricing', '#faq', '#reserve']) {
       await page.locator(selector).evaluate(n => scrollTo({top: scrollY + n.getBoundingClientRect().top - (n.matches('.ditch-row') ? -12 : 90), behavior: 'instant'}));
       await page.waitForTimeout(2600);
+      // Edge entrance is deliberately partly offscreen; resting checks follow its landing.
+      await page.waitForFunction(() => !['peeking', 'flying'].includes(document.querySelector('.jiro-buddy').dataset.jiroState));
       await mascot.waitFor({state: 'visible', timeout: 4000}).catch(error => { throw new Error(`${selector}: ${error.message}`); });
       assert.ok(await clearance(page), `${selector}: no text or controls covered`);
       const box = await mascot.boundingBox();

@@ -82,7 +82,8 @@ async function openHero({ viewport = DESKTOP, reducedMotion = "no-preference", p
     );
   }
   await page.clock.install({ time: T0 });
-  await page.clock.pauseAt(T0 + 1);
+  // Pause before navigation, with room for the two CDP calls to complete.
+  await page.clock.pauseAt(T0 + 60_000);
   await page.goto(SITE);
   return { page, errors, videos };
 }

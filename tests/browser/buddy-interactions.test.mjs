@@ -197,7 +197,7 @@ test('a restored pin in the desktop signup panel speaks that panel’s line', as
   await page.waitForFunction(line => document.querySelector('.jiro-buddy__text').textContent === line, expected);
 });
 
-test('speech stays clear of the enlarged keyboard-focused mascot', async t => {
+test('speech stays clear of keyboard-focused Jiro', async t => {
   const page = await open(t, 1440, false);
   await rest(page, '#why');
   const mascot = page.locator('.jiro-buddy__mascot');

@@ -59,9 +59,7 @@
   }
   function speechAt(x, y, size, below = false) {
     const left = Math.max(8, Math.min(innerWidth - size.width - 8, x + mascot.offsetWidth / 2 - size.width / 2));
-    // Speech clears the full hover/focus pose, including its upward idle bob.
-    const top = below ? y + mascot.offsetHeight + 14 : y - mascot.offsetHeight / 2 - 8 - size.height - 14;
-    return rect(left, top, size.width, size.height);
+    return rect(left, below ? y + mascot.offsetHeight + 14 : y - size.height - 14, size.width, size.height);
   }
   function safeSpeech(section, x, y, size) {
     for (const below of [false, true]) {
@@ -123,7 +121,8 @@
     const visible = enabled && (transient || (!!section && clear(box) && clear(close.getBoundingClientRect())));
     flag("data-site-visible", visible);
     const grown = rect(box.left - mascot.offsetWidth / 4, box.top - mascot.offsetHeight / 2 - 8, mascot.offsetWidth * 1.5, mascot.offsetHeight * 1.5 + 8);
-    flag('data-site-grow', visible && !entering && !held && !!section && contains(section, grown) && clear(grown));
+    // Speaking uses the runtime's smaller talking pose so a fixed pin keeps room for its line.
+    flag('data-site-grow', visible && bubble.hidden && !entering && !held && !!section && contains(section, grown) && clear(grown));
     // An unsafe dragged pose is hidden without breaking its captured pointer stream.
     const interactive = visible || (enabled && held);
     if (buddy.inert === interactive) buddy.inert = !interactive;
