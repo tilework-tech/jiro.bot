@@ -12,7 +12,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png" />
     <meta
       name="description"
-      content="Jiro is the tasteful software engineer: an expert AI engineer that cares more about quality than volume. Tag @jirobot to start."
+      content="Jiro is the tasteful software engineer: an expert AI engineer that cares more about quality than volume. Tag @Jiro to start."
     />
     <link rel="stylesheet" href="css/styles.css" />
     <meta name="early-access-endpoint" content="https://9bt7wykv5e.execute-api.us-east-1.amazonaws.com/signup" />
@@ -149,7 +149,7 @@
             background: #0a0a0a;
           "
         >
-          <div class="hero-row" style="display: flex; flex-wrap: wrap; gap: 0; min-height: 641px">
+          <div class="hero-row">
             <div
               class="hero-copy"
               style="
@@ -182,7 +182,7 @@
                         font-weight: 600;
                         font-size: 0.94em;
                       "
-                      >@jirobot</span
+                      >@Jiro</span
                     >
                     to start.
                   </p>
@@ -283,37 +283,8 @@
                   </div>
                 </div>
                 <div class="hc-controls" hidden>
-                  <div class="hc-dots" role="tablist" aria-label="Choose an example">
-                    <button
-                      type="button"
-                      role="tab"
-                      id="hc-tab-multiplayer"
-                      aria-controls="hc-multiplayer"
-                      aria-label="Multiplayer"
-                      aria-selected="true"
-                      tabindex="0"
-                    ></button>
-                    <button
-                      type="button"
-                      role="tab"
-                      id="hc-tab-oncall"
-                      aria-controls="hc-oncall"
-                      aria-label="On-call"
-                      aria-selected="false"
-                      tabindex="-1"
-                    ></button>
-                    <button
-                      type="button"
-                      role="tab"
-                      id="hc-tab-rbac"
-                      aria-controls="hc-rbac"
-                      aria-label="RBAC"
-                      aria-selected="false"
-                      tabindex="-1"
-                    ></button>
-                  </div>
                   <span class="hc-name" aria-hidden="true">Multiplayer</span>
-                  <button type="button" class="hc-pause" aria-label="Pause video" data-state="playing">
+                  <button type="button" class="hc-pause" aria-label="Pause examples" data-state="playing">
                     <svg viewBox="0 0 16 16" aria-hidden="true" class="i-pause">
                       <path d="M5.5 3.5v9M10.5 3.5v9" />
                     </svg>
@@ -323,7 +294,21 @@
                   </button>
                 </div>
               </div>
+              <script src="js/tabcycle.js" defer></script>
               <script src="js/hero.js" defer></script>
+            </div>
+            <div class="hero-bar" hidden>
+              <div class="cycle-tabs" role="tablist" aria-label="Choose an example">
+                <button type="button" role="tab" id="hc-tab-multiplayer" aria-controls="hc-multiplayer" aria-label="Multiplayer" aria-selected="true" tabindex="0">
+                  <span>Multiplayer</span><span class="cycle-progress" aria-hidden="true"></span>
+                </button>
+                <button type="button" role="tab" id="hc-tab-oncall" aria-controls="hc-oncall" aria-label="On-call" aria-selected="false" tabindex="-1">
+                  <span>On-call</span><span class="cycle-progress" aria-hidden="true"></span>
+                </button>
+                <button type="button" role="tab" id="hc-tab-rbac" aria-controls="hc-rbac" aria-label="RBAC" aria-selected="false" tabindex="-1">
+                  <span>RBAC</span><span class="cycle-progress" aria-hidden="true"></span>
+                </button>
+              </div>
             </div>
           </div>
           <div class="ditch-row" style="display: flex; flex-wrap: wrap; gap: 2px; min-height: 565px">
@@ -379,7 +364,7 @@
                     background: #2bff6b;
                     padding: 0 0.1em;
                   "
-                  >@jirobot</span
+                  >@Jiro</span
                 >
               </div>
             </div>
@@ -591,41 +576,58 @@
         </section>
 
         <section id="features" aria-labelledby="features-heading">
-          <article class="frow feature-story" id="feature-multiplayer" aria-labelledby="multiplayer-title">
-            <div class="ftext">
-              <h2 id="features-heading" class="sr-only">How it works</h2>
-              <div class="fnum">01</div>
-              <hgroup>
-                <h3 class="fh" id="multiplayer-title">True multiplayer across all interfaces</h3>
-                <p class="feature-subline">Different people. Different devices. One shared session.</p>
-              </hgroup>
-              <ol class="feature-steps" aria-label="True multiplayer across all interfaces. Steps">
-                <li class="feature-step" id="multiplayer-step-1">
-                  <a href="#multiplayer-region-1"><span>Tackle a problem in Slack</span></a>
-                </li>
-                <li class="feature-step" id="multiplayer-step-2">
-                  <a href="#multiplayer-region-2"><span>Kira joins from her phone</span></a>
-                </li>
-                <li class="feature-step" id="multiplayer-step-3">
-                  <a href="#multiplayer-region-3"><span>Once back on her computer, picks it up in terminal</span></a>
-                </li>
-              </ol>
+          <h2 id="features-heading" class="sr-only">How it works</h2>
+          <div class="feature-tabs" hidden>
+            <button type="button" class="ft-pause" aria-label="Pause stories" data-state="playing">
+              <svg viewBox="0 0 16 16" aria-hidden="true" class="i-pause">
+                <path d="M5.5 3.5v9M10.5 3.5v9" />
+              </svg>
+              <svg viewBox="0 0 16 16" aria-hidden="true" class="i-play">
+                <path d="M5 3.5l7 4.5-7 4.5z" />
+              </svg>
+            </button>
+            <div class="cycle-tabs" role="tablist" aria-label="Choose a story">
+              <button type="button" role="tab" id="feature-tab-multiplayer" aria-controls="feature-multiplayer" aria-selected="true">
+                <span class="ft-num">01</span> <span>Multiplayer</span><span class="cycle-progress" aria-hidden="true"></span>
+              </button>
+              <button type="button" role="tab" id="feature-tab-oncall" aria-controls="feature-oncall" aria-selected="false" tabindex="-1">
+                <span class="ft-num">02</span> <span>On-call</span><span class="cycle-progress" aria-hidden="true"></span>
+              </button>
+              <button type="button" role="tab" id="feature-tab-permissions" aria-controls="feature-permissions" aria-selected="false" tabindex="-1">
+                <span class="ft-num">03</span> <span>RBAC</span><span class="cycle-progress" aria-hidden="true"></span>
+              </button>
             </div>
-            <div class="fimg">
-              <figure class="feature-demo fpanel" aria-label="True multiplayer across all interfaces. Illustrated example">
-                <div class="feature-window-bar"><span>Alder / orders-export</span><span class="feature-tag">example</span></div>
-                <div class="feature-region" id="multiplayer-region-1">
-                  <div class="feature-app-label">Desktop Slack / #orders-team</div>
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">P</span><div><p class="feature-meta"><strong>Priya</strong> <span>09:38</span></p><p>@Jiro, the CSV downloads every order even when I select “Paid”. @Kira, is this what finance hit yesterday?</p></div></div>
-                </div>
-                <div class="feature-region feature-phone" id="multiplayer-region-2">
-                  <div class="feature-app-label">Phone Slack <span>09:41</span></div>
-                  <p class="feature-notification">Priya mentioned you in #orders-team</p>
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">K</span><div><p class="feature-meta"><strong>Kira</strong> <span>same thread</span></p><p>Yep, they only need paid orders for this month. @Jiro, keep the date range too. On my phone right now.</p></div></div>
-                </div>
-                <div class="feature-region feature-terminal" id="multiplayer-region-3">
-                  <div class="feature-app-label"><span aria-hidden="true">● ● ●</span> Kira’s laptop terminal</div>
-                  <pre><code>$ nori cloud
+          </div>
+          <div class="feature-track">
+            <article class="frow feature-story" id="feature-multiplayer" aria-labelledby="multiplayer-title">
+              <div class="ftext">
+                <div class="fnum">01</div>
+                <hgroup>
+                  <h3 class="fh" id="multiplayer-title">True multiplayer across all interfaces</h3>
+                  <p class="feature-subline">Different people. Different devices. One shared session.</p>
+                </hgroup>
+                <ol class="feature-steps" aria-label="True multiplayer across all interfaces. Steps">
+                  <li class="feature-step" id="multiplayer-step-1">Tackle a problem in Slack</li>
+                  <li class="feature-step" id="multiplayer-step-2">Kira joins from her phone</li>
+                  <li class="feature-step" id="multiplayer-step-3">Once back on her computer, picks it up in terminal</li>
+                </ol>
+              </div>
+              <div class="fimg">
+                <img class="fimg-art" src="img/jiro-happy-flat.svg" alt="" aria-hidden="true" width="168" height="168" />
+                <figure class="feature-demo fpanel" aria-label="True multiplayer across all interfaces. Illustrated example">
+                  <div class="feature-window-bar"><span>Alder / orders-export</span><span class="feature-tag">example</span></div>
+                  <div class="feature-region" id="multiplayer-region-1">
+                    <div class="feature-app-label">Desktop Slack / #orders-team</div>
+                    <div class="feature-message"><span class="feature-avatar" aria-hidden="true">P</span><div><p class="feature-meta"><strong>Priya</strong> <span>09:38</span></p><p>@Jiro, the CSV downloads every order even when I select “Paid”. @Kira, is this what finance hit yesterday?</p></div></div>
+                  </div>
+                  <div class="feature-region feature-phone" id="multiplayer-region-2">
+                    <div class="feature-app-label">Phone Slack <span>09:41</span></div>
+                    <p class="feature-notification">Priya mentioned you in #orders-team</p>
+                    <div class="feature-message"><span class="feature-avatar" aria-hidden="true">K</span><div><p class="feature-meta"><strong>Kira</strong> <span>same thread</span></p><p>Yep, they only need paid orders for this month. @Jiro, keep the date range too. On my phone right now.</p></div></div>
+                  </div>
+                  <div class="feature-region feature-terminal" id="multiplayer-region-3">
+                    <div class="feature-app-label"><span aria-hidden="true">● ● ●</span> Kira’s laptop terminal</div>
+                    <pre><code>$ nori cloud
 orders-export · resumed as Kira
 &gt; Back at my desk. Show the filter fix.
 Jiro: paid + date range now reach CSV.
@@ -633,101 +635,94 @@ $ npm test -- orders-export
 PASS 6 tests · filters + date range
 $ git diff --stat
  export.ts | 8 ++++++--</code></pre>
-                </div>
-              </figure>
-            </div>
-          </article>
-          <article class="frow feature-story" id="feature-oncall" aria-labelledby="oncall-title">
-            <div class="ftext">
-              <div class="fnum">02</div>
-              <hgroup>
-                <h3 class="fh" id="oncall-title">On call automation for small teams</h3>
-                <p class="feature-subline">Wake up to a fix you can review.</p>
-              </hgroup>
-              <ol class="feature-steps" aria-label="On call automation for small teams. Steps">
-                <li class="feature-step" id="oncall-step-1">
-                  <a href="#oncall-region-1"><span>Set Jiro on his task once</span></a>
-                </li>
-                <li class="feature-step" id="oncall-step-2">
-                  <a href="#oncall-region-2"><span>Linear kicks Jiro into action</span></a>
-                </li>
-                <li class="feature-step" id="oncall-step-3">
-                  <a href="#oncall-region-3"><span>Review the PR in the morning</span></a>
-                </li>
-              </ol>
-            </div>
-            <div class="fimg">
-              <figure class="feature-demo fpanel" aria-label="On call automation for small teams. Illustrated example">
-                <div class="feature-window-bar"><span>Alder · Slack / #checkout-oncall</span><span class="feature-tag">example</span></div>
-                <div class="feature-region" id="oncall-region-1">
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">D</span><div><p class="feature-meta"><strong>Dana</strong> <span>Monday · 16:30</span></p><p>@Jiro, if a checkout issue lands in Linear labelled “overnight”, take a look and leave me a small PR. Don’t merge it — I’ll review in the morning.</p></div></div>
-                </div>
-                <div class="feature-region feature-terminal" id="oncall-region-2">
-                  <div class="feature-issue">
-                    <div class="feature-app-label">Linear / ALD-241</div>
-                    <p class="feature-issue-title">Paid orders stuck as pending</p>
-                    <p class="feature-meta">04:12 · Open · High priority</p>
-                    <p>23 orders affected. Payments went through, but Stripe webhook retries return 400.</p>
-                    <p class="feature-meta">bug · checkout · overnight</p>
                   </div>
-                  <div class="feature-app-label"><span aria-hidden="true">● ● ●</span> Terminal / checkout</div>
-                  <pre><code>$ rg -n 'express.json|webhook' src/app.ts
+                </figure>
+              </div>
+            </article>
+            <article class="frow feature-story" id="feature-oncall" aria-labelledby="oncall-title">
+              <div class="ftext">
+                <div class="fnum">02</div>
+                <hgroup>
+                  <h3 class="fh" id="oncall-title">On call automation for small teams</h3>
+                  <p class="feature-subline">Wake up to a fix you can review.</p>
+                </hgroup>
+                <ol class="feature-steps" aria-label="On call automation for small teams. Steps">
+                  <li class="feature-step" id="oncall-step-1">Set Jiro on his task once</li>
+                  <li class="feature-step" id="oncall-step-2">Linear kicks Jiro into action</li>
+                  <li class="feature-step" id="oncall-step-3">Review the PR in the morning</li>
+                </ol>
+              </div>
+              <div class="fimg">
+                <img class="fimg-art" src="img/jiro-coding-flat.svg" alt="" aria-hidden="true" width="168" height="168" />
+                <figure class="feature-demo fpanel" aria-label="On call automation for small teams. Illustrated example">
+                  <div class="feature-window-bar"><span>Alder · Slack / #checkout-oncall</span><span class="feature-tag">example</span></div>
+                  <div class="feature-region" id="oncall-region-1">
+                    <div class="feature-message"><span class="feature-avatar" aria-hidden="true">D</span><div><p class="feature-meta"><strong>Dana</strong> <span>Monday · 16:30</span></p><p>@Jiro, if a checkout issue lands in Linear labelled “overnight”, take a look and leave me a small PR. Don’t merge it — I’ll review in the morning.</p></div></div>
+                  </div>
+                  <div class="feature-region feature-terminal" id="oncall-region-2">
+                    <div class="feature-issue">
+                      <div class="feature-app-label">Linear / ALD-241</div>
+                      <p class="feature-issue-title">Paid orders stuck as pending</p>
+                      <p class="feature-meta">04:12 · Open · High priority</p>
+                      <p>23 orders affected. Payments went through, but Stripe webhook retries return 400.</p>
+                      <p class="feature-meta">bug · checkout · overnight</p>
+                    </div>
+                    <div class="feature-app-label"><span aria-hidden="true">● ● ●</span> Terminal / checkout</div>
+                    <pre><code>$ rg -n 'express.json|webhook' src/app.ts
 41: app.use(express.json())
 58: app.post('/stripe/webhook', handler)
 Jiro: JSON parsing breaks the signature.
 Fix: register the raw-body route first.
 $ npm test -- stripe-webhook
 PASS 18 tests · signed payloads</code></pre>
-                </div>
-                <div class="feature-region feature-pr" id="oncall-region-3">
-                  <div class="feature-app-label">Pull request / alder/shop</div>
-                  <p class="feature-pr-title">Keep Stripe webhooks on the raw body <span>#1847</span></p>
-                  <p>The webhook route now runs before JSON parsing. Replayed the failing event: 200, order confirmed.</p>
-                  <p class="feature-meta">04:31 · 2 files · +12 / −3 · 18 tests passed</p>
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">D</span><div><p class="feature-meta"><strong>Dana</strong> <span>08:02 · Approved</span></p><p>ah yep, middleware order. nice catch — thanks.</p></div></div>
-                </div>
-              </figure>
-            </div>
-          </article>
-          <article class="frow feature-story" id="feature-permissions" aria-labelledby="permissions-title">
-            <div class="ftext">
-              <div class="fnum">03</div>
-              <hgroup>
-                <h3 class="fh" id="permissions-title">User level access control</h3>
-                <p class="feature-subline">On each surface, even in a single thread.</p>
-              </hgroup>
-              <ol class="feature-steps" aria-label="User level access control. Steps">
-                <li class="feature-step" id="permissions-step-1">
-                  <a href="#permissions-region-1"><span>A shared thread with distinct roles assigned</span></a>
-                </li>
-                <li class="feature-step" id="permissions-step-2">
-                  <a href="#permissions-region-2"><span>access enforced for each person talking to Jiro</span></a>
-                </li>
-              </ol>
-            </div>
-            <div class="fimg">
-              <figure class="feature-demo fpanel" aria-label="User level access control. Illustrated example">
-                <div class="feature-window-bar"><span>Alder · Slack / #incidents</span><span class="feature-tag">example</span></div>
-                <div class="feature-region" id="permissions-region-1">
-                  <div class="feature-app-label">Thread / Checkout confirmations</div>
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">J</span><div><p class="feature-meta"><strong>Jordan</strong> <span>Support agent access · 08:07</span></p><p>Three customers paid but still see “pending”. Is this the overnight issue?</p></div></div>
-                  <div class="feature-message"><span class="feature-avatar" aria-hidden="true">R</span><div><p class="feature-meta"><strong>Rae</strong> <span>Ops agent access · 08:08</span></p><p>Looks like it. Checking the webhook errors now.</p></div></div>
-                </div>
-                <div class="feature-region" id="permissions-region-2">
-                  <div class="feature-access-case">
-                    <p class="feature-meta"><strong>Jordan</strong> <span>no ops agent access</span></p>
-                    <p>@jiro-ops, can you pull the failed payment logs?</p>
-                    <p class="feature-reply"><strong>jiro-ops · reply to Jordan</strong><br>You don't have access to @jiro-ops. Ask an org admin to grant you access.</p>
                   </div>
-                  <div class="feature-access-case">
-                    <p class="feature-meta"><strong>Rae</strong> <span>ops agent access</span></p>
-                    <p>@jiro-ops, how many orders are waiting, and is the fix ready?</p>
-                    <p class="feature-reply"><strong>jiro-ops · reply to Rae</strong><br>23 paid orders are waiting on webhook retries. Signature checks rejected parsed bodies. PR #1847 keeps the raw body; all 18 tests pass.</p>
+                  <div class="feature-region feature-pr" id="oncall-region-3">
+                    <div class="feature-app-label">Pull request / alder/shop</div>
+                    <p class="feature-pr-title">Keep Stripe webhooks on the raw body <span>#1847</span></p>
+                    <p>The webhook route now runs before JSON parsing. Replayed the failing event: 200, order confirmed.</p>
+                    <p class="feature-meta">04:31 · 2 files · +12 / −3 · 18 tests passed</p>
+                    <div class="feature-message"><span class="feature-avatar" aria-hidden="true">D</span><div><p class="feature-meta"><strong>Dana</strong> <span>08:02 · Approved</span></p><p>ah yep, middleware order. nice catch — thanks.</p></div></div>
                   </div>
-                </div>
-              </figure>
-            </div>
-          </article>
+                </figure>
+              </div>
+            </article>
+            <article class="frow feature-story" id="feature-permissions" aria-labelledby="permissions-title">
+              <div class="ftext">
+                <div class="fnum">03</div>
+                <hgroup>
+                  <h3 class="fh" id="permissions-title">User level access control</h3>
+                  <p class="feature-subline">On each surface, even in a single thread.</p>
+                </hgroup>
+                <ol class="feature-steps" aria-label="User level access control. Steps">
+                  <li class="feature-step" id="permissions-step-1">A shared thread with distinct roles assigned</li>
+                  <li class="feature-step" id="permissions-step-2">access enforced for each person talking to Jiro</li>
+                </ol>
+              </div>
+              <div class="fimg">
+                <img class="fimg-art" src="img/jiro-push-back-flat.svg" alt="" aria-hidden="true" width="168" height="168" />
+                <figure class="feature-demo fpanel" aria-label="User level access control. Illustrated example">
+                  <div class="feature-window-bar"><span>Alder · Slack / #incidents</span><span class="feature-tag">example</span></div>
+                  <div class="feature-region" id="permissions-region-1">
+                    <div class="feature-app-label">Thread / Checkout confirmations</div>
+                    <div class="feature-message"><span class="feature-avatar" aria-hidden="true">J</span><div><p class="feature-meta"><strong>Jordan</strong> <span>Support agent access · 08:07</span></p><p>Three customers paid but still see “pending”. Is this the overnight issue?</p></div></div>
+                    <div class="feature-message"><span class="feature-avatar" aria-hidden="true">R</span><div><p class="feature-meta"><strong>Rae</strong> <span>Ops agent access · 08:08</span></p><p>Looks like it. Checking the webhook errors now.</p></div></div>
+                  </div>
+                  <div class="feature-region" id="permissions-region-2">
+                    <div class="feature-access-case">
+                      <p class="feature-meta"><strong>Jordan</strong> <span>no ops agent access</span></p>
+                      <p>@jiro-ops, can you pull the failed payment logs?</p>
+                      <p class="feature-reply"><strong>jiro-ops · reply to Jordan</strong><br>You don't have access to @jiro-ops. Ask an org admin to grant you access.</p>
+                    </div>
+                    <div class="feature-access-case">
+                      <p class="feature-meta"><strong>Rae</strong> <span>ops agent access</span></p>
+                      <p>@jiro-ops, how many orders are waiting, and is the fix ready?</p>
+                      <p class="feature-reply"><strong>jiro-ops · reply to Rae</strong><br>23 paid orders are waiting on webhook retries. Signature checks rejected parsed bodies. PR #1847 keeps the raw body; all 18 tests pass.</p>
+                    </div>
+                  </div>
+                </figure>
+              </div>
+            </article>
+          </div>
           <script src="js/features.js" defer></script>
         </section>
 
@@ -1806,7 +1801,7 @@ PASS 18 tests · signed payloads</code></pre>
               <details class="fq">
                 <summary><span>Who is Jiro?</span><span class="pl" aria-hidden="true">+</span></summary>
                 <p>
-                  An AI software engineer for your team. Tag @jirobot in a conversation, and Jiro takes on the task,
+                  An AI software engineer for your team. Tag @Jiro in a conversation, and Jiro takes on the task,
                   raises concerns early and hands back a pull request for review.
                 </p>
               </details>

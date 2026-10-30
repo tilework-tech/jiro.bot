@@ -102,18 +102,30 @@ async function close({ page, errors }) {
   await page.close();
 }
 
+const CYCLE = 40_000;
+const GREEN = "rgb(43, 255, 107)";
+const WHITE = "rgb(255, 255, 255)";
 const hero = (page) => page.locator("#top");
-const tab = (page, name) => hero(page).getByRole("tab", { name });
-const selectedTab = (page) => hero(page).getByRole("tab", { selected: true }).getAttribute("aria-label");
+const bar = (page) => hero(page).getByRole("tablist", { name: "Choose an example" });
+const tab = (page, name) => bar(page).getByRole("tab", { name, exact: true });
+const selectedTab = async (page) => (await bar(page).getByRole("tab", { selected: true }).textContent()).trim();
 const activeVideo = (page) => hero(page).getByRole("tabpanel").locator("video");
+const pauseButton = (page) => hero(page).getByRole("button", { name: /^(Pause|Play) examples$/ });
 const anyPlaying = (page) =>
   page.waitForFunction(() => [...document.querySelectorAll("#top video")].some((v) => !v.paused));
+const box = (page, selector) => page.locator(selector).first().evaluate((el) => {
+  const r = el.getBoundingClientRect();
+  return { x: r.x, y: r.y, width: r.width, height: r.height, right: r.right, bottom: r.bottom };
+});
 
-test("the hero carousel offers three examples, starting on Multiplayer", async () => {
+test("the hero bar offers three examples by name, starting on Multiplayer", async () => {
   const h = await openHero();
-  const tabs = hero(h.page).getByRole("tablist").getByRole("tab");
+  const tabs = bar(h.page).getByRole("tab");
   assert.deepEqual(await tabs.evaluateAll((els) => els.map((el) => el.getAttribute("aria-label"))), Object.keys(EXAMPLES));
-  for (const name of Object.keys(EXAMPLES)) assert.ok(await tab(h.page, name).isVisible(), `${name} dot is visible`);
+  for (const name of Object.keys(EXAMPLES)) {
+    assert.ok(await tab(h.page, name).isVisible(), `${name} entry is visible`);
+    assert.equal((await tab(h.page, name).textContent()).trim(), name, `${name} entry shows its name`);
+  }
   assert.equal(await selectedTab(h.page), "Multiplayer");
   assert.equal(await hero(h.page).getByRole("tabpanel").count(), 1, "only one example is shown at a time");
   assert.equal(await hero(h.page).getByRole("tabpanel", { name: "Multiplayer" }).count(), 1);
@@ -133,23 +145,64 @@ test("without JavaScript the hero starts on Multiplayer", async () => {
   await page.close();
 });
 
-test("clicking the dots moves forward and back between examples", async () => {
+test("the bar autocycles every 40 seconds so each clip can finish, wrapping to the start", async () => {
   const h = await openHero();
-  await tab(h.page, "On-call").click();
+  await h.page.clock.runFor(CYCLE - 1_000);
+  assert.equal(await selectedTab(h.page), "Multiplayer", "a clip is not cut off at 20 seconds");
+  await h.page.clock.runFor(2_000);
   assert.equal(await selectedTab(h.page), "On-call");
   await hero(h.page).getByRole("tabpanel", { name: "On-call" }).waitFor();
+  await requested(h, /oncall-desktop\.mp4/);
+  await h.page.clock.runFor(CYCLE);
+  assert.equal(await selectedTab(h.page), "RBAC");
+  await h.page.clock.runFor(CYCLE);
+  assert.equal(await selectedTab(h.page), "Multiplayer");
+  await close(h);
+});
+
+test("the active bar entry is highlighted green on the white bar and follows the cycle", async () => {
+  const h = await openHero();
+  const colors = (expected) => h.page.waitForFunction((expected) => {
+    const tabs = [...document.querySelectorAll('#top [role="tablist"] [role="tab"]')];
+    return JSON.stringify(tabs.map((el) => getComputedStyle(el).backgroundColor)) === JSON.stringify(expected);
+  }, expected);
+  assert.equal(await bar(h.page).evaluate((el) => getComputedStyle(el.closest(".hero-bar")).backgroundColor), WHITE);
+  await colors([GREEN, WHITE, WHITE]);
+  await h.page.clock.runFor(CYCLE + 500);
+  await colors([WHITE, GREEN, WHITE]);
+  await close(h);
+});
+
+test("tapping a bar entry jumps to it and the cycle continues from there", async () => {
+  const h = await openHero();
+  await h.page.clock.runFor(30_000);
   await tab(h.page, "RBAC").click();
   assert.equal(await selectedTab(h.page), "RBAC");
   await hero(h.page).getByRole("tabpanel", { name: "RBAC" }).waitFor();
+  await h.page.clock.runFor(CYCLE - 1_000);
+  assert.equal(await selectedTab(h.page), "RBAC", "the jump restarts the 40-second interval");
+  await h.page.clock.runFor(2_000);
+  assert.equal(await selectedTab(h.page), "Multiplayer");
+  await tab(h.page, "On-call").click();
   await tab(h.page, "Multiplayer").click();
   assert.equal(await selectedTab(h.page), "Multiplayer");
-  await hero(h.page).getByRole("tabpanel", { name: "Multiplayer" }).waitFor();
   assert.equal(await hero(h.page).getByRole("tabpanel").count(), 1);
   await close(h);
 });
 
-// Selection follows focus: moving between dots with the keyboard also switches the example.
-test("arrow keys, Home and End move between the dots", async () => {
+test("tapping the video advances to the next example", async () => {
+  const h = await openHero();
+  await hero(h.page).getByRole("tabpanel", { name: "Multiplayer" }).click();
+  assert.equal(await selectedTab(h.page), "On-call");
+  await hero(h.page).getByRole("tabpanel", { name: "On-call" }).click();
+  assert.equal(await selectedTab(h.page), "RBAC");
+  await hero(h.page).getByRole("tabpanel", { name: "RBAC" }).click();
+  assert.equal(await selectedTab(h.page), "Multiplayer");
+  await close(h);
+});
+
+// Selection follows focus: moving along the bar with the keyboard also switches the example.
+test("arrow keys, Home and End move along the bar, and keyboard focus holds the cycle", async () => {
   const h = await openHero();
   const { page } = h;
   await tab(page, "Multiplayer").focus();
@@ -169,20 +222,13 @@ test("arrow keys, Home and End move between the dots", async () => {
   assert.equal(await selectedTab(page), "RBAC");
   assert.equal(await focusedName(), "RBAC");
 
-  const tabStops = await hero(page)
+  const tabStops = await bar(page)
     .getByRole("tab")
     .evaluateAll((els) => els.filter((el) => el.tabIndex === 0).length);
-  assert.equal(tabStops, 1, "the dots are a single tab stop");
-  await close(h);
-});
+  assert.equal(tabStops, 1, "the bar is a single tab stop");
 
-test("the carousel never advances on its own", async () => {
-  const h = await openHero();
-  await h.page.clock.runFor(120_000);
-  assert.equal(await selectedTab(h.page), "Multiplayer");
-  await tab(h.page, "On-call").click();
-  await h.page.clock.runFor(120_000);
-  assert.equal(await selectedTab(h.page), "On-call");
+  await page.clock.runFor(CYCLE * 3);
+  assert.equal(await selectedTab(page), "RBAC", "the example does not move while the visitor is on the bar");
   await close(h);
 });
 
@@ -221,26 +267,31 @@ test("every example shows its own poster still", async () => {
   await close(h);
 });
 
-test("the pause control stops the example video, and play restarts the video", async () => {
+test("the pause control stops the video and the cycle on the first press, and play resumes both", async () => {
   const h = await openHero({ playable: true });
   const video = activeVideo(h.page);
   await anyPlaying(h.page);
-  await hero(h.page).getByRole("button", { name: "Pause video" }).click();
-  await hero(h.page).getByRole("button", { name: "Play video" }).waitFor();
+  await hero(h.page).getByRole("button", { name: "Pause examples" }).click();
+  await hero(h.page).getByRole("button", { name: "Play examples" }).waitFor();
   assert.equal(await video.evaluate((v) => v.paused), true);
-  await hero(h.page).getByRole("button", { name: "Play video" }).click();
-  await hero(h.page).getByRole("button", { name: "Pause video" }).waitFor();
+  await h.page.clock.runFor(CYCLE * 3);
+  assert.equal(await selectedTab(h.page), "Multiplayer", "a paused hero does not cycle");
+  await hero(h.page).getByRole("button", { name: "Play examples" }).click();
+  await hero(h.page).getByRole("button", { name: "Pause examples" }).waitFor();
   await video.evaluate((v) => (v.paused ? new Promise((r) => v.addEventListener("playing", r, { once: true })) : null));
+  await h.page.clock.runFor(CYCLE + 500);
+  assert.equal(await selectedTab(h.page), "On-call");
   await close(h);
 });
 
-test("with reduced motion the hero holds still until the visitor presses play", async () => {
+test("with reduced motion the hero holds still and never cycles until the visitor presses play", async () => {
   const h = await openHero({ reducedMotion: "reduce", playable: true });
-  await h.page.clock.runFor(30_000);
-  await hero(h.page).getByRole("button", { name: "Play video" }).waitFor();
+  await h.page.clock.runFor(CYCLE * 3);
+  assert.equal(await selectedTab(h.page), "Multiplayer");
+  await hero(h.page).getByRole("button", { name: "Play examples" }).waitFor();
   await h.page.waitForTimeout(500);
   assert.deepEqual(h.videos, [], "no video is fetched before play");
-  await hero(h.page).getByRole("button", { name: "Play video" }).click();
+  await hero(h.page).getByRole("button", { name: "Play examples" }).click();
   await requested(h, /multiplayer-desktop\.mp4/);
   await anyPlaying(h.page);
   await close(h);
@@ -257,44 +308,105 @@ test("the cursor after 'engineer' is a still orange block", async () => {
   await close(h);
 });
 
-test("the hero copy never calls Jiro 'he', never 'calls him in', and says nothing about craft", async () => {
+test("the hero copy never calls Jiro 'he', never 'calls him in', says nothing about craft and tags @Jiro", async () => {
   const h = await openHero();
   const text = await h.page.locator(".hero-row").innerText();
   assert.doesNotMatch(text, /craftsm|craftsperson|call him in|\bhe\b|\bhim\b/i);
-  assert.match(text, /@jirobot/);
+  assert.match(text.replace(/\s+/g, " "), /Tag @Jiro to start\./);
   await close(h);
 });
 
+for (const viewport of [DESKTOP, { width: 1180, height: 820 }]) {
+  test(`at ${viewport.width}px the hero locks into place under the sticky header`, async () => {
+    const h = await openHero({ viewport });
+    const { page } = h;
+    await page.mouse.move(viewport.width / 2, viewport.height / 2);
+    await page.mouse.wheel(0, 90);
+    await page.waitForFunction(() => scrollY === 0, null, { timeout: 3000 });
+    const header = await box(page, "header");
+    const row = await box(page, ".hero-row");
+    const pause = await box(page, ".hc-pause");
+    assert.ok(row.y >= header.bottom && row.y <= header.bottom + 16, `hero starts right under the header: ${row.y} vs ${header.bottom}`);
+    assert.ok(pause.y >= header.bottom, "the pause control is never hidden under the header");
+    await close(h);
+  });
+}
+
+test("on a phone the taller-than-screen hero scrolls freely down to its bar", async () => {
+  const h = await openHero({ viewport: MOBILE });
+  const { page } = h;
+  await page.mouse.move(195, 420);
+  await page.mouse.wheel(0, 400);
+  await page.waitForFunction(() => scrollY >= 300, null, { timeout: 3000 });
+  await page.waitForTimeout(400);
+  assert.ok(await page.evaluate(() => scrollY >= 300), "snapping never pulls the visitor back up");
+  const strip = await box(page, ".hero-bar");
+  const header = await box(page, "header");
+  assert.ok(strip.y >= header.bottom && strip.bottom <= MOBILE.height, "the whole bar is on screen");
+  await close(h);
+});
+
+for (const viewport of [DESKTOP, { width: 1180, height: 820 }]) {
+  test(`at ${viewport.width}x${viewport.height} the hero fills the screen, with the video running off its bottom edge`, async () => {
+    const h = await openHero({ viewport });
+    const { page } = h;
+    const header = await box(page, "header");
+    const row = await box(page, ".hero-row");
+    const media = await box(page, ".hero-media");
+    const strip = await box(page, ".hero-bar");
+    const video = await activeVideo(page).evaluate((v) => {
+      const r = v.getBoundingClientRect();
+      return { x: r.x, width: r.width, height: r.height, bottom: r.bottom };
+    });
+    assert.ok(Math.abs(strip.bottom - viewport.height) <= 4, `bar sits at the bottom of the first screen: ${strip.bottom}`);
+    assert.ok(row.y >= header.bottom);
+    assert.ok(Math.abs(strip.x - row.x) <= 1 && Math.abs(strip.width - row.width) <= 1, "bar spans the whole hero");
+    assert.ok(strip.y >= media.bottom - 1, "bar runs below the video");
+    assert.ok(Math.abs(video.x - media.x) <= 1 && Math.abs(video.width - media.width) <= 1, "video spans the panel edge to edge");
+    assert.ok(Math.abs(video.width / video.height - 5 / 4) < 0.02, "the 5:4 desktop cut is shown whole across its width, not cropped at the sides");
+    assert.ok(video.bottom > media.bottom + 8, "video continues past the bottom edge of its panel");
+    await close(h);
+  });
+}
+
 for (const width of [2560, 1440, 1180, 901, 900, 390, 320]) {
-  test(`at ${width}px the video fills the entire panel and controls overlay it`, async () => {
+  test(`at ${width}px the video fills its panel, quiet overlays sit on it and the bar fits below`, async () => {
     const h = await openHero({ viewport: { width, height: 900 } });
-    const media = h.page.locator('.hero-media');
-    const stage = h.page.locator('.hc-stage');
+    const media = h.page.locator(".hero-media");
+    const stage = h.page.locator(".hc-stage");
     for (const el of [media, stage]) {
-      assert.equal(await el.evaluate(n => getComputedStyle(n).backgroundColor), 'rgb(255, 255, 255)');
+      assert.equal(await el.evaluate((n) => getComputedStyle(n).backgroundColor), WHITE);
     }
     const m = await media.boundingBox(), v = await stage.boundingBox();
-    const dots = await h.page.getByRole('tablist').boundingBox();
-    for (const edge of ['x', 'y', 'width', 'height']) {
+    for (const edge of ["x", "y", "width", "height"]) {
       assert.ok(Math.abs(v[edge] - m[edge]) < 2, `video and media share ${edge}: ${v[edge]} vs ${m[edge]}`);
     }
-    for (const selector of ['.hc-name', '.hc-dots', '.hc-pause']) {
-      const box = await h.page.locator(selector).boundingBox();
-      assert.ok(box.x >= v.x && box.y >= v.y && box.x + box.width <= v.x + v.width && box.y + box.height <= v.y + v.height, `${selector} is inside the video`);
+    for (const selector of [".hc-name", ".hc-pause"]) {
+      const b = await h.page.locator(selector).boundingBox();
+      assert.ok(b.x >= v.x && b.y >= v.y && b.x + b.width <= v.x + v.width && b.y + b.height <= v.y + v.height / 2, `${selector} overlays the top of the video`);
     }
-    for (const control of [tab(h.page, 'Multiplayer'), h.page.locator('.hc-pause')]) {
+    const title = await h.page.locator(".hc-name").boundingBox();
+    const pause = await h.page.locator(".hc-pause").boundingBox();
+    assert.ok(title.x + title.width <= pause.x, "overlays do not overlap each other");
+
+    const entries = await bar(h.page).getByRole("tab").evaluateAll((els) => els.map((el) => {
+      const r = el.getBoundingClientRect();
+      return { x: r.x, y: r.y, right: r.right, height: r.height, fits: el.scrollWidth <= el.clientWidth + 1 };
+    }));
+    const b = await bar(h.page).boundingBox();
+    assert.ok(b.y >= v.y + v.height - 1, "the bar sits below the video, not over it");
+    assert.ok(entries.every((e) => Math.abs(e.y - entries[0].y) < 1), "entries form one segmented row");
+    assert.ok(entries.every((e) => e.x >= 0 && e.right <= width + 0.5), "entries fit the screen");
+    assert.ok(entries.every((e, i) => i === 0 || e.x >= entries[i - 1].right - 0.5), "entries do not overlap");
+    assert.ok(entries.every((e) => e.height >= 40 && e.fits), "entries are comfortable touch targets with unclipped labels");
+    assert.ok(await h.page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "no horizontal overflow");
+
+    for (const control of [tab(h.page, "Multiplayer"), h.page.locator(".hc-pause")]) {
       await control.focus();
-      const focus = await control.evaluate(el => ({visible: el.matches(':focus-visible'), width: parseFloat(getComputedStyle(el).outlineWidth)}));
-      assert.ok(focus.visible && focus.width >= 2, 'keyboard focus stays visible over video');
+      const focus = await control.evaluate((el) => ({ visible: el.matches(":focus-visible"), width: parseFloat(getComputedStyle(el).outlineWidth) }));
+      assert.ok(focus.visible && focus.width >= 2, "keyboard focus stays visible");
     }
-    assert.ok(Math.abs(dots.x + dots.width / 2 - (v.x + v.width / 2)) < 2, 'dots centered inside video');
-    assert.ok(dots.y + dots.height < v.y + v.height / 2, 'controls leave the video’s baked-in bottom captions readable');
-    const title = await h.page.locator('.hc-name').boundingBox();
-    const pause = await h.page.locator('.hc-pause').boundingBox();
-    assert.ok(title.x + title.width <= dots.x && dots.x + dots.width <= pause.x, 'overlays do not overlap each other');
-    assert.doesNotMatch(await hero(h.page).ariaSnapshot(), /You just hired/);
-    assert.doesNotMatch(await hero(h.page).textContent(), /You just hired/);
-    assert.equal(await h.page.getByRole('button', { name: 'Pause video' }).isVisible(), true);
+    assert.equal(await h.page.getByRole("button", { name: "Pause examples" }).isVisible(), true);
     await close(h);
   });
 }

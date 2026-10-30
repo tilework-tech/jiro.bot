@@ -1,7 +1,7 @@
 /*
  * jiro.bot: page behaviour.
- * Pixel art uses a 100 ms clock. The feature walkthroughs
- * are scroll-driven in features.js; the hero has its own controller.
+ * Pixel art uses a 100 ms clock. The "How it works" tabs live in
+ * features.js; the hero has its own controller. Both share js/tabcycle.js.
  * Each region only touches the DOM when its output changes.
  * Motion is off when the visitor prefers reduced motion; every region then shows a still frame.
  */
@@ -240,6 +240,15 @@
     });
   }
 
+  // ---------- sticky header: snapping and anchor jumps land just below it ----------
+  function initHeaderOffset() {
+    const header = $("header");
+    if (!header) return;
+    const set = () => document.documentElement.style.setProperty("--header-h", header.offsetHeight + "px");
+    set();
+    window.addEventListener("resize", set);
+  }
+
   // ---------- mobile menu ----------
   function initMenu() {
     const nav = $(".topnav");
@@ -274,6 +283,7 @@
   initDitchJiro();
   initNav();
   initMenu();
+  initHeaderOffset();
   window.addEventListener("resize", () => {
     if (still) render();
   });

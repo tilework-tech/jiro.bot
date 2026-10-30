@@ -38,7 +38,7 @@ Developers can use it inside a code editor, at the command line, in a web browse
 
 ## What does Jiro do, in plain terms?
 
-Jiro is closer to a colleague you can send a message to. Someone on your team writes "@jirobot please fix the broken signup email" in Slack, and Jiro goes off and does it.
+Jiro is closer to a colleague you can send a message to. Someone on your team writes "@Jiro please fix the broken signup email" in Slack, and Jiro goes off and does it.
 
 It works on its own computer in the cloud, which already has your company's code and tools set up [2]. When it's done, it sends back a pull request. That is simply a proposed change that a person on your team reads and approves before it goes live [11].
 

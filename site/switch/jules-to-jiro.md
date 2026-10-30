@@ -24,7 +24,7 @@ Budget about an hour for setup. Then a week of small tasks.
 4. **Mint a Claude token.** Laptop, terminal, `claude setup-token`. Copy what it prints. That string is valid twelve months and draws on your paid Claude seat, be it Pro, Max, Team or Enterprise [5].
 5. **Connect it in Jiro.** Paste the token. ChatGPT shop? Use the Codex login flow, or an OpenAI key. Cursor shop? Bring a Cursor key [6].
 6. **Script the environment.** Put install commands, language versions and service setup here so every environment boots ready [7].
-7. **Send a first task.** Mention @jirobot in a channel with something tiny. Review the PR [8].
+7. **Send a first task.** Mention @Jiro in a channel with something tiny. Review the PR [8].
 8. **Optional: install Jiro's skills.** Run `npx nori-skillsets install public/jiro` for its engineering conventions.
 
 ## Port what you had
