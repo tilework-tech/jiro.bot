@@ -1,4 +1,4 @@
-/* Host-page safety policy for the pinned, unmodified scroll-buddy runtime. */
+/* Host-page placement and safety policy for the scroll-buddy runtime. */
 (function () {
   "use strict";
 
@@ -8,37 +8,23 @@
     a.top - gap < b.bottom && a.bottom + gap > b.top;
   const contains = (outer, inner) => inner.left >= outer.left && inner.right <= outer.right &&
     inner.top >= outer.top && inner.bottom <= outer.bottom;
-  let buddy;
-  let mascot;
-  let bubble;
-  let close;
-  let status;
-  let protectedRects = [];
-  let sections = [];
-  let sectionNodes = [];
-  let hero;
-  let frame = 0;
-  let settleTimer;
-  let mobileSection;
+  const rect = (x, y, width, height) => ({left: x, top: y, right: x + width, bottom: y + height});
+  let buddy, mascot, bubble, close, status, probe;
+  let protectedRects = [], sections = [], sectionNodes = [], hero;
+  let frame = 0, settleTimer;
+  const speechSizes = new Map();
 
   function measure() {
     hero = document.querySelector(".hero-row").getBoundingClientRect();
     sectionNodes = Array.from(document.querySelectorAll("[data-jiro-comment]"));
     sections = sectionNodes.map(node => node.getBoundingClientRect());
-    if (reduced.matches || document.querySelector("dialog[open]") ||
-        !sections.some(rect => rect.top < innerHeight && rect.bottom > 0)) {
-      protectedRects = [];
-      return;
-    }
     protectedRects = Array.from(document.querySelectorAll("header, .hero-row, .hero-media, .cscroll, video, main a, main button, main input, main summary, footer a"))
       .filter(node => node.checkVisibility({visibilityProperty: true}))
       .map(node => node.getBoundingClientRect());
-    // Text ranges protect the glyphs while leaving genuinely empty panel space usable.
     for (const root of document.querySelectorAll("main, footer")) {
       const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
       while (walker.nextNode()) {
-        const node = walker.currentNode;
-        const parent = node.parentElement;
+        const node = walker.currentNode, parent = node.parentElement;
         if (!node.textContent.trim() || parent.closest('script, style, .sr-only, [aria-hidden="true"]') || !parent.checkVisibility({visibilityProperty: true})) continue;
         const box = parent.getBoundingClientRect();
         if (box.bottom < 0 || box.top > innerHeight) continue;
@@ -52,105 +38,127 @@
   function flag(name, value) {
     if (buddy.hasAttribute(name) !== value) buddy.toggleAttribute(name, value);
   }
-
-  function clear(rect) {
-    return contains({left: 8, top: 8, right: innerWidth - 8, bottom: innerHeight - 8}, rect) &&
-      !protectedRects.some(other => overlaps(rect, other, 10));
+  function clear(box, margin = 8) {
+    return contains(rect(margin, margin, innerWidth - margin * 2, innerHeight - margin * 2), box) &&
+      !protectedRects.some(other => overlaps(box, other, 10));
   }
-
-  function placeMobile() {
-    if (!buddy) return;
-    if (!mobile.matches || buddy.matches('.jiro-buddy--pinned, .jiro-buddy--held')) {
-      flag('data-site-mobile', false);
-      return;
+  function allowed() {
+    return !buddy.hidden && !reduced.matches && !document.querySelector("dialog[open]") && hero.bottom <= 0;
+  }
+  function bubbleSize(section) {
+    const key = `${innerWidth}:${section.dataset.jiroComment}`;
+    if (!speechSizes.has(key)) {
+      const style = getComputedStyle(bubble);
+      for (const name of ['font', 'padding', 'border', 'maxWidth', 'minHeight', 'boxSizing', 'width', 'lineHeight', 'letterSpacing', 'textWrap', 'overflowWrap']) probe.style[name] = style[name];
+      probe.style.width = 'max-content';
+      probe.querySelector('p').textContent = section.dataset.jiroComment;
+      const size = probe.getBoundingClientRect();
+      speechSizes.set(key, {width: size.width, height: size.height});
     }
+    return speechSizes.get(key);
+  }
+  function speechAt(x, y, size, below = false) {
+    const left = Math.max(9, Math.min(innerWidth - size.width - 9, x + mascot.offsetWidth / 2 - size.width / 2));
+    return rect(left, below ? y + mascot.offsetHeight + 14 : y - size.height - 24, size.width, size.height);
+  }
+  function safeSpeech(section, x, y, size) {
+    for (const below of [false, true]) {
+      const box = speechAt(x, y, size, below);
+      if (contains(section, box) && clear(box)) return {box, below};
+    }
+    for (const side of ['left', 'right']) {
+      const left = side === 'left' ? x - mascot.offsetWidth / 4 - size.width - 16 : x + mascot.offsetWidth * 1.25 + 16;
+      const box = rect(left, y + (mascot.offsetHeight - size.height) / 2, size.width, size.height);
+      if (contains(section, box) && clear(box)) return {box, side, below: false};
+    }
+    return null;
+  }
+  function position(event) {
     measure();
-    if (reduced.matches || buddy.hidden || document.querySelector('dialog[open]') || hero.bottom > 0) return;
-    // Match the runtime's active section so comments still belong to the resting place.
-    const distance = rect => Math.max(rect.top - innerHeight / 2, innerHeight / 2 - rect.bottom, 0);
-    const index = sections.reduce((best, rect, i) => best < 0 || distance(rect) < distance(sections[best]) ? i : best, -1);
-    if (index < 0) return;
-    const section = sections[index];
-    const node = sectionNodes[index];
-    const box = mascot.getBoundingClientRect();
-    const closeBox = close.getBoundingClientRect();
-    if (mobileSection === node && contains(section, box) && clear(box) && clear(closeBox)) return;
+    const node = event.detail.section, section = node.getBoundingClientRect();
     const width = mascot.offsetWidth, height = mascot.offsetHeight;
-    const closeLeft = close.offsetLeft;
-    const closeTop = close.offsetTop;
-    const fits = (x, y) => {
-      const body = {left: x, top: y, right: x + width, bottom: y + height};
-      const control = {left: x + closeLeft, top: y + closeTop, right: x + closeLeft + close.offsetWidth, bottom: y + closeTop + close.offsetHeight};
-      return contains(section, body) && contains(section, control) && clear(body) && clear(control);
-    };
-    const spot = node.dataset.jiroMobileSpot.split(',').map(Number);
+    const size = bubbleSize(node);
     const anchor = document.querySelector(node.dataset.jiroAnchor) || node;
-    const anchorBox = anchor.getBoundingClientRect();
-    const preferred = {x: anchorBox.left + anchorBox.width * spot[0] - width / 2,
-      y: anchorBox.top + anchorBox.height * spot[1] - height / 2};
-    // Search visible space more finely than the upstream section-relative grid.
-    const xs = [preferred.x];
-    const ys = [preferred.y];
-    for (let x = Math.max(18, section.left - closeLeft); x <= Math.min(innerWidth - width - 8, section.right - width); x += 12) xs.push(x);
-    for (let y = Math.max(8 - closeTop, section.top - closeTop); y <= Math.min(innerHeight - height - 8, section.bottom - height); y += 12) ys.push(y);
+    const a = anchor.getBoundingClientRect();
+    const spot = (mobile.matches ? node.dataset.jiroMobileSpot : node.dataset.jiroSpot).split(',').map(Number);
+    const preferred = {x: a.left + a.width * spot[0] - width / 2, y: a.top + a.height * spot[1] - height / 2};
+    const xs = [preferred.x], ys = [preferred.y];
+    for (let x = Math.max(24 + width / 4, section.left + width / 4 + 12); x <= Math.min(innerWidth - width * 1.25 - 12, section.right - width * 1.25 - 12); x += 12) xs.push(x);
+    for (let y = Math.max(12 + height / 2, section.top + height / 2 + 12); y <= Math.min(innerHeight - height - 12, section.bottom - height - 12); y += 12) ys.push(y);
     let best;
     for (const x of xs) for (const y of ys) {
-      if (!fits(x, y)) continue;
-      const score = Math.hypot(x - preferred.x, y - Math.max(80, Math.min(innerHeight - height - 40, preferred.y)));
+      const body = rect(x - width / 4, y - height / 2 - 8, width * 1.5, height * 1.5 + 8);
+      const control = rect(x + close.offsetLeft, y + close.offsetTop, close.offsetWidth, close.offsetHeight);
+      if (!contains(section, body) || !clear(body) || !clear(control)) continue;
+      const speech = safeSpeech(section, x, y, size);
+      if (!speech) continue;
+      const score = Math.hypot(x - preferred.x, y - Math.max(150, Math.min(innerHeight - height - 40, preferred.y)));
       if (!best || score < best.score) best = {x, y, score};
     }
-    if (!best) return;
-    buddy.style.setProperty('--site-buddy-x', `${best.x + scrollX}px`);
-    buddy.style.setProperty('--site-buddy-y', `${best.y + scrollY}px`);
-    mobileSection = node;
-    flag('data-site-mobile', true);
+    if (best) event.detail.point = {x: best.x + scrollX, y: best.y + scrollY};
+  }
+  function place() {
+    if (!buddy) return;
+    measure();
+    if (!allowed() || buddy.matches('.jiro-buddy--pinned, .jiro-buddy--held')) return;
+    const distance = box => Math.max(box.top - innerHeight / 2, innerHeight / 2 - box.bottom, 0);
+    const index = sections.reduce((best, box, i) => best < 0 || distance(box) < distance(sections[best]) ? i : best, -1);
+    if (index >= 0) buddy.dispatchEvent(new CustomEvent('jiro-buddy:refresh', {detail: {section: sectionNodes[index]}}));
     update();
   }
-
   function update() {
     if (!buddy) return;
     const box = mascot.getBoundingClientRect();
-    const section = sections.find(rect => contains(rect, box));
-    if (!mobile.matches || buddy.matches('.jiro-buddy--pinned, .jiro-buddy--held')) flag('data-site-mobile', false);
-    const visible = !buddy.hidden && !reduced.matches && !document.querySelector("dialog[open]") &&
-      hero.bottom <= 0 && !!section && clear(box) && clear(close.getBoundingClientRect());
+    const entering = ['peeking', 'flying'].includes(buddy.dataset.jiroState);
+    const held = buddy.classList.contains('jiro-buddy--held');
+    const section = sections.find(other => contains(other, box));
+    const enabled = allowed();
+    flag('data-site-ready', enabled);
+    flag('data-site-entering', entering);
+    const clipped = {left: Math.max(0, box.left), right: Math.min(innerWidth, box.right), top: box.top, bottom: box.bottom};
+    const transient = entering && clipped.right > clipped.left && clipped.top >= 8 && clipped.bottom <= innerHeight - 8 &&
+      !protectedRects.some(other => overlaps(clipped, other, 4));
+    const visible = enabled && (transient || (!!section && clear(box) && clear(close.getBoundingClientRect())));
     flag("data-site-visible", visible);
-    if (buddy.inert === visible) buddy.inert = !visible;
+    const grown = rect(box.left - mascot.offsetWidth / 4, box.top - mascot.offsetHeight / 2 - 8, mascot.offsetWidth * 1.5, mascot.offsetHeight * 1.5 + 8);
+    // Speaking uses the runtime's smaller talking pose so a fixed pin keeps room for its line.
+    flag('data-site-grow', visible && bubble.hidden && !entering && !held && !!section && contains(section, grown) && clear(grown));
+    // An unsafe dragged pose is hidden without breaking its captured pointer stream.
+    const interactive = visible || (enabled && held);
+    if (buddy.inert === interactive) buddy.inert = !interactive;
     const ariaHidden = String(!visible);
     if (buddy.getAttribute("aria-hidden") !== ariaHidden) buddy.setAttribute("aria-hidden", ariaHidden);
     const text = buddy.querySelector('.jiro-buddy__text');
     const comment = text.textContent + (text.dataset.rest || '');
     const belongs = !!section && comment === sectionNodes[sections.indexOf(section)].dataset.jiroComment;
-    const speech = visible && !bubble.hidden && belongs && contains(section, bubble.getBoundingClientRect()) && clear(bubble.getBoundingClientRect());
+    let speech = false;
+    if (visible && !entering && !bubble.hidden && belongs) {
+      const size = bubbleSize(sectionNodes[sections.indexOf(section)]);
+      const fit = safeSpeech(section, box.left, box.top, size);
+      if (fit) {
+        buddy.classList.toggle('jiro-buddy--below', fit.below);
+        flag('data-site-speech-side', !!fit.side);
+        for (const [name, value] of [['--site-bubble-left', `${fit.box.left - box.left}px`], ['--site-bubble-top', `${fit.box.top - box.top}px`]]) {
+          if (bubble.style.getPropertyValue(name) !== value) bubble.style.setProperty(name, value);
+        }
+        const actual = bubble.getBoundingClientRect();
+        speech = contains(section, actual) && clear(actual);
+      }
+    }
     flag("data-site-speech", speech);
     const live = speech ? "polite" : "off";
     if (status.getAttribute("aria-live") !== live) status.setAttribute("aria-live", live);
   }
-
-  function refresh() {
-    measure();
-    update();
-  }
-
-  function tick() {
-    frame = 0;
-    update();
-    // Transforms (including a dragged or restored pin) can cross protected content.
-    animate();
-  }
-
+  function tick() { frame = 0; update(); animate(); }
   function animate() {
-    if (!frame && !document.hidden && !reduced.matches && buddy && !buddy.hidden &&
-        sections.some(rect => rect.top < innerHeight && rect.bottom > 0)) frame = requestAnimationFrame(tick);
+    if (!frame && !document.hidden && !reduced.matches && buddy && !buddy.hidden && sections.some(box => box.top < innerHeight && box.bottom > 0)) frame = requestAnimationFrame(tick);
   }
-
   function resume() {
-    refresh();
-    animate();
+    if (!buddy) return;
+    measure(); update(); animate();
     clearTimeout(settleTimer);
-    settleTimer = setTimeout(placeMobile, 1200);
+    settleTimer = setTimeout(place, 1200);
   }
-
   const ready = new MutationObserver(() => {
     buddy = document.querySelector(".jiro-buddy");
     if (!buddy) return;
@@ -159,6 +167,16 @@
     bubble = buddy.querySelector(".jiro-buddy__bubble");
     close = buddy.querySelector(".jiro-buddy__close");
     status = buddy.querySelector(".jiro-buddy__sr");
+    const layer = document.createElement('div');
+    layer.className = 'jiro-buddy-layer';
+    buddy.before(layer); layer.append(buddy);
+    probe = document.createElement('div');
+    probe.append(document.createElement('p'));
+    probe.querySelector('p').style.margin = '0';
+    probe.className = 'jiro-buddy-measure';
+    probe.setAttribute('aria-hidden', 'true');
+    layer.append(probe);
+    buddy.addEventListener('jiro-buddy:place', position);
     new MutationObserver(() => { update(); animate(); }).observe(buddy, {subtree: true, attributes: true, childList: true});
     new MutationObserver(resume).observe(document.querySelector("dialog"), {attributes: true, attributeFilter: ["open"]});
     new ResizeObserver(resume).observe(document.querySelector("main"));
