@@ -406,14 +406,14 @@
             </p>
           </div>
           <div class="cscroll" style="flex: 1 1 100%; min-width: 0; background: #ffffff; overflow-x: auto">
-            <div class="ctable" style="min-width: 1140px; font-size: 13.5px; line-height: 1.4">
+            <div class="ctable">
               <div style="display: grid; grid-template-columns: var(--ccols); align-items: stretch; height: 75px">
                 <div
                   style="
                     padding: 0 20px 18px;
                     display: flex;
                     align-items: flex-end;
-                    font-family: &quot;JetBrains Mono&quot;, monospace;
+                    font-family: inherit;
                     font-weight: 600;
                     font-size: 10px;
                     letter-spacing: 0.06em;
@@ -451,7 +451,7 @@
               </div>
               <div
                 class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; min-height: 65px"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a"
               >
                 <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: flex-start">
                   <span>Agent</span>
@@ -460,21 +460,21 @@
                   <span>Claude Code, Codex, Gemini CLI, pi, Cursor Agent, OpenCode, or your own</span>
                 </div>
                 <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  Claude Code only
+                  <span class="compare-value"><span class="compare-defect" aria-hidden="true"></span>Claude Code only</span>
                 </div>
                 <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  Devin only
+                  <span class="compare-value"><span class="compare-defect" aria-hidden="true"></span>Devin only</span>
                 </div>
                 <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
                   Droid + custom subagents
                 </div>
                 <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  Cursor only
+                  <span class="compare-value"><span class="compare-defect" aria-hidden="true"></span>Cursor only</span>
                 </div>
               </div>
               <div
                 class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; min-height: 65px"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a"
               >
                 <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: flex-start">
                   <span>Model</span>
@@ -483,21 +483,21 @@
                   <span>Any model: your keys or subscription</span>
                 </div>
                 <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  Claude only
+                  <span class="compare-value"><span class="compare-defect" aria-hidden="true"></span>Claude only</span>
                 </div>
                 <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  Cognition's menu, no own keys
+                  <span class="compare-value"><span class="compare-defect" aria-hidden="true"></span>Cognition's menu, no own keys</span>
                 </div>
                 <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
                   Model menu + your keys
                 </div>
                 <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  Cursor's catalogue, no own keys
+                  <span class="compare-value"><span class="compare-defect" aria-hidden="true"></span>Cursor's catalogue, no own keys</span>
                 </div>
               </div>
               <div
                 class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; min-height: 65px"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a"
               >
                 <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: flex-start">
                   <span>Context</span>
@@ -515,12 +515,12 @@
                   Org-shared rules; wiki export
                 </div>
                 <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  proprietary rules
+                  <span class="compare-value"><span class="compare-defect" aria-hidden="true"></span>proprietary rules</span>
                 </div>
               </div>
               <div
                 class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; min-height: 65px"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a"
               >
                 <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: flex-start">
                   <span>Cloud</span>
@@ -543,7 +543,7 @@
               </div>
               <div
                 class="crow"
-                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a; min-height: 65px"
+                style="display: grid; grid-template-columns: var(--ccols); border-top: 2px solid #0a0a0a"
               >
                 <div class="ck" style="padding: 14px 20px 0; display: flex; align-items: flex-start">
                   <span>Pricing</span>
@@ -552,16 +552,16 @@
                   <span>Flat, zero token markup</span>
                 </div>
                 <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  API tokens, high volume
+                  <span class="compare-value"><span class="compare-defect" aria-hidden="true"></span>API tokens, high volume</span>
                 </div>
                 <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  plans $0–$200, usage at API price
+                  <span class="compare-value"><span class="compare-defect" aria-hidden="true"></span>plans $0–$200, usage at API price</span>
                 </div>
                 <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  From $20/mo; extra usage
+                  <span class="compare-value"><span class="compare-defect" aria-hidden="true"></span>From $20/mo; extra usage</span>
                 </div>
                 <div class="cx" style="padding: 0 22px; color: #5c5c5c; display: flex; align-items: center">
-                  metered, per model
+                  <span class="compare-value"><span class="compare-defect" aria-hidden="true"></span>metered, per model</span>
                 </div>
               </div>
             </div>

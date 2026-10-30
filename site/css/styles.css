@@ -485,6 +485,50 @@ details[open] .pl::after {
   top: 0;
   color: #fb5e45;
 }
+.ctable {
+  min-width: 1140px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.ctable > div > div {
+  display: flex;
+  justify-content: center;
+  align-items: center !important;
+  text-align: center;
+}
+.ctable > div:first-child > div {
+  padding: 18px 20px !important;
+}
+.crow {
+  min-height: 96px;
+}
+.crow > div {
+  padding: 24px 22px !important;
+}
+.compare-value {
+  position: relative;
+}
+.compare-defect {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  right: calc(100% + 6px);
+  top: calc(50% - 5px);
+}
+.compare-defect::before,
+.compare-defect::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 1px;
+  top: 4.5px;
+  left: 0;
+  background: currentColor;
+  transform: rotate(45deg);
+}
+.compare-defect::after {
+  transform: rotate(-45deg);
+}
 .crow {
   transition:
     background-color 120ms steps(2),
@@ -931,14 +975,14 @@ details[open] .pl::after {
     font-size: 15px !important;
     line-height: 1.5 !important;
   }
-  .crow > * {
+  .crow > div {
     padding: 18px 20px !important;
   }
   .crow > .ck {
     padding-left: 14px !important;
     padding-right: 14px !important;
   }
-  .compare-brand {
+  .ctable > div:first-child > .compare-brand {
     padding-left: 8px !important;
     padding-right: 8px !important;
   }
