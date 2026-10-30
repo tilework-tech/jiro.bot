@@ -1,6 +1,31 @@
 {
-  "avoid": ["header", ".hero-row", ".hero-media", "video", "#compare", "a", "button", "input", "summary", "dialog"],
+  "avoid": [
+    "header",
+    ".hero-row",
+    ".hero-media",
+    "video",
+    ".cscroll",
+    "a",
+    "button",
+    "input",
+    "summary",
+    "dialog"
+  ],
   "sections": [
+    {
+      "section": ".ditch-row",
+      "comment": "I censored them myself. Professional courtesy.",
+      "anchor": ".ditch-row",
+      "spot": "0.91,0.78",
+      "mobileSpot": "0.85,0.12"
+    },
+    {
+      "section": "#compare",
+      "comment": "The green column is mine. Biased, but sourced.",
+      "anchor": "#compare .sec-head",
+      "spot": "0.91,0.78",
+      "mobileSpot": "0.85,0.12"
+    },
     {
       "section": "#why",
       "comment": "Small changes. Clear intent.",
@@ -9,11 +34,46 @@
       "mobileSpot": "0.88,0.22"
     },
     {
+      "section": "#feature-multiplayer",
+      "comment": "Plain words are fine. I'll ask if it's unclear.",
+      "anchor": "#feature-multiplayer .ftext",
+      "spot": "0.91,0.78",
+      "mobileSpot": "0.85,0.12"
+    },
+    {
+      "section": "#feature-oncall",
+      "comment": "The cheapest bug is the one I flag before the PR.",
+      "anchor": "#feature-oncall .ftext",
+      "spot": "0.91,0.78",
+      "mobileSpot": "0.85,0.12"
+    },
+    {
+      "section": "#feature-permissions",
+      "comment": "Plain words are fine. I'll ask if it's unclear.",
+      "anchor": "#feature-permissions .ftext",
+      "spot": "0.91,0.78",
+      "mobileSpot": "0.85,0.12"
+    },
+    {
       "section": "#pricing",
       "comment": "Bring the tools you already like.",
       "anchor": "#pricing .sec-head",
-      "spot": "0.91,0.78",
+      "spot": "0.91,0.98",
       "mobileSpot": "0.85,0.22"
+    },
+    {
+      "section": "#faq",
+      "comment": "Yes, you can bring your current subscription.",
+      "anchor": "#faq",
+      "spot": "0.91,0.78",
+      "mobileSpot": "0.85,0.12"
+    },
+    {
+      "section": "#reserve",
+      "comment": "Plain words are fine. I'll ask if it's unclear.",
+      "anchor": "#reserve",
+      "spot": "0.91,0.78",
+      "mobileSpot": "0.85,0.12"
     }
   ]
 }

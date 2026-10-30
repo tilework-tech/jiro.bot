@@ -30,7 +30,9 @@ before(async () => {
     if (!up) await new Promise((r) => setTimeout(r, 100));
   }
   if (!up) throw new Error(`preview server did not start on ${SITE}`);
-  browser = await chromium.launch();
+  browser = process.env.PLAYWRIGHT_CDP_URL
+    ? await chromium.connectOverCDP(process.env.PLAYWRIGHT_CDP_URL)
+    : await chromium.launch();
   clip = await recordClip();
 });
 

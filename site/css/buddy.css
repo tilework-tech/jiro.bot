@@ -1,4 +1,19 @@
 /* The host only reveals the buddy where the entire control has clear space. */
+@media (max-width: 767.98px) {
+  /* Quiet resting space where the mobile layout otherwise has no clear gap. */
+  .ditch-copy,
+  #compare .sec-head,
+  .faq-col,
+  .reserve-col {
+    padding-top: 104px !important;
+  }
+
+  .jiro-buddy[data-site-mobile]:not(.jiro-buddy--pinned):not(.jiro-buddy--held) {
+    translate: var(--site-buddy-x) var(--site-buddy-y) !important;
+    transform: none !important;
+  }
+}
+
 .jiro-buddy:not([data-site-visible]),
 .jiro-buddy:not([data-site-visible]) *,
 .jiro-buddy:not([data-site-speech]) .jiro-buddy__bubble,
