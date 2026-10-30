@@ -205,6 +205,18 @@
     $$("#pricing .tface").forEach((face) => observer.observe(face));
   }
 
+  // ---------- Ditch Jiro: one quiet greeting on first entry ----------
+  function initDitchJiro() {
+    const mascot = $(".callj");
+    if (!mascot || !("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some(entry => entry.isIntersecting)) return;
+      mascot.classList.add("is-awake");
+      observer.disconnect();
+    }, { threshold: .5 });
+    observer.observe(mascot);
+  }
+
   // ---------- nav: highlight the section in view ----------
   function initNav() {
     const links = $$("[data-nav]");
@@ -259,6 +271,7 @@
 
   render();
   initPricingFaces();
+  initDitchJiro();
   initNav();
   initMenu();
   window.addEventListener("resize", () => {

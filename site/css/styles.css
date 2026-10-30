@@ -591,7 +591,16 @@ details[open] .pl::after {
   letter-spacing: -0.05em;
 }
 .callj {
-  margin-left: 1px;
+  align-self: center;
+}
+@keyframes jiro-greeting {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .callj.is-awake {
+    animation: jiro-greeting 4.8s ease-in-out;
+  }
 }
 .h-most {
   margin: 0;
@@ -914,11 +923,12 @@ details[open] .pl::after {
     padding: 0 !important;
   }
   .ditch-copy {
-    padding: 56px 20px 32px !important;
+    padding: 64px 20px 48px !important;
+    gap: 32px !important;
   }
   .call-cell {
-    padding: 24px 20px !important;
-    gap: 28px !important;
+    padding: 40px 20px !important;
+    gap: 40px !important;
   }
   .call-cell > div:last-child span {
     font-size: 40px !important;
