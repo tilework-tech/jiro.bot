@@ -43,11 +43,12 @@
       <header style="position: sticky; top: 0; z-index: 1000; background: #ffffff; border-bottom: 2px solid #0a0a0a">
         <nav
           aria-label="Primary"
-          class="nav-logo topnav"
+          class="topnav"
           style="box-sizing: border-box; display: flex; align-items: stretch; flex-wrap: wrap"
         >
           <a
             href="#top"
+            class="nav-logo"
             style="
               height: 52px;
               width: 232px;
@@ -138,7 +139,7 @@
 
       <main style="padding: 12px 12px 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px">
         <section
-          id="top"
+          id="top" aria-labelledby="hero-heading"
           style="
             display: flex;
             flex-direction: column;
@@ -164,9 +165,8 @@
                 gap: 48px;
               "
             >
-              <div class="lbl">&gt;_ Meet Jiro</div>
               <div style="display: flex; flex-direction: column; gap: 14px">
-                <h1 class="h-hero">
+                <h1 class="h-hero" id="hero-heading">
                   The <span class="hot">tasteful</span> software
                   <span style="white-space: nowrap">engineer<span class="cursor" aria-hidden="true" data-hero-cursor></span></span>
                 </h1>
@@ -386,7 +386,7 @@
           </div>
         </section>
 
-        <section id="compare" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
+        <section id="compare" aria-labelledby="compare-heading" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
           <div
             class="sec-head"
             style="
@@ -399,8 +399,7 @@
               gap: 18px;
             "
           >
-            <div class="lbl" style="font-size: 11px">&gt;_ Compare</div>
-            <h2 class="h-sec">The Bake-off.</h2>
+            <h2 class="h-sec" id="compare-heading">How Jiro compares.</h2>
             <p style="margin: -2px 0 0; font-size: 15px; line-height: 1.4; color: #3d3d3d">
               Jiro handles memory, security, RBAC, integrations and automations for your agents. One person sets it up
               once, and the whole team can use it.
@@ -553,7 +552,7 @@
           </div>
         </section>
 
-        <section id="why" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
+        <section id="why" aria-labelledby="why-heading" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
           <div
             class="sec-head"
             style="
@@ -569,9 +568,8 @@
               gap: 24px;
             "
           >
-            <div class="lbl" style="flex: 0 0 124px; color: #ffffff; font-size: 11px">&gt;_ Why Jiro</div>
             <div class="why-copy">
-              <h2 class="h-why" style="font-weight: 400">Jiro makes the change you would have made yourself, on a good day.</h2>
+              <h2 id="why-heading" class="h-why" style="font-weight: 400">Jiro makes the change you would have made yourself, on a good day.</h2>
             </div>
           </div>
           <div class="slop" data-slop data-at="3">
@@ -641,7 +639,7 @@
         <section id="features" aria-labelledby="features-heading">
           <article class="frow feature-story" id="feature-multiplayer" aria-labelledby="multiplayer-title">
             <div class="ftext">
-              <h2 id="features-heading" class="lbl">&gt;_ How it works</h2>
+              <h2 id="features-heading" class="sr-only">How it works</h2>
               <div class="fnum">01</div>
               <hgroup>
                 <h3 class="fh" id="multiplayer-title">True multiplayer across all interfaces</h3>
@@ -650,13 +648,13 @@
               <p class="fp">Different people. Different devices. One shared session.</p>
               <ol class="feature-steps" aria-label="True multiplayer across all interfaces. Steps">
                 <li class="feature-step" id="multiplayer-step-1">
-                  <a href="#multiplayer-region-1"><span class="feature-step-number">01</span><span>Tackle a problem in Slack</span></a>
+                  <a href="#multiplayer-region-1"><span>Tackle a problem in Slack</span></a>
                 </li>
                 <li class="feature-step" id="multiplayer-step-2">
-                  <a href="#multiplayer-region-2"><span class="feature-step-number">02</span><span>Kira joins from her phone</span></a>
+                  <a href="#multiplayer-region-2"><span>Kira joins from her phone</span></a>
                 </li>
                 <li class="feature-step" id="multiplayer-step-3">
-                  <a href="#multiplayer-region-3"><span class="feature-step-number">03</span><span>Once back on her computer, picks it up in terminal</span></a>
+                  <a href="#multiplayer-region-3"><span>Once back on her computer, picks it up in terminal</span></a>
                 </li>
               </ol>
             </div>
@@ -696,13 +694,13 @@ $ git diff --stat
               <p class="fp">Set it up once. Wake up to a fix you can review.</p>
               <ol class="feature-steps" aria-label="On call automation for small teams. Steps">
                 <li class="feature-step" id="oncall-step-1">
-                  <a href="#oncall-region-1"><span class="feature-step-number">01</span><span>Set Jiro on his task once</span></a>
+                  <a href="#oncall-region-1"><span>Set Jiro on his task once</span></a>
                 </li>
                 <li class="feature-step" id="oncall-step-2">
-                  <a href="#oncall-region-2"><span class="feature-step-number">02</span><span>Linear kicks Jiro into action</span></a>
+                  <a href="#oncall-region-2"><span>Linear kicks Jiro into action</span></a>
                 </li>
                 <li class="feature-step" id="oncall-step-3">
-                  <a href="#oncall-region-3"><span class="feature-step-number">03</span><span>Review the PR in the morning</span></a>
+                  <a href="#oncall-region-3"><span>Review the PR in the morning</span></a>
                 </li>
               </ol>
             </div>
@@ -749,10 +747,10 @@ PASS 18 tests · signed payloads</code></pre>
               <p class="fp">One thread. Each person’s access still applies.</p>
               <ol class="feature-steps" aria-label="User level access control. Steps">
                 <li class="feature-step" id="permissions-step-1">
-                  <a href="#permissions-region-1"><span class="feature-step-number">01</span><span>A shared thread with distinct roles assigned</span></a>
+                  <a href="#permissions-region-1"><span>A shared thread with distinct roles assigned</span></a>
                 </li>
                 <li class="feature-step" id="permissions-step-2">
-                  <a href="#permissions-region-2"><span class="feature-step-number">02</span><span>access enforced for each person talking to Jiro</span></a>
+                  <a href="#permissions-region-2"><span>access enforced for each person talking to Jiro</span></a>
                 </li>
               </ol>
             </div>
@@ -782,7 +780,7 @@ PASS 18 tests · signed payloads</code></pre>
           <script src="js/features.js" defer></script>
         </section>
 
-        <section id="pricing" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
+        <section id="pricing" aria-labelledby="pricing-heading" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
           <div
             class="sec-head"
             style="
@@ -795,8 +793,7 @@ PASS 18 tests · signed payloads</code></pre>
               gap: 18px;
             "
           >
-            <div class="lbl" style="font-size: 11px">&gt;_ Pricing</div>
-            <h2 class="h-sec">Not market price.</h2>
+            <h2 class="h-sec" id="pricing-heading">Pricing.</h2>
           </div>
           <div
             class="tier"
@@ -1850,9 +1847,9 @@ PASS 18 tests · signed payloads</code></pre>
           </div>
         </section>
         <div class="faq-reserve">
-        <section id="faq" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
+        <section id="faq" aria-labelledby="faq-heading" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
           <div class="faq-col">
-            <div class="lbl" style="font-size: 11px">&gt;_ FAQ</div>
+            <h2 class="sr-only" id="faq-heading">Frequently asked questions</h2>
             <div class="faq-list">
               <details class="fq">
                 <summary><span>Who is Jiro?</span><span class="pl" aria-hidden="true">+</span></summary>
@@ -1993,7 +1990,6 @@ PASS 18 tests · signed payloads</code></pre>
     <dialog class="ea" id="early-access" aria-labelledby="ea-title">
       <form class="ea-form" novalidate>
         <button type="button" class="ea-close" aria-label="Close" data-ea-close>&times;</button>
-        <div class="ea-lbl">&gt;_ Early access</div>
         <h2 class="ea-title" id="ea-title">Get early access to Jiro</h2>
         <label class="ea-field">Name<input name="name" autocomplete="name" required minlength="2" maxlength="160" /></label>
         <label class="ea-field">Work email<input name="email" type="email" autocomplete="email" required maxlength="254" /></label>
@@ -2004,7 +2000,6 @@ PASS 18 tests · signed payloads</code></pre>
       </form>
       <div class="ea-done" hidden>
         <button type="button" class="ea-close" aria-label="Close" data-ea-close>&times;</button>
-        <div class="ea-lbl">&gt;_ Almost there</div>
         <h2 class="ea-title" tabindex="-1" data-ea-done-title>Check your inbox</h2>
         <p class="ea-lede">We sent a confirmation link to <strong data-ea-email></strong>. Click it to hold your spot. The link expires in 24 hours.</p>
       </div>

@@ -242,12 +242,7 @@ for (const width of [1440, 1180, 390]) {
     assert.equal(await rows.count(), 3);
     assert.deepEqual(await rows.locator('.fnum').allInnerTexts(), ['01', '02', '03']);
     const colors = ['rgb(43, 255, 107)', 'rgb(251, 94, 69)', 'rgb(29, 59, 42)'];
-    const label = page.getByRole('heading', {name: '>_ How it works', exact: true});
-    const firstText = rows.first().locator('.ftext');
-    assert.equal(await firstText.getByRole('heading', {name: '>_ How it works', exact: true}).count(), 1);
-    const l = await label.boundingBox(), t0 = await firstText.boundingBox();
-    const heading = await page.locator('#multiplayer-title').boundingBox();
-    assert.ok(l.x >= t0.x && l.y >= t0.y && l.y + l.height <= heading.y, 'eyebrow belongs to the first white story panel');
+    assert.equal(await page.getByRole('region', {name: 'How it works', exact: true}).count(), 1, 'stories retain an accessible section name');
     assert.ok(Math.abs((await rows.first().boundingBox()).y - (await page.locator('#features').boundingBox()).y) <= 2, 'first example begins the section');
     for (let i = 0; i < 3; i++) {
       const row = rows.nth(i), text = row.locator('.ftext'), image = row.locator('.fimg');

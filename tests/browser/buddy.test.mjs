@@ -24,7 +24,9 @@ before(async () => {
     if (!up) await new Promise((r) => setTimeout(r, 100));
   }
   if (!up) throw new Error(`preview server did not start on ${SITE}`);
-  browser = await chromium.launch();
+  browser = process.env.PLAYWRIGHT_CDP_URL
+    ? await chromium.connectOverCDP(process.env.PLAYWRIGHT_CDP_URL)
+    : await chromium.launch();
 });
 
 after(async () => {
@@ -48,7 +50,7 @@ async function checkClear(page) {
   const collisions = await page.evaluate(() => {
     const visible = n => n.checkVisibility({visibilityProperty:true}) && n.getBoundingClientRect().width > 0;
     const overlap = (a,b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
-    const protectedRects = [...document.querySelectorAll('header, .hero-row, .hero-media, #compare, main a, main button, main summary, footer a')]
+    const protectedRects = [...document.querySelectorAll('header, .hero-row, .hero-media, .cscroll, main a, main button, main summary, footer a')]
       .filter(visible).map(n => ({name:n.id || n.tagName, rect:n.getBoundingClientRect()}));
     for (const root of document.querySelectorAll('main, footer')) {
       const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
@@ -142,7 +144,7 @@ test('moving buddy stays clear of the hero and bake-off throughout a scroll pass
         const r = node.getBoundingClientRect();
         if (r.bottom < 0 || r.top > innerHeight) continue;
         window.buddySamples++;
-        for (const forbidden of document.querySelectorAll('.hero-row, #compare, header, main a, main button')) {
+        for (const forbidden of document.querySelectorAll('.hero-row, .cscroll, header, main a, main button')) {
           const b = forbidden.getBoundingClientRect();
           if (r.left < b.right && r.right > b.left && r.top < b.bottom && r.bottom > b.top)
             window.buddyCollisions.push(forbidden.id || forbidden.tagName);

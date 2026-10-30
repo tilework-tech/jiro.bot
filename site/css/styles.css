@@ -119,9 +119,10 @@ summary:focus-visible {
 }
 #why > .sec-head { max-width: 1400px; margin-inline: auto; }
 .why-copy {
-  margin: 0;
-  flex: 1 1 0;
-  max-width: none;
+  margin: 0 auto;
+  flex: 0 1 1040px;
+  width: 100%;
+  max-width: 1040px;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -634,13 +635,6 @@ details[open] .pl::after {
 .topnav a.link {
   height: 52px;
 }
-.lbl {
-  font-family: "JetBrains Mono", monospace;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
 .h-hero {
   margin: 0;
   font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
@@ -1057,9 +1051,6 @@ details[open] .pl::after {
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
-  .sec-head .lbl {
-    flex: none !important;
-  }
   .h-why,
   .h-most,
   .why-copy {
@@ -1111,8 +1102,13 @@ details[open] .pl::after {
     overscroll-behavior-x: contain;
   }
   .ctable {
-    min-width: 700px !important;
-    --ccols: 140px 170px 1fr 1fr 1fr;
+    min-width: 940px !important;
+    --ccols: 140px 230px repeat(3, minmax(190px, 1fr));
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+  }
+  .crow > * {
+    padding: 18px 20px !important;
   }
   .compare-brand {
     padding-left: 8px !important;
@@ -1153,7 +1149,7 @@ details[open] .pl::after {
   }
   /* Captions share one area; pull requests stack when space is limited. */
   .slop {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     padding: 32px 12px 40px;
     gap: 24px;
   }
@@ -1206,6 +1202,13 @@ details[open] .pl::after {
 }
 
 @media (max-width: 420px) {
+  .nav-logo {
+    padding: 0 8px !important;
+    gap: 6px !important;
+  }
+  .nav-toggle {
+    width: 44px;
+  }
   .h-hero {
     font-size: 42px;
   }
@@ -1268,13 +1271,6 @@ details[open] .pl::after {
 }
 .ea-close:hover {
   color: #ffffff;
-}
-.ea-lbl {
-  font-family: "JetBrains Mono", monospace;
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #fb5e45;
 }
 .ea-title {
   margin: 0;
@@ -1410,7 +1406,6 @@ details[open] .pl::after {
   background: #0a0a0a;
   padding: 2px;
 }
-#features-heading { margin: 0 0 12px; font-size: 11px; font-weight: 400; }
 .frow { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; }
 .ftext { min-width: 0; background: #ffffff; padding: 56px 34px; display: flex; flex-direction: column; justify-content: center; gap: 18px; }
 .fnum { font: 400 14px/1.5 "JetBrains Mono", monospace; color: #525252; }
@@ -1425,7 +1420,6 @@ details[open] .pl::after {
 .feature-steps { list-style: none; margin: 14px 0 0; padding: 0; }
 .feature-step { padding: 8px 0; }
 .feature-step a { display: flex; gap: 12px; align-items: baseline; color: #525252; text-decoration: none; font-size: 15px; line-height: 1.4; }
-.feature-step-number { flex: none; font: 500 12px/1.5 "JetBrains Mono", monospace; }
 .feature-step a[aria-current="step"] { color: #0a0a0a; text-decoration: underline; text-underline-offset: 4px; }
 #features a:focus-visible { outline: 2px solid #0a0a0a; outline-offset: 4px; }
 .feature-demo { position: static; min-width: 0; width: 100%; margin: 0; border: 1px solid var(--feature-line); border-radius: 8px; background: var(--feature-sheet); color: var(--feature-text); font-size: 14px; line-height: 1.45; }
