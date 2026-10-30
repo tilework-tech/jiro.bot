@@ -1,0 +1,19 @@
+{
+  "head": "e3111ff970429123dfb8ceca848dd235a5f65018",
+  "base": "bcc3885d8d9bd831f50c93e87f7320514b30027d",
+  "viewports": [
+    1440,
+    390,
+    320
+  ],
+  "screenshots": [
+    "table-1440-start.png",
+    "table-320-end.png",
+    "table-320-factory.png",
+    "table-320-start.png",
+    "table-390-end.png",
+    "table-390-factory.png",
+    "table-390-start.png"
+  ],
+  "capture": "Local site, session headed Chrome via CDP, reduced motion, native viewport and horizontal scroll"
+}

@@ -1,0 +1,17 @@
+HEAD: e3111ff970429123dfb8ceca848dd235a5f65018
+Base: bcc3885d8d9bd831f50c93e87f7320514b30027d
+
+TDD: three focused assertions failed before implementation because Factory was absent.
+Targeted mobile regression tests: 2 passed at 390px and 320px after final sizing.
+CI=1 python3 -m unittest (tests/): 64 passed, 0 skipped.
+python3 tools/lint.py: 26 pages passed.
+python3 -m unittest discover -s tools/copy-editor/editor -p 'test_*.py': 7 passed.
+npm test (lambda/early-access/): 22 passed.
+node tools/copy-editor/editor/browser-test.mjs: PASS.
+git diff --check: passed.
+Code and test review: no blocking findings.
+
+Proof: real local site in session headed Chrome through CDP, exact 1440/390/320 viewport widths. Initial and Factory/final scroll positions captured for phones. Capture script recorded no page errors. Screenshots visually reviewed.
+No PR CI workflow exists. Both deployment workflows require workflow_dispatch. No deployment performed.
+
+PLAYWRIGHT_CDP_URL=http://127.0.0.1:9222 npm test (tests/browser/): 98 passed, 0 failed, 0 skipped; exit 0.
