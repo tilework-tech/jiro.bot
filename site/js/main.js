@@ -192,6 +192,19 @@
     for (const k in R) R[k](f);
   }
 
+  // ---------- pricing: one brief blink as each face first enters view ----------
+  function initPricingFaces() {
+    if (!("IntersectionObserver" in window)) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-awake");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: .5 });
+    $$("#pricing .tface").forEach((face) => observer.observe(face));
+  }
+
   // ---------- nav: highlight the section in view ----------
   function initNav() {
     const links = $$("[data-nav]");
@@ -291,6 +304,7 @@
   }
 
   render();
+  initPricingFaces();
   initNav();
   initSlop();
   initMenu();

@@ -243,11 +243,11 @@ summary:focus-visible {
     color 160ms steps(2);
 }
 .tier:hover {
-  background-color: #1d3b2a !important;
+  background-color: #0a0a0a !important;
   color: #faf8f2;
 }
 .tier:hover .tsub {
-  color: #bcd3c3 !important;
+  color: #d0d0cc !important;
 }
 .tier > div:first-child {
   transition: border-color 160ms steps(2);
@@ -713,7 +713,7 @@ details[open] .pl::after {
 .tprice {
   font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
   font-weight: 400;
-  font-size: 68px;
+  font-size: 60px;
   line-height: 0.85;
   letter-spacing: -0.06em;
 }
@@ -723,8 +723,17 @@ details[open] .pl::after {
   font-size: 13.5px;
   line-height: 21px;
 }
+.pricing-trial {
+  margin: 0;
+  color: #3d3d3d;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.tier-details > :nth-last-child(2) {
+  margin-bottom: 22px;
+}
 .tbtn {
-  margin-top: 22px;
+  margin-top: auto;
   width: 352px;
   max-width: 100%;
   height: 43px;
@@ -739,6 +748,24 @@ details[open] .pl::after {
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tbtn {
+    transition: background-size 160ms steps(4), color 0ms 80ms;
+  }
+  .tface.is-awake > span {
+    animation: pricing-blink 180ms ease-in-out 400ms;
+  }
+  .tier:nth-child(3) .tface.is-awake > span {
+    animation-delay: 1100ms;
+  }
+  .tier:nth-child(4) .tface.is-awake > span {
+    animation-delay: 1800ms;
+  }
+}
+@keyframes pricing-blink {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(.18); }
 }
 .tier:hover .tface {
   border-color: #faf8f2;
@@ -1086,7 +1113,7 @@ details[open] .pl::after {
     padding: 24px 20px 24px !important;
   }
   .tprice {
-    font-size: 56px;
+    font-size: 50px;
   }
   .tbtn {
     width: 100%;
@@ -1415,16 +1442,16 @@ details[open] .pl::after {
 .fnum { font: 400 14px/1.5 "JetBrains Mono", monospace; color: #525252; }
 .fh { margin: 0; max-width: 14ch; font-size: clamp(30px, 3.4vw, 48px); line-height: 1.1; letter-spacing: -.035em; font-weight: 400; }
 .feature-subline { margin: 8px 0 0; font-size: 14px; line-height: 1.5; font-weight: 400; color: #525252; text-wrap: balance; }
-.fp { margin: 0; max-width: 32ch; font-size: 16px; line-height: 1.5; }
 .fimg { min-width: 0; aspect-ratio: 1; padding: clamp(20px, 3vw, 44px); box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: #fb5e45; }
 #feature-multiplayer .fimg { background: #2bff6b; }
 #feature-oncall .fimg { grid-column: 1; grid-row: 1; }
 #feature-oncall .ftext { grid-column: 2; grid-row: 1; }
 #feature-permissions .fimg { background: #1d3b2a; }
 .feature-steps { list-style: none; margin: 14px 0 0; padding: 0; }
-.feature-step { padding: 8px 0; }
-.feature-step a { display: flex; gap: 12px; align-items: baseline; color: #525252; text-decoration: none; font-size: 15px; line-height: 1.4; }
-.feature-step a[aria-current="step"] { color: #0a0a0a; text-decoration: underline; text-underline-offset: 4px; }
+.feature-step { padding: 3px 0; }
+.feature-step a { display: flex; gap: 12px; align-items: baseline; padding: 8px 12px; border-left: 2px solid #e4e4e0; color: #525252; text-decoration: none; font-size: 15px; line-height: 1.4; }
+.feature-step a:hover { color: #0a0a0a; background: #f5f5f3; }
+.feature-step a[aria-current="step"] { color: #0a0a0a; background: #f5f5f3; border-left-color: #0a0a0a; }
 #features a:focus-visible { outline: 2px solid #0a0a0a; outline-offset: 4px; }
 .feature-demo { position: static; min-width: 0; width: 100%; margin: 0; border: 1px solid var(--feature-line); border-radius: 8px; background: var(--feature-sheet); color: var(--feature-text); font-size: 14px; line-height: 1.45; }
 .feature-window-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--feature-line); font: 500 12px/1.5 "JetBrains Mono", monospace; color: var(--feature-secondary); }
