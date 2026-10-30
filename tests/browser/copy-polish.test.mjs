@@ -88,15 +88,18 @@ for (const width of [1440, 390]) {
     }
   });
 
-  test(`comparison row labels at ${width}px begin at the top padding`, async t => {
+  test(`comparison row labels at ${width}px are centered in both directions`, async t => {
     const page = await open(t, width);
-    const labels = await page.locator(".crow .ck").evaluateAll(cells => cells.map(cell => ({
-      text: cell.textContent.trim(),
-      offset: cell.firstElementChild.getBoundingClientRect().top - cell.getBoundingClientRect().top,
-      padding: parseFloat(getComputedStyle(cell).paddingTop),
-    })));
-    for (const label of labels) assert.ok(Math.abs(label.offset - label.padding) <= 1,
-      `${label.text}: text starts at cell padding, not lower in the row`);
+    const labels = await page.locator(".crow .ck").evaluateAll(cells => cells.map(cell => {
+      const box = cell.getBoundingClientRect();
+      const text = cell.firstElementChild.getBoundingClientRect();
+      return { text: cell.textContent.trim(), dx: text.x + text.width / 2 - box.x - box.width / 2,
+        dy: text.y + text.height / 2 - box.y - box.height / 2 };
+    }));
+    for (const label of labels) {
+      assert.ok(Math.abs(label.dx) <= 1, `${label.text}: horizontally centered`);
+      assert.ok(Math.abs(label.dy) <= 1, `${label.text}: vertically centered`);
+    }
   });
 
   test(`footer at ${width}px links to Nori Agentic and opens the early-access dialog`, async t => {
