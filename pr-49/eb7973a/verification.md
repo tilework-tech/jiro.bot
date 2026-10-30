@@ -1,0 +1,123 @@
+# Scroll buddy verification
+
+Source commit: eb7973a7253c7a73db84bde95b22ead095f508d2
+
+112 unique browser tests passed (22 buddy/mobile; 90 page tests). The page run was interrupted after completing early-access, favicon and features; all hero, layout and sections tests were rerun successfully.
+64 Python tests, 7 copy-editor Python tests, 22 Lambda tests, and lint of 26 pages passed. Copy-editor desktop/mobile UI checks passed. JavaScript syntax and git diff checks passed.
+
+Captures use 1440px desktop and 390px phone viewports. Phone hover uses a mouse in a narrow viewport; phone dragging uses real CDP touch input. Clips show the real first-scroll edge peek, crouch and hop. No production writes or deployment.
+
+## Passed browser cases
+
+- /confirmed.html serves decodable favicon and touch-icon links
+- /index.html serves decodable favicon and touch-icon links
+- /link-expired.html serves decodable favicon and touch-icon links
+- /port/4192/confirmed.html serves decodable favicon and touch-icon links
+- /port/4192/index.html serves decodable favicon and touch-icon links
+- /port/4192/link-expired.html serves decodable favicon and touch-icon links
+- /port/4192/privacy.html serves decodable favicon and touch-icon links
+- /privacy.html serves decodable favicon and touch-icon links
+- AI slop shows a three-step illustration with no counts or totals
+- FAQ and sign-up at 1180px keep readable questions, quotes and signup button
+- FAQ and sign-up at 1440px keep readable questions, quotes and signup button
+- FAQ and sign-up at 390px keep readable questions, quotes and signup button
+- FAQ signup is reachable by keyboard with no-preference motion
+- FAQ signup is reachable by keyboard with reduce motion
+- Why Jiro heading aligns with the comparison at 1440px
+- Why Jiro heading aligns with the comparison at 2560px
+- a 900px window plays the mobile cut
+- a 901px window plays the desktop cut
+- a demo that cannot fit a laptop viewport does not pin off-screen
+- a failed or unreachable sign-up keeps the form and lets the visitor try again
+- a restored pin in the desktop signup panel speaks that panel’s line
+- a restored pinned buddy cannot cover the hero or signup controls
+- a visitor can explore a hero example and then sign up
+- an incomplete form is not sent
+- arrow keys, Home and End move between the dots
+- at 1180px the video fills the entire panel and controls overlay it
+- at 1180px three colored feature boxes alternate with white copy and remain readable
+- at 1440px the video fills the entire panel and controls overlay it
+- at 1440px three colored feature boxes alternate with white copy and remain readable
+- at 2560px the video fills the entire panel and controls overlay it
+- at 320px comparison rows are readable and labels stay visible while values scroll
+- at 320px stories stack, regions fit and scrolling emphasizes the region in view
+- at 320px the video fills the entire panel and controls overlay it
+- at 390px comparison rows are readable and labels stay visible while values scroll
+- at 390px stories stack, regions fit and scrolling emphasizes the region in view
+- at 390px the video fills the entire panel and controls overlay it
+- at 390px three colored feature boxes alternate with white copy and remain readable
+- at 900px stories stack, regions fit and scrolling emphasizes the region in view
+- at 900px the video fills the entire panel and controls overlay it
+- at 901px the video fills the entire panel and controls overlay it
+- bake-off rows match the fact-checked comparison
+- bake-off: Jiro's cells are bold, the context row says you can leave, and hovering a row focuses only that row
+- below the hero, Jiro uses neutral copy outside the approved on-call step and is never 'called in'
+- buddy rests below hero without covering content at 1440px
+- buddy rests below hero without covering content at 320px
+- buddy rests below hero without covering content at 390px
+- captured mouse drag pins safely and remains fixed on scroll at 1440px
+- captured touch drag pins safely and remains fixed on scroll at 320px
+- captured touch drag pins safely and remains fixed on scroll at 390px
+- clicking the dots moves forward and back between examples
+- confirmed and link-expired pages explain the next step and link home
+- crossing the mobile breakpoint swaps to the other cut
+- desktop plays the desktop cut
+- differentiators match the carousel order: multiplayer, on-call, permissions
+- every Get early access button opens the sign-up pop-up
+- every example shows its own poster still
+- feature-multiplayer: scrolling forwards, backwards and jumping selects the matching region inside its colored box
+- feature-oncall: scrolling forwards, backwards and jumping selects the matching region inside its colored box
+- feature-permissions: scrolling forwards, backwards and jumping selects the matching region inside its colored box
+- hover grows the animated game idle at 1440px
+- hover grows the animated game idle at 320px
+- hover grows the animated game idle at 390px
+- keyboard step links reveal their region without moving focus into the mock interface
+- mobile buddy follows through sections with clear, tappable content at 320px
+- mobile buddy follows through sections with clear, tappable content at 390px
+- mobile layout has no horizontal overflow outside the bake-off scroller and no errors
+- mobile plays the mobile cut
+- moving buddy stays clear of the hero and bake-off throughout a scroll pass
+- multiplayer step links follow Priya in Slack, Kira on her phone and Kira back at her terminal
+- on-call links reveal setup, a Linear issue with terminal work, and the morning PR review
+- one visible edge peek and hop per visit at 1440px
+- one visible edge peek and hop per visit at 320px
+- one visible edge peek and hop per visit at 390px
+- origin favicon and the generated pages' legacy icon are served
+- page layout fits at 1024px, with balanced hero and readable table
+- page layout fits at 1180px, with balanced hero and readable table
+- page layout fits at 1440px, with balanced hero and readable table
+- page layout fits at 1920px, with balanced hero and readable table
+- page layout fits at 2560px, with balanced hero and readable table
+- page layout fits at 320px, with balanced hero and readable table
+- page layout fits at 3440px, with balanced hero and readable table
+- page layout fits at 390px, with balanced hero and readable table
+- page layout fits at 768px, with balanced hero and readable table
+- page layout fits at 900px, with balanced hero and readable table
+- page layout fits at 901px, with balanced hero and readable table
+- page sections and signup dialog have accessible names
+- permissions links reveal assigned roles and enforce access for each participant together
+- reduced motion hides buddy on load and when changed at runtime
+- reduced motion shows complete static demos, including after changing the preference
+- reduced-motion slop shows the final caption and Jiro emphasis without motion
+- section speech opens, announces and dismisses without underlying activation at 1440px
+- section speech opens, announces and dismisses without underlying activation at 320px
+- section speech opens, announces and dismisses without underlying activation at 390px
+- sections run hero, bake-off, AI slop, differentiators, pricing, FAQ, sign-up
+- short desktop viewports keep demo content in normal flow
+- slop at 1440px starts at entry and scrolls from both frames to Generic agent to Jiro
+- slop at 390px starts at entry and scrolls from both frames to Generic agent to Jiro
+- speech stays clear of keyboard-focused Jiro
+- submitting name and email asks the visitor to check their inbox
+- the FAQ button collects name and email in the dialog and submits the signup
+- the carousel never advances on its own
+- the close button and a click on the backdrop close the pop-up
+- the cursor after 'engineer' is a still orange block
+- the hero carousel offers three examples, starting on Multiplayer
+- the hero copy never calls Jiro 'he', never 'calls him in', and says nothing about craft
+- the pause control stops the example video, and play restarts the video
+- the pop-up links to the privacy policy, which is served on jiro.bot
+- the sign-up block shows two customer quotes, one each from Corvus and Miravoice, naming Jiro rather than Nori, above the early-access button
+- with reduced motion every feature panel still shows its content
+- with reduced motion the hero holds still until the visitor presses play
+- without JavaScript every narrative and interface region is readable
+- without JavaScript the hero starts on Multiplayer

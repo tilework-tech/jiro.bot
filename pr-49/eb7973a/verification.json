@@ -1,0 +1,15 @@
+{
+  "source": "eb7973a7253c7a73db84bde95b22ead095f508d2",
+  "browser_tests_passed": 112,
+  "browser_tests_failed": 0,
+  "browser_logs": [
+    "buddy-final.log",
+    "page-final.log",
+    "page-remainder-final.log"
+  ],
+  "note": "Page run terminated after completing early-access, favicon, and features files. Entire hero, layout, and sections files rerun successfully. All unique tests accounted for.",
+  "python": 64,
+  "copy_editor_python": 7,
+  "lambda": 22,
+  "content_pages_linted": 26
+}

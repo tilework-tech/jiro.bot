@@ -1,0 +1,72 @@
+[
+  {
+    "width": 1440,
+    "name": "edge-peek-hold",
+    "filename": "1440-edge-peek-hold.png"
+  },
+  {
+    "width": 1440,
+    "name": "landed",
+    "filename": "1440-landed.png"
+  },
+  {
+    "width": 1440,
+    "name": "idle",
+    "filename": "1440-idle.png"
+  },
+  {
+    "width": 1440,
+    "name": "hover-grow",
+    "filename": "1440-hover-grow.png"
+  },
+  {
+    "width": 1440,
+    "name": "section-bubble",
+    "filename": "1440-section-bubble.png"
+  },
+  {
+    "width": 1440,
+    "name": "mid-mouse-drag",
+    "filename": "1440-mid-mouse-drag.png"
+  },
+  {
+    "width": 390,
+    "name": "edge-peek-hold",
+    "filename": "390-edge-peek-hold.png"
+  },
+  {
+    "width": 390,
+    "name": "landed",
+    "filename": "390-landed.png"
+  },
+  {
+    "width": 390,
+    "name": "idle",
+    "filename": "390-idle.png"
+  },
+  {
+    "width": 390,
+    "name": "hover-grow",
+    "filename": "390-hover-grow.png"
+  },
+  {
+    "width": 390,
+    "name": "section-bubble",
+    "filename": "390-section-bubble.png"
+  },
+  {
+    "width": 390,
+    "name": "mid-touch-drag",
+    "filename": "390-mid-touch-drag.png"
+  },
+  {
+    "width": 1440,
+    "name": "edge-peek-hop",
+    "filename": "1440-edge-peek-hop.mp4"
+  },
+  {
+    "width": 390,
+    "name": "edge-peek-hop",
+    "filename": "390-edge-peek-hop.mp4"
+  }
+]
