@@ -569,85 +569,23 @@
         </section>
 
         <section id="why" aria-labelledby="why-heading" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
-          <div
-            class="sec-head"
-            style="
-              flex: 1 1 100%;
-              background: #0a0a0a;
-              color: #ffffff;
-              padding: 52px 36px 0;
-              box-sizing: border-box;
-              display: flex;
-              flex-wrap: wrap;
-              justify-content: space-between;
-              align-items: flex-start;
-              gap: 24px;
-            "
-          >
-            <div class="why-copy">
-              <h2 id="why-heading" class="h-why" style="font-weight: 400">Jiro makes the change you would have made yourself, on a good day.</h2>
-            </div>
-          </div>
-          <div class="slop" data-slop data-at="3">
-            <ol class="slop-steps">
-              <li data-step="1" aria-current="step">
-                <span class="slop-n">01</span><span>Two agents get the same ticket</span>
-              </li>
-              <li data-step="2"><span class="slop-n">02</span><span>Another agent rewrites everything it touches.</span></li>
-              <li data-step="3"><span class="slop-n">03</span><span>Jiro opens one focused pull request. Done.</span></li>
-            </ol>
-            <div class="slop-stage">
-              <div
-                class="v2"
-                role="img"
-                aria-label="The same task done by a generic agent, a sprawling pull request, and by Jiro, a focused one"
-              >
-                <div class="v2grid">
-                  <div class="v2col slop-a">
-                    <span class="v2chip">Generic agent</span>
-                    <div class="gh">
-                      <div class="gh-bar">
-                        <span class="cc-dots"><i></i><i></i><i></i></span
-                        ><span class="gh-url">github.com/acme/website/pull/244</span>
-                      </div>
-                      <div class="gh-title">Homepage redesign</div>
-                      <div class="gh-body">
-                        <div class="gh-h">Overview</div>
-                        <div class="gh-p">
-                          Comprehensive improvements to the homepage to enhance the overall user experience and
-                          maintainability.
-                        </div>
-                        <div class="gh-h">Changes made</div>
-                        <div class="gh-li">Updated homepage components</div>
-                        <div class="gh-li">Refactored layout and styling</div>
-                        <div class="gh-li">Enhanced performance optimizations</div>
-                        <div class="gh-li">Added new utility functions</div>
-                        <div class="gh-li">Updated configuration files</div>
-                        <div class="gh-li">Fixed various issues</div>
-                        <div class="gh-li">Cleaned up code</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="v2col slop-b">
-                    <span class="v2chip" style="color: #2bff6b; box-shadow: inset 0 0 0 1px #1e7a3f">Jiro</span>
-                    <div class="gh">
-                      <div class="gh-bar">
-                        <span class="cc-dots"><i></i><i></i><i></i></span
-                        ><span class="gh-url">github.com/acme/website/pull/251</span>
-                      </div>
-                      <div class="gh-title">Homepage redesign</div>
-                      <div class="gh-body">
-                        <div class="gh-h">Summary</div>
-                        <div class="gh-li">Replaces the homepage with the responsive redesign.</div>
-                        <div class="gh-li">Keeps analytics, sitemap and social metadata intact.</div>
-                        <div class="gh-h">Test plan</div>
-                        <div class="gh-ck"><span class="gh-box"></span>Build and type checks pass</div>
-                        <div class="gh-ck"><span class="gh-box"></span>Regression test covers the FAQ</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <div class="sec-head">
+            <h2 id="why-heading" class="sr-only">Why Jiro</h2>
+            <div class="quotes">
+              <figure class="quote">
+                <blockquote>
+                  “I was at a client dinner Friday night, saw a bug in prod, had Jiro look into it, deploy a fix, and
+                  re-run customer accounts all while still at the table.”
+                </blockquote>
+                <figcaption>Alex, CTO, Corvus</figcaption>
+              </figure>
+              <figure class="quote">
+                <blockquote>
+                  “Jiro easily saves me 5 hours a week. I can’t begin to describe how much of a multiplier it is.
+                  There’s no going back.”
+                </blockquote>
+                <figcaption>Danny, CTO, Miravoice</figcaption>
+              </figure>
             </div>
           </div>
         </section>
@@ -1909,22 +1847,6 @@ PASS 18 tests · signed payloads</code></pre>
 
         <section id="reserve" aria-label="Get early access" style="display: flex; flex-wrap: wrap; gap: 2px; padding: 2px; background: #0a0a0a">
           <div class="reserve-col">
-            <div class="quotes">
-              <figure class="quote">
-                <blockquote>
-                  “I was at a client dinner Friday night, saw a bug in prod, had Jiro look into it, deploy a fix, and
-                  re-run customer accounts all while still at the table.”
-                </blockquote>
-                <figcaption>Alex, CTO, Corvus</figcaption>
-              </figure>
-              <figure class="quote">
-                <blockquote>
-                  “Jiro easily saves me 5 hours a week. I can’t begin to describe how much of a multiplier it is.
-                  There’s no going back.”
-                </blockquote>
-                <figcaption>Danny, CTO, Miravoice</figcaption>
-              </figure>
-            </div>
             <div class="reserve-form">
               <button
                 type="button"

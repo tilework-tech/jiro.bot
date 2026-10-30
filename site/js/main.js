@@ -228,52 +228,6 @@
     });
   }
 
-  // ---------- AI slop: compact section progress selects one of three steps ----------
-  function initSlop() {
-    const box = $("[data-slop]");
-    if (!box) return;
-    const steps = $$("[data-step]", box);
-    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let queued = false;
-    function update() {
-      queued = false;
-      const rect = box.closest("section").getBoundingClientRect();
-      // Begin at viewport entry; finish while the diff panels are still in view.
-      const progress = motion.matches ? 1 : (window.innerHeight - rect.top) / (window.innerHeight + rect.height * .45);
-      const ramp = (from, to) => Math.max(0, Math.min(1, (progress - from) / (to - from)));
-      const first = 1 - ramp(.33, .46);
-      const second = ramp(.43, .53) * (1 - ramp(.65, .74));
-      const third = ramp(.72, .84);
-      const current = progress < .46 ? 0 : progress < .74 ? 1 : 2;
-      box.style.setProperty("--frame", String(ramp(.25, .43) * .3));
-      box.style.setProperty("--left-focus", String(ramp(.46, .55) * (1 - ramp(.72, .84))));
-      box.style.setProperty("--right-focus", String(third));
-      [first, second, third].forEach((opacity, i) => {
-        steps[i].style.setProperty("--step-opacity", String(opacity));
-        steps[i].style.setProperty("--step-offset", (motion.matches ? 0 : i === 2 ? (1 - third) * 18 : 0) + "px");
-      });
-      box.dataset.at = String(current + 1);
-      steps.forEach((step, i) => {
-        if (i === current) step.setAttribute("aria-current", "step");
-        else step.removeAttribute("aria-current");
-      });
-    }
-    function requestUpdate() {
-      if (queued) return;
-      queued = true;
-      window.requestAnimationFrame(update);
-    }
-    function configure() {
-      box.classList.add("slop-ready");
-      update();
-    }
-    window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
-    window.addEventListener("pageshow", requestUpdate);
-    motion.addEventListener("change", configure);
-    configure();
-  }
-
   // ---------- mobile menu ----------
   function initMenu() {
     const nav = $(".topnav");
@@ -306,7 +260,6 @@
   render();
   initPricingFaces();
   initNav();
-  initSlop();
   initMenu();
   window.addEventListener("resize", () => {
     if (still) render();

@@ -97,137 +97,6 @@ summary:focus-visible {
     transition: none;
   }
 }
-.cc-dots {
-  display: inline-flex;
-  gap: 6px;
-}
-.cc-dots i {
-  display: block;
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
-  background: #5c5c5c;
-}
-.v2 {
-  position: relative;
-  background: #141414;
-  box-shadow: inset 0 0 0 1px #2a2a27;
-  padding: 20px 24px 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-#why > .sec-head { max-width: 1400px; margin-inline: auto; }
-.why-copy {
-  margin: 0 auto;
-  flex: 0 1 1040px;
-  width: 100%;
-  max-width: 1040px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-.why-copy .h-why {
-  margin: 0;
-  flex: none;
-  max-width: 28ch;
-  font-size: clamp(32px, 3.5vw, 56px);
-  line-height: 1.08;
-}
-.v2grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-  padding: 0 32px;
-}
-.v2col {
-  flex: 1 1 420px;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-}
-.v2chip {
-  align-self: flex-start;
-  padding: 6px 12px;
-  box-shadow: inset 0 0 0 1px #3a3a36;
-  color: #9a9a96;
-  font-family: "JetBrains Mono", monospace;
-  font-weight: 600;
-  font-size: var(--fs-caption);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.gh {
-  width: 100%;
-  height: 340px;
-  overflow: hidden;
-  background: #0f1115;
-  box-shadow: inset 0 0 0 1px #2a2e35;
-  font-size: var(--fs-caption);
-  color: #c9cdd3;
-  line-height: 1.5;
-}
-.gh-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 12px;
-  background: #16191e;
-}
-.gh-url {
-  flex: 1;
-  padding: 2px 10px;
-  background: #0f1115;
-  color: #7d8590;
-  font-family: "JetBrains Mono", monospace;
-}
-.gh-title {
-  padding: 12px 14px 4px;
-  font-size: var(--fs-body-lg);
-  color: #e6edf3;
-}
-.gh-body {
-  margin: 0 14px;
-  padding: 10px 14px;
-  box-shadow: inset 0 0 0 1px #2a2e35;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.gh-h {
-  margin-top: 6px;
-  font-weight: 600;
-  color: #e6edf3;
-}
-.gh-li {
-  padding-left: 12px;
-  position: relative;
-}
-.gh-li::before {
-  content: "";
-  position: absolute;
-  left: 2px;
-  top: 0.7em;
-  width: 4px;
-  height: 4px;
-  background: #7d8590;
-}
-.gh-p {
-  color: #9aa1a9;
-}
-.gh-ck {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.gh-box {
-  flex: none;
-  width: 10px;
-  height: 10px;
-  background: #2f81f7;
-}
 .tbul {
   margin: -8px 0 0;
   padding-left: 20px;
@@ -664,27 +533,6 @@ details[open] .pl::after {
 .callj {
   margin-left: 1px;
 }
-.h-why {
-  margin: 0 0 0 auto;
-  flex: 1 1 0;
-  max-width: 1200px;
-  font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
-  font-weight: 600;
-  font-size: 50.5px;
-  line-height: 49px;
-  letter-spacing: -0.04em;
-}
-.v2grid {
-  padding: 0 23px;
-  gap: 34px;
-}
-.gh {
-  height: 282px;
-  font-size: 10px;
-}
-.gh .gh-title {
-  font-size: 15px;
-}
 .h-most {
   margin: 0;
   flex: 0 1 1030px;
@@ -813,58 +661,13 @@ details[open] .pl::after {
   margin-right: -14px;
 }
 
-/* ---------- Why Jiro: scroll-driven captions and stationary diff panels ---------- */
-.slop {
+/* ---------- Customer stories ---------- */
+#why > .sec-head {
   flex: 1 1 100%;
   min-width: 0;
-  margin-top: -2px;
-  background: #0a0a0a;
-  color: #ffffff;
-  padding: 24px 36px 32px;
+  padding: 170px 36px 64px;
+  background: #ffffff;
   box-sizing: border-box;
-  display: grid;
-  gap: 24px;
-}
-.slop-steps {
-  display: grid;
-  gap: 16px;
-  margin: 0;
-  padding: 12px 0;
-  list-style: none;
-  width: min(100%, 1040px);
-  justify-self: center;
-  background: #0a0a0a;
-}
-.slop-steps li {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  font-size: clamp(18px, 2vw, 24px);
-  line-height: 1.4;
-  letter-spacing: -0.02em;
-}
-.slop-n {
-  flex: none;
-  font-family: "JetBrains Mono", monospace;
-  font-size: var(--fs-caption);
-  color: #fb5e45;
-}
-.slop-stage { width: min(100%, 1040px); justify-self: center; }
-.slop .v2 { padding: 16px; }
-.slop .v2grid { flex-wrap: nowrap; gap: 16px; padding: 0; }
-.slop .v2col { flex: 1 1 0; padding: 10px; box-sizing: border-box; }
-.slop .gh { height: auto; min-height: 282px; }
-.slop-ready .slop-steps { position: sticky; top: 76px; z-index: 1; }
-.slop-ready .slop-steps li {
-  grid-area: 1 / 1;
-  opacity: var(--step-opacity, 0);
-  transform: translateY(var(--step-offset, 0px));
-}
-.slop-ready .slop-a {
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, var(--frame, 0)), inset 0 0 0 2px rgba(251, 94, 69, var(--left-focus, 0));
-}
-.slop-ready .slop-b {
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, var(--frame, 0)), inset 0 0 0 2px rgba(43, 255, 107, var(--right-focus, 0));
 }
 /* ---------- FAQ and the sign-up block ---------- */
 .faq-reserve { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
@@ -886,7 +689,7 @@ details[open] .pl::after {
   min-width: 0;
   background: #0a0a0a;
   color: #ffffff;
-  padding: 48px 32px;
+  padding: 170px 32px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -895,27 +698,30 @@ details[open] .pl::after {
 }
 .quotes {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 32px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 64px;
 }
 .quote {
   margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 .quote blockquote {
   margin: 0;
   font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 18px;
-  line-height: 1.45;
+  font-size: clamp(22px, 2.1vw, 30px);
+  line-height: 1.4;
   letter-spacing: -0.02em;
-  color: #ffffff;
+  color: #0a0a0a;
 }
 .quote figcaption {
-  margin-top: 16px;
+  margin-top: auto;
+  padding-top: 24px;
   font-family: "JetBrains Mono", monospace;
   font-size: var(--fs-caption);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #9a9f9a;
+  color: #525252;
 }
 .reserve-form {
   max-width: 440px;
@@ -923,14 +729,6 @@ details[open] .pl::after {
   flex-direction: column;
   gap: 18px;
 }
-@media (prefers-reduced-motion: reduce) {
-  .slop-steps li,
-  .slop-a,
-  .slop-b {
-    transition: none;
-  }
-}
-
 /* ---------- Responsive ----------
    The design is drawn at 1440px. The rules below keep it working down to 320px.
    Many layout values in index.html are inline (they came straight from the design board),
@@ -1078,27 +876,10 @@ details[open] .pl::after {
     padding-left: 20px !important;
     padding-right: 20px !important;
   }
-  .h-why,
-  .h-most,
-  .why-copy {
+  .h-most {
     flex: none !important;
     margin: 0 !important;
     max-width: none;
-  }
-
-  /* PR comparison */
-  .v2 {
-    padding: 24px 12px !important;
-  }
-  .v2grid {
-    padding: 0 !important;
-    gap: 36px !important;
-  }
-  .v2col {
-    flex: 1 1 100% !important;
-  }
-  .gh {
-    height: 250px;
   }
 
   /* pricing */
@@ -1168,38 +949,15 @@ details[open] .pl::after {
     max-width: none;
   }
   .reserve-col {
-    padding: 48px 20px 40px;
-    gap: 40px;
+    padding: 210px 20px 80px;
   }
   .quotes {
-    grid-template-columns: 1fr;
-    gap: 32px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
   }
   .quote blockquote {
-    font-size: 20px;
+    font-size: 22px;
   }
-  /* Captions share one area; pull requests stack when space is limited. */
-  .slop {
-    grid-template-columns: minmax(0, 1fr);
-    padding: 32px 12px 40px;
-    gap: 24px;
-  }
-  .slop-steps { gap: 12px; }
-  .slop-steps li { gap: 8px; font-size: 18px; }
-  .slop-stage {
-    position: static;
-  }
-  .slop .v2grid {
-    flex-wrap: wrap;
-  }
-  .slop .v2col {
-    flex: 1 1 100%;
-  }
-  .slop .slop-a,
-  .slop .slop-b {
-    opacity: 1;
-  }
-
   /* footer */
   .foot-bar {
     height: auto !important;
@@ -1219,7 +977,6 @@ details[open] .pl::after {
     font-size: 46px;
     line-height: 52px;
   }
-  .h-why,
   .h-most,
   .h-sec {
     font-size: 32px;
