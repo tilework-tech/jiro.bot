@@ -10,7 +10,7 @@ Path: @/tools/copy-editor
 
 ### How it fits into the larger codebase
 
-- Serves only the landing page and what it loads: `/` and `/index.html`, the standalone pages in a `STATIC_PAGES` allowlist (`confirmed.html`, `link-expired.html`, `privacy.html`), and files under `css/`, `js/`, `fonts/`, `img/`, `video/` that resolve inside the root. Every other path returns 404, including the generated AEO pages and `assets/`; preview those with [tools/serve.py](../serve.py).
+- Serves only the landing page and what it loads: `/` and `/index.html`, the standalone pages in a `STATIC_PAGES` allowlist (`confirmed.html`, `link-expired.html`, `privacy.html`), the root favicon assets (`favicon.ico` and `jiro-16px.png`), and files under `css/`, `js/`, `fonts/`, `img/`, `video/` that resolve inside the root. Static asset content types come from Python's `mimetypes` module. Every other path returns 404, including the generated AEO pages and `assets/`; preview those with [tools/serve.py](../serve.py).
 - [The Playwright pop-up tests](../../tests/browser/early-access.test.mjs) start this server from the repository root on a fixed port, then stub the early-access endpoint, so they depend on its default `--root`.
 - [The page script](../../site/js/main.js) owns animated regions; the server excludes them from annotation, so animated copy is edited in that script, not through the editor.
 - Preview needs only Python; `--edit` also needs Git and `site/index.html` in Git history. The Nori Session proxy supplies access control and forwards `/port/<port>/`; the server has no authentication and listens on `0.0.0.0`.
