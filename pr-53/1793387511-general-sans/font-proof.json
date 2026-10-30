@@ -1,0 +1,226 @@
+[
+  {
+    "width": 1440,
+    "faces": [
+      {
+        "family": "General Sans",
+        "weight": "400",
+        "style": "normal",
+        "status": "loaded"
+      },
+      {
+        "family": "General Sans",
+        "weight": "500",
+        "style": "normal",
+        "status": "loaded"
+      },
+      {
+        "family": "General Sans",
+        "weight": "600",
+        "style": "normal",
+        "status": "loaded"
+      },
+      {
+        "family": "General Sans",
+        "weight": "700",
+        "style": "normal",
+        "status": "loaded"
+      }
+    ],
+    "responses": [
+      {
+        "url": "http://127.0.0.1:4100/fonts/GeneralSans-700.woff2",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:4100/fonts/GeneralSans-400.woff2",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:4100/fonts/GeneralSans-600.woff2",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:4100/fonts/GeneralSans-500.woff2",
+        "status": 200
+      }
+    ],
+    "fonts": {
+      "h1": [
+        {
+          "familyName": "General Sans Semibold",
+          "postScriptName": "GeneralSans-Semibold",
+          "isCustomFont": true,
+          "glyphCount": 28
+        }
+      ],
+      ".hero-copy p": [
+        {
+          "familyName": "JetBrains Mono SemiBold",
+          "postScriptName": "JetBrainsMono-SemiBold",
+          "isCustomFont": true,
+          "glyphCount": 8
+        },
+        {
+          "familyName": "General Sans",
+          "postScriptName": "GeneralSans-Regular",
+          "isCustomFont": true,
+          "glyphCount": 153
+        }
+      ],
+      "#features h3": [
+        {
+          "familyName": "General Sans",
+          "postScriptName": "GeneralSans-Regular",
+          "isCustomFont": true,
+          "glyphCount": 36
+        }
+      ],
+      ".tprice": [
+        {
+          "familyName": "General Sans",
+          "postScriptName": "GeneralSans-Regular",
+          "isCustomFont": true,
+          "glyphCount": 3
+        }
+      ],
+      ".cj span": [
+        {
+          "familyName": "General Sans Semibold",
+          "postScriptName": "GeneralSans-Semibold",
+          "isCustomFont": true,
+          "glyphCount": 69
+        }
+      ],
+      "#faq summary span": [
+        {
+          "familyName": "General Sans Semibold",
+          "postScriptName": "GeneralSans-Semibold",
+          "isCustomFont": true,
+          "glyphCount": 12
+        }
+      ],
+      ".feature-terminal code": [
+        {
+          "familyName": "JetBrains Mono",
+          "postScriptName": "JetBrainsMono-Regular",
+          "isCustomFont": true,
+          "glyphCount": 222
+        }
+      ]
+    },
+    "overflow": false
+  },
+  {
+    "width": 390,
+    "faces": [
+      {
+        "family": "General Sans",
+        "weight": "400",
+        "style": "normal",
+        "status": "loaded"
+      },
+      {
+        "family": "General Sans",
+        "weight": "500",
+        "style": "normal",
+        "status": "loaded"
+      },
+      {
+        "family": "General Sans",
+        "weight": "600",
+        "style": "normal",
+        "status": "loaded"
+      },
+      {
+        "family": "General Sans",
+        "weight": "700",
+        "style": "normal",
+        "status": "loaded"
+      }
+    ],
+    "responses": [
+      {
+        "url": "http://127.0.0.1:4100/fonts/GeneralSans-400.woff2",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:4100/fonts/GeneralSans-700.woff2",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:4100/fonts/GeneralSans-600.woff2",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:4100/fonts/GeneralSans-500.woff2",
+        "status": 200
+      }
+    ],
+    "fonts": {
+      "h1": [
+        {
+          "familyName": "General Sans Semibold",
+          "postScriptName": "GeneralSans-Semibold",
+          "isCustomFont": true,
+          "glyphCount": 28
+        }
+      ],
+      ".hero-copy p": [
+        {
+          "familyName": "JetBrains Mono SemiBold",
+          "postScriptName": "JetBrainsMono-SemiBold",
+          "isCustomFont": true,
+          "glyphCount": 8
+        },
+        {
+          "familyName": "General Sans",
+          "postScriptName": "GeneralSans-Regular",
+          "isCustomFont": true,
+          "glyphCount": 152
+        }
+      ],
+      "#features h3": [
+        {
+          "familyName": "General Sans",
+          "postScriptName": "GeneralSans-Regular",
+          "isCustomFont": true,
+          "glyphCount": 36
+        }
+      ],
+      ".tprice": [
+        {
+          "familyName": "General Sans",
+          "postScriptName": "GeneralSans-Regular",
+          "isCustomFont": true,
+          "glyphCount": 3
+        }
+      ],
+      ".cj span": [
+        {
+          "familyName": "General Sans Semibold",
+          "postScriptName": "GeneralSans-Semibold",
+          "isCustomFont": true,
+          "glyphCount": 68
+        }
+      ],
+      "#faq summary span": [
+        {
+          "familyName": "General Sans Semibold",
+          "postScriptName": "GeneralSans-Semibold",
+          "isCustomFont": true,
+          "glyphCount": 12
+        }
+      ],
+      ".feature-terminal code": [
+        {
+          "familyName": "JetBrains Mono",
+          "postScriptName": "JetBrainsMono-Regular",
+          "isCustomFont": true,
+          "glyphCount": 222
+        }
+      ]
+    },
+    "overflow": false
+  }
+]
