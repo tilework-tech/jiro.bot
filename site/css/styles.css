@@ -910,7 +910,7 @@ details[open] .pl::after {
    so these overrides use !important where they have to beat an inline style. */
 
 .ctable {
-  --ccols: 1.1fr 1.25fr 1fr 1fr 1fr;
+  --ccols: 1.1fr 1.25fr repeat(4, 1fr);
 }
 .nav-toggle {
   display: none;
@@ -1102,13 +1102,17 @@ details[open] .pl::after {
     overscroll-behavior-x: contain;
   }
   .ctable {
-    min-width: 940px !important;
-    --ccols: 140px 230px repeat(3, minmax(190px, 1fr));
+    min-width: 1080px !important;
+    --ccols: 90px 230px repeat(4, minmax(190px, 1fr));
     font-size: 15px !important;
     line-height: 1.5 !important;
   }
   .crow > * {
     padding: 18px 20px !important;
+  }
+  .crow > .ck {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
   }
   .compare-brand {
     padding-left: 8px !important;

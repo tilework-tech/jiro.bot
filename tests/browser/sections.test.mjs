@@ -100,7 +100,7 @@ test("bake-off: Jiro's cells are bold, the context row says you can leave, and h
   await page.waitForTimeout(400);
   const before0 = await colors(rows.nth(0));
   const before1 = await colors(rows.nth(1));
-  await rows.nth(0).hover();
+  await rows.nth(0).getByText("Droid + custom subagents", { exact: true }).hover();
   await page.waitForTimeout(400);
   assert.notDeepEqual(await colors(rows.nth(0)), before0, "hovered row changes");
   assert.deepEqual(await colors(rows.nth(1)), before1, "other rows stay as they were");
@@ -110,6 +110,22 @@ test("bake-off: Jiro's cells are bold, the context row says you can leave, and h
 test("bake-off rows match the fact-checked comparison", async () => {
   const { page } = await open();
   const table = page.locator("#compare");
+  const headers = await table.locator(".ctable > div:first-child > *").allTextContents();
+  assert.deepEqual(headers.map(text => text.trim()), ["Compare", "jiro.bot", "Claude Tag", "Devin", "Factory", "Cursor Cloud"]);
+  const factoryCells = {
+    Agent: "Droid + custom subagents",
+    Model: "Model menu + your keys",
+    Context: "Org-shared rules; wiki export",
+    Cloud: "Hosted or your machines",
+    Pricing: "From $20/mo; extra usage",
+  };
+  assert.equal(await table.locator(".crow").count(), 5);
+  for (const [label, expected] of Object.entries(factoryCells)) {
+    const row = table.locator(".crow").filter({ has: page.locator(".ck", { hasText: label }) });
+    const cells = row.locator(":scope > *");
+    assert.equal(await cells.count(), 6, `${label}: label and five products`);
+    assert.equal((await cells.nth(4).innerText()).trim(), expected, `${label}: approved Factory copy`);
+  }
   for (const cell of [
     "Claude Code, Codex, Gemini CLI, pi, Cursor Agent, OpenCode, or your own",
     "Any model: your keys or subscription",
