@@ -1,0 +1,13 @@
+{
+  "commit": "365811800e78b2129d6eb98da555c3959700ef86",
+  "source": "tilework-tech/nori-monorepo@54ca2abd80eaff7f6f6dc72514d88d512fab11d7/docs/design/jiro/index.html",
+  "assets": {
+    "site/favicon.ico": "6db1564e110cd75d08a0c7745a3b3d31bbc117442afd1e428dabf91daff9c8f4",
+    "site/img/apple-touch-icon.png": "413a69c1822df2e319274bf3dad06b9770205bc08f6c7abd0166f1059c6aa2e5",
+    "site/img/favicon-16x16.png": "dfe0dcc5b2db0e002646edccf5ff5ae18981337d2171a6b7e721fe39c3cd8b0e",
+    "site/img/favicon-32x32.png": "9a8cfdb5a3476ba3d488b79e954f62c5c2454db2dfe96a1a32f0325c84e601b6",
+    "site/img/favicon-48x48.png": "da71eeec91e24694ad0aa68c69eecf53fdadf7e412cd41556ed665972a8a30ed",
+    "site/img/favicon.svg": "44949cc7740d03a3f6b3dfdfee7e168afefb10ab0be0de322d38011a732afc70",
+    "site/jiro-16px.png": "dfe0dcc5b2db0e002646edccf5ff5ae18981337d2171a6b7e721fe39c3cd8b0e"
+  }
+}
