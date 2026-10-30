@@ -246,7 +246,8 @@
     if (!header) return;
     const set = () => document.documentElement.style.setProperty("--header-h", header.offsetHeight + "px");
     set();
-    window.addEventListener("resize", set);
+    if ("ResizeObserver" in window) new ResizeObserver(set).observe(header);
+    else window.addEventListener("resize", set);
   }
 
   // ---------- mobile menu ----------

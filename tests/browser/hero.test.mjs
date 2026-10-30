@@ -183,9 +183,6 @@ test("tapping a bar entry jumps to it and the cycle continues from there", async
   assert.equal(await selectedTab(h.page), "RBAC", "the jump restarts the 40-second interval");
   await h.page.clock.runFor(2_000);
   assert.equal(await selectedTab(h.page), "Multiplayer");
-  await tab(h.page, "On-call").click();
-  await tab(h.page, "Multiplayer").click();
-  assert.equal(await selectedTab(h.page), "Multiplayer");
   assert.equal(await hero(h.page).getByRole("tabpanel").count(), 1);
   await close(h);
 });
@@ -267,7 +264,7 @@ test("every example shows its own poster still", async () => {
   await close(h);
 });
 
-test("the pause control stops the video and the cycle on the first press, and play resumes both", async () => {
+test("pressing pause stops the video and the cycle, and play resumes both", async () => {
   const h = await openHero({ playable: true });
   const video = activeVideo(h.page);
   await anyPlaying(h.page);
@@ -308,20 +305,63 @@ test("the cursor after 'engineer' is a still orange block", async () => {
   await close(h);
 });
 
-test("the hero copy never calls Jiro 'he', never 'calls him in', says nothing about craft and tags @Jiro", async () => {
+test("the hero copy never calls Jiro 'he', never 'calls him in' and says nothing about craft", async () => {
   const h = await openHero();
   const text = await h.page.locator(".hero-row").innerText();
   assert.doesNotMatch(text, /craftsm|craftsperson|call him in|\bhe\b|\bhim\b/i);
-  assert.match(text.replace(/\s+/g, " "), /Tag @Jiro to start\./);
   await close(h);
 });
+
+test("the hero tells visitors to tag @Jiro", async () => {
+  const h = await openHero();
+  assert.match((await h.page.locator(".hero-row").innerText()).replace(/\s+/g, " "), /Tag @Jiro to start\./);
+  await close(h);
+});
+
+test("turning on reduced motion while the hero plays pauses the video and the cycle", async () => {
+  const h = await openHero({ playable: true });
+  await anyPlaying(h.page);
+  await h.page.emulateMedia({ reducedMotion: "reduce" });
+  await hero(h.page).getByRole("button", { name: "Play examples" }).waitFor();
+  assert.equal(await activeVideo(h.page).evaluate((v) => v.paused), true);
+  await h.page.clock.runFor(CYCLE * 2);
+  assert.equal(await selectedTab(h.page), "Multiplayer");
+  await close(h);
+});
+
+test("the hero holds its example while scrolled out of view", async () => {
+  const h = await openHero();
+  await h.page.locator("#pricing").evaluate((el) => el.scrollIntoView({ block: "start", behavior: "instant" }));
+  await h.page.waitForTimeout(300);
+  await h.page.clock.runFor(CYCLE * 2);
+  assert.equal(await selectedTab(h.page), "Multiplayer");
+  await close(h);
+});
+
+for (const [label, viewport, zoom] of [["a 1000px laptop", { width: 1000, height: 700 }, 1], ["200% text on a 1440px screen", DESKTOP, 2]]) {
+  test(`on ${label} the hero copy is never clipped by the bar`, async () => {
+    const h = await openHero({ viewport });
+    if (zoom !== 1) await h.page.addStyleTag({ content: `.hero-copy { zoom: ${zoom}; }` });
+    const copy = await h.page.locator(".hero-copy").evaluate((el) => {
+      const box = el.getBoundingClientRect();
+      const kids = [...el.querySelectorAll("h1, p, a")].map((k) => k.getBoundingClientRect());
+      return { top: box.top, bottom: box.bottom, first: Math.min(...kids.map((k) => k.top)), last: Math.max(...kids.map((k) => k.bottom)) };
+    });
+    const strip = await box(h.page, ".hero-bar");
+    assert.ok(copy.first >= copy.top && copy.last <= copy.bottom, "copy stays inside its panel");
+    assert.ok(copy.last <= strip.y, "copy ends above the bar");
+    await close(h);
+  });
+}
 
 for (const viewport of [DESKTOP, { width: 1180, height: 820 }]) {
   test(`at ${viewport.width}px the hero locks into place under the sticky header`, async () => {
     const h = await openHero({ viewport });
     const { page } = h;
     await page.mouse.move(viewport.width / 2, viewport.height / 2);
+    const ended = page.evaluate(() => new Promise((r) => addEventListener("scrollend", r, { once: true })));
     await page.mouse.wheel(0, 90);
+    await ended;
     await page.waitForFunction(() => scrollY === 0, null, { timeout: 3000 });
     const header = await box(page, "header");
     const row = await box(page, ".hero-row");

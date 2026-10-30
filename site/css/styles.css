@@ -269,8 +269,8 @@ a:hover .chevs i:nth-child(4) {
 .hero-row {
   display: grid;
   grid-template-columns: minmax(0, 547fr) minmax(0, 711fr);
-  grid-template-rows: minmax(0, 1fr) auto;
-  height: max(641px, calc(100svh - var(--header-h, 54px) - 14px));
+  grid-template-rows: 1fr auto;
+  min-height: max(641px, calc(100svh - var(--header-h, 54px) - 14px));
 }
 .hero-media {
   box-sizing: border-box;
@@ -460,10 +460,14 @@ a:hover .chevs i:nth-child(4) {
   }
 }
 @media (max-width: 900px) {
+  /* Stacked sections run taller than a phone screen, so locking them would only fight reading. */
+  html {
+    scroll-snap-type: none;
+  }
   .hero-row {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto auto;
-    height: auto;
+    min-height: 0;
   }
   .hero-media { aspect-ratio: 4 / 5; width: 100%; }
   .hc-stage { --clip-h: 125cqw; --bleed: 24px; }

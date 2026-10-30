@@ -26,7 +26,9 @@
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
   let current = 0;
   let queued = false;
-  const cycle = window.JiroTabCycle(tablist, 20000, () => select(current + 1));
+  let steering = false;
+  let trackWidth = track.clientWidth;
+  const cycle = window.JiroTabCycle(tablist, 20000, () => select(current + 1), section);
 
   const behavior = () => (reduced.matches ? "instant" : "smooth");
   const offset = (i) => stories[i].el.offsetLeft - track.offsetLeft;
@@ -44,7 +46,10 @@
       else story.setAttribute("aria-hidden", "true");
     });
     if (focus) tabs[current].focus();
-    if (Math.abs(track.scrollLeft - offset(current)) > 1) track.scrollTo({ left: offset(current), behavior: behavior() });
+    if (Math.abs(track.scrollLeft - offset(current)) > 1) {
+      steering = true;
+      track.scrollTo({ left: offset(current), behavior: behavior() });
+    }
     requestEmphasis();
   }
 
@@ -61,12 +66,16 @@
   }
 
   // Where a swipe settled; a story other than the selected one means the visitor moved it.
+  // A scroll this script started is finished back onto the selected story instead.
   function settled() {
     let nearest = 0;
     stories.forEach((_, i) => {
       if (Math.abs(offset(i) - track.scrollLeft) < Math.abs(offset(nearest) - track.scrollLeft)) nearest = i;
     });
-    if (nearest !== current) take(nearest, false);
+    if (steering) {
+      steering = false;
+      if (nearest !== current) track.scrollTo({ left: offset(current), behavior: "instant" });
+    } else if (nearest !== current) take(nearest, false);
   }
 
   function emphasize(story, index) {
@@ -119,10 +128,15 @@
     });
   });
   // Keyboard focus on the tabs or a story stops the rotation (APG carousel). The pause button
-  // is excluded so its first press always pauses.
+  // is excluded so its first press always pauses. Clicking into a story only holds it, so the
+  // focused story is never made inert under the visitor.
   [tablist, track].forEach((area) => area.addEventListener("focusin", (e) => {
     if (e.target.matches(":focus-visible")) setPaused(true);
+    else if (area === track) cycle.hold("focus", true);
   }));
+  track.addEventListener("focusout", (e) => {
+    if (!track.contains(e.relatedTarget)) cycle.hold("focus", false);
+  });
   toggle.addEventListener("click", () => setPaused(!cycle.paused()));
   track.addEventListener("pointerenter", (e) => {
     if (e.pointerType === "mouse") cycle.hold("pointer", true);
@@ -136,8 +150,12 @@
       quiet = setTimeout(settled, 150);
     }, { passive: true });
   }
+  // Mobile toolbars resize the viewport while scrolling; only a new track width needs re-aligning.
   window.addEventListener("resize", () => {
-    track.scrollTo({ left: offset(current), behavior: "instant" });
+    if (track.clientWidth !== trackWidth) {
+      trackWidth = track.clientWidth;
+      track.scrollTo({ left: offset(current), behavior: "instant" });
+    }
     requestEmphasis();
   });
   window.addEventListener("scroll", requestEmphasis, { passive: true });

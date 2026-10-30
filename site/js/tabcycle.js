@@ -1,10 +1,10 @@
 /*
  * Shared timer for the hero bar and the "How it works" tabs.
  * The cycle advances every `interval` ms while it is not paused, nothing holds it
- * (keyboard focus, a resting pointer) and the visitor has not asked for reduced motion.
- * `strip` gets data-cycling and --cycle-ms so the active tab can draw its progress line.
+ * (keyboard focus, a resting pointer, being off screen) and the visitor has not asked for reduced
+ * motion. `strip` gets data-cycling and --cycle-ms so the active tab can draw its progress line.
  */
-window.JiroTabCycle = function (strip, interval, advance) {
+window.JiroTabCycle = function (strip, interval, advance, area) {
   "use strict";
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   var paused = false;
@@ -29,9 +29,7 @@ window.JiroTabCycle = function (strip, interval, advance) {
     }, interval);
   }
 
-  strip.style.setProperty("--cycle-ms", interval + "ms");
-  reduce.addEventListener("change", restart);
-  return {
+  var cycle = {
     restart: restart,
     paused: function () { return paused; },
     setPaused: function (on) {
@@ -44,4 +42,13 @@ window.JiroTabCycle = function (strip, interval, advance) {
       restart();
     },
   };
+  strip.style.setProperty("--cycle-ms", interval + "ms");
+  reduce.addEventListener("change", restart);
+  // Nobody is watching an area scrolled out of view, so it waits where it is.
+  if (area && "IntersectionObserver" in window) {
+    new IntersectionObserver(function (entries) {
+      cycle.hold("offscreen", !entries[entries.length - 1].isIntersecting);
+    }).observe(area);
+  }
+  return cycle;
 };

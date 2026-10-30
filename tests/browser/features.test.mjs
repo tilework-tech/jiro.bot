@@ -89,8 +89,9 @@ test("How it works is a white tab strip of three stories with the active tab in 
   await context.close();
 });
 
-test("stories autorotate every 20 seconds and wrap", async () => {
+test("stories autorotate every 20 seconds and wrap, without moving the page", async () => {
   const { page, context } = await open();
+  const top = await page.evaluate(() => scrollY);
   await page.clock.runFor(ROTATE - 1_000);
   assert.equal(await selected(page), "01 Multiplayer");
   await page.clock.runFor(2_000);
@@ -102,6 +103,7 @@ test("stories autorotate every 20 seconds and wrap", async () => {
   await page.clock.runFor(ROTATE);
   assert.equal(await selected(page), "01 Multiplayer");
   await shows(page, "feature-multiplayer");
+  assert.equal(await page.evaluate(() => scrollY), top, "rotation never scrolls the page");
   await context.close();
 });
 
@@ -116,7 +118,7 @@ test("choosing a tab shows its story and stops the rotation", async () => {
   await context.close();
 });
 
-test("the first click on the stories pause button pauses the rotation", async () => {
+test("pressing pause on a fresh page pauses the rotation", async () => {
   const { page, context } = await open();
   await button(page, "Pause stories").click();
   await button(page, "Play stories").waitFor();
@@ -140,6 +142,41 @@ test("resting the pointer on a story holds the rotation until it leaves", async 
   await page.mouse.move(5, 5);
   await page.clock.runFor(ROTATE + 500);
   assert.equal(await selected(page), "02 On-call");
+  await context.close();
+});
+
+test("stories wait while the section is out of view", async () => {
+  const { page, context } = await open();
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await page.waitForTimeout(300);
+  await page.clock.runFor(ROTATE * 2);
+  assert.equal(await selected(page), "01 Multiplayer");
+  await context.close();
+});
+
+test("clicking into a story holds the rotation so focus is never dropped", async () => {
+  const { page, context } = await open();
+  await page.locator("#feature-multiplayer .ftext").click();
+  await page.mouse.move(5, 5);
+  await page.clock.runFor(ROTATE * 2);
+  assert.equal(await selected(page), "01 Multiplayer");
+  assert.equal(await page.evaluate(() => document.activeElement.id), "feature-multiplayer");
+  await context.close();
+});
+
+test("on a phone, scrolling through a story emphasizes the step whose demo is in the middle", async () => {
+  const { page, context } = await open({ viewport: { width: 390, height: 844 } });
+  await tab(page, "02 On-call").click();
+  await shows(page, "feature-oncall");
+  for (const i of [2, 1]) {
+    await page.locator(`#oncall-region-${i + 1}`).evaluate(el => el.scrollIntoView({ block: "center", behavior: "instant" }));
+    // Let the browser deliver the scroll event, then run the emphasis frame on the fake clock.
+    await page.waitForTimeout(150);
+    await page.clock.runFor(100);
+    await page.waitForFunction(i => document.querySelector(`#oncall-step-${i + 1}`).getAttribute("aria-current") === "step"
+      && document.querySelector(`#oncall-region-${i + 1}`).classList.contains("is-current")
+      && document.querySelectorAll("#feature-oncall [aria-current]").length === 1, i);
+  }
   await context.close();
 });
 
@@ -196,7 +233,7 @@ test("story steps are plain text with no links, hover or pointer", async () => {
   await context.close();
 });
 
-test("story content is unchanged", async () => {
+test("each demo region shows its scenario", async () => {
   const { page, context } = await open();
   const text = id => page.locator(id).innerText();
   assert.match(await text("#multiplayer-region-1"), /Priya/);

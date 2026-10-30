@@ -18,7 +18,7 @@
     var current = 0;
     var cycle = window.JiroTabCycle(tablist, 40000, function () {
       select(current + 1, false);
-    });
+    }, hero.querySelector(".hero-row"));
 
     function panel(i) {
       return document.getElementById(tabs[i].getAttribute("aria-controls"));
@@ -52,6 +52,7 @@
         t.tabIndex = on ? 0 : -1;
         var p = panel(j);
         p.toggleAttribute("data-active", on);
+        p.tabIndex = on ? 0 : -1;
         if (on) p.removeAttribute("aria-hidden");
         else p.setAttribute("aria-hidden", "true");
       });
@@ -95,6 +96,12 @@
       cycle.setPaused(!playing);
     });
     mobile.addEventListener("change", sync);
+    reduce.addEventListener("change", function () {
+      if (!reduce.matches) return;
+      playing = false;
+      sync();
+      cycle.setPaused(true);
+    });
     select(0, false);
     cycle.setPaused(!playing);
     hero.querySelector(".hc-controls").hidden = false;
