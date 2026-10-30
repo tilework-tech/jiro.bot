@@ -23,21 +23,31 @@
   font-display: swap;
 }
 @font-face {
-  font-family: "Sohne";
-  src: url("../fonts/Sohne-Buch.woff2") format("woff2");
+  font-family: "General Sans";
+  src: url("../fonts/GeneralSans-400.woff2") format("woff2");
   font-weight: 400;
+  font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Sohne";
-  src: url("../fonts/Sohne-Halbfett.woff2") format("woff2");
-  font-weight: 600 700;
+  font-family: "General Sans";
+  src: url("../fonts/GeneralSans-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Sohne Mono";
-  src: url("../fonts/SohneMono-Buch.woff2") format("woff2");
-  font-weight: 400;
+  font-family: "General Sans";
+  src: url("../fonts/GeneralSans-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "General Sans";
+  src: url("../fonts/GeneralSans-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
   font-display: swap;
 }
 html {
@@ -48,8 +58,14 @@ section[id],
   scroll-margin-top: 78px;
 }
 body {
+  font-family: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   margin: 0;
   background: #2bff6b;
+}
+code,
+kbd,
+pre {
+  font-family: "JetBrains Mono", monospace;
 }
 a {
   color: inherit;
@@ -211,7 +227,7 @@ a:hover .chevs i:nth-child(4) {
   }
 }
 .logotype {
-  font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
+  font-family: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 700;
   -webkit-text-stroke: 0.032em currentColor;
   paint-order: stroke fill;
@@ -506,7 +522,7 @@ details[open] .pl::after {
 }
 .h-hero {
   margin: 0;
-  font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
+  font-family: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 600;
   font-size: 86.5px;
   line-height: 1.12;
@@ -524,7 +540,7 @@ details[open] .pl::after {
 }
 .h-ditch {
   margin: 0;
-  font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
+  font-family: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 600;
   font-size: 86.5px;
   line-height: 96px;
@@ -537,7 +553,7 @@ details[open] .pl::after {
   margin: 0;
   flex: 0 1 1030px;
   margin-right: auto;
-  font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
+  font-family: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 400;
   font-size: 48.5px;
   line-height: 49px;
@@ -545,21 +561,21 @@ details[open] .pl::after {
 }
 .h-sec {
   margin: 0;
-  font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
+  font-family: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 600;
   font-size: 50.6px;
   line-height: 1;
   letter-spacing: -0.045em;
 }
 .tname {
-  font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
+  font-family: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 400;
   font-size: 26.4px;
   line-height: 1.1;
   letter-spacing: -0.03em;
 }
 .tprice {
-  font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
+  font-family: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 400;
   font-size: 60px;
   line-height: 0.85;
@@ -622,7 +638,7 @@ details[open] .pl::after {
   padding: 0 22px 18px;
   display: flex;
   align-items: flex-end;
-  font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
+  font-family: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 600;
   font-size: 15.5px;
   color: #0a0a0a;
@@ -636,7 +652,7 @@ details[open] .pl::after {
   justify-content: space-between;
   align-items: center;
   gap: 24px;
-  font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
+  font-family: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 600;
   font-size: 20.5px;
   line-height: 26px;
@@ -708,7 +724,7 @@ details[open] .pl::after {
 }
 .quote blockquote {
   margin: 0;
-  font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
+  font-family: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: clamp(22px, 2.1vw, 30px);
   line-height: 1.4;
   letter-spacing: -0.02em;
@@ -1017,7 +1033,7 @@ details[open] .pl::after {
 .ea,
 .page-solo,
 .page-legal {
-  font-family: "Sohne", "Helvetica Neue", Helvetica, sans-serif;
+  font-family: "General Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .ea {
   width: min(460px, calc(100vw - 32px));
