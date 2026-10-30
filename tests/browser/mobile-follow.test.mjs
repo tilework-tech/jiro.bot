@@ -101,8 +101,9 @@ for (const width of [390, 320]) {
     assert.equal(new Set(visited.map(Math.round)).size, visited.length, 'each section has a new resting position');
     await page.locator('#why').evaluate(n => scrollTo({top: scrollY + n.getBoundingClientRect().top + 320, behavior: 'instant'}));
     await page.waitForTimeout(2600);
-    await mascot.waitFor({state: 'visible'});
-    assert.ok(await clearance(page), 'follows within a long section');
+    await page.waitForFunction(() => !['peeking', 'flying'].includes(document.querySelector('.jiro-buddy').dataset.jiroState));
+    // Crowded testimonial content takes precedence over keeping the buddy visible.
+    assert.ok(await clearance(page), 'deep scrolling keeps testimonial content unobstructed');
     // Change adjacent sections before the plug-in's previous rest period expires.
     for (const selector of ['#feature-oncall', '#feature-permissions']) {
       await page.locator(selector).evaluate(n => scrollTo({top: scrollY + n.getBoundingClientRect().top - 90, behavior: 'instant'}));
