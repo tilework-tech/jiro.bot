@@ -352,10 +352,18 @@
     function spotSection() {
       if (!pinned) return restingSection;
       var box = mascot.getBoundingClientRect();
+      var containing = sections.find(function (section) {
+        var r = section.getBoundingClientRect();
+        return box.left >= r.left && box.right <= r.right && box.top >= r.top && box.bottom <= r.bottom;
+      });
+      if (containing) return containing;
+      var x = box.left + box.width / 2;
       var y = box.top + box.height / 2;
       return sections.reduce(function (best, section) {
         var r = section.getBoundingClientRect();
-        var d = y < r.top ? r.top - y : y > r.bottom ? y - r.bottom : 0;
+        var dx = Math.max(r.left - x, x - r.right, 0);
+        var dy = Math.max(r.top - y, y - r.bottom, 0);
+        var d = Math.hypot(dx, dy);
         return !best || d < best.d ? { s: section, d: d } : best;
       }, null).s;
     }
@@ -376,7 +384,7 @@
 
     function pickIdle() {
       var styles = journey.bouncy ? ["game", "game", "sleepy"] : ["game", "game", "sleepy", "spring", "eager"];
-      var style = styles[Math.floor(Math.random() * styles.length)];
+      var style = hovered ? "game" : styles[Math.floor(Math.random() * styles.length)];
       if (style === "spring" || style === "eager") journey.bouncy = true;
       aside.setAttribute("data-jiro-motion", style);
       if (bubble.hidden) setFace(restFace());
@@ -496,6 +504,10 @@
     }
 
     function spotFor(section) {
+      // The host can reserve space for its content and the complete interaction.
+      var placement = { section: section, point: null };
+      aside.dispatchEvent(new CustomEvent("jiro-buddy:place", { detail: placement }));
+      if (placement.point) return placement.point;
       var anchor = target(section, "anchor");
       var box = (anchor || section).getBoundingClientRect();
       if (!box.width || !box.height) box = (target(section, "mobile-anchor") || section).getBoundingClientRect();
@@ -692,7 +704,7 @@
     function travelTo(section) {
       var from = aside.getBoundingClientRect();
       var offscreen = from.bottom < 0 || from.top > window.innerHeight;
-      if (wide.matches && motion() && (offscreen || direction > 0) && peeks < MAX_PEEKS) {
+      if (motion() && (offscreen || direction > 0) && peeks < MAX_PEEKS && aside.hasAttribute("data-site-ready")) {
         aside.setAttribute("data-jiro-move", "large-peek");
         hopTo(section, "large");
         return;
@@ -838,9 +850,35 @@
 
     mascot.addEventListener("pointerenter", function () {
       hovered = true;
-      setFace(face);
+      aside.setAttribute("data-jiro-motion", "game");
+      setFace(face === "sleepy" ? "cursor" : face);
     });
     mascot.addEventListener("pointerleave", function () { hovered = false; setFace(face); });
+
+    aside.addEventListener("jiro-buddy:refresh", function (event) {
+      if (closed || moving || drag || pinned) return;
+      var section = event.detail.section;
+      if (section !== restingSection) hideBubble();
+      active = section;
+      restingSection = section;
+      place(section);
+      if (direction > 0 && peeks < MAX_PEEKS && motion()) {
+        peeks += 1;
+        moving = true;
+        aside.setAttribute("data-jiro-move", "large-peek");
+        peekThenFly(section, ++moveId);
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && !bubble.hidden) {
+        hideBubble();
+        event.stopPropagation();
+      }
+    });
+    document.addEventListener("click", function (event) {
+      if (!aside.contains(event.target) && !bubble.hidden) hideBubble();
+    });
 
     mascot.addEventListener("click", function () {
       if (swallowClick) {

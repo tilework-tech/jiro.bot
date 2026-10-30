@@ -1,31 +1,69 @@
-/* The host only reveals the buddy where the entire control has clear space. */
-@media (max-width: 767.98px) {
-  /* Quiet resting space where the mobile layout otherwise has no clear gap. */
-  .ditch-copy,
+/* Keep off-screen entrance frames out of the document's horizontal overflow. */
+.jiro-buddy-layer {
+  position: absolute;
+  inset: 0;
+  overflow-x: clip;
+  overflow-y: visible;
+  pointer-events: none;
+}
+.jiro-buddy-measure {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: auto;
+  translate: none;
+  visibility: hidden !important;
+  pointer-events: none;
+}
+/* Dense desktop panels reserve one clear row for the enlarged pose and speech. */
+@media (min-width: 768px) {
   #compare .sec-head,
   .faq-col,
   .reserve-col {
-    padding-top: 104px !important;
-  }
-
-  .jiro-buddy[data-site-mobile]:not(.jiro-buddy--pinned):not(.jiro-buddy--held) {
-    translate: var(--site-buddy-x) var(--site-buddy-y) !important;
-    transform: none !important;
+    padding-top: 170px !important;
   }
 }
-
+/* Narrow panels reserve room for speech and the larger hover pose. */
+@media (max-width: 767.98px) {
+  .ditch-copy,
+  #compare .sec-head,
+  #why .sec-head,
+  #pricing .sec-head,
+  .ftext,
+  .faq-col,
+  .reserve-col {
+    padding-top: 210px !important;
+  }
+}
 .jiro-buddy:not([data-site-visible]),
 .jiro-buddy:not([data-site-visible]) *,
 .jiro-buddy:not([data-site-speech]) .jiro-buddy__bubble,
-.jiro-buddy:not([data-site-speech]) .jiro-buddy__sr {
+.jiro-buddy:not([data-site-speech]) .jiro-buddy__sr,
+.jiro-buddy[data-site-entering] .jiro-buddy__close {
   visibility: hidden !important;
   pointer-events: none !important;
 }
-
+@media (prefers-reduced-motion: no-preference) {
+  .jiro-buddy[data-site-grow] .jiro-buddy__mascot:hover .jiro-buddy__art,
+  .jiro-buddy[data-site-grow] .jiro-buddy__mascot:focus-visible .jiro-buddy__art {
+    transform: scale(1.5);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .jiro-buddy,
   .jiro-buddy * {
     visibility: hidden !important;
     pointer-events: none !important;
   }
+}
+
+.jiro-buddy .jiro-buddy__bubble {
+  left: var(--site-bubble-left, 50%);
+  top: var(--site-bubble-top, auto);
+  bottom: auto;
+  translate: none;
+}
+.jiro-buddy[data-site-speech-side] .jiro-buddy__bubble::before,
+.jiro-buddy[data-site-speech-side] .jiro-buddy__bubble::after {
+  display: none;
 }
