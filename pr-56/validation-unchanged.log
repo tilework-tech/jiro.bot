@@ -1,0 +1,10 @@
+site/video/carousel/oncall-desktop.mp4: OK
+site/video/carousel/oncall-mobile.mp4: OK
+site/video/carousel/oncall-poster.jpg: OK
+site/video/carousel/rbac-desktop.mp4: OK
+site/video/carousel/rbac-mobile.mp4: OK
+site/video/carousel/rbac-poster.jpg: OK
+video/carousel-src/lib/core.js: OK
+video/carousel-src/lib/stage.css: OK
+video/carousel-src/scenes/oncall.html: OK
+video/carousel-src/scenes/rbac.html: OK

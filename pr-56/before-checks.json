@@ -1,0 +1,163 @@
+[
+  {
+    "cut": "desktop",
+    "t": 0,
+    "text": "     PriyaSlack on desktop",
+    "background": "rgba(10, 10, 10, 0.55)",
+    "color": "rgb(242, 242, 238)",
+    "secondary": "rgb(154, 154, 150)",
+    "opacity": "1",
+    "box": {
+      "x": 438.5078125,
+      "y": 890,
+      "width": 322.984375,
+      "height": 44,
+      "top": 890,
+      "right": 761.4921875,
+      "bottom": 934,
+      "left": 438.5078125
+    },
+    "contrast": [
+      3.9199486418451324,
+      1.5579826683046754
+    ]
+  },
+  {
+    "cut": "desktop",
+    "t": 12,
+    "text": "    KiraSlack on phone",
+    "background": "rgba(10, 10, 10, 0.55)",
+    "color": "rgb(242, 242, 238)",
+    "secondary": "rgb(154, 154, 150)",
+    "opacity": "1",
+    "box": {
+      "x": 453,
+      "y": 890,
+      "width": 294,
+      "height": 44,
+      "top": 890,
+      "right": 747,
+      "bottom": 934,
+      "left": 453
+    },
+    "contrast": [
+      3.9199486418451324,
+      1.5579826683046754
+    ]
+  },
+  {
+    "cut": "desktop",
+    "t": 25,
+    "text": "   SamCLI on laptop",
+    "background": "rgba(10, 10, 10, 0.55)",
+    "color": "rgb(242, 242, 238)",
+    "secondary": "rgb(154, 154, 150)",
+    "opacity": "1",
+    "box": {
+      "x": 462.21875,
+      "y": 890,
+      "width": 275.5625,
+      "height": 44,
+      "top": 890,
+      "right": 737.78125,
+      "bottom": 934,
+      "left": 462.21875
+    },
+    "contrast": [
+      3.9199486418451324,
+      1.5579826683046754
+    ]
+  },
+  {
+    "cut": "mobile",
+    "t": 0,
+    "text": "     PriyaSlack on desktop",
+    "background": "rgba(10, 10, 10, 0.55)",
+    "color": "rgb(242, 242, 238)",
+    "secondary": "rgb(154, 154, 150)",
+    "opacity": "1",
+    "box": {
+      "x": 198.5078125,
+      "y": 830,
+      "width": 322.984375,
+      "height": 44,
+      "top": 830,
+      "right": 521.4921875,
+      "bottom": 874,
+      "left": 198.5078125
+    },
+    "contrast": [
+      3.9199486418451324,
+      1.5579826683046754
+    ]
+  },
+  {
+    "cut": "mobile",
+    "t": 12,
+    "text": "    KiraSlack on phone",
+    "background": "rgba(10, 10, 10, 0.55)",
+    "color": "rgb(242, 242, 238)",
+    "secondary": "rgb(154, 154, 150)",
+    "opacity": "1",
+    "box": {
+      "x": 213,
+      "y": 830,
+      "width": 294,
+      "height": 44,
+      "top": 830,
+      "right": 507,
+      "bottom": 874,
+      "left": 213
+    },
+    "contrast": [
+      3.9199486418451324,
+      1.5579826683046754
+    ]
+  },
+  {
+    "cut": "mobile",
+    "t": 25,
+    "text": "   SamCLI on laptop",
+    "background": "rgba(10, 10, 10, 0.55)",
+    "color": "rgb(242, 242, 238)",
+    "secondary": "rgb(154, 154, 150)",
+    "opacity": "1",
+    "box": {
+      "x": 222.21875,
+      "y": 830,
+      "width": 275.5625,
+      "height": 44,
+      "top": 830,
+      "right": 497.78125,
+      "bottom": 874,
+      "left": 222.21875
+    },
+    "contrast": [
+      3.9199486418451324,
+      1.5579826683046754
+    ]
+  },
+  {
+    "cut": "poster",
+    "t": 0,
+    "text": "     PriyaSlack on desktop",
+    "background": "rgba(10, 10, 10, 0.55)",
+    "color": "rgb(242, 242, 238)",
+    "secondary": "rgb(154, 154, 150)",
+    "opacity": "1",
+    "box": {
+      "x": 378.5078125,
+      "y": 902,
+      "width": 322.984375,
+      "height": 44,
+      "top": 902,
+      "right": 701.4921875,
+      "bottom": 946,
+      "left": 378.5078125
+    },
+    "contrast": [
+      3.9199486418451324,
+      1.5579826683046754
+    ]
+  }
+]
