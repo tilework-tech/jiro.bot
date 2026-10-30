@@ -151,7 +151,7 @@ class CopyHandler(BaseHTTPRequestHandler):
             self.send(200, file.read_bytes(), 'text/javascript' if file.suffix == '.js' else 'text/css')
         elif path in STATIC_PAGES:
             self.send(200, (self.server.root / path.lstrip('/')).read_bytes(), 'text/html; charset=utf-8')
-        elif path.startswith(('/css/', '/js/', '/fonts/', '/img/', '/video/')):
+        elif path in ('/favicon.ico', '/jiro-16px.png') or path.startswith(('/css/', '/js/', '/fonts/', '/img/', '/video/')):
             file = (self.server.root / path.lstrip('/')).resolve()
             if file.is_relative_to(self.server.root) and file.is_file():
                 self.send(200, file.read_bytes(), mimetypes.guess_type(file.name)[0] or 'application/octet-stream')

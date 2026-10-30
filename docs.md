@@ -16,6 +16,7 @@ Path: @/
 - Generated pages funnel to the Nori Sessions signup (`trial_url`, `login.norisessions.com`) and to the `public/jiro` skillset install command (`nori-skillsets`), both configured in `site.toml`. The landing page instead funnels to the early-access waitlist (see below).
 - Publishing is the manual-dispatch workflow [.github/workflows/deploy.yml](.github/workflows/deploy.yml): it runs `aws s3 sync site/ --delete` into the bucket from [infra/site.cfn.yaml](infra/site.cfn.yaml) and invalidates CloudFront. It does not run the build, so generated output in `site/` is committed and what is in git is exactly what ships.
 - The backend deploys separately through [.github/workflows/deploy-early-access.yml](.github/workflows/deploy-early-access.yml). It runs the Lambda tests and updates function code through [lambda/early-access/deploy.sh](lambda/early-access/deploy.sh); secrets and API configuration remain owned by the CloudFormation stack.
+- The shared favicon is an orange bubble with white terminal glyphs on a transparent background. Hand-written pages link to [the SVG source](site/img/favicon.svg), raster exports and the Apple touch icon using relative paths for session previews; [site/favicon.ico](site/favicon.ico) supplies the conventional root fallback. Generated pages retain their existing `/jiro-16px.png` link from [build.py](build.py), whose asset matches the new small PNG export. These are committed static assets, preserved by the generator and published with the rest of `site/`.
 
 ```
 content/site.toml ─┐
