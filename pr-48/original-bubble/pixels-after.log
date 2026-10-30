@@ -1,0 +1,14 @@
+PASS site/img/favicon.svg: exact original vector source
+PASS site/img/favicon-16x16.png: 16x16: alpha=0..255, transparent=97, opaque=106, four clear corners, original full color
+PASS site/img/favicon-32x32.png: 32x32: alpha=0..255, transparent=442, opaque=485, four clear corners, original full color
+PASS site/img/favicon-48x48.png: 48x48: alpha=0..255, transparent=1038, opaque=1126, four clear corners, original full color
+PASS site/img/apple-touch-icon.png: 180x180: alpha=0..255, transparent=15338, opaque=16483, four clear corners, original full color
+PASS site/favicon.ico: 16x16: alpha=0..255, transparent=97, opaque=106, four clear corners, original full color; 32x32: alpha=0..255, transparent=442, opaque=485, four clear corners, original full color; 48x48: alpha=0..255, transparent=1038, opaque=1126, four clear corners, original full color
+PASS site/jiro-16px.png: 16x16: alpha=0..255, transparent=97, opaque=106, four clear corners, original full color
+PASS .local/options-round/favicon-options/01-bubble/source.svg: exact original vector source
+PASS .local/options-round/favicon-options/01-bubble/16.png: 16x16: alpha=0..255, transparent=97, opaque=106, four clear corners, original full color
+PASS .local/options-round/favicon-options/01-bubble/32.png: 32x32: alpha=0..255, transparent=442, opaque=485, four clear corners, original full color
+PASS .local/options-round/favicon-options/01-bubble/48.png: 48x48: alpha=0..255, transparent=1038, opaque=1126, four clear corners, original full color
+PASS .local/options-round/favicon-options/01-bubble/180.png: 180x180: alpha=0..255, transparent=15338, opaque=16483, four clear corners, original full color
+PASS .local/options-round/favicon-options/01-bubble/favicon.ico: 16x16: alpha=0..255, transparent=97, opaque=106, four clear corners, original full color; 32x32: alpha=0..255, transparent=442, opaque=485, four clear corners, original full color; 48x48: alpha=0..255, transparent=1038, opaque=1126, four clear corners, original full color
+13/13 checks passed; 0 failed

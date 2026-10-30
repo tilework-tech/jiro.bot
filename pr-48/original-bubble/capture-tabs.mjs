@@ -1,0 +1,31 @@
+import { chromium } from '../../tests/browser/node_modules/playwright/index.mjs';
+import { execFileSync } from 'node:child_process';
+import { copyFile, writeFile } from 'node:fs/promises';
+const browser = await chromium.connectOverCDP('http://127.0.0.1:9222');
+const context = browser.contexts()[0];
+const settings = context.pages().find(p => p.url().startsWith('chrome://settings')) ?? await context.newPage();
+await settings.goto('chrome://settings/appearance');
+const scheme = settings.locator('#colorSchemeModeSelect');
+await scheme.waitFor();
+const originalScheme = await scheme.inputValue();
+const page = await context.newPage();
+await page.goto('http://127.0.0.1:4100/?favicon=original-bubble');
+await page.waitForLoadState('networkidle');
+const cdp = await context.newCDPSession(page);
+await cdp.send('Emulation.clearDeviceMetricsOverride');
+const {windowId} = await cdp.send('Browser.getWindowForTarget');
+await cdp.send('Browser.setWindowBounds', {windowId, bounds:{windowState:'normal'}});
+await cdp.send('Browser.setWindowBounds', {windowId, bounds:{left:0,top:0,width:1440,height:1100}});
+for (const [name, value] of [['light','1'], ['dark','2']]) {
+  await settings.bringToFront();
+  await scheme.selectOption(value);
+  await page.bringToFront();
+  await page.waitForTimeout(1200);
+  execFileSync('python3', ['.local/pr-proof/capture-desktop.py', `.local/pr-proof/browser-tab-${name}.png`], {stdio:'inherit'});
+}
+await copyFile('site/img/favicon-16x16.png', '.local/pr-proof/favicon-16px.png');
+await writeFile('.local/pr-proof/capture-metadata.json', JSON.stringify({browser:await browser.version(),url:page.url(),originalScheme,headless:false,capture:'X11 root window; actual Chrome theme via settings UI'},null,2));
+await scheme.selectOption(originalScheme);
+await settings.close();
+await page.bringToFront();
+await browser.close();

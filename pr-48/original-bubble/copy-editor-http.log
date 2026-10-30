@@ -1,0 +1,12 @@
+test_default_preview_has_no_editor (test_server.CopyServerTests.test_default_preview_has_no_editor) ... ok
+test_invalid_save_is_atomic_and_private_files_are_not_served (test_server.CopyServerTests.test_invalid_save_is_atomic_and_private_files_are_not_served) ... ok
+test_save_escapes_text_preserves_markup_commits_and_survives_reload (test_server.CopyServerTests.test_save_escapes_text_preserves_markup_commits_and_survives_reload) ... ok
+test_serves_hero_video (test_server.CopyServerTests.test_serves_hero_video) ... ok
+test_serves_images (test_server.CopyServerTests.test_serves_images) ... ok
+test_site_exposes_editable_copy_but_preserves_dynamic_regions (test_server.CopyServerTests.test_site_exposes_editable_copy_but_preserves_dynamic_regions) ... ok
+test_stale_save_is_rejected_without_overwriting_saved_copy (test_server.CopyServerTests.test_stale_save_is_rejected_without_overwriting_saved_copy) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.826s
+
+OK
