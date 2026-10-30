@@ -113,7 +113,7 @@ test("page sections and signup dialog have accessible names", async t => {
   for (const section of names) assert.ok(section.name, `${section.id} has an accessible name`);
   assert.equal(await page.getByRole('region', { name: 'How it works', exact: true }).count(), 1);
   assert.equal(await page.getByRole('heading', { name: 'How Jiro compares.', exact: true }).count(), 1);
-  assert.equal(await page.getByRole('heading', { name: 'Pricing.', exact: true }).count(), 1);
+  assert.equal(await page.getByRole('heading', { name: 'Pricing', exact: true }).count(), 1);
   await page.locator('#reserve [data-early-access]').click();
   assert.equal(await page.getByRole('dialog', { name: 'Get early access to Jiro', exact: true }).count(), 1);
 });
