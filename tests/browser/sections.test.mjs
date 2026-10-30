@@ -91,14 +91,19 @@ test("bake-off: Jiro's cells are bold, the context row says you can leave, and h
   assert.match(await contextRow.innerText(), /leave/i);
 
   const rows = table.locator(".crow");
+  const colors = row => row.evaluate(node => [node, ...node.querySelectorAll('*')].map(element => {
+    const style = getComputedStyle(element);
+    return {color: style.color, background: style.backgroundColor};
+  }));
+  await rows.first().scrollIntoViewIfNeeded();
   await page.mouse.move(0, 0);
   await page.waitForTimeout(400);
-  const before0 = await rows.nth(0).screenshot();
-  const before1 = await rows.nth(1).screenshot();
+  const before0 = await colors(rows.nth(0));
+  const before1 = await colors(rows.nth(1));
   await rows.nth(0).hover();
   await page.waitForTimeout(400);
-  assert.notDeepEqual(await rows.nth(0).screenshot(), before0, "hovered row changes");
-  assert.deepEqual(await rows.nth(1).screenshot(), before1, "other rows stay as they were");
+  assert.notDeepEqual(await colors(rows.nth(0)), before0, "hovered row changes");
+  assert.deepEqual(await colors(rows.nth(1)), before1, "other rows stay as they were");
   await page.close();
 });
 
