@@ -3,3 +3,5 @@ node_modules/
 .DS_Store
 # Söhne trial fonts are licensed for development only; never publish them.
 site/fonts/Sohne*.woff2
+# Fontshare permits self-hosting; fetch from its official source instead of redistributing in Git.
+site/fonts/GeneralSans-*.woff2

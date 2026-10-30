@@ -19,11 +19,18 @@ FAMILIES = {"alternatives": "Alternatives", "compare": "Head-to-head comparisons
 FACT_REF = re.compile(r"\[\[(fact|cite):([a-z0-9-]+)\.([a-z0-9-]+)\]\]")
 ORDERED = re.compile(r"^\d+\. ")
 
-CSS = """:root{--bg:#0b0d0c;--panel:#121614;--line:#2a312d;--text:#e8ece9;--muted:#9aa49e;--green:#3cf06e;--salmon:#f2694f}
-*{box-sizing:border-box}body{background:var(--bg);color:var(--text);font:17px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif;margin:0}
+FONT_FACES = "\n".join(
+    f'@font-face{{font-family:"{family}";src:url("../fonts/{filename}-{weight}.woff2") format("woff2");'
+    f'font-weight:{weight};font-style:normal;font-display:swap}}'
+    for family, filename in [("General Sans", "GeneralSans"), ("JetBrains Mono", "JetBrainsMono")]
+    for weight in [400, 500, 600, 700]
+)
+
+CSS = FONT_FACES + "\n" + """:root{--bg:#0b0d0c;--panel:#121614;--line:#2a312d;--text:#e8ece9;--muted:#9aa49e;--green:#3cf06e;--salmon:#f2694f}
+*{box-sizing:border-box}body{background:var(--bg);color:var(--text);font:17px/1.65 "General Sans","Helvetica Neue",Helvetica,Arial,sans-serif;margin:0}
 main{max-width:780px;margin:0 auto;padding:32px 22px 80px}a{color:var(--green)}
-nav{font:14px ui-monospace,Menlo,monospace;color:var(--muted)}nav a{color:var(--text);text-decoration:none}
-.family{font:12px ui-monospace,Menlo,monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--salmon);margin-top:28px}
+nav{font:14px "General Sans","Helvetica Neue",Helvetica,Arial,sans-serif;color:var(--muted)}nav a{color:var(--text);text-decoration:none}
+.family{font:12px "General Sans","Helvetica Neue",Helvetica,Arial,sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--salmon);margin-top:28px}
 h1{font-size:34px;line-height:1.2;margin:.2em 0 .3em}h2{font-size:22px;margin-top:2.2em}h3{font-size:18px;margin-top:1.6em}
 .meta{color:var(--muted);font-size:14px}
 .answer{border-left:3px solid var(--green);background:var(--panel);padding:6px 18px;margin:24px 0}
@@ -31,6 +38,7 @@ h1{font-size:34px;line-height:1.2;margin:.2em 0 .3em}h2{font-size:22px;margin-to
 .table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:15px}
 th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}th{color:var(--green)}
 td:first-child{color:var(--muted)}sup a{text-decoration:none;font-size:12px}
+code,kbd,pre{font-family:"JetBrains Mono",monospace}
 code{background:#1a201c;padding:1px 5px;border-radius:3px;font-size:.92em}
 .cta{margin-top:40px;padding:18px;border:1px solid var(--line);background:var(--panel)}
 .cta a.button{display:inline-block;background:var(--green);color:var(--bg);padding:9px 16px;font-weight:700;text-decoration:none}

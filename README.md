@@ -22,6 +22,7 @@ The landing page, copy editor and sign-up Lambda were consolidated here from the
 Python 3.11+ (for `tomllib`) for the generator and tools; Node 22 for the Lambda and browser tests.
 
 ```bash
+python3 tools/fetch_fonts.py         # fetch verified General Sans assets before previews/browser tests
 python3 build.py                     # regenerate site/ from content/
 python3 tools/lint.py                # must pass before publishing; also fails if site/ is stale
 cd tests && python3 -m unittest      # generator, lint and carousel video tests (video tests need ffmpeg)
@@ -45,6 +46,12 @@ Browser tests can attach to an existing session Chrome through `PLAYWRIGHT_CDP_U
 In a Nori Session, background the preview server (`setsid nohup python3 tools/copy-editor/server.py --port 4100 > /tmp/jiro-copy-server.log 2>&1 < /dev/null &`) and open the session's `/port/4100/` URL.
 
 ## Landing page
+
+The site uses self-hosted General Sans from Fontshare for sans-serif UI text, with normal weights 400, 500, 600 and 700 and `font-display: swap`. [The main stylesheet](site/css/styles.css) loads `site/fonts/GeneralSans-{weight}.woff2`; [build.py](build.py) emits the matching declarations into [the generated page stylesheet](site/assets/pages.css). JetBrains Mono remains on code, terminal mockups and the existing monospace UI.
+
+The Fontshare license is [GeneralSans-FFL.txt](site/fonts/GeneralSans-FFL.txt); it permits self-hosting but restricts redistribution, including through public repositories. The binaries are gitignored: run `python3 tools/fetch_fonts.py` before previews or browser tests. The script downloads the official Fontshare archive and checks pinned SHA-256 hashes for the font files and license before writing them. Visitors load fonts from this site, with no browser request to a Fontshare CDN. The manual site-deploy workflow runs the same preparation before syncing. When updating the fonts, review the official source and license before updating the hashes in [the fetch script](tools/fetch_fonts.py).
+
+[Typography browser tests](tests/browser/typography.test.mjs) verify actual custom-font rendering on desktop and mobile, font-file loading, standalone and generated pages, and the code-font boundary.
 
 `site/js/main.js` renders the pixel art (`data-px`) every 100 ms and only writes to the DOM when a region's output changes. The HTML ships with still values, and visitors with reduced motion get a still frame of these regions. The feature walkthroughs have a separate scroll controller. Pricing faces are independent of the pixel-art clock: each gives a brief, staggered blink when first entering view, then remains still. Without IntersectionObserver or with reduced motion, pricing faces remain static.
 

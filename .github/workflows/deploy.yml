@@ -25,6 +25,8 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::870844658207:role/github-actions-jiro-bot-deploy
           aws-region: us-east-1
+      - name: Fetch licensed webfonts from Fontshare
+        run: python3 tools/fetch_fonts.py
       - name: Sync site
         run: aws s3 sync site/ "s3://$BUCKET/" --delete --cache-control "public,max-age=300"
       - name: Invalidate CloudFront
