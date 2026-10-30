@@ -1,0 +1,32 @@
+[
+  {
+    "id": "01-bubble",
+    "name": "Original bubble",
+    "rationale": "The familiar round Jiro mark, with its terminal face and speech tail floating freely."
+  },
+  {
+    "id": "02-white",
+    "name": "Porcelain",
+    "rationale": "A white squircle gives the full-color mascot a stable, quiet backing in either browser theme."
+  },
+  {
+    "id": "03-carbon",
+    "name": "Carbon",
+    "rationale": "A carbon tile and fine cream separation keep the full-color bubble distinct on dark chrome."
+  },
+  {
+    "id": "04-orange",
+    "name": "Jiro orange",
+    "rationale": "The site’s #FB5E45 accent frames the cream-and-green mascot as a bright but contained tab marker."
+  },
+  {
+    "id": "05-mono",
+    "name": "Terminal glyph",
+    "rationale": "A heavier monochrome silhouette and pixel-aligned terminal face prioritize recognition at 16px."
+  },
+  {
+    "id": "06-signal",
+    "name": "Ember bubble",
+    "rationale": "A direct two-tone orange speech bubble turns the terminal face into a compact, distinctive stamp."
+  }
+]

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jiro — favicon options</title>
+<style>
+:root{--bg:#f2f4f8;--sheet:#fff;--fg:#161616;--text:#393939;--sub:#525252;--line:#dde1e6;--control:#f2f4f8;--green:#198038;color-scheme:light}
+[data-theme=dark]{--bg:#161616;--sheet:#1c1c1c;--fg:#f2f4f8;--text:#dde1e6;--sub:#8a8f98;--line:#393939;--control:#262626;--green:#42be65;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 Arial,sans-serif}main{max-width:1200px;margin:auto;padding:44px 32px}h1{font-size:36px;letter-spacing:-1px;line-height:1.15;font-weight:500;margin:10px 0 14px;color:var(--fg)}p{color:var(--sub);max-width:800px}.eyebrow{font-size:11px;letter-spacing:1.4px;text-transform:uppercase}header{margin-bottom:28px}.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:26px 0 16px}button,select{font:inherit;background:var(--sheet);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:9px 12px;cursor:pointer}button:hover{background:var(--control)}button:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--green);outline-offset:2px}#save{background:var(--green);color:var(--sheet);border-color:var(--green)}#status{font-size:12px;color:var(--sub)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.card{background:var(--sheet);border:1px solid var(--line);border-radius:8px;padding:24px;overflow:hidden}.card.picked{outline:2px solid var(--green);outline-offset:-2px}.card h2{font-size:19px;color:var(--fg);font-weight:500;margin:0}.card p{font-size:13px;min-height:40px}.heading{display:flex;align-items:center;justify-content:space-between;gap:12px}.num{font-size:12px;color:var(--sub);margin-right:10px}.pick{font-size:12px;white-space:nowrap}.hero{height:214px;display:flex;align-items:center;justify-content:center;margin:12px 0;background:var(--control);border-radius:6px}.hero img{width:180px;height:180px}.strip{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0}.sample{background:var(--control);height:68px;flex:1;border:1px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:12px}.sample.dark{background:#262626;color:#f2f4f8;border-color:#393939}.sample.light{background:#fff;color:#161616;border-color:#dde1e6}.native{width:16px;height:16px;flex:none}.downloads{display:flex;gap:14px;margin:16px 0;flex-wrap:wrap}a{color:var(--text);text-underline-offset:3px;font-size:12px}textarea{width:100%;font:13px/1.5 Arial,sans-serif;background:var(--control);color:var(--text);border:1px solid var(--line);border-radius:6px;resize:vertical;min-height:70px;padding:10px}.notes-label{display:block;color:var(--sub);font-size:12px;margin:12px 0 6px}dialog{border:1px solid var(--line);border-radius:8px;padding:18px;background:var(--sheet);color:var(--text);max-width:calc(100vw - 32px)}dialog::backdrop{background:#161616b0}.mockup-scroll{overflow:auto;max-width:calc(100vw - 72px);margin:14px 0}.mockup-scroll img{width:1100px;height:376px;max-width:none;display:block}dialog p{font-size:12px}.dialog-heading{display:flex;align-items:center;justify-content:space-between;gap:20px}footer{margin-top:28px;font-size:12px;color:var(--sub)}@media(max-width:750px){main{padding:28px 16px}.grid{grid-template-columns:1fr}h1{font-size:30px}}
+</style>
+<main>
+<header><div class="eyebrow">jiro.bot / icon studies / 30 October 2026</div><h1>A small mark.<br>A recognizable Jiro.</h1><p>Six candidates built from the Jiro bubble. Compare the actual 16px icons on both tab backgrounds, then open the browser-strip mockups at their native size.</p>
+<div class="controls"><button id="theme">Dark canvas</button><label for="size">Compare at</label><select id="size"><option value="16">16px — browser tab</option><option value="32">32px</option><option value="48">48px</option></select><button id="save">Save choices & notes</button><span id="status" role="status">Review only · no site changes</span></div></header>
+<div class="grid" id="grid"></div><footer>Large previews are the 180×180 exports. Small comparisons use their matching PNG at its exact pixel size. The mockups are Chromium-style illustrations, rendered at 1×. Saving writes only to this review folder.</footer>
+</main>
+<dialog id="dialog"><div class="dialog-heading"><strong id="dialog-title"></strong><button id="close">Close</button></div><div class="mockup-scroll"><img id="mockup" alt="Light and dark browser tab mockups"></div><p>Native 1100×376 image. Scroll horizontally on smaller screens; the favicons remain 16×16.</p></dialog>
+<script type="module">
+const choices = await (await fetch('manifest.json')).json();
+const response = await fetch('review-notes.json');
+const saved = response.ok ? await response.json() : {};
+const grid = document.querySelector('#grid');
+for (const [i,c] of choices.entries()) {
+  const card = document.createElement('article'); card.className='card'; card.dataset.id=c.id;
+  card.innerHTML=`<div class="heading"><h2><span class="num">0${i+1}</span>${c.name}</h2><label class="pick"><input type="checkbox"> Shortlist</label></div><p>${c.rationale}</p><div class="hero"><img src="${c.id}/180.png" alt="${c.name} at 180px" width="180" height="180"></div><div class="strip"><div class="sample light"><img class="native" src="${c.id}/16.png" alt="">jiro.bot</div><div class="sample dark"><img class="native" src="${c.id}/16.png" alt="">jiro.bot</div></div><button class="tabs">View true-size browser strips</button><div class="downloads">${[16,32,48,180].map(s=>`<a href="${c.id}/${s}.png">${s}px PNG</a>`).join('')}<a href="${c.id}/favicon.ico">ICO</a><a href="${c.id}/source.svg">SVG</a></div><label class="notes-label" for="notes-${c.id}">Review notes</label><textarea id="notes-${c.id}" placeholder="What works? What should change?"></textarea>`;
+  const pick=card.querySelector('input');const note=card.querySelector('textarea');
+  pick.checked=Boolean(saved[c.id]?.shortlisted);note.value=saved[c.id]?.notes||'';
+  card.classList.toggle('picked',pick.checked);
+  pick.onchange=()=>{card.classList.toggle('picked',pick.checked);document.querySelector('#status').textContent='Unsaved changes';};
+  note.oninput=()=>document.querySelector('#status').textContent='Unsaved changes';
+  card.querySelector('.tabs').onclick=()=>{document.querySelector('#mockup').src=`${c.id}/tabs.png`;document.querySelector('#dialog-title').textContent=c.name;document.querySelector('#dialog').showModal();};
+  grid.append(card);
+}
+document.querySelector('#size').onchange=(e)=>{const size=Number(e.target.value);document.querySelectorAll('.card').forEach(c=>c.querySelectorAll('.native').forEach(img=>{img.src=`${c.dataset.id}/${size}.png`;img.style.width=img.style.height=`${size}px`;}));};
+document.querySelector('#theme').onclick=()=>{const dark=document.documentElement.dataset.theme!=='dark';document.documentElement.dataset.theme=dark?'dark':'light';document.querySelector('#theme').textContent=dark?'Light canvas':'Dark canvas';};
+document.querySelector('#close').onclick=()=>document.querySelector('#dialog').close();
+document.querySelector('#save').onclick=async()=>{
+  const button=document.querySelector('#save');button.disabled=true;
+  const data=Object.fromEntries([...document.querySelectorAll('.card')].map(c=>[c.dataset.id,{shortlisted:c.querySelector('input').checked,notes:c.querySelector('textarea').value}]));
+  const status=document.querySelector('#status');
+  try {const result=await fetch('review-notes.json',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});if(!result.ok)throw new Error('save');status.textContent='Saved to review-notes.json';}
+  catch {status.textContent='Could not save. Keep this page open and try again.';}
+  finally {button.disabled=false;}
+};
+</script>
+</html>

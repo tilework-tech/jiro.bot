@@ -1,0 +1,5 @@
+.research/
+review-notes.json
+review-notes.json.tmp
+*.log
+*.pid
